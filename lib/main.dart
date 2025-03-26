@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:kusel/theme_manager/theme_manager_controller.dart';
 
-import 'localization_manager.dart';
+import 'locale/localization_manager.dart';
 import 'app_router.dart';
 
 void main() {
