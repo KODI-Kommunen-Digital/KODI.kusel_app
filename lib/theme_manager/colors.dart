@@ -6,3 +6,4 @@ const lightThemeShadowColor = Color.fromRGBO(0, 0, 0, 0.1);
 const lightThemeScaffoldColor = Color.fromRGBO(255, 255, 255, 1);
 const lightThemeTextColor = Color.fromRGBO(0, 0, 0, 1);
 const lightThemeHintTextColor = Color.fromRGBO(0, 0, 0, 0.4);
+const Color lightThemeCardTitleLocationTextColor = Color.fromRGBO(105, 114, 168, 1);
