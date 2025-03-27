@@ -27,7 +27,7 @@ List<RouteBase> goRouteList = [
       path: signUpScreenPath,
       builder: (context, state) {
         return SignupScreen();
-      })
+      }),
   GoRoute(
       path: dashboardScreenPath,
       builder: (context, state) {

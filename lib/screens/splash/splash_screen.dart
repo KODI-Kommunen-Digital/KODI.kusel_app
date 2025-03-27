@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kusel/app_router.dart';
+import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/splash/splash_screen_provider.dart';
 
 
@@ -19,9 +21,14 @@ class _State extends ConsumerState<SplashScreen> {
 
   @override
   void initState() {
-    Timer(const Duration(milliseconds: 1500), () {
-      ref.read(splashScreenProvider.notifier).navigateToNextScreen(context);
-    });    super.initState();
+    Future.microtask(() {
+      ref.read(splashScreenProvider.notifier).startTimer(() {
+        ref.read(navigationProvider).removeAllAndNavigate(
+            context: context, path: signInScreenPath);
+      });
+    });
+
+    super.initState();
   }
 
   @override
@@ -33,7 +40,9 @@ class _State extends ConsumerState<SplashScreen> {
               child: Text(
                 "Kusel",
                 style: TextStyle(
-                    fontSize: 40, color: Colors.white, fontWeight: FontWeight.bold),
+                    fontSize: 40,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold),
               )),
         )
     );
