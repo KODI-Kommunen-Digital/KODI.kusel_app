@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
-/*LIGHT THEME COLORS*/
-
+const lightThemePrimaryColor = Color.fromRGBO(226, 235, 247, 1);
+const lightThemeSecondaryColor = Color.fromRGBO(255, 255, 255, 1);
+const lightThemeShadowColor = Color.fromRGBO(0, 0, 0, 0.1);
 const lightThemeScaffoldColor = Color.fromRGBO(255, 255, 255, 1);
 const lightThemeDisplayMediumTextColor = Color.fromRGBO(0, 0, 0, 1);
 const lightThemeDisplaySmallTextColor = Color.fromRGBO(0, 0, 0, 1);
 const lightThemeDisplayLargeTextColor = Color.fromRGBO(0, 0, 0, 1);
 const lightThemeHintTextColor = Color.fromRGBO(0, 0, 0, 0.4);
+const lightThemeTemperatureColor = Color.fromRGBO(105, 114, 168, 1);
+const Color lightThemeCardTitleLocationTextColor = Color.fromRGBO(105, 114, 168, 1);
+
 const lightThemeContainerColor = Color.fromRGBO(226, 235, 247, 1);

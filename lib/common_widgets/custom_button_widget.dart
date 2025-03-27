@@ -54,7 +54,7 @@ class CustomButton extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50),
                     ),
-                    backgroundColor: buttonColor ?? Color(0xFF18204F)),
+                    backgroundColor: buttonColor ?? Color(0xFF283583)),
                 child: FittedBox(
                   child: textRegularPoppins(
                     fontSize: textSize,
