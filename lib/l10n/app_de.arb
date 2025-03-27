@@ -1,5 +1,12 @@
 {
   "hello": "Hello",
   "welcome": "Welcome to Flutter Localization",
-  "app_title": "German Heidi"
+  "app_title": "German Heidi",
+  "enter_email_id": "Geben Sie die E-Mail-ID ein",
+  "password": "Passwort",
+  "forgot_password": "Passwort vergessen?",
+  "login": "Login",
+  "signup": "SignUp",
+  "or": "Order",
+  "username": "Benutzername"
 }
