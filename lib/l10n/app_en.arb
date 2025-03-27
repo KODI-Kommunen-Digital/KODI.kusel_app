@@ -1,4 +1,11 @@
 {
-"welcome": "Welcome to Flutter Localization",
-"app_title": "Heidi"
+  "welcome": "Welcome to Flutter Localization",
+  "app_title": "Heidi",
+  "enter_email_id": "Enter the email ID",
+  "password": "Password",
+  "forgot_password": "Forgot Password?",
+  "login": "Login",
+  "signup": "SignUp",
+  "or": "Or",
+  "username": "Username"
 }
