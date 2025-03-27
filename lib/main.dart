@@ -7,7 +7,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/theme_manager/theme_manager_controller.dart';
 
 import 'app_router.dart';
-import 'localization_manager.dart';
+import 'locale/localization_manager.dart';
+
 
 void main() {
   runApp(ProviderScope(child: MyApp()));
