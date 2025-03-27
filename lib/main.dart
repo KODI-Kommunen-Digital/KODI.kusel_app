@@ -1,13 +1,13 @@
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/theme_manager/theme_manager_controller.dart';
 
-import 'localization_manager.dart';
 import 'app_router.dart';
+import 'localization_manager.dart';
 
 void main() {
   runApp(ProviderScope(child: MyApp()));
@@ -23,13 +23,16 @@ class MyApp extends ConsumerStatefulWidget {
 class _MyAppState extends ConsumerState<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-        locale: ref.watch(localeManagerProvider).currentLocale,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        title: 'Flutter Demo',
-        routerConfig: ref.read(mobileRouterProvider),
-        theme: ref.watch(themeManagerProvider).currentSelectedTheme);
+    return ScreenUtilInit(
+      designSize: Size(360, 690),
+      child: MaterialApp.router(
+          locale: ref.watch(localeManagerProvider).currentLocale,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          title: 'Flutter Demo',
+          routerConfig: ref.read(mobileRouterProvider),
+          theme: ref.watch(themeManagerProvider).currentSelectedTheme),
+    );
   }
 
   @override
@@ -49,5 +52,3 @@ class _MyAppState extends ConsumerState<MyApp> {
     super.initState();
   }
 }
-
-
