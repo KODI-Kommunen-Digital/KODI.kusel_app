@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/app_router.dart';
@@ -10,10 +12,10 @@ final splashScreenProvider = StateNotifierProvider.autoDispose<
     SplashScreenState>((ref) => SplashScreenProvider(ref: ref));
 
 class SplashScreenProvider extends StateNotifier<SplashScreenState> {
-  StateNotifierProviderRef<SplashScreenProvider, SplashScreenState> ref;
+  Ref ref;
   SplashScreenProvider({required this.ref}) : super(SplashScreenState.empty());
 
-  void navigateToNextScreen(BuildContext context) {
-    ref.read(navigationProvider).removeAllAndNavigate(context: context, path: dashboardScreenPath);
+  startTimer(void Function() callBack) {
+    Timer(Duration(seconds: 2), callBack);
   }
 }
