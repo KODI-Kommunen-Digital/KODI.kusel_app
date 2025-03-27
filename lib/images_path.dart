@@ -13,5 +13,5 @@ Map<String, String> _pngImagePath = {
 };
 
 Map<String, String> _jpegImagePath = {
-  "abc": "assets/jpg/abc.jpg"
+  "background_image": "assets/jpg/background_image.jpg"
 };
