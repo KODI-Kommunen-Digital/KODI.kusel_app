@@ -8,5 +8,9 @@
   "login": "Login",
   "signup": "SignUp",
   "or": "Order",
-  "username": "Benutzername"
+  "username": "Benutzername",
+  "firstName": "Vorname",
+  "lastName" : "Nachname",
+  "roleId" : "Rollen-ID",
+  "description": "Beschreibung"
 }
