@@ -6,6 +6,7 @@ import 'package:kusel/screens/home/home_screen_provider.dart';
 
 import '../../../common_widgets/highlights_card.dart';
 import '../../../images_path.dart';
+import '../../common_widgets/feedback_card_widget.dart';
 import '../../common_widgets/text_styles.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -79,7 +80,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         children: [
           customCarouselView(carouselController, highlightCards),
           SizedBox(height: 20,),
-          WeatherWidget()
+          WeatherWidget(),
+          FeedbackCardWidget(),
+          SizedBox(height: 100,)
         ],
       ),
     );
