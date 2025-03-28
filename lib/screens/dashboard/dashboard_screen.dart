@@ -83,7 +83,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     height: 15.h,
                     width: 13.w,
                     imagePath['location_icon'] ?? "",
-                    color: selectedIndex == 1
+                    color: selectedIndex == 3
                         ? const Color(0xFF88AF33)
                         : const Color(0xFFFFFFFF),
                   ),
