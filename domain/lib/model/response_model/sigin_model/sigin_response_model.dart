@@ -1,17 +1,24 @@
 import 'package:core/base_model.dart';
 
-class SignInResponseModel implements BaseModel<SignInResponseModel>{
-  SignInResponseModel();
+class SignInRequestModel implements BaseModel<SignInRequestModel> {
+  String? username;
+  String? password;
+
+  SignInRequestModel({this.username, this.password});
 
   @override
-  SignInResponseModel fromJson(Map<String, dynamic> json) {
-    // TODO: implement fromJson
-    throw UnimplementedError();
+  SignInRequestModel fromJson(Map<String, dynamic> json) {
+    return SignInRequestModel(
+      username: json['username'],
+      password: json['password'],
+    );
   }
 
   @override
   Map<String, dynamic> toJson() {
-    // TODO: implement toJson
-    throw UnimplementedError();
+    return {
+      'username': username,
+      'password': password,
+    };
   }
 }

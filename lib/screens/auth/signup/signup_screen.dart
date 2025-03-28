@@ -133,8 +133,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
           12.verticalSpace,
           Align(
               alignment: Alignment.center,
-              child: textRegularPoppins(
-                  text: AppLocalizations.of(context).or, fontSize: 12.sp)),
+              child: GestureDetector(
+                onTap: () {
+                  ref.read(navigationProvider).navigateUsingPath(
+                      path: dashboardScreenPath, context: context);
+                },
+                child: textRegularPoppins(
+                    text: AppLocalizations.of(context).or, fontSize: 12.sp),
+              )),
           12.verticalSpace,
           GestureDetector(
             onTap: () {

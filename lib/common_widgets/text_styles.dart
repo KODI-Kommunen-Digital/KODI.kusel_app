@@ -7,15 +7,18 @@ Text textRegularPoppins(
     FontWeight? fontWeight,
     double? fontSize,
     TextOverflow? textOverflow,
-    TextDecoration? decoration}) {
+    TextDecoration? decoration,
+    TextAlign? textAlign}) {
   return Text(
     text,
     style: TextStyle(
-        fontSize: fontSize?.sp ?? 14.sp,
-        fontFamily: "Poppins",
-        fontWeight: fontWeight ?? FontWeight.w400,
-        color: color,
-    decoration: decoration),
+      fontSize: fontSize?.sp ?? 14.sp,
+      fontFamily: "Poppins",
+      fontWeight: fontWeight ?? FontWeight.w400,
+      color: color,
+      decoration: decoration,
+    ),
+    textAlign: textAlign ?? TextAlign.center,
     overflow: textOverflow ?? TextOverflow.ellipsis,
   );
 }
@@ -48,10 +51,10 @@ Text textBoldPoppins(
     text,
     textAlign: textAlign,
     style: TextStyle(
-        fontFamily: "Poppins",
-        fontWeight: fontWeight ?? FontWeight.w600,
-        color: color,
-        fontSize: fontSize?.sp ?? 14.sp,
+      fontFamily: "Poppins",
+      fontWeight: fontWeight ?? FontWeight.w600,
+      color: color,
+      fontSize: fontSize?.sp ?? 14.sp,
     ),
     overflow: textOverflow ?? TextOverflow.ellipsis,
   );
@@ -95,13 +98,12 @@ Text textSemiBoldMontserrat(
     {required String text,
     Color? color,
     FontWeight? fontWeight,
-      double? fontSize,
-
-      TextOverflow? textOverflow}) {
+    double? fontSize,
+    TextOverflow? textOverflow}) {
   return Text(
     text,
     style: TextStyle(
-      fontSize: fontSize ?? 15,
+        fontSize: fontSize ?? 15,
         fontFamily: "Montserrat",
         fontWeight: fontWeight ?? FontWeight.w500,
         color: color ?? Color.fromRGBO(0, 0, 0, 1)),
