@@ -10,9 +10,7 @@ final signInScreenProvider =
         (ref) => SignInController(signInUseCase: ref.read(signInUseCaseProvider)));
 
 class SignInController extends StateNotifier<SignInState> {
-  TextEditingController emailTextEditingController = TextEditingController();
-  TextEditingController passwordTextEditingController = TextEditingController();
-  GlobalKey<FormState> signInFormKey = GlobalKey();
+
   SignInUseCase signInUseCase;
 
   SignInController({required this.signInUseCase}) : super(SignInState.empty());
