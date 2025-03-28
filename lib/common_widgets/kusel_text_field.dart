@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -29,6 +30,7 @@ class KuselTextField extends ConsumerStatefulWidget {
   bool outlined;
   List<TextInputFormatter>? inputFormatters;
   void Function(String)? onFieldSubmitted;
+  FocusNode? focusNode;
 
   KuselTextField(
       {required this.textEditingController,
@@ -55,6 +57,7 @@ class KuselTextField extends ConsumerStatefulWidget {
       this.outlined = false,
       this.inputFormatters,
       this.onFieldSubmitted,
+      this.focusNode,
       super.key});
 
   @override
@@ -81,6 +84,7 @@ class _KuselTextFieldState extends ConsumerState<KuselTextField> {
       readOnly: widget.readOnly ?? false,
       controller: widget.textEditingController,
       keyboardType: widget.keyboardType,
+      focusNode: widget.focusNode,
       style: TextStyle(
         color: widget.textColor ??
             currentSelectedThemeData.textTheme.displayMedium!.color,
@@ -101,8 +105,7 @@ class _KuselTextFieldState extends ConsumerState<KuselTextField> {
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(borderRadius),
             borderSide: BorderSide(
-                color: widget.focusBorderColor ??
-                    Color.fromRGBO(0, 0, 0, 0.8),
+                color: widget.focusBorderColor ?? Color.fromRGBO(0, 0, 0, 0.8),
                 width: 0.7),
           ),
           enabledBorder: OutlineInputBorder(
@@ -130,4 +133,5 @@ class _KuselTextFieldState extends ConsumerState<KuselTextField> {
           )),
     );
   }
+
 }
