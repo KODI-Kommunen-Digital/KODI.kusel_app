@@ -11,6 +11,8 @@ import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/navigator/navigator.dart';
 import 'package:kusel/screens/auth/signin/signin_controller.dart';
+import 'package:kusel/screens/auth/validator/email_validator.dart';
+import 'package:kusel/screens/auth/validator/password_validator.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {
   const SignInScreen({super.key});
@@ -20,6 +22,11 @@ class SignInScreen extends ConsumerStatefulWidget {
 }
 
 class _SignInScreenState extends ConsumerState<SignInScreen> {
+
+  TextEditingController emailTextEditingController = TextEditingController();
+  TextEditingController passwordTextEditingController = TextEditingController();
+  GlobalKey<FormState> signInFormKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -76,75 +83,85 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   }
 
   _buildLoginCard(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          15.verticalSpace,
-          Align(
-              alignment: Alignment.center,
-              child: textBoldPoppins(
-                  text: AppLocalizations.of(context).login, fontSize: 20.sp)),
-          32.verticalSpace,
-          Padding(
-            padding: EdgeInsets.only(left: 8.w),
-            child: textSemiBoldPoppins(
-                text: AppLocalizations.of(context).enter_email_id,
-                fontSize: 12.sp,
-                color: Theme.of(context).textTheme.displayMedium?.color),
-          ),
-          5.verticalSpace,
-          KuselTextField(
-            textEditingController: ref
-                .read(signInScreenProvider.notifier)
-                .emailTextEditingController,
-          ),
-          22.verticalSpace,
-          Padding(
-            padding: EdgeInsets.only(left: 8.w),
-            child: textSemiBoldPoppins(
-                text: AppLocalizations.of(context).password,
-                fontSize: 12.sp,
-                color: Theme.of(context).textTheme.displayMedium?.color),
-          ),
-          5.verticalSpace,
-          KuselTextField(
-            textEditingController: ref
-                .read(signInScreenProvider.notifier)
-                .passwordTextEditingController,
-          ),
-          22.verticalSpace,
-          Padding(
-            padding: EdgeInsets.only(left: 8.w),
-            child: textRegularPoppins(
-                text: AppLocalizations.of(context).forgot_password,
-                fontSize: 12.sp,
-                decoration: TextDecoration.underline),
-          ),
-          32.verticalSpace,
-          CustomButton(
-              onPressed: () {}, text: AppLocalizations.of(context).login),
-          12.verticalSpace,
-          Align(
-              alignment: Alignment.center,
-              child: textRegularPoppins(
-                  text: AppLocalizations.of(context).or, fontSize: 12.sp)),
-          12.verticalSpace,
-          GestureDetector(
-            onTap: () {
-              ref.read(navigationProvider).removeCurrentAndNavigate(
-                  context: context, path: signUpScreenPath);
-            },
-            child: Align(
-              alignment: Alignment.center,
-              child: textRegularPoppins(
-                  text: AppLocalizations.of(context).signup,
-                  decoration: TextDecoration.underline,
-                  fontSize: 12.sp),
+    return Form(
+      key: signInFormKey,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            15.verticalSpace,
+            Align(
+                alignment: Alignment.center,
+                child: textBoldPoppins(
+                    text: AppLocalizations.of(context).login, fontSize: 20.sp)),
+            32.verticalSpace,
+            Padding(
+              padding: EdgeInsets.only(left: 8.w),
+              child: textSemiBoldPoppins(
+                  text: AppLocalizations.of(context).enter_email_id,
+                  fontSize: 12.sp,
+                  color: Theme.of(context).textTheme.displayMedium?.color),
             ),
-          )
-        ],
+            5.verticalSpace,
+            KuselTextField(
+              textEditingController: emailTextEditingController,
+              validator: (value){
+                return validateEmail(value);
+              },
+            ),
+            22.verticalSpace,
+            Padding(
+              padding: EdgeInsets.only(left: 8.w),
+              child: textSemiBoldPoppins(
+                  text: AppLocalizations.of(context).password,
+                  fontSize: 12.sp,
+                  color: Theme.of(context).textTheme.displayMedium?.color),
+            ),
+            5.verticalSpace,
+            KuselTextField(
+              textEditingController: passwordTextEditingController,
+              validator: (value)
+              {
+                return validatePassword(value);
+              },
+            ),
+            22.verticalSpace,
+            Padding(
+              padding: EdgeInsets.only(left: 8.w),
+              child: textRegularPoppins(
+                  text: AppLocalizations.of(context).forgot_password,
+                  fontSize: 12.sp,
+                  decoration: TextDecoration.underline),
+            ),
+            32.verticalSpace,
+            CustomButton(
+                onPressed: () {
+                  if (signInFormKey.currentState?.validate() ?? false) {
+                    // Proceed with signup logic
+                  }
+                }, text: AppLocalizations.of(context).login),
+            12.verticalSpace,
+            Align(
+                alignment: Alignment.center,
+                child: textRegularPoppins(
+                    text: AppLocalizations.of(context).or, fontSize: 12.sp)),
+            12.verticalSpace,
+            GestureDetector(
+              onTap: () {
+                ref.read(navigationProvider).removeCurrentAndNavigate(
+                    context: context, path: signUpScreenPath);
+              },
+              child: Align(
+                alignment: Alignment.center,
+                child: textRegularPoppins(
+                    text: AppLocalizations.of(context).signup,
+                    decoration: TextDecoration.underline,
+                    fontSize: 12.sp),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
