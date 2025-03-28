@@ -26,14 +26,16 @@ class GetAllCategoriesResponseModel extends BaseModel<GetAllCategoriesResponseMo
 class Category {
   int? id;
   String? name;
+  String? imageUrl;
   int? noOfSubcategories;
 
-  Category({this.id, this.name, this.noOfSubcategories});
+  Category({this.id, this.name, this.noOfSubcategories, this.imageUrl});
 
   factory Category.fromJson(Map<String, dynamic> json) {
     return Category(
       id: json['id'] as int?,
       name: json['name'] as String?,
+      imageUrl: json['imageUrl'] as String?,
       noOfSubcategories: json['noOfSubcategories'] as int?,
     );
   }
@@ -42,6 +44,7 @@ class Category {
     return {
       'id': id,
       'name': name,
+      'imageUrl': imageUrl,
       'noOfSubcategories': noOfSubcategories,
     };
   }
