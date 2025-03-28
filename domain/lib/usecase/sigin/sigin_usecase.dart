@@ -5,6 +5,8 @@ import 'package:domain/model/request_model/sigin/signin_request_model.dart';
 import 'package:domain/usecase/usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../model/response_model/sigin_model/sigin_response_model.dart';
+
 final signInUseCaseProvider = Provider(
     (ref) => SignInUseCase(signInRepo: ref.read(sigInRepositoryProvider)));
 
