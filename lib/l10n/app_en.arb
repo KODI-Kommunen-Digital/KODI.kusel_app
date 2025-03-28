@@ -7,5 +7,9 @@
   "login": "Login",
   "signup": "SignUp",
   "or": "Or",
-  "username": "Username"
+  "username": "Username",
+  "firstName": "First Name",
+  "lastName" : "Last Name",
+  "roleId" : "Role ID",
+  "description": "Description"
 }
