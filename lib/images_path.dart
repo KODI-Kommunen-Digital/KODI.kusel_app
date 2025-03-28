@@ -12,7 +12,8 @@ Map<String, String> _svgImagePath = {
 };
 
 Map<String, String> _pngImagePath = {
-  "dino": "assets/png/dino.png"
+  "dino": "assets/png/dino.png",
+  "feedback_image.png": "assets/png/feedback_image.png"
 };
 
 Map<String, String> _jpegImagePath = {
