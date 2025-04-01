@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kusel/common_widgets/weather_widget.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
@@ -17,14 +18,13 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-
-
   @override
   Widget build(BuildContext context) {
     CarouselController carouselController = CarouselController(initialItem: 0);
-    carouselController.addListener((){
-      ref.watch(homeScreenProvider.notifier).addCarouselListener(carouselController);
-
+    carouselController.addListener(() {
+      ref
+          .watch(homeScreenProvider.notifier)
+          .addCarouselListener(carouselController);
     });
     List<Widget> highlightCards = [
       HighlightsCard(
@@ -66,8 +66,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     ];
     return Scaffold(
       backgroundColor: Color(0xFFE2EBF7),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
+      body: SizedBox(
+          height: MediaQuery.of(context).size.height,
           child: buildUi(carouselController, highlightCards)),
     );
   }
@@ -79,10 +79,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         mainAxisSize: MainAxisSize.max,
         children: [
           customCarouselView(carouselController, highlightCards),
-          SizedBox(height: 20,),
+          SizedBox(
+            height: 20,
+          ),
           WeatherWidget(),
           FeedbackCardWidget(),
-          SizedBox(height: 100,)
+          SizedBox(
+            height: 100,
+          )
         ],
       ),
     );
@@ -92,12 +96,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       CarouselController carouselController, List<Widget> highlightCards) {
     int currentIndex = ref.watch(homeScreenProvider).highlightCount;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
       child: Column(
         children: [
-          SizedBox(
-            height: 50,
-          ),
+          40.verticalSpace,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -111,11 +113,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         fontWeight: FontWeight.w600,
                         color: Color(0xFF18204F)),
                   ),
-                  SizedBox(
-                    width: 12,
-                  ),
+                  12.horizontalSpace,
                   SvgPicture.asset(
-                    imagePath['arrow_icon'] ?? "", // Add a fallback if the path is null
+                    imagePath['arrow_icon'] ?? "",
+                    // Add a fallback if the path is null
                     height: 12,
                     width: 18,
                   )
@@ -138,10 +139,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 ? Color(0xFF283583)
                                 : Color(0xFF6972A8).withAlpha(130),
                           ),
-                          if (index !=
-                              highlightCards.length -
-                                  1)
-                            const SizedBox(width: 4),
+                          if (index != highlightCards.length - 1)
+                            4.horizontalSpace
                         ],
                       ),
                     ),
