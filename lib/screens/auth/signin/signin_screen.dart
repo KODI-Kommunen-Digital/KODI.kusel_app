@@ -14,6 +14,10 @@ import 'package:kusel/images_path.dart';
 import 'package:kusel/navigator/navigator.dart';
 import 'package:kusel/screens/auth/signin/signin_controller.dart';
 
+import '../validator/email_validator.dart';
+import '../validator/empty_field_validator.dart';
+import '../validator/password_validator.dart';
+
 class SignInScreen extends ConsumerStatefulWidget {
   const SignInScreen({super.key});
 
@@ -133,9 +137,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             5.verticalSpace,
             KuselTextField(
               textEditingController: emailTextEditingController,
-              // validator: (value) {
-              //   return validateEmail(value);
-              // },
+              validator: (value) {
+                return validateField(value,"Email or Username");
+              },
             ),
             22.verticalSpace,
             Padding(
@@ -154,9 +158,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             5.verticalSpace,
             KuselTextField(
               textEditingController: passwordTextEditingController,
-              // validator: (value) {
-              //   return validatePassword(value);
-              // },
+              validator: (value) {
+                return validateField(value,"Password");
+              },
             ),
             22.verticalSpace,
             Padding(
@@ -171,18 +175,23 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             32.verticalSpace,
             CustomButton(
                 onPressed: () async {
-                  final result = await ref
-                      .read(signInScreenProvider.notifier)
-                      .sigInUser(
-                      userName: emailTextEditingController.text,
-                      password: passwordTextEditingController.text,
-                      success: () {
-                        ref.read(navigationProvider).removeAllAndNavigate(
-                            context: context, path: dashboardScreenPath);
-                      },
-                      error: (message) {
-                        showErrorToast(message: message, context: context);
-                      });
+
+                  if(signInFormKey.currentState!.validate())
+                    {
+                      await ref
+                          .read(signInScreenProvider.notifier)
+                          .sigInUser(
+                          userName: emailTextEditingController.text,
+                          password: passwordTextEditingController.text,
+                          success: () {
+                            ref.read(navigationProvider).removeAllAndNavigate(
+                                context: context, path: dashboardScreenPath);
+                          },
+                          error: (message) {
+                            showErrorToast(message: message, context: context);
+                          });
+                    }
+
                 },
                 text: AppLocalizations
                     .of(context)

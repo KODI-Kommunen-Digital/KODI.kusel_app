@@ -48,15 +48,15 @@ class SignInController extends StateNotifier<SignInState> {
         final response = (r as SignInResponseModel);
         if (response.errorCode != null) {
           if (r.errorCode == 2003) {
-            debugPrint("Invalid email or password");
+            error(r.message ?? "");
           } else if (r.errorCode == 2002) {
-            debugPrint("Invalid password");
+            error(r.message ?? "");
           } else if (r.errorCode == 1002) {
-            debugPrint("username is not present");
+            error(r.message ?? "");
           } else if (r.errorCode == 1001) {
             error(r.message ?? "");
           } else if (r.errorCode == 1003) {
-            debugPrint("Password is not present");
+            error(r.message ?? "");
           }
         } else {
           if (response.data != null) {
