@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kusel/screens/auth/forgot_password/forgot_password_screen.dart';
 import 'package:kusel/screens/auth/signin/signin_screen.dart';
 import 'package:kusel/screens/auth/signup/signup_screen.dart';
 import 'package:kusel/screens/dashboard/dashboard_screen.dart';
@@ -11,6 +12,7 @@ const splashScreenPath = "/";
 const signInScreenPath = "/signInScreen";
 const signUpScreenPath = "/signUpScreen";
 const dashboardScreenPath = "/dashboardScreenPath";
+const forgotPasswordPath = "/forgotPasswordPath";
 
 List<RouteBase> goRouteList = [
   GoRoute(
@@ -32,5 +34,10 @@ List<RouteBase> goRouteList = [
       path: dashboardScreenPath,
       builder: (context, state) {
         return DashboardScreen();
+      }),
+  GoRoute(
+      path: forgotPasswordPath,
+      builder: (context, state) {
+        return ForgotPasswordScreen();
       }),
 ];
