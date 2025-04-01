@@ -2,8 +2,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final sharedPreferenceHelperProvider = FutureProvider<SharedPreferenceHelper>((ref) async {
-  final prefs = await SharedPreferences.getInstance();
+final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
+  throw UnimplementedError(); // This will be overridden in main
+});
+
+// SharedPreferenceHelper provider
+final sharedPreferenceHelperProvider = Provider<SharedPreferenceHelper>((ref) {
+  final prefs = ref.watch(sharedPreferencesProvider);
   return SharedPreferenceHelper(prefs: prefs);
 });
 
@@ -29,7 +34,7 @@ class SharedPreferenceHelper {
   }
 
   Future<void> clear() async {
-    await await prefs.clear();
+     await prefs.clear();
   }
 
 }

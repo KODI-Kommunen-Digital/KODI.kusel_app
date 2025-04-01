@@ -1,38 +1,79 @@
+import 'package:core/preference_manager/preference_constant.dart';
+import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:domain/model/request_model/sigin/signin_request_model.dart';
+import 'package:domain/model/response_model/sigin_model/sigin_response_model.dart';
+import 'package:domain/usecase/sigin/sigin_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/screens/auth/signin/signin_state.dart';
-import 'package:domain/usecase/sigin/sigin_usecase.dart';
-import 'package:domain/model/response_model/sigin_model/sigin_response_model.dart';
 
 final signInScreenProvider =
-    StateNotifierProvider.autoDispose<SignInController, SignInState>(
-        (ref) => SignInController(signInUseCase: ref.read(signInUseCaseProvider)));
+    StateNotifierProvider.autoDispose<SignInController, SignInState>((ref) =>
+        SignInController(
+            signInUseCase: ref.read(signInUseCaseProvider),
+            sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider)));
 
 class SignInController extends StateNotifier<SignInState> {
-
   SignInUseCase signInUseCase;
+  SharedPreferenceHelper sharedPreferenceHelper;
 
-  SignInController({required this.signInUseCase}) : super(SignInState.empty());
+  SignInController(
+      {required this.signInUseCase, required this.sharedPreferenceHelper})
+      : super(SignInState.empty());
 
   updateShowPassword(bool value) {
     state = state.copyWith(showPassword: value);
   }
 
-  Future<void> sigInUser()
-  async{
-    try{
-
-      SignInRequestModel sigInRequestModel = SignInRequestModel();
+  Future<void> sigInUser(
+      {required String userName,
+      required String password,
+      required void Function() success,
+      required void Function(String message) error}) async {
+    try {
+      state = state.copyWith(showLoading: true);
+      SignInRequestModel sigInRequestModel =
+          SignInRequestModel(username: userName, password: password);
 
       SignInResponseModel signInResponseModel = SignInResponseModel();
 
-      final result = await signInUseCase.call(sigInRequestModel, signInResponseModel);
+      final result =
+          await signInUseCase.call(sigInRequestModel, signInResponseModel);
 
+      result.fold((l) {
+        state = state.copyWith(showLoading: false);
+        debugPrint(' Exception = $l');
+      }, (r) {
+        state = state.copyWith(showLoading: false);
+        final response = (r as SignInResponseModel);
+        if (response.errorCode != null) {
+          if (r.errorCode == 2003) {
+            debugPrint("Invalid email or password");
+          } else if (r.errorCode == 2002) {
+            debugPrint("Invalid password");
+          } else if (r.errorCode == 1002) {
+            debugPrint("username is not present");
+          } else if (r.errorCode == 1001) {
+            error(r.message ?? "");
+          } else if (r.errorCode == 1003) {
+            debugPrint("Password is not present");
+          }
+        } else {
+          if (response.data != null) {
+            final userId = response.data?.userId ?? 0;
+            final token = response.data?.accessToken ?? "";
+            final refreshToken = response.data?.refreshToken ?? "";
 
-    }catch(error)
-    {
-
+            sharedPreferenceHelper.setString(refreshTokenKey, refreshToken);
+            sharedPreferenceHelper.setString(tokenKey, token);
+            sharedPreferenceHelper.setInt(userIdKey, userId);
+            success();
+          }
+        }
+      });
+    } catch (error) {
+      state = state.copyWith(showLoading: false);
+      debugPrint(' Exception = $error');
     }
   }
 }

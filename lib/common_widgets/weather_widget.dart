@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/images_path.dart';
 
@@ -18,7 +19,7 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return SizedBox(
-      height: 260,
+      height: 260.h,
     child: Card(
         color: lightThemePrimaryColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
@@ -27,7 +28,7 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
           children: [
             Positioned(
               left: -width * .15,
-              bottom: 12,
+              bottom: 15.h,
               child: Container(
                 color: Colors.white,
                 width: width * .87,
@@ -48,17 +49,17 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
                       ),
                       textBoldMontserrat(text: "Kusal"),
                       SizedBox(
-                        height: 32,
-                        width: width * .4,
+                        height: 32.h,
+                        width: (width * .4).w,
                         child: Divider(
                           thickness: 1,
                           color: lightThemeTemperatureColor,
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      16.horizontalSpace,
                       // 3-Day Forecast
                       SizedBox(
-                        width: width * .4,
+                        width: (width * .4).w,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: const [
@@ -76,18 +77,18 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
             ,
             Positioned(
               bottom: 0,
-              right: 8,
+              right: 8.w,
               child: Image.asset(
                 imagePath['dino'] ?? "",
-                width: width * .37,
-                height: width * .37,
+                width: (width * .37).w,
+                height: (width * .37).h,
               ),
             ),Positioned(
-              top: 20,
-              right: width * .2,
+              top: 20.h,
+              right: (width * .15).w,
               child: Container(
-                width: width * .28,
-                height: width * .18,
+                width: (width * .26).w,
+                height: (width * .16).h,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
@@ -96,13 +97,13 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
                     colors: [
                       Color.fromRGBO(255, 228, 201, 1), // intermediate shade
                       Color.fromRGBO(255, 228, 131, 1), // intermediate shade
-                      Colors.yellow.withOpacity(0.0) // transparent at the edge
+                      Color.fromRGBO(255, 228, 131, 1) // transparent at the edge
                     ],
                     stops: const [0.0, 0.7, 1.0],
                   ),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.yellow.withOpacity(0.8),
+                      color: Color.fromRGBO(255, 228, 131, 1),
                       blurRadius: 20,
                       spreadRadius: 20,
                     ),
@@ -134,9 +135,9 @@ class _DayWeather extends StatelessWidget {
     return Column(
       children: [
         textRegularMontserrat(text: day),
-        const SizedBox(height: 4),
+        4.horizontalSpace,
         Icon(icon),
-        const SizedBox(height: 4),
+        4.horizontalSpace,
         textSemiBoldMontserrat(text: temp),
       ],
     );

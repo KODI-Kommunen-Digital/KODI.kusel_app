@@ -32,7 +32,7 @@ dependencies:
     sdk: flutter
   dot_navigation_bar: ^1.0.2
   flutter_svg: ^2.0.9
-
+  motion_toast: ^2.12.1
   core:
     path: core
 

@@ -21,65 +21,91 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
   @override
   void initState() {
     super.initState();
-    ref.read(exploreScreenProvider.notifier).getCategories();
-  }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(exploreScreenProvider.notifier).getCategories();
+    });  }
 
-  @override
-  Widget build(BuildContext context) {
-    ExploreScreenState exploreScreenState = ref.watch(exploreScreenProvider);
-    final borderRadius = Radius.circular(50.r);
-    return Scaffold(
-        body: SingleChildScrollView(
-      child: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            Positioned(
-                top: 0.h,
-                child: Container(
-                  height: MediaQuery.of(context).size.height * .3,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(),
-                  child: Image.asset(
-                    imagePath['background_image'] ?? "",
-                    fit: BoxFit.cover,
+    @override
+    Widget build(BuildContext context) {
+      final ExploreScreenState exploreScreenState = ref.watch(
+          exploreScreenProvider);
+      return SafeArea(
+        child: Scaffold(
+          body: SingleChildScrollView(
+            child: SizedBox(
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  // Background image at the top
+                  Positioned(
+                    top: 0.h,
+                    child: SizedBox(
+                      height: MediaQuery
+                          .of(context)
+                          .size
+                          .height * .3,
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width,
+                      child: Image.asset(
+                        imagePath['background_image'] ?? "",
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
-                )),
-            Positioned.fill(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
-                child: Container(
-                  color: Theme.of(context).cardColor.withValues(alpha: 0.6),
-                ),
+                  // Blurred overlay
+                  Positioned.fill(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
+                      child: Container(
+                        color: Theme
+                            .of(context)
+                            .cardColor
+                            .withValues(alpha: 0.6),
+                      ),
+                    ),
+                  ),
+                  exploreScreenState.loading ?? false
+                      ? const Center(child: CircularProgressIndicator())
+                      : Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: categoryView(exploreScreenState),
+                  ),
+                ],
               ),
             ),
-            Positioned(
-              child: CategoryView(exploreScreenState),
-            )
-          ],
+          ),
         ),
-      ),
-    ));
+      );
+    }
   }
 
-  CategoryView(ExploreScreenState exploreScreenState) {
+  categoryView(ExploreScreenState exploreScreenState) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
+      padding:  EdgeInsets.symmetric(horizontal: 8.r, vertical: 16.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
         children: [
-          SizedBox(
-            height: 24,
-          ),
+          24.verticalSpace,
           Padding(
-            padding: const EdgeInsets.only(left: 16.0),
+            padding: EdgeInsets.only(left: 16.w),
             child: textBoldPoppins(text: "Was gibt’s zu entdecken"),
           ),
           Expanded(
             child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              physics: BouncingScrollPhysics(),
+                gridDelegate:  SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
+                  mainAxisExtent: 200.h
                 ),
                 itemCount: exploreScreenState.exploreCategories.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -96,4 +122,4 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
       ),
     );
   }
-}
+
