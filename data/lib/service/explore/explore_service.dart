@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:network/src/api_helper.dart';
 
 final exploreServiceProvider = Provider(
-    (ref) => ExploreService(apiHelper: ApiHelper(dioHelper: dioHelperObject)));
+    (ref) => ExploreService(apiHelper: ApiHelper(dioHelper: ref.read(dioHelperObjectProvider))));
 
 class ExploreService {
   ApiHelper apiHelper;

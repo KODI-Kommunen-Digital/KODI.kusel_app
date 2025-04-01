@@ -1,17 +1,22 @@
 import 'dart:ui';
 
+import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/theme_manager/theme_manager_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_router.dart';
 import 'locale/localization_manager.dart';
 
-
-void main() {
-  runApp(ProviderScope(child: MyApp()));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  runApp(ProviderScope(overrides: [
+    sharedPreferencesProvider.overrideWithValue(prefs),
+  ], child: MyApp()));
 }
 
 class MyApp extends ConsumerStatefulWidget {

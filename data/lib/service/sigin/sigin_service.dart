@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:network/src/api_helper.dart';
 
 final signInServiceProvider = Provider(
-    (ref) => SigInService(apiHelper: ApiHelper(dioHelper: dioHelperObject)));
+    (ref) => SigInService(apiHelper: ApiHelper(dioHelper: ref.read(dioHelperObjectProvider))));
 
 class SigInService {
   ApiHelper apiHelper;
@@ -15,8 +15,10 @@ class SigInService {
 
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
-    final result = await apiHelper.postFormRequest(
-        path: sigInEndPoint, create: () => responseModel);
+    final result = await apiHelper.postRequest(
+        path: sigInEndPoint,
+        create: () => responseModel,
+        body: requestModel.toJson());
 
     return result.fold((l) => Left(l), (r) => Right(r));
   }
