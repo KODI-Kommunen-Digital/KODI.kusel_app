@@ -12,5 +12,10 @@
   "firstName": "First Name",
   "lastName" : "Last Name",
   "roleId" : "Role ID",
-  "description": "Description"
+  "description": "Description",
+  "submit": "Submit",
+  "forgot": "Forgot Password",
+  "email_send": "Email has been send",
+  "something_went_wrong": "Something went wrong, Please try again later"
+
 }

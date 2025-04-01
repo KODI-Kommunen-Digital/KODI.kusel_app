@@ -13,5 +13,9 @@
   "firstName": "Vorname",
   "lastName" : "Nachname",
   "roleId" : "Rollen-ID",
-  "description": "Beschreibung"
+  "description": "Beschreibung",
+  "submit": "Senden",
+  "forgot": "Passwort vergessen",
+  "email_send": "E-Mail wurde gesendet",
+  "something_went_wrong": "Etwas ist schiefgelaufen. Bitte versuchen Sie es später noch einmal"
 }

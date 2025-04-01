@@ -29,12 +29,12 @@ class _CommonEventCardState extends ConsumerState<CategoryGridCardView> {
       elevation: 4,
       child: Column(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(8.r),
-            // Adjust the radius as needed
-            child: SizedBox(
-              height: 120.h,
-              width: 175.w,
+          Container(
+            padding: EdgeInsets.only(top: 6.h,left: 6.w,right: 6.w),
+            height: 120.h,
+            width: 180.w,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8.r),
               child: Image.network(
                 widget.imageUrl,
                 errorBuilder: (context, error, stackTrace) =>

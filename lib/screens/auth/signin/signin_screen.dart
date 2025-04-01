@@ -14,9 +14,7 @@ import 'package:kusel/images_path.dart';
 import 'package:kusel/navigator/navigator.dart';
 import 'package:kusel/screens/auth/signin/signin_controller.dart';
 
-import '../validator/email_validator.dart';
 import '../validator/empty_field_validator.dart';
-import '../validator/password_validator.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {
   const SignInScreen({super.key});
@@ -35,7 +33,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     return SafeArea(
       child: Scaffold(
         body: _buildBody(context),
-      ).loaderDialog(context,ref
+      ).loaderDialog(context, ref
           .watch(signInScreenProvider)
           .showLoading),
     );
@@ -98,7 +96,6 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                           topRight: borderRadius, topLeft: borderRadius)),
                   child: _buildLoginCard(context)),
             ),
-
           ],
         ),
       ),
@@ -138,7 +135,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             KuselTextField(
               textEditingController: emailTextEditingController,
               validator: (value) {
-                return validateField(value,"Email or Username");
+                return validateField(value, AppLocalizations.of(context).enter_email_id);
               },
             ),
             22.verticalSpace,
@@ -159,39 +156,40 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             KuselTextField(
               textEditingController: passwordTextEditingController,
               validator: (value) {
-                return validateField(value,"Password");
+                return validateField(value, AppLocalizations.of(context).password);
               },
             ),
             22.verticalSpace,
-            Padding(
-              padding: EdgeInsets.only(left: 8.w),
-              child: textRegularPoppins(
-                  text: AppLocalizations
-                      .of(context)
-                      .forgot_password,
-                  fontSize: 12.sp,
-                  decoration: TextDecoration.underline),
+            GestureDetector(
+              onTap: () {
+                ref.read(navigationProvider).removeAllAndNavigate(
+                    context: context, path: forgotPasswordPath);
+              },
+              child: Padding(
+                padding: EdgeInsets.only(left: 8.w),
+                child: textRegularPoppins(
+                    text: AppLocalizations
+                        .of(context)
+                        .forgot_password,
+                    fontSize: 12.sp,
+                    decoration: TextDecoration.underline),
+              ),
             ),
             32.verticalSpace,
             CustomButton(
                 onPressed: () async {
-
-                  if(signInFormKey.currentState!.validate())
-                    {
-                      await ref
-                          .read(signInScreenProvider.notifier)
-                          .sigInUser(
-                          userName: emailTextEditingController.text,
-                          password: passwordTextEditingController.text,
-                          success: () {
-                            ref.read(navigationProvider).removeAllAndNavigate(
-                                context: context, path: dashboardScreenPath);
-                          },
-                          error: (message) {
-                            showErrorToast(message: message, context: context);
-                          });
-                    }
-
+                  if (signInFormKey.currentState!.validate()) {
+                    await ref.read(signInScreenProvider.notifier).sigInUser(
+                        userName: emailTextEditingController.text,
+                        password: passwordTextEditingController.text,
+                        success: () {
+                          ref.read(navigationProvider).removeAllAndNavigate(
+                              context: context, path: dashboardScreenPath);
+                        },
+                        error: (message) {
+                          showErrorToast(message: message, context: context);
+                        });
+                  }
                 },
                 text: AppLocalizations
                     .of(context)
