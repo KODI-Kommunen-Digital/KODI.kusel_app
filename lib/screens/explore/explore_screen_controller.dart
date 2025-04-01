@@ -18,6 +18,8 @@ class ExploreScreenController extends StateNotifier<ExploreScreenState> {
 
   Future<void> getCategories() async {
     try {
+      state = state.copyWith(loading: true, error: "");
+
       EmptyRequest emptyRequest = EmptyRequest();
 
       GetAllCategoriesResponseModel getAllCategoriesResponseModel =
@@ -25,12 +27,16 @@ class ExploreScreenController extends StateNotifier<ExploreScreenState> {
       final result = await exploreCategoriesUseCase.call(
           emptyRequest, getAllCategoriesResponseModel);
       result.fold(
-        (l) {},
+        (l) {
+          state = state.copyWith(loading: false, error: l.toString());
+        },
         (r) {
           var categories = (r as GetAllCategoriesResponseModel).data;
-          state = state.copyWith(exploreCategories: categories);
+          state = state.copyWith(exploreCategories: categories, loading: false);
         },
       );
-    } catch (error) {}
+    } catch (error) {
+      state = state.copyWith(loading: false, error: error.toString());
+    }
   }
 }

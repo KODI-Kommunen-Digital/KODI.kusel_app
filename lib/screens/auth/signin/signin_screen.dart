@@ -7,12 +7,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/kusel_text_field.dart';
+import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/common_widgets/toast_message.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/navigator/navigator.dart';
 import 'package:kusel/screens/auth/signin/signin_controller.dart';
-import 'package:kusel/screens/auth/validator/email_validator.dart';
-import 'package:kusel/screens/auth/validator/password_validator.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {
   const SignInScreen({super.key});
@@ -22,7 +22,6 @@ class SignInScreen extends ConsumerStatefulWidget {
 }
 
 class _SignInScreenState extends ConsumerState<SignInScreen> {
-
   TextEditingController emailTextEditingController = TextEditingController();
   TextEditingController passwordTextEditingController = TextEditingController();
   GlobalKey<FormState> signInFormKey = GlobalKey();
@@ -32,7 +31,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     return SafeArea(
       child: Scaffold(
         body: _buildBody(context),
-      ),
+      ).loaderDialog(context,ref
+          .watch(signInScreenProvider)
+          .showLoading),
     );
   }
 
@@ -40,15 +41,24 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     final borderRadius = Radius.circular(50.r);
     return SingleChildScrollView(
       child: SizedBox(
-        height: MediaQuery.of(context).size.height,
+        height: MediaQuery
+            .of(context)
+            .size
+            .height,
         child: Stack(
           fit: StackFit.expand,
           children: [
             Positioned(
                 top: 0.h,
                 child: Container(
-                  height: MediaQuery.of(context).size.height * .3,
-                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .height * .3,
+                  width: MediaQuery
+                      .of(context)
+                      .size
+                      .width,
                   decoration: BoxDecoration(),
                   child: Image.asset(
                     imagePath['background_image'] ?? "",
@@ -59,7 +69,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
                 child: Container(
-                  color: Theme.of(context).cardColor.withValues(alpha: 0.6),
+                  color: Theme
+                      .of(context)
+                      .cardColor
+                      .withValues(alpha: 0.6),
                 ),
               ),
             ),
@@ -68,14 +81,20 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               left: 0.w,
               right: 0.w,
               child: Container(
-                  height: MediaQuery.of(context).size.height * .8,
+                  height: MediaQuery
+                      .of(context)
+                      .size
+                      .height * .8,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                      color: Theme.of(context).cardColor,
+                      color: Theme
+                          .of(context)
+                          .cardColor,
                       borderRadius: BorderRadius.only(
                           topRight: borderRadius, topLeft: borderRadius)),
                   child: _buildLoginCard(context)),
             ),
+
           ],
         ),
       ),
@@ -94,58 +113,87 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             Align(
                 alignment: Alignment.center,
                 child: textBoldPoppins(
-                    text: AppLocalizations.of(context).login, fontSize: 20.sp)),
+                    text: AppLocalizations
+                        .of(context)
+                        .login, fontSize: 20.sp)),
             32.verticalSpace,
             Padding(
               padding: EdgeInsets.only(left: 8.w),
               child: textSemiBoldPoppins(
-                  text: AppLocalizations.of(context).enter_email_id,
+                  text: AppLocalizations
+                      .of(context)
+                      .enter_email_id,
                   fontSize: 12.sp,
-                  color: Theme.of(context).textTheme.displayMedium?.color),
+                  color: Theme
+                      .of(context)
+                      .textTheme
+                      .displayMedium
+                      ?.color),
             ),
             5.verticalSpace,
             KuselTextField(
               textEditingController: emailTextEditingController,
-              validator: (value){
-                return validateEmail(value);
-              },
+              // validator: (value) {
+              //   return validateEmail(value);
+              // },
             ),
             22.verticalSpace,
             Padding(
               padding: EdgeInsets.only(left: 8.w),
               child: textSemiBoldPoppins(
-                  text: AppLocalizations.of(context).password,
+                  text: AppLocalizations
+                      .of(context)
+                      .password,
                   fontSize: 12.sp,
-                  color: Theme.of(context).textTheme.displayMedium?.color),
+                  color: Theme
+                      .of(context)
+                      .textTheme
+                      .displayMedium
+                      ?.color),
             ),
             5.verticalSpace,
             KuselTextField(
               textEditingController: passwordTextEditingController,
-              validator: (value)
-              {
-                return validatePassword(value);
-              },
+              // validator: (value) {
+              //   return validatePassword(value);
+              // },
             ),
             22.verticalSpace,
             Padding(
               padding: EdgeInsets.only(left: 8.w),
               child: textRegularPoppins(
-                  text: AppLocalizations.of(context).forgot_password,
+                  text: AppLocalizations
+                      .of(context)
+                      .forgot_password,
                   fontSize: 12.sp,
                   decoration: TextDecoration.underline),
             ),
             32.verticalSpace,
             CustomButton(
-                onPressed: () {
-                  if (signInFormKey.currentState?.validate() ?? false) {
-                    // Proceed with signup logic
-                  }
-                }, text: AppLocalizations.of(context).login),
+                onPressed: () async {
+                  final result = await ref
+                      .read(signInScreenProvider.notifier)
+                      .sigInUser(
+                      userName: emailTextEditingController.text,
+                      password: passwordTextEditingController.text,
+                      success: () {
+                        ref.read(navigationProvider).removeAllAndNavigate(
+                            context: context, path: dashboardScreenPath);
+                      },
+                      error: (message) {
+                        showErrorToast(message: message, context: context);
+                      });
+                },
+                text: AppLocalizations
+                    .of(context)
+                    .login),
             12.verticalSpace,
             Align(
                 alignment: Alignment.center,
                 child: textRegularPoppins(
-                    text: AppLocalizations.of(context).or, fontSize: 12.sp)),
+                    text: AppLocalizations
+                        .of(context)
+                        .or, fontSize: 12.sp)),
             12.verticalSpace,
             GestureDetector(
               onTap: () {
@@ -155,7 +203,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               child: Align(
                 alignment: Alignment.center,
                 child: textRegularPoppins(
-                    text: AppLocalizations.of(context).signup,
+                    text: AppLocalizations
+                        .of(context)
+                        .signup,
                     decoration: TextDecoration.underline,
                     fontSize: 12.sp),
               ),
