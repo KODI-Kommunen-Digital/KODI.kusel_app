@@ -4,6 +4,7 @@ import 'package:kusel/screens/auth/forgot_password/forgot_password_screen.dart';
 import 'package:kusel/screens/auth/signin/signin_screen.dart';
 import 'package:kusel/screens/auth/signup/signup_screen.dart';
 import 'package:kusel/screens/dashboard/dashboard_screen.dart';
+import 'package:kusel/screens/highlight/highlight_screen.dart';
 import 'package:kusel/screens/splash/splash_screen.dart';
 
 final mobileRouterProvider = Provider((ref) => GoRouter(routes: goRouteList));
@@ -13,6 +14,7 @@ const signInScreenPath = "/signInScreen";
 const signUpScreenPath = "/signUpScreen";
 const dashboardScreenPath = "/dashboardScreenPath";
 const forgotPasswordPath = "/forgotPasswordPath";
+const highlightScreenPath = "/highlightScreenPath";
 
 List<RouteBase> goRouteList = [
   GoRoute(
@@ -39,5 +41,10 @@ List<RouteBase> goRouteList = [
       path: forgotPasswordPath,
       builder: (context, state) {
         return ForgotPasswordScreen();
+      }),
+  GoRoute(
+      path: highlightScreenPath,
+      builder: (context, state) {
+        return HighlightScreen();
       }),
 ];
