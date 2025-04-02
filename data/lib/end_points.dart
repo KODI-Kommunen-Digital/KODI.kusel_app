@@ -3,3 +3,5 @@ const sigInEndPoint = "/users/login";
 const exploreEndpoint = "/categories";
 const signUpEndPoint = "/users/register";
 const forgotPasswordEndPoint = "/users/forgotPassword";
+
+const subCategoriesEndPoint = "/subcategories";
