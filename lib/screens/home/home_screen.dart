@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/weather_widget.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 
 import '../../../common_widgets/highlights_card.dart';
 import '../../../images_path.dart';
 import '../../common_widgets/feedback_card_widget.dart';
+import '../../common_widgets/search_widget.dart';
 import '../../common_widgets/text_styles.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../theme_manager/colors.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -17,14 +23,13 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-
-
   @override
   Widget build(BuildContext context) {
     CarouselController carouselController = CarouselController(initialItem: 0);
-    carouselController.addListener((){
-      ref.watch(homeScreenProvider.notifier).addCarouselListener(carouselController);
-
+    carouselController.addListener(() {
+      ref
+          .watch(homeScreenProvider.notifier)
+          .addCarouselListener(carouselController);
     });
     List<Widget> highlightCards = [
       HighlightsCard(
@@ -65,9 +70,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ),
     ];
     return Scaffold(
-      backgroundColor: Color(0xFFE2EBF7),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
+      backgroundColor: lightThemeScaffoldBackgroundColor,
+      body: SizedBox(
+          height: MediaQuery.of(context).size.height,
           child: buildUi(carouselController, highlightCards)),
     );
   }
@@ -78,11 +83,67 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
+          Stack(
+            children: [
+              ClipPath(
+                clipper: UpstreamWaveClipper(),
+                child: Container(
+                  height: 272.h,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image:
+                          AssetImage(imagePath['home_screen_background'] ?? ''),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 70.h,
+                left: 20.w,
+                right: 20.w,
+                child: Column(
+                  children: [
+                    textBoldPoppins(
+                      fontSize: 20,
+                      color: lightThemeSecondaryColor,
+                      textAlign: TextAlign.center,
+                      text: "Hey Lukas!",
+                    ),
+                    textBoldPoppins(
+                      fontSize: 20,
+                      color: lightThemeSecondaryColor,
+                      textAlign: TextAlign.center,
+                      text: "Heute wird's sonning!",
+                    ),
+                    32.verticalSpace,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 15.w),
+                          child: textRegularPoppins(
+                              text: AppLocalizations.of(context).search,
+                              fontSize: 12.sp,
+                              fontStyle: FontStyle.italic,
+                              color: lightThemeSecondaryColor),
+                        ),
+                        SearchWidget(
+                          searchController: TextEditingController(),
+                          hintText: AppLocalizations.of(context).enter_search_term,
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
           customCarouselView(carouselController, highlightCards),
-          SizedBox(height: 20,),
+          20.verticalSpace,
           WeatherWidget(),
           FeedbackCardWidget(),
-          SizedBox(height: 100,)
+          100.verticalSpace
         ],
       ),
     );
@@ -92,39 +153,35 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       CarouselController carouselController, List<Widget> highlightCards) {
     int currentIndex = ref.watch(homeScreenProvider).highlightCount;
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
       child: Column(
         children: [
-          SizedBox(
-            height: 50,
-          ),
+          40.verticalSpace,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 10.0),
+                    padding: EdgeInsets.only(left: 10.w),
                     child: textRegularPoppins(
-                        text: "Highlights",
-                        fontSize: 17,
+                        text: AppLocalizations.of(context).highlights,
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF18204F)),
+                        color: lightThemeSecondaryColor),
                   ),
-                  SizedBox(
-                    width: 12,
-                  ),
+                  12.horizontalSpace,
                   SvgPicture.asset(
-                    imagePath['arrow_icon'] ?? "", // Add a fallback if the path is null
-                    height: 12,
-                    width: 18,
+                    imagePath['arrow_icon'] ?? "",
+                    height: 10.h,
+                    width: 16.w,
                   )
                 ],
               ),
               Align(
                 alignment: Alignment.centerRight,
                 child: Padding(
-                  padding: EdgeInsets.only(right: 5.0),
+                  padding: EdgeInsets.only(right: 5.w),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
@@ -135,13 +192,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             Icons.circle,
                             size: currentIndex == index ? 11 : 8,
                             color: currentIndex == index
-                                ? Color(0xFF283583)
-                                : Color(0xFF6972A8).withAlpha(130),
+                                ? lightThemeHighlightDotColor
+                                : lightThemeHighlightDotColor.withAlpha(130),
                           ),
-                          if (index !=
-                              highlightCards.length -
-                                  1)
-                            const SizedBox(width: 4),
+                          if (index != highlightCards.length - 1)
+                            4.horizontalSpace
                         ],
                       ),
                     ),
@@ -150,17 +205,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ],
           ),
+          10.verticalSpace,
           SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            height: 418,
+            height: 350.h,
             child: CarouselView(
               controller: carouselController,
               scrollDirection: Axis.horizontal,
               itemExtent: 317,
               shrinkExtent: 317,
-              padding: EdgeInsets.all(8),
+              padding: EdgeInsets.all(6.h.w),
               children: highlightCards ?? [],
             ),
           ),
