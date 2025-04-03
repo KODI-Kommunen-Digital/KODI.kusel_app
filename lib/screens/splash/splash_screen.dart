@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/splash/splash_screen_provider.dart';
+import 'package:kusel/theme_manager/colors.dart';
 
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -24,7 +25,7 @@ class _State extends ConsumerState<SplashScreen> {
     Future.microtask(() {
       ref.read(splashScreenProvider.notifier).startTimer(() {
         ref.read(navigationProvider).removeAllAndNavigate(
-            context: context, path: signInScreenPath);
+            context: context, path: dashboardScreenPath);
       });
     });
 
@@ -35,13 +36,13 @@ class _State extends ConsumerState<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-          color: Color(0xFF18204F),
+          color: lightThemeSecondaryColor,
           child: Center(
               child: Text(
-                "Kusel",
+                AppLocalizations.of(context).app_title,
                 style: TextStyle(
                     fontSize: 40,
-                    color: Colors.white,
+                    color: lightThemeWhiteColor,
                     fontWeight: FontWeight.bold),
               )),
         )

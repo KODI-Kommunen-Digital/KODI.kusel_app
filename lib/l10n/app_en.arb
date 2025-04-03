@@ -16,6 +16,7 @@
   "submit": "Submit",
   "forgot": "Forgot Password",
   "email_send": "Email has been send",
-  "something_went_wrong": "Something went wrong, Please try again later"
-
+  "something_went_wrong": "Something went wrong, Please try again later",
+  "highlights": "Highlights",
+  "category_heading": "What is there to discover"
 }
