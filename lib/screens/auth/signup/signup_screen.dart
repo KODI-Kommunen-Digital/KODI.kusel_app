@@ -51,7 +51,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
     firstNameFocusNode.addListener(() => _scrollToFocused(firstNameFocusNode));
 
-
     lastNameFocusNode.addListener(() => _scrollToFocused(lastNameFocusNode));
   }
 
@@ -111,11 +110,12 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             ),
           ),
           Positioned(
-            top: 150.h,
+            top: 100.h,
             bottom: 0.h,
             left: 0.w,
             right: 0.w,
             child: Container(
+              padding: EdgeInsets.only(top: 20.h),
               width: double.infinity,
               decoration: BoxDecoration(
                 color: Theme.of(context).cardColor,
@@ -152,7 +152,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 ),
               ),
               32.verticalSpace,
-              _buildLabel(context, AppLocalizations.of(context).enter_email_id),
+              _buildLabel(context, AppLocalizations.of(context).email),
               KuselTextField(
                 textEditingController: emailTextEditingController,
                 focusNode: emailFocusNode,
@@ -170,27 +170,37 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               KuselTextField(
                 textEditingController: userNameTextEditingController,
                 focusNode: userNameFocusNode,
-                validator: (value) => validateField(value, AppLocalizations.of(context).username),
+                validator: (value) =>
+                    validateField(value, AppLocalizations.of(context).username),
               ),
               22.verticalSpace,
               _buildLabel(context, AppLocalizations.of(context).firstName),
               KuselTextField(
                 textEditingController: firstNameTextEditingController,
                 focusNode: firstNameFocusNode,
-                validator: (value) => validateField(value, AppLocalizations.of(context).firstName),
+                validator: (value) => validateField(
+                    value, AppLocalizations.of(context).firstName),
               ),
               22.verticalSpace,
               _buildLabel(context, AppLocalizations.of(context).lastName),
               KuselTextField(
                 textEditingController: lastNameTextEditingController,
                 focusNode: lastNameFocusNode,
-                validator: (value) => validateField(value, AppLocalizations.of(context).lastName),
+                validator: (value) =>
+                    validateField(value, AppLocalizations.of(context).lastName),
               ),
               32.verticalSpace,
               CustomButton(
                 onPressed: () {
                   if (signupFormKey.currentState?.validate() ?? false) {
-                    // Proceed with signup logic
+                    ref.read(signUpScreenProvider.notifier).registerUser(
+                        userName: userNameTextEditingController.text,
+                        password: passwordTextEditingController.text,
+                        firstName: firstNameTextEditingController.text,
+                        lastName: lastNameTextEditingController.text,
+                        email: emailTextEditingController.text,
+                        onError: (value) {},
+                        onSuccess: (value) {});
                   }
                 },
                 text: AppLocalizations.of(context).signup,
@@ -207,9 +217,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               GestureDetector(
                 onTap: () {
                   ref.read(navigationProvider).removeCurrentAndNavigate(
-                    context: context,
-                    path: signInScreenPath,
-                  );
+                        context: context,
+                        path: signInScreenPath,
+                      );
                 },
                 child: Align(
                   alignment: Alignment.center,
@@ -243,7 +253,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       final context = focusNode.context;
       if (context != null && context.mounted) {
-        Scrollable.ensureVisible(context, duration: const Duration(milliseconds: 300));
+        Scrollable.ensureVisible(context,
+            duration: const Duration(milliseconds: 300));
       }
     });
   }

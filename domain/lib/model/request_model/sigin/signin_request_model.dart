@@ -1,4 +1,5 @@
 import 'package:core/base_model.dart';
+import 'package:flutter/material.dart';
 
 class SignInRequestModel implements BaseModel<SignInRequestModel> {
   String? username;

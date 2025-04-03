@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/theme_manager/colors.dart';
 
 class HighlightsCard extends ConsumerStatefulWidget {
   String imageUrl;
@@ -12,14 +14,13 @@ class HighlightsCard extends ConsumerStatefulWidget {
 
   HighlightsCard(
       {super.key,
-        required this.imageUrl,
-        required this.date,
-        required this.heading,
-        required this.description,
-        required this.isFavourite,
-        required this.onPress,
-        required this.onFavouriteIconClick
-      });
+      required this.imageUrl,
+      required this.date,
+      required this.heading,
+      required this.description,
+      required this.isFavourite,
+      required this.onPress,
+      required this.onFavouriteIconClick});
 
   @override
   ConsumerState<HighlightsCard> createState() => _HighlightsCardState();
@@ -29,15 +30,13 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 380,
-      width: 300,
-      padding: EdgeInsets.all(9),
+      padding: EdgeInsets.symmetric(vertical: 6.h,horizontal: 9.w),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
           BoxShadow(
-            color: Color(0xFF283583).withValues(alpha: 0.46),
+            color: lightThemeHighlightDotColor.withValues(alpha: 0.46),
             offset: Offset(0, 4),
             blurRadius: 24,
           ),
@@ -48,49 +47,51 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
           Stack(
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(18),
+                borderRadius: BorderRadius.circular(18.r),
                 child: SizedBox(
-                  height: 306,
-                  child: Image.asset(
-                    // height: 306,
-                    fit: BoxFit.fill,
-                      widget.imageUrl),
+                  height: 250.h,
+                  child: Image.asset(fit: BoxFit.cover, widget.imageUrl),
                 ),
               ),
               Positioned(
-                top: 5,
-                left: 230,
+                top: 5.h,
+                left: 215.w,
                 child: Container(
-                  padding: EdgeInsets.all(8),
-                  height: 48,
-                  width: 48,
+                  padding: EdgeInsets.all(10.r),
                   decoration: BoxDecoration(
-                      color: Color(0xFF283583),
-                    borderRadius: BorderRadius.circular(50),
+                    color: lightThemeHighlightDotColor,
+                    borderRadius: BorderRadius.circular(50.r),
                   ),
-                  child: Icon(Icons.favorite_border_sharp, color: Colors.white,),
+                  child: Icon(
+                    Icons.favorite_border_sharp,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ],
           ),
-          SizedBox(height: 6,),
+          6.verticalSpace,
           Align(
             alignment: Alignment.bottomLeft,
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(8.r),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(widget.date,style: TextStyle(color: Color(0xFF6972A8), fontSize: 13),),
-                  SizedBox(height: 4,),
-                  Text(widget.heading, style: TextStyle(color: Color(0xFF18204F), fontSize: 15)),
-                  SizedBox(height: 4,),
-                  Text(widget.description, style: TextStyle(color: Color(0xFF6972A8), fontSize: 13))
+                  Text(
+                    widget.date,
+                    style: TextStyle(color: lightThemeTransportCardTextColor, fontSize: 12.sp),
+                  ),
+                  4.verticalSpace,
+                  Text(widget.heading,
+                      style: TextStyle(color: lightThemeSecondaryColor, fontSize: 13.sp)),
+                  4.verticalSpace,
+                  Text(widget.description,
+                      style: TextStyle(color: lightThemeTransportCardTextColor, fontSize: 12.sp))
                 ],
               ),
             ),
           )
-
         ],
       ),
     );
