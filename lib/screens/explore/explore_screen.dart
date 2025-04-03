@@ -3,10 +3,13 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/screens/explore/explore_screen_controller.dart';
 import 'package:kusel/screens/explore/explore_screen_state.dart';
+import 'package:kusel/screens/sub_category/sub_category_screen_parameter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../common_widgets/category_grid_card_view.dart';
@@ -26,27 +29,25 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(exploreScreenProvider.notifier).getCategories();
-    });  }
+    });
+  }
 
-    @override
-    Widget build(BuildContext context) {
-      final ExploreScreenState exploreScreenState = ref.watch(
-          exploreScreenProvider);
-      return SafeArea(
-        child: Scaffold(
-          body: SingleChildScrollView(
-            child: SizedBox(
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  // Background image at the top
-                  Positioned(
-                    top: 0.h,
-                    child: ClipPath(
+  @override
+  Widget build(BuildContext context) {
+    final ExploreScreenState exploreScreenState =
+        ref.watch(exploreScreenProvider);
+    return SafeArea(
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                // Background image at the top
+                Positioned(
+                  top: 0.h,
+                  child: ClipPath(
                       clipper: UpstreamWaveClipper(),
                       child: SizedBox(
                         height: MediaQuery
@@ -84,19 +85,18 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                     right: 0,
                     bottom: 0,
                     child: categoryView(exploreScreenState, context),
-                  ),
-                ],
-              ),
+                      ),
+              ],
             ),
           ),
         ),
-      );
-    }
+      ),
+    );
   }
 
   categoryView(ExploreScreenState exploreScreenState, BuildContext context) {
     return Padding(
-      padding:  EdgeInsets.symmetric(horizontal: 8.r, vertical: 16.h),
+      padding: EdgeInsets.symmetric(horizontal: 8.r, vertical: 16.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.max,
@@ -119,16 +119,24 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                   itemBuilder: (BuildContext context, int index) {
                     var exploreCategory =
                         exploreScreenState.exploreCategories[index];
-                    return CategoryGridCardView(
+                    return GestureDetector(
+                    onTap: () {
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: subCategoryScreenPath,
+                          context: context,
+                          params: SubCategoryScreenParameters(
+                              id: exploreCategory.id ?? 0));
+                    },
+                    child:CategoryGridCardView(
                       imageUrl:
                           "https://fastly.picsum.photos/id/452/200/200.jpg?hmac=f5vORXpRW2GF7jaYrCkzX3EwDowO7OXgUaVYM2NNRXY",
                       title: exploreCategory.name ?? "",
-                    );
-                  }),
+                    ),
+                  );}),
             ),
           ),
         ],
       ),
     );
   }
-
+}
