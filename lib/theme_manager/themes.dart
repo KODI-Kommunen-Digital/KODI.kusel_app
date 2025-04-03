@@ -11,7 +11,8 @@ final lightTheme = ThemeData(
         displayMedium: TextStyle(color: lightThemeDisplayMediumTextColor),
         displayLarge: TextStyle(color: lightThemeDisplayLargeTextColor),
         displaySmall: TextStyle(color: lightThemeDisplaySmallTextColor)),
-    cardColor: lightThemeContainerColor);
+    cardColor: lightThemeContainerColor,
+);
 
 final darkTheme =
     ThemeData(useMaterial3: false, scaffoldBackgroundColor: Colors.black);
