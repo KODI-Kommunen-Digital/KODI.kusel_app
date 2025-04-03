@@ -36,58 +36,57 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
   Widget build(BuildContext context) {
     final ExploreScreenState exploreScreenState =
         ref.watch(exploreScreenProvider);
-    return SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                // Background image at the top
-                Positioned(
-                  top: 0.h,
-                  child: ClipPath(
-                      clipper: UpstreamWaveClipper(),
-                      child: SizedBox(
-                        height: MediaQuery
-                            .of(context)
-                            .size
-                            .height * .15,
-                        width: MediaQuery
-                            .of(context)
-                            .size
-                            .width,
-                        child: Image.asset(
-                          imagePath['background_image'] ?? "",
-                          fit: BoxFit.cover,
-                        ),
+    return Scaffold(
+      body: SingleChildScrollView(
+        physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              // Background image at the top
+              Positioned(
+                top: 0.h,
+                child: ClipPath(
+                    clipper: UpstreamWaveClipper(),
+                    child: SizedBox(
+                      height: MediaQuery
+                          .of(context)
+                          .size
+                          .height * .15,
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width,
+                      child: Image.asset(
+                        imagePath['background_image'] ?? "",
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
-                  // Blurred overlay
-                  Positioned.fill(
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
-                      child: Container(
-                        color: Theme
-                            .of(context)
-                            .cardColor
-                            .withValues(alpha: 0.6),
-                      ),
+                ),
+                // Blurred overlay
+                Positioned.fill(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
+                    child: Container(
+                      color: Theme
+                          .of(context)
+                          .cardColor
+                          .withValues(alpha: 0.6),
                     ),
                   ),
-                  exploreScreenState.loading ?? false
-                      ? const Center(child: CircularProgressIndicator())
-                      : Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    child: categoryView(exploreScreenState, context),
-                      ),
-              ],
-            ),
+                ),
+                exploreScreenState.loading ?? false
+                    ? const Center(child: CircularProgressIndicator())
+                    : Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: categoryView(exploreScreenState, context),
+                    ),
+            ],
           ),
         ),
       ),
@@ -107,7 +106,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
             child: textBoldPoppins(text: AppLocalizations.of(context).category_heading),
           ),
           Positioned(
-            top: MediaQuery.of(context).size.height*0.2,
+            top: MediaQuery.of(context).size.height*0.25,
             child: Expanded(
               child: GridView.builder(
                 physics: NeverScrollableScrollPhysics(),
