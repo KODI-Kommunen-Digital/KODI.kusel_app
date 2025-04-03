@@ -11,9 +11,6 @@
   "or": "Oder",
   "username": "Benutzername",
   "firstName": "Vorname",
-  "lastName" : "Nachname",
-  "roleId" : "Rollen-ID",
-  "description": "Beschreibung",
   "submit": "Senden",
   "forgot": "Passwort vergessen",
   "email_send": "E-Mail wurde gesendet",
@@ -22,5 +19,13 @@
   "roleId": "Rollen-ID",
   "description": "Beschreibung",
   "highlights": "Höhepunkte",
-  "category_heading": "Was gibt’s zu entdecken"
+  "category_heading": "Was gibt’s zu entdecken",
+  "medieval_market": "Medieval market",
+  "public_transport_offer": "ÖPNV Angebot",
+  "next_dates": "Nächste Termine",
+  "search": "Suche",
+  "enter_search_term": "Suchbegriff eingeben",
+  "feedback_heading": "Wie findest du die App?",
+  "feedback_description": "Fehlt dir noch etwas oder ist dir etwas aufgefallen? Lass es uns wissen, um die App stetig zu verbessern.",
+  "send_feedback": "Feedback senden"
 }
