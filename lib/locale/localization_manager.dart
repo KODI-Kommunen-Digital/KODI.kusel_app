@@ -1,5 +1,6 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kusel/locale/locale_constant.dart';
 
 final localeManagerProvider =
     StateNotifierProvider<LocaleManagerController, LocaleManagerState>(
@@ -20,7 +21,8 @@ class LocaleManagerState {
   LocaleManagerState(this.currentLocale);
 
   factory LocaleManagerState.empty() {
-    return LocaleManagerState(const Locale('en', 'GB'));
+    return LocaleManagerState(Locale(
+        LocaleConstant.english.languageCode, LocaleConstant.english.region));
   }
 
   LocaleManagerState copyWith({Locale? currentLocale}) {
