@@ -18,5 +18,8 @@
   "email_send": "Email has been send",
   "something_went_wrong": "Something went wrong, Please try again later",
   "highlights": "Highlights",
-  "category_heading": "What is there to discover"
+  "category_heading": "What is there to discover",
+  "change_language": "Change Language",
+  "logout": "Logout",
+  "select_language": "Select Language"
 }

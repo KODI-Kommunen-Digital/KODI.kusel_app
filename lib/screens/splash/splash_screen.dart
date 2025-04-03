@@ -9,7 +9,6 @@ import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/splash/splash_screen_provider.dart';
 import 'package:kusel/theme_manager/colors.dart';
 
-
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
 
@@ -23,9 +22,19 @@ class _State extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     Future.microtask(() {
-      ref.read(splashScreenProvider.notifier).startTimer(() {
+      ref.read(splashScreenProvider.notifier).startTimer((bool isLogin) {
+
+        String path = "";
+        if(isLogin)
+          {
+                path = dashboardScreenPath;
+          }else{
+               path = signInScreenPath;
+        }
+
         ref.read(navigationProvider).removeAllAndNavigate(
-            context: context, path: dashboardScreenPath);
+            context: context, path: path);
+
       });
     });
 
