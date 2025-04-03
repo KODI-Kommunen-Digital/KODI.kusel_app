@@ -7,59 +7,48 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import '../images_path.dart';
 import '../theme_manager/colors.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LocationCardWidget extends ConsumerStatefulWidget {
-  const LocationCardWidget({super.key});
+  final String address;
+  final String websiteText;
+  final String websiteUrl;
+
+  const LocationCardWidget(
+      {super.key,
+      required this.address,
+      required this.websiteText,
+      required this.websiteUrl});
 
   @override
   ConsumerState<LocationCardWidget> createState() => _LocationCardWidgetState();
 }
 
 class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
-  String address = "Fetching address...";
-
-  void fetchAddress() async {
-    String result = await getAddressFromLatLng(28.7041, 77.1025);
-    setState(() {
-      address = result;
-    });
-  }
-
-  @override
-  void initState() {
-    Future.microtask(() {
-      fetchAddress();
-    });
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15.r),
-        boxShadow: [
-          BoxShadow(
-            color: Color(0xFF283583).withValues(alpha: 0.46),
-            offset: Offset(0, 4),
-            blurRadius: 24,
-          ),
-        ]
-      ),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15.r),
+          boxShadow: [
+            BoxShadow(
+              color: lightThemeHighlightDotColor.withValues(alpha: 0.46),
+              offset: Offset(0, 4),
+              blurRadius: 24,
+            ),
+          ]),
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.all(12.h.w),
             child: Row(
               children: [
                 SvgPicture.asset(imagePath['location_card_icon'] ?? ''),
                 Padding(
-                  padding: const EdgeInsets.only(left: 8.0),
+                  padding: EdgeInsets.only(left: 8.0.w),
                   child: textRegularPoppins(
-                    text: address,
+                    text: widget.address,
                     textOverflow: TextOverflow.ellipsis,
                     color: lightThemeCardTitleLocationTextColor,
                   ),
@@ -68,35 +57,9 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
             ),
           ),
           SizedBox(
-            width: MediaQuery.of(context).size.width, // Adjust width as needed
-            height: 110.h, // Adjust height as needed
-            child: FlutterMap(
-              options: MapOptions(
-                initialCenter: LatLng(49.5298, 7.3753),
-                //Burg lichtenberg latlong
-                initialZoom: 13.0,
-                interactionOptions:
-                    InteractionOptions(), // Disable map interaction
-              ),
-              children: [
-                TileLayer(
-                  urlTemplate:
-                      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-                  subdomains: ['a', 'b', 'c'],
-                ),
-                MarkerLayer(
-                  markers: [
-                    Marker(
-                      width: 40.0,
-                      height: 40.0,
-                      point: LatLng(49.5298, 7.3753), //Burg lichtenberg latlong
-                      child: Icon(Icons.location_pin,
-                          color: Colors.red), // Use 'child' here
-                    ),
-                  ],
-                ),
-              ],
-            ),
+            width: MediaQuery.of(context).size.width,
+            height: 106.h,
+            child: _customMapWidget(latitude: 49.5298, longitude: 7.3753),
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16),
@@ -117,7 +80,7 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
                 EdgeInsets.only(top: 8.0, bottom: 12.0, left: 16, right: 16),
             child: GestureDetector(
               onTap: () async {
-                final Uri uri = Uri.parse("https://www.google.com");
+                final Uri uri = Uri.parse(widget.websiteUrl);
                 if (await canLaunchUrl(uri)) {
                   await launchUrl(uri);
                 }
@@ -127,7 +90,7 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
                   SvgPicture.asset(imagePath['link_icon'] ?? ''),
                   8.horizontalSpace,
                   textRegularPoppins(
-                    text: "Website besuchen",
+                    text: widget.websiteText,
                     textOverflow: TextOverflow.ellipsis,
                     color: lightThemeCardTitleLocationTextColor,
                   ),
@@ -179,15 +142,28 @@ Widget iconTextWidget(String imageUrl, String text) {
   );
 }
 
-Future<String> getAddressFromLatLng(double lat, double lng) async {
-  try {
-    List<Placemark> placemarks = await placemarkFromCoordinates(lat, lng);
-    if (placemarks.isNotEmpty) {
-      Placemark place = placemarks.first;
-      return "${place.street}, ${place.locality}, ${place.administrativeArea}, ${place.country}";
-    }
-  } catch (e) {
-    return "Error: $e";
-  }
-  return "No Address Found";
+Widget _customMapWidget({required double latitude, required double longitude}) {
+  return FlutterMap(
+    options: MapOptions(
+      initialCenter: LatLng(latitude, longitude),
+      initialZoom: 13.0,
+      interactionOptions: InteractionOptions(),
+    ),
+    children: [
+      TileLayer(
+        urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+        subdomains: ['a', 'b', 'c'],
+      ),
+      MarkerLayer(
+        markers: [
+          Marker(
+            width: 35.w,
+            height: 35.h,
+            point: LatLng(latitude, longitude),
+            child: Icon(Icons.location_pin, color: lightThemeMapMarkerColor),
+          ),
+        ],
+      ),
+    ],
+  );
 }

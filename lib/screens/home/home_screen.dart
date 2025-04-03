@@ -70,7 +70,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ),
     ];
     return Scaffold(
-      backgroundColor: Color(0xFFE2EBF7),
+      backgroundColor: lightThemeScaffoldBackgroundColor,
       body: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: buildUi(carouselController, highlightCards)),
@@ -88,7 +88,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ClipPath(
                 clipper: UpstreamWaveClipper(),
                 child: Container(
-                  height: 340,
+                  height: 272.h,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image:
@@ -99,20 +99,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               ),
               Positioned(
-                top: 70.h, // Adjust position to be below the clipped image
-                left: 20,
-                right: 20,
+                top: 70.h,
+                left: 20.w,
+                right: 20.w,
                 child: Column(
                   children: [
                     textBoldPoppins(
                       fontSize: 20,
-                      color: Color(0xFF18204F),
+                      color: lightThemeSecondaryColor,
                       textAlign: TextAlign.center,
                       text: "Hey Lukas!",
                     ),
                     textBoldPoppins(
                       fontSize: 20,
-                      color: Color(0xFF18204F),
+                      color: lightThemeSecondaryColor,
                       textAlign: TextAlign.center,
                       text: "Heute wird's sonning!",
                     ),
@@ -121,16 +121,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(left: 15.0),
+                          padding: EdgeInsets.only(left: 15.w),
                           child: textRegularPoppins(
-                              text: 'Suche',
-                              fontSize: 13,
+                              text: AppLocalizations.of(context).search,
+                              fontSize: 12.sp,
                               fontStyle: FontStyle.italic,
                               color: lightThemeSecondaryColor),
                         ),
                         SearchWidget(
                           searchController: TextEditingController(),
-                          hintText: "Suchbegriff eingeben",
+                          hintText: AppLocalizations.of(context).enter_search_term,
                         )
                       ],
                     )
@@ -140,14 +140,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ],
           ),
           customCarouselView(carouselController, highlightCards),
-          SizedBox(
-            height: 20,
-          ),
+          20.verticalSpace,
           WeatherWidget(),
           FeedbackCardWidget(),
-          SizedBox(
-            height: 100,
-          )
+          100.verticalSpace
         ],
       ),
     );
@@ -167,25 +163,25 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               Row(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 10.0),
+                    padding: EdgeInsets.only(left: 10.w),
                     child: textRegularPoppins(
                         text: AppLocalizations.of(context).highlights,
-                        fontSize: 17,
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
                         color: lightThemeSecondaryColor),
                   ),
                   12.horizontalSpace,
                   SvgPicture.asset(
                     imagePath['arrow_icon'] ?? "",
-                    height: 12,
-                    width: 18,
+                    height: 10.h,
+                    width: 16.w,
                   )
                 ],
               ),
               Align(
                 alignment: Alignment.centerRight,
                 child: Padding(
-                  padding: EdgeInsets.only(right: 5.0),
+                  padding: EdgeInsets.only(right: 5.w),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
@@ -209,9 +205,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ],
           ),
-          SizedBox(
-            height: 10,
-          ),
+          10.verticalSpace,
           SizedBox(
             height: 350.h,
             child: CarouselView(
@@ -219,7 +213,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               scrollDirection: Axis.horizontal,
               itemExtent: 317,
               shrinkExtent: 317,
-              padding: EdgeInsets.all(8),
+              padding: EdgeInsets.all(6.h.w),
               children: highlightCards ?? [],
             ),
           ),
