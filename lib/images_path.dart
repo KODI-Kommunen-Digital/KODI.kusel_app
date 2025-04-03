@@ -9,11 +9,19 @@ Map<String, String> _svgImagePath = {
   "discover_icon": "assets/svg/discover_icon.svg",
   "location_icon": "assets/svg/location_icon.svg",
   "arrow_icon": "assets/svg/arrow_icon.svg",
+  "search_icon": "assets/svg/search_icon.svg",
+  "calendar": "assets/svg/calendar.svg",
+  "link_icon": "assets/svg/link_icon.svg",
+  "location_card_icon": "assets/svg/location_card_icon.svg",
+  "man_icon": "assets/svg/man_icon.svg",
+  "paw_icon": "assets/svg/paw_icon.svg",
+  "transport_icon": "assets/svg/transport_icon.svg",
 };
 
 Map<String, String> _pngImagePath = {
   "dino": "assets/png/dino.png",
-  "feedback_image.png": "assets/png/feedback_image.png"
+  "feedback_image.png": "assets/png/feedback_image.png",
+  "home_screen_background": "assets/png/home_screen_background.png",
 };
 
 Map<String, String> _jpegImagePath = {

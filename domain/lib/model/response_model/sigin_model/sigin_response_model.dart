@@ -2,15 +2,19 @@ import 'package:core/base_model.dart';
 
 class SignInResponseModel implements BaseModel<SignInResponseModel> {
   String? status;
-  Data? data;
+  SignInResponseData? data;
+  int? errorCode;
+  String? message;
 
-  SignInResponseModel({this.status, this.data});
+  SignInResponseModel({this.status, this.data,this.message,this.errorCode});
 
   @override
   SignInResponseModel fromJson(Map<String, dynamic> json) {
     return SignInResponseModel(
       status: json['status'],
-      data: json['data'] != null ? Data().fromJson(json['data']) : null,
+      errorCode: json['errorCode'],
+      message: json['message'],
+      data: json['data'] != null ? SignInResponseData().fromJson(json['data']) : null,
     );
   }
 
@@ -23,17 +27,17 @@ class SignInResponseModel implements BaseModel<SignInResponseModel> {
   }
 }
 
-class Data implements BaseModel<Data> {
+class SignInResponseData implements BaseModel<SignInResponseData> {
   String? accessToken;
   String? refreshToken;
   int? userId;
   List<CityUser>? cityUsers;
 
-  Data({this.accessToken, this.refreshToken, this.userId, this.cityUsers});
+  SignInResponseData({this.accessToken, this.refreshToken, this.userId, this.cityUsers});
 
   @override
-  Data fromJson(Map<String, dynamic> json) {
-    return Data(
+  SignInResponseData fromJson(Map<String, dynamic> json) {
+    return SignInResponseData(
       accessToken: json['accessToken'],
       refreshToken: json['refreshToken'],
       userId: json['userId'],

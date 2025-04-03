@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/theme_manager/colors.dart';
 
 class CustomButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -54,7 +55,7 @@ class CustomButton extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50),
                     ),
-                    backgroundColor: buttonColor ?? Color(0xFF283583)),
+                    backgroundColor: buttonColor ?? lightThemeHighlightDotColor),
                 child: FittedBox(
                   child: textRegularPoppins(
                     fontSize: textSize,
