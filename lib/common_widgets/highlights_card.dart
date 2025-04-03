@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/theme_manager/colors.dart';
 
 class HighlightsCard extends ConsumerStatefulWidget {
   String imageUrl;
@@ -35,7 +36,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
           BoxShadow(
-            color: Color(0xFF283583).withValues(alpha: 0.46),
+            color: lightThemeHighlightDotColor.withValues(alpha: 0.46),
             offset: Offset(0, 4),
             blurRadius: 24,
           ),
@@ -58,7 +59,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                 child: Container(
                   padding: EdgeInsets.all(10.r),
                   decoration: BoxDecoration(
-                    color: Color(0xFF283583),
+                    color: lightThemeHighlightDotColor,
                     borderRadius: BorderRadius.circular(50.r),
                   ),
                   child: Icon(
@@ -79,14 +80,14 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                 children: [
                   Text(
                     widget.date,
-                    style: TextStyle(color: Color(0xFF6972A8), fontSize: 13),
+                    style: TextStyle(color: lightThemeTransportCardTextColor, fontSize: 12.sp),
                   ),
                   4.verticalSpace,
                   Text(widget.heading,
-                      style: TextStyle(color: Color(0xFF18204F), fontSize: 15)),
+                      style: TextStyle(color: lightThemeSecondaryColor, fontSize: 13.sp)),
                   4.verticalSpace,
                   Text(widget.description,
-                      style: TextStyle(color: Color(0xFF6972A8), fontSize: 13))
+                      style: TextStyle(color: lightThemeTransportCardTextColor, fontSize: 12.sp))
                 ],
               ),
             ),

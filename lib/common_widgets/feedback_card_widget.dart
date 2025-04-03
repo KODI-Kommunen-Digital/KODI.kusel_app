@@ -4,6 +4,10 @@ import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/images_path.dart';
 
+import '../theme_manager/colors.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+
 class FeedbackCardWidget extends StatefulWidget {
   const FeedbackCardWidget({super.key});
 
@@ -15,7 +19,7 @@ class _FeedbackCardWidgetState extends State<FeedbackCardWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color(0xFF101534),
+      color: lightThemeFeedbackCardColor,
       child: Column(
         children: [
           Padding(
@@ -33,15 +37,14 @@ class _FeedbackCardWidgetState extends State<FeedbackCardWidget> {
                     children: [
                       textBoldPoppins(
                         fontWeight: FontWeight.w600,
-                          text: "Wie findest du die App?",
+                          text: AppLocalizations.of(context).feedback_heading,
                           fontSize: 14.sp,
                           color: Colors.white,
                         textAlign: TextAlign.start,
                       ),
                       SizedBox(height: 8.h,),
                       textSemiBoldPoppins(
-                          text:
-                              "Fehlt dir noch etwas oder ist dir etwas aufgefallen? Lass es uns wissen, um die App stetig zu verbessern.",
+                          text: AppLocalizations.of(context).feedback_description,
                           color: Colors.white,
                           fontSize: 13.sp,
                           // textAlign: TextAlign.start,
@@ -55,10 +58,10 @@ class _FeedbackCardWidgetState extends State<FeedbackCardWidget> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 15),
-            child: CustomButton(onPressed: (){}, text: "Feedback senden", buttonColor: Color(0xFF283583),),
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 13.h),
+            child: CustomButton(onPressed: (){}, text: AppLocalizations.of(context).send_feedback, buttonColor: lightThemeHighlightDotColor),
           ),
-          SizedBox(height: 20.h,)
+          20.verticalSpace
         ],
       ),
     );
