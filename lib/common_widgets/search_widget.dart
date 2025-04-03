@@ -1,8 +1,14 @@
+import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
+import 'package:domain/usecase/search/search_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/images_path.dart';
+import 'package:data/params/listings_params.dart';
+import 'package:kusel/screens/home/home_screen_provider.dart';
 
 import '../theme_manager/colors.dart';
 
@@ -35,17 +41,75 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
               SvgPicture.asset(imagePath['search_icon'] ?? ''),
               8.horizontalSpace,
               Expanded(
-                child: TextField(
+                child: TypeAheadField<Listing>(
                   controller: widget.searchController,
-                  decoration: InputDecoration(
-                      hintText: widget.hintText,
-                      border: InputBorder.none,
-                      hintStyle: TextStyle(
-                          fontSize: 14.sp,
-                          fontFamily: "Poppins",
-                          fontWeight: FontWeight.w400,
-                          color: lightThemeHintColor,
-                          fontStyle: FontStyle.italic)),
+                  debounceDuration: Duration(milliseconds: 300),
+                  suggestionsCallback: (search) async {
+                    if (search.isEmpty) return [];
+                    try {
+                      await ref.read(homeScreenProvider.notifier).searchList(
+                          searchText: search, success: () {}, error: (err) {});
+                      return [Listing(
+                        title: "This is group",
+                        startDate: "aa"
+                      )];
+                    } catch (e) {
+                      [Listing(
+                        title: "This is group",
+                      )];
+                    }
+                  },
+                  builder: (context, controller, focusNode) {
+                    return TextField(
+                      controller: controller,
+                      focusNode: focusNode, // Add this
+                      decoration: InputDecoration(
+                          hintText: widget.hintText,
+                          border: InputBorder.none,
+                          hintStyle: TextStyle(
+                              fontSize: 14.sp,
+                              fontFamily: "Poppins",
+                              fontWeight: FontWeight.w400,
+                              color: lightThemeHintColor,
+                              fontStyle: FontStyle.italic)),
+                    );
+                  },
+                  itemBuilder: (context, event) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 2.0, vertical: 2.0),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 4.0),
+                        title: Align(
+                          alignment: Alignment.centerLeft,
+                          child: textRegularPoppins(
+                            text: event.title ?? "",
+                            fontSize: 16,
+                            color: Colors.black87,
+                            textAlign: TextAlign.start, // Ensure text is left-aligned
+                          ),
+                        ),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(top: 4.0),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: textRegularPoppins(
+                              text: event.startDate ?? "",
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                              textAlign: TextAlign.start, // Ensure text is left-aligned
+                            ),
+                          ),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 18,
+                        ),
+                      ),
+                    );
+                  },
+                  onSelected: (city) {},
                 ),
               )
             ],
