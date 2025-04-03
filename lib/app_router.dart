@@ -58,7 +58,7 @@ List<RouteBase> goRouteList = [
         return SubCategoryScreen(
             subCategoryScreenParameters:
                 state.extra as SubCategoryScreenParameters);
-      })
+      }),
   GoRoute(
       path: highlightScreenPath,
       builder: (context, state) {
