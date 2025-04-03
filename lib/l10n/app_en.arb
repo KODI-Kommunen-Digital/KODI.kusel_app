@@ -22,4 +22,14 @@
   "change_language": "Change Language",
   "logout": "Logout",
   "select_language": "Select Language"
+  "category_heading": "What is there to discover",
+  "medieval_market": "Medieval market",
+  "public_transport_offer": "Public transport offer",
+  "next_dates": "Next dates",
+  "search": "Search",
+  "enter_search_term": "Enter search term",
+  "feedback_heading": "What do you think of the app?",
+  "feedback_description": "Is there anything missing or have you noticed something? Let us know so we can continually improve the app.",
+  "send_feedback": "Send feedback"
+
 }
