@@ -3,9 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:kusel/screens/event/event_screen.dart';
 
 import '../../common_widgets/highlights_card.dart';
 import '../../images_path.dart';
+import '../../theme_manager/colors.dart';
 import '../explore/explore_screen.dart';
 import '../home/home_screen.dart';
 import '../location/location_screen.dart';
@@ -24,7 +26,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   final List<Widget> _pages = [
     HomeScreen(),
     ExploreScreen(),
-    SearchScreen(),
+    EventScreen(),
     LocationScreen(),
     SettingsScreen()
   ];
@@ -34,6 +36,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     int selectedIndex = ref.watch(dashboardScreenProvider).selectedIndex;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           Positioned.fill(
@@ -44,21 +47,21 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             left: 16,
             right: 16,
             child: DotNavigationBar(
-              backgroundColor: const Color(0xFF18204F),
-              selectedItemColor: const Color(0xFF88AF33),
-              unselectedItemColor: const Color(0xFFFFFFFF),
+              backgroundColor: lightThemeSecondaryColor,
+              selectedItemColor: lightThemeSelectedItemColor,
+              unselectedItemColor: lightThemeWhiteColor,
               currentIndex: selectedIndex,
               enableFloatingNavBar: true,
               paddingR: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
               marginR: const EdgeInsets.all(0),
               onTap: ref.read(dashboardScreenProvider.notifier).onItemTapped,
-              dotIndicatorColor: const Color(0xFF88AF33),
+              dotIndicatorColor: lightThemeSelectedItemColor,
               itemPadding:
                   const EdgeInsets.only(top: 8, bottom: 0, left: 16, right: 16),
               items: [
                 DotNavigationBarItem(
                   icon: const Icon(Icons.home_filled),
-                  selectedColor: const Color(0xFF88AF33),
+                  selectedColor: lightThemeSelectedItemColor,
                 ),
                 DotNavigationBarItem(
                   icon: Padding(
@@ -68,15 +71,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       width: 13.w,
                       imagePath['discover_icon'] ?? "",
                       color: selectedIndex == 1
-                          ? const Color(0xFF88AF33)
-                          : const Color(0xFFFFFFFF),
+                          ? lightThemeSelectedItemColor
+                          : lightThemeWhiteColor,
                     ),
                   ),
-                  selectedColor: const Color(0xFF88AF33),
+                  selectedColor: lightThemeSelectedItemColor,
                 ),
                 DotNavigationBarItem(
                   icon: const Icon(Icons.search),
-                  selectedColor: const Color(0xFF88AF33),
+                  selectedColor: lightThemeSelectedItemColor,
                 ),
                 DotNavigationBarItem(
                   icon: SvgPicture.asset(
@@ -84,14 +87,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     width: 13.w,
                     imagePath['location_icon'] ?? "",
                     color: selectedIndex == 3
-                        ? const Color(0xFF88AF33)
-                        : const Color(0xFFFFFFFF),
+                        ? lightThemeSelectedItemColor
+                        : lightThemeWhiteColor,
                   ),
-                  selectedColor: const Color(0xFF88AF33),
+                  selectedColor: lightThemeSelectedItemColor,
                 ),
                 DotNavigationBarItem(
                   icon: const Icon(Icons.menu),
-                  selectedColor: const Color(0xFF88AF33),
+                  selectedColor: lightThemeSelectedItemColor,
                 ),
               ],
             ),

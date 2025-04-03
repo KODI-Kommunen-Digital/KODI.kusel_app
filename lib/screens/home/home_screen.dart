@@ -2,13 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/weather_widget.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 
 import '../../../common_widgets/highlights_card.dart';
 import '../../../images_path.dart';
 import '../../common_widgets/feedback_card_widget.dart';
+import '../../common_widgets/search_widget.dart';
 import '../../common_widgets/text_styles.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../theme_manager/colors.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -78,6 +83,62 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
+          Stack(
+            children: [
+              ClipPath(
+                clipper: UpstreamWaveClipper(),
+                child: Container(
+                  height: 340,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image:
+                          AssetImage(imagePath['home_screen_background'] ?? ''),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 70.h, // Adjust position to be below the clipped image
+                left: 20,
+                right: 20,
+                child: Column(
+                  children: [
+                    textBoldPoppins(
+                      fontSize: 20,
+                      color: Color(0xFF18204F),
+                      textAlign: TextAlign.center,
+                      text: "Hey Lukas!",
+                    ),
+                    textBoldPoppins(
+                      fontSize: 20,
+                      color: Color(0xFF18204F),
+                      textAlign: TextAlign.center,
+                      text: "Heute wird's sonning!",
+                    ),
+                    32.verticalSpace,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(left: 15.0),
+                          child: textRegularPoppins(
+                              text: 'Suche',
+                              fontSize: 13,
+                              fontStyle: FontStyle.italic,
+                              color: lightThemeSecondaryColor),
+                        ),
+                        SearchWidget(
+                          searchController: TextEditingController(),
+                          hintText: "Suchbegriff eingeben",
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
           customCarouselView(carouselController, highlightCards),
           SizedBox(
             height: 20,
@@ -108,15 +169,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   Padding(
                     padding: const EdgeInsets.only(left: 10.0),
                     child: textRegularPoppins(
-                        text: "Highlights",
+                        text: AppLocalizations.of(context).highlights,
                         fontSize: 17,
                         fontWeight: FontWeight.w600,
-                        color: Color(0xFF18204F)),
+                        color: lightThemeSecondaryColor),
                   ),
                   12.horizontalSpace,
                   SvgPicture.asset(
                     imagePath['arrow_icon'] ?? "",
-                    // Add a fallback if the path is null
                     height: 12,
                     width: 18,
                   )
@@ -136,8 +196,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             Icons.circle,
                             size: currentIndex == index ? 11 : 8,
                             color: currentIndex == index
-                                ? Color(0xFF283583)
-                                : Color(0xFF6972A8).withAlpha(130),
+                                ? lightThemeHighlightDotColor
+                                : lightThemeHighlightDotColor.withAlpha(130),
                           ),
                           if (index != highlightCards.length - 1)
                             4.horizontalSpace
@@ -153,7 +213,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             height: 10,
           ),
           SizedBox(
-            height: 418,
+            height: 350.h,
             child: CarouselView(
               controller: carouselController,
               scrollDirection: Axis.horizontal,
