@@ -5,11 +5,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kusel/common_widgets/downstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/screens/event/event_screen_controller.dart';
 
 import '../../common_widgets/arrow_back_widget.dart' show ArrowBackWidget;
 import '../../common_widgets/location_card_widget.dart';
 import '../../images_path.dart';
 import '../../theme_manager/colors.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EventScreen extends ConsumerStatefulWidget {
   const EventScreen({super.key});
@@ -19,6 +21,14 @@ class EventScreen extends ConsumerStatefulWidget {
 }
 
 class _EventScreenState extends ConsumerState<EventScreen> {
+  @override
+  void initState() {
+    Future.microtask(() {
+      ref.read(eventScreenProvider.notifier).fetchAddress();
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,55 +47,119 @@ class _EventScreenState extends ConsumerState<EventScreen> {
 
   Widget _buildEventsUi() {
     return Padding(
-      padding: EdgeInsets.all(15.0),
+      padding: EdgeInsets.all(12.h.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           textBoldPoppins(
-              text: "Mittelaltermarkt",
+              text: AppLocalizations.of(context).medieval_market,
               color: lightThemeSecondaryColor,
               fontSize: 16.sp),
           15.verticalSpace,
-          LocationCardWidget(),
+          LocationCardWidget(
+              address: ref.watch(eventScreenProvider).address,
+              websiteText: "Website besuchen",
+              websiteUrl: "https://www.google.com/"),
           12.verticalSpace,
-          publicTransportCard()
+          publicTransportCard(
+              heading: AppLocalizations.of(context).public_transport_offer,
+              description: "Schau dir hier an, wie du am besten hinkommst",
+              onTap: () {}),
+          16.verticalSpace,
+          _eventInfoWidget(
+            heading: AppLocalizations.of(context).description,
+            subHeading:
+                "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod",
+            description:
+                "tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore ...",
+          )
         ],
       ),
     );
   }
 
-  Widget publicTransportCard() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.all(15.h),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Color(0xFF283583).withValues(alpha: 0.46),
-              offset: Offset(0, 4),
-              blurRadius: 8,
-            ),
-          ]),
-      child: Row(
+  Widget _eventInfoWidget(
+      {required String heading,
+      required String subHeading,
+      required String description}) {
+    return Padding(
+      padding: EdgeInsets.all(12.h.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SvgPicture.asset(imagePath['transport_icon'] ?? ''),
-          20.horizontalSpace,
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                textBoldPoppins(text: "ÖPNV Angebot", fontSize: 14.sp),
-                textRegularPoppins(
-                    textAlign: TextAlign.left,
-                    text: "Schau dir hier an, wie du am besten hinkommst",
-                    textOverflow: TextOverflow.visible)
-              ],
-            ),
-          ),
-          SvgPicture.asset(imagePath['link_icon'] ?? ''),
+          textBoldPoppins(
+              text: heading, fontSize: 15.sp, color: lightThemeSecondaryColor),
+          12.verticalSpace,
+          textSemiBoldPoppins(
+              text: subHeading,
+              fontSize: 12.sp,
+              textOverflow: TextOverflow.visible,
+              color: lightThemeSecondaryColor,
+              fontWeight: FontWeight.w600),
+          12.verticalSpace,
+          textRegularPoppins(
+              text: description,
+              fontSize: 11.sp,
+              textOverflow: TextOverflow.visible,
+              color: lightThemeSecondaryColor,
+              textAlign: TextAlign.start),
+          Align(
+              child: _buildExpandedTile())
         ],
+      ),
+    );
+  }
+
+  Widget publicTransportCard(
+      {required String heading,
+      required String description,
+      required Function() onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.all(12.h.w),
+        decoration: BoxDecoration(
+            color: lightThemeWhiteColor,
+            borderRadius: BorderRadius.circular(20.r),
+            boxShadow: [
+              BoxShadow(
+                color: lightThemeHighlightDotColor.withValues(alpha: 0.46),
+                offset: Offset(0, 4),
+                blurRadius: 8,
+              ),
+            ]),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8.h),
+          child: Row(
+            children: [
+              SvgPicture.asset(
+                imagePath['transport_icon'] ?? '',
+                height: 25.h,
+                width: 25.w,
+              ),
+              20.horizontalSpace,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    textBoldPoppins(
+                        text: heading,
+                        fontSize: 13.sp,
+                        color: lightThemeSecondaryColor),
+                    textRegularPoppins(
+                        textAlign: TextAlign.left,
+                        text: description,
+                        fontSize: 11.sp,
+                        color: lightThemeTransportCardTextColor,
+                        textOverflow: TextOverflow.visible)
+                  ],
+                ),
+              ),
+              SvgPicture.asset(imagePath['link_icon'] ?? ''),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -96,7 +170,7 @@ class _EventScreenState extends ConsumerState<EventScreen> {
         ClipPath(
           clipper: DownstreamCurveClipper(),
           child: Container(
-            height: 340,
+            height: 270.h,
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(imagePath['highlight_card_image'] ?? ''),
