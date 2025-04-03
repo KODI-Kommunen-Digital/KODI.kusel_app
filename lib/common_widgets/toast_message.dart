@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/theme_manager/colors.dart';
 import "package:motion_toast/motion_toast.dart";
 
 showSuccessToast({required String message, required BuildContext context}) {
   MotionToast(
-    primaryColor: Color(0xFF4CAF50).withValues(alpha: .3),
+    primaryColor: lightThemeSuccessToastColor.withValues(alpha: .3),
     description: textRegularPoppins(
         text: message, color: Colors.white),
     toastAlignment: Alignment.bottomCenter,
@@ -24,7 +25,7 @@ showSuccessToast({required String message, required BuildContext context}) {
 
 showErrorToast({required String message, required BuildContext context}) {
   MotionToast(
-    primaryColor: Color(0xFFF75A5A).withValues(alpha: .3),
+    primaryColor: lightThemeErrorToastColor.withValues(alpha: .3),
     description: textRegularPoppins(
         text: message, color: Colors.white),
     toastAlignment: Alignment.bottomCenter,
