@@ -8,6 +8,7 @@ Text textRegularPoppins(
     double? fontSize,
     TextOverflow? textOverflow,
     TextDecoration? decoration,
+    FontStyle? fontStyle,
     TextAlign? textAlign}) {
   return Text(
     text,
@@ -17,6 +18,7 @@ Text textRegularPoppins(
       fontWeight: fontWeight ?? FontWeight.w400,
       color: color,
       decoration: decoration,
+      fontStyle: fontStyle
     ),
     textAlign: textAlign ?? TextAlign.center,
     overflow: textOverflow ?? TextOverflow.ellipsis,
