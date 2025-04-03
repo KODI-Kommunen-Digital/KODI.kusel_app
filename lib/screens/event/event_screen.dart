@@ -6,6 +6,7 @@ import 'package:kusel/common_widgets/downstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 
+import '../../common_widgets/arrow_back_widget.dart' show ArrowBackWidget;
 import '../../common_widgets/location_card_widget.dart';
 import '../../images_path.dart';
 import '../../theme_manager/colors.dart';
@@ -58,16 +59,15 @@ class _EventScreenState extends ConsumerState<EventScreen> {
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.all(15.h),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: Color(0xFF283583).withValues(alpha: 0.46),
-            offset: Offset(0, 4),
-            blurRadius: 8,
-          ),
-        ]
-      ),
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Color(0xFF283583).withValues(alpha: 0.46),
+              offset: Offset(0, 4),
+              blurRadius: 8,
+            ),
+          ]),
       child: Row(
         children: [
           SvgPicture.asset(imagePath['transport_icon'] ?? ''),
@@ -78,10 +78,9 @@ class _EventScreenState extends ConsumerState<EventScreen> {
               children: [
                 textBoldPoppins(text: "ÖPNV Angebot", fontSize: 14.sp),
                 textRegularPoppins(
-                  textAlign: TextAlign.left,
+                    textAlign: TextAlign.left,
                     text: "Schau dir hier an, wie du am besten hinkommst",
-                    textOverflow: TextOverflow.visible
-                )
+                    textOverflow: TextOverflow.visible)
               ],
             ),
           ),
@@ -109,16 +108,8 @@ class _EventScreenState extends ConsumerState<EventScreen> {
         Positioned(
           top: 30.h,
           left: 15.w,
-          child: Container(
-            padding: EdgeInsets.all(10.r),
-            decoration: BoxDecoration(
-              color: Color(0xFF283583),
-              borderRadius: BorderRadius.circular(50.r),
-            ),
-            child: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
+          child: ArrowBackWidget(
+            onTap: () {},
           ),
         ),
       ],
