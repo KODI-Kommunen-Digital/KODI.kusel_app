@@ -49,6 +49,7 @@ dependencies:
   intl: any
   flutter_localizations:
     sdk: flutter
+  flutter_typeahead: ^5.2.0
 
 dev_dependencies:
   flutter_test:
