@@ -1,18 +1,25 @@
+import 'package:domain/model/empty_request.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
+import 'package:domain/model/request_model/listings/search_request_model.dart';
+import 'package:domain/model/response_model/listings_model/search_listings_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:domain/usecase/listings/listings_usecase.dart';
+import 'package:domain/usecase/search/search_usecase.dart';
+import 'package:data/repo_impl/search/search_repo_impl.dart';
 
 import 'home_screen_state.dart';
 import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
 
 final homeScreenProvider =
     StateNotifierProvider.autoDispose<HomeScreenProvider, HomeScreenState>(
-        (ref) => HomeScreenProvider(listingsUseCase: ref.read(listingsUseCaseProvider)));
+        (ref) => HomeScreenProvider(listingsUseCase: ref.read(listingsUseCaseProvider),
+        searchUseCase: SearchUseCase(searchRepo: ref.read(searchRepositoryProvider))));
 
 class HomeScreenProvider extends StateNotifier<HomeScreenState> {
   ListingsUseCase listingsUseCase;
-  HomeScreenProvider({required this.listingsUseCase}) : super(HomeScreenState.empty());
+  SearchUseCase searchUseCase;
+  HomeScreenProvider({required this.listingsUseCase, required this.searchUseCase}) : super(HomeScreenState.empty());
 
   Future<void> getListings() async {
     try {
@@ -49,6 +56,31 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
     }
   }
 
+  Future<void> searchList(
+      {required String searchText,
+        required void Function() success,
+        required void Function(String message) error}) async {
+    try {
+      print("search callllled");
+      state = state.copyWith(loading: true, error: "");
+      SearchRequestModel searchRequestModel = SearchRequestModel(searchQuery: searchText);
+
+      SearchListingsResponseModel searchListingsResponseModel = SearchListingsResponseModel();
+
+      final result = await searchUseCase.call(searchRequestModel, searchListingsResponseModel);
+
+      result.fold((l) {
+        state = state.copyWith(loading: false);
+        debugPrint(' Exception = $l');
+      }, (r) {
+        state = state.copyWith(loading: false);
+
+      });
+    } catch (error) {
+      state = state.copyWith(loading: false);
+      debugPrint(' Exception = $error');
+    }
+  }
 
 
   addCarouselListener(CarouselController carouselController) {
