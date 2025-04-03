@@ -11,26 +11,26 @@ class DownstreamCurveClipper extends CustomClipper<Path> {
     // First wave - pointing outwards
     path.quadraticBezierTo(
       size.width / 4 -40, // Control point X
-      size.height - 40, // Control point Y (moved upwards)
+      size.height - 50, // Control point Y (moved upwards)
       size.width / 2 - 60, // End point X
-      size.height-2, // End point Y
+      size.height-20, // End point Y
     );
 
 
     // First wave - pointing outwards
     path.quadraticBezierTo(
       size.width / 2, // Control point X
-      size.height -80, // Control point Y (moved upwards)
+      size.height, // Control point Y (moved upwards)
       size.width *0.6+10, // End point X
-      size.height-62, // End point Y
+      size.height-35, // End point Y
     );
 
     // Second wave - pointing inwards (default)
     path.quadraticBezierTo(
       size.width*0.75+40, // Control point X
-      size.height - 28, // Control point Y
+      size.height - 85, // Control point Y
       size.width, // End point X
-      size.height-90, // End point Y
+      size.height-56, // End point Y
     );
 
     // Line to bottom-right corner
