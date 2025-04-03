@@ -1,14 +1,14 @@
 {
   "hello": "Hello",
-  "welcome": "Welcome to Flutter Localization",
-  "app_title": "German Heidi",
-  "enter_email_id": "E-Mail oder Benutzername",
+  "welcome": "Willkommen zur Flutter-Lokalisierung",
+  "app_title": "Kusel",
+  "enter_email_id": "E-Mail-Adresse eingeben",
   "password": "Passwort",
   "email": "E-Mail",
   "forgot_password": "Passwort vergessen?",
-  "login": "Login",
-  "signup": "SignUp",
-  "or": "Order",
+  "login": "Anmelden",
+  "signup": "Registrieren",
+  "or": "Oder",
   "username": "Benutzername",
   "firstName": "Vorname",
   "lastName" : "Nachname",
@@ -17,5 +17,10 @@
   "submit": "Senden",
   "forgot": "Passwort vergessen",
   "email_send": "E-Mail wurde gesendet",
-  "something_went_wrong": "Etwas ist schiefgelaufen. Bitte versuchen Sie es später noch einmal"
+  "something_went_wrong": "Etwas ist schiefgelaufen. Bitte versuchen Sie es später noch einmal",
+  "lastName": "Nachname",
+  "roleId": "Rollen-ID",
+  "description": "Beschreibung",
+  "highlights": "Höhepunkte",
+  "category_heading": "Was gibt’s zu entdecken"
 }
