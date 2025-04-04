@@ -10,6 +10,8 @@ import 'package:kusel/images_path.dart';
 import 'package:data/params/listings_params.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 
+import '../app_router.dart';
+import '../navigation/navigation.dart';
 import '../theme_manager/colors.dart';
 
 class SearchWidget extends ConsumerStatefulWidget {
@@ -43,20 +45,14 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
               Expanded(
                 child: TypeAheadField<Listing>(
                   controller: widget.searchController,
-                  debounceDuration: Duration(milliseconds: 300),
                   suggestionsCallback: (search) async {
                     if (search.isEmpty) return [];
                     try {
                       await ref.read(homeScreenProvider.notifier).searchList(
                           searchText: search, success: () {}, error: (err) {});
-                      return [Listing(
-                        title: "This is group",
-                        startDate: "aa"
-                      )];
+                      return [];
                     } catch (e) {
-                      [Listing(
-                        title: "This is group",
-                      )];
+                      [];
                     }
                   },
                   builder: (context, controller, focusNode) {
@@ -109,7 +105,12 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                       ),
                     );
                   },
-                  onSelected: (city) {},
+                  onSelected: (city) {
+                    ref.read(navigationProvider).navigateUsingPath(
+                      context: context,
+                      path: eventScreenPath,
+                    );
+                  },
                 ),
               )
             ],
