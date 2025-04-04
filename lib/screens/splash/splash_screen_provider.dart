@@ -1,21 +1,29 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
+import 'package:core/preference_manager/preference_constant.dart';
+import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kusel/app_router.dart';
 import 'package:kusel/screens/splash/splash_screen_state.dart';
 
-import '../../navigation/navigation.dart';
-
-final splashScreenProvider = StateNotifierProvider.autoDispose<
-    SplashScreenProvider,
-    SplashScreenState>((ref) => SplashScreenProvider(ref: ref));
+final splashScreenProvider =
+    StateNotifierProvider.autoDispose<SplashScreenProvider, SplashScreenState>(
+        (ref) => SplashScreenProvider(
+            sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider)));
 
 class SplashScreenProvider extends StateNotifier<SplashScreenState> {
-  Ref ref;
-  SplashScreenProvider({required this.ref}) : super(SplashScreenState.empty());
+  SharedPreferenceHelper sharedPreferenceHelper;
 
-  startTimer(void Function() callBack) {
-    Timer(Duration(seconds: 2), callBack);
+  SplashScreenProvider({required this.sharedPreferenceHelper})
+      : super(SplashScreenState.empty());
+
+  startTimer(Function(bool isLogin) callBack) {
+    Timer(Duration(seconds: 2), () async {
+      final token = sharedPreferenceHelper.getString(tokenKey);
+      if (token == null) {
+        callBack(false);
+      } else {
+        callBack(true);
+      }
+    });
   }
 }

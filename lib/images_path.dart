@@ -22,9 +22,10 @@ Map<String, String> _pngImagePath = {
   "dino": "assets/png/dino.png",
   "feedback_image.png": "assets/png/feedback_image.png",
   "home_screen_background": "assets/png/home_screen_background.png",
+  "background_image": "assets/png/home_screen_background.png",
 };
 
 Map<String, String> _jpegImagePath = {
-  "background_image": "assets/jpg/background_image.jpg",
+
   "highlight_card_image": "assets/jpg/highlight_card_image.jpg"
 };
