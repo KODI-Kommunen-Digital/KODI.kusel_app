@@ -109,12 +109,18 @@ class _ExploreScreenState extends ConsumerState<CategoryScreen> {
           var exploreCategory = categoryScreenState.exploreCategories[index];
           return GestureDetector(
             onTap: () {
-              ref.read(navigationProvider).navigateUsingPath(
-                  path: subCategoryScreenPath,
-                  context: context,
-                  params: SubCategoryScreenParameters(
-                      id: exploreCategory.id ?? 0,
-                      categoryHeading: exploreCategory.name ?? ""));
+              if(ref.read(categoryScreenProvider.notifier).isSubCategoryAvailable(exploreCategory)) {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: subCategoryScreenPath,
+                    context: context,
+                    params:
+                    SubCategoryScreenParameters(id: exploreCategory.id ?? 0));
+              }
+              else{
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: eventListScreenPath,
+                    context: context);
+              }
             },
             child: CategoryGridCardView(
               imageUrl:
