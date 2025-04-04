@@ -14,6 +14,10 @@ class SignUpController extends StateNotifier<SignUpState> {
 
   SignUpController({required this.signUpUseCase}) : super(SignUpState.empty());
 
+  updateShowPasswordStatus(bool status) {
+    state = state.copyWith(showPassword: status);
+  }
+
   Future<void> registerUser({
     required String userName,
     required String password,
