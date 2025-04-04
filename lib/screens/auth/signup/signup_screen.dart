@@ -5,6 +5,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/kusel_text_field.dart';
@@ -161,9 +162,38 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               22.verticalSpace,
               _buildLabel(context, AppLocalizations.of(context).password),
               KuselTextField(
+                maxLines: 1,
                 textEditingController: passwordTextEditingController,
                 focusNode: passwordFocusNode,
                 validator: validatePassword,
+                obscureText: !ref.watch(signUpScreenProvider).showPassword,
+                suffixIcon: ref.read(signUpScreenProvider).showPassword
+                    ? GestureDetector(
+                        onTap: () {
+                          ref
+                              .read(signUpScreenProvider.notifier)
+                              .updateShowPasswordStatus(false);
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.only(right: 10.w),
+                          child: SvgPicture.asset(
+                            imagePath['eye_open']!,
+                          ),
+                        ),
+                      )
+                    : GestureDetector(
+                        onTap: () {
+                          ref
+                              .read(signUpScreenProvider.notifier)
+                              .updateShowPasswordStatus(true);
+                        },
+                        child: Padding(
+                          padding: EdgeInsets.only(right: 10.w),
+                          child: SvgPicture.asset(imagePath['eye_closed']!),
+                        ),
+                      ),
+                suffixIconConstraints:
+                    BoxConstraints(maxWidth: 40.w, maxHeight: 40.h),
               ),
               22.verticalSpace,
               _buildLabel(context, AppLocalizations.of(context).username),
