@@ -1,17 +1,15 @@
+import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:kusel/screens/category/category_screen.dart';
 import 'package:kusel/screens/event/event_screen.dart';
 
-import '../../common_widgets/highlights_card.dart';
 import '../../images_path.dart';
 import '../../theme_manager/colors.dart';
-import '../explore/explore_screen.dart';
 import '../home/home_screen.dart';
 import '../location/location_screen.dart';
-import '../search/search_screen.dart';
 import '../settings/settings_screen.dart';
 import 'dashboard_screen_provider.dart';
 
@@ -25,7 +23,7 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   final List<Widget> _pages = [
     HomeScreen(),
-    ExploreScreen(),
+    CategoryScreen(),
     EventScreen(),
     LocationScreen(),
     SettingsScreen()
