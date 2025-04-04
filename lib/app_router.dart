@@ -4,6 +4,7 @@ import 'package:kusel/screens/auth/forgot_password/forgot_password_screen.dart';
 import 'package:kusel/screens/auth/signin/signin_screen.dart';
 import 'package:kusel/screens/auth/signup/signup_screen.dart';
 import 'package:kusel/screens/dashboard/dashboard_screen.dart';
+import 'package:kusel/screens/events_listing/event_list_screen.dart';
 import 'package:kusel/screens/highlight/highlight_screen.dart';
 import 'package:kusel/screens/event/event_screen.dart';
 import 'package:kusel/screens/splash/splash_screen.dart';
@@ -20,6 +21,7 @@ const eventScreenPath = "/eventScreenPath";
 const forgotPasswordPath = "/forgotPasswordPath";
 const highlightScreenPath = "/highlightScreenPath";
 const subCategoryScreenPath = "/subCategoryPath";
+const eventListScreenPath = "/eventListScreenPath";
 
 List<RouteBase> goRouteList = [
   GoRoute(
@@ -46,6 +48,11 @@ List<RouteBase> goRouteList = [
       path: eventScreenPath,
       builder: (context, state) {
         return EventScreen();
+      }),
+  GoRoute(
+      path: eventListScreenPath,
+      builder: (context, state) {
+        return EventListScreen();
       }),
   GoRoute(
       path: forgotPasswordPath,
