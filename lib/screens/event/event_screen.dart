@@ -57,9 +57,10 @@ class _EventScreenState extends ConsumerState<EventScreen> {
               fontSize: 16.sp),
           15.verticalSpace,
           LocationCardWidget(
-              address: ref.watch(eventScreenProvider).address,
-              websiteText: "Website besuchen",
-              websiteUrl: "https://www.google.com/"),
+            address: ref.watch(eventScreenProvider).address,
+            websiteText: "Website besuchen",
+            websiteUrl: "https://www.google.com/",
+          ),
           12.verticalSpace,
           publicTransportCard(
               heading: AppLocalizations.of(context).public_transport_offer,

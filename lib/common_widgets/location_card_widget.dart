@@ -6,6 +6,7 @@ import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import '../images_path.dart';
+import '../screens/event/event_screen_controller.dart';
 import '../theme_manager/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -14,17 +15,21 @@ class LocationCardWidget extends ConsumerStatefulWidget {
   final String websiteText;
   final String websiteUrl;
 
-  const LocationCardWidget(
-      {super.key,
-      required this.address,
-      required this.websiteText,
-      required this.websiteUrl});
+  const LocationCardWidget({
+    super.key,
+    required this.address,
+    required this.websiteText,
+    required this.websiteUrl,
+  });
 
   @override
   ConsumerState<LocationCardWidget> createState() => _LocationCardWidgetState();
 }
 
 class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
+  double latitude = 49.5298;
+  double longitude = 7.3753;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -59,7 +64,14 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
           SizedBox(
             width: MediaQuery.of(context).size.width,
             height: 106.h,
-            child: _customMapWidget(latitude: 49.5298, longitude: 7.3753),
+            child: _customMapWidget(
+                latitude: latitude,
+                longitude: longitude,
+                onMapTap: () {
+                  ref
+                      .read(eventScreenProvider.notifier)
+                      .openInMaps(latitude, longitude);
+                }),
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16),
@@ -142,9 +154,15 @@ Widget iconTextWidget(String imageUrl, String text) {
   );
 }
 
-Widget _customMapWidget({required double latitude, required double longitude}) {
+Widget _customMapWidget(
+    {required double latitude,
+    required double longitude,
+    required Function() onMapTap}) {
   return FlutterMap(
     options: MapOptions(
+      onTap: (tapPosition, LatLng latLong) {
+        onMapTap();
+      },
       initialCenter: LatLng(latitude, longitude),
       initialZoom: 13.0,
       interactionOptions: InteractionOptions(),

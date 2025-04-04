@@ -15,6 +15,7 @@ import 'package:kusel/screens/sub_category/sub_category_screen_parameter.dart';
 
 import '../../common_widgets/category_grid_card_view.dart';
 import '../../images_path.dart';
+import '../../theme_manager/colors.dart';
 
 class CategoryScreen extends ConsumerStatefulWidget {
   const CategoryScreen({super.key});
@@ -36,66 +37,73 @@ class _ExploreScreenState extends ConsumerState<CategoryScreen> {
   Widget build(BuildContext context) {
     final CategoryScreenState categoryScreenState =
         ref.watch(categoryScreenProvider);
-    return SafeArea(
-      child: Scaffold(
-        body: _buildBody(categoryScreenState, context),
-      ).loaderDialog(context, categoryScreenState.loading),
-    );
+    return Scaffold(
+      backgroundColor: lightThemeScaffoldBackgroundColor,
+      body: _buildBody(categoryScreenState, context),
+    ).loaderDialog(context, categoryScreenState.loading);
   }
 
   _buildBody(CategoryScreenState categoryScreenState, BuildContext context) {
     return SingleChildScrollView(
-      child: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            // Background image at the top
-            Positioned(
-              top: 0.h,
-              child: ClipPath(
-                clipper: UpstreamWaveClipper(),
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height * .15,
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.asset(
-                    imagePath['background_image'] ?? "",
-                    fit: BoxFit.cover,
+      child: Column(
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height*0.16,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                // Background image at the top
+                Positioned(
+                  top: 0.h,
+                  child: ClipPath(
+                    clipper: UpstreamWaveClipper(),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * .16,
+                      width: MediaQuery.of(context).size.width,
+                      child: Image.asset(
+                        imagePath['background_image'] ?? "",
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            // Blurred overlay
-            Positioned.fill(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
-                child: Container(
-                  color: Theme.of(context).cardColor.withValues(alpha: 0.6),
+                // Blurred overlay
+                Positioned.fill(
+                  child: ClipPath(
+                    clipper: UpstreamWaveClipper(),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
+                      child: Container(
+                        color: Theme.of(context).cardColor.withValues(alpha: 0.4),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                Positioned(
+                  left: 16.r,
+                  top: 68.h,
+                  child: textBoldPoppins(
+                      color: lightThemeSecondaryColor,
+                      fontSize: 18.sp,
+                      text: AppLocalizations.of(context).category_heading),
+                ),
+              ],
             ),
-
-            Positioned(
-              left: 16.r,
-              top: 24.h,
-              child: textBoldPoppins(
-                  text: AppLocalizations.of(context).category_heading),
-            ),
-
-            Positioned.fill(
-                top: MediaQuery.of(context).size.height * .15,
-                child: categoryView(categoryScreenState, context))
-          ],
-        ),
+          ),
+          categoryView(categoryScreenState, context),
+          80.verticalSpace
+        ],
       ),
     );
   }
 
   categoryView(CategoryScreenState categoryScreenState, BuildContext context) {
     return GridView.builder(
+      padding: EdgeInsets.only(top: 0),
         physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, mainAxisExtent: 200.h),
+            crossAxisCount: 2, mainAxisExtent: 135.h),
         itemCount: categoryScreenState.exploreCategories.length,
         itemBuilder: (BuildContext context, int index) {
           var exploreCategory = categoryScreenState.exploreCategories[index];
@@ -104,8 +112,9 @@ class _ExploreScreenState extends ConsumerState<CategoryScreen> {
               ref.read(navigationProvider).navigateUsingPath(
                   path: subCategoryScreenPath,
                   context: context,
-                  params:
-                      SubCategoryScreenParameters(id: exploreCategory.id ?? 0));
+                  params: SubCategoryScreenParameters(
+                      id: exploreCategory.id ?? 0,
+                      categoryHeading: exploreCategory.name ?? ""));
             },
             child: CategoryGridCardView(
               imageUrl:
