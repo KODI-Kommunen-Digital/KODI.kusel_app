@@ -17,6 +17,7 @@ class ListingsService {
       BaseModel requestModel, BaseModel responseModel) async {
 
     final queryParams = requestModel.toJson().entries
+        .where((e) => e.value != null)
         .map((e) => "${e.key}=${Uri.encodeComponent(e.value.toString())}")
         .join("&");
     final path = "$listingsEndPoint?$queryParams";

@@ -40,4 +40,8 @@ class CategoryScreenController extends StateNotifier<CategoryScreenState> {
       state = state.copyWith(loading: false, error: error.toString());
     }
   }
+
+  bool isSubCategoryAvailable(Category exploreCategories) {
+    return (exploreCategories.noOfSubcategories ?? 0) > 0;
+  }
 }
