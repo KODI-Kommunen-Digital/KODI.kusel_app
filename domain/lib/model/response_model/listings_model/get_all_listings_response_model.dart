@@ -24,93 +24,163 @@ class GetAllListingsResponseModel extends BaseModel<GetAllListingsResponseModel>
 }
 
 class Listing {
-  int? villageId;
+  int? id;
   String? title;
-  String? place;
   String? description;
+  String? createdAt;
+  int? userId;
+  String? startDate;
+  String? endDate;
+  int? statusId;
   int? categoryId;
   int? subcategoryId;
-  int? statusId;
+  bool? showExternal;
+  int? appointmentId;
+  int? viewCount;
+  int? externalId;
+  String? expiryDate;
+  int? sourceId;
+  String? website;
   String? address;
   String? email;
   String? phone;
-  String? website;
-  double? price;
-  double? discountPrice;
+  int? zipcode;
+  String? pdf;
+  int? cityId;
+  int? cityCount;
+  List<int>? allCities;
   String? logo;
-  double? longitude;
-  double? latitude;
-  String? zipcode;
-  String? endDate;
-  String? startDate;
+  int? logoCount;
+  List<OtherLogo>? otherLogos;
 
   Listing({
-    this.villageId,
+    this.id,
     this.title,
-    this.place,
     this.description,
+    this.createdAt,
+    this.userId,
+    this.startDate,
+    this.endDate,
+    this.statusId,
     this.categoryId,
     this.subcategoryId,
-    this.statusId,
+    this.showExternal,
+    this.appointmentId,
+    this.viewCount,
+    this.externalId,
+    this.expiryDate,
+    this.sourceId,
+    this.website,
     this.address,
     this.email,
     this.phone,
-    this.website,
-    this.price,
-    this.discountPrice,
-    this.logo,
-    this.longitude,
-    this.latitude,
     this.zipcode,
-    this.endDate,
-    this.startDate,
+    this.pdf,
+    this.cityId,
+    this.cityCount,
+    this.allCities,
+    this.logo,
+    this.logoCount,
+    this.otherLogos,
   });
 
   factory Listing.fromJson(Map<String, dynamic> json) {
     return Listing(
-      villageId: json['villageId'] as int?,
-      title: json['title'] as String?,
-      place: json['place'] as String?,
-      description: json['description'] as String?,
-      categoryId: (json['categoryId'] as num?)?.toInt(),
-      subcategoryId: (json['subcategoryId'] as num?)?.toInt(),
-      statusId: (json['statusId'] as num?)?.toInt(),
-      address: json['address'] as String?,
-      email: json['email'] as String?,
-      phone: json['phone'] as String?,
-      website: json['website'] as String?,
-      price: (json['price'] as num?)?.toDouble(),
-      discountPrice: (json['discountPrice'] as num?)?.toDouble(),
-      logo: json['logo'] as String?,
-      longitude: (json['longitude'] as num?)?.toDouble(),
-      latitude: (json['latitude'] as num?)?.toDouble(),
-      zipcode: json['zipcode'] as String?,
-      endDate: json['endDate'] as String?,
-      startDate: json['startDate'] as String?,
+      id: json['id'],
+      title: json['title'],
+      description: json['description'],
+      createdAt: json['createdAt'],
+      userId: json['userId'],
+      startDate: json['startDate'],
+      endDate: json['endDate'],
+      statusId: json['statusId'],
+      categoryId: json['categoryId'],
+      subcategoryId: json['subcategoryId'],
+      showExternal: json['showExternal'],
+      appointmentId: json['appointmentId'],
+      viewCount: json['viewCount'],
+      externalId: json['externalId'],
+      expiryDate: json['expiryDate'],
+      sourceId: json['sourceId'],
+      website: json['website'],
+      address: json['address'],
+      email: json['email'],
+      phone: json['phone'],
+      zipcode: json['zipcode'],
+      pdf: json['pdf'],
+      cityId: json['cityId'],
+      cityCount: json['cityCount'],
+      allCities: json['allCities'] != null ? List<int>.from(json['allCities']) : null,
+      logo: json['logo'],
+      logoCount: json['logoCount'],
+      otherLogos: json['otherLogos'] != null
+          ? List<OtherLogo>.from(json['otherLogos'].map((x) => OtherLogo.fromJson(x)))
+          : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'villageId': villageId,
+      'id': id,
       'title': title,
-      'place': place,
       'description': description,
+      'createdAt': createdAt,
+      'userId': userId,
+      'startDate': startDate,
+      'endDate': endDate,
+      'statusId': statusId,
       'categoryId': categoryId,
       'subcategoryId': subcategoryId,
-      'statusId': statusId,
+      'showExternal': showExternal,
+      'appointmentId': appointmentId,
+      'viewCount': viewCount,
+      'externalId': externalId,
+      'expiryDate': expiryDate,
+      'sourceId': sourceId,
+      'website': website,
       'address': address,
       'email': email,
       'phone': phone,
-      'website': website,
-      'price': price,
-      'discountPrice': discountPrice,
-      'logo': logo,
-      'longitude': longitude,
-      'latitude': latitude,
       'zipcode': zipcode,
-      'endDate': endDate,
-      'startDate': startDate,
+      'pdf': pdf,
+      'cityId': cityId,
+      'cityCount': cityCount,
+      'allCities': allCities,
+      'logo': logo,
+      'logoCount': logoCount,
+      'otherLogos': otherLogos?.map((x) => x.toJson()).toList(),
+    };
+  }
+}
+
+class OtherLogo {
+  int? id;
+  String? logo;
+  int? listingId;
+  int? imageOrder;
+
+  OtherLogo({
+    this.id,
+    this.logo,
+    this.listingId,
+    this.imageOrder,
+  });
+
+  factory OtherLogo.fromJson(Map<String, dynamic> json) {
+    return OtherLogo(
+      id: json['id'],
+      logo: json['logo'],
+      listingId: json['listingId'],
+      imageOrder: json['imageOrder'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'logo': logo,
+      'listingId': listingId,
+      'imageOrder': imageOrder,
     };
   }
 }
