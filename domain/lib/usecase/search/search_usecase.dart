@@ -1,5 +1,6 @@
 import 'package:core/base_model.dart';
 import 'package:dartz/dartz.dart';
+import 'package:data/params/listings_params.dart';
 import 'package:data/repo_impl/search/search_repo_impl.dart';
 import 'package:domain/model/empty_request.dart';
 import 'package:domain/model/request_model/listings/search_request_model.dart';

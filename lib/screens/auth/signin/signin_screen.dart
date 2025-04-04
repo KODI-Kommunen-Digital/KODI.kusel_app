@@ -224,10 +224,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             12.verticalSpace,
             GestureDetector(
               onTap: () {
-                // ref.read(navigationProvider).removeCurrentAndNavigate(
-                //     context: context, path: signUpScreenPath);
-                ref.read(navigationProvider).removeCurrentAndNavigate(
-                    context: context, path: highlightScreenPath);
+                ref.read(navigationProvider).navigateUsingPath(
+                    context: context, path: signUpScreenPath);
               },
               child: Align(
                 alignment: Alignment.center,

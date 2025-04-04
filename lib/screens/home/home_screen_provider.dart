@@ -3,6 +3,7 @@ import 'package:domain/model/response_model/listings_model/get_all_listings_resp
 import 'package:domain/model/request_model/listings/search_request_model.dart';
 import 'package:domain/model/response_model/listings_model/search_listings_response_model.dart';
 import 'package:flutter/material.dart';
+import 'package:data/params/listings_params.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:domain/usecase/listings/listings_usecase.dart';
 import 'package:domain/usecase/search/search_usecase.dart';
@@ -21,21 +22,12 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
   SearchUseCase searchUseCase;
   HomeScreenProvider({required this.listingsUseCase, required this.searchUseCase}) : super(HomeScreenState.empty());
 
-  Future<void> getListings() async {
+  Future<void> getHighlights() async {
     try {
       state = state.copyWith(loading: true, error: "");
 
       GetAllListingsRequestModel getAllListingsRequestModel = GetAllListingsRequestModel(
-        pageNo: 1,
-        pageSize: 10,
-        sortByStartDate: true,
-        statusId: "active",
-        categoryId: "41",
-        subcategoryId: "456",
-        cityId: "789",
-        translate: "en",
-        startAfterDate: "2024-01-01",
-        endBeforeDate: "2024-12-31",
+        categoryId: "41"
       );
 
       GetAllListingsResponseModel getAllListingsResponseModel =
@@ -44,11 +36,39 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
           getAllListingsRequestModel, getAllListingsResponseModel);
       result.fold(
             (l) {
+
+              state = state.copyWith(loading: false, error: l.toString());
+        },
+            (r) {
+          var listings = (r as GetAllListingsResponseModel).data;
+          state = state.copyWith(highlightsList: listings, loading: false);
+        },
+      );
+    } catch (error) {
+      state = state.copyWith(loading: false, error: error.toString());
+    }
+  }
+
+  Future<void> getEvents() async {
+    try {
+      state = state.copyWith(loading: true, error: "");
+
+      GetAllListingsRequestModel getAllListingsRequestModel = GetAllListingsRequestModel(
+          categoryId: "3"
+      );
+
+      GetAllListingsResponseModel getAllListingsResponseModel =
+      GetAllListingsResponseModel();
+      final result = await listingsUseCase.call(
+          getAllListingsRequestModel, getAllListingsResponseModel);
+      result.fold(
+            (l) {
+
           state = state.copyWith(loading: false, error: l.toString());
         },
             (r) {
           var listings = (r as GetAllListingsResponseModel).data;
-          state = state.copyWith(listings: listings, loading: false);
+          state = state.copyWith(eventsList: listings, loading: false);
         },
       );
     } catch (error) {
@@ -61,12 +81,9 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
         required void Function() success,
         required void Function(String message) error}) async {
     try {
-      print("search callllled");
       state = state.copyWith(loading: true, error: "");
       SearchRequestModel searchRequestModel = SearchRequestModel(searchQuery: searchText);
-
       SearchListingsResponseModel searchListingsResponseModel = SearchListingsResponseModel();
-
       final result = await searchUseCase.call(searchRequestModel, searchListingsResponseModel);
 
       result.fold((l) {
