@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/theme_manager/colors.dart';
 
+import '../app_router.dart';
+import '../navigation/navigation.dart';
+
 class HighlightsCard extends ConsumerStatefulWidget {
   String imageUrl;
   String date;
@@ -42,57 +45,66 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
           ),
         ],
       ),
-      child: Column(
-        children: [
-          Stack(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(18.r),
-                child: SizedBox(
-                  height: 250.h,
-                  child: Image.asset(fit: BoxFit.cover, widget.imageUrl),
-                ),
-              ),
-              Positioned(
-                top: 5.h,
-                left: 215.w,
-                child: Container(
-                  padding: EdgeInsets.all(10.r),
-                  decoration: BoxDecoration(
-                    color: lightThemeHighlightDotColor,
-                    borderRadius: BorderRadius.circular(50.r),
-                  ),
-                  child: Icon(
-                    Icons.favorite_border_sharp,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          6.verticalSpace,
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Padding(
-              padding: EdgeInsets.all(8.r),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      child: InkWell(
+        onTap: (){
+          widget.onPress;
+        },
+        child: Column(
+          children: [
+            SizedBox(
+              height: 200.h,
+              child: Stack(
+                fit: StackFit.loose,
                 children: [
-                  Text(
-                    widget.date,
-                    style: TextStyle(color: lightThemeTransportCardTextColor, fontSize: 12.sp),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(18.r),
+                    child: SizedBox(
+                      height: 200.h,
+                      child: Image.asset(widget.imageUrl, fit: BoxFit.cover),
+                    ),
                   ),
-                  4.verticalSpace,
-                  Text(widget.heading,
-                      style: TextStyle(color: lightThemeSecondaryColor, fontSize: 13.sp)),
-                  4.verticalSpace,
-                  Text(widget.description,
-                      style: TextStyle(color: lightThemeTransportCardTextColor, fontSize: 12.sp))
+                  Positioned(
+                    top: 5.h,
+                    left: 200.w,
+                    child: Container(
+                      padding: EdgeInsets.all(10.r),
+                      decoration: BoxDecoration(
+                        color: lightThemeHighlightDotColor,
+                        borderRadius: BorderRadius.circular(50.r),
+                      ),
+                      child: Icon(
+                        Icons.favorite_border_sharp,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
-          )
-        ],
+            6.verticalSpace,
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: EdgeInsets.all(8.r),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.date,
+                      style: TextStyle(color: lightThemeTransportCardTextColor, fontSize: 12.sp),
+                    ),
+                    4.verticalSpace,
+                    Text(widget.heading,
+                        style: TextStyle(color: lightThemeSecondaryColor, fontSize: 13.sp)),
+                    4.verticalSpace,
+                    Text(widget.description,
+                        style: TextStyle(color: lightThemeTransportCardTextColor, fontSize: 12.sp))
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
