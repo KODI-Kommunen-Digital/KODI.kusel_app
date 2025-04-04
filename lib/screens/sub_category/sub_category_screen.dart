@@ -10,6 +10,7 @@ import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/sub_category/sub_category_controller.dart';
 import 'package:kusel/screens/sub_category/sub_category_screen_parameter.dart';
 
+import '../../app_router.dart';
 import '../../common_widgets/arrow_back_widget.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
 
@@ -105,7 +106,12 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
           var exploreSubCategory =
               ref.read(subCategoryProvider).subCategoryDataList[index];
           return GestureDetector(
-            onTap: () {},
+            onTap: () {
+              ref.read(navigationProvider).navigateUsingPath(
+                context: context,
+                path: eventListScreenPath,
+              );
+            },
             child: CategoryGridCardView(
               imageUrl:
                   "https://fastly.picsum.photos/id/452/200/200.jpg?hmac=f5vORXpRW2GF7jaYrCkzX3EwDowO7OXgUaVYM2NNRXY",
