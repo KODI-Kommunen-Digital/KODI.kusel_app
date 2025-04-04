@@ -11,6 +11,7 @@ import 'package:kusel/screens/event/event_screen_controller.dart';
 import '../../common_widgets/arrow_back_widget.dart' show ArrowBackWidget;
 import '../../common_widgets/location_card_widget.dart';
 import '../../images_path.dart';
+import '../../navigation/navigation.dart';
 import '../../theme_manager/colors.dart';
 
 class EventScreen extends ConsumerStatefulWidget {
@@ -239,7 +240,9 @@ class _EventScreenState extends ConsumerState<EventScreen> {
           top: 30.h,
           left: 15.w,
           child: ArrowBackWidget(
-            onTap: () {},
+            onTap: () {
+              ref.read(navigationProvider).removeTopPage(context: context);
+            },
           ),
         ),
       ],

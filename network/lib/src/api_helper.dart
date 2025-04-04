@@ -186,9 +186,11 @@ class ApiHelper<E extends BaseModel> {
     try {
       return Right(create().fromJson(response.data));
     } on Exception catch (e) {
+      print(">>>>>>$e");
       return Left(e);
     } catch (error) {
       try {
+        print(">>>>>>$error");
         return Left(ApiError(
             error: errorModel != null
                 ? errorModel!().fromJson(response.data).message

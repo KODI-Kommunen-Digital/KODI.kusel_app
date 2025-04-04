@@ -4,23 +4,28 @@ class HomeScreenState {
   int highlightCount;
   bool loading;
   String error;
-  final List<Listing> listings;
+  final List<Listing> highlightsList;
+  final List<Listing> eventsList;
 
-  HomeScreenState(this.highlightCount, this.loading, this.error, this.listings);
+  HomeScreenState(this.highlightCount, this.loading, this.error,
+      this.highlightsList, this.eventsList);
 
   factory HomeScreenState.empty() {
-    return HomeScreenState(0, false, '', []);
+    return HomeScreenState(0, false, '', [], []);
   }
 
   HomeScreenState copyWith(
       {int? highlightCount,
       bool? loading,
       String? error,
-      List<Listing>? listings}) {
+      List<Listing>? highlightsList,
+      List<Listing>? eventsList}) {
     return HomeScreenState(
-        highlightCount ?? this.highlightCount,
-        loading ?? this.loading,
-        error ?? this.error,
-        listings ?? this.listings);
+      highlightCount ?? this.highlightCount,
+      loading ?? this.loading,
+      error ?? this.error,
+      highlightsList ?? this.highlightsList,
+      eventsList ?? this.eventsList,
+    );
   }
 }
