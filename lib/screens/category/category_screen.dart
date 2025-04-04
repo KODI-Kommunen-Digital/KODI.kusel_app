@@ -114,8 +114,9 @@ class _ExploreScreenState extends ConsumerState<CategoryScreen> {
                     path: subCategoryScreenPath,
                     context: context,
                     params:
-                    SubCategoryScreenParameters(id: exploreCategory.id ?? 0));
-              }
+                    SubCategoryScreenParameters(
+                        id: exploreCategory.id ?? 0,
+                        categoryHeading: exploreCategory.name ?? ""));              }
               else{
                 ref.read(navigationProvider).navigateUsingPath(
                     path: eventListScreenPath,
