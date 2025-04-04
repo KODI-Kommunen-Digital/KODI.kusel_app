@@ -24,14 +24,14 @@ class _CommonEventCardState extends ConsumerState<CategoryGridCardView> {
   Widget build(BuildContext context) {
     return Card(
       color: Colors.white,
-      margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+      margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
       elevation: 4,
       child: Column(
         children: [
           Container(
             padding: EdgeInsets.only(top: 6.h,left: 6.w,right: 6.w),
-            height: 120.h,
+            height: 85.h,
             width: 180.w,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8.r),
@@ -43,19 +43,20 @@ class _CommonEventCardState extends ConsumerState<CategoryGridCardView> {
               ),
             ),
           ),
-          SizedBox(
-            width: 175.w,
-            height: 64.h,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding:  EdgeInsets.symmetric(horizontal: 8.w),
-                  child:
-                      textRegularMontserrat(text: widget.title, fontSize: 16),
-                ),
-              ],
+          Expanded(
+            child: SizedBox(
+              width: 175.w,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding:  EdgeInsets.symmetric(horizontal: 8.w),
+                    child:
+                        textRegularMontserrat(text: widget.title, fontSize: 12.sp),
+                  ),
+                ],
+              ),
             ),
           )
         ],
