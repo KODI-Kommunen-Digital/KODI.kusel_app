@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,10 +8,10 @@ import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/screens/event/event_screen_controller.dart';
 
+import '../../common_widgets/arrow_back_widget.dart' show ArrowBackWidget;
 import '../../common_widgets/location_card_widget.dart';
 import '../../images_path.dart';
 import '../../theme_manager/colors.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EventScreen extends ConsumerStatefulWidget {
   const EventScreen({super.key});
@@ -102,59 +103,9 @@ class _EventScreenState extends ConsumerState<EventScreen> {
               textOverflow: TextOverflow.visible,
               color: lightThemeSecondaryColor,
               textAlign: TextAlign.start),
-          Align(
-              child: _buildExpandedTile())
+          Align(child: _buildExpandedTile())
         ],
       ),
-    );
-  }
-
-  Widget _buildExpandedTile() {
-    return ExpansionTile(
-      tilePadding: EdgeInsets.zero,
-      iconColor: lightThemeHighlightDotColor,
-      visualDensity: VisualDensity.compact, // Reduces space between title & arrow
-      expandedCrossAxisAlignment: CrossAxisAlignment.start,
-      childrenPadding: EdgeInsets.zero,
-      title: textRegularPoppins(text: "Weiterlesen", color: lightThemeSecondaryColor, textAlign: TextAlign.start, decoration: TextDecoration.underline),
-      children: [
-        textBoldPoppins(text: "Nächste Termine", color: lightThemeSecondaryColor),
-        10.verticalSpace,
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: 6.h),
-          child: Row(
-            children: [
-              SvgPicture.asset(
-                imagePath['calendar'] ?? '',
-                color: lightThemeCalendarIconColor,
-              ),
-              8.horizontalSpace,
-              textRegularMontserrat(
-                text: "Samstag, 28.10.2024 \nvon 6:30 - 22:00 Uhr",
-                textOverflow: TextOverflow.ellipsis,
-                color: lightThemeSecondaryColor,
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: 6.h, ),
-          child: Row(
-            children: [
-              SvgPicture.asset(
-                imagePath['calendar'] ?? '',
-                color: lightThemeCalendarIconColor,
-              ),
-              8.horizontalSpace,
-              textRegularMontserrat(
-                text: "Samstag, 28.10.2024 \nvon 6:30 - 22:00 Uhr",
-                textOverflow: TextOverflow.ellipsis,
-                color: lightThemeSecondaryColor,
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 
@@ -212,6 +163,63 @@ class _EventScreenState extends ConsumerState<EventScreen> {
     );
   }
 
+  Widget _buildExpandedTile() {
+    return ExpansionTile(
+      tilePadding: EdgeInsets.zero,
+      iconColor: lightThemeHighlightDotColor,
+      visualDensity: VisualDensity.compact,
+      // Reduces space between title & arrow
+      expandedCrossAxisAlignment: CrossAxisAlignment.start,
+      childrenPadding: EdgeInsets.zero,
+      title: textRegularPoppins(
+          text: "Weiterlesen",
+          color: lightThemeSecondaryColor,
+          textAlign: TextAlign.start,
+          decoration: TextDecoration.underline),
+      children: [
+        textBoldPoppins(
+            text: "Nächste Termine", color: lightThemeSecondaryColor),
+        10.verticalSpace,
+        Padding(
+          padding: EdgeInsets.symmetric(vertical: 6.h),
+          child: Row(
+            children: [
+              SvgPicture.asset(
+                imagePath['calendar'] ?? '',
+                color: lightThemeCalendarIconColor,
+              ),
+              8.horizontalSpace,
+              textRegularMontserrat(
+                text: "Samstag, 28.10.2024 \nvon 6:30 - 22:00 Uhr",
+                textOverflow: TextOverflow.ellipsis,
+                color: lightThemeSecondaryColor,
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(
+            vertical: 6.h,
+          ),
+          child: Row(
+            children: [
+              SvgPicture.asset(
+                imagePath['calendar'] ?? '',
+                color: lightThemeCalendarIconColor,
+              ),
+              8.horizontalSpace,
+              textRegularMontserrat(
+                text: "Samstag, 28.10.2024 \nvon 6:30 - 22:00 Uhr",
+                textOverflow: TextOverflow.ellipsis,
+                color: lightThemeSecondaryColor,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildClipperBackground() {
     return Stack(
       children: [
@@ -230,16 +238,8 @@ class _EventScreenState extends ConsumerState<EventScreen> {
         Positioned(
           top: 30.h,
           left: 15.w,
-          child: Container(
-            padding: EdgeInsets.all(10.r),
-            decoration: BoxDecoration(
-              color: lightThemeHighlightDotColor,
-              borderRadius: BorderRadius.circular(50.r),
-            ),
-            child: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
+          child: ArrowBackWidget(
+            onTap: () {},
           ),
         ),
       ],
