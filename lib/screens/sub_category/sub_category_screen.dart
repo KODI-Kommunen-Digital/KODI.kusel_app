@@ -11,7 +11,11 @@ import 'package:kusel/screens/sub_category/sub_category_controller.dart';
 import 'package:kusel/screens/sub_category/sub_category_screen_parameter.dart';
 
 import '../../common_widgets/arrow_back_widget.dart';
+import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
+import '../../theme_manager/colors.dart';
 
 class SubCategoryScreen extends ConsumerStatefulWidget {
   final SubCategoryScreenParameters subCategoryScreenParameters;
@@ -56,7 +60,7 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
               child: ClipPath(
                 clipper: UpstreamWaveClipper(),
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height * .15,
+                  height: MediaQuery.of(context).size.height * .16,
                   width: MediaQuery.of(context).size.width,
                   child: Image.asset(
                     imagePath['background_image'] ?? "",
@@ -70,24 +74,43 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
                 child: Container(
-                  color: Theme.of(context).cardColor.withValues(alpha: 0.6),
+                  color: Theme.of(context).cardColor.withValues(alpha: 0.4),
                 ),
               ),
             ),
 
             Positioned(
-              left: 16.r,
+              // left: 16.r,
               top: 25.h,
-              child: ArrowBackWidget(
-                onTap: () {
-                  ref.read(navigationProvider).removeTopPage(context: context);
-                },
-                size: 15,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15.w),
+                  child: Row(
+                    children: [
+                      ArrowBackWidget(
+                        onTap: () {
+                          ref.read(navigationProvider).removeTopPage(context: context);
+                        },
+                        size: 15,
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(right: 18.h),
+                          child: textBoldPoppins(
+                              color: lightThemeSecondaryColor,
+                              fontSize: 16.sp,
+                              textAlign: TextAlign.center,
+                              text: widget.subCategoryScreenParameters.categoryHeading),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
               ),
             ),
-
             Positioned.fill(
-                top: MediaQuery.of(context).size.height * .15,
+                top: MediaQuery.of(context).size.height * .10,
                 child: categoryView(context))
           ],
         ),
@@ -99,7 +122,7 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
     return GridView.builder(
         physics: NeverScrollableScrollPhysics(),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, mainAxisExtent: 200.h),
+            crossAxisCount: 2, mainAxisExtent: 135.h),
         itemCount: ref.watch(subCategoryProvider).subCategoryDataList.length,
         itemBuilder: (BuildContext context, int index) {
           var exploreSubCategory =
