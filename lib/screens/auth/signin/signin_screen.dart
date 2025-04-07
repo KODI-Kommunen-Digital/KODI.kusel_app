@@ -160,7 +160,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             22.verticalSpace,
             GestureDetector(
               onTap: () {
-                ref.read(navigationProvider).removeAllAndNavigate(
+                ref.read(navigationProvider).navigateUsingPath(
                     context: context, path: forgotPasswordPath);
               },
               child: Padding(
