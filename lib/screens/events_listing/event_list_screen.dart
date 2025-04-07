@@ -10,17 +10,19 @@ import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/navigation/navigation.dart';
-import 'package:kusel/screens/category/category_screen_controller.dart';
-import 'package:kusel/screens/category/category_screen_state.dart';
 import 'package:kusel/screens/events_listing/event_list_screen_controller.dart';
-import 'package:kusel/screens/sub_category/sub_category_screen_parameter.dart';
+import 'package:kusel/screens/events_listing/event_list_screen_parameter.dart';
 
-import '../../common_widgets/category_grid_card_view.dart';
+import '../../common_widgets/arrow_back_widget.dart';
 import '../../images_path.dart';
+import '../../theme_manager/colors.dart';
 import 'event_list_screen_state.dart';
 
 class EventListScreen extends ConsumerStatefulWidget {
-  const EventListScreen({super.key});
+
+  final EventListScreenParameter eventListScreenParameter;
+
+  const EventListScreen({super.key, required this.eventListScreenParameter});
 
   @override
   ConsumerState<EventListScreen> createState() => _ExploreScreenState();
@@ -31,7 +33,7 @@ class _ExploreScreenState extends ConsumerState<EventListScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(eventListScreenProvider.notifier).getEventsList();
+      ref.read(eventListScreenProvider.notifier).getEventsList(widget.eventListScreenParameter);
     });
   }
 
@@ -79,15 +81,43 @@ class _ExploreScreenState extends ConsumerState<EventListScreen> {
             ),
 
             Positioned(
-              left: 16.r,
-              top: 24.h,
-              child: textBoldPoppins(
-                  text: AppLocalizations.of(context).category_heading),
+              // left: 16.r,
+              top: 25.h,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15.w),
+                  child: Row(
+                    children: [
+                      ArrowBackWidget(
+                        onTap: () {
+                          ref.read(navigationProvider).removeTopPage(context: context);
+                        },
+                        size: 15,
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(right: 18.h),
+                          child: textBoldPoppins(
+                              color: lightThemeSecondaryColor,
+                              fontSize: 16.sp,
+                              textAlign: TextAlign.center,
+                              text: widget.eventListScreenParameter.listHeading ?? ""),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
             ),
 
+            categoryScreenState.eventsList.isEmpty ?
+            Positioned.fill(
+                top: 0,
+                child: Center(child: textHeadingMontserrat(text: AppLocalizations.of(context).no_data))) :
             Positioned.fill(
                 top: MediaQuery.of(context).size.height * .10,
-                child: categoryView(categoryScreenState, context))
+                child: categoryView(categoryScreenState, context)),
           ],
         ),
       ),
@@ -96,18 +126,19 @@ class _ExploreScreenState extends ConsumerState<EventListScreen> {
 
   categoryView(EventListScreenState eventListState, BuildContext context) {
     return ListView.builder(
-      itemCount: 10,
+      itemCount: eventListState.eventsList.length,
       itemBuilder: (context, index) {
-        // final item = eventListState.eventsList[index];
+        final item = eventListState.eventsList[index];
         return CommonEventCard(
             imageUrl:"https://fastly.picsum.photos/id/452/200/200.jpg?hmac=f5vORXpRW2GF7jaYrCkzX3EwDowO7OXgUaVYM2NNRXY" ,
-            date: "12-April-2024",
-            title: "Europäischer Bauernmarkt",
-            location: "Konken",
+            date: item.startDate ?? "",
+            title: item.title ?? "",
+            location: item.address ?? "",
         onTap: (){
           ref.read(navigationProvider).navigateUsingPath(
             context: context,
             path: eventScreenPath,
+            params: item
           );
         },);
       },
