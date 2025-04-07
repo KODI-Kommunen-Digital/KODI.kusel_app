@@ -6,7 +6,7 @@ import "package:motion_toast/motion_toast.dart";
 
 showSuccessToast({required String message, required BuildContext context}) {
   MotionToast(
-    primaryColor: lightThemeSuccessToastColor.withValues(alpha: .3),
+    primaryColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: .3),
     description: textRegularPoppins(
         text: message, color: Colors.white),
     toastAlignment: Alignment.bottomCenter,
@@ -25,7 +25,7 @@ showSuccessToast({required String message, required BuildContext context}) {
 
 showErrorToast({required String message, required BuildContext context}) {
   MotionToast(
-    primaryColor: lightThemeErrorToastColor.withValues(alpha: .3),
+    primaryColor: Theme.of(context).colorScheme.onError.withValues(alpha: .3),
     description: textRegularPoppins(
         text: message, color: Colors.white),
     toastAlignment: Alignment.bottomCenter,
