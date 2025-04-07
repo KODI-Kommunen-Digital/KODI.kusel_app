@@ -17,14 +17,14 @@ Map<String, String> _svgImagePath = {
   "paw_icon": "assets/svg/paw_icon.svg",
   "transport_icon": "assets/svg/transport_icon.svg",
   "eye_open":"assets/svg/eye_open.svg",
-  "eye_closed":"assets/svg/eye_closed.svg"
-};
+  "eye_closed":"assets/svg/eye_closed.svg"};
 
 Map<String, String> _pngImagePath = {
   "dino": "assets/png/dino.png",
   "feedback_image.png": "assets/png/feedback_image.png",
   "home_screen_background": "assets/png/home_screen_background.png",
   "background_image": "assets/png/home_screen_background.png",
+  "calendar": "assets/png/calendar.png",
 };
 
 Map<String, String> _jpegImagePath = {

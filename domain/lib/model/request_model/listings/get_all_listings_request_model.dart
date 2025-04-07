@@ -44,7 +44,7 @@ class GetAllListingsRequestModel extends BaseModel<GetAllListingsRequestModel> {
 
   @override
   Map<String, dynamic> toJson() {
-    return {
+    final data = {
       'pageNo': pageNo,
       'pageSize': pageSize,
       'sortByStartDate': sortByStartDate,
@@ -56,6 +56,10 @@ class GetAllListingsRequestModel extends BaseModel<GetAllListingsRequestModel> {
       'startAfterDate': startAfterDate,
       'endBeforeDate': endBeforeDate,
     };
+    // Remove keys where the value is null or, if a String, empty.
+    data.removeWhere((key, value) =>
+    value == null || (value is String && value.isEmpty));
+    return data;
   }
 
   @override
