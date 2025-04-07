@@ -19,11 +19,11 @@ class _FeedbackCardWidgetState extends State<FeedbackCardWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: lightThemeFeedbackCardColor,
+      color: Theme.of(context).colorScheme.onPrimary,
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 15.0),
+            padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 12.w),
             child: Row(
               children: [
                 Image.asset(
@@ -38,15 +38,16 @@ class _FeedbackCardWidgetState extends State<FeedbackCardWidget> {
                       textBoldPoppins(
                         fontWeight: FontWeight.w600,
                           text: AppLocalizations.of(context).feedback_heading,
-                          fontSize: 14.sp,
+                          fontSize: 13.sp,
                           color: Colors.white,
+                        textOverflow: TextOverflow.visible,
                         textAlign: TextAlign.start,
                       ),
                       SizedBox(height: 8.h,),
                       textSemiBoldPoppins(
                           text: AppLocalizations.of(context).feedback_description,
                           color: Colors.white,
-                          fontSize: 13.sp,
+                          fontSize: 12.sp,
                           // textAlign: TextAlign.start,
                           fontWeight: FontWeight.w200,
                           textOverflow: TextOverflow.visible,
@@ -58,10 +59,10 @@ class _FeedbackCardWidgetState extends State<FeedbackCardWidget> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 13.h),
-            child: CustomButton(onPressed: (){}, text: AppLocalizations.of(context).send_feedback, buttonColor: lightThemeHighlightDotColor),
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 2.h),
+            child: CustomButton(onPressed: (){}, text: AppLocalizations.of(context).send_feedback, buttonColor: Theme.of(context).primaryColor),
           ),
-          20.verticalSpace
+          28.verticalSpace
         ],
       ),
     );

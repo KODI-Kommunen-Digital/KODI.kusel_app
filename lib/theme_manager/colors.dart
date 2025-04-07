@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
 
-const lightThemePrimaryColor = Color.fromRGBO(226, 235, 247, 1);
 const lightThemeSecondaryColor = Color(0xFF18204F);
-const lightThemeHighlightDotColor = Color(0xFF283583);
-const lightThemeShadowColor = Color.fromRGBO(0, 0, 0, 0.1);
+const lightThemePrimaryColor = Color(0xFF283583);
 const lightThemeScaffoldColor = Color.fromRGBO(255, 255, 255, 1);
 const lightThemeDisplayMediumTextColor = Color.fromRGBO(0, 0, 0, 1);
 const lightThemeDisplaySmallTextColor = Color.fromRGBO(0, 0, 0, 1);
 const lightThemeDisplayLargeTextColor = Color.fromRGBO(0, 0, 0, 1);
-const lightThemeHintTextColor = Color.fromRGBO(0, 0, 0, 0.4);
 const lightThemeTemperatureColor = Color.fromRGBO(105, 114, 168, 1);
-const Color lightThemeCardTitleLocationTextColor = Color.fromRGBO(105, 114, 168, 1);
 const lightThemeContainerColor = Color.fromRGBO(226, 235, 247, 1);
 const lightThemeSelectedItemColor = Color(0xFF88AF33);
 const lightThemeWhiteColor = Color(0xFFFFFFFF);
@@ -19,7 +15,6 @@ const lightThemeCardGreyColor = Color(0xFFEAEBF3);
 const lightThemeDividerColor = Color(0xFFBFC2DA);
 const lightThemeHintColor = Color(0xFF949AC1);
 const lightThemeMapMarkerColor = Color(0xFFF75A50);
-const lightThemeTransportCardTextColor = Color(0xFF6972A8);
 const lightThemeCalendarIconColor = Color(0xFF5F6368);
 const lightThemeFeedbackCardColor = Color(0xFF101534);
 const lightThemeSuccessToastColor = Color(0xFF4CAF50);

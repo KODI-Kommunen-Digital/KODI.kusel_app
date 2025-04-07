@@ -60,12 +60,12 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     textRegularMontserrat(
-                        text: formatDate(widget.date), color: lightThemeCardTitleLocationTextColor),
+                        text: formatDate(widget.date), color: Theme.of(context).textTheme.labelMedium?.color),
                     const SizedBox(height: 4),
                     textSemiBoldMontserrat(text: widget.title),
                     const SizedBox(height: 2),
                     textRegularMontserrat(
-                        text: widget.location, color: lightThemeCardTitleLocationTextColor),
+                        text: widget.location, color: Theme.of(context).textTheme.labelMedium?.color),
                   ],
                 ),
               ),
