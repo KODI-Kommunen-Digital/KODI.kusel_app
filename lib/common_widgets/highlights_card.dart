@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/theme_manager/colors.dart';
 
@@ -66,7 +67,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                   ),
                   Positioned(
                     top: 5.h,
-                    left: 210.w,
+                    left: 195.w,
                     child: Container(
                       padding: EdgeInsets.all(10.r),
                       decoration: BoxDecoration(
@@ -86,17 +87,29 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                textRegularPoppins(
-                  text:widget.date, fontSize: 12),
                 4.verticalSpace,
-                textSemiBoldPoppins(text: widget.heading, fontSize: 13),
+                textSemiBoldMontserrat(
+                  text:formatDate(widget.date), fontSize: 14),
                 4.verticalSpace,
-                textRegularPoppins(text: widget.description, fontSize: 12, textAlign: TextAlign.start, textOverflow: TextOverflow.ellipsis, maxLines: 3)
+                textSemiBoldMontserrat(text: widget.heading, fontSize: 16),
+                4.verticalSpace,
+                textSemiBoldMontserrat(text: widget.description, fontSize: 14, textAlign: TextAlign.start, textOverflow: TextOverflow.visible, maxLines: 3)
               ],
             )
           ],
         ),
       ),
     );
+  }
+
+  String formatDate(String inputDate) {
+    try {
+      final DateTime parsedDate = DateTime.parse(inputDate);
+      final DateFormat formatter = DateFormat('dd.MM.yyyy');
+      return formatter.format(parsedDate);
+    }
+    catch(e){
+      return inputDate;
+    }
   }
 }
