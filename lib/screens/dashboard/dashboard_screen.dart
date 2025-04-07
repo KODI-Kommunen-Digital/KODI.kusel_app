@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kusel/screens/category/category_screen.dart';
-import 'package:kusel/screens/event/event_screen.dart';
 import 'package:kusel/screens/search/search_screen.dart';
 
 import '../../images_path.dart';
