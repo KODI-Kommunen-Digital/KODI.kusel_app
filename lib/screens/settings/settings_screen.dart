@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/settings/settings_screen_provider.dart';
+
+import '../../theme_manager/colors.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -64,24 +67,49 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        final selectedLanguage = ref.watch(settingsScreenProvider).selectedLanguage;
+        final languageList = ref.read(settingsScreenProvider).languageList;
+
         return AlertDialog(
+          backgroundColor: lightThemeSecondaryColor,
           title: textBoldPoppins(
-              text: AppLocalizations.of(context).select_language),
-          content: DropdownButton<String>(
-            value: ref.watch(settingsScreenProvider).selectedLanguage,
-            isExpanded: true,
-            onChanged: (String? value) {
-              ref
-                  .read(settingsScreenProvider.notifier)
-                  .changeLanguage(selectedLanguage: value!);
-            },
-            items:
-                ref.read(settingsScreenProvider).languageList.map((language) {
-              return DropdownMenuItem(
-                value: language,
-                child: textRegularPoppins(text: language),
-              );
-            }).toList(),
+            color: Colors.white,
+            text: AppLocalizations.of(context).select_language,
+          ),
+          content: Container(
+            color: lightThemeSecondaryColor,
+            width: double.maxFinite,
+            height: 90.h,
+            child: ListView(
+              shrinkWrap: true,
+              children: languageList.map((language) {
+                return RadioTheme(data: RadioThemeData(
+                  fillColor: WidgetStateProperty.resolveWith<Color>((Set<MaterialState> states) {
+                    if (states.contains(MaterialState.selected)) {
+                      return Colors.white; // selected radio button
+                    }
+                    return Colors.white; // unselected radio button
+                  }),
+                ), child: RadioListTile<String>(
+                  hoverColor: Colors.white,
+                  title: Align(
+                    alignment: Alignment.centerLeft,
+                    child: textRegularPoppins(text: language, color: Colors.white),
+                  ),
+                  value: language,
+                  selectedTileColor: Colors.white,
+                  groupValue: selectedLanguage,
+                  onChanged: (String? value) {
+                    if (value != null) {
+                      ref
+                          .read(settingsScreenProvider.notifier)
+                          .changeLanguage(selectedLanguage: value);
+                      ref.read(navigationProvider).removeDialog(context: context);
+                    }
+                  },
+                ));
+              }).toList(),
+            ),
           ),
         );
       },
