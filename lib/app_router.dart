@@ -5,6 +5,7 @@ import 'package:kusel/screens/auth/signin/signin_screen.dart';
 import 'package:kusel/screens/auth/signup/signup_screen.dart';
 import 'package:kusel/screens/dashboard/dashboard_screen.dart';
 import 'package:kusel/screens/events_listing/event_list_screen.dart';
+import 'package:kusel/screens/events_listing/event_list_screen_paramaters.dart';
 import 'package:kusel/screens/highlight/highlight_screen.dart';
 import 'package:kusel/screens/event/event_screen.dart';
 import 'package:kusel/screens/splash/splash_screen.dart';
@@ -52,7 +53,10 @@ List<RouteBase> goRouteList = [
   GoRoute(
       path: eventListScreenPath,
       builder: (context, state) {
-        return EventListScreen();
+        return EventListScreen(
+          eventListScreenParameters:
+          state.extra as EventListScreenParameters
+        );
       }),
   GoRoute(
       path: forgotPasswordPath,

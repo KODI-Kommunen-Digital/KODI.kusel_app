@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/app_router.dart';
@@ -10,17 +9,17 @@ import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/navigation/navigation.dart';
-import 'package:kusel/screens/category/category_screen_controller.dart';
-import 'package:kusel/screens/category/category_screen_state.dart';
 import 'package:kusel/screens/events_listing/event_list_screen_controller.dart';
-import 'package:kusel/screens/sub_category/sub_category_screen_parameter.dart';
 
-import '../../common_widgets/category_grid_card_view.dart';
+import '../../common_widgets/arrow_back_widget.dart';
 import '../../images_path.dart';
+import '../../theme_manager/colors.dart';
+import 'event_list_screen_paramaters.dart';
 import 'event_list_screen_state.dart';
 
 class EventListScreen extends ConsumerStatefulWidget {
-  const EventListScreen({super.key});
+  final EventListScreenParameters eventListScreenParameters;
+  const EventListScreen({super.key, required this.eventListScreenParameters});
 
   @override
   ConsumerState<EventListScreen> createState() => _ExploreScreenState();
@@ -48,6 +47,7 @@ class _ExploreScreenState extends ConsumerState<EventListScreen> {
 
   _buildBody(EventListScreenState categoryScreenState, BuildContext context) {
     return SingleChildScrollView(
+      physics: NeverScrollableScrollPhysics(),
       child: SizedBox(
         height: MediaQuery.of(context).size.height,
         child: Stack(
@@ -79,11 +79,35 @@ class _ExploreScreenState extends ConsumerState<EventListScreen> {
             ),
 
             Positioned(
-              left: 16.r,
-              top: 24.h,
-              child: textBoldPoppins(
-                  text: AppLocalizations.of(context).category_heading),
+              top: 25.h,
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15.w),
+                  child: Row(
+                    children: [
+                      ArrowBackWidget(
+                        onTap: () {
+                          ref.read(navigationProvider).removeTopPage(context: context);
+                        },
+                        size: 15,
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.only(right: 18.h),
+                          child: textBoldPoppins(
+                              color: lightThemeSecondaryColor,
+                              fontSize: 16.sp,
+                              textAlign: TextAlign.center,
+                              text: widget.eventListScreenParameters.subCategoryHeading),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
             ),
+
 
             Positioned.fill(
                 top: MediaQuery.of(context).size.height * .10,

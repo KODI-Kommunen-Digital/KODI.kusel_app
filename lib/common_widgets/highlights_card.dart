@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/theme_manager/colors.dart';
-
-import '../app_router.dart';
-import '../navigation/navigation.dart';
 
 class HighlightsCard extends ConsumerStatefulWidget {
   String imageUrl;
@@ -33,7 +31,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 6.h,horizontal: 9.w),
+      padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 10.w),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12.r),
@@ -46,7 +44,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
         ],
       ),
       child: InkWell(
-        onTap: (){
+        onTap: () {
           widget.onPress;
         },
         child: Column(
@@ -82,26 +80,16 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
               ),
             ),
             6.verticalSpace,
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Padding(
-                padding: EdgeInsets.all(8.r),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      widget.date,
-                      style: TextStyle(color: lightThemeTransportCardTextColor, fontSize: 12.sp),
-                    ),
-                    4.verticalSpace,
-                    Text(widget.heading,
-                        style: TextStyle(color: lightThemeSecondaryColor, fontSize: 13.sp)),
-                    4.verticalSpace,
-                    Text(widget.description,
-                        style: TextStyle(color: lightThemeTransportCardTextColor, fontSize: 12.sp))
-                  ],
-                ),
-              ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                textRegularPoppins(
+                  text:widget.date, fontSize: 12),
+                4.verticalSpace,
+                textSemiBoldPoppins(text: widget.heading, fontSize: 13),
+                4.verticalSpace,
+                textRegularPoppins(text: widget.description, textAlign: TextAlign.left, fontSize: 12, textOverflow: TextOverflow.visible)
+              ],
             )
           ],
         ),
