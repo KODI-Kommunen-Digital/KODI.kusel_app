@@ -4,6 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/theme_manager/colors.dart';
 
+import '../app_router.dart';
+import '../navigation/navigation.dart';
+
 class HighlightsCard extends ConsumerStatefulWidget {
   String imageUrl;
   String date;
@@ -44,7 +47,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
         ],
       ),
       child: InkWell(
-        onTap: () {
+        onTap: (){
           widget.onPress;
         },
         child: Column(
@@ -63,7 +66,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                   ),
                   Positioned(
                     top: 5.h,
-                    left: 200.w,
+                    left: 210.w,
                     child: Container(
                       padding: EdgeInsets.all(10.r),
                       decoration: BoxDecoration(
@@ -88,7 +91,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                 4.verticalSpace,
                 textSemiBoldPoppins(text: widget.heading, fontSize: 13),
                 4.verticalSpace,
-                textRegularPoppins(text: widget.description, textAlign: TextAlign.left, fontSize: 12, textOverflow: TextOverflow.visible)
+                textRegularPoppins(text: widget.description, fontSize: 12, textAlign: TextAlign.start, textOverflow: TextOverflow.ellipsis, maxLines: 3)
               ],
             )
           ],
