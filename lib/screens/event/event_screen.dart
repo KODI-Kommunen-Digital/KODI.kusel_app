@@ -36,7 +36,7 @@ class _EventScreenState extends ConsumerState<EventScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: lightThemeScaffoldBackgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.onSecondary,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -57,7 +57,7 @@ class _EventScreenState extends ConsumerState<EventScreen> {
         children: [
           textBoldPoppins(
               text: widget.listingParam.title ?? "",
-              color: lightThemeSecondaryColor,
+              color: Theme.of(context).textTheme.labelLarge?.color,
               fontSize: 16.sp),
           15.verticalSpace,
           LocationCardWidget(
@@ -93,20 +93,20 @@ class _EventScreenState extends ConsumerState<EventScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           textBoldPoppins(
-              text: heading, fontSize: 15.sp, color: lightThemeSecondaryColor),
+              text: heading, fontSize: 15.sp, color: Theme.of(context).textTheme.labelLarge?.color),
           12.verticalSpace,
           textSemiBoldPoppins(
               text: subHeading,
               fontSize: 12.sp,
               textOverflow: TextOverflow.visible,
-              color: lightThemeSecondaryColor,
+              color: Theme.of(context).textTheme.labelLarge?.color,
               fontWeight: FontWeight.w600),
           12.verticalSpace,
           textRegularPoppins(
               text: description,
               fontSize: 11.sp,
               textOverflow: TextOverflow.visible,
-              color: lightThemeSecondaryColor,
+              color: Theme.of(context).textTheme.labelLarge?.color,
               textAlign: TextAlign.start),
           Align(child: _buildExpandedTile())
         ],
@@ -124,11 +124,11 @@ class _EventScreenState extends ConsumerState<EventScreen> {
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.all(12.h.w),
         decoration: BoxDecoration(
-            color: lightThemeWhiteColor,
+            color:  Theme.of(context).canvasColor,
             borderRadius: BorderRadius.circular(20.r),
             boxShadow: [
               BoxShadow(
-                color: lightThemeHighlightDotColor.withValues(alpha: 0.46),
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.46),
                 offset: Offset(0, 4),
                 blurRadius: 8,
               ),
@@ -150,12 +150,12 @@ class _EventScreenState extends ConsumerState<EventScreen> {
                     textBoldPoppins(
                         text: heading,
                         fontSize: 13.sp,
-                        color: lightThemeSecondaryColor),
+                        color: Theme.of(context).textTheme.labelLarge?.color),
                     textRegularPoppins(
                         textAlign: TextAlign.left,
                         text: description,
                         fontSize: 11.sp,
-                        color: lightThemeTransportCardTextColor,
+                        color: Theme.of(context).textTheme.labelMedium?.color,
                         textOverflow: TextOverflow.visible)
                   ],
                 ),
@@ -171,19 +171,19 @@ class _EventScreenState extends ConsumerState<EventScreen> {
   Widget _buildExpandedTile() {
     return ExpansionTile(
       tilePadding: EdgeInsets.zero,
-      iconColor: lightThemeHighlightDotColor,
+      iconColor: Theme.of(context).primaryColor,
       visualDensity: VisualDensity.compact,
       // Reduces space between title & arrow
       expandedCrossAxisAlignment: CrossAxisAlignment.start,
       childrenPadding: EdgeInsets.zero,
       title: textRegularPoppins(
           text: "Weiterlesen",
-          color: lightThemeSecondaryColor,
+          color: Theme.of(context).textTheme.labelLarge?.color,
           textAlign: TextAlign.start,
           decoration: TextDecoration.underline),
       children: [
         textBoldPoppins(
-            text: "Nächste Termine", color: lightThemeSecondaryColor),
+            text: "Nächste Termine", color: Theme.of(context).textTheme.labelLarge?.color),
         10.verticalSpace,
         Padding(
           padding: EdgeInsets.symmetric(vertical: 6.h),
@@ -191,13 +191,13 @@ class _EventScreenState extends ConsumerState<EventScreen> {
             children: [
               SvgPicture.asset(
                 imagePath['calendar'] ?? '',
-                color: lightThemeCalendarIconColor,
+                color: Theme.of(context).colorScheme.surface,
               ),
               8.horizontalSpace,
               textRegularMontserrat(
                 text: "Samstag, 28.10.2024 \nvon 6:30 - 22:00 Uhr",
                 textOverflow: TextOverflow.ellipsis,
-                color: lightThemeSecondaryColor,
+                color: Theme.of(context).textTheme.labelLarge?.color,
               ),
             ],
           ),
@@ -210,13 +210,13 @@ class _EventScreenState extends ConsumerState<EventScreen> {
             children: [
               SvgPicture.asset(
                 imagePath['calendar'] ?? '',
-                color: lightThemeCalendarIconColor,
+                color: Theme.of(context).colorScheme.surface,
               ),
               8.horizontalSpace,
               textRegularMontserrat(
                 text: "Samstag, 28.10.2024 \nvon 6:30 - 22:00 Uhr",
                 textOverflow: TextOverflow.ellipsis,
-                color: lightThemeSecondaryColor,
+                color: Theme.of(context).textTheme.labelLarge?.color,
               ),
             ],
           ),
