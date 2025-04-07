@@ -76,26 +76,37 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
     }
   }
 
-  Future<void> searchList(
-      {required String searchText,
-        required void Function() success,
-        required void Function(String message) error}) async {
+  Future<List<Listing>> searchList({
+    required String searchText,
+    required void Function() success,
+    required void Function(String message) error,
+  }) async {
     try {
       state = state.copyWith(loading: true, error: "");
       SearchRequestModel searchRequestModel = SearchRequestModel(searchQuery: searchText);
       SearchListingsResponseModel searchListingsResponseModel = SearchListingsResponseModel();
+
       final result = await searchUseCase.call(searchRequestModel, searchListingsResponseModel);
-
-      result.fold((l) {
-        state = state.copyWith(loading: false);
-        debugPrint(' Exception = $l');
-      }, (r) {
-        state = state.copyWith(loading: false);
-
-      });
-    } catch (error) {
+      return result.fold(
+            (l) {
+          state = state.copyWith(loading: false);
+          debugPrint('Exception = $l');
+          error(l.toString());
+          return <Listing>[];
+        },
+            (r) {
+          state = state.copyWith(loading: false);
+          final listings = (r as SearchListingsResponseModel).data;
+          debugPrint('>>>> returned = ${listings?.length}');
+          success();
+          return listings ?? <Listing>[];
+        },
+      );
+    } catch (e) {
       state = state.copyWith(loading: false);
-      debugPrint(' Exception = $error');
+      debugPrint('>>>> Exception = $e');
+      error(e.toString());
+      return <Listing>[];
     }
   }
 
