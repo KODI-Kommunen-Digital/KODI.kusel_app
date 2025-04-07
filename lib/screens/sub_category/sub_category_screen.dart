@@ -17,6 +17,7 @@ import '../../common_widgets/upstream_wave_clipper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../theme_manager/colors.dart';
+import '../events_listing/event_list_screen_parameter.dart';
 
 class SubCategoryScreen extends ConsumerStatefulWidget {
   final SubCategoryScreenParameters subCategoryScreenParameters;
@@ -131,9 +132,13 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
           return GestureDetector(
             onTap: () {
               ref.read(navigationProvider).navigateUsingPath(
-                context: context,
-                path: eventListScreenPath,
-              );
+                  path: eventListScreenPath,
+                  context: context,
+                  params:
+                  EventListScreenParameter(
+                      categoryId: widget.subCategoryScreenParameters.id,
+                      subCategoryId: exploreSubCategory.id,
+                      listHeading: exploreSubCategory.name ?? ""));
             },
             child: CategoryGridCardView(
               imageUrl:

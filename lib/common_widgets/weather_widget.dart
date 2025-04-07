@@ -23,7 +23,7 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
     child: Card(
         color: lightThemePrimaryColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-        elevation: 4,
+        elevation: 0,
         child: Stack(
           children: [
             Positioned(
