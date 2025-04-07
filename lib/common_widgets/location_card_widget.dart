@@ -51,12 +51,16 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
             child: Row(
               children: [
                 SvgPicture.asset(imagePath['location_card_icon'] ?? ''),
-                Padding(
-                  padding: EdgeInsets.only(left: 8.0.w),
-                  child: textRegularPoppins(
-                    text: widget.address,
-                    textOverflow: TextOverflow.ellipsis,
-                    color: lightThemeCardTitleLocationTextColor,
+                Flexible(
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 8.0.w),
+                    child: textRegularPoppins(
+                      text: widget.address,
+                      textAlign: TextAlign.start,
+                      textOverflow: TextOverflow.visible,
+                      maxLines: 4,
+                      color: lightThemeCardTitleLocationTextColor,
+                    ),
                   ),
                 ),
               ],
@@ -155,7 +159,7 @@ Widget iconTextWidget(String imageUrl, String text) {
             child: textRegularPoppins(
                 text: text,
                 maxLines: 1,
-                softWrap: false
+                softWrap: false // Make sure this is set
                 ))
       ],
     ),

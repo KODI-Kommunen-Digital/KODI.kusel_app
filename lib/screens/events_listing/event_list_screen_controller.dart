@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:data/params/listings_params.dart';
 import 'package:kusel/screens/event/event_screen_state.dart';
+import 'package:kusel/screens/events_listing/event_list_screen_parameter.dart';
 import 'package:kusel/screens/events_listing/event_list_screen_state.dart';
 
 final eventListScreenProvider = StateNotifierProvider.autoDispose<
@@ -17,13 +18,15 @@ class EventListScreenController extends StateNotifier<EventListScreenState> {
       : super(EventListScreenState.empty());
   ListingsUseCase listingsUseCase;
 
-  Future<void> getEventsList() async {
+  Future<void> getEventsList(
+      EventListScreenParameter? eventListScreenParameter) async {
     try {
       state = state.copyWith(loading: true, error: "");
 
-
       GetAllListingsRequestModel getAllListingsRequestModel =
-          GetAllListingsRequestModel();
+          GetAllListingsRequestModel(
+              categoryId: eventListScreenParameter?.categoryId.toString(),
+              subcategoryId: eventListScreenParameter?.subCategoryId?.toString());
       GetAllListingsResponseModel getAllListResponseModel =
           GetAllListingsResponseModel();
 
