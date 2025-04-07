@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:url_launcher/url_launcher.dart';
+
 import '../images_path.dart';
 import '../screens/event/event_screen_controller.dart';
 import '../theme_manager/colors.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class LocationCardWidget extends ConsumerStatefulWidget {
   final String address;
@@ -50,12 +51,16 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
             child: Row(
               children: [
                 SvgPicture.asset(imagePath['location_card_icon'] ?? ''),
-                Padding(
-                  padding: EdgeInsets.only(left: 8.0.w),
-                  child: textRegularPoppins(
-                    text: widget.address,
-                    textOverflow: TextOverflow.ellipsis,
-                    color: lightThemeCardTitleLocationTextColor,
+                Flexible(
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 8.0.w),
+                    child: textRegularPoppins(
+                      text: widget.address,
+                      textAlign: TextAlign.start,
+                      textOverflow: TextOverflow.visible,
+                      maxLines: 4,
+                      color: lightThemeCardTitleLocationTextColor,
+                    ),
                   ),
                 ),
               ],
@@ -136,11 +141,13 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
 Widget iconTextWidget(String imageUrl, String text) {
   return Container(
     height: 26.h,
+    width: 145.w,
     padding: EdgeInsets.symmetric(horizontal: 12.w),
     decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
         color: lightThemeCardGreyColor),
     child: Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         SvgPicture.asset(
           imageUrl,
@@ -148,7 +155,12 @@ Widget iconTextWidget(String imageUrl, String text) {
           width: 18.w,
         ),
         6.horizontalSpace,
-        textRegularPoppins(text: text)
+        Flexible(
+            child: textRegularPoppins(
+                text: text,
+                maxLines: 1,
+                softWrap: false // Make sure this is set
+                ))
       ],
     ),
   );

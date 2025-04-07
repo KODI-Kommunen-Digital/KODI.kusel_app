@@ -9,19 +9,23 @@ Text textRegularPoppins(
     TextOverflow? textOverflow,
     TextDecoration? decoration,
     FontStyle? fontStyle,
-    TextAlign? textAlign}) {
+      int? maxLines,
+    TextAlign? textAlign,
+    bool? softWrap}) {
   return Text(
     text,
+    softWrap: softWrap,
     style: TextStyle(
       fontSize: fontSize?.sp ?? 14.sp,
       fontFamily: "Poppins",
       fontWeight: fontWeight ?? FontWeight.w400,
       color: color,
       decoration: decoration,
-      fontStyle: fontStyle
+      fontStyle: fontStyle,
     ),
     textAlign: textAlign ?? TextAlign.center,
     overflow: textOverflow ?? TextOverflow.ellipsis,
+    maxLines:maxLines,
   );
 }
 
