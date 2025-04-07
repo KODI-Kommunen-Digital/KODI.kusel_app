@@ -1,3 +1,4 @@
+import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,7 +16,9 @@ import '../../navigation/navigation.dart';
 import '../../theme_manager/colors.dart';
 
 class EventScreen extends ConsumerStatefulWidget {
-  const EventScreen({super.key});
+
+  final Listing listingParam;
+  const EventScreen({super.key, required this.listingParam});
 
   @override
   ConsumerState<EventScreen> createState() => _EventScreenState();
@@ -53,14 +56,14 @@ class _EventScreenState extends ConsumerState<EventScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           textBoldPoppins(
-              text: AppLocalizations.of(context).medieval_market,
+              text: widget.listingParam.title ?? "",
               color: lightThemeSecondaryColor,
               fontSize: 16.sp),
           15.verticalSpace,
           LocationCardWidget(
-            address: ref.watch(eventScreenProvider).address,
+            address: widget.listingParam.address ?? "",
             websiteText: "Website besuchen",
-            websiteUrl: "https://www.google.com/",
+            websiteUrl: widget.listingParam.website ?? "",
           ),
           12.verticalSpace,
           publicTransportCard(
@@ -73,7 +76,7 @@ class _EventScreenState extends ConsumerState<EventScreen> {
             subHeading:
                 "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod",
             description:
-                "tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore ...",
+            widget.listingParam.description ?? "",
           )
         ],
       ),
