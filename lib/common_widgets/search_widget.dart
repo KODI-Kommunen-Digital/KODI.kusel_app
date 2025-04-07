@@ -1,4 +1,5 @@
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
+import 'package:domain/model/response_model/listings_model/search_listings_response_model.dart';
 import 'package:domain/usecase/search/search_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -44,16 +45,21 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
               8.horizontalSpace,
               Expanded(
                 child: TypeAheadField<Listing>(
+                  hideOnEmpty: true,
+                  hideOnUnfocus: true,
+                  hideOnSelect: true,
+                  debounceDuration: Duration(milliseconds: 1000),
                   controller: widget.searchController,
                   suggestionsCallback: (search) async {
+                    List<Listing>? list;
                     if (search.isEmpty) return [];
                     try {
-                      await ref.read(homeScreenProvider.notifier).searchList(
+                      list = await ref.read(homeScreenProvider.notifier).searchList(
                           searchText: search, success: () {}, error: (err) {});
-                      return [];
                     } catch (e) {
-                      [];
+                      return [];
                     }
+                    return list;
                   },
                   builder: (context, controller, focusNode) {
                     return TextField(
@@ -106,9 +112,12 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                     );
                   },
                   onSelected: (city) {
+                    widget.searchController.clear();
+                    FocusScope.of(context).unfocus();
                     ref.read(navigationProvider).navigateUsingPath(
                       context: context,
                       path: eventScreenPath,
+                      params: city
                     );
                   },
                 ),

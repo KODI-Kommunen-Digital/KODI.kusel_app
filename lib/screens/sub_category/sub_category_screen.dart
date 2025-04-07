@@ -7,7 +7,6 @@ import 'package:kusel/common_widgets/category_grid_card_view.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/navigation/navigation.dart';
-import 'package:kusel/screens/events_listing/event_list_screen_paramaters.dart';
 import 'package:kusel/screens/sub_category/sub_category_controller.dart';
 import 'package:kusel/screens/sub_category/sub_category_screen_parameter.dart';
 
@@ -15,8 +14,10 @@ import '../../app_router.dart';
 import '../../common_widgets/arrow_back_widget.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../theme_manager/colors.dart';
+import '../events_listing/event_list_screen_parameter.dart';
 
 class SubCategoryScreen extends ConsumerStatefulWidget {
   final SubCategoryScreenParameters subCategoryScreenParameters;
@@ -131,14 +132,13 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
           return GestureDetector(
             onTap: () {
               ref.read(navigationProvider).navigateUsingPath(
-                context: context,
-                path: eventListScreenPath,
-                params: EventListScreenParameters(subCategoryHeading: ref
-                              .read(subCategoryProvider)
-                              .subCategoryDataList[index]
-                              .name ??
-                          '')
-              );
+                  path: eventListScreenPath,
+                  context: context,
+                  params:
+                  EventListScreenParameter(
+                      categoryId: widget.subCategoryScreenParameters.id,
+                      subCategoryId: exploreSubCategory.id,
+                      listHeading: exploreSubCategory.name ?? ""));
             },
             child: CategoryGridCardView(
               imageUrl:

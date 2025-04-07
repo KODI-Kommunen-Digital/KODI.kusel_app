@@ -27,5 +27,8 @@
   "enter_search_term": "Suchbegriff eingeben",
   "feedback_heading": "Wie findest du die App?",
   "feedback_description": "Fehlt dir noch etwas oder ist dir etwas aufgefallen? Lass es uns wissen, um die App stetig zu verbessern.",
-  "send_feedback": "Feedback senden"
+  "send_feedback": "Feedback senden",
+  "no_data": "No data",
+  "events": "Heutige Veranstaltungen",
+  "all_events": "Alle Veranstaltungen anzeigen"
 }

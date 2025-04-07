@@ -16,7 +16,7 @@ import 'package:kusel/screens/sub_category/sub_category_screen_parameter.dart';
 import '../../common_widgets/category_grid_card_view.dart';
 import '../../images_path.dart';
 import '../../theme_manager/colors.dart';
-import '../events_listing/event_list_screen_paramaters.dart';
+import '../events_listing/event_list_screen_parameter.dart';
 
 class CategoryScreen extends ConsumerStatefulWidget {
   const CategoryScreen({super.key});
@@ -49,7 +49,7 @@ class _ExploreScreenState extends ConsumerState<CategoryScreen> {
       child: Column(
         children: [
           SizedBox(
-            height: MediaQuery.of(context).size.height*0.16,
+            height: MediaQuery.of(context).size.height * 0.16,
             child: Stack(
               fit: StackFit.expand,
               children: [
@@ -117,13 +117,12 @@ class _ExploreScreenState extends ConsumerState<CategoryScreen> {
                     params:
                     SubCategoryScreenParameters(
                         id: exploreCategory.id ?? 0,
-                        categoryHeading: exploreCategory.name ?? ""));              }
-              else{
+                        categoryHeading: exploreCategory.name ?? ""));              } else {
                 ref.read(navigationProvider).navigateUsingPath(
                     path: eventListScreenPath,
-                    params: EventListScreenParameters(subCategoryHeading:
-                    exploreCategory.name ?? "" ??
-                        ''),
+                    params: EventListScreenParameter(
+                        listHeading: exploreCategory.name ?? "" ?? '',
+                        categoryId: exploreCategory.id),
                     context: context);
               }
             },

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 
 import '../theme_manager/colors.dart';
@@ -59,7 +60,7 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     textRegularMontserrat(
-                        text: widget.date, color: lightThemeCardTitleLocationTextColor),
+                        text: formatDate(widget.date), color: lightThemeCardTitleLocationTextColor),
                     const SizedBox(height: 4),
                     textSemiBoldMontserrat(text: widget.title),
                     const SizedBox(height: 2),
@@ -81,4 +82,10 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
       ),
     );
   }
+  String formatDate(String inputDate) {
+    final DateTime parsedDate = DateTime.parse(inputDate);
+    final DateFormat formatter = DateFormat('dd.MM.yyyy');
+    return formatter.format(parsedDate);
+  }
+
 }
