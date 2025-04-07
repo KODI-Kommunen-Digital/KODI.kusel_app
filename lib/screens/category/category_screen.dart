@@ -11,6 +11,7 @@ import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/category/category_screen_controller.dart';
 import 'package:kusel/screens/category/category_screen_state.dart';
+import 'package:kusel/screens/events_listing/event_list_screen_parameter.dart';
 import 'package:kusel/screens/sub_category/sub_category_screen_parameter.dart';
 
 import '../../common_widgets/category_grid_card_view.dart';
@@ -48,7 +49,7 @@ class _ExploreScreenState extends ConsumerState<CategoryScreen> {
       child: Column(
         children: [
           SizedBox(
-            height: MediaQuery.of(context).size.height*0.16,
+            height: MediaQuery.of(context).size.height * 0.16,
             child: Stack(
               fit: StackFit.expand,
               children: [
@@ -120,7 +121,11 @@ class _ExploreScreenState extends ConsumerState<CategoryScreen> {
               else{
                 ref.read(navigationProvider).navigateUsingPath(
                     path: eventListScreenPath,
-                    context: context);
+                    context: context,
+                    params:
+                    EventListScreenParameter(
+                        categoryId: exploreCategory.id ?? 0,
+                        listHeading: exploreCategory.name ?? ""));
               }
             },
             child: CategoryGridCardView(
