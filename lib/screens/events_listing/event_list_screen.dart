@@ -19,7 +19,6 @@ import '../../theme_manager/colors.dart';
 import 'event_list_screen_state.dart';
 
 class EventListScreen extends ConsumerStatefulWidget {
-
   final EventListScreenParameter eventListScreenParameter;
 
   const EventListScreen({super.key, required this.eventListScreenParameter});
@@ -33,115 +32,104 @@ class _ExploreScreenState extends ConsumerState<EventListScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(eventListScreenProvider.notifier).getEventsList(widget.eventListScreenParameter);
+      ref
+          .read(eventListScreenProvider.notifier)
+          .getEventsList(widget.eventListScreenParameter);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final EventListScreenState categoryScreenState =
-        ref.watch(eventListScreenProvider);
-    return SafeArea(
-      child: Scaffold(
-        body: _buildBody(categoryScreenState, context),
-      ).loaderDialog(context, categoryScreenState.loading),
+    ref.watch(eventListScreenProvider);
+    return Scaffold(
+      body: categoryScreenState.loading
+          ? const Center(child: CircularProgressIndicator())
+          : _buildBody(categoryScreenState, context),
     );
   }
 
-  _buildBody(EventListScreenState categoryScreenState, BuildContext context) {
-    return SingleChildScrollView(
-      child: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            // Background image at the top
-            Positioned(
-              top: 0.h,
-              child: ClipPath(
-                clipper: UpstreamWaveClipper(),
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height * .15,
-                  width: MediaQuery.of(context).size.width,
-                  child: Image.asset(
-                    imagePath['background_image'] ?? "",
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ),
-            // Blurred overlay
-            Positioned.fill(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
-                child: Container(
-                  color: Theme.of(context).cardColor.withValues(alpha: 0.6),
-                ),
-              ),
-            ),
-
-            Positioned(
-              // left: 16.r,
-              top: 25.h,
+  Widget _buildBody(
+      EventListScreenState categoryScreenState, BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        SliverAppBar(
+          automaticallyImplyLeading: false,
+          floating: true,
+          pinned: false,
+          expandedHeight: MediaQuery.of(context).size.height * 0.15,
+          flexibleSpace: FlexibleSpaceBar(
+            background: ClipPath(
+              clipper: UpstreamWaveClipper(),
               child: SizedBox(
+                height: MediaQuery.of(context).size.height * 0.15,
                 width: MediaQuery.of(context).size.width,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15.w),
-                  child: Row(
-                    children: [
-                      ArrowBackWidget(
-                        onTap: () {
-                          ref.read(navigationProvider).removeTopPage(context: context);
-                        },
-                        size: 15,
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding: EdgeInsets.only(right: 18.h),
-                          child: textBoldPoppins(
-                              color: lightThemeSecondaryColor,
-                              fontSize: 16.sp,
-                              textAlign: TextAlign.center,
-                              text: widget.eventListScreenParameter.listHeading ?? ""),
-                        ),
-                      )
-                    ],
-                  ),
+                child: Image.asset(
+                  imagePath['background_image'] ?? "",
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
-
-            categoryScreenState.eventsList.isEmpty ?
-            Positioned.fill(
-                top: 0,
-                child: Center(child: textHeadingMontserrat(text: AppLocalizations.of(context).no_data))) :
-            Positioned.fill(
-                top: MediaQuery.of(context).size.height * .10,
-                child: categoryView(categoryScreenState, context)),
-          ],
+          ),
+          title: Row(
+            children: [
+              ArrowBackWidget(
+                onTap: () {
+                  ref
+                      .read(navigationProvider)
+                      .removeTopPage(context: context);
+                },
+                size: 15,
+              ),
+              Expanded(
+                child: Center(
+                  child: textBoldPoppins(
+                    color: lightThemeSecondaryColor,
+                    fontSize: 16.sp,
+                    textAlign: TextAlign.center,
+                    text:
+                    widget.eventListScreenParameter.listHeading ?? "",
+                  ),
+                ),
+              ),
+            ],
+          ),
+          backgroundColor:
+          Theme.of(context).cardColor.withValues(alpha: 0.6),
         ),
-      ),
-    );
-  }
 
-  categoryView(EventListScreenState eventListState, BuildContext context) {
-    return ListView.builder(
-      itemCount: eventListState.eventsList.length,
-      itemBuilder: (context, index) {
-        final item = eventListState.eventsList[index];
-        return CommonEventCard(
-            imageUrl:"https://fastly.picsum.photos/id/452/200/200.jpg?hmac=f5vORXpRW2GF7jaYrCkzX3EwDowO7OXgUaVYM2NNRXY" ,
-            date: item.startDate ?? "",
-            title: item.title ?? "",
-            location: item.address ?? "",
-        onTap: (){
-          ref.read(navigationProvider).navigateUsingPath(
-            context: context,
-            path: eventScreenPath,
-            params: item
-          );
-        },);
-      },
+        // If no events exist, show a message using a SliverFillRemaining
+        categoryScreenState.eventsList.isEmpty
+            ? SliverFillRemaining(
+          child: Center(
+            child: textHeadingMontserrat(
+                text: AppLocalizations.of(context).no_data),
+          ),
+        )
+            : SliverList(
+          delegate: SliverChildBuilderDelegate(
+                (context, index) {
+              final item = categoryScreenState.eventsList[index];
+              return CommonEventCard(
+                imageUrl:
+                "https://fastly.picsum.photos/id/452/200/200.jpg?hmac=f5vORXpRW2GF7jaYrCkzX3EwDowO7OXgUaVYM2NNRXY",
+                date: item.startDate ?? "",
+                title: item.title ?? "",
+                location: item.address ?? "",
+                onTap: () {
+                  ref.read(navigationProvider).navigateUsingPath(
+                    context: context,
+                    path: eventScreenPath,
+                    params: item,
+                  );
+                },
+              );
+            },
+            childCount: categoryScreenState.eventsList.length,
+          ),
+        ),
+      ],
     );
   }
 }
+

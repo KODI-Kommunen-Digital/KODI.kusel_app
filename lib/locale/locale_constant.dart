@@ -1,6 +1,6 @@
 enum LocaleConstant {
   english("English", "en", "GB"),
-  german("Germany", "de", "DE");
+  german("German", "de", "DE");
 
   final String displayName;
   final String languageCode;

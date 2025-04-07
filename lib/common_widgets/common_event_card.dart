@@ -82,10 +82,16 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
       ),
     );
   }
+
   String formatDate(String inputDate) {
-    final DateTime parsedDate = DateTime.parse(inputDate);
-    final DateFormat formatter = DateFormat('dd.MM.yyyy');
-    return formatter.format(parsedDate);
+    try {
+      final DateTime parsedDate = DateTime.parse(inputDate);
+      final DateFormat formatter = DateFormat('dd.MM.yyyy');
+      return formatter.format(parsedDate);
+    }
+    catch(e){
+      return inputDate;
+    }
   }
 
 }
