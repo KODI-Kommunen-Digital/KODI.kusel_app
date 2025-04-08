@@ -45,21 +45,21 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
             left: 16,
             right: 16,
             child: DotNavigationBar(
-              backgroundColor: lightThemeSecondaryColor,
-              selectedItemColor: lightThemeSelectedItemColor,
-              unselectedItemColor: lightThemeWhiteColor,
+              backgroundColor: Theme.of(context).colorScheme.secondary,
+              selectedItemColor: Theme.of(context).indicatorColor,
+              unselectedItemColor:  Theme.of(context).canvasColor,
               currentIndex: selectedIndex,
               enableFloatingNavBar: true,
               paddingR: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
               marginR: const EdgeInsets.all(0),
               onTap: ref.read(dashboardScreenProvider.notifier).onItemTapped,
-              dotIndicatorColor: lightThemeSelectedItemColor,
+              dotIndicatorColor: Theme.of(context).indicatorColor,
               itemPadding:
                   const EdgeInsets.only(top: 8, bottom: 0, left: 16, right: 16),
               items: [
                 DotNavigationBarItem(
                   icon: const Icon(Icons.home_filled),
-                  selectedColor: lightThemeSelectedItemColor,
+                  selectedColor: Theme.of(context).indicatorColor,
                 ),
                 DotNavigationBarItem(
                   icon: Padding(
@@ -69,15 +69,15 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       width: 13.w,
                       imagePath['discover_icon'] ?? "",
                       color: selectedIndex == 1
-                          ? lightThemeSelectedItemColor
-                          : lightThemeWhiteColor,
+                          ? Theme.of(context).indicatorColor
+                          :  Theme.of(context).canvasColor,
                     ),
                   ),
-                  selectedColor: lightThemeSelectedItemColor,
+                  selectedColor: Theme.of(context).indicatorColor,
                 ),
                 DotNavigationBarItem(
                   icon: const Icon(Icons.search),
-                  selectedColor: lightThemeSelectedItemColor,
+                  selectedColor: Theme.of(context).indicatorColor,
                 ),
                 DotNavigationBarItem(
                   icon: SvgPicture.asset(
@@ -85,14 +85,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     width: 13.w,
                     imagePath['location_icon'] ?? "",
                     color: selectedIndex == 3
-                        ? lightThemeSelectedItemColor
-                        : lightThemeWhiteColor,
+                        ? Theme.of(context).indicatorColor
+                        :  Theme.of(context).canvasColor,
                   ),
-                  selectedColor: lightThemeSelectedItemColor,
+                  selectedColor: Theme.of(context).indicatorColor,
                 ),
                 DotNavigationBarItem(
                   icon: const Icon(Icons.menu),
-                  selectedColor: lightThemeSelectedItemColor,
+                  selectedColor: Theme.of(context).indicatorColor,
                 ),
               ],
             ),
