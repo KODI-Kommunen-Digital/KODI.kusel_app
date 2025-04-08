@@ -21,7 +21,7 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
     return SizedBox(
       height: 260.h,
     child: Card(
-        color: lightThemePrimaryColor,
+        color: Theme.of(context).colorScheme.onSecondary,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
         elevation: 0,
         child: Stack(
@@ -43,7 +43,7 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
                           fontFamily: "Montserrat",
                           fontWeight: FontWeight.w500,
                           fontSize: 64,
-                          color: lightThemeTemperatureColor,
+                          color: Theme.of(context).textTheme.labelMedium?.color,
                         ),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -53,7 +53,7 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
                         width: (width * .4).w,
                         child: Divider(
                           thickness: 1,
-                          color: lightThemeTemperatureColor,
+                          color: Theme.of(context).textTheme.labelMedium?.color,
                         ),
                       ),
                       16.horizontalSpace,

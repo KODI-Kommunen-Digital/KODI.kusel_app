@@ -39,7 +39,7 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
           borderRadius: BorderRadius.circular(15.r),
           boxShadow: [
             BoxShadow(
-              color: lightThemeHighlightDotColor.withValues(alpha: 0.46),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.46),
               offset: Offset(0, 4),
               blurRadius: 24,
             ),
@@ -59,7 +59,7 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
                       textAlign: TextAlign.start,
                       textOverflow: TextOverflow.visible,
                       maxLines: 4,
-                      color: lightThemeCardTitleLocationTextColor,
+                      color: Theme.of(context).textTheme.labelMedium?.color,
                     ),
                   ),
                 ),
@@ -76,7 +76,9 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
                   ref
                       .read(eventScreenProvider.notifier)
                       .openInMaps(latitude, longitude);
-                }),
+                },
+                context : context
+            ),
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16),
@@ -87,7 +89,7 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
                 textRegularPoppins(
                   text: "Samstag, 28.10.2024 \nvon 6:30 - 22:00 Uhr",
                   textOverflow: TextOverflow.ellipsis,
-                  color: lightThemeCardTitleLocationTextColor,
+                  color: Theme.of(context).textTheme.labelMedium?.color,
                 ),
               ],
             ),
@@ -109,7 +111,7 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
                   textRegularPoppins(
                     text: widget.websiteText,
                     textOverflow: TextOverflow.ellipsis,
-                    color: lightThemeCardTitleLocationTextColor,
+                    color: Theme.of(context).textTheme.labelMedium?.color,
                   ),
                 ],
               ),
@@ -119,16 +121,16 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
             padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 5),
             child: Divider(
               height: 2.h,
-              color: lightThemeDividerColor,
+              color: Theme.of(context).dividerColor,
             ),
           ),
           Padding(
             padding: EdgeInsets.all(16.0),
             child: Row(
               children: [
-                iconTextWidget(imagePath['man_icon'] ?? '', "Barrierefrei"),
+                iconTextWidget(imagePath['man_icon'] ?? '', "Barrierefrei", context),
                 8.horizontalSpace,
-                iconTextWidget(imagePath['paw_icon'] ?? '', "Hunde erlaubt")
+                iconTextWidget(imagePath['paw_icon'] ?? '', "Hunde erlaubt", context)
               ],
             ),
           )
@@ -138,14 +140,14 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
   }
 }
 
-Widget iconTextWidget(String imageUrl, String text) {
+Widget iconTextWidget(String imageUrl, String text, BuildContext context) {
   return Container(
     height: 26.h,
     width: 145.w,
     padding: EdgeInsets.symmetric(horizontal: 12.w),
     decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: lightThemeCardGreyColor),
+        color: Theme.of(context).cardTheme.color),
     child: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -169,7 +171,9 @@ Widget iconTextWidget(String imageUrl, String text) {
 Widget _customMapWidget(
     {required double latitude,
     required double longitude,
-    required Function() onMapTap}) {
+    required Function() onMapTap,
+    required BuildContext context
+    }) {
   return FlutterMap(
     options: MapOptions(
       onTap: (tapPosition, LatLng latLong) {
@@ -190,7 +194,7 @@ Widget _customMapWidget(
             width: 35.w,
             height: 35.h,
             point: LatLng(latitude, longitude),
-            child: Icon(Icons.location_pin, color: lightThemeMapMarkerColor),
+            child: Icon(Icons.location_pin, color: Theme.of(context).colorScheme.onTertiaryFixed),
           ),
         ],
       ),

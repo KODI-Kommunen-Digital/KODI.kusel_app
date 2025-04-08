@@ -99,7 +99,7 @@ class _ExploreScreenState extends ConsumerState<EventListScreen> {
                         child: Padding(
                           padding: EdgeInsets.only(right: 18.h),
                           child: textBoldPoppins(
-                              color: lightThemeSecondaryColor,
+                              color: Theme.of(context).textTheme.labelLarge?.color,
                               fontSize: 16.sp,
                               textAlign: TextAlign.center,
                               text: widget.eventListScreenParameter.listHeading ?? ""),
