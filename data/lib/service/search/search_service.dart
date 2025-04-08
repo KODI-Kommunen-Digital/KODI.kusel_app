@@ -17,7 +17,7 @@ class SearchService {
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
 
-    final endpoint = Uri.parse(listingsEndPoint).replace(queryParameters: {
+    final endpoint = Uri.parse(searchEndPoint).replace(queryParameters: {
       'searchQuery': (requestModel.toJson()["searchQuery"] ?? "").toString(),
     });
 

@@ -45,13 +45,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ListTile(
           leading: const Icon(Icons.language),
           title: textBoldPoppins(
+            textAlign: TextAlign.start,
               text: AppLocalizations.of(context).change_language),
           onTap: () => _showLanguageDialog(context),
         ),
         const Divider(),
         ListTile(
           leading: const Icon(Icons.logout),
-          title: textBoldPoppins(text: AppLocalizations.of(context).logout),
+          title: textBoldPoppins(text: AppLocalizations.of(context).logout,textAlign: TextAlign.start,),
           onTap: () async {
             ref.read(settingsScreenProvider.notifier).logoutUser(() {
               ref.read(navigationProvider).removeAllAndNavigate(
