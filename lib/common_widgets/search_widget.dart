@@ -33,9 +33,9 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
       height: 40.h,
       width: 350.w,
       decoration: BoxDecoration(
-          color: lightThemeWhiteColor,
+          color: Theme.of(context).canvasColor,
           borderRadius: BorderRadius.circular(30.r),
-          border: Border.all(width: 1, color: lightThemeDividerColor)),
+          border: Border.all(width: 1, color: Theme.of(context).dividerColor)),
       child: Center(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 14.0.w),
@@ -72,7 +72,7 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                               fontSize: 14.sp,
                               fontFamily: "Poppins",
                               fontWeight: FontWeight.w400,
-                              color: lightThemeHintColor,
+                              color: Theme.of(context).hintColor,
                               fontStyle: FontStyle.italic)),
                     );
                   },
