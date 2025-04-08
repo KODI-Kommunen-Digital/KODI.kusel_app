@@ -40,7 +40,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
         borderRadius: BorderRadius.circular(12.r),
         boxShadow: [
           BoxShadow(
-            color: lightThemeHighlightDotColor.withValues(alpha: 0.46),
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.46),
             offset: Offset(0, 4),
             blurRadius: 24,
           ),
@@ -70,7 +70,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                     child: Container(
                       padding: EdgeInsets.all(10.r),
                       decoration: BoxDecoration(
-                        color: lightThemeHighlightDotColor,
+                        color: Theme.of(context).primaryColor,
                         borderRadius: BorderRadius.circular(50.r),
                       ),
                       child: Icon(

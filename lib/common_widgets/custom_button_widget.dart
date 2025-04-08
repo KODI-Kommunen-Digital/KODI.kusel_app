@@ -61,7 +61,7 @@ class CustomButton extends StatelessWidget {
                       borderRadius: BorderRadius.circular(50),
                     ),
                     backgroundColor:
-                        buttonColor ?? lightThemeHighlightDotColor),
+                        buttonColor ?? Theme.of(context).primaryColor),
                 child: FittedBox(
                   child: icon != null
                       ? Row(
@@ -74,14 +74,14 @@ class CustomButton extends StatelessWidget {
                             SizedBox(width: 12),
                             textRegularPoppins(
                               fontSize: textSize,
-                              color: textColor,
+                              color: textColor ?? Theme.of(context).canvasColor,
                               text: text,
                             ),
                           ],
                         )
                       : textRegularPoppins(
                           fontSize: textSize,
-                          color: textColor,
+                          color: textColor ?? Theme.of(context).canvasColor,
                           text: text,
                         ),
                 ),

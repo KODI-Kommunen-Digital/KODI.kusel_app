@@ -45,13 +45,13 @@ class _State extends ConsumerState<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-          color: lightThemeSecondaryColor,
+          color: Theme.of(context).colorScheme.secondary,
           child: Center(
               child: Text(
                 AppLocalizations.of(context).app_title,
                 style: TextStyle(
                     fontSize: 40,
-                    color: lightThemeWhiteColor,
+                    color:  Theme.of(context).canvasColor,
                     fontWeight: FontWeight.bold),
               )),
         )
