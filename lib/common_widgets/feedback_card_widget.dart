@@ -60,7 +60,8 @@ class _FeedbackCardWidgetState extends State<FeedbackCardWidget> {
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 2.h),
-            child: CustomButton(onPressed: (){}, text: AppLocalizations.of(context).send_feedback, buttonColor: lightThemeHighlightDotColor),
+            child: CustomButton(onPressed: (){}, text: AppLocalizations.of(context).send_feedback, buttonColor: Theme.of(context).primaryColor
+            ),
           ),
           28.verticalSpace
         ],
