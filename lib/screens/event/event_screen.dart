@@ -97,6 +97,7 @@ class _EventScreenState extends ConsumerState<EventScreen> {
           12.verticalSpace,
           textSemiBoldPoppins(
               text: subHeading,
+              textAlign: TextAlign.start,
               fontSize: 12.sp,
               textOverflow: TextOverflow.visible,
               color: Theme.of(context).textTheme.labelLarge?.color,
