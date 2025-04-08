@@ -25,9 +25,10 @@ class SignUpController extends StateNotifier<SignUpState> {
     required String lastName,
     required String email,
     required void Function(String) onError,
-    required void Function(String?) onSuccess,
+    required void Function() onSuccess,
   }) async {
     try {
+      state = state.copyWith(isLoading: true);
       SignUpRequestModel signUpRequestModel = SignUpRequestModel(
           email: email,
           password: password,
@@ -40,11 +41,22 @@ class SignUpController extends StateNotifier<SignUpState> {
           await signUpUseCase.call(signUpRequestModel, signUpResponseModel);
 
       result.fold((l) {
+        state = state.copyWith(isLoading: false);
         onError("");
       }, (r) {
-        onSuccess(null);
+        state = state.copyWith(isLoading: false);
+        final result = r as SignUpResponseModel;
+
+        if (result.errorCode == null) {
+          debugPrint('On Success');
+          onSuccess();
+        } else {
+          debugPrint('On error');
+          onError(result.message ?? "");
+        }
       });
     } catch (error) {
+      state = state.copyWith(isLoading: false);
       debugPrint('register user exception : $error');
     }
   }

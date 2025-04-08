@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
-import 'package:kusel/theme_manager/colors.dart';
 import "package:motion_toast/motion_toast.dart";
 
 showSuccessToast({required String message, required BuildContext context}) {
   MotionToast(
     primaryColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: .3),
     description: textRegularPoppins(
-        text: message, color: Colors.white),
+        text: message,
+        color: Theme.of(context).canvasColor,
+        textAlign: TextAlign.start,
+        maxLines: 2),
     toastAlignment: Alignment.bottomCenter,
     animationType: AnimationType.slideInFromBottom,
     displayBorder: true,
@@ -27,7 +29,10 @@ showErrorToast({required String message, required BuildContext context}) {
   MotionToast(
     primaryColor: Theme.of(context).colorScheme.onError.withValues(alpha: .3),
     description: textRegularPoppins(
-        text: message, color: Colors.white),
+        text: message,
+        color: Theme.of(context).canvasColor,
+        maxLines: 2,
+        textAlign: TextAlign.start),
     toastAlignment: Alignment.bottomCenter,
     animationType: AnimationType.slideInFromBottom,
     displayBorder: true,
