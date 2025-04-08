@@ -32,6 +32,7 @@
   "send_feedback": "Send feedback",
   "no_data": "No data",
   "events": "Heutige Veranstaltungen",
-  "all_events": "View all events"
+  "all_events": "View all events",
+  "check_your_email": "A link has been send to your email, please verify"
 
 }
