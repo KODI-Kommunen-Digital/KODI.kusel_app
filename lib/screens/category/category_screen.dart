@@ -39,7 +39,7 @@ class _ExploreScreenState extends ConsumerState<CategoryScreen> {
     final CategoryScreenState categoryScreenState =
         ref.watch(categoryScreenProvider);
     return Scaffold(
-      backgroundColor: lightThemeScaffoldBackgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.onSecondary,
       body: _buildBody(categoryScreenState, context),
     ).loaderDialog(context, categoryScreenState.loading);
   }
@@ -84,7 +84,7 @@ class _ExploreScreenState extends ConsumerState<CategoryScreen> {
                   left: 16.r,
                   top: 68.h,
                   child: textBoldPoppins(
-                      color: lightThemeSecondaryColor,
+                      color: Theme.of(context).textTheme.labelLarge?.color,
                       fontSize: 18.sp,
                       text: AppLocalizations.of(context).category_heading),
                 ),

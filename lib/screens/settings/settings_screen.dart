@@ -71,13 +71,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         final languageList = ref.read(settingsScreenProvider).languageList;
 
         return AlertDialog(
-          backgroundColor: lightThemeSecondaryColor,
+          backgroundColor: Theme.of(context).colorScheme.secondary,
           title: textBoldPoppins(
             color: Colors.white,
             text: AppLocalizations.of(context).select_language,
           ),
           content: Container(
-            color: lightThemeSecondaryColor,
+            color: Theme.of(context).colorScheme.secondary,
             width: double.maxFinite,
             height: 90.h,
             child: ListView(
