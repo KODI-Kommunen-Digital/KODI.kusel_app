@@ -30,5 +30,7 @@
   "send_feedback": "Feedback senden",
   "no_data": "No data",
   "events": "Heutige Veranstaltungen",
-  "all_events": "Alle Veranstaltungen anzeigen"
+  "all_events": "Alle Veranstaltungen anzeigen",
+  "check_your_email": "Ein Link wurde an deine E-Mail-Adresse gesendet. Bitte überprüfe sie."
+
 }
