@@ -6,12 +6,13 @@ class HomeScreenState {
   String error;
   final List<Listing> highlightsList;
   final List<Listing> eventsList;
+  String userName;
 
   HomeScreenState(this.highlightCount, this.loading, this.error,
-      this.highlightsList, this.eventsList);
+      this.highlightsList, this.eventsList, this.userName);
 
   factory HomeScreenState.empty() {
-    return HomeScreenState(0, false, '', [], []);
+    return HomeScreenState(0, false, '', [], [], "");
   }
 
   HomeScreenState copyWith(
@@ -19,13 +20,14 @@ class HomeScreenState {
       bool? loading,
       String? error,
       List<Listing>? highlightsList,
-      List<Listing>? eventsList}) {
+      List<Listing>? eventsList,
+      String? userName}) {
     return HomeScreenState(
-      highlightCount ?? this.highlightCount,
-      loading ?? this.loading,
-      error ?? this.error,
-      highlightsList ?? this.highlightsList,
-      eventsList ?? this.eventsList,
-    );
+        highlightCount ?? this.highlightCount,
+        loading ?? this.loading,
+        error ?? this.error,
+        highlightsList ?? this.highlightsList,
+        eventsList ?? this.eventsList,
+        userName ?? this.userName);
   }
 }
