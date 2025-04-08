@@ -1,5 +1,5 @@
-import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -12,15 +12,11 @@ import 'package:kusel/screens/home/home_screen_state.dart';
 
 import '../../../images_path.dart';
 import '../../app_router.dart';
-import '../../common_widgets/category_grid_card_view.dart';
 import '../../common_widgets/common_event_card.dart';
 import '../../common_widgets/feedback_card_widget.dart';
 import '../../common_widgets/search_widget.dart';
 import '../../common_widgets/text_styles.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import '../../navigation/navigation.dart';
-import '../../theme_manager/colors.dart';
 import '../events_listing/event_list_screen_parameter.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -35,6 +31,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(homeScreenProvider.notifier).getUserDetails();
       ref.read(homeScreenProvider.notifier).getHighlights();
       ref.read(homeScreenProvider.notifier).getEvents();
     });
@@ -91,7 +88,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         fontSize: 20,
                         color: Theme.of(context).textTheme.labelLarge?.color,
                         textAlign: TextAlign.center,
-                        text: "Hey Lukas!",
+                        text: ref.watch(homeScreenProvider).userName,
                       ),
                       textBoldPoppins(
                         fontSize: 20,
@@ -109,7 +106,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 text: AppLocalizations.of(context).search,
                                 fontSize: 12.sp,
                                 fontStyle: FontStyle.italic,
-                                color: Theme.of(context).textTheme.labelLarge?.color),
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge
+                                    ?.color),
                           ),
                           SearchWidget(
                             searchController: TextEditingController(),
@@ -144,15 +144,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           Padding(
             padding: EdgeInsets.fromLTRB(8.w, 16.w, 0, 0),
             child: InkWell(
-              onTap: (){
+              onTap: () {
                 ref.read(navigationProvider).navigateUsingPath(
                     path: eventListScreenPath,
                     context: context,
-                    params:
-                    EventListScreenParameter(
+                    params: EventListScreenParameter(
                         categoryId: 3,
                         listHeading: AppLocalizations.of(context).all_events));
-
               },
               child: Row(
                 children: [
@@ -201,11 +199,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ref.read(navigationProvider).navigateUsingPath(
                     path: eventListScreenPath,
                     context: context,
-                    params:
-                    EventListScreenParameter(
+                    params: EventListScreenParameter(
                         categoryId: 3,
                         listHeading: AppLocalizations.of(context).all_events));
-
               },
               text: AppLocalizations.of(context).all_events,
               icon: imagePath['calendar'] ?? "",
@@ -267,7 +263,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               size: currentIndex == index ? 11 : 8,
                               color: currentIndex == index
                                   ? Theme.of(context).primaryColor
-                                  : Theme.of(context).primaryColor.withAlpha(130),
+                                  : Theme.of(context)
+                                      .primaryColor
+                                      .withAlpha(130),
                             ),
                             if (index != state.highlightsList.length - 1)
                               4.horizontalSpace
