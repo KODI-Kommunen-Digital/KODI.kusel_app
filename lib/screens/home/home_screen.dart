@@ -299,7 +299,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 return HighlightsCard(
                     imageUrl: imagePath['highlight_card_image'] ?? '',
                     // need to be fixed
-                    date: listing.startDate ?? "",
+                    date: listing.createdAt ?? "",
                     heading: listing.title ?? "",
                     description: listing.description ?? "",
                     isFavourite: false,
