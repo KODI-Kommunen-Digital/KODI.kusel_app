@@ -50,7 +50,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     });
 
     return Scaffold(
-      backgroundColor: lightThemeScaffoldBackgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.onSecondary,
       body: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: buildUi(carouselController)),
@@ -89,13 +89,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     children: [
                       textBoldPoppins(
                         fontSize: 20,
-                        color: lightThemeSecondaryColor,
+                        color: Theme.of(context).textTheme.labelLarge?.color,
                         textAlign: TextAlign.center,
                         text: "Hey Lukas!",
                       ),
                       textBoldPoppins(
                         fontSize: 20,
-                        color: lightThemeSecondaryColor,
+                        color: Theme.of(context).textTheme.labelLarge?.color,
                         textAlign: TextAlign.center,
                         text: "Heute wird's sonning!",
                       ),
@@ -109,7 +109,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 text: AppLocalizations.of(context).search,
                                 fontSize: 12.sp,
                                 fontStyle: FontStyle.italic,
-                                color: lightThemeSecondaryColor),
+                                color: Theme.of(context).textTheme.labelLarge?.color),
                           ),
                           SearchWidget(
                             searchController: TextEditingController(),
@@ -162,7 +162,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         text: AppLocalizations.of(context).events,
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
-                        color: lightThemeSecondaryColor),
+                        color: Theme.of(context).textTheme.labelLarge?.color),
                   ),
                   12.horizontalSpace,
                   SvgPicture.asset(
@@ -237,7 +237,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         text: AppLocalizations.of(context).highlights,
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
-                        color: lightThemeSecondaryColor),
+                        color: Theme.of(context).textTheme.labelLarge?.color),
                   ),
                   12.horizontalSpace,
                   SvgPicture.asset(
@@ -266,8 +266,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               Icons.circle,
                               size: currentIndex == index ? 11 : 8,
                               color: currentIndex == index
-                                  ? lightThemeHighlightDotColor
-                                  : lightThemeHighlightDotColor.withAlpha(130),
+                                  ? Theme.of(context).primaryColor
+                                  : Theme.of(context).primaryColor.withAlpha(130),
                             ),
                             if (index != state.highlightsList.length - 1)
                               4.horizontalSpace
