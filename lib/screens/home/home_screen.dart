@@ -148,6 +148,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ref.read(navigationProvider).navigateUsingPath(
                     path: eventListScreenPath,
                     context: context,
+                    // Need to be replaced with actual lat-long value
                     params: EventListScreenParameter(
                         radius: 1,
                         centerLatitude: 49.53838,
@@ -202,6 +203,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ref.read(navigationProvider).navigateUsingPath(
                     path: eventListScreenPath,
                     context: context,
+                    // Need to be replaced with actual lat-long value
                     params: EventListScreenParameter(
                         radius: 1,
                         centerLatitude: 49.53838,
