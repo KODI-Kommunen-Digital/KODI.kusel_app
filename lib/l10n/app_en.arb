@@ -32,6 +32,19 @@
   "send_feedback": "Send feedback",
   "no_data": "No data",
   "events": "Heutige Veranstaltungen",
-  "all_events": "View all events"
+  "all_events": "View all events",
+  "settings": "Settings",
+  "reset": "Reset",
+  "period": "Period",
+  "target_group": "Target Group",
+  "ort": "Ort",
+  "perimeter": "Perimeter",
+  "sort_by": "Sort by",
+  "actuality": "Actuality",
+  "distance": "Distance",
+  "cancel": "Cancel",
+  "options": "Options",
+  "apply": "Apply"
+
 
 }
