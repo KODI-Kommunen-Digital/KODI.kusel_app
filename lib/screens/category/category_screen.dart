@@ -75,7 +75,8 @@ class _ExploreScreenState extends ConsumerState<CategoryScreen> {
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
                       child: Container(
-                        color: Theme.of(context).cardColor.withValues(alpha: 0.4),
+                        color:
+                            Theme.of(context).cardColor.withValues(alpha: 0.4),
                       ),
                     ),
                   ),
@@ -100,7 +101,7 @@ class _ExploreScreenState extends ConsumerState<CategoryScreen> {
 
   categoryView(CategoryScreenState categoryScreenState, BuildContext context) {
     return GridView.builder(
-      padding: EdgeInsets.only(top: 0),
+        padding: EdgeInsets.only(top: 0),
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -110,17 +111,23 @@ class _ExploreScreenState extends ConsumerState<CategoryScreen> {
           var exploreCategory = categoryScreenState.exploreCategories[index];
           return GestureDetector(
             onTap: () {
-              if(ref.read(categoryScreenProvider.notifier).isSubCategoryAvailable(exploreCategory)) {
+              if (ref
+                  .read(categoryScreenProvider.notifier)
+                  .isSubCategoryAvailable(exploreCategory)) {
                 ref.read(navigationProvider).navigateUsingPath(
                     path: subCategoryScreenPath,
                     context: context,
-                    params:
-                    SubCategoryScreenParameters(
+                    params: SubCategoryScreenParameters(
                         id: exploreCategory.id ?? 0,
-                        categoryHeading: exploreCategory.name ?? ""));              } else {
+                        categoryHeading: exploreCategory.name ?? ""));
+              } else {
                 ref.read(navigationProvider).navigateUsingPath(
                     path: eventListScreenPath,
+                    // Need to be replaced with actual lat-long value
                     params: EventListScreenParameter(
+                        radius: 1,
+                        centerLatitude: 49.53838,
+                        centerLongitude: 7.40647,
                         listHeading: exploreCategory.name ?? "" ?? '',
                         categoryId: exploreCategory.id),
                     context: context);
