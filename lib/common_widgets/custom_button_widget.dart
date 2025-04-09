@@ -17,6 +17,7 @@ class CustomButton extends StatelessWidget {
   final Color? buttonColor;
   final Color? textColor;
   final double? textSize;
+  final Color? borderColor;
 
   const CustomButton(
       {super.key,
@@ -30,7 +31,9 @@ class CustomButton extends StatelessWidget {
       this.isOutLined = false,
       this.buttonColor,
       this.textColor,
-      this.textSize});
+      this.textSize,
+      this.borderColor
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +61,7 @@ class CustomButton extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
+                      side: BorderSide(color: borderColor ?? Theme.of(context).primaryColor, width: 2),
                       borderRadius: BorderRadius.circular(50),
                     ),
                     backgroundColor:
