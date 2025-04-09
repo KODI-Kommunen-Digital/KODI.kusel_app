@@ -7,7 +7,6 @@ import 'package:kusel/images_path.dart';
 import '../theme_manager/colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-
 class FeedbackCardWidget extends StatefulWidget {
   const FeedbackCardWidget({super.key});
 
@@ -43,7 +42,9 @@ class _FeedbackCardWidgetState extends State<FeedbackCardWidget> {
                         textOverflow: TextOverflow.visible,
                         textAlign: TextAlign.start,
                       ),
-                      SizedBox(height: 8.h,),
+                      SizedBox(
+                        height: 8.h,
+                      ),
                       textSemiBoldPoppins(
                         text: AppLocalizations.of(context).feedback_description,
                         color: Colors.white,
@@ -60,8 +61,10 @@ class _FeedbackCardWidgetState extends State<FeedbackCardWidget> {
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 2.h),
-            child: CustomButton(onPressed: (){}, text: AppLocalizations.of(context).send_feedback, buttonColor: Theme.of(context).primaryColor
-            ),
+            child: CustomButton(
+                onPressed: () {},
+                text: AppLocalizations.of(context).send_feedback,
+                buttonColor: Theme.of(context).primaryColor),
           ),
           28.verticalSpace
         ],
