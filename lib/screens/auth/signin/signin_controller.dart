@@ -57,7 +57,10 @@ class SignInController extends StateNotifier<SignInState> {
             error(r.message ?? "");
           } else if (r.errorCode == 1003) {
             error(r.message ?? "");
-          }
+          }else if(r.errorCode == 2006)
+            {
+              error(r.message ?? "");
+            }
         } else {
           if (response.data != null) {
             final userId = response.data?.userId ?? 0;
