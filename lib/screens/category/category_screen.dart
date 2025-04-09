@@ -123,6 +123,7 @@ class _ExploreScreenState extends ConsumerState<CategoryScreen> {
               } else {
                 ref.read(navigationProvider).navigateUsingPath(
                     path: eventListScreenPath,
+                    // Need to be replaced with actual lat-long value
                     params: EventListScreenParameter(
                         radius: 1,
                         centerLatitude: 49.53838,
