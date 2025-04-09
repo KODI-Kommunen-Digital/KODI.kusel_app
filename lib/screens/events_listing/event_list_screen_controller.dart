@@ -2,16 +2,15 @@ import 'package:domain/model/request_model/listings/get_all_listings_request_mod
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/usecase/listings/listings_usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geocoding/geocoding.dart';
-import 'package:data/params/listings_params.dart';
-import 'package:kusel/screens/event/event_screen_state.dart';
 import 'package:kusel/screens/events_listing/event_list_screen_parameter.dart';
 import 'package:kusel/screens/events_listing/event_list_screen_state.dart';
 
 final eventListScreenProvider = StateNotifierProvider.autoDispose<
-        EventListScreenController, EventListScreenState>(
-    (ref) => EventListScreenController(
-        listingsUseCase: ref.read(listingsUseCaseProvider)));
+    EventListScreenController,
+    EventListScreenState>(
+        (ref) =>
+        EventListScreenController(
+            listingsUseCase: ref.read(listingsUseCaseProvider)));
 
 class EventListScreenController extends StateNotifier<EventListScreenState> {
   EventListScreenController({required this.listingsUseCase})
@@ -24,19 +23,23 @@ class EventListScreenController extends StateNotifier<EventListScreenState> {
       state = state.copyWith(loading: true, error: "");
 
       GetAllListingsRequestModel getAllListingsRequestModel =
-          GetAllListingsRequestModel(
-              categoryId: eventListScreenParameter?.categoryId.toString(),
-              subcategoryId: eventListScreenParameter?.subCategoryId?.toString());
+      GetAllListingsRequestModel(
+        radius: eventListScreenParameter?.radius,
+        centerLatitude: eventListScreenParameter?.centerLongitude,
+        centerLongitude: eventListScreenParameter?.centerLatitude,
+        categoryId: eventListScreenParameter?.categoryId.toString(),
+        subcategoryId: eventListScreenParameter?.subCategoryId?.toString(),
+      );
       GetAllListingsResponseModel getAllListResponseModel =
-          GetAllListingsResponseModel();
+      GetAllListingsResponseModel();
 
       final result = await listingsUseCase.call(
           getAllListingsRequestModel, getAllListResponseModel);
       result.fold(
-        (l) {
+            (l) {
           state = state.copyWith(loading: false, error: l.toString());
         },
-        (r) {
+            (r) {
           var eventsList = (r as GetAllListingsResponseModel).data;
           state = state.copyWith(list: eventsList, loading: false);
         },

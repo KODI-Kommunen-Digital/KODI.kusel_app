@@ -12,18 +12,24 @@ class GetAllListingsRequestModel extends BaseModel<GetAllListingsRequestModel> {
   final String? translate;
   final String? startAfterDate;
   final String? endBeforeDate;
+  final double? centerLatitude;
+  final double? centerLongitude;
+  final int? radius;
 
   GetAllListingsRequestModel({
-     this.pageNo,
-     this.pageSize,
-     this.sortByStartDate,
-     this.statusId,
-     this.categoryId,
-     this.subcategoryId,
-     this.cityId,
-     this.translate,
-     this.startAfterDate,
-     this.endBeforeDate,
+    this.pageNo,
+    this.pageSize,
+    this.sortByStartDate,
+    this.statusId,
+    this.categoryId,
+    this.subcategoryId,
+    this.cityId,
+    this.translate,
+    this.startAfterDate,
+    this.endBeforeDate,
+    this.centerLatitude,
+    this.centerLongitude,
+    this.radius,
   });
 
   @override
@@ -39,6 +45,9 @@ class GetAllListingsRequestModel extends BaseModel<GetAllListingsRequestModel> {
       translate: json['translate'] ?? '',
       startAfterDate: json['startAfterDate'] ?? '',
       endBeforeDate: json['endBeforeDate'] ?? '',
+      centerLatitude: (json['centerLatitude'] as num?)?.toDouble(),
+      centerLongitude: (json['centerLongitude'] as num?)?.toDouble(),
+      radius: json['radius'],
     );
   }
 
@@ -55,8 +64,10 @@ class GetAllListingsRequestModel extends BaseModel<GetAllListingsRequestModel> {
       'translate': translate,
       'startAfterDate': startAfterDate,
       'endBeforeDate': endBeforeDate,
+      'centerLatitude': centerLatitude,
+      'centerLongitude': centerLongitude,
+      'radius': radius,
     };
-    // Remove keys where the value is null or, if a String, empty.
     data.removeWhere((key, value) =>
     value == null || (value is String && value.isEmpty));
     return data;
