@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../custom_logger.dart';
+import 'package:core/preference_manager/preference_constant.dart';
+import 'package:core/preference_manager/shared_pref_helper.dart';
 
 final customInterceptorProvider =
     Provider((ref) => CustomInterceptor(ref: ref));
@@ -18,11 +20,17 @@ class CustomInterceptor extends Interceptor {
   }
 
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    ref.read(customLoggerProvider).logRequest(options);
+  Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+    var accessToken = ref.read(sharedPreferenceHelperProvider).getString(tokenKey);
     options.validateStatus = (status) {
       return status != null && status < 500;
     };
+
+    options.headers.addAll({
+      'authorization': "Bearer $accessToken", // Replace with dynamic token if needed
+      'Accept': 'application/json',
+    });
+    ref.read(customLoggerProvider).logRequest(options);
     super.onRequest(options, handler);
   }
 

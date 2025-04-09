@@ -6,4 +6,5 @@ const forgotPasswordEndPoint = "/users/forgotPassword";
 const listingsEndPoint = "/listings";
 const searchEndPoint = "$listingsEndPoint/search";
 const subCategoriesEndPoint = "/subcategories";
+String gatFavoritesEndpoint(String userId) =>"/users/$userId/favorites";
 const userDetailsEndPoint = "/users";
