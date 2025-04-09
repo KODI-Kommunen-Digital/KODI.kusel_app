@@ -135,7 +135,11 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
                   path: eventListScreenPath,
                   context: context,
                   params:
+                  // Need to be replaced with actual lat-long value
                   EventListScreenParameter(
+                      radius: 1,
+                      centerLatitude: 49.53838,
+                      centerLongitude: 7.40647,
                       categoryId: widget.subCategoryScreenParameters.id,
                       subCategoryId: exploreSubCategory.id,
                       listHeading: exploreSubCategory.name ?? ""));
