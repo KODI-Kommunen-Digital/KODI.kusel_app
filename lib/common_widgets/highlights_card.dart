@@ -76,7 +76,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                       ),
                       child: Icon(
                         Icons.favorite_border_sharp,
-                        color: Colors.white,
+                        color: widget.isFavourite ? Colors.white : Colors.red,
                       ),
                     ),
                   ),
