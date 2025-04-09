@@ -30,7 +30,6 @@
   "send_feedback": "Feedback senden",
   "no_data": "No data",
   "events": "Heutige Veranstaltungen",
-  "all_events": "Alle Veranstaltungen anzeigen",
   "settings": "Einstellungen",
   "reset": "Zurücksetzen",
   "period": "Zeitraum",
@@ -42,9 +41,7 @@
   "distance": "Entfernung",
   "cancel": "Abbrechen",
   "options": "Optionen",
-  "apply": "Anwenden"
-
+  "apply": "Anwenden",
   "all_events": "Alle Veranstaltungen anzeigen",
   "check_your_email": "Ein Link wurde an deine E-Mail-Adresse gesendet. Bitte überprüfe sie."
-
 }
