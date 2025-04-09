@@ -149,6 +149,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     path: eventListScreenPath,
                     context: context,
                     params: EventListScreenParameter(
+                        radius: 1,
+                        centerLatitude: 49.53838,
+                        centerLongitude: 7.40647,
                         categoryId: 3,
                         listHeading: AppLocalizations.of(context).all_events));
               },
@@ -200,6 +203,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     path: eventListScreenPath,
                     context: context,
                     params: EventListScreenParameter(
+                        radius: 1,
+                        centerLatitude: 49.53838,
+                        centerLongitude: 7.40647,
                         categoryId: 3,
                         listHeading: AppLocalizations.of(context).all_events));
               },
