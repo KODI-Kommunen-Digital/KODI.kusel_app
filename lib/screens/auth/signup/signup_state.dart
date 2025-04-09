@@ -1,13 +1,15 @@
 class SignUpState {
   bool showPassword;
+  bool isLoading;
 
-  SignUpState(this.showPassword);
+  SignUpState(this.showPassword, this.isLoading);
 
   factory SignUpState.empty() {
-    return SignUpState(false);
+    return SignUpState(false, false);
   }
 
-  SignUpState copyWith({bool? showPassword}) {
-    return SignUpState(showPassword ?? this.showPassword);
+  SignUpState copyWith({bool? showPassword, bool? isLoading}) {
+    return SignUpState(
+        showPassword ?? this.showPassword, isLoading ?? this.isLoading);
   }
 }
