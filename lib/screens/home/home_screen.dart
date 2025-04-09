@@ -1,3 +1,4 @@
+import 'package:domain/model/response_model/favorites/get_favorites_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -7,6 +8,7 @@ import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/highlights_card.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/weather_widget.dart';
+import 'package:kusel/providers/favorites_list_notifier.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/home/home_screen_state.dart';
 
@@ -31,6 +33,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(homeScreenProvider.notifier).getFavorites(success: (list) {
+        ref.read(favoritesListProvider.notifier).setFavorites(list ?? []);
+      });
       ref.read(homeScreenProvider.notifier).getUserDetails();
       ref.read(homeScreenProvider.notifier).getHighlights();
       ref.read(homeScreenProvider.notifier).getEvents();
@@ -224,6 +229,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Widget customCarouselView(CarouselController carouselController) {
     HomeScreenState state = ref.watch(homeScreenProvider);
+    List<FavoritesItem> favoriteList = ref.watch(favoritesListProvider);
     int currentIndex = state.highlightCount;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
@@ -292,10 +298,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: CarouselView(
               controller: carouselController,
               onTap: (index) {
-                ref.read(navigationProvider).navigateUsingPath(
-                    context: context,
-                    path: eventScreenPath,
-                    params: state.highlightsList[index]);
+                ref.read(favoritesListProvider.notifier).toggleFavorite(
+                    state.highlightsList[index],
+                    success: () {
+
+                    },
+                    error: (error) {});
               },
               scrollDirection: Axis.horizontal,
               itemExtent: 317,
@@ -308,8 +316,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     date: listing.createdAt ?? "",
                     heading: listing.title ?? "",
                     description: listing.description ?? "",
-                    isFavourite: false,
-                    onPress: () {},
+                    isFavourite: ref.read(favoritesListProvider.notifier).checkIsFavorite(listing),
+                    onPress: () {
+
+                    },
                     onFavouriteIconClick: () {});
               }).toList(),
             ),
