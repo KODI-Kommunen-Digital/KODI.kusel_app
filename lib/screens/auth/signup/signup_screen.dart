@@ -9,7 +9,9 @@ import 'package:flutter_svg/svg.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/kusel_text_field.dart';
+import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/common_widgets/toast_message.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/navigator/navigator.dart';
 import 'package:kusel/screens/auth/signup/signup_controller.dart';
@@ -80,7 +82,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         body: _buildBody(context),
-      ),
+      ).loaderDialog(context, ref.watch(signUpScreenProvider).isLoading),
     );
   }
 
@@ -221,16 +223,26 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               ),
               32.verticalSpace,
               CustomButton(
-                onPressed: () {
+                onPressed: () async {
                   if (signupFormKey.currentState?.validate() ?? false) {
-                    ref.read(signUpScreenProvider.notifier).registerUser(
+                    await ref.read(signUpScreenProvider.notifier).registerUser(
                         userName: userNameTextEditingController.text,
                         password: passwordTextEditingController.text,
                         firstName: firstNameTextEditingController.text,
                         lastName: lastNameTextEditingController.text,
                         email: emailTextEditingController.text,
-                        onError: (value) {},
-                        onSuccess: (value) {});
+                        onError: (value) {
+                          showErrorToast(message: value, context: context);
+                        },
+                        onSuccess: () {
+                          showSuccessToast(
+                              message:
+                                  AppLocalizations.of(context).check_your_email,
+                              context: context);
+                          ref
+                              .read(navigationProvider)
+                              .removeTopPage(context: context);
+                        });
                   }
                 },
                 text: AppLocalizations.of(context).signup,
