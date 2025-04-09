@@ -46,5 +46,7 @@
   "options": "Options",
   "apply": "Apply"
 
+  "all_events": "View all events",
+  "check_your_email": "A link has been send to your email, please verify"
 
 }

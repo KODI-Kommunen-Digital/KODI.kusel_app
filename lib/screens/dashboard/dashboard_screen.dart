@@ -21,6 +21,12 @@ class DashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   final List<Widget> _pages = [
     HomeScreen(),
     CategoryScreen(),
