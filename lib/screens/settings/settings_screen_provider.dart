@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:core/preference_manager/preference_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/locale/locale_constant.dart';
@@ -24,6 +25,17 @@ class SettingsScreenProvider extends StateNotifier<SettingsScreenState> {
   logoutUser(void Function() callBack)async {
     await sharedPreferenceHelper.clear();
     callBack();
+    getLoginStatus();
+
+  }
+
+  void getLoginStatus() {
+    final token = sharedPreferenceHelper.getString(tokenKey);
+    if (token == null) {
+      state = state.copyWith(isSignupButtonVisible: true);
+    } else {
+      state = state.copyWith(isSignupButtonVisible: false);
+    }
   }
 
   changeLanguage({required String selectedLanguage}) {
