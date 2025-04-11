@@ -36,7 +36,6 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       required this.userDetailUseCase})
       : super(HomeScreenState.empty());
 
-
   Future<void> getHighlights() async {
     try {
       state = state.copyWith(loading: true, error: "");
@@ -155,6 +154,15 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       });
     } catch (error) {
       debugPrint('get user details exception : $error');
+    }
+  }
+
+  void getLoginStatus() {
+    final token = sharedPreferenceHelper.getString(tokenKey);
+    if (token == null) {
+      state = state.copyWith(isSignupButtonVisible: true);
+    } else {
+      state = state.copyWith(isSignupButtonVisible: false);
     }
   }
 }
