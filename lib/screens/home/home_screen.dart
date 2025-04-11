@@ -29,6 +29,9 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
+    Future.microtask(() {
+      ref.read(homeScreenProvider.notifier).getLoginStatus();
+    });
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(homeScreenProvider.notifier).getUserDetails();
@@ -68,7 +71,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ClipPath(
                   clipper: UpstreamWaveClipper(),
                   child: Container(
-                    height: 272.h,
+                    height: 285.h,
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage(
@@ -79,7 +82,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                 ),
                 Positioned(
-                  top: 70.h,
+                  top: 85.h,
                   left: 20.w,
                   right: 20.w,
                   child: Column(
@@ -121,6 +124,31 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ],
                   ),
                 ),
+                Visibility(
+                  visible: ref.watch(homeScreenProvider).isSignupButtonVisible,
+                    child: Positioned(
+                        left: 210.w,
+                        top: 30.h,
+                        child: GestureDetector(
+                          onTap: () {
+                            ref.read(navigationProvider).removeAllAndNavigate(
+                                context: context, path: signInScreenPath);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30.r),
+                                border: Border.all(
+                                    width: 2.w,
+                                    color: Theme.of(context).primaryColor)),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10.w, vertical: 6.h),
+                            child: textBoldPoppins(
+                                text:
+                                    AppLocalizations.of(context).log_in_sign_up,
+                                fontSize: 13.sp,
+                                color: Theme.of(context).primaryColor),
+                          ),
+                        )))
               ],
             ),
             customCarouselView(carouselController),

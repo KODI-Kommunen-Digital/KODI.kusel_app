@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:core/preference_manager/preference_constant.dart';
 import 'package:core/preference_manager/shared_pref_helper.dart';
@@ -16,14 +17,7 @@ class SplashScreenProvider extends StateNotifier<SplashScreenState> {
   SplashScreenProvider({required this.sharedPreferenceHelper})
       : super(SplashScreenState.empty());
 
-  startTimer(Function(bool isLogin) callBack) {
-    Timer(Duration(seconds: 2), () async {
-      final token = sharedPreferenceHelper.getString(tokenKey);
-      if (token == null) {
-        callBack(false);
-      } else {
-        callBack(true);
-      }
-    });
+  void startTimer(VoidCallback callBack) {
+    Timer(const Duration(seconds: 2), callBack);
   }
 }

@@ -19,6 +19,15 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+
+  @override
+  void initState() {
+    Future.microtask(() {
+      ref.read(settingsScreenProvider.notifier).getLoginStatus();
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -50,15 +59,29 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           onTap: () => _showLanguageDialog(context),
         ),
         const Divider(),
-        ListTile(
-          leading: const Icon(Icons.logout),
-          title: textBoldPoppins(text: AppLocalizations.of(context).logout,textAlign: TextAlign.start,),
-          onTap: () async {
-            ref.read(settingsScreenProvider.notifier).logoutUser(() {
+        Visibility(
+          visible: !ref.watch(settingsScreenProvider).isSignupButtonVisible,
+          child: ListTile(
+            leading: const Icon(Icons.logout),
+            title: textBoldPoppins(text: AppLocalizations.of(context).logout,textAlign: TextAlign.start,),
+            onTap: () async {
+              ref.read(settingsScreenProvider.notifier).logoutUser(() {
+                ref.read(navigationProvider).removeAllAndNavigate(
+                    context: context, path: dashboardScreenPath);
+              });
+            },
+          ),
+        ),
+        Visibility(
+          visible: ref.watch(settingsScreenProvider).isSignupButtonVisible,
+          child: ListTile(
+            leading: const Icon(Icons.login),
+            title: textBoldPoppins(text: AppLocalizations.of(context).log_in_sign_up,textAlign: TextAlign.start,),
+            onTap: () async {
               ref.read(navigationProvider).removeAllAndNavigate(
                   context: context, path: signInScreenPath);
-            });
-          },
+            },
+          ),
         ),
       ],
     );
