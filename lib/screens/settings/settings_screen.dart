@@ -22,15 +22,10 @@ class SettingsScreen extends ConsumerStatefulWidget {
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   @override
-  void initState() {
-    Future.microtask(() {
-      ref.read(settingsScreenProvider.notifier).getLoginStatus();
-    });
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    Future.microtask(() {
+      ref.read(dashboardScreenProvider.notifier).getLoginStatus();
+    });
     return SafeArea(
       child: Scaffold(
         body: _buildBody(context),
@@ -61,7 +56,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ),
         const Divider(),
         Visibility(
-          visible: !ref.watch(settingsScreenProvider).isSignupButtonVisible,
+          visible: !ref.watch(dashboardScreenProvider).isSignupButtonVisible,
           child: ListTile(
             leading: const Icon(Icons.logout),
             title: textBoldPoppins(
@@ -76,7 +71,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
         ),
         Visibility(
-          visible: ref.watch(settingsScreenProvider).isSignupButtonVisible,
+          visible: ref.watch(dashboardScreenProvider).isSignupButtonVisible,
           child: ListTile(
             leading: const Icon(Icons.login),
             title: textBoldPoppins(

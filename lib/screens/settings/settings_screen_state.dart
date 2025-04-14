@@ -3,26 +3,21 @@ import 'package:kusel/locale/locale_constant.dart';
 class SettingsScreenState {
   List<String> languageList;
   String selectedLanguage;
-  bool isSignupButtonVisible;
 
   SettingsScreenState(
-      this.languageList, this.selectedLanguage, this.isSignupButtonVisible);
+      this.languageList, this.selectedLanguage);
 
   factory SettingsScreenState.empty() {
     return SettingsScreenState(
         [LocaleConstant.english.displayName, LocaleConstant.german.displayName],
-        LocaleConstant.english.displayName,
-        true);
+        LocaleConstant.english.displayName);
   }
 
   SettingsScreenState copyWith(
       {List<String>? languageList,
-      String? selectedLanguage,
-      String? selectedLanguageCode,
-      bool? isSignupButtonVisible}) {
+      String? selectedLanguage}) {
     return SettingsScreenState(
         languageList ?? this.languageList,
-        selectedLanguage ?? this.selectedLanguage,
-        isSignupButtonVisible ?? this.isSignupButtonVisible);
+        selectedLanguage ?? this.selectedLanguage);
   }
 }

@@ -25,17 +25,6 @@ class SettingsScreenProvider extends StateNotifier<SettingsScreenState> {
   logoutUser(void Function() callBack)async {
     await sharedPreferenceHelper.clear();
     callBack();
-    getLoginStatus();
-
-  }
-
-  void getLoginStatus() {
-    final token = sharedPreferenceHelper.getString(tokenKey);
-    if (token == null) {
-      state = state.copyWith(isSignupButtonVisible: true);
-    } else {
-      state = state.copyWith(isSignupButtonVisible: false);
-    }
   }
 
   changeLanguage({required String selectedLanguage}) {
