@@ -45,5 +45,7 @@
   "cancel": "Cancel",
   "options": "Options",
   "apply": "Apply",
-  "check_your_email": "A link has been send to your email, please verify"
+  "check_your_email": "A link has been send to your email, please verify",
+  "near_you": "Near you",
+  "to_map_view": "To map view"
 }
