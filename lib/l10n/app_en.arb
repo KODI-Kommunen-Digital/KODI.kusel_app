@@ -48,5 +48,6 @@
   "check_your_email": "A link has been send to your email, please verify",
   "log_in_sign_up": "SIGN UP | LOG IN",
   "near_you": "Near you",
-  "to_map_view": "To map view"
+  "to_map_view": "To map view",
+  "select_environment": "Select Environment"
 }

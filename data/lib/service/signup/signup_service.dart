@@ -3,18 +3,18 @@ import 'package:dartz/dartz.dart';
 import 'package:data/dio_helper_object.dart';
 import 'package:data/end_points.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:network/src/api_helper.dart';
 
-final signUpServiceProvider = Provider(
-        (ref) => SignUpService(apiHelper: ApiHelper(dioHelper: ref.read(dioHelperObjectProvider))));
+final signUpServiceProvider = Provider((ref) => SignUpService(ref: ref));
 
 class SignUpService {
-  ApiHelper apiHelper;
+  Ref ref;
 
-  SignUpService({required this.apiHelper});
+  SignUpService({required this.ref});
 
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
+    final apiHelper = ref.read(apiHelperProvider);
+
     final result = await apiHelper.postRequest(
         path: signUpEndPoint,
         create: () => responseModel,
