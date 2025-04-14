@@ -1,3 +1,4 @@
+import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,6 +35,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ref.read(homeScreenProvider.notifier).getUserDetails();
       ref.read(homeScreenProvider.notifier).getHighlights();
       ref.read(homeScreenProvider.notifier).getEvents();
+      ref.read(homeScreenProvider.notifier).getNearbyEvents();
     });
   }
 
@@ -55,6 +57,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget buildUi(CarouselController carouselController) {
+    HomeScreenState state = ref.watch(homeScreenProvider);
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -126,7 +129,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             customCarouselView(carouselController),
             20.verticalSpace,
             WeatherWidget(),
-            eventsView(),
+            eventsView(
+              state.eventsList,
+              AppLocalizations.of(context).near_you,
+              5,
+              AppLocalizations.of(context).to_map_view,
+              imagePath['map_icon'] ?? "",
+            ),
+            eventsView(
+              state.nearbyEventsList,
+              AppLocalizations.of(context).all_events,
+              3,
+              AppLocalizations.of(context).all_events,
+              imagePath['calendar'] ?? "",
+            ),
             FeedbackCardWidget(),
             100.verticalSpace
           ],
@@ -135,9 +151,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget eventsView() {
-    HomeScreenState state = ref.watch(homeScreenProvider);
-    if (state.eventsList.isNotEmpty) {
+  Widget eventsView(List<Listing> eventsList, String heading, int maxListLimit,
+      String buttonText, String buttonIconPath) {
+    if (eventsList.isNotEmpty) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -154,14 +170,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         centerLatitude: 49.53838,
                         centerLongitude: 7.40647,
                         categoryId: 3,
-                        listHeading: AppLocalizations.of(context).all_events));
+                        listHeading: heading));
               },
               child: Row(
                 children: [
                   Padding(
                     padding: EdgeInsets.only(left: 10.w),
                     child: textRegularPoppins(
-                        text: AppLocalizations.of(context).events,
+                        text: heading,
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).textTheme.labelLarge?.color),
@@ -179,10 +195,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount:
-                state.eventsList.length > 3 ? 3 : state.eventsList.length,
+            itemCount: eventsList.length > maxListLimit
+                ? maxListLimit
+                : eventsList.length,
             itemBuilder: (context, index) {
-              final item = state.eventsList[index];
+              final item = eventsList[index];
               return CommonEventCard(
                 imageUrl:
                     "https://fastly.picsum.photos/id/452/200/200.jpg?hmac=f5vORXpRW2GF7jaYrCkzX3EwDowO7OXgUaVYM2NNRXY",
@@ -199,23 +216,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: CustomButton(
-              onPressed: () {
-                ref.read(navigationProvider).navigateUsingPath(
-                    path: eventListScreenPath,
-                    context: context,
-                    // Need to be replaced with actual lat-long value
-                    params: EventListScreenParameter(
-                        radius: 1,
-                        centerLatitude: 49.53838,
-                        centerLongitude: 7.40647,
-                        categoryId: 3,
-                        listHeading: AppLocalizations.of(context).all_events));
-              },
-              text: AppLocalizations.of(context).all_events,
-              icon: imagePath['calendar'] ?? "",
-            ),
+                onPressed: () {
+                  ref.read(navigationProvider).navigateUsingPath(
+                      path: eventListScreenPath,
+                      context: context,
+                      // Need to be replaced with actual lat-long value
+                      params: EventListScreenParameter(
+                          radius: 1,
+                          centerLatitude: 49.53838,
+                          centerLongitude: 7.40647,
+                          categoryId: 3,
+                          listHeading: heading));
+                },
+                text: buttonText,
+                icon: buttonIconPath),
           ),
-          20.verticalSpace
+          15.verticalSpace
         ],
       );
     }

@@ -87,6 +87,34 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
     }
   }
 
+  Future<void> getNearbyEvents() async {
+    try {
+      state = state.copyWith(loading: true, error: "");
+
+      GetAllListingsRequestModel getAllListingsRequestModel =
+      GetAllListingsRequestModel(
+        radius: 1,
+        centerLatitude: 49.53838,
+        centerLongitude: 7.40647
+      );
+      GetAllListingsResponseModel getAllListingsResponseModel =
+      GetAllListingsResponseModel();
+      final result = await listingsUseCase.call(
+          getAllListingsRequestModel, getAllListingsResponseModel);
+      result.fold(
+            (l) {
+          state = state.copyWith(loading: false, error: l.toString());
+        },
+            (r) {
+          var listings = (r as GetAllListingsResponseModel).data;
+          state = state.copyWith(nearbyEventsList: listings, loading: false);
+        },
+      );
+    } catch (error) {
+      state = state.copyWith(loading: false, error: error.toString());
+    }
+  }
+
   Future<List<Listing>> searchList({
     required String searchText,
     required void Function() success,
