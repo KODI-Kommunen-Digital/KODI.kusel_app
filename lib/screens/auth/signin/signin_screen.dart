@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,6 +16,7 @@ import 'package:kusel/images_path.dart';
 import 'package:kusel/navigator/navigator.dart';
 import 'package:kusel/screens/auth/signin/signin_controller.dart';
 
+import '../../environment/environment_dialog.dart';
 import '../validator/empty_field_validator.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {
@@ -93,10 +95,20 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             15.verticalSpace,
-            Align(
-                alignment: Alignment.center,
-                child: textBoldPoppins(
-                    text: AppLocalizations.of(context).login, fontSize: 20.sp)),
+            GestureDetector(
+              onLongPress: ()async{
+                if(kDebugMode)
+                  {
+                    await showEnvironmentDialog(context: context,
+                    ref: ref);
+                  }
+
+              },
+              child: Align(
+                  alignment: Alignment.center,
+                  child: textBoldPoppins(
+                      text: AppLocalizations.of(context).login, fontSize: 20.sp)),
+            ),
             32.verticalSpace,
             Padding(
               padding: EdgeInsets.only(left: 8.w),
@@ -212,4 +224,5 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       ),
     );
   }
+
 }

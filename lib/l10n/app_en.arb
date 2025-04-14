@@ -33,6 +33,6 @@
   "no_data": "No data",
   "events": "Heutige Veranstaltungen",
   "all_events": "View all events",
-  "check_your_email": "A link has been send to your email, please verify"
-
+  "check_your_email": "A link has been send to your email, please verify",
+  "select_environment": "Select Environment"
 }

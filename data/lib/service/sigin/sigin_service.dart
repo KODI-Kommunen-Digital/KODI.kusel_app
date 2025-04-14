@@ -5,16 +5,18 @@ import 'package:data/end_points.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:network/src/api_helper.dart';
 
-final signInServiceProvider = Provider(
-    (ref) => SigInService(apiHelper: ApiHelper(dioHelper: ref.read(dioHelperObjectProvider))));
+final signInServiceProvider = Provider((ref) => SigInService(ref: ref));
 
 class SigInService {
-  ApiHelper apiHelper;
 
-  SigInService({required this.apiHelper});
+  Ref ref;
+  SigInService({required this.ref});
 
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
+
+    final apiHelper = ref.read(apiHelperProvider);
+
     final result = await apiHelper.postRequest(
         path: sigInEndPoint,
         create: () => responseModel,
