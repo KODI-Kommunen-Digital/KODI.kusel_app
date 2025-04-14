@@ -24,9 +24,6 @@ class EventListScreenController extends StateNotifier<EventListScreenState> {
 
       GetAllListingsRequestModel getAllListingsRequestModel =
       GetAllListingsRequestModel(
-        radius: eventListScreenParameter?.radius,
-        centerLatitude: eventListScreenParameter?.centerLongitude,
-        centerLongitude: eventListScreenParameter?.centerLatitude,
         categoryId: eventListScreenParameter?.categoryId.toString(),
         subcategoryId: eventListScreenParameter?.subCategoryId?.toString(),
       );
