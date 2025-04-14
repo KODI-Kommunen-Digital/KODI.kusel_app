@@ -6,6 +6,7 @@ class HomeScreenState {
   String error;
   final List<Listing> highlightsList;
   final List<Listing> eventsList;
+  final List<Listing> nearbyEventsList;
   String userName;
   bool isSignupButtonVisible;
 
@@ -16,10 +17,12 @@ class HomeScreenState {
       this.highlightsList,
       this.eventsList,
       this.userName,
-      this.isSignupButtonVisible);
+      this.isSignupButtonVisible,
+      this.nearbyEventsList
+      );
 
   factory HomeScreenState.empty() {
-    return HomeScreenState(0, false, '', [], [], "", true);
+    return HomeScreenState(0, false, '', [], [], "", []);
   }
 
   HomeScreenState copyWith(
@@ -30,6 +33,8 @@ class HomeScreenState {
       List<Listing>? eventsList,
       String? userName,
       bool? isSignupButtonVisible}) {
+      String? userName,
+      List<Listing>? nearbyEventsList}) {
     return HomeScreenState(
         highlightCount ?? this.highlightCount,
         loading ?? this.loading,
@@ -38,5 +43,7 @@ class HomeScreenState {
         eventsList ?? this.eventsList,
         userName ?? this.userName,
         isSignupButtonVisible ?? this.isSignupButtonVisible);
+        userName ?? this.userName,
+        nearbyEventsList ?? this.nearbyEventsList);
   }
 }
