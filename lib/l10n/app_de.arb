@@ -31,6 +31,6 @@
   "no_data": "No data",
   "events": "Heutige Veranstaltungen",
   "all_events": "Alle Veranstaltungen anzeigen",
-  "check_your_email": "Ein Link wurde an deine E-Mail-Adresse gesendet. Bitte überprüfe sie."
-
+  "check_your_email": "Ein Link wurde an deine E-Mail-Adresse gesendet. Bitte überprüfe sie.",
+  "select_environment": "Wählen Sie Umgebung aus"
 }
