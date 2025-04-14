@@ -8,6 +8,7 @@ import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/highlights_card.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/weather_widget.dart';
+import 'package:kusel/screens/dashboard/dashboard_screen_provider.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/home/home_screen_state.dart';
 
@@ -35,6 +36,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ref.read(homeScreenProvider.notifier).getUserDetails();
       ref.read(homeScreenProvider.notifier).getHighlights();
       ref.read(homeScreenProvider.notifier).getEvents();
+      ref.read(homeScreenProvider.notifier).getNearbyEvents();
       ref.read(homeScreenProvider.notifier).getNearbyEvents();
     });
   }
@@ -71,7 +73,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ClipPath(
                   clipper: UpstreamWaveClipper(),
                   child: Container(
-                    height: 272.h,
+                    height: 285.h,
                     decoration: BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage(
@@ -82,7 +84,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                 ),
                 Positioned(
-                  top: 70.h,
+                  top: 85.h,
                   left: 20.w,
                   right: 20.w,
                   child: Column(
@@ -124,6 +126,31 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ],
                   ),
                 ),
+                Visibility(
+                  visible: ref.watch(dashboardScreenProvider).isSignupButtonVisible,
+                    child: Positioned(
+                        left: 210.w,
+                        top: 30.h,
+                        child: GestureDetector(
+                          onTap: () {
+                            ref.read(navigationProvider).navigateUsingPath(
+                                context: context, path: signInScreenPath);
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30.r),
+                                border: Border.all(
+                                    width: 2.w,
+                                    color: Theme.of(context).primaryColor)),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 8.w, vertical: 5.h),
+                            child: textBoldPoppins(
+                                text:
+                                    AppLocalizations.of(context).log_in_sign_up,
+                                fontSize: 12.sp,
+                                color: Theme.of(context).primaryColor),
+                          ),
+                        )))
               ],
             ),
             customCarouselView(carouselController),
@@ -210,6 +237,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ref.read(navigationProvider).navigateUsingPath(
                       context: context, path: eventScreenPath, params: item);
                 },
+                isFavouriteVisible: !ref.watch(dashboardScreenProvider).isSignupButtonVisible,
               );
             },
           ),
@@ -319,14 +347,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               padding: EdgeInsets.all(6.h.w),
               children: state.highlightsList.map((listing) {
                 return HighlightsCard(
-                    imageUrl: imagePath['highlight_card_image'] ?? '',
-                    // need to be fixed
-                    date: listing.createdAt ?? "",
-                    heading: listing.title ?? "",
-                    description: listing.description ?? "",
-                    isFavourite: false,
-                    onPress: () {},
-                    onFavouriteIconClick: () {});
+                  imageUrl: imagePath['highlight_card_image'] ?? '',
+                  // need to be fixed
+                  date: listing.createdAt ?? "",
+                  heading: listing.title ?? "",
+                  description: listing.description ?? "",
+                  isFavourite: false,
+                  onPress: () {},
+                  onFavouriteIconClick: () {},
+                  isVisible: !ref.read(dashboardScreenProvider).isSignupButtonVisible,
+                );
               }).toList(),
             ),
           ),

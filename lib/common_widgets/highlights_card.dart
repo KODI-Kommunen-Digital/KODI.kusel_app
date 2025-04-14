@@ -16,6 +16,7 @@ class HighlightsCard extends ConsumerStatefulWidget {
   bool isFavourite;
   Function() onPress;
   Function() onFavouriteIconClick;
+  bool isVisible;
 
   HighlightsCard(
       {super.key,
@@ -25,7 +26,9 @@ class HighlightsCard extends ConsumerStatefulWidget {
       required this.description,
       required this.isFavourite,
       required this.onPress,
-      required this.onFavouriteIconClick});
+      required this.onFavouriteIconClick,
+      required this.isVisible
+      });
 
   @override
   ConsumerState<HighlightsCard> createState() => _HighlightsCardState();
@@ -65,18 +68,21 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                       child: Image.asset(widget.imageUrl, fit: BoxFit.cover),
                     ),
                   ),
-                  Positioned(
-                    top: 5.h,
-                    left: 195.w,
-                    child: Container(
-                      padding: EdgeInsets.all(10.r),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor,
-                        borderRadius: BorderRadius.circular(50.r),
-                      ),
-                      child: Icon(
-                        Icons.favorite_border_sharp,
-                        color: Colors.white,
+                  Visibility(
+                    visible: widget.isVisible,
+                    child: Positioned(
+                      top: 5.h,
+                      left: 195.w,
+                      child: Container(
+                        padding: EdgeInsets.all(10.r),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor,
+                          borderRadius: BorderRadius.circular(50.r),
+                        ),
+                        child: Icon(
+                          Icons.favorite_border_sharp,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
