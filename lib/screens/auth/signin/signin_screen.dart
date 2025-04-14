@@ -15,6 +15,7 @@ import 'package:kusel/images_path.dart';
 import 'package:kusel/navigator/navigator.dart';
 import 'package:kusel/screens/auth/signin/signin_controller.dart';
 
+import '../../dashboard/dashboard_screen_provider.dart';
 import '../validator/empty_field_validator.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {
@@ -181,6 +182,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                         success: () {
                           ref.read(navigationProvider).removeAllAndNavigate(
                               context: context, path: dashboardScreenPath);
+                          ref.read(dashboardScreenProvider.notifier).onIndexChanged(0);
                         },
                         error: (message) {
                           showErrorToast(message: message, context: context);
