@@ -8,6 +8,7 @@ import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/highlights_card.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/weather_widget.dart';
+import 'package:kusel/screens/dashboard/dashboard_screen_provider.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/home/home_screen_state.dart';
 
@@ -30,14 +31,12 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
-    Future.microtask(() {
-      ref.read(homeScreenProvider.notifier).getLoginStatus();
-    });
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(homeScreenProvider.notifier).getUserDetails();
       ref.read(homeScreenProvider.notifier).getHighlights();
       ref.read(homeScreenProvider.notifier).getEvents();
+      ref.read(homeScreenProvider.notifier).getNearbyEvents();
       ref.read(homeScreenProvider.notifier).getNearbyEvents();
     });
   }
@@ -128,7 +127,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                 ),
                 Visibility(
-                  visible: ref.watch(homeScreenProvider).isSignupButtonVisible,
+                  visible: ref.watch(dashboardScreenProvider).isSignupButtonVisible,
                     child: Positioned(
                         left: 210.w,
                         top: 30.h,
@@ -238,6 +237,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ref.read(navigationProvider).navigateUsingPath(
                       context: context, path: eventScreenPath, params: item);
                 },
+                isFavouriteVisible: !ref.watch(dashboardScreenProvider).isSignupButtonVisible,
               );
             },
           ),
@@ -355,7 +355,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   isFavourite: false,
                   onPress: () {},
                   onFavouriteIconClick: () {},
-                  isVisible: !ref.read(homeScreenProvider).isSignupButtonVisible,
+                  isVisible: !ref.read(dashboardScreenProvider).isSignupButtonVisible,
                 );
               }).toList(),
             ),

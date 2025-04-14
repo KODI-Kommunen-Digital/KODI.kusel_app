@@ -10,6 +10,7 @@ class CommonEventCard extends ConsumerStatefulWidget {
   final String date;
   final String title;
   final String location;
+  final bool isFavouriteVisible;
   final VoidCallback? onTap;
   final VoidCallback? onFavorite;
 
@@ -19,6 +20,7 @@ class CommonEventCard extends ConsumerStatefulWidget {
     required this.date,
     required this.title,
     required this.location,
+    required this.isFavouriteVisible,
     this.onTap,
     this.onFavorite,
   }) : super(key: key);
@@ -69,11 +71,14 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                   ],
                 ),
               ),
-              InkWell(
-                onTap: widget.onFavorite,
-                child: const Icon(
-                  Icons.favorite_border,
-                  color: Colors.black,
+              Visibility(
+                visible: widget.isFavouriteVisible,
+                child: InkWell(
+                  onTap: widget.onFavorite,
+                  child: const Icon(
+                    Icons.favorite_border,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ],

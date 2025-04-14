@@ -9,6 +9,7 @@ import 'package:kusel/screens/search/search_screen.dart';
 import '../../images_path.dart';
 import '../../theme_manager/colors.dart';
 import '../home/home_screen.dart';
+import '../home/home_screen_provider.dart';
 import '../location/location_screen.dart';
 import '../settings/settings_screen.dart';
 import 'dashboard_screen_provider.dart';
@@ -22,11 +23,6 @@ class DashboardScreen extends ConsumerStatefulWidget {
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   final List<Widget> _pages = [
     HomeScreen(),
     CategoryScreen(),
@@ -34,6 +30,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     LocationScreen(),
     SettingsScreen()
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ref.read(dashboardScreenProvider.notifier).getLoginStatus();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
