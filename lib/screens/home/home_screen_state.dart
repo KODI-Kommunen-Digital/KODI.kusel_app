@@ -6,9 +6,8 @@ class HomeScreenState {
   String error;
   final List<Listing> highlightsList;
   final List<Listing> eventsList;
-  final List<Listing> nearbyEventsList;
   String userName;
-  bool isSignupButtonVisible;
+  final List<Listing> nearbyEventsList;
 
   HomeScreenState(
       this.highlightCount,
@@ -17,9 +16,7 @@ class HomeScreenState {
       this.highlightsList,
       this.eventsList,
       this.userName,
-      this.isSignupButtonVisible,
-      this.nearbyEventsList
-      );
+      this.nearbyEventsList);
 
   factory HomeScreenState.empty() {
     return HomeScreenState(0, false, '', [], [], "", []);
@@ -32,8 +29,6 @@ class HomeScreenState {
       List<Listing>? highlightsList,
       List<Listing>? eventsList,
       String? userName,
-      bool? isSignupButtonVisible}) {
-      String? userName,
       List<Listing>? nearbyEventsList}) {
     return HomeScreenState(
         highlightCount ?? this.highlightCount,
@@ -41,8 +36,6 @@ class HomeScreenState {
         error ?? this.error,
         highlightsList ?? this.highlightsList,
         eventsList ?? this.eventsList,
-        userName ?? this.userName,
-        isSignupButtonVisible ?? this.isSignupButtonVisible);
         userName ?? this.userName,
         nearbyEventsList ?? this.nearbyEventsList);
   }
