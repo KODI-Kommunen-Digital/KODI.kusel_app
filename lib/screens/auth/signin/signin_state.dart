@@ -1,6 +1,9 @@
+import 'package:core/environment/environment_type.dart';
+
 class SignInState {
   bool showPassword;
   bool showLoading;
+
 
   SignInState(this.showPassword,this.showLoading);
 
@@ -10,6 +13,7 @@ class SignInState {
 
   SignInState copyWith({bool? showPassword, bool? showLoading}) {
     return SignInState(showPassword ?? this.showPassword,
-    showLoading??this.showLoading);
+    showLoading??this.showLoading
+    );
   }
 }

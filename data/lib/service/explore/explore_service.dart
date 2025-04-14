@@ -3,18 +3,18 @@ import 'package:dartz/dartz.dart';
 import 'package:data/dio_helper_object.dart';
 import 'package:data/end_points.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:network/src/api_helper.dart';
 
-final exploreServiceProvider = Provider(
-    (ref) => ExploreService(apiHelper: ApiHelper(dioHelper: ref.read(dioHelperObjectProvider))));
+final exploreServiceProvider = Provider((ref) => ExploreService(ref: ref));
 
 class ExploreService {
-  ApiHelper apiHelper;
+  Ref ref;
 
-  ExploreService({required this.apiHelper});
+  ExploreService({required this.ref});
 
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
+    final apiHelper = ref.read(apiHelperProvider);
+
     final result = await apiHelper.getRequest(
         path: exploreEndpoint, create: () => responseModel);
 
