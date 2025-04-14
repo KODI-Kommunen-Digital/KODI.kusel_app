@@ -25,6 +25,7 @@ Map<String, String> _pngImagePath = {
   "home_screen_background": "assets/png/home_screen_background.png",
   "background_image": "assets/png/home_screen_background.png",
   "calendar": "assets/png/calendar.png",
+  "map_icon":"assets/png/map_icon.png",
 };
 
 Map<String, String> _jpegImagePath = {
