@@ -20,7 +20,7 @@ class DashBoardScreenProvider extends StateNotifier<DashboardScreenState> {
       { required this.sharedPreferenceHelper})
       : super(DashboardScreenState.empty());
 
-  void onItemTapped(int index) {
+  void onIndexChanged(int index) {
     state = state.copyWith(selectedIndex: index);
   }
 

@@ -58,7 +58,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               enableFloatingNavBar: true,
               paddingR: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
               marginR: const EdgeInsets.all(0),
-              onTap: ref.read(dashboardScreenProvider.notifier).onItemTapped,
+              onTap: ref.read(dashboardScreenProvider.notifier).onIndexChanged,
               dotIndicatorColor: Theme.of(context).indicatorColor,
               itemPadding:
                   const EdgeInsets.only(top: 8, bottom: 0, left: 16, right: 16),

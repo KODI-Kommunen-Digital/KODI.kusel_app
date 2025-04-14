@@ -131,7 +131,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         top: 30.h,
                         child: GestureDetector(
                           onTap: () {
-                            ref.read(navigationProvider).removeAllAndNavigate(
+                            ref.read(navigationProvider).navigateUsingPath(
                                 context: context, path: signInScreenPath);
                           },
                           child: Container(
@@ -141,11 +141,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     width: 2.w,
                                     color: Theme.of(context).primaryColor)),
                             padding: EdgeInsets.symmetric(
-                                horizontal: 10.w, vertical: 6.h),
+                                horizontal: 8.w, vertical: 5.h),
                             child: textBoldPoppins(
                                 text:
                                     AppLocalizations.of(context).log_in_sign_up,
-                                fontSize: 13.sp,
+                                fontSize: 12.sp,
                                 color: Theme.of(context).primaryColor),
                           ),
                         )))
@@ -331,14 +331,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               padding: EdgeInsets.all(6.h.w),
               children: state.highlightsList.map((listing) {
                 return HighlightsCard(
-                    imageUrl: imagePath['highlight_card_image'] ?? '',
-                    // need to be fixed
-                    date: listing.createdAt ?? "",
-                    heading: listing.title ?? "",
-                    description: listing.description ?? "",
-                    isFavourite: false,
-                    onPress: () {},
-                    onFavouriteIconClick: () {});
+                  imageUrl: imagePath['highlight_card_image'] ?? '',
+                  // need to be fixed
+                  date: listing.createdAt ?? "",
+                  heading: listing.title ?? "",
+                  description: listing.description ?? "",
+                  isFavourite: false,
+                  onPress: () {},
+                  onFavouriteIconClick: () {},
+                  isVisible: !ref.read(homeScreenProvider).isSignupButtonVisible,
+                );
               }).toList(),
             ),
           ),
