@@ -43,6 +43,7 @@
   "options": "Optionen",
   "apply": "Anwenden",
   "all_events": "Alle Veranstaltungen anzeigen",
+  "select_environment": "Wählen Sie Umgebung aus",
   "check_your_email": "Ein Link wurde an deine E-Mail-Adresse gesendet. Bitte überprüfe sie.",
   "log_in_sign_up": "LOG IN | SIGN UP",
   "near_you": "In deiner Nähe",
