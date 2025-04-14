@@ -10,6 +10,7 @@ import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/settings/settings_screen_provider.dart';
 
 import '../../theme_manager/colors.dart';
+import '../dashboard/dashboard_screen_provider.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -63,11 +64,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           visible: !ref.watch(settingsScreenProvider).isSignupButtonVisible,
           child: ListTile(
             leading: const Icon(Icons.logout),
-            title: textBoldPoppins(text: AppLocalizations.of(context).logout,textAlign: TextAlign.start,),
+            title: textBoldPoppins(
+              text: AppLocalizations.of(context).logout,
+              textAlign: TextAlign.start,
+            ),
             onTap: () async {
               ref.read(settingsScreenProvider.notifier).logoutUser(() {
-                ref.read(navigationProvider).removeAllAndNavigate(
-                    context: context, path: dashboardScreenPath);
+                ref.read(dashboardScreenProvider.notifier).onIndexChanged(0);
               });
             },
           ),
@@ -76,10 +79,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           visible: ref.watch(settingsScreenProvider).isSignupButtonVisible,
           child: ListTile(
             leading: const Icon(Icons.login),
-            title: textBoldPoppins(text: AppLocalizations.of(context).log_in_sign_up,textAlign: TextAlign.start,),
+            title: textBoldPoppins(
+              text: AppLocalizations.of(context).log_in_sign_up,
+              textAlign: TextAlign.start,
+            ),
             onTap: () async {
-              ref.read(navigationProvider).removeAllAndNavigate(
-                  context: context, path: signInScreenPath);
+              ref.read(navigationProvider).navigateUsingPath(
+                  context: context, path: signInScreenPath
+              );
             },
           ),
         ),
