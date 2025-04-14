@@ -36,7 +36,6 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       required this.userDetailUseCase})
       : super(HomeScreenState.empty());
 
-
   Future<void> getHighlights() async {
     try {
       state = state.copyWith(loading: true, error: "");
@@ -185,4 +184,5 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       debugPrint('get user details exception : $error');
     }
   }
+
 }

@@ -10,6 +10,7 @@ import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/settings/settings_screen_provider.dart';
 
 import '../../theme_manager/colors.dart';
+import '../dashboard/dashboard_screen_provider.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -19,8 +20,12 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+
   @override
   Widget build(BuildContext context) {
+    Future.microtask(() {
+      ref.read(dashboardScreenProvider.notifier).getLoginStatus();
+    });
     return SafeArea(
       child: Scaffold(
         body: _buildBody(context),
@@ -50,15 +55,35 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           onTap: () => _showLanguageDialog(context),
         ),
         const Divider(),
-        ListTile(
-          leading: const Icon(Icons.logout),
-          title: textBoldPoppins(text: AppLocalizations.of(context).logout,textAlign: TextAlign.start,),
-          onTap: () async {
-            ref.read(settingsScreenProvider.notifier).logoutUser(() {
-              ref.read(navigationProvider).removeAllAndNavigate(
-                  context: context, path: signInScreenPath);
-            });
-          },
+        Visibility(
+          visible: !ref.watch(dashboardScreenProvider).isSignupButtonVisible,
+          child: ListTile(
+            leading: const Icon(Icons.logout),
+            title: textBoldPoppins(
+              text: AppLocalizations.of(context).logout,
+              textAlign: TextAlign.start,
+            ),
+            onTap: () async {
+              ref.read(settingsScreenProvider.notifier).logoutUser(() {
+                ref.read(dashboardScreenProvider.notifier).onIndexChanged(0);
+              });
+            },
+          ),
+        ),
+        Visibility(
+          visible: ref.watch(dashboardScreenProvider).isSignupButtonVisible,
+          child: ListTile(
+            leading: const Icon(Icons.login),
+            title: textBoldPoppins(
+              text: AppLocalizations.of(context).log_in_sign_up,
+              textAlign: TextAlign.start,
+            ),
+            onTap: () async {
+              ref.read(navigationProvider).navigateUsingPath(
+                  context: context, path: signInScreenPath
+              );
+            },
+          ),
         ),
       ],
     );
