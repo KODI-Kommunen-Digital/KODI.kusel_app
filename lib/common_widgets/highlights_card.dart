@@ -2,21 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
-import 'package:kusel/theme_manager/colors.dart';
-
-import '../app_router.dart';
-import '../navigation/navigation.dart';
 
 class HighlightsCard extends ConsumerStatefulWidget {
-  String imageUrl;
-  String date;
-  String heading;
-  String description;
-  bool isFavourite;
-  Function() onPress;
-  Function() onFavouriteIconClick;
-  bool isVisible;
+  final String imageUrl;
+  final String date;
+  final String heading;
+  final String description;
+  final bool isFavourite;
+  final Function() onPress;
+  final Function() onFavouriteIconClick;
+  final bool isVisible;
 
   HighlightsCard(
       {super.key,
@@ -27,8 +24,7 @@ class HighlightsCard extends ConsumerStatefulWidget {
       required this.isFavourite,
       required this.onPress,
       required this.onFavouriteIconClick,
-      required this.isVisible
-      });
+      required this.isVisible});
 
   @override
   ConsumerState<HighlightsCard> createState() => _HighlightsCardState();
@@ -51,7 +47,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
         ],
       ),
       child: InkWell(
-        onTap: (){
+        onTap: () {
           widget.onPress;
         },
         child: Column(
@@ -65,7 +61,8 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                     borderRadius: BorderRadius.circular(18.r),
                     child: SizedBox(
                       height: 200.h,
-                      child: Image.asset(widget.imageUrl, fit: BoxFit.cover),
+                      child:
+                      Image.asset(widget.imageUrl, fit: BoxFit.cover),
                     ),
                   ),
                   Visibility(
@@ -95,11 +92,17 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
               children: [
                 4.verticalSpace,
                 textSemiBoldMontserrat(
-                  text:formatDate(widget.date), fontSize: 14),
+                    text: formatDate(widget.date), fontSize: 14),
                 4.verticalSpace,
-                textSemiBoldMontserrat(text: widget.heading, fontSize: 16),
+                textSemiBoldMontserrat(
+                    text: widget.heading, fontSize: 16),
                 4.verticalSpace,
-                textSemiBoldMontserrat(text: widget.description, fontSize: 14, textAlign: TextAlign.start, textOverflow: TextOverflow.visible, maxLines: 3)
+                textSemiBoldMontserrat(
+                    text: widget.description,
+                    fontSize: 14,
+                    textAlign: TextAlign.start,
+                    textOverflow: TextOverflow.visible,
+                    maxLines: 3)
               ],
             )
           ],
@@ -113,9 +116,49 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
       final DateTime parsedDate = DateTime.parse(inputDate);
       final DateFormat formatter = DateFormat('dd.MM.yyyy');
       return formatter.format(parsedDate);
-    }
-    catch(e){
+    } catch (e) {
       return inputDate;
     }
   }
+
+
+}
+
+Widget highlightCardShimmerEffect() {
+  return Padding(
+    padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 14.w),
+    child: Column(
+      children: [
+        CustomShimmerWidget.circular(
+          height: 200.h,
+          width: double.infinity,
+          shapeBorder:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+        ),
+        10.verticalSpace,
+        CustomShimmerWidget.rectangular(
+          height: 15.h,
+          shapeBorder:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r))
+        ),
+        10.verticalSpace,
+        CustomShimmerWidget.rectangular(
+            height: 15.h,
+            shapeBorder:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r))
+        ),        10.verticalSpace,
+        CustomShimmerWidget.rectangular(
+            height: 15.h,
+            shapeBorder:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r))
+        ),        10.verticalSpace,
+        CustomShimmerWidget.rectangular(
+            height: 15.h,
+            shapeBorder:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r))
+        ),
+
+      ],
+    ),
+  );
 }
