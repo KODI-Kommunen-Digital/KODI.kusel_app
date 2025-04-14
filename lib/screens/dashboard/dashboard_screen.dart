@@ -9,6 +9,7 @@ import 'package:kusel/screens/search/search_screen.dart';
 import '../../images_path.dart';
 import '../../theme_manager/colors.dart';
 import '../home/home_screen.dart';
+import '../home/home_screen_provider.dart';
 import '../location/location_screen.dart';
 import '../settings/settings_screen.dart';
 import 'dashboard_screen_provider.dart';
@@ -22,11 +23,6 @@ class DashboardScreen extends ConsumerStatefulWidget {
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   final List<Widget> _pages = [
     HomeScreen(),
     CategoryScreen(),
@@ -34,6 +30,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     LocationScreen(),
     SettingsScreen()
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      ref.read(dashboardScreenProvider.notifier).getLoginStatus();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +62,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               enableFloatingNavBar: true,
               paddingR: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
               marginR: const EdgeInsets.all(0),
-              onTap: ref.read(dashboardScreenProvider.notifier).onItemTapped,
+              onTap: ref.read(dashboardScreenProvider.notifier).onIndexChanged,
               dotIndicatorColor: Theme.of(context).indicatorColor,
               itemPadding:
                   const EdgeInsets.only(top: 8, bottom: 0, left: 16, right: 16),

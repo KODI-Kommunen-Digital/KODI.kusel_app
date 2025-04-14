@@ -6,8 +6,8 @@ class HomeScreenState {
   String error;
   final List<Listing> highlightsList;
   final List<Listing> eventsList;
-  final List<Listing> nearbyEventsList;
   String userName;
+  final List<Listing> nearbyEventsList;
 
   HomeScreenState(
       this.highlightCount,
