@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
+import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/highlights_card.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/weather_widget.dart';
@@ -59,6 +60,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget buildUi(CarouselController carouselController) {
+    final isLoading = ref.watch(homeScreenProvider).loading;
     HomeScreenState state = ref.watch(homeScreenProvider);
     return GestureDetector(
       onTap: () {
@@ -70,7 +72,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           children: [
             Stack(
               children: [
-                ClipPath(
+                isLoading ? Container(
+                  height: 285.h,
+                ) : ClipPath(
                   clipper: UpstreamWaveClipper(),
                   child: Container(
                     height: 285.h,
@@ -89,45 +93,65 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   right: 20.w,
                   child: Column(
                     children: [
-                      textBoldPoppins(
-                        fontSize: 20,
-                        color: Theme.of(context).textTheme.labelLarge?.color,
-                        textAlign: TextAlign.center,
-                        text: ref.watch(homeScreenProvider).userName,
-                      ),
-                      textBoldPoppins(
-                        fontSize: 20,
-                        color: Theme.of(context).textTheme.labelLarge?.color,
-                        textAlign: TextAlign.center,
-                        text: "Heute wird's sonning!",
-                      ),
+                      isLoading
+                          ? CustomShimmerWidget.rectangular(
+                              height: 15.h,
+                              shapeBorder: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.r)))
+                          : textBoldPoppins(
+                              fontSize: 20,
+                              color:
+                                  Theme.of(context).textTheme.labelLarge?.color,
+                              textAlign: TextAlign.center,
+                              text: ref.watch(homeScreenProvider).userName,
+                            ),
+                      isLoading ? 10.verticalSpace : 0.verticalSpace,
+                      isLoading
+                          ? CustomShimmerWidget.rectangular(
+                              height: 15.h,
+                              shapeBorder: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.r)))
+                          : textBoldPoppins(
+                              fontSize: 20,
+                              color:
+                                  Theme.of(context).textTheme.labelLarge?.color,
+                              textAlign: TextAlign.center,
+                              text: "Heute wird's sonning!",
+                            ),
                       32.verticalSpace,
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 15.w),
-                            child: textRegularPoppins(
-                                text: AppLocalizations.of(context).search,
-                                fontSize: 12.sp,
-                                fontStyle: FontStyle.italic,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .labelLarge
-                                    ?.color),
-                          ),
-                          SearchWidget(
-                            searchController: TextEditingController(),
-                            hintText:
-                                AppLocalizations.of(context).enter_search_term,
-                          )
-                        ],
-                      )
+                      isLoading
+                          ? CustomShimmerWidget.rectangular(
+                              height: 45.h,
+                              shapeBorder: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.r)))
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(left: 15.w),
+                                  child: textRegularPoppins(
+                                      text: AppLocalizations.of(context).search,
+                                      fontSize: 12.sp,
+                                      fontStyle: FontStyle.italic,
+                                      color: Theme.of(context)
+                                          .textTheme
+                                          .labelLarge
+                                          ?.color),
+                                ),
+                                SearchWidget(
+                                  searchController: TextEditingController(),
+                                  hintText: AppLocalizations.of(context)
+                                      .enter_search_term,
+                                )
+                              ],
+                            )
                     ],
                   ),
                 ),
                 Visibility(
-                  visible: ref.watch(dashboardScreenProvider).isSignupButtonVisible,
+                    visible: ref
+                        .watch(dashboardScreenProvider)
+                        .isSignupButtonVisible,
                     child: Positioned(
                         left: 210.w,
                         top: 30.h,
@@ -153,23 +177,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         )))
               ],
             ),
-            customCarouselView(carouselController),
+            customCarouselView(carouselController, isLoading),
             20.verticalSpace,
             WeatherWidget(),
             eventsView(
-              state.eventsList,
-              AppLocalizations.of(context).near_you,
-              5,
-              AppLocalizations.of(context).to_map_view,
-              imagePath['map_icon'] ?? "",
-            ),
+                state.eventsList,
+                AppLocalizations.of(context).near_you,
+                5,
+                AppLocalizations.of(context).to_map_view,
+                imagePath['map_icon'] ?? "",
+                isLoading),
             eventsView(
-              state.nearbyEventsList,
-              AppLocalizations.of(context).all_events,
-              3,
-              AppLocalizations.of(context).all_events,
-              imagePath['calendar'] ?? "",
-            ),
+                state.nearbyEventsList,
+                AppLocalizations.of(context).all_events,
+                3,
+                AppLocalizations.of(context).all_events,
+                imagePath['calendar'] ?? "",
+                isLoading),
             FeedbackCardWidget(),
             100.verticalSpace
           ],
@@ -179,8 +203,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget eventsView(List<Listing> eventsList, String heading, int maxListLimit,
-      String buttonText, String buttonIconPath) {
-    if (eventsList.isNotEmpty) {
+      String buttonText, String buttonIconPath, bool isLoading) {
+    if (isLoading) {
+      return Column(
+        children: [
+          Padding(
+              padding: EdgeInsets.fromLTRB(12.w, 16.w, 12.w, 0),
+              child: CustomShimmerWidget.rectangular(
+                  height: 15.h,
+                  shapeBorder: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.r)))),
+          ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: 4,
+              itemBuilder: (_, index) {
+                return eventCartShimmerEffect();
+              }),
+        ],
+      );
+    } else if (eventsList.isNotEmpty) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -237,7 +279,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ref.read(navigationProvider).navigateUsingPath(
                       context: context, path: eventScreenPath, params: item);
                 },
-                isFavouriteVisible: !ref.watch(dashboardScreenProvider).isSignupButtonVisible,
+                isFavouriteVisible:
+                    !ref.watch(dashboardScreenProvider).isSignupButtonVisible,
               );
             },
           ),
@@ -266,7 +309,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Container();
   }
 
-  Widget customCarouselView(CarouselController carouselController) {
+  Widget customCarouselView(
+      CarouselController carouselController, bool isLoading) {
     HomeScreenState state = ref.watch(homeScreenProvider);
     int currentIndex = state.highlightCount;
     return Padding(
@@ -274,91 +318,100 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       child: Column(
         children: [
           40.verticalSpace,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 10.w),
-                    child: textRegularPoppins(
-                        text: AppLocalizations.of(context).highlights,
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).textTheme.labelLarge?.color),
-                  ),
-                  12.horizontalSpace,
-                  SvgPicture.asset(
-                    imagePath['arrow_icon'] ?? "",
-                    height: 10.h,
-                    width: 16.w,
-                  )
-                ],
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: EdgeInsets.only(right: 5.w),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                      state.highlightsList.length,
-                      (index) => InkWell(
-                        onTap: () {
-                          ref.read(navigationProvider).navigateUsingPath(
-                              context: context, path: eventScreenPath);
-                        },
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.w),
+            child: isLoading
+                ? CustomShimmerWidget.rectangular(
+                    height: 30.h,
+                    shapeBorder: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r)))
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          textRegularPoppins(
+                              text: AppLocalizations.of(context).highlights,
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .labelLarge
+                                  ?.color),
+                          12.horizontalSpace,
+                          SvgPicture.asset(
+                            imagePath['arrow_icon'] ?? "",
+                            height: 10.h,
+                            width: 16.w,
+                          )
+                        ],
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
                         child: Row(
-                          children: [
-                            Icon(
-                              Icons.circle,
-                              size: currentIndex == index ? 11 : 8,
-                              color: currentIndex == index
-                                  ? Theme.of(context).primaryColor
-                                  : Theme.of(context)
-                                      .primaryColor
-                                      .withAlpha(130),
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(
+                            state.highlightsList.length,
+                            (index) => InkWell(
+                              onTap: () {
+                                ref.read(navigationProvider).navigateUsingPath(
+                                    context: context, path: eventScreenPath);
+                              },
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.circle,
+                                    size: currentIndex == index ? 11 : 8,
+                                    color: currentIndex == index
+                                        ? Theme.of(context).primaryColor
+                                        : Theme.of(context)
+                                            .primaryColor
+                                            .withAlpha(130),
+                                  ),
+                                  if (index != state.highlightsList.length - 1)
+                                    4.horizontalSpace
+                                ],
+                              ),
                             ),
-                            if (index != state.highlightsList.length - 1)
-                              4.horizontalSpace
-                          ],
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
-                ),
-              ),
-            ],
           ),
           10.verticalSpace,
           SizedBox(
             height: 350.h,
-            child: CarouselView(
-              controller: carouselController,
-              onTap: (index) {
-                ref.read(navigationProvider).navigateUsingPath(
-                    context: context,
-                    path: eventScreenPath,
-                    params: state.highlightsList[index]);
-              },
-              scrollDirection: Axis.horizontal,
-              itemExtent: 317,
-              shrinkExtent: 317,
-              padding: EdgeInsets.all(6.h.w),
-              children: state.highlightsList.map((listing) {
-                return HighlightsCard(
-                  imageUrl: imagePath['highlight_card_image'] ?? '',
-                  // need to be fixed
-                  date: listing.createdAt ?? "",
-                  heading: listing.title ?? "",
-                  description: listing.description ?? "",
-                  isFavourite: false,
-                  onPress: () {},
-                  onFavouriteIconClick: () {},
-                  isVisible: !ref.read(dashboardScreenProvider).isSignupButtonVisible,
-                );
-              }).toList(),
-            ),
+            child: isLoading
+                ? highlightCardShimmerEffect()
+                : CarouselView(
+                    controller: carouselController,
+                    onTap: (index) {
+                      ref.read(navigationProvider).navigateUsingPath(
+                          context: context,
+                          path: eventScreenPath,
+                          params: state.highlightsList[index]);
+                    },
+                    scrollDirection: Axis.horizontal,
+                    itemExtent: 317,
+                    shrinkExtent: 317,
+                    padding: EdgeInsets.all(6.h.w),
+                    children: state.highlightsList.map((listing) {
+                      return HighlightsCard(
+                        imageUrl: imagePath['highlight_card_image'] ?? '',
+                        // need to be fixed
+                        date: listing.createdAt ?? "",
+                        heading: listing.title ?? "",
+                        description: listing.description ?? "",
+                        isFavourite: false,
+                        onPress: () {},
+                        onFavouriteIconClick: () {},
+                        isVisible: !ref
+                            .read(dashboardScreenProvider)
+                            .isSignupButtonVisible,
+                      );
+                    }).toList(),
+                  ),
           ),
         ],
       ),
