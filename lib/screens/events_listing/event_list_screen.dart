@@ -12,6 +12,7 @@ import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/events_listing/event_list_screen_controller.dart';
 import 'package:kusel/screens/events_listing/event_list_screen_parameter.dart';
+import 'package:kusel/screens/home/home_screen_provider.dart';
 
 import '../../common_widgets/arrow_back_widget.dart';
 import '../../images_path.dart';
@@ -124,7 +125,7 @@ class _ExploreScreenState extends ConsumerState<EventListScreen> {
                     params: item,
                   );
                 },
-                isFavouriteVisible: !ref.watch(dashboardScreenProvider).isSignupButtonVisible,
+                isFavouriteVisible: !ref.watch(homeScreenProvider).isSignupButtonVisible,
               );
             },
             childCount: categoryScreenState.eventsList.length,

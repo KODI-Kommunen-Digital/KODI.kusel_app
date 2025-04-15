@@ -9,7 +9,7 @@ import 'package:kusel/screens/settings/settings_screen_state.dart';
 import 'package:core/preference_manager/shared_pref_helper.dart';
 
 final settingsScreenProvider =
-StateNotifierProvider<SettingsScreenProvider, SettingsScreenState>((ref) =>
+StateNotifierProvider.autoDispose<SettingsScreenProvider, SettingsScreenState>((ref) =>
     SettingsScreenProvider(
         localeManagerController: ref.read(localeManagerProvider.notifier),
         sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider)));

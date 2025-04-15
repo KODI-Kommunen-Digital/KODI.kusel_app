@@ -1,18 +1,15 @@
 class DashboardScreenState {
   int selectedIndex;
-  bool isSignupButtonVisible;
 
-  DashboardScreenState(this.selectedIndex, this.isSignupButtonVisible);
+  DashboardScreenState(this.selectedIndex);
 
   factory DashboardScreenState.empty() {
-    return DashboardScreenState(0, true);
+    return DashboardScreenState(0);
   }
 
   DashboardScreenState copyWith({
     int? selectedIndex,
-    bool? isSignupButtonVisible,
   }) {
-    return DashboardScreenState(selectedIndex ?? this.selectedIndex,
-        isSignupButtonVisible ?? this.isSignupButtonVisible);
+    return DashboardScreenState(selectedIndex ?? this.selectedIndex);
   }
 }
