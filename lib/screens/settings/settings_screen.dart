@@ -7,9 +7,12 @@ import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/navigation/navigation.dart';
+import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/settings/settings_screen_provider.dart';
 
 import '../../theme_manager/colors.dart';
+import '../dashboard/dashboard_screen_provider.dart';
+import 'package:core/sign_in_status/sign_in_status_controller.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -19,6 +22,7 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -50,15 +54,35 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           onTap: () => _showLanguageDialog(context),
         ),
         const Divider(),
-        ListTile(
-          leading: const Icon(Icons.logout),
-          title: textBoldPoppins(text: AppLocalizations.of(context).logout,textAlign: TextAlign.start,),
-          onTap: () async {
-            ref.read(settingsScreenProvider.notifier).logoutUser(() {
+        Visibility(
+          visible: !ref.watch(signInStatusProvider).isSignupButtonVisible,
+          child: ListTile(
+            leading: const Icon(Icons.logout),
+            title: textBoldPoppins(
+              text: AppLocalizations.of(context).logout,
+              textAlign: TextAlign.start,
+            ),
+            onTap: () async {
+              ref.read(settingsScreenProvider.notifier).logoutUser(() {
+                ref.read(dashboardScreenProvider.notifier).onIndexChanged(0);
+              });
+            },
+          ),
+        ),
+        Visibility(
+          visible: ref.watch(signInStatusProvider).isSignupButtonVisible,
+          child: ListTile(
+            leading: const Icon(Icons.login),
+            title: textBoldPoppins(
+              text: AppLocalizations.of(context).log_in_sign_up,
+              textAlign: TextAlign.start,
+            ),
+            onTap: () async {
               ref.read(navigationProvider).removeAllAndNavigate(
-                  context: context, path: signInScreenPath);
-            });
-          },
+                  context: context, path: signInScreenPath
+              );
+            },
+          ),
         ),
       ],
     );

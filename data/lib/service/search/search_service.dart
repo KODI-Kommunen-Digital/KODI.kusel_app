@@ -7,12 +7,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:network/src/api_helper.dart';
 
 final searchServiceProvider = Provider(
-    (ref) => SearchService(apiHelper: ApiHelper(dioHelper: ref.read(dioHelperObjectProvider))));
+    (ref) => SearchService(ref: ref));
 
 class SearchService {
-  ApiHelper apiHelper;
+  Ref ref;
 
-  SearchService({required this.apiHelper});
+  SearchService({required this.ref});
 
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
@@ -21,6 +21,7 @@ class SearchService {
       'searchQuery': (requestModel.toJson()["searchQuery"] ?? "").toString(),
     });
 
+    final apiHelper = ref.read(apiHelperProvider);
 
     final result = await apiHelper.getRequest(
         path: endpoint.toString(),
