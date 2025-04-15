@@ -7,6 +7,7 @@ import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/navigation/navigation.dart';
+import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/settings/settings_screen_provider.dart';
 
 import '../../theme_manager/colors.dart';
@@ -23,9 +24,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Future.microtask(() {
-      ref.read(dashboardScreenProvider.notifier).getLoginStatus();
-    });
     return SafeArea(
       child: Scaffold(
         body: _buildBody(context),
@@ -56,7 +54,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ),
         const Divider(),
         Visibility(
-          visible: !ref.watch(dashboardScreenProvider).isSignupButtonVisible,
+          visible: !ref.watch(homeScreenProvider).isSignupButtonVisible,
           child: ListTile(
             leading: const Icon(Icons.logout),
             title: textBoldPoppins(
@@ -71,7 +69,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
         ),
         Visibility(
-          visible: ref.watch(dashboardScreenProvider).isSignupButtonVisible,
+          visible: ref.watch(homeScreenProvider).isSignupButtonVisible,
           child: ListTile(
             leading: const Icon(Icons.login),
             title: textBoldPoppins(

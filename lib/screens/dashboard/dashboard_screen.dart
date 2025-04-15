@@ -33,10 +33,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   @override
   void initState() {
-    super.initState();
     Future.microtask(() {
-      ref.read(dashboardScreenProvider.notifier).getLoginStatus();
+      // ref.read(dashboardScreenProvider.notifier).getLoginStatus();
+      ref.read(dashboardScreenProvider.notifier).onIndexChanged(0);
     });
+    super.initState();
   }
 
   @override

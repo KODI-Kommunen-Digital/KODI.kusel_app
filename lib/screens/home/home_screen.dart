@@ -9,7 +9,6 @@ import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/highlights_card.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/weather_widget.dart';
-import 'package:kusel/screens/dashboard/dashboard_screen_provider.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/home/home_screen_state.dart';
 
@@ -32,14 +31,15 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    Future.microtask(() {
+      ref.read(homeScreenProvider.notifier).getLocation();
       ref.read(homeScreenProvider.notifier).getUserDetails();
       ref.read(homeScreenProvider.notifier).getHighlights();
       ref.read(homeScreenProvider.notifier).getEvents();
       ref.read(homeScreenProvider.notifier).getNearbyEvents();
-      ref.read(homeScreenProvider.notifier).getNearbyEvents();
+      ref.read(homeScreenProvider.notifier).getLoginStatus();
     });
+    super.initState();
   }
 
   @override
@@ -62,6 +62,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget buildUi(CarouselController carouselController) {
     final isLoading = ref.watch(homeScreenProvider).loading;
     HomeScreenState state = ref.watch(homeScreenProvider);
+    final latitude = ref.watch(homeScreenProvider).latitude;
+    final longitude = ref.watch(homeScreenProvider).longitude;
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -149,9 +151,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                 ),
                 Visibility(
-                    visible: ref
-                        .watch(dashboardScreenProvider)
-                        .isSignupButtonVisible,
+                  visible: ref.watch(homeScreenProvider).isSignupButtonVisible,
                     child: Positioned(
                         left: 210.w,
                         top: 30.h,
@@ -186,14 +186,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 5,
                 AppLocalizations.of(context).to_map_view,
                 imagePath['map_icon'] ?? "",
-                isLoading),
+                isLoading,
+                latitude,
+                longitude),
             eventsView(
                 state.nearbyEventsList,
                 AppLocalizations.of(context).all_events,
                 3,
                 AppLocalizations.of(context).all_events,
                 imagePath['calendar'] ?? "",
-                isLoading),
+                isLoading,
+                latitude,
+                longitude),
             FeedbackCardWidget(),
             100.verticalSpace
           ],
@@ -223,6 +227,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ],
       );
     } else if (eventsList.isNotEmpty) {
+      String buttonText, String buttonIconPath, double? latitude, double? longitude) {
+    if (eventsList.isNotEmpty) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -236,8 +242,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     // Need to be replaced with actual lat-long value
                     params: EventListScreenParameter(
                         radius: 1,
-                        centerLatitude: 49.53838,
-                        centerLongitude: 7.40647,
+                        centerLatitude: latitude,
+                        centerLongitude: longitude,
                         categoryId: 3,
                         listHeading: heading));
               },
@@ -279,8 +285,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ref.read(navigationProvider).navigateUsingPath(
                       context: context, path: eventScreenPath, params: item);
                 },
-                isFavouriteVisible:
-                    !ref.watch(dashboardScreenProvider).isSignupButtonVisible,
+                isFavouriteVisible: !ref.watch(homeScreenProvider).isSignupButtonVisible,
               );
             },
           ),
@@ -407,7 +412,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         onPress: () {},
                         onFavouriteIconClick: () {},
                         isVisible: !ref
-                            .read(dashboardScreenProvider)
+                            .read(homeScreenProvider)
                             .isSignupButtonVisible,
                       );
                     }).toList(),
