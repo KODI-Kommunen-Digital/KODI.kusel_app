@@ -12,6 +12,7 @@ import 'package:kusel/screens/settings/settings_screen_provider.dart';
 
 import '../../theme_manager/colors.dart';
 import '../dashboard/dashboard_screen_provider.dart';
+import 'package:core/sign_in_status/sign_in_status_controller.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -54,7 +55,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ),
         const Divider(),
         Visibility(
-          visible: !ref.watch(homeScreenProvider).isSignupButtonVisible,
+          visible: !ref.watch(signInStatusProvider).isSignupButtonVisible,
           child: ListTile(
             leading: const Icon(Icons.logout),
             title: textBoldPoppins(
@@ -69,7 +70,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
         ),
         Visibility(
-          visible: ref.watch(homeScreenProvider).isSignupButtonVisible,
+          visible: ref.watch(signInStatusProvider).isSignupButtonVisible,
           child: ListTile(
             leading: const Icon(Icons.login),
             title: textBoldPoppins(
