@@ -20,6 +20,7 @@ import '../../common_widgets/search_widget.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../navigation/navigation.dart';
 import '../events_listing/event_list_screen_parameter.dart';
+import 'package:core/sign_in_status/sign_in_status_controller.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   HomeScreen({Key? key}) : super(key: key);
@@ -37,7 +38,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ref.read(homeScreenProvider.notifier).getHighlights();
       ref.read(homeScreenProvider.notifier).getEvents();
       ref.read(homeScreenProvider.notifier).getNearbyEvents();
-      ref.read(homeScreenProvider.notifier).getLoginStatus();
+      ref.read(signInStatusProvider.notifier).getLoginStatus();
     });
     super.initState();
   }
@@ -156,7 +157,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
                 Visibility(
                     visible:
-                        ref.watch(homeScreenProvider).isSignupButtonVisible,
+                        ref.watch(signInStatusProvider).isSignupButtonVisible,
                     child: Positioned(
                         left: 210.w,
                         top: 30.h,
@@ -307,7 +308,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       context: context, path: eventScreenPath, params: item);
                 },
                 isFavouriteVisible:
-                    !ref.watch(homeScreenProvider).isSignupButtonVisible,
+                    !ref.watch(signInStatusProvider).isSignupButtonVisible,
               );
             },
           ),
@@ -434,7 +435,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         onPress: () {},
                         onFavouriteIconClick: () {},
                         isVisible:
-                            !ref.read(homeScreenProvider).isSignupButtonVisible,
+                            !ref.read(signInStatusProvider).isSignupButtonVisible,
                       );
                     }).toList(),
                   ),
