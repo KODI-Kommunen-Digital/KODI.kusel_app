@@ -74,21 +74,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           children: [
             Stack(
               children: [
-                isLoading ? Container(
-                  height: 285.h,
-                ) : ClipPath(
-                  clipper: UpstreamWaveClipper(),
-                  child: Container(
-                    height: 285.h,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(
-                            imagePath['home_screen_background'] ?? ''),
-                        fit: BoxFit.cover,
+                isLoading
+                    ? Container(
+                        height: 285.h,
+                      )
+                    : ClipPath(
+                        clipper: UpstreamWaveClipper(),
+                        child: Container(
+                          height: 285.h,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: AssetImage(
+                                  imagePath['home_screen_background'] ?? ''),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
                 Positioned(
                   top: 85.h,
                   left: 20.w,
@@ -151,7 +153,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                 ),
                 Visibility(
-                  visible: ref.watch(homeScreenProvider).isSignupButtonVisible,
+                    visible:
+                        ref.watch(homeScreenProvider).isSignupButtonVisible,
                     child: Positioned(
                         left: 210.w,
                         top: 30.h,
@@ -206,8 +209,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     );
   }
 
-  Widget eventsView(List<Listing> eventsList, String heading, int maxListLimit,
-      String buttonText, String buttonIconPath, bool isLoading) {
+  Widget eventsView(
+      List<Listing> eventsList,
+      String heading,
+      int maxListLimit,
+      String buttonText,
+      String buttonIconPath,
+      bool isLoading,
+      double? latitude,
+      double? longitude) {
     if (isLoading) {
       return Column(
         children: [
@@ -227,8 +237,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ],
       );
     } else if (eventsList.isNotEmpty) {
-      String buttonText, String buttonIconPath, double? latitude, double? longitude) {
-    if (eventsList.isNotEmpty) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -285,7 +293,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ref.read(navigationProvider).navigateUsingPath(
                       context: context, path: eventScreenPath, params: item);
                 },
-                isFavouriteVisible: !ref.watch(homeScreenProvider).isSignupButtonVisible,
+                isFavouriteVisible:
+                    !ref.watch(homeScreenProvider).isSignupButtonVisible,
               );
             },
           ),
@@ -411,9 +420,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         isFavourite: false,
                         onPress: () {},
                         onFavouriteIconClick: () {},
-                        isVisible: !ref
-                            .read(homeScreenProvider)
-                            .isSignupButtonVisible,
+                        isVisible:
+                            !ref.read(homeScreenProvider).isSignupButtonVisible,
                       );
                     }).toList(),
                   ),
