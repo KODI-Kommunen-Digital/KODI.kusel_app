@@ -6,12 +6,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:network/src/api_helper.dart';
 
 final listingServiceProvider = Provider((ref) => ListingsService(
-    apiHelper: ApiHelper(dioHelper: ref.read(dioHelperObjectProvider))));
+    ref:ref));
 
 class ListingsService {
-  ApiHelper apiHelper;
+  Ref ref;
 
-  ListingsService({required this.apiHelper});
+  ListingsService({required this.ref});
 
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
@@ -21,6 +21,7 @@ class ListingsService {
         .map((e) => "${e.key}=${Uri.encodeComponent(e.value.toString())}")
         .join("&");
     final path = "$listingsEndPoint?$queryParams";
+    final apiHelper = ref.read(apiHelperProvider);
 
     final result =
         await apiHelper.getRequest(path: path, create: () => responseModel);
