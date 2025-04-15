@@ -19,6 +19,8 @@ import 'package:kusel/screens/auth/validator/email_validator.dart';
 import 'package:kusel/screens/auth/validator/empty_field_validator.dart';
 import 'package:kusel/screens/auth/validator/password_validator.dart';
 
+import '../../dashboard/dashboard_screen_provider.dart';
+
 class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
 
@@ -239,9 +241,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                               message:
                                   AppLocalizations.of(context).check_your_email,
                               context: context);
-                          ref
-                              .read(navigationProvider)
-                              .removeTopPage(context: context);
+                          ref.read(navigationProvider).removeAllAndNavigate(
+                              context: context, path: dashboardScreenPath);
+                          ref.read(dashboardScreenProvider.notifier).onIndexChanged(0);
                         });
                   }
                 },

@@ -1,4 +1,3 @@
-import 'package:domain/model/response_model/favorites/get_favorites_response_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 
 class HomeScreenState {
@@ -8,13 +7,26 @@ class HomeScreenState {
   final List<Listing> highlightsList;
   final List<Listing> eventsList;
   String userName;
-  final List<FavoritesItem> favoritesList;
+  final List<Listing> nearbyEventsList;
+  bool isSignupButtonVisible;
+  double? latitude;
+  double? longitude;
 
-  HomeScreenState(this.highlightCount, this.loading, this.error,
-      this.highlightsList, this.eventsList, this.userName, this.favoritesList);
+  HomeScreenState(
+      this.highlightCount,
+      this.loading,
+      this.error,
+      this.highlightsList,
+      this.eventsList,
+      this.userName,
+      this.nearbyEventsList,
+      this.isSignupButtonVisible,
+      this.latitude,
+      this.longitude
+      );
 
   factory HomeScreenState.empty() {
-    return HomeScreenState(0, false, '', [], [], "", []);
+    return HomeScreenState(0, false, '', [], [], "", [], true, null, null);
   }
 
   HomeScreenState copyWith(
@@ -24,7 +36,11 @@ class HomeScreenState {
       List<Listing>? highlightsList,
       List<Listing>? eventsList,
       String? userName,
-      List<FavoritesItem>? favoritesList}) {
+      List<Listing>? nearbyEventsList,
+      bool? isSignupButtonVisible,
+      double? latitude,
+      double? longitude
+      }) {
     return HomeScreenState(
         highlightCount ?? this.highlightCount,
         loading ?? this.loading,
@@ -32,6 +48,9 @@ class HomeScreenState {
         highlightsList ?? this.highlightsList,
         eventsList ?? this.eventsList,
         userName ?? this.userName,
-        favoritesList ?? this.favoritesList);
+        nearbyEventsList ?? this.nearbyEventsList,
+        isSignupButtonVisible ?? this.isSignupButtonVisible,
+        latitude ?? this.latitude,
+        longitude ?? this.latitude);
   }
 }

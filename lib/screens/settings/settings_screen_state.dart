@@ -4,7 +4,8 @@ class SettingsScreenState {
   List<String> languageList;
   String selectedLanguage;
 
-  SettingsScreenState(this.languageList, this.selectedLanguage);
+  SettingsScreenState(
+      this.languageList, this.selectedLanguage);
 
   factory SettingsScreenState.empty() {
     return SettingsScreenState(
@@ -14,9 +15,9 @@ class SettingsScreenState {
 
   SettingsScreenState copyWith(
       {List<String>? languageList,
-      String? selectedLanguage,
-      String? selectedLanguageCode}) {
-    return SettingsScreenState(languageList ?? this.languageList,
+      String? selectedLanguage}) {
+    return SettingsScreenState(
+        languageList ?? this.languageList,
         selectedLanguage ?? this.selectedLanguage);
   }
 }

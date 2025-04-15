@@ -1,29 +1,19 @@
 import 'package:core/preference_manager/preference_constant.dart';
 import 'package:core/preference_manager/shared_pref_helper.dart';
-import 'package:domain/model/empty_request.dart';
-import 'package:domain/model/response_model/favorites/get_favorites_response_model.dart';
-import 'package:core/preference_manager/preference_constant.dart';
-import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
 import 'package:domain/model/request_model/listings/search_request_model.dart';
 import 'package:domain/model/request_model/user_detail/user_detail_request_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/model/response_model/listings_model/search_listings_response_model.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:domain/model/response_model/user_detail/user_detail_response_model.dart';
 import 'package:domain/usecase/listings/listings_usecase.dart';
-import 'package:domain/usecase/favorites/get_favorites_usecase.dart';
 import 'package:domain/usecase/search/search_usecase.dart';
-import 'package:data/repo_impl/search/search_repo_impl.dart';
-import 'package:data/repo_impl/favorites/favorites_repo_impl.dart';
 import 'package:domain/usecase/user_detail/user_detail_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
+import 'package:data/service/location_service/location_service.dart';
 import 'home_screen_state.dart';
-import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
-import 'package:domain/model/request_model/favorites/get_favorites_request_model.dart';
 
 final homeScreenProvider =
     StateNotifierProvider.autoDispose<HomeScreenProvider, HomeScreenState>(
@@ -31,14 +21,10 @@ final homeScreenProvider =
               listingsUseCase: ref.read(listingsUseCaseProvider),
               searchUseCase: ref.read(searchUseCaseProvider),
               sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
-              getFavoritesUseCase: GetFavoritesUseCase(
-                  favoritesRepo: ref.read(favoritesRepositoryProvider)),
               userDetailUseCase: ref.read(userDetailUseCaseProvider),
             ));
 
-
 class HomeScreenProvider extends StateNotifier<HomeScreenState> {
-  GetFavoritesUseCase getFavoritesUseCase;
   ListingsUseCase listingsUseCase;
   SearchUseCase searchUseCase;
   SharedPreferenceHelper sharedPreferenceHelper;
@@ -48,7 +34,6 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       {required this.listingsUseCase,
       required this.searchUseCase,
       required this.sharedPreferenceHelper,
-      required this.getFavoritesUseCase,
       required this.userDetailUseCase})
       : super(HomeScreenState.empty());
 
@@ -77,34 +62,6 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
     }
   }
 
-  Future<void> getFavorites(
-      {required void Function(List<FavoritesItem>?) success}) async {
-    try {
-      GetFavoritesRequestModel getFavoritesRequestModel =
-          GetFavoritesRequestModel(
-              userId:
-                  sharedPreferenceHelper.getInt(userIdKey).toString() ?? "");
-
-      GetFavoritesResponseModel getFavoritesResponseModel =
-          GetFavoritesResponseModel();
-
-      final result = await getFavoritesUseCase.call(
-          getFavoritesRequestModel, getFavoritesResponseModel);
-      result.fold(
-        (l) {
-          state = state.copyWith(error: l.toString());
-        },
-        (r) {
-          print(">>>>${(r as GetFavoritesResponseModel).data?.length}");
-          success(r.data);
-        },
-      );
-    } catch (error) {
-      print(">>>>>>>$error");
-      state = state.copyWith(error: error.toString());
-    }
-  }
-
   Future<void> getEvents() async {
     try {
       state = state.copyWith(loading: true, error: "");
@@ -123,6 +80,35 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
         (r) {
           var listings = (r as GetAllListingsResponseModel).data;
           state = state.copyWith(eventsList: listings, loading: false);
+        },
+      );
+    } catch (error) {
+      state = state.copyWith(loading: false, error: error.toString());
+    }
+  }
+
+  Future<void> getNearbyEvents() async {
+    try {
+      getLocation();
+      state = state.copyWith(loading: true, error: "");
+
+      GetAllListingsRequestModel getAllListingsRequestModel =
+      GetAllListingsRequestModel(
+        radius: 1,
+        centerLatitude: state.latitude,
+        centerLongitude: state.longitude
+      );
+      GetAllListingsResponseModel getAllListingsResponseModel =
+      GetAllListingsResponseModel();
+      final result = await listingsUseCase.call(
+          getAllListingsRequestModel, getAllListingsResponseModel);
+      result.fold(
+            (l) {
+          state = state.copyWith(loading: false, error: l.toString());
+        },
+            (r) {
+          var listings = (r as GetAllListingsResponseModel).data;
+          state = state.copyWith(nearbyEventsList: listings, loading: false);
         },
       );
     } catch (error) {
@@ -201,13 +187,21 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
     }
   }
 
-  bool checkIsFavorite(List<FavoritesItem> favoriteList, Listing listing) {
-    debugPrint(listing.toString());
-    debugPrint(favoriteList.toString());
-    if (listing.id == null || listing.cityId == null) {
-      return false;
+  Future<void> getLoginStatus() async {
+    final token = sharedPreferenceHelper.getString(tokenKey);
+    if (token == null) {
+      state = state.copyWith(isSignupButtonVisible: true);
+    } else {
+      state = state.copyWith(isSignupButtonVisible: false);
     }
-    return favoriteList.any(
-        (fav) => fav.listingId == listing.id && fav.cityId == listing.cityId);
+  }
+
+  Future<void> getLocation() async {
+    final position = await LocationService.getCurrentLocation();
+    if (position != null) {
+      print("lat long printing ${position.latitude}");
+      state = state.copyWith(
+          latitude: position.latitude, longitude: position.longitude);
+    }
   }
 }

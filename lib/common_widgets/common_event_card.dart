@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
-
-import '../theme_manager/colors.dart';
 
 class CommonEventCard extends ConsumerStatefulWidget {
   final String imageUrl;
   final String date;
   final String title;
   final String location;
+  final bool isFavouriteVisible;
   final VoidCallback? onTap;
   final VoidCallback? onFavorite;
 
@@ -19,6 +20,7 @@ class CommonEventCard extends ConsumerStatefulWidget {
     required this.date,
     required this.title,
     required this.location,
+    required this.isFavouriteVisible,
     this.onTap,
     this.onFavorite,
   }) : super(key: key);
@@ -69,11 +71,14 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                   ],
                 ),
               ),
-              InkWell(
-                onTap: widget.onFavorite,
-                child: const Icon(
-                  Icons.favorite_border,
-                  color: Colors.black,
+              Visibility(
+                visible: widget.isFavouriteVisible,
+                child: InkWell(
+                  onTap: widget.onFavorite,
+                  child: const Icon(
+                    Icons.favorite_border,
+                    color: Colors.black,
+                  ),
                 ),
               ),
             ],
@@ -94,4 +99,17 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
     }
   }
 
+}
+
+
+Widget eventCartShimmerEffect() {
+  return ListTile(
+    leading: CustomShimmerWidget.circular(height: 60.h, width: 60.w),
+    title: CustomShimmerWidget.rectangular(
+              height: 12.h,
+          ),
+    subtitle: CustomShimmerWidget.rectangular(
+              height: 12.h,
+          ),
+  );
 }
