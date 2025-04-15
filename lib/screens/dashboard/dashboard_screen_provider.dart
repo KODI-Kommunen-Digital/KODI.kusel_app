@@ -20,14 +20,4 @@ class DashBoardScreenProvider extends StateNotifier<DashboardScreenState> {
     state = state.copyWith(selectedIndex: index);
   }
 
-  void getLoginStatus() {
-    final token = sharedPreferenceHelper.getString(tokenKey);
-    if (token == null) {
-      state = state.copyWith(isSignupButtonVisible: true);
-    } else {
-      state = state.copyWith(isSignupButtonVisible: false);
-    }
-  }
-
-
 }
