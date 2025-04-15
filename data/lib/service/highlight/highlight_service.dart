@@ -3,23 +3,22 @@ import 'package:dartz/dartz.dart';
 import 'package:data/dio_helper_object.dart';
 import 'package:data/end_points.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:network/src/api_helper.dart';
 
-final highlightServiceProvider = Provider((ref) => HighlightService(
-    apiHelper: ApiHelper(dioHelper: ref.read(dioHelperObjectProvider))));
+final highlightServiceProvider = Provider((ref) => HighlightService(ref: ref));
 
 class HighlightService {
-  ApiHelper apiHelper;
+  Ref ref;
 
-  HighlightService({required this.apiHelper});
+  HighlightService({required this.ref});
 
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
-
     final path = "$listingsEndPoint?${requestModel.toJson()["categoryId"]}";
 
+    final apiHelper = ref.read(apiHelperProvider);
+
     final result =
-    await apiHelper.getRequest(path: path, create: () => responseModel);
+        await apiHelper.getRequest(path: path, create: () => responseModel);
 
     return result.fold((l) => Left(l), (r) => Right(r));
   }
