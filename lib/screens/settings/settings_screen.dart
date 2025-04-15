@@ -77,7 +77,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               textAlign: TextAlign.start,
             ),
             onTap: () async {
-              ref.read(navigationProvider).navigateUsingPath(
+              ref.read(navigationProvider).removeAllAndNavigate(
                   context: context, path: signInScreenPath
               );
             },
