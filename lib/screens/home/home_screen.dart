@@ -51,11 +51,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           .addCarouselListener(carouselController);
     });
 
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.onSecondary,
-      body: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: buildUi(carouselController)),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.onSecondary,
+        body: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: buildUi(carouselController)),
+      ),
     );
   }
 
@@ -158,26 +160,37 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     child: Positioned(
                         left: 210.w,
                         top: 30.h,
-                        child: GestureDetector(
-                          onTap: () {
-                            ref.read(navigationProvider).navigateUsingPath(
-                                context: context, path: signInScreenPath);
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30.r),
-                                border: Border.all(
-                                    width: 2.w,
-                                    color: Theme.of(context).primaryColor)),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 8.w, vertical: 5.h),
-                            child: textBoldPoppins(
-                                text:
-                                    AppLocalizations.of(context).log_in_sign_up,
-                                fontSize: 12.sp,
-                                color: Theme.of(context).primaryColor),
-                          ),
-                        )))
+                        child: isLoading
+                            ? CustomShimmerWidget.circular(
+                                width: 120.w,
+                                height: 30.h,
+                                shapeBorder: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(30.r)),
+                              )
+                            : GestureDetector(
+                                onTap: () {
+                                  ref
+                                      .read(navigationProvider)
+                                      .removeAllAndNavigate(
+                                          context: context,
+                                          path: signInScreenPath);
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30.r),
+                                      border: Border.all(
+                                          width: 2.w,
+                                          color:
+                                              Theme.of(context).primaryColor)),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: 8.w, vertical: 5.h),
+                                  child: textBoldPoppins(
+                                      text: AppLocalizations.of(context)
+                                          .log_in_sign_up,
+                                      fontSize: 12.sp,
+                                      color: Theme.of(context).primaryColor),
+                                ),
+                              )))
               ],
             ),
             customCarouselView(carouselController, isLoading),
