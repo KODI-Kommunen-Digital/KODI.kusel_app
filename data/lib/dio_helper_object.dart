@@ -13,7 +13,7 @@ final apiHelperProvider = Provider.autoDispose<ApiHelper>((ref) {
       ref.read(sharedPreferenceHelperProvider).getString(environmentKey);
 
   final dioHelper = DioHelper(
-    baseUrl: environment == EnvironmentType.production.name
+    baseUrl:  (environment==null || environment == EnvironmentType.production.name)
         ? baseUrlProd
         : baseUrlStage,
     dioInterceptors: [ref.read(customInterceptorProvider)],
