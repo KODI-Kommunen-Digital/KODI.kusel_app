@@ -204,4 +204,15 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
           latitude: position.latitude, longitude: position.longitude);
     }
   }
+
+  void setIsFavorite(bool isFavorite, int? id) {
+
+    for (var listing in state.highlightsList) {
+      if (listing.id == id) {
+        listing.isFavorite = isFavorite ? 1 : 0;
+      }
+    }
+    state = state.copyWith(
+        highlightsList: state.highlightsList);
+  }
 }
