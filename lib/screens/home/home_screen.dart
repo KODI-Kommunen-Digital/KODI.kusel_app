@@ -9,6 +9,7 @@ import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/highlights_card.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/weather_widget.dart';
+import 'package:kusel/screens/event/event_screen_controller.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/home/home_screen_state.dart';
 
@@ -102,7 +103,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     children: [
                       isLoading
                           ? CustomShimmerWidget.rectangular(
-                              height: 15.h,
+                              height: 20.h,
+                              width: 150.w,
                               shapeBorder: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12.r)))
                           : textBoldPoppins(
@@ -115,7 +117,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       isLoading ? 10.verticalSpace : 0.verticalSpace,
                       isLoading
                           ? CustomShimmerWidget.rectangular(
-                              height: 15.h,
+                              height: 20.h,
+                              width: 200.w,
                               shapeBorder: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12.r)))
                           : textBoldPoppins(
@@ -127,10 +130,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ),
                       32.verticalSpace,
                       isLoading
-                          ? CustomShimmerWidget.rectangular(
-                              height: 45.h,
+                          ? Column(
+                        children: [
+                          18.verticalSpace,
+                          CustomShimmerWidget.rectangular(
+                              height: 40.h,
                               shapeBorder: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30.r)))
+                        ],
+                      )
                           : Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -305,7 +313,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 location: item.address ?? "",
                 onTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
-                      context: context, path: eventScreenPath, params: item);
+                      context: context, path: eventScreenPath, params: EventScreenParams(eventId: item.id));
                 },
                 isFavouriteVisible:
                     !ref.watch(signInStatusProvider).isSignupButtonVisible,
@@ -313,7 +321,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             },
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: 16.w,vertical: 20.h),
             child: CustomButton(
                 onPressed: () {
                   ref.read(navigationProvider).navigateUsingPath(
@@ -383,7 +391,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             (index) => InkWell(
                               onTap: () {
                                 ref.read(navigationProvider).navigateUsingPath(
-                                    context: context, path: eventScreenPath);
+                                    context: context,
+                                    path: eventScreenPath,
+                                    params: EventScreenParams(
+                                        eventId:
+                                            state.highlightsList[index].id));
                               },
                               child: Row(
                                 children: [
@@ -418,7 +430,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       ref.read(navigationProvider).navigateUsingPath(
                           context: context,
                           path: eventScreenPath,
-                          params: state.highlightsList[index]);
+                          params: EventScreenParams(
+                              eventId: state.highlightsList[index].id));
                     },
                     scrollDirection: Axis.horizontal,
                     itemExtent: 317,
