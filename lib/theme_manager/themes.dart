@@ -10,6 +10,7 @@ final lightTheme = ThemeData(
   primaryColor: lightThemePrimaryColor,
   canvasColor: lightThemeWhiteColor,
   indicatorColor: lightThemeSelectedItemColor,
+  splashColor: lightThemeShimmerColor,
   colorScheme: ColorScheme(
       brightness: Brightness.light,
       primary: lightThemePrimaryColor,
