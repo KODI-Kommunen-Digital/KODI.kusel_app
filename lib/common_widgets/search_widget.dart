@@ -48,80 +48,60 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                   hideOnEmpty: true,
                   hideOnUnfocus: true,
                   hideOnSelect: true,
-                  debounceDuration: Duration(milliseconds: 1000),
+                  debounceDuration: const Duration(milliseconds: 500),
                   controller: widget.searchController,
+                  // Ensures it's not behind your container
                   suggestionsCallback: (search) async {
-                    List<Listing>? list;
                     if (search.isEmpty) return [];
                     try {
-                      list = await ref.read(homeScreenProvider.notifier).searchList(
-                          searchText: search, success: () {}, error: (err) {});
+                      final list = await ref.read(homeScreenProvider.notifier).searchList(
+                        searchText: search,
+                        success: () {},
+                        error: (err) {},
+                      );
+                      print(">>>> success ${list.length}");
+                      return list;
                     } catch (e) {
+                      print(">>>> error $e");
                       return [];
                     }
-                    return list;
-                  },
-                  builder: (context, controller, focusNode) {
-                    return TextField(
-                      controller: controller,
-                      focusNode: focusNode, // Add this
-                      decoration: InputDecoration(
-                          hintText: widget.hintText,
-                          border: InputBorder.none,
-                          hintStyle: TextStyle(
-                              fontSize: 14.sp,
-                              fontFamily: "Poppins",
-                              fontWeight: FontWeight.w400,
-                              color: Theme.of(context).hintColor,
-                              fontStyle: FontStyle.italic)),
-                    );
                   },
                   itemBuilder: (context, event) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 2.0, vertical: 2.0),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 8.0, vertical: 4.0),
-                        title: Align(
-                          alignment: Alignment.centerLeft,
-                          child: textRegularPoppins(
-                            text: event.title ?? "",
-                            fontSize: 16,
-                            color: Colors.black87,
-                            textAlign: TextAlign.start, // Ensure text is left-aligned
-                          ),
-                        ),
-                        subtitle: Padding(
-                          padding: const EdgeInsets.only(top: 4.0),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: textRegularPoppins(
-                              text: event.startDate ?? "",
-                              fontSize: 14,
-                              color: Colors.grey[600],
-                              textAlign: TextAlign.start, // Ensure text is left-aligned
-                            ),
-                          ),
-                        ),
-                        trailing: Icon(
-                          Icons.arrow_forward_ios,
-                          size: 18,
-                        ),
-                      ),
+                    return ListTile(
+                      title: Text(event.title ?? "", style: TextStyle(fontSize: 16)),
+                      subtitle: Text(event.startDate ?? "", style: TextStyle(fontSize: 14)),
+                      trailing: const Icon(Icons.arrow_forward_ios, size: 18),
                     );
                   },
-                  onSelected: (city) {
+                  onSelected: (listing) {
                     widget.searchController.clear();
                     FocusScope.of(context).unfocus();
                     ref.read(navigationProvider).navigateUsingPath(
                       context: context,
                       path: eventScreenPath,
-                      params: city
+                      params: listing,
+                    );
+                  },
+                  builder: (context, controller, focusNode) {
+                    return TextField(
+                      controller: controller,
+                      focusNode: focusNode,
+                      decoration: InputDecoration(
+                        hintText: widget.hintText,
+                        border: InputBorder.none,
+                        hintStyle: TextStyle(
+                          fontSize: 14.sp,
+                          fontFamily: "Poppins",
+                          fontWeight: FontWeight.w400,
+                          color: Theme.of(context).hintColor,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
                     );
                   },
                 ),
-              )
+              ),
+
             ],
           ),
         ),

@@ -62,7 +62,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                     child: SizedBox(
                       height: 200.h,
                       child:
-                      Image.asset(widget.imageUrl, fit: BoxFit.cover),
+                      Image.network(widget.imageUrl, fit: BoxFit.cover),
                     ),
                   ),
                   Visibility(
@@ -77,8 +77,8 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                           borderRadius: BorderRadius.circular(50.r),
                         ),
                         child: Icon(
-                          Icons.favorite_border_sharp,
-                          color: Colors.white,
+                          Icons.favorite_sharp,
+                          color: widget.isFavourite ? Colors.red : Colors.white,
                         ),
                       ),
                     ),
