@@ -10,6 +10,7 @@ import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/navigation/navigation.dart';
+import 'package:kusel/screens/event/event_screen_controller.dart';
 import 'package:kusel/screens/events_listing/event_list_screen_controller.dart';
 import 'package:kusel/screens/events_listing/event_list_screen_parameter.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
@@ -122,7 +123,7 @@ class _ExploreScreenState extends ConsumerState<EventListScreen> {
                   ref.read(navigationProvider).navigateUsingPath(
                     context: context,
                     path: eventScreenPath,
-                    params: item,
+                    params: EventScreenParams(eventId: item.id),
                   );
                 },
                 isFavouriteVisible: !ref.watch(homeScreenProvider).isSignupButtonVisible,
