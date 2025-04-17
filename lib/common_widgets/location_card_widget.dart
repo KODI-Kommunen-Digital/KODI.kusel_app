@@ -9,18 +9,22 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../images_path.dart';
 import '../screens/event/event_screen_controller.dart';
-import '../theme_manager/colors.dart';
+import 'custom_shimmer_widget.dart';
 
 class LocationCardWidget extends ConsumerStatefulWidget {
   final String address;
   final String websiteText;
   final String websiteUrl;
+  final double latitude;
+  final double longitude;
 
   const LocationCardWidget({
     super.key,
     required this.address,
     required this.websiteText,
     required this.websiteUrl,
+    required this.latitude,
+    required this.longitude
   });
 
   @override
@@ -28,8 +32,6 @@ class LocationCardWidget extends ConsumerStatefulWidget {
 }
 
 class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
-  double latitude = 49.5298;
-  double longitude = 7.3753;
 
   @override
   Widget build(BuildContext context) {
@@ -70,12 +72,12 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
             width: MediaQuery.of(context).size.width,
             height: 106.h,
             child: _customMapWidget(
-                latitude: latitude,
-                longitude: longitude,
+                latitude: widget.latitude,
+                longitude: widget.longitude,
                 onMapTap: () {
                   ref
                       .read(eventScreenProvider.notifier)
-                      .openInMaps(latitude, longitude);
+                      .openInMaps(widget.latitude, widget.longitude);
                 },
                 context : context
             ),
@@ -84,7 +86,7 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
             padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16),
             child: Row(
               children: [
-                SvgPicture.asset(imagePath['calendar'] ?? ''),
+                SvgPicture.asset(imagePath['calendar_icon'] ?? ''),
                 8.horizontalSpace,
                 textRegularPoppins(
                   text: "Samstag, 28.10.2024 \nvon 6:30 - 22:00 Uhr",
@@ -198,6 +200,75 @@ Widget _customMapWidget(
           ),
         ],
       ),
+    ],
+  );
+}
+
+Widget locationCardShimmerEffect(BuildContext context) {
+  return Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    children: [
+      12.verticalSpace,
+      CustomShimmerWidget.rectangular(
+        height: 20.h,
+        shapeBorder:
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+      ),
+      15.verticalSpace,
+      CustomShimmerWidget.rectangular(
+        height: 106.h,
+        shapeBorder:
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.r)),
+      ),
+      12.verticalSpace,
+      Align(
+        alignment: Alignment.centerLeft,
+        child: CustomShimmerWidget.rectangular(
+          height: 15.h,
+          width: 150.w,
+          shapeBorder:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+        ),
+      ),
+      10.verticalSpace,
+      Align(
+        alignment: Alignment.centerLeft,
+        child: CustomShimmerWidget.rectangular(
+          height: 15.h,
+          width: 150.w,
+          shapeBorder:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+        ),
+      ),
+      16.verticalSpace,
+      Align(
+        alignment: Alignment.centerLeft,
+        child: CustomShimmerWidget.rectangular(
+          height: 20.h,
+          width: 200.w,
+          shapeBorder:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+        ),
+      ),
+      20.verticalSpace,
+      Row(
+        children: [
+          CustomShimmerWidget.rectangular(
+            height: 25.h,
+            width: MediaQuery.of(context).size.width/2 -20.w,
+            shapeBorder:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+          ),
+          5.horizontalSpace,
+          CustomShimmerWidget.rectangular(
+            height: 25.h,
+            width: MediaQuery.of(context).size.width/2 -20.w,
+            shapeBorder:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+          ),
+        ],
+      ),
+      10.verticalSpace,
     ],
   );
 }

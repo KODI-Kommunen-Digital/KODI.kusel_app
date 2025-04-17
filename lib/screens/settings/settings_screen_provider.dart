@@ -9,22 +9,36 @@ import 'package:kusel/screens/settings/settings_screen_state.dart';
 import 'package:core/preference_manager/shared_pref_helper.dart';
 
 final settingsScreenProvider =
-StateNotifierProvider.autoDispose<SettingsScreenProvider, SettingsScreenState>((ref) =>
-    SettingsScreenProvider(
-        localeManagerController: ref.read(localeManagerProvider.notifier),
-        sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider)));
+    StateNotifierProvider<SettingsScreenProvider, SettingsScreenState>((ref) =>
+        SettingsScreenProvider(
+            localeManagerController: ref.read(localeManagerProvider.notifier),
+            sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider)));
 
 class SettingsScreenProvider extends StateNotifier<SettingsScreenState> {
   LocaleManagerController localeManagerController;
   SharedPreferenceHelper sharedPreferenceHelper;
 
   SettingsScreenProvider(
-      {required this.localeManagerController, required this.sharedPreferenceHelper})
+      {required this.localeManagerController,
+      required this.sharedPreferenceHelper})
       : super(SettingsScreenState.empty());
 
-  logoutUser(void Function() callBack)async {
+  logoutUser(void Function() callBack) async {
     await sharedPreferenceHelper.clear();
     callBack();
+  }
+
+  void fetchCurrentLanguage() {
+    final savedLanguageCode = sharedPreferenceHelper.getString(languageKey);
+    if (savedLanguageCode != null) {
+      if (savedLanguageCode == LocaleConstant.english.languageCode) {
+        state = state.copyWith(
+            selectedLanguage: LocaleConstant.english.displayName);
+      } else if (savedLanguageCode == LocaleConstant.german.languageCode) {
+        state =
+            state.copyWith(selectedLanguage: LocaleConstant.german.displayName);
+      }
+    }
   }
 
   changeLanguage({required String selectedLanguage}) {
@@ -40,7 +54,6 @@ class SettingsScreenProvider extends StateNotifier<SettingsScreenState> {
       languageCode = LocaleConstant.german.languageCode;
       region = LocaleConstant.german.region;
     }
-
     localeManagerController
         .updateCurrentSelectedLocale(Locale(languageCode, region));
   }
