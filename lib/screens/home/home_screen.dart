@@ -9,6 +9,7 @@ import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/highlights_card.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/weather_widget.dart';
+import 'package:kusel/screens/event/event_screen_controller.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/home/home_screen_state.dart';
 
@@ -288,7 +289,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 location: item.address ?? "",
                 onTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
-                      context: context, path: eventScreenPath, params: item);
+                      context: context, path: eventScreenPath, params: EventScreenParams(eventId: item.id));
                 },
                 isFavouriteVisible:
                     !ref.watch(signInStatusProvider).isSignupButtonVisible,
@@ -298,7 +299,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           buttonText.isEmpty
               ? Container()
               : Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.symmetric(horizontal: 16.w,vertical: 20.h),
                   child: CustomButton(
                       onPressed: () {
                         ref.read(navigationProvider).navigateUsingPath(
@@ -368,7 +369,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             (index) => InkWell(
                               onTap: () {
                                 ref.read(navigationProvider).navigateUsingPath(
-                                    context: context, path: eventScreenPath);
+                                    context: context,
+                                    path: eventScreenPath,
+                                    params: EventScreenParams(
+                                        eventId:
+                                            state.highlightsList[index].id));
                               },
                               child: Row(
                                 children: [
