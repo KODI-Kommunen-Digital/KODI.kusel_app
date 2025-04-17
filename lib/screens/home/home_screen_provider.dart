@@ -11,7 +11,6 @@ import 'package:domain/usecase/search/search_usecase.dart';
 import 'package:domain/usecase/user_detail/user_detail_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 import 'package:data/service/location_service/location_service.dart';
 import 'home_screen_state.dart';
 
@@ -199,7 +198,6 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
   Future<void> getLocation() async {
     final position = await LocationService.getCurrentLocation();
     if (position != null) {
-      print("lat long printing ${position.latitude}");
       state = state.copyWith(
           latitude: position.latitude, longitude: position.longitude);
     }

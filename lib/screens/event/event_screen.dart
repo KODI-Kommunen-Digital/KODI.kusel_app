@@ -4,21 +4,22 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/downstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/screens/event/event_screen_controller.dart';
+import 'package:kusel/screens/event/event_screen_state.dart';
 
 import '../../common_widgets/arrow_back_widget.dart' show ArrowBackWidget;
 import '../../common_widgets/location_card_widget.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
-import '../../theme_manager/colors.dart';
 
 class EventScreen extends ConsumerStatefulWidget {
+  final EventScreenParams eventScreenParams;
 
-  final Listing listingParam;
-  const EventScreen({super.key, required this.listingParam});
+  const EventScreen({super.key, required this.eventScreenParams});
 
   @override
   ConsumerState<EventScreen> createState() => _EventScreenState();
@@ -29,19 +30,23 @@ class _EventScreenState extends ConsumerState<EventScreen> {
   void initState() {
     Future.microtask(() {
       ref.read(eventScreenProvider.notifier).fetchAddress();
+      ref
+          .read(eventScreenProvider.notifier)
+          .getEventDetails(widget.eventScreenParams.eventId);
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(eventScreenProvider);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.onSecondary,
       body: SingleChildScrollView(
         child: Column(
           children: [
-            _buildClipperBackground(),
-            _buildEventsUi(),
+            _buildClipperBackground(state),
+            _buildEventsUi(state),
             FeedbackCardWidget(),
           ],
         ),
@@ -49,35 +54,48 @@ class _EventScreenState extends ConsumerState<EventScreen> {
     );
   }
 
-  Widget _buildEventsUi() {
+  Widget _buildEventsUi(EventScreenState state) {
     return Padding(
       padding: EdgeInsets.all(12.h.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          textBoldPoppins(
-              text: widget.listingParam.title ?? "",
-              color: Theme.of(context).textTheme.labelLarge?.color,
-              fontSize: 16.sp),
+          state.loading
+              ? CustomShimmerWidget.rectangular(
+                  height: 25.h,
+                  shapeBorder: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20.r)),
+                )
+              : textBoldPoppins(
+                  text: state.eventDetails.title ?? "",
+                  color: Theme.of(context).textTheme.labelLarge?.color,
+                  fontSize: 16.sp),
           15.verticalSpace,
-          LocationCardWidget(
-            address: widget.listingParam.address ?? "",
-            websiteText: "Website besuchen",
-            websiteUrl: widget.listingParam.website ?? "",
-          ),
+          state.loading
+              ? locationCardShimmerEffect(context)
+              : LocationCardWidget(
+                  address: state.eventDetails.address ?? "",
+                  websiteText: "Website besuchen",
+                  websiteUrl: state.eventDetails.website ?? "",
+                  latitude: state.eventDetails.latitude ?? 0,
+                  longitude: state.eventDetails.longitude ?? 0,
+                ),
           12.verticalSpace,
-          publicTransportCard(
-              heading: AppLocalizations.of(context).public_transport_offer,
-              description: "Schau dir hier an, wie du am besten hinkommst",
-              onTap: () {}),
+          state.loading
+              ? _publicTransportShimmerEffect()
+              : _publicTransportCard(
+                  heading: AppLocalizations.of(context).public_transport_offer,
+                  description: "Schau dir hier an, wie du am besten hinkommst",
+                  onTap: () {}),
           16.verticalSpace,
-          _eventInfoWidget(
-            heading: AppLocalizations.of(context).description,
-            subHeading:
-                "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod",
-            description:
-            widget.listingParam.description ?? "",
-          )
+          state.loading
+              ? _eventInfoShimmerEffect()
+              : _eventInfoWidget(
+                  heading: AppLocalizations.of(context).description,
+                  subHeading:
+                      "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod",
+                  description: state.eventDetails.description ?? "",
+                )
         ],
       ),
     );
@@ -93,7 +111,9 @@ class _EventScreenState extends ConsumerState<EventScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           textBoldPoppins(
-              text: heading, fontSize: 15.sp, color: Theme.of(context).textTheme.labelLarge?.color),
+              text: heading,
+              fontSize: 15.sp,
+              color: Theme.of(context).textTheme.labelLarge?.color),
           12.verticalSpace,
           textSemiBoldPoppins(
               text: subHeading,
@@ -115,7 +135,59 @@ class _EventScreenState extends ConsumerState<EventScreen> {
     );
   }
 
-  Widget publicTransportCard(
+  Widget _eventInfoShimmerEffect() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        20.verticalSpace,
+        Align(
+          alignment: Alignment.centerLeft,
+          child: CustomShimmerWidget.rectangular(
+            height: 20.h,
+            width: 150.w,
+            shapeBorder: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.r)),
+          ),
+        ),
+        20.verticalSpace,
+        CustomShimmerWidget.rectangular(
+          height: 15.h,
+          shapeBorder:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+        ),
+        8.verticalSpace,
+        CustomShimmerWidget.rectangular(
+          height: 15.h,
+          shapeBorder:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+        ),
+        20.verticalSpace,
+        CustomShimmerWidget.rectangular(
+          height: 15.h,
+          shapeBorder:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+        ),
+        8.verticalSpace,
+        CustomShimmerWidget.rectangular(
+          height: 15.h,
+          shapeBorder:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+        ),
+        8.verticalSpace,
+        Align(
+          alignment: Alignment.centerLeft,
+          child: CustomShimmerWidget.rectangular(
+            height: 15.h,
+            width: 150.w,
+            shapeBorder: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.r)),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _publicTransportCard(
       {required String heading,
       required String description,
       required Function() onTap}) {
@@ -125,7 +197,7 @@ class _EventScreenState extends ConsumerState<EventScreen> {
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.all(12.h.w),
         decoration: BoxDecoration(
-            color:  Theme.of(context).canvasColor,
+            color: Theme.of(context).canvasColor,
             borderRadius: BorderRadius.circular(20.r),
             boxShadow: [
               BoxShadow(
@@ -169,6 +241,43 @@ class _EventScreenState extends ConsumerState<EventScreen> {
     );
   }
 
+  Widget _publicTransportShimmerEffect() {
+    return Row(
+      children: [
+        CustomShimmerWidget.circular(
+            width: 60.w,
+            height: 50.h,
+            shapeBorder: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.r))),
+        10.horizontalSpace,
+        Column(
+          children: [
+            CustomShimmerWidget.rectangular(
+              height: 15.h,
+              width: MediaQuery.of(context).size.width - 110.w,
+              shapeBorder: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.r)),
+            ),
+            5.verticalSpace,
+            CustomShimmerWidget.rectangular(
+              height: 15.h,
+              width: MediaQuery.of(context).size.width - 110.w,
+              shapeBorder: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.r)),
+            ),
+            5.verticalSpace,
+            CustomShimmerWidget.rectangular(
+              height: 15.h,
+              width: MediaQuery.of(context).size.width - 110.w,
+              shapeBorder: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20.r)),
+            )
+          ],
+        )
+      ],
+    );
+  }
+
   Widget _buildExpandedTile() {
     return ExpansionTile(
       tilePadding: EdgeInsets.zero,
@@ -184,14 +293,15 @@ class _EventScreenState extends ConsumerState<EventScreen> {
           decoration: TextDecoration.underline),
       children: [
         textBoldPoppins(
-            text: "Nächste Termine", color: Theme.of(context).textTheme.labelLarge?.color),
+            text: "Nächste Termine",
+            color: Theme.of(context).textTheme.labelLarge?.color),
         10.verticalSpace,
         Padding(
           padding: EdgeInsets.symmetric(vertical: 6.h),
           child: Row(
             children: [
               SvgPicture.asset(
-                imagePath['calendar'] ?? '',
+                imagePath['calendar_icon'] ?? '',
                 color: Theme.of(context).colorScheme.surface,
               ),
               8.horizontalSpace,
@@ -210,7 +320,7 @@ class _EventScreenState extends ConsumerState<EventScreen> {
           child: Row(
             children: [
               SvgPicture.asset(
-                imagePath['calendar'] ?? '',
+                imagePath['calendar_icon'] ?? '',
                 color: Theme.of(context).colorScheme.surface,
               ),
               8.horizontalSpace,
@@ -226,8 +336,8 @@ class _EventScreenState extends ConsumerState<EventScreen> {
     );
   }
 
-  Widget _buildClipperBackground() {
-    return Stack(
+  Widget _buildClipperBackground(EventScreenState state) {
+    return state.loading ? _buildClipperBackgroundShimmer() : Stack(
       children: [
         ClipPath(
           clipper: DownstreamCurveClipper(),
@@ -249,6 +359,17 @@ class _EventScreenState extends ConsumerState<EventScreen> {
               ref.read(navigationProvider).removeTopPage(context: context);
             },
           ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildClipperBackgroundShimmer() {
+    return Stack(
+      children: [
+        ClipPath(
+          clipper: DownstreamCurveClipper(),
+          child: CustomShimmerWidget.rectangular(height: 270.h),
         ),
       ],
     );
