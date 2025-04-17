@@ -3,48 +3,45 @@ import 'package:dartz/dartz.dart';
 import 'package:data/dio_helper_object.dart';
 import 'package:data/end_points.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:network/src/api_helper.dart';
 
-final favoritesServiceProvider = Provider((ref) => FavoritesService(
-    apiHelper: ApiHelper(dioHelper: ref.read(dioHelperObjectProvider))));
+final favoritesServiceProvider = Provider((ref) => FavoritesService(ref: ref));
 
 class FavoritesService {
-  ApiHelper apiHelper;
+  Ref ref;
 
-  FavoritesService({required this.apiHelper});
+  FavoritesService({required this.ref});
 
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
+    final apiHelper = ref.read(apiHelperProvider);
 
     final userId = requestModel.toJson()["userId"];
-    print(">>>>>>>userId $userId");
 
-    final result =
-        await apiHelper.getRequest(path: gatFavoritesEndpoint(userId), create: () => responseModel);
+    final result = await apiHelper.getRequest(
+        path: gatFavoritesEndpoint(userId), create: () => responseModel);
 
     return result.fold((l) => Left(l), (r) => Right(r));
   }
 
   Future<Either<Exception, BaseModel>> addFavorite(
       BaseModel requestModel, BaseModel responseModel) async {
-
+    final apiHelper = ref.read(apiHelperProvider);
     final userId = requestModel.toJson()["userId"];
-    print(">>>>>>>userId $userId");
-
-    final result =
-    await apiHelper.postRequest(path: gatFavoritesEndpoint(userId), create: () => responseModel);
+    print("city id");
+    print(requestModel.toJson()["cityId"]);
+    final result = await apiHelper.postRequest(
+        path: gatFavoritesEndpoint(userId), create: () => responseModel, body: requestModel.toJson());
 
     return result.fold((l) => Left(l), (r) => Right(r));
   }
 
   Future<Either<Exception, BaseModel>> deleteFavorite(
       BaseModel requestModel, BaseModel responseModel) async {
-
+    final apiHelper = ref.read(apiHelperProvider);
     final userId = requestModel.toJson()["userId"];
-    print(">>>>>>>userId $userId");
 
-    final result =
-    await apiHelper.getRequest(path: gatFavoritesEndpoint(userId), create: () => responseModel);
+    final result = await apiHelper.getRequest(
+        path: gatFavoritesEndpoint(userId), create: () => responseModel);
 
     return result.fold((l) => Left(l), (r) => Right(r));
   }

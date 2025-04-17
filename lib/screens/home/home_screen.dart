@@ -19,6 +19,7 @@ import '../../common_widgets/feedback_card_widget.dart';
 import '../../common_widgets/search_widget.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../navigation/navigation.dart';
+import '../../providers/favorites_list_notifier.dart';
 import '../events_listing/event_list_screen_parameter.dart';
 import 'package:core/sign_in_status/sign_in_status_controller.dart';
 
@@ -100,58 +101,40 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   right: 20.w,
                   child: Column(
                     children: [
-                      isLoading
-                          ? CustomShimmerWidget.rectangular(
-                              height: 15.h,
-                              shapeBorder: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12.r)))
-                          : textBoldPoppins(
-                              fontSize: 20,
-                              color:
-                                  Theme.of(context).textTheme.labelLarge?.color,
-                              textAlign: TextAlign.center,
-                              text: ref.watch(homeScreenProvider).userName,
-                            ),
-                      isLoading ? 10.verticalSpace : 0.verticalSpace,
-                      isLoading
-                          ? CustomShimmerWidget.rectangular(
-                              height: 15.h,
-                              shapeBorder: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12.r)))
-                          : textBoldPoppins(
-                              fontSize: 20,
-                              color:
-                                  Theme.of(context).textTheme.labelLarge?.color,
-                              textAlign: TextAlign.center,
-                              text: "Heute wird's sonning!",
-                            ),
+                      textBoldPoppins(
+                        fontSize: 20,
+                        color: Theme.of(context).textTheme.labelLarge?.color,
+                        textAlign: TextAlign.center,
+                        text: ref.watch(homeScreenProvider).userName,
+                      ),
+                      textBoldPoppins(
+                        fontSize: 20,
+                        color: Theme.of(context).textTheme.labelLarge?.color,
+                        textAlign: TextAlign.center,
+                        text: "Heute wird's sonning!",
+                      ),
                       32.verticalSpace,
-                      isLoading
-                          ? CustomShimmerWidget.rectangular(
-                              height: 45.h,
-                              shapeBorder: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30.r)))
-                          : Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(left: 15.w),
-                                  child: textRegularPoppins(
-                                      text: AppLocalizations.of(context).search,
-                                      fontSize: 12.sp,
-                                      fontStyle: FontStyle.italic,
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .labelLarge
-                                          ?.color),
-                                ),
-                                SearchWidget(
-                                  searchController: TextEditingController(),
-                                  hintText: AppLocalizations.of(context)
-                                      .enter_search_term,
-                                )
-                              ],
-                            )
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(left: 15.w),
+                            child: textRegularPoppins(
+                                text: AppLocalizations.of(context).search,
+                                fontSize: 12.sp,
+                                fontStyle: FontStyle.italic,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge
+                                    ?.color),
+                          ),
+                          SearchWidget(
+                            searchController: TextEditingController(),
+                            hintText:
+                                AppLocalizations.of(context).enter_search_term,
+                          )
+                        ],
+                      )
                     ],
                   ),
                 ),
@@ -201,7 +184,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 state.eventsList,
                 AppLocalizations.of(context).near_you,
                 5,
-                AppLocalizations.of(context).to_map_view,
+                "",
                 imagePath['map_icon'] ?? "",
                 isLoading,
                 latitude,
@@ -312,24 +295,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               );
             },
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: CustomButton(
-                onPressed: () {
-                  ref.read(navigationProvider).navigateUsingPath(
-                      path: eventListScreenPath,
-                      context: context,
-                      // Need to be replaced with actual lat-long value
-                      params: EventListScreenParameter(
-                          radius: 1,
-                          centerLatitude: 49.53838,
-                          centerLongitude: 7.40647,
-                          categoryId: 3,
-                          listHeading: heading));
-                },
-                text: buttonText,
-                icon: buttonIconPath),
-          ),
+          buttonText.isEmpty
+              ? Container()
+              : Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: CustomButton(
+                      onPressed: () {
+                        ref.read(navigationProvider).navigateUsingPath(
+                            path: eventListScreenPath,
+                            context: context,
+                            // Need to be replaced with actual lat-long value
+                            params: EventListScreenParameter(
+                                radius: 1,
+                                centerLatitude: 49.53838,
+                                centerLongitude: 7.40647,
+                                categoryId: 3,
+                                listHeading: heading));
+                      },
+                      text: buttonText,
+                      icon: buttonIconPath),
+                ),
           15.verticalSpace
         ],
       );
@@ -415,10 +400,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 : CarouselView(
                     controller: carouselController,
                     onTap: (index) {
-                      ref.read(navigationProvider).navigateUsingPath(
-                          context: context,
-                          path: eventScreenPath,
-                          params: state.highlightsList[index]);
+                      ref
+                          .watch(favoritesListProvider.notifier)
+                          .toggleFavorite(state.highlightsList[index],
+                          success: ({required bool isFavorite}) {
+                            ref.read(homeScreenProvider.notifier).setIsFavorite(isFavorite, state.highlightsList[index].id);
+                          }, error: (error) {});
                     },
                     scrollDirection: Axis.horizontal,
                     itemExtent: 317,
@@ -426,16 +413,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     padding: EdgeInsets.all(6.h.w),
                     children: state.highlightsList.map((listing) {
                       return HighlightsCard(
-                        imageUrl: imagePath['highlight_card_image'] ?? '',
+                        imageUrl: listing.logo ?? "",
                         // need to be fixed
                         date: listing.createdAt ?? "",
                         heading: listing.title ?? "",
                         description: listing.description ?? "",
-                        isFavourite: false,
-                        onPress: () {},
-                        onFavouriteIconClick: () {},
-                        isVisible:
-                            !ref.read(signInStatusProvider).isSignupButtonVisible,
+                        isFavourite: listing.isFavorite == 1,
+                        onPress: () {
+                          ref
+                              .watch(favoritesListProvider.notifier)
+                              .toggleFavorite(listing,
+                              success: ({required bool isFavorite}) {
+                                ref.read(homeScreenProvider.notifier).setIsFavorite(isFavorite, listing.id);
+                              }, error: (error) {});
+                        },
+                        onFavouriteIconClick: () {
+
+                        },
+                        isVisible: !ref
+                            .read(signInStatusProvider)
+                            .isSignupButtonVisible,
                       );
                     }).toList(),
                   ),
