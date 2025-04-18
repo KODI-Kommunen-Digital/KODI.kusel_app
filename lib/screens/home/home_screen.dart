@@ -12,6 +12,7 @@ import 'package:kusel/common_widgets/weather_widget.dart';
 import 'package:kusel/screens/event/event_screen_controller.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/home/home_screen_state.dart';
+import 'package:kusel/screens/event/event_screen_controller.dart';
 
 import '../../../images_path.dart';
 import '../../app_router.dart';
@@ -287,9 +288,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 date: item.startDate ?? "",
                 title: item.title ?? "",
                 location: item.address ?? "",
+                isFavorite: item.isFavorite == 1,
                 onTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
                       context: context, path: eventScreenPath, params: EventScreenParams(eventId: item.id));
+                },
+                onFavorite: (){
+                  ref
+                      .watch(favoritesListProvider.notifier)
+                      .toggleFavorite(item,
+                      success: ({required bool isFavorite}) {
+                        ref.read(homeScreenProvider.notifier).setIsFavoriteEvent(isFavorite, item.id);
+                      }, error: (error) {});
                 },
                 isFavouriteVisible:
                     !ref.watch(signInStatusProvider).isSignupButtonVisible,
@@ -299,7 +309,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           buttonText.isEmpty
               ? Container()
               : Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.w,vertical: 20.h),
+                  padding:  EdgeInsets.symmetric(horizontal: 16.w,vertical: 20.h),
                   child: CustomButton(
                       onPressed: () {
                         ref.read(navigationProvider).navigateUsingPath(
@@ -403,15 +413,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: isLoading
                 ? highlightCardShimmerEffect()
                 : CarouselView(
-                    controller: carouselController,
-                    onTap: (index) {
-                      ref
-                          .watch(favoritesListProvider.notifier)
-                          .toggleFavorite(state.highlightsList[index],
-                          success: ({required bool isFavorite}) {
-                            ref.read(homeScreenProvider.notifier).setIsFavorite(isFavorite, state.highlightsList[index].id);
-                          }, error: (error) {});
+                    itemSnapping: false,
+                    onTap: (index){
+                      ref.read(navigationProvider).navigateUsingPath(
+                          context: context,
+                          path: eventScreenPath,
+                          params: EventScreenParams(
+                              eventId:
+                              state.highlightsList[index].id));
                     },
+                    controller: carouselController,
                     scrollDirection: Axis.horizontal,
                     itemExtent: 317,
                     shrinkExtent: 317,
@@ -425,12 +436,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         description: listing.description ?? "",
                         isFavourite: listing.isFavorite == 1,
                         onPress: () {
-                          ref
-                              .watch(favoritesListProvider.notifier)
-                              .toggleFavorite(listing,
-                              success: ({required bool isFavorite}) {
-                                ref.read(homeScreenProvider.notifier).setIsFavorite(isFavorite, listing.id);
-                              }, error: (error) {});
+
                         },
                         onFavouriteIconClick: () {
 
