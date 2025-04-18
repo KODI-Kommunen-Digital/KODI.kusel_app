@@ -152,17 +152,8 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
     }
   }
 
-  addCarouselListener(CarouselController carouselController) {
-    final position = carouselController.position;
-    final width = 317;
-    if (position.hasPixels) {
-      final index = (position.pixels / width).round();
-      state = state.copyWith(highlightCount: index);
-    }
-
-    updateCarouselCard(int index) {
-      state = state.copyWith(highlightCount: index);
-    }
+  updateCardIndex(int index) {
+    state = state.copyWith(highlightCount: index);
   }
 
   Future<void> getUserDetails() async {
