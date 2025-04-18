@@ -70,15 +70,18 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                     child: Positioned(
                       top: 5.h,
                       left: 195.w,
-                      child: Container(
-                        padding: EdgeInsets.all(10.r),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: BorderRadius.circular(50.r),
-                        ),
-                        child: Icon(
-                          Icons.favorite_sharp,
-                          color: widget.isFavourite ? Colors.red : Colors.white,
+                      child: InkWell(
+                        onTap: widget.onFavouriteIconClick,
+                        child: Container(
+                          padding: EdgeInsets.all(10.r),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor,
+                            borderRadius: BorderRadius.circular(50.r),
+                          ),
+                          child: Icon(
+                            Icons.favorite_sharp,
+                            color: widget.isFavourite ? Colors.red : Colors.white,
+                          ),
                         ),
                       ),
                     ),

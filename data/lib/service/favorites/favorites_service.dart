@@ -18,7 +18,7 @@ class FavoritesService {
     final userId = requestModel.toJson()["userId"];
 
     final result = await apiHelper.getRequest(
-        path: gatFavoritesEndpoint(userId), create: () => responseModel);
+        path: gatFavoritesListingEndpoint(userId), create: () => responseModel);
 
     return result.fold((l) => Left(l), (r) => Right(r));
   }

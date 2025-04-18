@@ -213,4 +213,15 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
     state = state.copyWith(
         highlightsList: state.highlightsList);
   }
+
+  void setIsFavoriteEvent(bool isFavorite, int? id) {
+    for (var listing in state.eventsList) {
+      if (listing.id == id) {
+        listing.isFavorite = isFavorite ? 1 : 0;
+      }
+    }
+    state = state.copyWith(
+        highlightsList: state.eventsList);
+  }
+
 }

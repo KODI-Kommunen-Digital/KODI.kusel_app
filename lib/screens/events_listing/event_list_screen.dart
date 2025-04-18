@@ -119,6 +119,7 @@ class _ExploreScreenState extends ConsumerState<EventListScreen> {
                 date: item.startDate ?? "",
                 title: item.title ?? "",
                 location: item.address ?? "",
+                isFavorite: item.isFavorite == 1,
                 onTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
                     context: context,
