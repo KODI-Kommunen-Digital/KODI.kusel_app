@@ -53,7 +53,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         Locale deviceLocale = PlatformDispatcher.instance.locale;
         ref
             .read(localeManagerProvider.notifier)
-            .updateCurrentSelectedLocale(deviceLocale);
+            .fetchCurrentSelectedLocale(deviceLocale);
       }
     });
     super.initState();
