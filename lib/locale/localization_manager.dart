@@ -18,28 +18,6 @@ class LocaleManagerController extends StateNotifier<LocaleManagerState> {
 
   LocaleManagerController({required this.sharedPreferenceHelper})
       : super(LocaleManagerState.empty());
-
-  void updateCurrentSelectedLocale(Locale updatedLocale) {
-    final savedLanguageCode = sharedPreferenceHelper.getString(languageKey);
-
-    Locale newLocale;
-
-    if (savedLanguageCode != null &&
-        savedLanguageCode == updatedLocale.languageCode) {
-      newLocale = AppLocalizations.supportedLocales.firstWhere(
-        (locale) => locale.languageCode == savedLanguageCode,
-        orElse: () => updatedLocale,
-      );
-    } else {
-      newLocale = AppLocalizations.supportedLocales.firstWhere(
-        (locale) => locale.languageCode == updatedLocale.languageCode,
-        orElse: () => const Locale('en', 'GB'),
-      );
-    }
-    sharedPreferenceHelper.setString(languageKey, updatedLocale.languageCode);
-
-    state = state.copyWith(currentLocale: newLocale);
-  }
 }
 
 class LocaleManagerState {
