@@ -55,6 +55,6 @@ class SettingsScreenProvider extends StateNotifier<SettingsScreenState> {
       region = LocaleConstant.german.region;
     }
     localeManagerController
-        .updateCurrentSelectedLocale(Locale(languageCode, region));
+        .updateSelectedLocale(Locale(languageCode, region));
   }
 }
