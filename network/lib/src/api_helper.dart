@@ -314,3 +314,20 @@ class ApiHelper<E extends BaseModel> {
     }
   }
 }
+
+
+
+extension DioFetchExtension<E extends BaseModel> on ApiHelper<E> {
+  Future<Either<Exception, Response>> fetchRequest({
+    required RequestOptions requestOptions,
+  }) async {
+    try {
+      final response = await _dio.fetch(requestOptions);
+      return Right(response);
+    } on DioException catch (e) {
+      return Left(ApiError(error: e.message ?? fallbackErrorMessage));
+    } catch (e) {
+      return Left(ApiError(error: fallbackErrorMessage));
+    }
+  }
+}
