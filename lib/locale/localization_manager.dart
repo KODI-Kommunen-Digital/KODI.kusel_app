@@ -8,8 +8,8 @@ import 'package:kusel/locale/locale_constant.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 final localeManagerProvider =
-    StateNotifierProvider<LocaleManagerController, LocaleManagerState>(
-  (ref) => LocaleManagerController(
+StateNotifierProvider<LocaleManagerController, LocaleManagerState>(
+      (ref) => LocaleManagerController(
       sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider)),
 );
 
@@ -18,6 +18,34 @@ class LocaleManagerController extends StateNotifier<LocaleManagerState> {
 
   LocaleManagerController({required this.sharedPreferenceHelper})
       : super(LocaleManagerState.empty());
+
+  void fetchCurrentSelectedLocale(Locale currentLocale) {
+    final savedLanguageCode = sharedPreferenceHelper.getString(languageKey);
+    Locale newLocale;
+    if (savedLanguageCode != null) {
+      newLocale = AppLocalizations.supportedLocales.firstWhere(
+            (locale) => locale.languageCode == savedLanguageCode,
+        orElse: () => currentLocale,
+      );
+    } else {
+      newLocale = AppLocalizations.supportedLocales.firstWhere(
+            (locale) => locale.languageCode == currentLocale.languageCode,
+        orElse: () => const Locale('en', 'GB'),
+      );
+      sharedPreferenceHelper.setString(languageKey, newLocale.languageCode);
+    }
+    state = state.copyWith(currentLocale: newLocale);
+  }
+
+  void updateSelectedLocale(Locale currentLocale) {
+    Locale newLocale;
+    newLocale = AppLocalizations.supportedLocales.firstWhere(
+          (locale) => locale.languageCode == currentLocale.languageCode,
+      orElse: () => const Locale('en', 'GB'),
+    );
+    sharedPreferenceHelper.setString(languageKey, newLocale.languageCode);
+    state = state.copyWith(currentLocale: newLocale);
+  }
 }
 
 class LocaleManagerState {
