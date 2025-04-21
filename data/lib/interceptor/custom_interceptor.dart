@@ -32,8 +32,6 @@ class CustomInterceptor extends Interceptor {
 
       final userId = sharedPreferenceHelper.getString(userIdKey);
       if (userId != null && userId.isNotEmpty) {
-        debugPrint("Refresh Token called");
-
         final path = "users/$userId/refresh";
 
         final refreshToken = sharedPreferenceHelper.getString(refreshTokenKey);
@@ -62,10 +60,8 @@ class CustomInterceptor extends Interceptor {
             final updatedRequestOptions = response.requestOptions;
             updatedRequestOptions.headers["Authorization"] =
                 "Bearer $accessToken";
-
             final retryRequest = await apiHelper.fetchRequest(
                 requestOptions: updatedRequestOptions);
-
             retryRequest.fold(
               (err) => debugPrint("Retry request failed: $err"),
               (retriedResponse) => handler.resolve(retriedResponse),
