@@ -31,6 +31,7 @@ class KuselTextField extends ConsumerStatefulWidget {
   List<TextInputFormatter>? inputFormatters;
   void Function(String)? onFieldSubmitted;
   FocusNode? focusNode;
+  TextAlign? textAlign;
 
   KuselTextField(
       {required this.textEditingController,
@@ -58,6 +59,7 @@ class KuselTextField extends ConsumerStatefulWidget {
       this.inputFormatters,
       this.onFieldSubmitted,
       this.focusNode,
+      this.textAlign,
       super.key});
 
   @override
@@ -73,6 +75,7 @@ class _KuselTextFieldState extends ConsumerState<KuselTextField> {
     double borderRadius = 20.r;
 
     return TextFormField(
+      textAlign: widget.textAlign ?? TextAlign.start,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       onFieldSubmitted: widget.onFieldSubmitted,
       inputFormatters: widget.inputFormatters,
