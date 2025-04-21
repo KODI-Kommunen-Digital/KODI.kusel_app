@@ -8,12 +8,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/images_path.dart';
-import 'package:data/params/listings_params.dart';
+import 'package:kusel/screens/event/event_screen_controller.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 
 import '../app_router.dart';
 import '../navigation/navigation.dart';
-import '../theme_manager/colors.dart';
 
 class SearchWidget extends ConsumerStatefulWidget {
   String hintText;
@@ -117,7 +116,7 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                     ref.read(navigationProvider).navigateUsingPath(
                       context: context,
                       path: eventScreenPath,
-                      params: city
+                      params: EventScreenParams(eventId: city.id)
                     );
                   },
                 ),

@@ -1,10 +1,10 @@
-import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kusel/screens/auth/forgot_password/forgot_password_screen.dart';
 import 'package:kusel/screens/auth/signin/signin_screen.dart';
 import 'package:kusel/screens/auth/signup/signup_screen.dart';
 import 'package:kusel/screens/dashboard/dashboard_screen.dart';
+import 'package:kusel/screens/event/event_screen_controller.dart';
 import 'package:kusel/screens/events_listing/event_list_screen.dart';
 import 'package:kusel/screens/events_listing/event_list_screen_parameter.dart';
 import 'package:kusel/screens/fliter_screen/filter_screen.dart';
@@ -52,7 +52,7 @@ List<RouteBase> goRouteList = [
       path: eventScreenPath,
       builder: (context, state) {
         return EventScreen(
-            listingParam: state.extra as Listing
+            eventScreenParams: state.extra as EventScreenParams
         );
       }),
   GoRoute(

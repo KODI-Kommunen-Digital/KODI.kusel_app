@@ -19,3 +19,4 @@ const lightThemeCalendarIconColor = Color(0xFF5F6368);
 const lightThemeFeedbackCardColor = Color(0xFF101534);
 const lightThemeSuccessToastColor = Color(0xFF4CAF50);
 const lightThemeErrorToastColor = Color(0xFFF75A5A);
+const lightThemeShimmerColor = Color(0xFFB4CDE1);

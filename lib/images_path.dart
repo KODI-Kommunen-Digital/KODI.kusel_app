@@ -10,7 +10,7 @@ Map<String, String> _svgImagePath = {
   "location_icon": "assets/svg/location_icon.svg",
   "arrow_icon": "assets/svg/arrow_icon.svg",
   "search_icon": "assets/svg/search_icon.svg",
-  "calendar": "assets/svg/calendar.svg",
+  "calendar_icon": "assets/svg/calendar_icon.svg",
   "link_icon": "assets/svg/link_icon.svg",
   "location_card_icon": "assets/svg/location_card_icon.svg",
   "man_icon": "assets/svg/man_icon.svg",

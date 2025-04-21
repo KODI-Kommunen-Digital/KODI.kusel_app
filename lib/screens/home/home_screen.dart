@@ -9,6 +9,7 @@ import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/highlights_card.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/weather_widget.dart';
+import 'package:kusel/screens/event/event_screen_controller.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/home/home_screen_state.dart';
 
@@ -45,24 +46,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    CarouselController carouselController = CarouselController(initialItem: 0);
-    carouselController.addListener(() {
-      ref
-          .watch(homeScreenProvider.notifier)
-          .addCarouselListener(carouselController);
-    });
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.onSecondary,
         body: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: buildUi(carouselController)),
+            height: MediaQuery.of(context).size.height, child: buildUi()),
       ),
     );
   }
 
-  Widget buildUi(CarouselController carouselController) {
+  Widget buildUi() {
     final isLoading = ref.watch(homeScreenProvider).loading;
     HomeScreenState state = ref.watch(homeScreenProvider);
     final latitude = ref.watch(homeScreenProvider).latitude;
@@ -102,7 +95,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     children: [
                       isLoading
                           ? CustomShimmerWidget.rectangular(
-                              height: 15.h,
+                              height: 20.h,
+                              width: 150.w,
                               shapeBorder: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12.r)))
                           : textBoldPoppins(
@@ -115,7 +109,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       isLoading ? 10.verticalSpace : 0.verticalSpace,
                       isLoading
                           ? CustomShimmerWidget.rectangular(
-                              height: 15.h,
+                              height: 20.h,
+                              width: 200.w,
                               shapeBorder: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12.r)))
                           : textBoldPoppins(
@@ -127,10 +122,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ),
                       32.verticalSpace,
                       isLoading
-                          ? CustomShimmerWidget.rectangular(
-                              height: 45.h,
-                              shapeBorder: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30.r)))
+                          ? Column(
+                              children: [
+                                18.verticalSpace,
+                                CustomShimmerWidget.rectangular(
+                                    height: 40.h,
+                                    shapeBorder: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(30.r)))
+                              ],
+                            )
                           : Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -194,7 +195,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               )))
               ],
             ),
-            customCarouselView(carouselController, isLoading),
+            customPageViewer(isLoading),
             20.verticalSpace,
             WeatherWidget(),
             eventsView(
@@ -305,7 +306,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 location: item.address ?? "",
                 onTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
-                      context: context, path: eventScreenPath, params: item);
+                      context: context,
+                      path: eventScreenPath,
+                      params: EventScreenParams(eventId: item.id));
                 },
                 isFavouriteVisible:
                     !ref.watch(signInStatusProvider).isSignupButtonVisible,
@@ -313,7 +316,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             },
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
             child: CustomButton(
                 onPressed: () {
                   ref.read(navigationProvider).navigateUsingPath(
@@ -337,8 +340,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Container();
   }
 
-  Widget customCarouselView(
-      CarouselController carouselController, bool isLoading) {
+  Widget customPageViewer(bool isLoading) {
     HomeScreenState state = ref.watch(homeScreenProvider);
     int currentIndex = state.highlightCount;
     return Padding(
@@ -383,7 +385,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             (index) => InkWell(
                               onTap: () {
                                 ref.read(navigationProvider).navigateUsingPath(
-                                    context: context, path: eventScreenPath);
+                                    context: context,
+                                    path: eventScreenPath,
+                                    params: EventScreenParams(
+                                        eventId:
+                                            state.highlightsList[index].id));
                               },
                               child: Row(
                                 children: [
@@ -410,35 +416,39 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           10.verticalSpace,
           SizedBox(
             height: 350.h,
-            child: isLoading
-                ? highlightCardShimmerEffect()
-                : CarouselView(
-                    controller: carouselController,
-                    onTap: (index) {
+            child: PageView.builder(
+              controller: PageController(
+                  viewportFraction: 317 / MediaQuery.of(context).size.width),
+              scrollDirection: Axis.horizontal,
+              padEnds: false,
+              itemCount: state.highlightsList.length,
+              itemBuilder: (context, index) {
+                final listing = state.highlightsList[index];
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 6.h.w),
+                  child: HighlightsCard(
+                    imageUrl: imagePath['highlight_card_image'] ?? '',
+                    date: listing.createdAt ?? "",
+                    heading: listing.title ?? "",
+                    description: listing.description ?? "",
+                    isFavourite: false,
+                    onPress: () {
                       ref.read(navigationProvider).navigateUsingPath(
-                          context: context,
-                          path: eventScreenPath,
-                          params: state.highlightsList[index]);
+                            context: context,
+                            path: eventScreenPath,
+                            params: EventScreenParams(eventId: listing.id),
+                          );
                     },
-                    scrollDirection: Axis.horizontal,
-                    itemExtent: 317,
-                    shrinkExtent: 317,
-                    padding: EdgeInsets.all(6.h.w),
-                    children: state.highlightsList.map((listing) {
-                      return HighlightsCard(
-                        imageUrl: imagePath['highlight_card_image'] ?? '',
-                        // need to be fixed
-                        date: listing.createdAt ?? "",
-                        heading: listing.title ?? "",
-                        description: listing.description ?? "",
-                        isFavourite: false,
-                        onPress: () {},
-                        onFavouriteIconClick: () {},
-                        isVisible:
-                            !ref.read(signInStatusProvider).isSignupButtonVisible,
-                      );
-                    }).toList(),
+                    onFavouriteIconClick: () {},
+                    isVisible:
+                        !ref.read(signInStatusProvider).isSignupButtonVisible,
                   ),
+                );
+              },
+              onPageChanged: (index) {
+                ref.read(homeScreenProvider.notifier).updateCardIndex(index);
+              },
+            ),
           ),
         ],
       ),
