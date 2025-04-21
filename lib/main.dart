@@ -51,13 +51,9 @@ class _MyAppState extends ConsumerState<MyApp> {
     Future.microtask(() {
       {
         Locale deviceLocale = PlatformDispatcher.instance.locale;
-        for (Locale supportedLocale in AppLocalizations.supportedLocales) {
-          if (supportedLocale.languageCode == deviceLocale.languageCode) {
-            ref
-                .read(localeManagerProvider.notifier)
-                .updateCurrentSelectedLocale(deviceLocale);
-          }
-        }
+        ref
+            .read(localeManagerProvider.notifier)
+            .fetchCurrentSelectedLocale(deviceLocale);
       }
     });
     super.initState();

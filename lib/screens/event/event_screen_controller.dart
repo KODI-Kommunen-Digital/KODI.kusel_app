@@ -1,18 +1,53 @@
+import 'package:domain/model/response_model/event_details/event_details_response_model.dart';
+import 'package:domain/model/request_model/event_details/event_details_request_model.dart';
+import 'package:domain/usecase/event_details/event_details_usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:kusel/screens/event/event_screen_state.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 final eventScreenProvider =
-    StateNotifierProvider.autoDispose<EventScreenController, EventScreenState>(
-        (ref) => EventScreenController());
+    StateNotifierProvider<EventScreenController, EventScreenState>(
+        (ref) => EventScreenController(
+              eventDetailsUseCase: ref.read(eventDetailsUseCaseProvider),
+            ));
 
 class EventScreenController extends StateNotifier<EventScreenState> {
-  EventScreenController() : super(EventScreenState.empty());
+  EventScreenController({required this.eventDetailsUseCase})
+      : super(EventScreenState.empty());
+
+  EventDetailsUseCase eventDetailsUseCase;
 
   Future<void> fetchAddress() async {
     String result = await getAddressFromLatLng(28.7041, 77.1025);
     state = state.copyWith(address: result);
+  }
+
+  Future<void> getEventDetails(int? eventId) async {
+    if (eventId != null) {
+      try {
+        state = state.copyWith(loading: true, error: "");
+
+        GetEventDetailsRequestModel getEventDetailsRequestModel =
+            GetEventDetailsRequestModel(id: eventId);
+
+        GetEventDetailsResponseModel getEventDetailsResponseModel =
+            GetEventDetailsResponseModel();
+        final result = await eventDetailsUseCase.call(
+            getEventDetailsRequestModel, getEventDetailsResponseModel);
+        result.fold(
+          (l) {
+            state = state.copyWith(loading: false, error: l.toString());
+          },
+          (r) {
+            var eventData = (r as GetEventDetailsResponseModel).data;
+            state = state.copyWith(eventDetails: eventData, loading: false);
+          },
+        );
+      } catch (error) {
+        state = state.copyWith(loading: false, error: error.toString());
+      }
+    }
   }
 
   Future<String> getAddressFromLatLng(double lat, double lng) async {
@@ -30,7 +65,8 @@ class EventScreenController extends StateNotifier<EventScreenState> {
 
   void openInMaps(double latitude, double longitude) async {
     final Uri geoUri = Uri.parse('geo:$latitude,$longitude');
-    final Uri webUri = Uri.parse('https://www.google.com/maps/search/?api=1&query=$latitude,$longitude');
+    final Uri webUri = Uri.parse(
+        'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude');
     if (await canLaunchUrl(geoUri)) {
       await launchUrl(geoUri, mode: LaunchMode.externalApplication);
     } else if (await canLaunchUrl(webUri)) {
@@ -41,4 +77,8 @@ class EventScreenController extends StateNotifier<EventScreenState> {
   }
 }
 
+class EventScreenParams {
+  int? eventId;
 
+  EventScreenParams({required this.eventId});
+}
