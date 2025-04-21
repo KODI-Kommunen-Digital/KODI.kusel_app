@@ -34,7 +34,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   @override
   void initState() {
     Future.microtask(() {
-      // ref.read(dashboardScreenProvider.notifier).getLoginStatus();
       ref.read(dashboardScreenProvider.notifier).onIndexChanged(0);
     });
     super.initState();
@@ -43,7 +42,6 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     int selectedIndex = ref.watch(dashboardScreenProvider).selectedIndex;
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
