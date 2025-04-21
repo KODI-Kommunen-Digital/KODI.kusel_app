@@ -8,16 +8,23 @@ class CustomDropdown extends ConsumerStatefulWidget {
   final List<String> items;
   final String selectedItem;
   final Function(String? newValue) onSelected;
+  final bool? disableBorder;
+  final bool? textAlignCenter;
 
   const CustomDropdown(
-      {super.key, required this.hintText, required this.items, required this.selectedItem, required this.onSelected});
+      {super.key,
+      required this.hintText,
+      required this.items,
+      required this.selectedItem,
+      required this.onSelected,
+      this.disableBorder,
+      this.textAlignCenter});
 
   @override
   ConsumerState<CustomDropdown> createState() => _CustomDropdownState();
 }
 
 class _CustomDropdownState extends ConsumerState<CustomDropdown> {
-
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -25,17 +32,32 @@ class _CustomDropdownState extends ConsumerState<CustomDropdown> {
         height: 38.h,
         padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: Theme.of(context).canvasColor,
-          borderRadius: BorderRadius.circular(30.r),
-          border: Border.all(color: Theme.of(context).dividerColor, width: 0.7),
-        ),
+            color: Theme.of(context).canvasColor,
+            borderRadius: BorderRadius.circular(30.r),
+            border: (widget.disableBorder ?? false)
+                ? null
+                : Border.all(
+                    color: Theme.of(context).dividerColor, width: 0.7)),
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
-            icon: Icon(Icons.keyboard_arrow_down_outlined, color: Theme.of(context).primaryColor,),
-            hint: textRegularPoppins(
+            icon: Icon(
+              Icons.keyboard_arrow_down_outlined,
+              color: Theme.of(context).primaryColor,
+            ),
+            hint: (widget.textAlignCenter ?? false) ? Center(
+              child: textRegularPoppins(
                 text: widget.hintText,
-                color: Theme.of(context).textTheme.labelLarge?.color?.withAlpha(90)),
-            value: widget.items.contains(widget.selectedItem) ? widget.selectedItem : null,
+                color: Theme.of(context).hintColor,
+                fontSize: 12,
+              ),
+            ): textRegularPoppins(
+              text: widget.hintText,
+              color: Theme.of(context).hintColor,
+              fontSize: 12,
+            ),
+            value: widget.items.contains(widget.selectedItem)
+                ? widget.selectedItem
+                : null,
             isExpanded: true,
             items: widget.items.map((String item) {
               return DropdownMenuItem<String>(
