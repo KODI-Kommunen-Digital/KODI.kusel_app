@@ -49,6 +49,7 @@ class _OnboardingFinishPageState extends ConsumerState<OnboardingFinishPage> {
                 textRegularPoppins(
                     text: AppLocalizations.of(context)
                         .i_have_prepared_everything_text,
+                    color: Theme.of(context).colorScheme.secondary,
                     textOverflow: TextOverflow.visible,
                     fontSize: 12.sp),
                 25.verticalSpace,

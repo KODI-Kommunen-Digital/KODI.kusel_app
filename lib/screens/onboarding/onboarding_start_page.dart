@@ -17,22 +17,31 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingStartPage> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical :15.w, horizontal: 18.h),
+      padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 18.h),
       child: Column(
         children: [
           50.verticalSpace,
-          Image.asset(imagePath["onboarding_logo"] ?? '', width: 270.w, height: 210.h,),
-          textBoldPoppins(text: AppLocalizations.of(context).welcome_text, fontSize: 16.sp),
+          Image.asset(
+            imagePath["onboarding_logo"] ?? '',
+            width: 270.w,
+            height: 210.h,
+          ),
+          textBoldPoppins(
+              text: AppLocalizations.of(context).welcome_text,
+              fontSize: 18.sp,
+              color: Theme.of(context).textTheme.labelLarge?.color),
           20.verticalSpace,
           textRegularPoppins(
-              text: AppLocalizations.of(context).welcome_para_first ,textOverflow: TextOverflow.visible,
-            fontSize: 12.sp
-          ),
+              text: AppLocalizations.of(context).welcome_para_first,
+              color: Theme.of(context).textTheme.labelLarge?.color,
+              textOverflow: TextOverflow.visible,
+              fontSize: 12.sp),
           16.verticalSpace,
           textRegularPoppins(
-              text: AppLocalizations.of(context).welcome_para_second ,textOverflow: TextOverflow.visible,
-              fontSize: 12.sp
-          )
+              text: AppLocalizations.of(context).welcome_para_second,
+              color: Theme.of(context).textTheme.labelLarge?.color,
+              textOverflow: TextOverflow.visible,
+              fontSize: 12.sp)
         ],
       ),
     );
