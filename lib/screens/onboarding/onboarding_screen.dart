@@ -39,7 +39,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       const OnboardingStartPage(),
       const OnBoardingNamePage(),
       const OnboardingTypePage(),
-      const OnboardingOptionPage(isResident: true),
+      const OnboardingOptionPage(),
       const OnBoardingPreferencesPage()
     ];
 
@@ -47,148 +47,178 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.onSecondary,
         resizeToAvoidBottomInset: false,
-        body: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(imagePath['onboarding_background'] ?? ''),
-              fit: BoxFit.cover,
-            ),
+        body: _buildDashboardUi(pages, selectedPageIndex, pageController),
+      ),
+    );
+  }
+
+  Widget _buildDashboardUi(List<Widget> pages, int selectedPageIndex,
+      PageController pageController) {
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(imagePath['onboarding_background'] ?? ''),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Stack(
+        children: [
+          _customPageViewer(pages, pageController),
+          selectedPageIndex == 4
+              ? Positioned(
+                  bottom: 1,
+                  left: 16,
+                  right: 16,
+                  child: Container(
+                    color: Colors.white.withAlpha(150),
+                    height: 100.h,
+                  ))
+              : Container(),
+          Positioned(
+            bottom: 16,
+            left: 16,
+            right: 16,
+            child: _buildBottomUi(selectedPageIndex, pages, pageController),
           ),
-          child: Stack(
-            children: [
-              PageView(
-                controller: pageController,
-                onPageChanged: (int index) {
-                  ref
-                      .read(onboardingScreenProvider.notifier)
-                      .updateSelectedPageIndex(index);
-                },
-                physics: const BouncingScrollPhysics(),
-                children: pages, // optional: nice swipe effect
-              ),
-              ref.watch(onboardingScreenProvider).selectedPageIndex == 4
-                  ? Positioned(
-                      bottom: 1,
-                      left: 16,
-                      right: 16,
-                      child: Container(
-                        color: Colors.white.withAlpha(150),
-                        height: 100.h,
-                      ))
-                  : Container(),
-              Positioned(
-                bottom: 16,
-                left: 16,
-                right: 16,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w),
-                  child: Column(
-                    children: [
-                      CustomButton(
-                        onPressed: () {
-                          ref.read(onboardingScreenProvider.notifier).nextPage();
-                          if (ref
-                                  .watch(onboardingScreenProvider)
-                                  .selectedPageIndex ==
-                              4) {
-                            ref.read(navigationProvider).navigateUsingPath(
-                                path: onboardingLoadingPagePath,
-                                context: context);
-                          }
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomUi(int selectedPageIndex, List<Widget> pages,
+      PageController pageController) {
+    final state = ref.read(onboardingScreenProvider);
+    final stateNotifier = ref.read(onboardingScreenProvider.notifier);
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10.w),
+      child: Column(
+        children: [
+          CustomButton(
+            onPressed: () {
+              switch (selectedPageIndex) {
+                case 0:
+                  stateNotifier.nextPage();
+                  break;
+                case 1:
+                  if (stateNotifier.onboardingNameFormKey.currentState?.validate() ?? false) {
+                    stateNotifier.nextPage();
+                  }
+                  break;
+                case 2:
+                  stateNotifier.nextPage();
+                  break;
+                case 3:
+                  // if (state.isTourist) {
+                  //   if (stateNotifier.onboardingTouristKey.currentState?.validate() ?? false) {
+                  //     stateNotifier.nextPage();
+                  //   }
+                  // } else {
+                  //   if (stateNotifier.onboardingResidentFormKey.currentState?.validate() ?? false) {
+                  //     stateNotifier.nextPage();
+                  //   }
+                  // }
+                  stateNotifier.nextPage();
+                  break;
+                case 4:
+                  ref.read(navigationProvider).navigateUsingPath(
+                    path: onboardingLoadingPagePath,
+                    context: context,
+                  );
+                  break;
+                default:
+                  break;
+              }
+            },
+            text: (selectedPageIndex == 0)
+                ? AppLocalizations.of(context).lets_get_started
+                : selectedPageIndex == 4
+                    ? AppLocalizations.of(context).complete
+                    : AppLocalizations.of(context).next,
+          ),
+          18.verticalSpace,
+          selectedPageIndex == 0
+              ? GestureDetector(
+                  onTap: () {
+                    ref.read(navigationProvider).removeAllAndNavigate(
+                        context: context, path: dashboardScreenPath);
+                  },
+                  child: textBoldPoppins(
+                    color: Theme.of(context).colorScheme.secondary,
+                    fontSize: 11.sp,
+                    text: AppLocalizations.of(context).another_time,
+                  ),
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                      onTap: stateNotifier.onBackPress,
+                      child: textBoldPoppins(
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontSize: 11.sp,
+                        text: AppLocalizations.of(context).back,
+                      ),
+                    ),
+                    8.horizontalSpace,
+                    GestureDetector(
+                        onTap:(){
+                          stateNotifier.onSkipPress((){
+                            ref.read(navigationProvider).removeAllAndNavigate(
+                                context: context,
+                                path: onboardingLoadingPagePath);
+                          });
                         },
-                        text: (ref
-                                    .watch(onboardingScreenProvider)
-                                    .selectedPageIndex ==
-                                0)
-                            ? AppLocalizations.of(context).lets_get_started
-                            : ref
-                                        .watch(onboardingScreenProvider)
-                                        .selectedPageIndex ==
-                                    4
-                                ? AppLocalizations.of(context).complete
-                                : AppLocalizations.of(context).next,
+                      child: textBoldPoppins(
+                        color: Theme.of(context).colorScheme.secondary,
+                        fontSize: 11.sp,
+                        text: AppLocalizations.of(context).skip,
                       ),
-                      16.verticalSpace,
-                      ref.read(onboardingScreenProvider).selectedPageIndex == 0
-                          ? GestureDetector(
-                              onTap: () {
-                                ref.read(navigationProvider).removeAllAndNavigate(
-                                    context: context, path: dashboardScreenPath);
-                              },
-                              child: textBoldPoppins(
-                                color: Theme.of(context).colorScheme.secondary,
-                                fontSize: 11.sp,
-                                text: AppLocalizations.of(context).another_time,
-                              ),
-                            )
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                GestureDetector(
-                                  onTap: ref
-                                      .read(onboardingScreenProvider.notifier)
-                                      .onBackPress,
-                                  child: textBoldPoppins(
-                                    color:
-                                        Theme.of(context).colorScheme.secondary,
-                                    fontSize: 11.sp,
-                                    text: AppLocalizations.of(context).back,
-                                  ),
-                                ),
-                                8.horizontalSpace,
-                                GestureDetector(
-                                  onTap: ref
-                                      .read(onboardingScreenProvider.notifier)
-                                      .onSkipPress,
-                                  child: textBoldPoppins(
-                                    color:
-                                        Theme.of(context).colorScheme.secondary,
-                                    fontSize: 11.sp,
-                                    text: AppLocalizations.of(context).skip,
-                                  ),
-                                )
-                              ],
-                            ),
-                      18.verticalSpace,
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(
-                          pages.length,
-                          (index) => InkWell(
-                            onTap: () {
-                              pageController.animateToPage(
-                                index,
-                                duration: const Duration(milliseconds: 400),
-                                curve: Curves.easeInOut,
-                              );
-                              ref
-                                  .read(onboardingScreenProvider.notifier)
-                                  .updateSelectedPageIndex(index);
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 4.w),
-                              child: Icon(
-                                Icons.circle,
-                                size: selectedPageIndex == index ? 11 : 8,
-                                color: selectedPageIndex == index
-                                    ? Theme.of(context).primaryColor
-                                    : Theme.of(context)
-                                        .primaryColor
-                                        .withAlpha(130),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      12.verticalSpace,
-                    ],
+                    )
+                  ],
+                ),
+          18.verticalSpace,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.generate(
+              pages.length,
+              (index) => InkWell(
+                onTap: () {
+                  pageController.animateToPage(
+                    index,
+                    duration: const Duration(milliseconds: 400),
+                    curve: Curves.easeInOut,
+                  );
+                  stateNotifier.updateSelectedPageIndex(index);
+                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 3.w),
+                  child: Icon(
+                    Icons.circle,
+                    size: selectedPageIndex == index ? 11 : 8,
+                    color: selectedPageIndex == index
+                        ? Theme.of(context).primaryColor
+                        : Theme.of(context).primaryColor.withAlpha(130),
                   ),
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+          12.verticalSpace,
+        ],
       ),
+    );
+  }
+
+  Widget _customPageViewer(List<Widget> pages, PageController pageController) {
+    return PageView(
+      controller: pageController,
+      onPageChanged: (int index) {
+        ref
+            .read(onboardingScreenProvider.notifier)
+            .updateSelectedPageIndex(index);
+      },
+      physics: const NeverScrollableScrollPhysics(),
+      children: pages,
     );
   }
 }
