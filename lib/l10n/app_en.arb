@@ -79,5 +79,7 @@
   "i_have_prepared_everything_text": "I've prepared everything for you.\nHave fun!",
   "continue_to_homepage": "Continue to the homepage",
   "ready" : "Ready",
-  "thanks": "Thanks"
+  "thanks": "Thanks",
+  "name": "Name",
+  "details" : "Details"
 }

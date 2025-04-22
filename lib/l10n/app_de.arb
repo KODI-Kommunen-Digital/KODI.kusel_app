@@ -77,5 +77,7 @@
   "i_have_prepared_everything_text": "Ich habe alles für dich vorbereitet.\nViel Spaß !",
   "continue_to_homepage": "Weiter zur Startseite",
   "ready": "Fertig",
-  "thanks": "Danke"
+  "thanks": "Danke",
+  "name": "Name",
+  "details" : "Details"
 }

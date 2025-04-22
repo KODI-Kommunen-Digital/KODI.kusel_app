@@ -8,6 +8,7 @@ import 'package:kusel/app_router.dart';
 import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/onboarding/onboarding_screen_provider.dart';
 
+import '../../common_widgets/custom_circular_progress_indicator.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../images_path.dart';
 
@@ -58,14 +59,9 @@ class _OnboardingLoadingPageState extends ConsumerState<OnboardingLoadingPage> {
             child: Column(
               children: [
                 150.verticalSpace,
-                Center(child: SizedBox(
-                  height: 120.h,
-                  width: 140.w,
-                  child:
-                    CircularProgressIndicator(
-                      color: Color(0xFF6972A8),
-                    )
-                )),
+                Center(
+                  child: CustomCircularProgressIndicator(),
+                ),
                 30.verticalSpace,
                 textBoldPoppins(
                     text: textMsg,
@@ -75,6 +71,7 @@ class _OnboardingLoadingPageState extends ConsumerState<OnboardingLoadingPage> {
                 textRegularPoppins(
                     text: AppLocalizations.of(context).preparing_the_app_text,
                     textOverflow: TextOverflow.visible,
+                    color: Theme.of(context).colorScheme.secondary,
                     fontSize: 12.sp)
               ],
             ),
