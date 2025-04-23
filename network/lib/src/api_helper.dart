@@ -313,6 +313,39 @@ class ApiHelper<E extends BaseModel> {
       }
     }
   }
+
+  Future<Either<Exception, T>> patchRequest<T extends BaseModel>(
+      {required String path,
+        required CreateModel<T> create,
+        Map<String, dynamic>? body,
+        Map<String, dynamic>? headers}) async {
+    var response = await _dio
+        .patch(path, data: body, options: Options(headers: headers))
+        .catchError((error) {
+      return Response(
+        requestOptions: RequestOptions(path: ''),
+        statusMessage: error.toString(),
+        statusCode: 999,
+      );
+    });
+    if (response.statusCode == 999) {
+      return Left(ApiError(error: fallbackErrorMessage));
+    }
+    try {
+      return Right(create().fromJson(response.data));
+    } on Exception catch (e) {
+      return Left(e);
+    } catch (error) {
+      try {
+        return Left(ApiError(
+            error: errorModel != null
+                ? errorModel!().fromJson(response.data).message
+                : fallbackErrorMessage));
+      } catch (error) {
+        return Left(ApiError(error: fallbackErrorMessage));
+      }
+    }
+  }
 }
 
 
