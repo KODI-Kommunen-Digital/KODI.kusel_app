@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/model/response_model/listings_model/search_listings_response_model.dart';
 import 'package:domain/usecase/search/search_usecase.dart';
@@ -17,9 +19,10 @@ import '../navigation/navigation.dart';
 class SearchWidget extends ConsumerStatefulWidget {
   String hintText;
   TextEditingController searchController;
+  FutureOr<List<Listing>?> Function(String) suggestionCallback;
 
   SearchWidget(
-      {super.key, required this.hintText, required this.searchController});
+      {super.key, required this.hintText, required this.searchController, required this.suggestionCallback});
 
   @override
   ConsumerState<SearchWidget> createState() => _SearchWidgetState();
@@ -49,17 +52,7 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                   hideOnSelect: true,
                   debounceDuration: Duration(milliseconds: 1000),
                   controller: widget.searchController,
-                  suggestionsCallback: (search) async {
-                    List<Listing>? list;
-                    if (search.isEmpty) return [];
-                    try {
-                      list = await ref.read(homeScreenProvider.notifier).searchList(
-                          searchText: search, success: () {}, error: (err) {});
-                    } catch (e) {
-                      return [];
-                    }
-                    return list;
-                  },
+                  suggestionsCallback: widget.suggestionCallback,
                   builder: (context, controller, focusNode) {
                     return TextField(
                       controller: controller,

@@ -121,38 +121,42 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               text: "Heute wird's sonning!",
                             ),
                       32.verticalSpace,
-                      isLoading
-                          ? Column(
-                              children: [
-                                18.verticalSpace,
-                                CustomShimmerWidget.rectangular(
-                                    height: 40.h,
-                                    shapeBorder: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(30.r)))
-                              ],
-                            )
-                          : Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.only(left: 15.w),
-                                  child: textRegularPoppins(
-                                      text: AppLocalizations.of(context).search,
-                                      fontSize: 12.sp,
-                                      fontStyle: FontStyle.italic,
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .labelLarge
-                                          ?.color),
-                                ),
-                                SearchWidget(
-                                  searchController: TextEditingController(),
-                                  hintText: AppLocalizations.of(context)
-                                      .enter_search_term,
-                                )
-                              ],
-                            )
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(left: 15.w),
+                            child: textRegularPoppins(
+                                text: AppLocalizations.of(context).search,
+                                fontSize: 12.sp,
+                                fontStyle: FontStyle.italic,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .labelLarge
+                                    ?.color),
+                          ),
+                          SearchWidget(
+                            searchController: TextEditingController(),
+                            hintText:
+                                AppLocalizations.of(context).enter_search_term,
+                            suggestionCallback: (search) async {
+                              List<Listing>? list;
+                              if (search.isEmpty) return [];
+                              try {
+                                list = await ref
+                                    .read(homeScreenProvider.notifier)
+                                    .searchList(
+                                        searchText: search,
+                                        success: () {},
+                                        error: (err) {});
+                              } catch (e) {
+                                return [];
+                              }
+                              return list;
+                            },
+                          )
+                        ],
+                      )
                     ],
                   ),
                 ),

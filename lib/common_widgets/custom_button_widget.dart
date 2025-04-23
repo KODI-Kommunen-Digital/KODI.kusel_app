@@ -32,8 +32,7 @@ class CustomButton extends StatelessWidget {
       this.buttonColor,
       this.textColor,
       this.textSize,
-      this.borderColor
-      });
+      this.borderColor});
 
   @override
   Widget build(BuildContext context) {
@@ -43,17 +42,40 @@ class CustomButton extends StatelessWidget {
         height: height ?? 45,
         child: isOutLined
             ? OutlinedButton(
-                onPressed: () {
-                  FocusManager.instance.primaryFocus?.unfocus();
-                  onPressed();
-                },
-                child: FittedBox(
-                  child: Text(
-                    text,
-                    maxLines: 1,
-                  ),
+          style: OutlinedButton.styleFrom(
+            side: BorderSide(
+              color: Theme.of(context).primaryColor,
+              width: 1,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(50),
+            ),
+          ),
+          onPressed: onPressed,
+          child: FittedBox(
+            child: icon != null
+                ? Row(
+              children: [
+                Image.asset(
+                  icon ?? "",
+                  width: iconWidth,
+                  height: iconHeight,
                 ),
-              )
+                SizedBox(width: 12),
+                textRegularPoppins(
+                  fontSize: textSize,
+                  color: textColor ?? Theme.of(context).canvasColor,
+                  text: text,
+                ),
+              ],
+            )
+                : textRegularPoppins(
+              fontSize: textSize,
+              color: textColor ?? Theme.of(context).canvasColor,
+              text: text,
+            ),
+          ),
+        )
             : ElevatedButton(
                 onPressed: () {
                   FocusManager.instance.primaryFocus?.unfocus();
@@ -61,7 +83,9 @@ class CustomButton extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
-                      side: BorderSide(color: borderColor ?? Theme.of(context).primaryColor, width: 2),
+                      side: BorderSide(
+                          color: borderColor ?? Theme.of(context).primaryColor,
+                          width: 2),
                       borderRadius: BorderRadius.circular(50),
                     ),
                     backgroundColor:
