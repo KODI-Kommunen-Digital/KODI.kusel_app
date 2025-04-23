@@ -1,26 +1,32 @@
 import 'dart:ui';
 
 import 'package:core/preference_manager/preference_constant.dart';
+import 'package:domain/model/request_model/edit_user_detail/edit_user_detail_request_model.dart';
+import 'package:domain/model/response_model/edit_user_detail/edit_user_detail_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/locale/locale_constant.dart';
 import 'package:kusel/locale/localization_manager.dart';
 import 'package:kusel/screens/settings/settings_screen_state.dart';
 import 'package:core/preference_manager/shared_pref_helper.dart';
+import 'package:domain/usecase/edit_user_detail/edit_user_detail_usecase.dart';
 
 final settingsScreenProvider =
     StateNotifierProvider<SettingsScreenProvider, SettingsScreenState>((ref) =>
         SettingsScreenProvider(
             localeManagerController: ref.read(localeManagerProvider.notifier),
-            sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider)));
+            sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
+            editUserDetailUseCase: ref.read(editUserDetailUseCase)));
 
 class SettingsScreenProvider extends StateNotifier<SettingsScreenState> {
   LocaleManagerController localeManagerController;
   SharedPreferenceHelper sharedPreferenceHelper;
+  EditUserDetailUseCase editUserDetailUseCase;
 
   SettingsScreenProvider(
       {required this.localeManagerController,
-      required this.sharedPreferenceHelper})
+      required this.sharedPreferenceHelper,
+      required this.editUserDetailUseCase})
       : super(SettingsScreenState.empty());
 
   logoutUser(void Function() callBack) async {
@@ -54,7 +60,26 @@ class SettingsScreenProvider extends StateNotifier<SettingsScreenState> {
       languageCode = LocaleConstant.german.languageCode;
       region = LocaleConstant.german.region;
     }
-    localeManagerController
-        .updateSelectedLocale(Locale(languageCode, region));
+    localeManagerController.updateSelectedLocale(Locale(languageCode, region));
+  }
+
+  Future<void> editUserDetails() async {
+    try {
+      EditUserDetailRequestModel editUserDetailRequestModel =
+          EditUserDetailRequestModel(
+              id: 3, description: "My new test description");
+      EditUserDetailsResponseModel editUserDetailsResponseModel =
+          EditUserDetailsResponseModel();
+      final result = await editUserDetailUseCase.call(
+          editUserDetailRequestModel, editUserDetailsResponseModel);
+      result.fold((l) {
+        debugPrint(l.toString());
+      }, (r) {
+        var resData = (r as EditUserDetailsResponseModel).status;
+        debugPrint("Edit Api Result : $resData");
+      });
+    } catch (error) {
+      debugPrint(error.toString());
+    }
   }
 }

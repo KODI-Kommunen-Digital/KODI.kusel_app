@@ -92,6 +92,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             },
           ),
         ),
+        GestureDetector(
+          onTap: ref.read(settingsScreenProvider.notifier).editUserDetails,
+          child: Container(
+            color: Colors.blue,
+            width: 100,
+            height: 40,
+          ),
+        )
       ],
     );
   }
