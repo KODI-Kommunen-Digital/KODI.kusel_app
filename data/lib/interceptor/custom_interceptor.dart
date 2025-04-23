@@ -28,11 +28,11 @@ class CustomInterceptor extends Interceptor {
     if ((response.requestOptions.path != sigInEndPoint &&
             response.requestOptions.path != signUpEndPoint) &&
         (response.statusCode == 401)) {
-      print("On Response Called -");
       ApiHelper apiHelper = ref.read(apiHelperProvider);
 
       final userId = sharedPreferenceHelper.getInt(userIdKey);
-      if (userId != null) {
+      if (userId != null &&
+          response.requestOptions.path != "/users/$userId/refresh") {
         final path = "/users/$userId/refresh";
 
         final refreshToken = sharedPreferenceHelper.getString(refreshTokenKey);
@@ -80,8 +80,7 @@ class CustomInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     ref.read(customLoggerProvider).logRequest(options);
-    print("Options status print - ${options.path}");
-    if(options.path == "/users/3") {
+    if (options.path == "/users/3") {
       final authToken = sharedPreferenceHelper.getString(tokenKey);
       final headers = {'Authorization': 'Bearer $authToken'};
       options.headers = headers;

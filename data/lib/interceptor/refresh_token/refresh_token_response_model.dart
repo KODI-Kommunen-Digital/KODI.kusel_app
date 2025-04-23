@@ -9,9 +9,15 @@ class RefreshTokenResponseModel extends BaseModel<RefreshTokenResponseModel> {
 
   @override
   RefreshTokenResponseModel fromJson(Map<String, dynamic> json) {
-    // TODO: implement fromJson
-    throw UnimplementedError();
+    return RefreshTokenResponseModel(
+      status: json['status'] as String?,
+      message: json['message'] as String?,
+      data: json['data'] != null
+          ? RefreshTokenResponseDataModel.fromJson(json['data'] as Map<String, dynamic>)
+          : null,
+    );
   }
+
 
   @override
   Map<String, dynamic> toJson() {
