@@ -16,8 +16,9 @@ Map<String, String> _svgImagePath = {
   "man_icon": "assets/svg/man_icon.svg",
   "paw_icon": "assets/svg/paw_icon.svg",
   "transport_icon": "assets/svg/transport_icon.svg",
-  "eye_open" : "assets/svg/eye_open.svg",
-  "eye_closed":"assets/svg/eye_closed.svg"};
+  "eye_open":"assets/svg/eye_open.svg",
+  "eye_closed":"assets/svg/eye_closed.svg",
+};
 
 Map<String, String> _pngImagePath = {
   "dino": "assets/png/dino.png",
@@ -26,6 +27,9 @@ Map<String, String> _pngImagePath = {
   "background_image": "assets/png/home_screen_background.png",
   "calendar": "assets/png/calendar.png",
   "map_icon":"assets/png/map_icon.png",
+  "dino_with_bg":"assets/png/dino_with_bg.png",
+  "explore":"assets/png/explore.png",
+  "star":"assets/png/star.png",
   "onboarding_background": "assets/png/onboarding_background.png",
   "onboarding_logo" : "assets/png/onboarding_logo.png",
 };
