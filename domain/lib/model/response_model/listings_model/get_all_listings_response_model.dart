@@ -28,6 +28,8 @@ class Listing {
   String? title;
   String? description;
   String? createdAt;
+  double? lat;
+  double?long;
   int? userId;
   String? startDate;
   String? endDate;
@@ -82,6 +84,8 @@ class Listing {
     this.logo,
     this.logoCount,
     this.otherLogos,
+    this.lat,
+    this.long
   });
 
   factory Listing.fromJson(Map<String, dynamic> json) {
@@ -116,6 +120,8 @@ class Listing {
       otherLogos: json['otherLogos'] != null
           ? List<OtherLogo>.from(json['otherLogos'].map((x) => OtherLogo.fromJson(x)))
           : null,
+      lat: json['latitude'],
+      long: json['longitude']
     );
   }
 
