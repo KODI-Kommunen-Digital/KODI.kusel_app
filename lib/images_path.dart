@@ -18,6 +18,7 @@ Map<String, String> _svgImagePath = {
   "transport_icon": "assets/svg/transport_icon.svg",
   "eye_open":"assets/svg/eye_open.svg",
   "eye_closed":"assets/svg/eye_closed.svg",
+  "map_fav":"assets/svg/map_fav.svg"
 };
 
 Map<String, String> _pngImagePath = {
