@@ -2,8 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:kusel/common_widgets/progress_indicator.dart';
+import 'package:kusel/screens/location/bottom_sheet_screens/selected_filter_screen.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
+
+import 'bottom_sheet_screens/all_filter_screen.dart';
+import 'bottom_sheet_selected_ui_type.dart';
+import 'location_screen_provider.dart';
 
 class LocationScreen extends ConsumerStatefulWidget {
   const LocationScreen({super.key});
@@ -13,6 +19,14 @@ class LocationScreen extends ConsumerStatefulWidget {
 }
 
 class _ExploreScreenState extends ConsumerState<LocationScreen> {
+  @override
+  void initState() {
+    Future.microtask(() {
+      ref.read(locationScreenProvider.notifier).getAllEventList();
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -24,41 +38,73 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
 
   _buildBody(BuildContext context) {
     return SlidingUpPanel(
-      body: FlutterMap(options: MapOptions(
-        onTap: (tapPosition, LatLng latLong) {
-
-        },
-        initialCenter: LatLng(49.53838,7.40647 ),
-        initialZoom: 13.0,
-        interactionOptions: InteractionOptions(),
-      ), children: [
-        TileLayer(
-          urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-          subdomains: ['a', 'b', 'c'],
-        ),
-        MarkerLayer(
-          markers: [
-            Marker(
-              width: 35.w,
-              height: 35.h,
-              point: LatLng(49.53838,7.40647),
-              child: Icon(Icons.location_pin, color: Theme.of(context).colorScheme.onTertiaryFixed),
+      minHeight: 200.h,
+      maxHeight: 550.h,
+      borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
+      body: Stack(
+        children: [
+          FlutterMap(
+            options: MapOptions(
+              onTap: (tapPosition, LatLng latLong) {},
+              initialCenter: LatLng(49.53838, 7.40647),
+              initialZoom: 13.0,
+              interactionOptions: InteractionOptions(),
             ),
+            children: [
+              TileLayer(
+                urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+              ),
+              MarkerLayer(
+                markers:
+                    ref.watch(locationScreenProvider).allEventList.map((value) {
+                  final lat = value.lat;
+                  final long = value.long;
 
-            Marker(
-              width: 35.w,
-              height: 35.h,
-              point: LatLng(49.53348,7.40647),
-              child: Icon(Icons.location_pin, color: Theme.of(context).colorScheme.onTertiaryFixed),
-            )
-          ],
-        )
-      ],),
-      panelBuilder: (controller){
-        return Center(
-          child: Text("Hello"),
+                  return Marker(
+                    width: 35.w,
+                    height: 35.h,
+                    point: LatLng(lat!, long!),
+                    child: Icon(Icons.location_pin,
+                        color: Theme.of(context).colorScheme.onTertiaryFixed),
+                  );
+                }).toList(),
+              )
+            ],
+          ),
+          if (ref.watch(locationScreenProvider).isLoading)
+            SizedBox().loaderDialog(
+                context, ref.read(locationScreenProvider).isLoading)
+        ],
+      ),
+      panelBuilder: (controller) {
+        return ClipRRect(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
+          child: Container(
+            color: Colors.transparent,
+            child: getBottomSheetUI(
+              ref.watch(locationScreenProvider).bottomSheetSelectedUIType,
+            ),
+          ),
         );
       },
     );
+  }
+
+  getBottomSheetUI(BottomSheetSelectedUIType type) {
+    late Widget widget;
+
+    switch (type) {
+      case BottomSheetSelectedUIType.eventList:
+        widget = SelectedFilterScreen(
+            selectedFilterScreenParams:
+                SelectedFilterScreenParams(categoryId: 1));
+        break;
+
+      default:
+        widget = AllFilterScreen();
+        break;
+    }
+
+    return widget;
   }
 }

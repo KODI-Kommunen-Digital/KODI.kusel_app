@@ -84,5 +84,9 @@
   "ready": "Fertig",
   "thanks": "Danke",
   "name": "Name",
-  "details" : "Details"
+  "details" : "Details",
+
+  "map_fav": "Favoriten",
+  "map_calendar": "Veranstal",
+  "map_restaurant": "Gastro"
 }
