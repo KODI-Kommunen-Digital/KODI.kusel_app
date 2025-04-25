@@ -16,6 +16,14 @@ class AllFilterScreen extends ConsumerStatefulWidget {
 }
 
 class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
+
+  @override
+  void initState() {
+    Future.microtask(() {
+      ref.read(locationScreenProvider.notifier).getAllEventList();
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,13 +68,11 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
     );
   }
 
-  filterCard(String image, String name) {
+  filterCard(String image, String categoryID) {
     return GestureDetector(
       onTap: () {
-        // ref.read(locationScreenProvider.notifier).updateSelectedCategory();
-        ref
-            .read(locationScreenProvider.notifier)
-            .updateBottomSheetSelectedUIType(
+        ref.read(locationScreenProvider.notifier).updateSelectedCategory(int.parse(categoryID));
+        ref.read(locationScreenProvider.notifier).updateBottomSheetSelectedUIType(
                 BottomSheetSelectedUIType.eventList);
       },
       child: Column(
@@ -87,7 +93,7 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
             ),
           ),
           5.verticalSpace,
-          textRegularMontserrat(text: name, fontSize: 13),
+          textRegularMontserrat(text: categoryID, fontSize: 13),
         ],
       ),
     );

@@ -1,13 +1,16 @@
+import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/screens/location/bottom_sheet_screens/selected_filter_screen.dart';
+import 'package:kusel/screens/location/location_screen_state.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import 'bottom_sheet_screens/all_filter_screen.dart';
+import 'bottom_sheet_screens/selected_event_screen.dart';
 import 'bottom_sheet_selected_ui_type.dart';
 import 'location_screen_provider.dart';
 
@@ -19,13 +22,6 @@ class LocationScreen extends ConsumerStatefulWidget {
 }
 
 class _ExploreScreenState extends ConsumerState<LocationScreen> {
-  @override
-  void initState() {
-    Future.microtask(() {
-      ref.read(locationScreenProvider.notifier).getAllEventList();
-    });
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +61,7 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
                     height: 35.h,
                     point: LatLng(lat!, long!),
                     child: Icon(Icons.location_pin,
+                        size: 40.w,
                         color: Theme.of(context).colorScheme.onTertiaryFixed),
                   );
                 }).toList(),
@@ -77,34 +74,34 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
         ],
       ),
       panelBuilder: (controller) {
+
         return ClipRRect(
           borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
           child: Container(
             color: Colors.transparent,
             child: getBottomSheetUI(
-              ref.watch(locationScreenProvider).bottomSheetSelectedUIType,
-            ),
+                ref.watch(locationScreenProvider).bottomSheetSelectedUIType),
           ),
         );
       },
     );
   }
 
-  getBottomSheetUI(BottomSheetSelectedUIType type) {
+  getBottomSheetUI(BottomSheetSelectedUIType type,) {
     late Widget widget;
-
+    LocationScreenState locationScreenState = ref.watch(locationScreenProvider);
     switch (type) {
       case BottomSheetSelectedUIType.eventList:
-        widget = SelectedFilterScreen(
-            selectedFilterScreenParams:
-                SelectedFilterScreenParams(categoryId: 1));
-        break;
 
+        widget = SelectedFilterScreen(selectedFilterScreenParams: SelectedFilterScreenParams(categoryId: locationScreenState.selectedCategoryId ?? 0),);
+        break;
+      case BottomSheetSelectedUIType.eventDetail:
+        widget = SelectedEventScreen();
+        break;
       default:
         widget = AllFilterScreen();
         break;
     }
-
     return widget;
   }
 }
