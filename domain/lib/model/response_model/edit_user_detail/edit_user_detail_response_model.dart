@@ -7,7 +7,7 @@ class EditUserDetailsResponseModel implements BaseModel<EditUserDetailsResponseM
 
   @override
   EditUserDetailsResponseModel fromJson(Map<String, dynamic> json) {
-    throw UnimplementedError();
+    return EditUserDetailsResponseModel(status: json['status'] as String?);
   }
 
   @override

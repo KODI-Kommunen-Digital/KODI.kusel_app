@@ -5,14 +5,14 @@ import 'package:domain/usecase/usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:data/repo_impl/edit_user_detail/edit_user_detail_repo_impl.dart';
 
-final editUserDetailUseCase = Provider((ref) => EditUserDetailUseCase(
+final editUserDetailUseCaseProvider = Provider((ref) => EditUserDetailUseCase(
     editUserDetailRepoImpl: ref.read(editUserDetailRepositoryProvider)));
 
 class EditUserDetailUseCase
     implements UseCase<BaseModel, EditUserDetailRequestModel> {
   EditUserDetailUseCase({required this.editUserDetailRepoImpl});
 
-  EditUserDetailRepoImpl editUserDetailRepoImpl;
+  EditUserImageRepoImpl editUserDetailRepoImpl;
 
   @override
   Future<Either<Exception, BaseModel>> call(

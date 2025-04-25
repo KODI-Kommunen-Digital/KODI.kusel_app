@@ -84,5 +84,6 @@
   "ready": "Fertig",
   "thanks": "Danke",
   "name": "Name",
-  "details" : "Details"
+  "details" : "Details",
+  "profile" : "Profile"
 }
