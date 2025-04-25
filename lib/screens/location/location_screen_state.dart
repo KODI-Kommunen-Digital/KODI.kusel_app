@@ -1,4 +1,5 @@
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
+import 'package:kusel/screens/location/bottom_sheet_screens/selected_event_screen.dart';
 
 import 'bottom_sheet_selected_ui_type.dart';
 
@@ -9,6 +10,7 @@ class LocationScreenState {
   int? selectedCategoryId;
   int? selectedSubCategoryId;
   List<Listing> distinctFilterCategoryList;
+  Listing? selectedEvent;
 
   LocationScreenState(
     this.allEventList,
@@ -17,11 +19,12 @@ class LocationScreenState {
     this.selectedCategoryId,
     this.selectedSubCategoryId,
     this.distinctFilterCategoryList,
+    this.selectedEvent,
   );
 
   factory LocationScreenState.empty() {
     return LocationScreenState(
-        [], false, BottomSheetSelectedUIType.allEvent, null, null, []);
+        [], false, BottomSheetSelectedUIType.allEvent, null, null, [], null);
   }
 
   LocationScreenState copyWith({
@@ -30,6 +33,7 @@ class LocationScreenState {
     BottomSheetSelectedUIType? bottomSheetSelectedUIType,
     int? selectedCategoryId,
     int? selectedSubCategoryId,
+    Listing? selectedEvent,
     List<Listing>? distinctFilterCategoryList,
   }) {
     return LocationScreenState(
@@ -38,6 +42,7 @@ class LocationScreenState {
         bottomSheetSelectedUIType ?? this.bottomSheetSelectedUIType,
         selectedCategoryId ?? this.selectedCategoryId,
         selectedSubCategoryId ?? this.selectedSubCategoryId,
-        distinctFilterCategoryList ?? this.distinctFilterCategoryList);
+        distinctFilterCategoryList ?? this.distinctFilterCategoryList,
+        selectedEvent ?? this.selectedEvent);
   }
 }
