@@ -8,7 +8,7 @@ class LocationScreenState {
   BottomSheetSelectedUIType bottomSheetSelectedUIType;
   int? selectedCategoryId;
   int? selectedSubCategoryId;
-  List<Listing> distinctCategoryList;
+  List<Listing> distinctFilterCategoryList;
 
   LocationScreenState(
     this.allEventList,
@@ -16,7 +16,7 @@ class LocationScreenState {
     this.bottomSheetSelectedUIType,
     this.selectedCategoryId,
     this.selectedSubCategoryId,
-    this.distinctCategoryList,
+    this.distinctFilterCategoryList,
   );
 
   factory LocationScreenState.empty() {
@@ -30,7 +30,7 @@ class LocationScreenState {
     BottomSheetSelectedUIType? bottomSheetSelectedUIType,
     int? selectedCategoryId,
     int? selectedSubCategoryId,
-    List<Listing>? distinctCategoryList,
+    List<Listing>? distinctFilterCategoryList,
   }) {
     return LocationScreenState(
         allEventList ?? this.allEventList,
@@ -38,6 +38,6 @@ class LocationScreenState {
         bottomSheetSelectedUIType ?? this.bottomSheetSelectedUIType,
         selectedCategoryId ?? this.selectedCategoryId,
         selectedSubCategoryId ?? this.selectedSubCategoryId,
-        distinctCategoryList ?? this.distinctCategoryList);
+        distinctFilterCategoryList ?? this.distinctFilterCategoryList);
   }
 }

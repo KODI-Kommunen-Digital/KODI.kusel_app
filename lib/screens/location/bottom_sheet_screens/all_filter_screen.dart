@@ -19,9 +19,7 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme
-          .of(context)
-          .splashColor,
+      backgroundColor: Theme.of(context).splashColor,
       body: _buildBody(context),
     );
   }
@@ -34,24 +32,28 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
           height: 5.h,
           width: 100.w,
           decoration: BoxDecoration(
-              color: Theme
-                  .of(context)
-                  .textTheme
-                  .labelMedium!
-                  .color,
+              color: Theme.of(context).textTheme.labelMedium!.color,
               borderRadius: BorderRadius.circular(10.r)),
         ),
         32.verticalSpace,
         Expanded(
           child: GridView.builder(
               physics: NeverScrollableScrollPhysics(),
-              itemCount: 10,
+              itemCount: ref
+                  .watch(locationScreenProvider)
+                  .distinctFilterCategoryList
+                  .length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 4,
                   mainAxisExtent: 70.h,
                   mainAxisSpacing: 16.h),
               itemBuilder: (context, index) {
-                return filterCard("map_fav", "");
+                final listing = ref
+                    .read(locationScreenProvider)
+                    .distinctFilterCategoryList[index];
+
+                return filterCard(
+                    "map_fav", listing.categoryId?.toString() ?? "");
               }),
         )
       ],
@@ -61,19 +63,19 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
   filterCard(String image, String name) {
     return GestureDetector(
       onTap: () {
-       // ref.read(locationScreenProvider.notifier).updateSelectedCategory();
-        ref.read(locationScreenProvider.notifier)
+        // ref.read(locationScreenProvider.notifier).updateSelectedCategory();
+        ref
+            .read(locationScreenProvider.notifier)
             .updateBottomSheetSelectedUIType(
-            BottomSheetSelectedUIType.eventList);
+                BottomSheetSelectedUIType.eventList);
       },
       child: Column(
         children: [
           Material(
             elevation: 6, // adjust this value to control the shadow
             shape: const CircleBorder(),
-            color: Theme
-                .of(context)
-                .scaffoldBackgroundColor, // background color
+            color:
+                Theme.of(context).scaffoldBackgroundColor, // background color
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
               child: SizedBox(
@@ -84,6 +86,7 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
               ),
             ),
           ),
+          5.verticalSpace,
           textRegularMontserrat(text: name, fontSize: 13),
         ],
       ),
