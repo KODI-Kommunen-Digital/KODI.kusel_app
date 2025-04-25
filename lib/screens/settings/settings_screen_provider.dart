@@ -16,7 +16,7 @@ final settingsScreenProvider =
         SettingsScreenProvider(
             localeManagerController: ref.read(localeManagerProvider.notifier),
             sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
-            editUserDetailUseCase: ref.read(editUserDetailUseCase)));
+            editUserDetailUseCase: ref.read(editUserDetailUseCaseProvider)));
 
 class SettingsScreenProvider extends StateNotifier<SettingsScreenState> {
   LocaleManagerController localeManagerController;
@@ -61,25 +61,5 @@ class SettingsScreenProvider extends StateNotifier<SettingsScreenState> {
       region = LocaleConstant.german.region;
     }
     localeManagerController.updateSelectedLocale(Locale(languageCode, region));
-  }
-
-  Future<void> editUserDetails() async {
-    try {
-      EditUserDetailRequestModel editUserDetailRequestModel =
-          EditUserDetailRequestModel(
-              id: 3, description: "My new test description");
-      EditUserDetailsResponseModel editUserDetailsResponseModel =
-          EditUserDetailsResponseModel();
-      final result = await editUserDetailUseCase.call(
-          editUserDetailRequestModel, editUserDetailsResponseModel);
-      result.fold((l) {
-        debugPrint(l.toString());
-      }, (r) {
-        var resData = (r as EditUserDetailsResponseModel).status;
-        debugPrint("Edit Api Result : $resData");
-      });
-    } catch (error) {
-      debugPrint(error.toString());
-    }
   }
 }

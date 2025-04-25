@@ -59,10 +59,11 @@ class CustomInterceptor extends Interceptor {
             await sharedPreferenceHelper.setString(tokenKey, accessToken ?? "");
 
             final updatedRequestOptions = response.requestOptions;
-            updatedRequestOptions.headers["Authorization"] =
-                "Bearer $accessToken";
+            updatedRequestOptions.headers =
+            {'Authorization': 'Bearer $accessToken'};
             final retryRequest = await apiHelper.fetchRequest(
                 requestOptions: updatedRequestOptions);
+            print("API Token Print - ${updatedRequestOptions.headers}");
             retryRequest.fold(
               (err) => debugPrint("Retry request failed: $err"),
               (retriedResponse) => handler.resolve(retriedResponse),
@@ -80,11 +81,6 @@ class CustomInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     ref.read(customLoggerProvider).logRequest(options);
-    if (options.path == "/users/3") {
-      final authToken = sharedPreferenceHelper.getString(tokenKey);
-      final headers = {'Authorization': 'Bearer $authToken'};
-      options.headers = headers;
-    }
     options.validateStatus = (status) {
       return status != null && status < 500;
     };

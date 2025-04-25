@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dartz/dartz.dart';
 
 final editUserDetailRepositoryProvider = Provider((ref) =>
-    EditUserDetailRepoImpl(
+    EditUserImageRepoImpl(
         editUserDetailService: ref.read(editUserDetailServiceProvider)));
 
 abstract class EditUserDetailRepo {
@@ -12,10 +12,10 @@ abstract class EditUserDetailRepo {
       BaseModel requestModel, BaseModel responseModel);
 }
 
-class EditUserDetailRepoImpl implements EditUserDetailRepo {
+class EditUserImageRepoImpl implements EditUserDetailRepo {
   EditUserDetailService editUserDetailService;
 
-  EditUserDetailRepoImpl({required this.editUserDetailService});
+  EditUserImageRepoImpl({required this.editUserDetailService});
 
   @override
   Future<Either<Exception, BaseModel>> call(

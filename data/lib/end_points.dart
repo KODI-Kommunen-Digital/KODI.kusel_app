@@ -8,3 +8,4 @@ const listingsEndPoint = "/listings";
 const searchEndPoint = "$listingsEndPoint/search";
 const subCategoriesEndPoint = "/subcategories";
 const userDetailsEndPoint = "/users";
+const uploadImageEndPoint = "/imageUpload";

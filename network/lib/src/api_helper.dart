@@ -78,6 +78,7 @@ class ApiHelper<E extends BaseModel> {
     Map<String, dynamic>? headers,
     ProgressCallback? onReceiveProgress,
   }) async {
+    print("Printing form data body - ${body}");
     var response = await _dio
         .post(
       path,

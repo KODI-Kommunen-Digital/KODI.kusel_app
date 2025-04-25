@@ -32,6 +32,7 @@ Map<String, String> _pngImagePath = {
   "star":"assets/png/star.png",
   "onboarding_background": "assets/png/onboarding_background.png",
   "onboarding_logo" : "assets/png/onboarding_logo.png",
+  "empty_profile_image" : "assets/png/empty_profile_image.png"
 };
 
 Map<String, String> _jpegImagePath = {
