@@ -188,7 +188,7 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
 
   Future<void> getLocation() async {
     final position = await LocationService.getCurrentLocation();
-    if (position != null) {
+    if (mounted && position != null) {
       state = state.copyWith(
           latitude: position.latitude, longitude: position.longitude);
     }

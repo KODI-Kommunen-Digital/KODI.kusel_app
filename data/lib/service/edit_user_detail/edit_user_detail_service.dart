@@ -22,11 +22,13 @@ class EditUserDetailService {
       BaseModel requestModel, BaseModel responseModel) async {
     final apiHelper = ref.read(apiHelperProvider);
     final path = "$userDetailsEndPoint/${requestModel.toJson()["id"]}";
+    String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
+    final headers = {'Authorization': 'Bearer $token'};
     final result = await apiHelper.patchRequest(
+        headers: headers,
         path: path,
         create: () => responseModel,
-        body: requestModel.toJson()
-    );
+        body: requestModel.toJson());
     return result.fold((l) => Left(l), (r) => Right(r));
   }
 }
