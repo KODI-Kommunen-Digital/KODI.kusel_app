@@ -33,8 +33,20 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
         final response = r as GetAllListingsResponseModel;
 
         if (response.data != null) {
+          List<int> categoryIdList = [];
+          List<Listing> filterCategoryList = [];
 
-          state = state.copyWith(allEventList: response.data);
+          for (Listing listing in response.data!) {
+            final categoryId = listing.categoryId;
+            if (categoryId != null && !categoryIdList.contains(categoryId)) {
+              filterCategoryList.add(listing);
+              categoryIdList.add(categoryId);
+            }
+          }
+
+          state = state.copyWith(
+              allEventList: response.data,
+              distinctFilterCategoryList: filterCategoryList);
         }
 
         state = state.copyWith(isLoading: false);
@@ -45,13 +57,11 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
     }
   }
 
-
   Future<void> getAllEventListUsingCategoryId(String categoryId) async {
     try {
       state = state.copyWith(isLoading: true);
-      GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(
-        categoryId: categoryId
-      );
+      GetAllListingsRequestModel requestModel =
+          GetAllListingsRequestModel(categoryId: categoryId);
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
 
       final result = await listingsUseCase.call(requestModel, responseModel);
@@ -61,7 +71,6 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
         debugPrint("Get all event list fold exception = $l");
       }, (r) {
         final response = r as GetAllListingsResponseModel;
-
 
         state = state.copyWith(isLoading: false);
       });
@@ -75,8 +84,7 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
     state = state.copyWith(bottomSheetSelectedUIType: type);
   }
 
-  updateSelectedCategory(int? selectedCategory)
-  {
+  updateSelectedCategory(int? selectedCategory) {
     state = state.copyWith(selectedCategoryId: selectedCategory);
   }
 }
