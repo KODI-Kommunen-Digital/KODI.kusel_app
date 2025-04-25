@@ -1,6 +1,9 @@
 import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
+import 'package:domain/model/request_model/listings/search_request_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
+import 'package:domain/model/response_model/listings_model/search_listings_response_model.dart';
 import 'package:domain/usecase/listings/listings_usecase.dart';
+import 'package:domain/usecase/search/search_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/screens/location/bottom_sheet_selected_ui_type.dart';
@@ -10,12 +13,15 @@ import 'location_screen_state.dart';
 final locationScreenProvider = StateNotifierProvider.autoDispose<
         LocationScreenProvider, LocationScreenState>(
     (ref) => LocationScreenProvider(
-        listingsUseCase: ref.read(listingsUseCaseProvider)));
+        listingsUseCase: ref.read(listingsUseCaseProvider),
+        searchUseCase: ref.read(searchUseCaseProvider),
+    ));
 
 class LocationScreenProvider extends StateNotifier<LocationScreenState> {
   ListingsUseCase listingsUseCase;
+  SearchUseCase searchUseCase;
 
-  LocationScreenProvider({required this.listingsUseCase})
+  LocationScreenProvider({required this.listingsUseCase, required this.searchUseCase})
       : super(LocationScreenState.empty());
 
   Future<void> getAllEventList() async {
@@ -71,8 +77,7 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
         debugPrint("Get all event list fold exception = $l");
       }, (r) {
         final response = r as GetAllListingsResponseModel;
-
-        state = state.copyWith(isLoading: false);
+        state = state.copyWith(isLoading: false, allEventList: response.data);
       });
     } catch (error) {
       state = state.copyWith(isLoading: false);
@@ -86,5 +91,47 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
 
   updateSelectedCategory(int? selectedCategory) {
     state = state.copyWith(selectedCategoryId: selectedCategory);
+  }
+
+  void setEventItem(Listing event) {
+    List<Listing> list = [];
+    state.allEventList.forEach((item) {
+      if (item.id == event.id) list.add(item);
+    });
+
+    state = state.copyWith(isLoading: false, selectedEvent: event, allEventList: list);
+  }
+
+  Future<List<Listing>> searchList({
+    required String searchText,
+    required void Function() success,
+    required void Function(String message) error,
+  }) async {
+    try {
+      SearchRequestModel searchRequestModel =
+      SearchRequestModel(searchQuery: searchText);
+      SearchListingsResponseModel searchListingsResponseModel =
+      SearchListingsResponseModel();
+
+      final result = await searchUseCase.call(
+          searchRequestModel, searchListingsResponseModel);
+      return result.fold(
+            (l) {
+          debugPrint('Exception = $l');
+          error(l.toString());
+          return <Listing>[];
+        },
+            (r) {
+          final listings = (r as SearchListingsResponseModel).data;
+          debugPrint('>>>> returned = ${listings?.length}');
+          success();
+          return listings ?? <Listing>[];
+        },
+      );
+    } catch (e) {
+      debugPrint('>>>> Exception = $e');
+      error(e.toString());
+      return <Listing>[];
+    }
   }
 }
