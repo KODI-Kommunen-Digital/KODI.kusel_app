@@ -1,8 +1,14 @@
+import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/screens/location/bottom_sheet_selected_ui_type.dart';
 import 'package:kusel/screens/location/location_screen_provider.dart';
+import 'package:kusel/screens/location/location_screen_state.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../../common_widgets/common_event_card.dart';
+import '../../../common_widgets/search_widget.dart';
 
 class SelectedFilterScreen extends ConsumerStatefulWidget {
   SelectedFilterScreenParams selectedFilterScreenParams;
@@ -15,6 +21,14 @@ class SelectedFilterScreen extends ConsumerStatefulWidget {
 }
 
 class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
+
+  @override
+  void initState() {
+    Future.microtask(() {
+      ref.read(locationScreenProvider.notifier).getAllEventListUsingCategoryId(widget.selectedFilterScreenParams.categoryId.toString());
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,6 +38,7 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
   }
 
   _buildBody(BuildContext context) {
+    LocationScreenState state = ref.watch(locationScreenProvider);
     return Column(
       children: [
         16.verticalSpace,
@@ -31,16 +46,17 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             IconButton(
-                onPressed: () {
-                  ref
-                      .read(locationScreenProvider.notifier)
-                      .updateBottomSheetSelectedUIType(
-                          BottomSheetSelectedUIType.allEvent);
-                },
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: Theme.of(context).textTheme.labelMedium!.color,
-                )),
+              onPressed: () {
+                ref
+                    .read(locationScreenProvider.notifier)
+                    .updateBottomSheetSelectedUIType(
+                    BottomSheetSelectedUIType.allEvent);
+              },
+              icon: Icon(
+                Icons.arrow_back,
+                color: Theme.of(context).textTheme.labelMedium!.color,
+              ),
+            ),
             80.horizontalSpace,
             Align(
               alignment: Alignment.center,
@@ -53,7 +69,59 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
               ),
             ),
           ],
-        )
+        ),
+        SearchWidget(
+          searchController: TextEditingController(),
+          hintText:
+          AppLocalizations.of(context).enter_search_term,
+          suggestionCallback: (search) async {
+            List<Listing>? list;
+            if (search.isEmpty) return [];
+            try {
+              list = await ref
+                  .read(locationScreenProvider.notifier)
+                  .searchList(
+                  searchText: search,
+                  success: () {},
+                  error: (err) {});
+            } catch (e) {
+              return [];
+            }
+            return list;
+          },
+        ),
+        Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Align(alignment: Alignment.centerLeft,child: textSemiBoldPoppins(text: "Category ${state.selectedCategoryId}", fontSize: 16.sp),),
+        ),
+        Expanded(
+          child: CustomScrollView(
+            slivers: [
+              SliverList(
+                delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                    final item = state.allEventList[index];
+                    return CommonEventCard(
+                      imageUrl:
+                      "https://fastly.picsum.photos/id/452/200/200.jpg?hmac=f5vORXpRW2GF7jaYrCkzX3EwDowO7OXgUaVYM2NNRXY",
+                      date: item.startDate ?? "",
+                      title: item.title ?? "",
+                      location: item.address ?? "",
+                      onTap: () {
+                        ref.read(locationScreenProvider.notifier).setEventItem(item);
+                        ref.read(locationScreenProvider.notifier)
+                            .updateBottomSheetSelectedUIType(
+                            BottomSheetSelectedUIType.eventDetail);
+                      },
+                      isFavouriteVisible: false,
+                    );
+                  },
+                  childCount: state.allEventList.length,
+                ),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
