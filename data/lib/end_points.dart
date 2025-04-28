@@ -10,3 +10,4 @@ const subCategoriesEndPoint = "/subcategories";
 String gatFavoritesEndpoint(String userId) =>"/users/$userId/favorites";
 String gatFavoritesListingEndpoint(String userId) =>"/users/$userId/favorites/listings";
 const userDetailsEndPoint = "/users";
+const uploadImageEndPoint = "/imageUpload";
