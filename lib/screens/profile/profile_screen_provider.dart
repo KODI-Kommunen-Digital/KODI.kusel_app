@@ -115,10 +115,11 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
       editUserDetailRequestModel.website = websiteEditingController.text;
     }
 
-    // final imageFile = state.imageFile;
-    // if (imageFile != null) {
-    //   await uploadUserImage(imageFile);
-    // }
+    print("Image path print - ${state.imageFile?.path}");
+    final imageFile = state.imageFile;
+    if (imageFile != null) {
+      await uploadUserImage(imageFile);
+    }
 
     try {
       state = state.copyWith(loading: false);
@@ -171,7 +172,7 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
 
   Future<void> uploadUserImage(File imageFile) async {
     try {
-      state = state.copyWith(loading: false);
+      state = state.copyWith(loading: true);
       final userId = sharedPreferenceHelper.getInt(userIdKey);
 
       EditUserImageRequestModel requestModel =
