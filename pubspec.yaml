@@ -38,6 +38,8 @@ dependencies:
   url_launcher: ^6.2.1
   shimmer: ^3.0.0
   geolocator: ^10.1.0
+  image_picker: ^1.0.4
+  path_provider: ^2.1.1
   core:
     path: core
 
@@ -52,7 +54,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_typeahead: ^5.2.0
-  carousel_slider: ^5.0.0
+  sliding_up_panel: ^2.0.0+1
 
 dev_dependencies:
   flutter_test:

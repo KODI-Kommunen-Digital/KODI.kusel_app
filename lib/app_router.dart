@@ -10,9 +10,16 @@ import 'package:kusel/screens/events_listing/event_list_screen_parameter.dart';
 import 'package:kusel/screens/fliter_screen/filter_screen.dart';
 import 'package:kusel/screens/highlight/highlight_screen.dart';
 import 'package:kusel/screens/event/event_screen.dart';
+import 'package:kusel/screens/profile/profile_screen.dart';
+import 'package:kusel/screens/search/search_screen.dart';
+import 'package:kusel/screens/search_result/search_result_screen.dart';
+import 'package:kusel/screens/search_result/search_result_screen_parameter.dart';
 import 'package:kusel/screens/splash/splash_screen.dart';
 import 'package:kusel/screens/sub_category/sub_category_screen.dart';
 import 'package:kusel/screens/sub_category/sub_category_screen_parameter.dart';
+import 'package:kusel/screens/onboarding/onboarding_finish_page.dart';
+import 'package:kusel/screens/onboarding/onboarding_loading_page.dart';
+import 'package:kusel/screens/onboarding/onboarding_screen.dart';
 
 final mobileRouterProvider = Provider((ref) => GoRouter(routes: goRouteList));
 
@@ -26,6 +33,11 @@ const highlightScreenPath = "/highlightScreenPath";
 const subCategoryScreenPath = "/subCategoryPath";
 const eventListScreenPath = "/eventListScreenPath";
 const filterScreenPath = "/filterScreenPath";
+const searchResultScreenPath = "/searchResultScreenPath";
+const onboardingScreenPath = "/onboardingScreenPath";
+const onboardingLoadingPagePath = "/onboardingLoadingPagePath";
+const onboardingFinishPagePath = "/onboardingFinishPagePath";
+const profileScreenPath = "/profileScreenPath";
 
 List<RouteBase> goRouteList = [
   GoRoute(
@@ -84,4 +96,35 @@ List<RouteBase> goRouteList = [
       builder: (context, state) {
         return FilterScreen();
       }),
+  GoRoute(
+      path: searchResultScreenPath,
+      builder: (context, state) {
+        return SearchResultScreen(
+            searchResultScreenParameter: state.extra as SearchResultScreenParameter
+        );
+      }),
+  GoRoute(
+      path: onboardingScreenPath,
+      builder: (context, state) {
+        return OnboardingScreen();
+      }
+  ),
+  GoRoute(
+      path: onboardingLoadingPagePath,
+      builder: (context, state) {
+        return OnboardingLoadingPage();
+      }
+  ),
+  GoRoute(
+      path: onboardingFinishPagePath,
+      builder: (context, state) {
+        return OnboardingFinishPage();
+      }
+  ),
+  GoRoute(
+      path: profileScreenPath,
+      builder: (context, state) {
+        return ProfileScreen();
+      }
+  )
 ];
