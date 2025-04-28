@@ -48,24 +48,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    CarouselController carouselController = CarouselController(initialItem: 0);
-    carouselController.addListener(() {
-      ref
-          .watch(homeScreenProvider.notifier)
-          .addCarouselListener(carouselController);
-    });
-
     return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.onSecondary,
         body: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: buildUi(carouselController)),
+            height: MediaQuery.of(context).size.height, child: buildUi()),
       ),
     );
   }
 
-  Widget buildUi(CarouselController carouselController) {
+  Widget buildUi() {
     final isLoading = ref.watch(homeScreenProvider).loading;
     HomeScreenState state = ref.watch(homeScreenProvider);
     final latitude = ref.watch(homeScreenProvider).latitude;
@@ -134,6 +126,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             searchController: TextEditingController(),
                             hintText:
                                 AppLocalizations.of(context).enter_search_term,
+                            suggestionCallback: (search) async {
+                              List<Listing>? list;
+                              if (search.isEmpty) return [];
+                              try {
+                                list = await ref
+                                    .read(homeScreenProvider.notifier)
+                                    .searchList(
+                                        searchText: search,
+                                        success: () {},
+                                        error: (err) {});
+                              } catch (e) {
+                                return [];
+                              }
+                              return list;
+                            },
                           )
                         ],
                       )
@@ -179,7 +186,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               )))
               ],
             ),
-            customCarouselView(carouselController, isLoading),
+            customPageViewer(isLoading),
             20.verticalSpace,
             WeatherWidget(),
             eventsView(
@@ -291,7 +298,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 isFavorite: item.isFavorite == 1,
                 onTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
-                      context: context, path: eventScreenPath, params: EventScreenParams(eventId: item.id));
+                      context: context,
+                      path: eventScreenPath,
+                      params: EventScreenParams(eventId: item.id));
                 },
                 onFavorite: (){
                   ref
@@ -306,26 +315,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               );
             },
           ),
-          buttonText.isEmpty
-              ? Container()
-              : Padding(
-                  padding:  EdgeInsets.symmetric(horizontal: 16.w,vertical: 20.h),
-                  child: CustomButton(
-                      onPressed: () {
-                        ref.read(navigationProvider).navigateUsingPath(
-                            path: eventListScreenPath,
-                            context: context,
-                            // Need to be replaced with actual lat-long value
-                            params: EventListScreenParameter(
-                                radius: 1,
-                                centerLatitude: 49.53838,
-                                centerLongitude: 7.40647,
-                                categoryId: 3,
-                                listHeading: heading));
-                      },
-                      text: buttonText,
-                      icon: buttonIconPath),
-                ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+            child: CustomButton(
+                onPressed: () {
+                  ref.read(navigationProvider).navigateUsingPath(
+                      path: eventListScreenPath,
+                      context: context,
+                      // Need to be replaced with actual lat-long value
+                      params: EventListScreenParameter(
+                          radius: 1,
+                          centerLatitude: 49.53838,
+                          centerLongitude: 7.40647,
+                          categoryId: 3,
+                          listHeading: heading));
+                },
+                text: buttonText,
+                icon: buttonIconPath),
+          ),
           15.verticalSpace
         ],
       );
@@ -333,8 +340,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Container();
   }
 
-  Widget customCarouselView(
-      CarouselController carouselController, bool isLoading) {
+  Widget customPageViewer(bool isLoading) {
     HomeScreenState state = ref.watch(homeScreenProvider);
     int currentIndex = state.highlightCount;
     return Padding(
@@ -410,43 +416,39 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           10.verticalSpace,
           SizedBox(
             height: 350.h,
-            child: isLoading
-                ? highlightCardShimmerEffect()
-                : CarouselView(
-                    itemSnapping: false,
-                    onTap: (index){
+            child: PageView.builder(
+              controller: PageController(
+                  viewportFraction: 317 / MediaQuery.of(context).size.width),
+              scrollDirection: Axis.horizontal,
+              padEnds: false,
+              itemCount: state.highlightsList.length,
+              itemBuilder: (context, index) {
+                final listing = state.highlightsList[index];
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 6.h.w),
+                  child: HighlightsCard(
+                    imageUrl: imagePath['highlight_card_image'] ?? '',
+                    date: listing.createdAt ?? "",
+                    heading: listing.title ?? "",
+                    description: listing.description ?? "",
+                    isFavourite: false,
+                    onPress: () {
                       ref.read(navigationProvider).navigateUsingPath(
-                          context: context,
-                          path: eventScreenPath,
-                          params: EventScreenParams(
-                              eventId:
-                              state.highlightsList[index].id));
+                            context: context,
+                            path: eventScreenPath,
+                            params: EventScreenParams(eventId: listing.id),
+                          );
                     },
-                    controller: carouselController,
-                    scrollDirection: Axis.horizontal,
-                    itemExtent: 317,
-                    shrinkExtent: 317,
-                    padding: EdgeInsets.all(6.h.w),
-                    children: state.highlightsList.map((listing) {
-                      return HighlightsCard(
-                        imageUrl: listing.logo ?? "",
-                        // need to be fixed
-                        date: listing.createdAt ?? "",
-                        heading: listing.title ?? "",
-                        description: listing.description ?? "",
-                        isFavourite: listing.isFavorite == 1,
-                        onPress: () {
-
-                        },
-                        onFavouriteIconClick: () {
-
-                        },
-                        isVisible: !ref
-                            .read(signInStatusProvider)
-                            .isSignupButtonVisible,
-                      );
-                    }).toList(),
+                    onFavouriteIconClick: () {},
+                    isVisible:
+                        !ref.read(signInStatusProvider).isSignupButtonVisible,
                   ),
+                );
+              },
+              onPageChanged: (index) {
+                ref.read(homeScreenProvider.notifier).updateCardIndex(index);
+              },
+            ),
           ),
         ],
       ),

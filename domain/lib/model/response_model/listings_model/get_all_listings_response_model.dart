@@ -31,6 +31,8 @@ class Listing {
   String? title;
   String? description;
   String? createdAt;
+  double? lat;
+  double?long;
   int? userId;
   String? startDate;
   String? endDate;
@@ -87,6 +89,8 @@ class Listing {
     this.logoCount,
     this.otherLogos,
     this.isFavorite,
+    this.lat,
+    this.long
   });
 
   factory Listing.fromJson(Map<String, dynamic> json) {
@@ -126,6 +130,8 @@ class Listing {
               json['otherLogos'].map((x) => OtherLogo.fromJson(x)))
           : null,
       isFavorite: json['isFavorite'],
+        lat: json['latitude'],
+        long: json['longitude']
     );
   }
 
