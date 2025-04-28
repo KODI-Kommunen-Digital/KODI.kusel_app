@@ -1,4 +1,6 @@
 const baseUrlProd = "http://116.202.186.81:4001/v1";
+const imageDownloadingEndpoint = "https://kusel1heidi.obs.eu-de.otc.t-systems.com/";
+const baseUrlProd = "http://116.202.186.81:4001/v1";
 const baseUrlStage = "";
 const sigInEndPoint = "/users/login";
 const exploreEndpoint = "/categories";
@@ -8,3 +10,4 @@ const listingsEndPoint = "/listings";
 const searchEndPoint = "$listingsEndPoint/search";
 const subCategoriesEndPoint = "/subcategories";
 const userDetailsEndPoint = "/users";
+const uploadImageEndPoint = "/imageUpload";
