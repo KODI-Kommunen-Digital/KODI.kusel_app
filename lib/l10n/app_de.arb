@@ -85,5 +85,16 @@
   "thanks": "Danke",
   "name": "Name",
   "details" : "Details",
-  "profile" : "Profile"
+  "profile" : "Profile",
+  "field_updated_message" : "Feld erfolgreich aktualisiert",
+  "enter_name": "Name eingeben",
+  "enter_username": "Benutzernamen eingeben",
+  "enter_email": "E-Mail-Adresse eingeben",
+  "phone_number": "Telefonnummer",
+  "enter_phone_number": "Telefonnummer eingeben",
+  "enter_description": "Beschreibung eingeben",
+  "website": "Website",
+  "enter_website": "Website eingeben",
+  "save_changes": "Änderungen speichern",
+  "edit" : "Bearbeiten"
 }

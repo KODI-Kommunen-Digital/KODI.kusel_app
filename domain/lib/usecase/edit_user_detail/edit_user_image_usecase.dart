@@ -3,7 +3,6 @@ import 'package:dartz/dartz.dart';
 import 'package:domain/usecase/usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:data/repo_impl/edit_user_detail/edit_user_image_repo_impl.dart';
-import 'package:dio/dio.dart';
 
 import '../../model/request_model/edit_user_detail/edit_user_image_request_model.dart';
 
@@ -20,6 +19,7 @@ class EditUserImageUseCase
   Future<Either<Exception, BaseModel>> call(
       EditUserImageRequestModel requestModel,
       BaseModel responseModel) async {
+
     final result =
         await editUserImageRepoImpl.call(requestModel, responseModel);
     return result.fold((l) => Left(l), (r) => Right(r));

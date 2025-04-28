@@ -58,15 +58,14 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     onPressed: () {
                       ref.read(profileScreenProvider.notifier).editUserDetails(
                           onSuccess: () {
-                        print("Getting Called");
                         showSuccessToast(
-                            message: "Field Updated Successfully",
+                            message: AppLocalizations.of(context).field_updated_message,
                             context: context);
                       }, onError: (String msg) {
                         showErrorToast(message: msg, context: context);
                       });
                     },
-                    text: "Save Changes")),
+                    text: AppLocalizations.of(context).save_changes)),
           ),
           40.verticalSpace,
         ],
@@ -129,7 +128,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         padding: EdgeInsets.symmetric(
                             horizontal: 20.w, vertical: 5.h),
                         child: textRegularPoppins(
-                            text: "Edit",
+                            text: AppLocalizations.of(context).edit,
                             fontSize: 14.sp,
                             color: Theme.of(context).canvasColor),
                       ),
@@ -152,13 +151,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           children: [
             CircleAvatar(
               backgroundColor: Theme.of(context).colorScheme.onSecondary,
-              radius: 50.r, // Adjust size
-              backgroundImage: state.imageFile != null
-                  ? FileImage(state.imageFile!)
-                  : null,
-              child: state.imageFile == null
-                  ? Icon(Icons.account_circle, size: 80.h.w, color : Theme.of(context).primaryColor.withAlpha(80))
-                  : null,
+              radius: 50.r,
+              backgroundImage: _getProfileImage(context, state),
+              child: _buildProfilePlaceholder(context, state),
             ),
             Positioned(
               left: 65.w,
@@ -193,12 +188,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       child: Column(
         children: [
           _customProfileDetailTile(
-            detailKey: "Name",
+            detailKey: AppLocalizations.of(context).name,
             detailValue:
                 "${userdata?.firstname ?? ''} ${userdata?.lastname ?? ''}",
             icon: Icons.account_box,
             textEditingController: stateNotifier.nameEditingController,
-            hintText: "Enter Name",
+            hintText: AppLocalizations.of(context).enter_name,
             fieldEnabled: state.editingEnabled ?? false,
           ),
           Divider(
@@ -206,11 +201,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             color: Theme.of(context).dividerColor,
           ),
           _customProfileDetailTile(
-            detailKey: "User Name",
+            detailKey: AppLocalizations.of(context).username,
             detailValue: userdata?.username ?? '',
             icon: Icons.legend_toggle,
             textEditingController: stateNotifier.userNameEditingController,
-            hintText: "Enter User Name",
+            hintText: AppLocalizations.of(context).enter_username,
             fieldEnabled: state.editingEnabled ?? false,
           ),
           Divider(
@@ -218,11 +213,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             color: Theme.of(context).dividerColor,
           ),
           _customProfileDetailTile(
-            detailKey: "Email",
+            detailKey: AppLocalizations.of(context).name,
             detailValue: userdata?.email ?? '',
             icon: Icons.email,
             textEditingController: stateNotifier.emailEditingController,
-            hintText: "Enter Email",
+            hintText: AppLocalizations.of(context).email,
             fieldEnabled: false,
           ),
           Divider(
@@ -230,11 +225,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             color: Theme.of(context).dividerColor,
           ),
           _customProfileDetailTile(
-            detailKey: "Phone Number",
+            detailKey: AppLocalizations.of(context).phone_number,
             detailValue: userdata?.phoneNumber ?? '',
             icon: Icons.phone_android,
             textEditingController: stateNotifier.phoneNumberEditingController,
-            hintText: "Enter Phone Numner",
+            hintText: AppLocalizations.of(context).enter_phone_number,
             fieldEnabled: state.editingEnabled ?? false,
           ),
           Divider(
@@ -242,11 +237,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             color: Theme.of(context).dividerColor,
           ),
           _customProfileDetailTile(
-            detailKey: "Description",
+            detailKey: AppLocalizations.of(context).description,
             detailValue: userdata?.description ?? '',
             icon: Icons.textsms_outlined,
             textEditingController: stateNotifier.descriptionEditingController,
-            hintText: "Enter Description",
+            hintText: AppLocalizations.of(context).enter_description,
             fieldEnabled: state.editingEnabled ?? false,
           ),
           Divider(
@@ -254,11 +249,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             color: Theme.of(context).dividerColor,
           ),
           _customProfileDetailTile(
-            detailKey: "Website",
+            detailKey: AppLocalizations.of(context).website,
             detailValue: userdata?.website ?? '_',
             icon: Icons.computer,
             textEditingController: stateNotifier.websiteEditingController,
-            hintText: "Enter Website",
+            hintText: AppLocalizations.of(context).enter_website,
             fieldEnabled: state.editingEnabled ?? false,
           ),
         ],
@@ -325,5 +320,31 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
         ],
       ),
     );
+  }
+
+  ImageProvider<Object>? _getProfileImage(
+      BuildContext context, ProfileScreenState state) {
+    if (state.imageFile != null) {
+      return FileImage(state.imageFile!);
+    } else if (state.userData?.image != null) {
+      return NetworkImage(
+        ref
+            .read(profileScreenProvider.notifier)
+            .getUrlForImage(state.userData!.image!),
+      );
+    }
+    return null;
+  }
+
+  Widget? _buildProfilePlaceholder(
+      BuildContext context, ProfileScreenState state) {
+    if (state.imageFile == null && state.userData?.image == null) {
+      return Icon(
+        Icons.account_circle,
+        size: 80.h.w,
+        color: Theme.of(context).primaryColor.withAlpha(80),
+      );
+    }
+    return null;
   }
 }

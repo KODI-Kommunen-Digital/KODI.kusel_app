@@ -11,13 +11,12 @@ import 'package:domain/usecase/edit_user_detail/edit_user_detail_usecase.dart';
 import 'package:domain/model/response_model/edit_user_detail/edit_user_image_response_model.dart';
 import 'package:domain/model/request_model/edit_user_detail/edit_user_image_request_model.dart';
 import 'package:domain/usecase/edit_user_detail/edit_user_image_usecase.dart';
-import 'package:dio/dio.dart';
+import 'package:data/end_points.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:kusel/screens/profile/profile_screen_state.dart';
-import 'package:path_provider/path_provider.dart';
 
 final profileScreenProvider =
     StateNotifierProvider<ProfileScreenController, ProfileScreenState>((ref) =>
@@ -59,7 +58,7 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
 
   Future<void> getUserDetails() async {
     try {
-      state = state.copyWith(loading: false);
+      state = state.copyWith(loading: true);
       final userId = sharedPreferenceHelper.getInt(userIdKey);
 
       UserDetailRequestModel requestModel = UserDetailRequestModel(id: userId);
@@ -89,6 +88,7 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
   Future<void> editUserDetails(
       {required void Function() onSuccess,
       required void Function(String msg) onError}) async {
+    state = state.copyWith(loading: true);
     EditUserDetailRequestModel editUserDetailRequestModel =
         EditUserDetailRequestModel();
     editUserDetailRequestModel.id = state.userData?.id ?? 0;
@@ -115,7 +115,6 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
       editUserDetailRequestModel.website = websiteEditingController.text;
     }
 
-    print("Image path print - ${state.imageFile?.path}");
     final imageFile = state.imageFile;
     if (imageFile != null) {
       await uploadUserImage(imageFile);
@@ -136,7 +135,6 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
         debugPrint("Edit Api Result : $resData");
         await getUserDetails();
         state = state.copyWith(loading: false, editingEnabled: false);
-        print("Success printing");
         onSuccess();
         debugPrint("Edit API Success");
       });
@@ -158,6 +156,15 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
     };
   }
 
+  bool isAnyFieldEdited(EditUserDetailRequestModel model) {
+    return model.firstname != null ||
+        model.lastname != null ||
+        model.username != null ||
+        model.phoneNumber != null ||
+        model.description != null ||
+        model.website != null;
+  }
+
   Future<void> pickImage() async {
     final pickedFile = await ImagePicker().pickImage(
       source: ImageSource.gallery,
@@ -172,9 +179,7 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
 
   Future<void> uploadUserImage(File imageFile) async {
     try {
-      state = state.copyWith(loading: true);
       final userId = sharedPreferenceHelper.getInt(userIdKey);
-
       EditUserImageRequestModel requestModel =
           EditUserImageRequestModel(id: userId, imagePath: imageFile.path);
       EditUserImageResponseModel responseModel = EditUserImageResponseModel();
@@ -185,31 +190,14 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
         debugPrint('get user details fold exception : $l');
       }, (r) async {
         final response = r as EditUserImageResponseModel;
-        print("Printing form data Status - ${response.status}");
-        File? imageFile;
-        if (response.image != null) {
-          imageFile = await downloadImageFile(response.image!);
-        }
-        state = state.copyWith(
-            loading: false, imageFile: imageFile);
       });
     } catch (error) {
       debugPrint('Upload Image exception : $error');
-      state = state.copyWith(loading: false);
     }
   }
 
-  Future<File> downloadImageFile(String relativePath) async {
-    final imageUrl = getFullImageUrl(relativePath);
-    final dir = await getTemporaryDirectory();
-    final filePath = '${dir.path}/${relativePath.split('/').last}';
-
-    await Dio().download(imageUrl, filePath);
-    return File(filePath);
-  }
-
-  String getFullImageUrl(String imagePath) {
-    const String baseUrl = "https://kusel1heidi.obs.eu-de.otc.t-systems.com/";
-    return baseUrl + imagePath;
+  String getUrlForImage(String? imagePath) {
+    String url = "$imageDownloadingEndpoint$imagePath";
+    return url;
   }
 }

@@ -8,9 +8,10 @@ import 'package:dio/dio.dart';
 
 import '../../end_points.dart';
 
-final editUserImageServiceProvider = Provider((ref) => EditUserImageService(
-    ref: ref,
-    sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider)));
+final editUserImageServiceProvider = Provider((ref) =>
+    EditUserImageService(
+        ref: ref,
+        sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider)));
 
 class EditUserImageService {
   Ref ref;
@@ -19,28 +20,26 @@ class EditUserImageService {
   EditUserImageService(
       {required this.ref, required this.sharedPreferenceHelper});
 
-  Future<Either<Exception, BaseModel>> call(
-      BaseModel requestModel, BaseModel responseModel) async {
+  Future<Either<Exception, BaseModel>> call(BaseModel requestModel,
+      BaseModel responseModel) async {
     final apiHelper = ref.read(apiHelperProvider);
     final path =
-        "$userDetailsEndPoint/${requestModel.toJson()["id"]}${uploadImageEndPoint}";
-    String? imagePath = requestModel.toJson()['image'];
-    final body = <String, dynamic>{
-      if (imagePath != null)
-        'image': await MultipartFile.fromFile(
-          imagePath,
-          filename: imagePath.split('/').last,
-        ),
-    };
-    print("Printing form data body - ${body.entries.first}");
+        "$userDetailsEndPoint/${requestModel
+        .toJson()["id"]}${uploadImageEndPoint}";
+    String imagePath = requestModel.toJson()['imagePath'];
 
+    FormData body = FormData.fromMap({
+      'image': await MultipartFile.fromFile(
+        imagePath,
+      ),
+    });
     String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
     final headers = {'Authorization': 'Bearer $token'};
     final result = await apiHelper.postFormRequest(
         headers: headers,
         path: path,
         create: () => responseModel,
-        body: FormData.fromMap(body));
+        body: body);
     return result.fold((l) => Left(l), (r) => Right(r));
   }
 }
