@@ -87,5 +87,16 @@
   "thanks": "Thanks",
   "name": "Name",
   "details" : "Details",
-  "profile" : "Profile"
+  "profile" : "Profile",
+  "field_updated_message" : "Field Updated Successfully",
+  "enter_name": "Enter Name",
+  "enter_username": "Enter Username",
+  "enter_email": "Enter Email",
+  "phone_number": "Phone Number",
+  "enter_phone_number": "Enter Phone Number",
+  "enter_description": "Enter Description",
+  "website": "Website",
+  "enter_website": "Enter Website",
+  "save_changes": "Save Changes",
+  "edit" : "Edit"
 }

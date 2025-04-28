@@ -10,7 +10,7 @@ class EditUserImageRequestModel extends BaseModel<EditUserImageRequestModel> {
   EditUserImageRequestModel fromJson(Map<String, dynamic> json) {
     return EditUserImageRequestModel(
       id: json['id'],
-      imagePath: json['image'],
+      imagePath: json['imagePath'],
     );
   }
 
