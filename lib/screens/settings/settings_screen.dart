@@ -22,7 +22,6 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
-
   @override
   void initState() {
     Future.microtask(() {
@@ -54,10 +53,30 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
           ),
         ),
+        Visibility(
+          visible: !ref.watch(signInStatusProvider).isSignupButtonVisible,
+          child: Column(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.account_circle_outlined),
+                title: textBoldPoppins(
+                  text: AppLocalizations.of(context).profile,
+                  textAlign: TextAlign.start,
+                ),
+                onTap: () {
+                  ref
+                      .read(navigationProvider)
+                      .navigateUsingPath(path: profileScreenPath, context: context);
+                },
+              ),
+              const Divider(),
+            ],
+          ),
+        ),
         ListTile(
           leading: const Icon(Icons.language),
           title: textBoldPoppins(
-            textAlign: TextAlign.start,
+              textAlign: TextAlign.start,
               text: AppLocalizations.of(context).change_language),
           onTap: () => _showLanguageDialog(context),
         ),
@@ -87,8 +106,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
             onTap: () async {
               ref.read(navigationProvider).removeAllAndNavigate(
-                  context: context, path: signInScreenPath
-              );
+                  context: context, path: signInScreenPath);
             },
           ),
         ),
@@ -100,7 +118,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        final selectedLanguage = ref.watch(settingsScreenProvider).selectedLanguage;
+        final selectedLanguage =
+            ref.watch(settingsScreenProvider).selectedLanguage;
         final languageList = ref.read(settingsScreenProvider).languageList;
 
         return AlertDialog(
@@ -116,31 +135,37 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             child: ListView(
               shrinkWrap: true,
               children: languageList.map((language) {
-                return RadioTheme(data: RadioThemeData(
-                  fillColor: WidgetStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-                    if (states.contains(MaterialState.selected)) {
-                      return Colors.white; // selected radio button
-                    }
-                    return Colors.white; // unselected radio button
-                  }),
-                ), child: RadioListTile<String>(
-                  hoverColor: Colors.white,
-                  title: Align(
-                    alignment: Alignment.centerLeft,
-                    child: textRegularPoppins(text: language, color: Colors.white),
-                  ),
-                  value: language,
-                  selectedTileColor: Colors.white,
-                  groupValue: selectedLanguage,
-                  onChanged: (String? value) {
-                    if (value != null) {
-                      ref
-                          .read(settingsScreenProvider.notifier)
-                          .changeLanguage(selectedLanguage: value);
-                      ref.read(navigationProvider).removeDialog(context: context);
-                    }
-                  },
-                ));
+                return RadioTheme(
+                    data: RadioThemeData(
+                      fillColor: WidgetStateProperty.resolveWith<Color>(
+                          (Set<MaterialState> states) {
+                        if (states.contains(MaterialState.selected)) {
+                          return Colors.white; // selected radio button
+                        }
+                        return Colors.white; // unselected radio button
+                      }),
+                    ),
+                    child: RadioListTile<String>(
+                      hoverColor: Colors.white,
+                      title: Align(
+                        alignment: Alignment.centerLeft,
+                        child: textRegularPoppins(
+                            text: language, color: Colors.white),
+                      ),
+                      value: language,
+                      selectedTileColor: Colors.white,
+                      groupValue: selectedLanguage,
+                      onChanged: (String? value) {
+                        if (value != null) {
+                          ref
+                              .read(settingsScreenProvider.notifier)
+                              .changeLanguage(selectedLanguage: value);
+                          ref
+                              .read(navigationProvider)
+                              .removeDialog(context: context);
+                        }
+                      },
+                    ));
               }).toList(),
             ),
           ),
