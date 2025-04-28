@@ -1,4 +1,4 @@
-const baseUrlProd = "http://116.202.186.81:3001/v2";
+const baseUrlProd = "http://116.202.186.81:4001/v1";
 const baseUrlStage = "";
 const sigInEndPoint = "/users/login";
 const exploreEndpoint = "/categories";
