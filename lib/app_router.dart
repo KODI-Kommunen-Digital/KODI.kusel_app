@@ -10,6 +10,7 @@ import 'package:kusel/screens/events_listing/event_list_screen_parameter.dart';
 import 'package:kusel/screens/fliter_screen/filter_screen.dart';
 import 'package:kusel/screens/highlight/highlight_screen.dart';
 import 'package:kusel/screens/event/event_screen.dart';
+import 'package:kusel/screens/profile/profile_screen.dart';
 import 'package:kusel/screens/search/search_screen.dart';
 import 'package:kusel/screens/search_result/search_result_screen.dart';
 import 'package:kusel/screens/search_result/search_result_screen_parameter.dart';
@@ -36,6 +37,7 @@ const searchResultScreenPath = "/searchResultScreenPath";
 const onboardingScreenPath = "/onboardingScreenPath";
 const onboardingLoadingPagePath = "/onboardingLoadingPagePath";
 const onboardingFinishPagePath = "/onboardingFinishPagePath";
+const profileScreenPath = "/profileScreenPath";
 
 List<RouteBase> goRouteList = [
   GoRoute(
@@ -117,6 +119,12 @@ List<RouteBase> goRouteList = [
       path: onboardingFinishPagePath,
       builder: (context, state) {
         return OnboardingFinishPage();
+      }
+  ),
+  GoRoute(
+      path: profileScreenPath,
+      builder: (context, state) {
+        return ProfileScreen();
       }
   )
 ];
