@@ -16,35 +16,38 @@ import 'package:kusel/screens/events_listing/event_list_screen_parameter.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 
 import '../../common_widgets/arrow_back_widget.dart';
+import '../../common_widgets/toast_message.dart';
 import '../../images_path.dart';
+import '../../providers/favorites_list_notifier.dart';
 import '../../theme_manager/colors.dart';
 import '../dashboard/dashboard_screen_provider.dart';
-import 'event_list_screen_state.dart';
+import 'favorites_list_screen_controller.dart';
+import 'favorites_list_screen_parameter.dart';
+import 'favorites_list_screen_state.dart';
 
-class EventListScreen extends ConsumerStatefulWidget {
-  final EventListScreenParameter eventListScreenParameter;
+class FavoritesListScreen extends ConsumerStatefulWidget {
 
-  const EventListScreen({super.key, required this.eventListScreenParameter});
+  const FavoritesListScreen({super.key});
 
   @override
-  ConsumerState<EventListScreen> createState() => _ExploreScreenState();
+  ConsumerState<FavoritesListScreen> createState() => _ExploreScreenState();
 }
 
-class _ExploreScreenState extends ConsumerState<EventListScreen> {
+class _ExploreScreenState extends ConsumerState<FavoritesListScreen> {
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref
-          .read(eventListScreenProvider.notifier)
-          .getEventsList(widget.eventListScreenParameter);
+          .read(favoritesListScreenProvider.notifier)
+          .getFavoritesList();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final EventListScreenState categoryScreenState =
-    ref.watch(eventListScreenProvider);
+    final FavoritesListScreenState categoryScreenState =
+    ref.watch(favoritesListScreenProvider);
     return Scaffold(
       body: categoryScreenState.loading
           ? const Center(child: CircularProgressIndicator())
@@ -53,7 +56,7 @@ class _ExploreScreenState extends ConsumerState<EventListScreen> {
   }
 
   Widget _buildBody(
-      EventListScreenState categoryScreenState, BuildContext context) {
+      FavoritesListScreenState categoryScreenState, BuildContext context) {
     return CustomScrollView(
       slivers: [
         SliverAppBar(
@@ -91,7 +94,7 @@ class _ExploreScreenState extends ConsumerState<EventListScreen> {
                     fontSize: 16.sp,
                     textAlign: TextAlign.center,
                     text:
-                    widget.eventListScreenParameter.listHeading ?? "",
+                    AppLocalizations.of(context).favorites,
                   ),
                 ),
               ),
@@ -119,7 +122,17 @@ class _ExploreScreenState extends ConsumerState<EventListScreen> {
                 date: item.startDate ?? "",
                 title: item.title ?? "",
                 location: item.address ?? "",
-                isFavorite: item.isFavorite == 1,
+                onFavorite: (){
+                  ref.watch(favoritesProvider.notifier).toggleFavorite(item,
+                      success: ({required bool isFavorite}) {
+                        ref
+                            .read(favoritesListScreenProvider.notifier)
+                            .removeFavorite(isFavorite, item.id);
+                      }, error: ({required String message}) {
+                        showErrorToast(message: message, context: context);
+                      });
+                },
+                isFavorite: item.isFavorite ?? false,
                 onTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
                     context: context,
@@ -127,7 +140,7 @@ class _ExploreScreenState extends ConsumerState<EventListScreen> {
                     params: EventScreenParams(eventId: item.id),
                   );
                 },
-                isFavouriteVisible: !ref.watch(homeScreenProvider).isSignupButtonVisible,
+                isFavouriteVisible: ref.watch(favoritesProvider.notifier).showFavoriteIcon(),
               );
             },
             childCount: categoryScreenState.eventsList.length,

@@ -96,6 +96,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             },
           ),
         ),
+        const Divider(),
         Visibility(
           visible: ref.watch(signInStatusProvider).isSignupButtonVisible,
           child: ListTile(
@@ -107,6 +108,20 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             onTap: () async {
               ref.read(navigationProvider).removeAllAndNavigate(
                   context: context, path: signInScreenPath);
+            },
+          ),
+        ),
+        Visibility(
+          visible: !ref.watch(signInStatusProvider).isSignupButtonVisible,
+          child: ListTile(
+            leading: const Icon(Icons.favorite_border),
+            title: textBoldPoppins(
+              text: AppLocalizations.of(context).favorites,
+              textAlign: TextAlign.start,
+            ),
+            onTap: () async {
+              ref.read(navigationProvider).navigateUsingPath(
+                  context: context, path: favoritesListScreenPath);
             },
           ),
         ),
