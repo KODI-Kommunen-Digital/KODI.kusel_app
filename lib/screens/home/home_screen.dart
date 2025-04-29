@@ -42,6 +42,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ref.read(homeScreenProvider.notifier).getEvents();
       ref.read(homeScreenProvider.notifier).getNearbyEvents();
       ref.read(signInStatusProvider.notifier).getLoginStatus();
+      ref.watch(homeScreenProvider.notifier).getWeather();
     });
     super.initState();
   }
@@ -203,7 +204,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             customPageViewer(isLoading),
             20.verticalSpace,
-            WeatherWidget(),
+            WeatherWidget(weatherResponseModel: ref.watch(homeScreenProvider).weatherResponseModel,),
             eventsView(
                 state.eventsList,
                 AppLocalizations.of(context).near_you,

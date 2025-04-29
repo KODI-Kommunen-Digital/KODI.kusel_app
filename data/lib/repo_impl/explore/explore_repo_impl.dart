@@ -6,12 +6,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final exploreRepositoryProvider = Provider(
     (ref) => ExploreRepoImpl(exploreService: ref.read(exploreServiceProvider)));
 
-abstract class SignInRepo {
+abstract class ExploreRepo {
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel);
 }
 
-class ExploreRepoImpl implements SignInRepo {
+class ExploreRepoImpl implements ExploreRepo {
   ExploreService exploreService;
 
   ExploreRepoImpl({required this.exploreService});
