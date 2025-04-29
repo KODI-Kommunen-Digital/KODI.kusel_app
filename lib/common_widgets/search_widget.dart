@@ -1,17 +1,18 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:core/preference_manager/preference_constant.dart';
+import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
-import 'package:domain/model/response_model/listings_model/search_listings_response_model.dart';
-import 'package:domain/usecase/search/search_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:intl/intl.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/screens/event/event_screen_controller.dart';
-import 'package:kusel/screens/home/home_screen_provider.dart';
 
 import '../app_router.dart';
 import '../navigation/navigation.dart';
@@ -89,7 +90,7 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: textRegularPoppins(
-                              text: event.startDate ?? "",
+                              text: formatDate(event.startDate ?? ""),
                               fontSize: 14,
                               color: Colors.grey[600],
                               textAlign: TextAlign.start, // Ensure text is left-aligned
@@ -103,13 +104,14 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                       ),
                     );
                   },
-                  onSelected: (city) {
+                  onSelected: (listing) {
                     widget.searchController.clear();
                     FocusScope.of(context).unfocus();
+                    saveListingToPrefs(listing);
                     ref.read(navigationProvider).navigateUsingPath(
                       context: context,
                       path: eventScreenPath,
-                      params: EventScreenParams(eventId: city.id)
+                      params: EventScreenParams(eventId: listing.id)
                     );
                   },
                 ),
@@ -120,4 +122,33 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
       ),
     );
   }
+  String formatDate(String inputDate) {
+    try {
+      final DateTime parsedDate = DateTime.parse(inputDate);
+      final DateFormat formatter = DateFormat('dd.MM.yyyy');
+      return formatter.format(parsedDate);
+    }
+    catch(e){
+      return inputDate;
+    }
+  }
+
+  saveListingToPrefs(Listing newListing)  {
+    final existingJson = ref.read(sharedPreferenceHelperProvider).getString(searchListKey);
+
+    List<Listing> currentListings = [];
+
+    if (existingJson != null && existingJson.isNotEmpty) {
+      final List<dynamic> decoded = jsonDecode(existingJson);
+      currentListings = decoded.map((e) => Listing.fromJson(e)).toList();
+    }
+
+    currentListings.removeWhere((item) => item.id == newListing.id);
+
+    currentListings.add(newListing);
+
+    final updatedJson = jsonEncode(currentListings.map((e) => e.toJson()).toList());
+    ref.read(sharedPreferenceHelperProvider).setString(searchListKey, updatedJson);
+  }
+
 }
