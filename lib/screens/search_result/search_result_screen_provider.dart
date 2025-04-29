@@ -27,12 +27,7 @@ class SearchResultScreenProvider
 
   Future<void> getNearbyList() async {
     try {
-      //   49.53838,
-      // centerLongitude: 7.40647,
-      //   // Position? location = await getLocation();
       state = state.copyWith(loading: true, error: "");
-      // print(" location ${location?.longitude} ${location?.latitude}");
-
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
               radius: 1, centerLatitude: 49.53838, centerLongitude: 7.40647);
@@ -55,7 +50,6 @@ class SearchResultScreenProvider
             }
             groupedEvents[categoryId]!.add(event);
           }
-          print("list ${listings?.first.title} ${listings?.length}");
           state = state.copyWith(
             groupedEvents: groupedEvents,
             eventsList: listings,
@@ -74,7 +68,6 @@ class SearchResultScreenProvider
   }
 
   void getEventsList(SearchType searchType) {
-    print("called");
     if (searchType == SearchType.nearBy) {
       getNearbyList();
     } else {

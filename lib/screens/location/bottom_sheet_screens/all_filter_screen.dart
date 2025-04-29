@@ -61,17 +61,17 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
                     .distinctFilterCategoryList[index];
 
                 return filterCard(
-                    "map_fav", listing.categoryId?.toString() ?? "");
+                    "map_fav", listing.categoryId?.toString() ?? "", listing.categoryName?.toString() ?? "");
               }),
         )
       ],
     );
   }
 
-  filterCard(String image, String categoryID) {
+  filterCard(String image, String categoryID, String categoryName) {
     return GestureDetector(
       onTap: () {
-        ref.read(locationScreenProvider.notifier).updateSelectedCategory(int.parse(categoryID));
+        ref.read(locationScreenProvider.notifier).updateSelectedCategory(int.parse(categoryID), categoryName);
         ref.read(locationScreenProvider.notifier).updateBottomSheetSelectedUIType(
                 BottomSheetSelectedUIType.eventList);
       },
@@ -93,7 +93,7 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
             ),
           ),
           5.verticalSpace,
-          textRegularMontserrat(text: categoryID, fontSize: 13),
+          textRegularMontserrat(text: categoryName, fontSize: 13),
         ],
       ),
     );

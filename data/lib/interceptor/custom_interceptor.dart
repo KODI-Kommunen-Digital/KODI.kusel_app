@@ -26,55 +26,73 @@ class CustomInterceptor extends Interceptor {
     ref.read(customLoggerProvider).logResponse(response);
 
     if ((response.requestOptions.path != sigInEndPoint &&
-            response.requestOptions.path != signUpEndPoint) &&
+        response.requestOptions.path != signUpEndPoint) &&
         (response.statusCode == 401)) {
       ApiHelper apiHelper = ref.read(apiHelperProvider);
 
-      final userId = sharedPreferenceHelper.getString(userIdKey);
-      if (userId != null && userId.isNotEmpty) {
-        final path = "users/$userId/refresh";
+      final userId = sharedPreferenceHelper.getInt(userIdKey);
+      if (userId != null &&
+          response.requestOptions.path != "/users/$userId/refresh") {
+        try {
+          final path = "/users/$userId/refresh";
+          final refreshToken = sharedPreferenceHelper.getString(refreshTokenKey);
 
-        final refreshToken = sharedPreferenceHelper.getString(refreshTokenKey);
+          RefreshTokenRequestModel requestModel =
+          RefreshTokenRequestModel(refreshToken: refreshToken ?? "");
 
-        RefreshTokenRequestModel requestModel =
-            RefreshTokenRequestModel(refreshToken: refreshToken ?? "");
-
-        final result = await apiHelper.postRequest(
+          final result = await apiHelper.postRequest(
             path: path,
             body: requestModel.toJson(),
-            create: () {
-              return RefreshTokenResponseModel();
-            });
+            create: () => RefreshTokenResponseModel(),
+          );
 
-        result.fold((left) {
-          debugPrint("refresh token fold exception : $left");
-        }, (right) async {
-          if (right.data != null) {
-            final accessToken = right.data!.accessToken;
-            final refreshToken = right.data!.refreshToken;
+          await result.fold(
+                (left) async {
+              debugPrint("refresh token fold exception: $left");
+              handler.resolve(response); // fallback to original response
+            },
+                (right) async {
+              if (right.data != null) {
+                final accessToken = right.data!.accessToken;
+                final newRefreshToken = right.data!.refreshToken;
 
-            await sharedPreferenceHelper.setString(
-                refreshTokenKey, refreshToken ?? "");
-            await sharedPreferenceHelper.setString(tokenKey, accessToken ?? "");
+                await sharedPreferenceHelper.setString(
+                    refreshTokenKey, newRefreshToken ?? "");
+                await sharedPreferenceHelper.setString(tokenKey, accessToken ?? "");
 
-            final updatedRequestOptions = response.requestOptions;
-            updatedRequestOptions.headers["Authorization"] =
-                "Bearer $accessToken";
-            final retryRequest = await apiHelper.fetchRequest(
-                requestOptions: updatedRequestOptions);
-            retryRequest.fold(
-              (err) => debugPrint("Retry request failed: $err"),
-              (retriedResponse) => handler.resolve(retriedResponse),
-            );
-            return;
-          } else {
-            debugPrint("Failed to get new token: ${right.message}");
-          }
-        });
+                final updatedRequestOptions = response.requestOptions;
+                updatedRequestOptions.headers = {
+                  'Authorization': 'Bearer $accessToken'
+                };
+
+                final retryResult = await apiHelper.fetchRequest(
+                    requestOptions: updatedRequestOptions);
+
+                retryResult.fold(
+                      (err) {
+                    debugPrint("Retry request failed: $err");
+                    handler.resolve(response); // fallback to original response
+                  },
+                      (retriedResponse) {
+                    handler.resolve(retriedResponse); // successful retry
+                  },
+                );
+              } else {
+                debugPrint("Failed to get new token: ${right.message}");
+                handler.resolve(response); // fallback
+              }
+            },
+          );
+        } catch (e, stacktrace) {
+          debugPrint("Exception during token refresh: $e\n$stacktrace");
+          handler.resolve(response); // fallback to original
+        }
+        return;
       }
     }
-    super.onResponse(response, handler);
+    handler.next(response);
   }
+
 
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {

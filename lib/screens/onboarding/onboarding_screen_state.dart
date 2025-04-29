@@ -2,7 +2,7 @@ class OnboardingScreenState {
   int selectedPageIndex;
   String onBoardingButtonText;
   List<String> residenceList;
-  String resident;
+  String? resident;
   String userNam;
   bool isLoading;
   bool isTourist;
@@ -13,6 +13,8 @@ class OnboardingScreenState {
   bool isWithFamily;
   bool isWithDog;
   bool isBarrierearm;
+  bool isErrorMsgVisible;
+  Map<int, String> cityDetailsMap;
 
   OnboardingScreenState(
       this.selectedPageIndex,
@@ -29,14 +31,16 @@ class OnboardingScreenState {
       this.isWithFamily,
       this.isWithDog,
       this.isBarrierearm,
+      this.isErrorMsgVisible,
+      this.cityDetailsMap
       );
 
   factory OnboardingScreenState.empty() {
     return OnboardingScreenState(
       0,
       '',
-      ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
-      '',
+      [],
+      null,
       '',
       false,
       false,
@@ -47,6 +51,8 @@ class OnboardingScreenState {
       false,
       false,
       false,
+      false,
+      {}
     );
   }
 
@@ -65,22 +71,26 @@ class OnboardingScreenState {
     bool? isWithFamily,
     bool? isWithDog,
     bool? isBarrierearm,
+    bool? isErrorMsgVisible,
+    Map<int,String>? cityDetailsMap
   }) {
     return OnboardingScreenState(
-      selectedPageIndex ?? this.selectedPageIndex,
-      onBoardingButtonText ?? this.onBoardingButtonText,
-      residenceList ?? this.residenceList,
-      resident ?? this.resident,
-      userName ?? this.userNam,
-      isLoading ?? this.isLoading,
-      isTourist ?? this.isTourist,
-      isResident ?? this.isResident,
-      loadingPercentage ?? this.loadingPercentage,
-      isSingle ?? this.isSingle,
-      isForTwo ?? this.isForTwo,
-      isWithFamily ?? this.isWithFamily,
-      isWithDog ?? this.isWithDog,
-      isBarrierearm ?? this.isBarrierearm,
+        selectedPageIndex ?? this.selectedPageIndex,
+        onBoardingButtonText ?? this.onBoardingButtonText,
+        residenceList ?? this.residenceList,
+        resident ?? this.resident,
+        userName ?? this.userNam,
+        isLoading ?? this.isLoading,
+        isTourist ?? this.isTourist,
+        isResident ?? this.isResident,
+        loadingPercentage ?? this.loadingPercentage,
+        isSingle ?? this.isSingle,
+        isForTwo ?? this.isForTwo,
+        isWithFamily ?? this.isWithFamily,
+        isWithDog ?? this.isWithDog,
+        isBarrierearm ?? this.isBarrierearm,
+        isErrorMsgVisible ?? this.isErrorMsgVisible,
+        cityDetailsMap ?? this.cityDetailsMap
     );
   }
 }

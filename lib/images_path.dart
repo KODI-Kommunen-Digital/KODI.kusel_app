@@ -36,7 +36,9 @@ Map<String, String> _pngImagePath = {
   "sunny_image":"assets/png/sunny_image.png",
   "cold_image":"assets/png/cold_image.png",
   "rain_image":"assets/png/rain_image.png",
-  "spring_image":"assets/png/spring_image.png"
+  "spring_image":"assets/png/spring_image.png",
+  "empty_profile_image" : "assets/png/empty_profile_image.png",
+
 };
 
 Map<String, String> _jpegImagePath = {

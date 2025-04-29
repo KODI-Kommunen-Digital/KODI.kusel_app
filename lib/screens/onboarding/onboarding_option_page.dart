@@ -9,7 +9,6 @@ import '../../common_widgets/custom_dropdown.dart';
 import '../../common_widgets/text_styles.dart';
 
 class OnboardingOptionPage extends ConsumerStatefulWidget {
-
   const OnboardingOptionPage({super.key});
 
   @override
@@ -18,6 +17,7 @@ class OnboardingOptionPage extends ConsumerStatefulWidget {
 }
 
 class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
+
   @override
   Widget build(BuildContext context) {
     return ref.read(onboardingScreenProvider).isResident
@@ -53,9 +53,11 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
           CustomDropdown(
             hintText: AppLocalizations.of(context).select_residence,
             items: ref.read(onboardingScreenProvider).residenceList,
-            selectedItem: ref.watch(onboardingScreenProvider).resident,
+            selectedItem: ref.watch(onboardingScreenProvider).resident ?? '',
             textAlignCenter: true,
-            onSelected: (String? newValue) {},
+            onSelected: (String? newValue) {
+              stateNotifier.updateUserType(newValue ?? '');
+            },
           ),
           20.verticalSpace,
           Divider(
@@ -107,6 +109,21 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
                 stateNotifier
                     .updateCompanionType(OnBoardingCompanionType.barrierearm);
               }),
+          5.verticalSpace,
+          Visibility(
+              visible: state.isErrorMsgVisible,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 10.w),
+                  child: textRegularPoppins(
+                      text:
+                          AppLocalizations.of(context).please_select_the_field,
+                      color: Theme.of(context).colorScheme.error,
+                      fontSize: 11.sp),
+                ),
+              )),
+          5.verticalSpace,
         ],
       ),
     );
@@ -140,9 +157,11 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
           CustomDropdown(
             hintText: AppLocalizations.of(context).select_residence,
             items: ref.read(onboardingScreenProvider).residenceList,
-            selectedItem: ref.watch(onboardingScreenProvider).resident,
+            selectedItem: ref.watch(onboardingScreenProvider).resident ?? '',
             textAlignCenter: true,
-            onSelected: (String? newValue) {},
+            onSelected: (String? newValue) {
+              stateNotifier.updateUserType(newValue ?? '');
+            },
           ),
           20.verticalSpace,
           Divider(
@@ -194,6 +213,20 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
                 stateNotifier
                     .updateCompanionType(OnBoardingCompanionType.barrierearm);
               }),
+          5.verticalSpace,
+          Visibility(
+              visible: state.isErrorMsgVisible,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 10.w),
+                  child: textRegularPoppins(
+                      text:
+                          AppLocalizations.of(context).please_select_the_field,
+                      color: Theme.of(context).colorScheme.error,
+                      fontSize: 11.sp),
+                ),
+              )),
         ],
       ),
     );

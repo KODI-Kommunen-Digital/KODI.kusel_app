@@ -21,7 +21,8 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
   ListingsUseCase listingsUseCase;
   SearchUseCase searchUseCase;
 
-  LocationScreenProvider({required this.listingsUseCase, required this.searchUseCase})
+  LocationScreenProvider(
+      {required this.listingsUseCase, required this.searchUseCase})
       : super(LocationScreenState.empty());
 
   Future<void> getAllEventList() async {
@@ -67,7 +68,7 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
     try {
       state = state.copyWith(isLoading: true);
       GetAllListingsRequestModel requestModel =
-          GetAllListingsRequestModel(categoryId: categoryId);
+      GetAllListingsRequestModel(categoryId: categoryId);
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
 
       final result = await listingsUseCase.call(requestModel, responseModel);
@@ -89,8 +90,19 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
     state = state.copyWith(bottomSheetSelectedUIType: type);
   }
 
-  updateSelectedCategory(int? selectedCategory) {
-    state = state.copyWith(selectedCategoryId: selectedCategory);
+  updateSelectedCategory(int? selectedCategory, String? categoryName) {
+    state = state.copyWith(selectedCategoryId: selectedCategory,
+        selectedCategoryName: categoryName);
+  }
+
+  void setIsFavorite(bool isFavorite, int? id) {
+    for (var listing in state.allEventList) {
+      if (listing.id == id) {
+        listing.isFavorite = isFavorite;
+      }
+    }
+    state = state.copyWith(
+        allEventList: state.allEventList);
   }
 
   void setEventItem(Listing event) {
@@ -99,7 +111,8 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
       if (item.id == event.id) list.add(item);
     });
 
-    state = state.copyWith(isLoading: false, selectedEvent: event, allEventList: list);
+    state = state.copyWith(
+        isLoading: false, selectedEvent: event, allEventList: list);
   }
 
   Future<List<Listing>> searchList({

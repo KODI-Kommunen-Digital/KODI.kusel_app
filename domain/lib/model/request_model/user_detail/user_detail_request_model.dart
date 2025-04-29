@@ -7,7 +7,6 @@ class UserDetailRequestModel implements BaseModel<UserDetailRequestModel> {
 
   @override
   UserDetailRequestModel fromJson(Map<String, dynamic> json) {
-    // TODO: implement fromJson
     throw UnimplementedError();
   }
 

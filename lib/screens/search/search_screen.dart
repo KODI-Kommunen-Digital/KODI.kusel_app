@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:core/preference_manager/preference_constant.dart';
+import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,6 +28,14 @@ class SearchScreen extends ConsumerStatefulWidget {
 }
 
 class _ExploreScreenState extends ConsumerState<SearchScreen> {
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(searchScreenProvider.notifier).loadSavedListings();
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -36,6 +48,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
   }
 
   Widget buildUi() {
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -148,6 +161,16 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                         text: AppLocalizations.of(context).recent_search,
                         fontSize: 18),
                   ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: ref.watch(searchScreenProvider).searchedList.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(ref.watch(searchScreenProvider).searchedList[index].title ?? ""),
+                      );
+                    },
+                  )
                 ],
               ),
             ),
@@ -157,3 +180,4 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
     );
   }
 }
+
