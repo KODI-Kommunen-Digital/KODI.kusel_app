@@ -9,6 +9,7 @@ import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/onboarding/onboarding_name_page.dart';
 import 'package:kusel/screens/onboarding/onboarding_preferences_page.dart';
 import 'package:kusel/screens/onboarding/onboarding_screen_provider.dart';
+import 'package:kusel/screens/onboarding/onboarding_screen_state.dart';
 import 'package:kusel/screens/onboarding/onboarding_start_page.dart';
 import 'package:kusel/screens/onboarding/onboarding_type_page.dart';
 import 'onboarding_option_page.dart';
@@ -100,30 +101,34 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   stateNotifier.nextPage();
                   break;
                 case 1:
-                  if (stateNotifier.onboardingNameFormKey.currentState?.validate() ?? false) {
+                  if (stateNotifier.onboardingNameFormKey.currentState
+                          ?.validate() ??
+                      false) {
                     stateNotifier.nextPage();
                   }
                   break;
                 case 2:
-                  stateNotifier.nextPage();
+                  if(!state.isTourist && !state.isResident){
+                    stateNotifier.updateErrorMsgStatus(true);
+                  } else {
+                    stateNotifier.updateErrorMsgStatus(false);
+                    stateNotifier.fetchCities();
+                    stateNotifier.nextPage();
+                  }
                   break;
                 case 3:
-                  // if (state.isTourist) {
-                  //   if (stateNotifier.onboardingTouristKey.currentState?.validate() ?? false) {
-                  //     stateNotifier.nextPage();
-                  //   }
-                  // } else {
-                  //   if (stateNotifier.onboardingResidentFormKey.currentState?.validate() ?? false) {
-                  //     stateNotifier.nextPage();
-                  //   }
-                  // }
-                  stateNotifier.nextPage();
+                  if (getErrorMessageStatus(state)) {
+                    stateNotifier.updateErrorMsgStatus(true);
+                  } else {
+                    stateNotifier.updateErrorMsgStatus(false);
+                    stateNotifier.nextPage();
+                  }
                   break;
                 case 4:
                   ref.read(navigationProvider).navigateUsingPath(
-                    path: onboardingLoadingPagePath,
-                    context: context,
-                  );
+                        path: onboardingLoadingPagePath,
+                        context: context,
+                      );
                   break;
                 default:
                   break;
@@ -161,13 +166,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     ),
                     8.horizontalSpace,
                     GestureDetector(
-                        onTap:(){
-                          stateNotifier.onSkipPress((){
-                            ref.read(navigationProvider).removeAllAndNavigate(
-                                context: context,
-                                path: onboardingLoadingPagePath);
-                          });
-                        },
+                      onTap: () {
+                        stateNotifier.onSkipPress(() {
+                          ref.read(navigationProvider).removeAllAndNavigate(
+                              context: context,
+                              path: onboardingLoadingPagePath);
+                        });
+                      },
                       child: textBoldPoppins(
                         color: Theme.of(context).colorScheme.secondary,
                         fontSize: 11.sp,
@@ -207,6 +212,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         ],
       ),
     );
+  }
+
+  bool getErrorMessageStatus(OnboardingScreenState state) {
+    bool martialStatusFilled =
+        (!state.isSingle && !state.isForTwo && !state.isWithFamily);
+
+    bool accommodationPreferenceFilled =
+        (!state.isWithDog && !state.isBarrierearm);
+    bool cityFilled = state.resident == null;
+    return martialStatusFilled || accommodationPreferenceFilled || cityFilled;
   }
 
   Widget _customPageViewer(List<Widget> pages, PageController pageController) {

@@ -1,3 +1,5 @@
+import 'package:core/preference_manager/preference_constant.dart';
+import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:domain/model/request_model/signup/singup_request_model.dart';
 import 'package:domain/model/response_model/signup_model/singup_response_model.dart';
 import 'package:domain/usecase/signup/signup_usecase.dart';
@@ -7,12 +9,14 @@ import 'package:kusel/screens/auth/signup/signup_state.dart';
 
 final signUpScreenProvider =
     StateNotifierProvider.autoDispose<SignUpController, SignUpState>((ref) =>
-        SignUpController(signUpUseCase: ref.read(signUpUseCaseProvider)));
+        SignUpController(signUpUseCase: ref.read(signUpUseCaseProvider), sharedPreferenceHelper : ref.read(
+            sharedPreferenceHelperProvider)));
 
 class SignUpController extends StateNotifier<SignUpState> {
   SignUpUseCase signUpUseCase;
+  SharedPreferenceHelper sharedPreferenceHelper;
 
-  SignUpController({required this.signUpUseCase}) : super(SignUpState.empty());
+  SignUpController({required this.signUpUseCase, required this.sharedPreferenceHelper}) : super(SignUpState.empty());
 
   updateShowPasswordStatus(bool status) {
     state = state.copyWith(showPassword: status);
@@ -48,6 +52,8 @@ class SignUpController extends StateNotifier<SignUpState> {
         final result = r as SignUpResponseModel;
 
         if (result.errorCode == null) {
+          final userId = result.id ?? 0;
+          sharedPreferenceHelper.setInt(userIdKey, userId);
           debugPrint('On Success');
           onSuccess();
         } else {

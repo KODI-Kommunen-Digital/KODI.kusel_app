@@ -12,7 +12,6 @@ import 'package:kusel/screens/fliter_screen/filter_screen.dart';
 import 'package:kusel/screens/highlight/highlight_screen.dart';
 import 'package:kusel/screens/event/event_screen.dart';
 import 'package:kusel/screens/profile/profile_screen.dart';
-import 'package:kusel/screens/search/search_screen.dart';
 import 'package:kusel/screens/search_result/search_result_screen.dart';
 import 'package:kusel/screens/search_result/search_result_screen_parameter.dart';
 import 'package:kusel/screens/splash/splash_screen.dart';
