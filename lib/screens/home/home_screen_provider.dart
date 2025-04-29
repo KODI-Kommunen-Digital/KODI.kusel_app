@@ -194,10 +194,41 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
 
   Future<void> getLocation() async {
     final position = await LocationService.getCurrentLocation();
-    if (position != null) {
+    if (mounted && position != null) {
       state = state.copyWith(
           latitude: position.latitude, longitude: position.longitude);
     }
+  }
+
+  void setIsFavorite(bool isFavorite, int? id) {
+
+    for (var listing in state.highlightsList) {
+      if (listing.id == id) {
+        listing.isFavorite = isFavorite;
+      }
+    }
+    state = state.copyWith(
+        highlightsList: state.highlightsList);
+  }
+
+  void setIsFavoriteEvent(bool isFavorite, int? id) {
+    for (var listing in state.eventsList) {
+      if (listing.id == id) {
+        listing.isFavorite = isFavorite;
+      }
+    }
+    state = state.copyWith(
+        highlightsList: state.eventsList);
+  }
+
+  void setIsFavoriteHighlight(bool isFavorite, int? id) {
+    for (var listing in state.highlightsList) {
+      if (listing.id == id) {
+        listing.isFavorite = isFavorite;
+      }
+    }
+    state = state.copyWith(
+        highlightsList: state.highlightsList);
   }
 
   Future<void> getWeather() async {

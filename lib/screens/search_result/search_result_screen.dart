@@ -141,7 +141,7 @@ class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
                               Padding(
                                 padding: EdgeInsets.only(left: 10.w),
                                 child: textRegularPoppins(
-                                    text: 'Category ID: $categoryId',
+                                    text: items.isNotEmpty ? items.first.categoryName ?? "" : "",
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.w600,
                                     color: Theme.of(context)
@@ -162,6 +162,7 @@ class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
                       // List items under this category
                       ...items.map((item) {
                         return CommonEventCard(
+                          isFavorite: item.isFavorite ?? false,
                           imageUrl:
                               "https://fastly.picsum.photos/id/452/200/200.jpg?hmac=f5vORXpRW2GF7jaYrCkzX3EwDowO7OXgUaVYM2NNRXY",
                           date: item.startDate ?? "",
