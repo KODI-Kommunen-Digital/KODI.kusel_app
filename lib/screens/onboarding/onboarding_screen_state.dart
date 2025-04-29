@@ -14,6 +14,7 @@ class OnboardingScreenState {
   bool isWithDog;
   bool isBarrierearm;
   bool isErrorMsgVisible;
+  Map<int, String> cityDetailsMap;
 
   OnboardingScreenState(
       this.selectedPageIndex,
@@ -30,14 +31,15 @@ class OnboardingScreenState {
       this.isWithFamily,
       this.isWithDog,
       this.isBarrierearm,
-      this.isErrorMsgVisible
+      this.isErrorMsgVisible,
+      this.cityDetailsMap
       );
 
   factory OnboardingScreenState.empty() {
     return OnboardingScreenState(
       0,
       '',
-      ['City 1', 'City 2', 'City 3', 'City 4'],
+      [],
       null,
       '',
       false,
@@ -49,7 +51,8 @@ class OnboardingScreenState {
       false,
       false,
       false,
-      false
+      false,
+      {}
     );
   }
 
@@ -68,7 +71,8 @@ class OnboardingScreenState {
     bool? isWithFamily,
     bool? isWithDog,
     bool? isBarrierearm,
-    bool? isErrorMsgVisible
+    bool? isErrorMsgVisible,
+    Map<int,String>? cityDetailsMap
   }) {
     return OnboardingScreenState(
         selectedPageIndex ?? this.selectedPageIndex,
@@ -85,6 +89,8 @@ class OnboardingScreenState {
         isWithFamily ?? this.isWithFamily,
         isWithDog ?? this.isWithDog,
         isBarrierearm ?? this.isBarrierearm,
-        isErrorMsgVisible ?? this.isErrorMsgVisible);
+        isErrorMsgVisible ?? this.isErrorMsgVisible,
+        cityDetailsMap ?? this.cityDetailsMap
+    );
   }
 }
