@@ -99,5 +99,7 @@
   "enter_website": "Enter Website",
   "save_changes": "Save Changes",
   "edit" : "Edit",
-  "favorites": "Favorites"
+  "favorites": "Favorites",
+  "please_select_the_field" : "Please complete the form"
+
 }

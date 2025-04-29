@@ -1,4 +1,5 @@
 const baseUrlProd = "http://116.202.186.81:4001/v1";
+const imageDownloadingEndpoint = "https://kusel1heidi.obs.eu-de.otc.t-systems.com/";
 const baseUrlStage = "";
 const sigInEndPoint = "/users/login";
 const exploreEndpoint = "/categories";
@@ -12,3 +13,8 @@ String deleteFavoritesEndpoint(String userId, String listingId) =>"/users/$userI
 String gatFavoritesListingEndpoint(String userId) =>"/users/$userId/favorites/listings";
 const userDetailsEndPoint = "/users";
 const uploadImageEndPoint = "/imageUpload";
+const fetchUserOwnDataEndPoint = "/me";
+const onboardingUserTypeEndPoint = "/userType";
+const onboardingUserInterestsEndPoint = "/interests";
+const onboardingUserDemographicsEndPoint = "/demographics";
+const getCitiesEndPoint = "/cities";
