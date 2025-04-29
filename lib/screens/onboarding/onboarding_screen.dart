@@ -112,6 +112,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     stateNotifier.updateErrorMsgStatus(true);
                   } else {
                     stateNotifier.updateErrorMsgStatus(false);
+                    stateNotifier.fetchCities();
                     stateNotifier.nextPage();
                   }
                   break;
