@@ -1,14 +1,35 @@
 import 'dart:async';
+import 'package:domain/model/request_model/onboarding_model/onboarding_user_Demographics_request_model.dart';
+import 'package:domain/model/request_model/onboarding_model/onboarding_user_Interests_request_model.dart';
+import 'package:domain/model/request_model/onboarding_model/onboarding_user_type_request_model.dart';
+import 'package:domain/usecase/onboarding/onboarding_user_interests_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/screens/onboarding/onboarding_screen_state.dart';
+import 'package:domain/usecase/onboarding/onboarding_user_type_usecase.dart';
+import 'package:domain/usecase/onboarding/onboarding_user_demographics_usecase.dart';
+import 'package:domain/model/response_model/onboarding_model/onboarding_user_type_response_model.dart';
+import 'package:domain/model/response_model/onboarding_model/onboarding_user_demographics_response_model.dart';
+import 'package:domain/model/response_model/onboarding_model/onboarding_user_interests_response_model.dart';
 
 final onboardingScreenProvider = StateNotifierProvider.autoDispose<
-    OnboardingScreenController,
-    OnboardingScreenState>((ref) => OnboardingScreenController());
+        OnboardingScreenController, OnboardingScreenState>(
+    (ref) => OnboardingScreenController(
+        onboardingUserTypeUseCase: ref.read(onboardingUserTypeUseCaseProvider),
+        onboardingUserDemographicsUseCase:
+            ref.read(onboardingUserDemographicsUseCaseProvider),
+        onboardingUserInterestsUseCase:
+            ref.read(onboardingUserInterestsUseCaseProvider)));
 
 class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
-  OnboardingScreenController() : super(OnboardingScreenState.empty());
+  OnboardingScreenController(
+      {required this.onboardingUserTypeUseCase,
+      required this.onboardingUserDemographicsUseCase,
+      required this.onboardingUserInterestsUseCase})
+      : super(OnboardingScreenState.empty());
+  OnboardingUserTypeUseCase onboardingUserTypeUseCase;
+  OnboardingUserDemographicsUseCase onboardingUserDemographicsUseCase;
+  OnboardingUserInterestsUseCase onboardingUserInterestsUseCase;
   PageController pageController = PageController();
   TextEditingController nameEditingController = TextEditingController();
   TextEditingController yourLocationEditingController = TextEditingController();
@@ -20,9 +41,14 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     );
   }
 
+  void updateErrorMsgStatus(bool value) {
+    state = state.copyWith(isErrorMsgVisible: value);
+  }
+
   void updateOnboardingType(OnBoardingType onBoardingType) {
     final isResidentSelected = onBoardingType == OnBoardingType.resident;
-    final alreadySelected = isResidentSelected ? state.isResident : state.isTourist;
+    final alreadySelected =
+        isResidentSelected ? state.isResident : state.isTourist;
 
     state = state.copyWith(
       isResident: isResidentSelected ? !alreadySelected : false,
@@ -45,22 +71,104 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     }
 
     state = state.copyWith(
-      isSingle: onBoardingFamilyType == OnBoardingFamilyType.single ? !alreadySelected : false,
-      isForTwo: onBoardingFamilyType == OnBoardingFamilyType.withTwo ? !alreadySelected : false,
-      isWithFamily: onBoardingFamilyType == OnBoardingFamilyType.withMyFamily ? !alreadySelected : false,
+      isSingle: onBoardingFamilyType == OnBoardingFamilyType.single
+          ? !alreadySelected
+          : false,
+      isForTwo: onBoardingFamilyType == OnBoardingFamilyType.withTwo
+          ? !alreadySelected
+          : false,
+      isWithFamily: onBoardingFamilyType == OnBoardingFamilyType.withMyFamily
+          ? !alreadySelected
+          : false,
     );
   }
 
+  void updateUserType(String value) {
+    state = state.copyWith(resident: value);
+  }
+
+  Future<void> updateOnboardingDetails(
+      {required void Function() success}) async {
+    try {
+      String userType = state.isResident ? "citizen" : "tourist";
+      OnboardingUserTypeRequestModel onboardingUserTypeRequestModel =
+          OnboardingUserTypeRequestModel(userType: userType);
+      OnboardingUserTypeResponseModel onboardingUserTypeResponseModel =
+          OnboardingUserTypeResponseModel();
+      final r = await onboardingUserTypeUseCase.call(
+          onboardingUserTypeRequestModel, onboardingUserTypeResponseModel);
+      r.fold((l) {
+        debugPrint('update onboarding user type fold exception : $l');
+      }, (r) async {
+        final result = r as OnboardingUserTypeResponseModel;
+      });
+    } catch (error) {
+      debugPrint('update onboarding user type exception : $error');
+    }
+
+    try {
+      String maritalStatus = state.isSingle
+          ? "alone"
+          : state.isForTwo
+              ? "married"
+              : "with_family";
+      String accommodationPreference = state.isWithDog ? "dog" : "low_barrier";
+      // Todo need to change
+      int cityId = 1;
+
+      OnboardingUserDemographicsRequestModel
+          onboardingUserDemographicsRequestModel =
+          OnboardingUserDemographicsRequestModel(
+              maritalStatus: maritalStatus,
+              accommodationPreference: accommodationPreference,
+              cityId: cityId);
+      OnboardingUserDemographicsResponseModel
+          onboardingUserDemographicsResponseModel =
+          OnboardingUserDemographicsResponseModel();
+      final r = await onboardingUserDemographicsUseCase.call(
+          onboardingUserDemographicsRequestModel,
+          onboardingUserDemographicsResponseModel);
+      r.fold((l) {
+        debugPrint('update onboarding user demographics fold exception : $l');
+      }, (r) async {
+        final result = r as OnboardingUserDemographicsResponseModel;
+        success();
+      });
+    } catch (error) {
+      debugPrint('update onboarding user demographics exception : $error');
+    }
+
+    try {
+      List<int> interestIds = [1, 2, 4, 5];
+      OnboardingUserInterestsRequestModel onboardingUserInterestsRequestModel =
+          OnboardingUserInterestsRequestModel(interestIds: interestIds);
+      OnboardingUserInterestsResponseModel
+          onboardingUserInterestsResponseModel =
+          OnboardingUserInterestsResponseModel();
+      final r = await onboardingUserInterestsUseCase.call(
+          onboardingUserInterestsRequestModel,
+          onboardingUserInterestsResponseModel);
+      r.fold((l) {
+        debugPrint('update onboarding user interests fold exception : $l');
+      }, (r) async {
+        final result = r as OnboardingUserInterestsResponseModel;
+      });
+    } catch (error) {
+      debugPrint('update onboarding user interests exception : $error');
+    }
+  }
+
   void updateCompanionType(OnBoardingCompanionType onBoardingCompanionType) {
-    final isWithDogSelected = onBoardingCompanionType == OnBoardingCompanionType.withDog;
-    final alreadySelected = isWithDogSelected ? state.isWithDog : state.isBarrierearm;
+    final isWithDogSelected =
+        onBoardingCompanionType == OnBoardingCompanionType.withDog;
+    final alreadySelected =
+        isWithDogSelected ? state.isWithDog : state.isBarrierearm;
 
     state = state.copyWith(
       isWithDog: isWithDogSelected ? !alreadySelected : false,
       isBarrierearm: !isWithDogSelected ? !alreadySelected : false,
     );
   }
-
 
   void nextPage() {
     if (pageController.hasClients) {
@@ -113,7 +221,8 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     state = state.copyWith(selectedPageIndex: index);
   }
 
-  void startLoadingTimer(Function() callBack) {
+  Future<void> startLoadingTimer(Function() callBack) async {
+    await updateOnboardingDetails(success: () {});
     Future.delayed(const Duration(seconds: 5), () {
       callBack();
     });
