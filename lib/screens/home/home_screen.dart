@@ -9,6 +9,7 @@ import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/highlights_card.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/weather_widget.dart';
+import 'package:kusel/providers/favorites_list_notifier.dart';
 import 'package:kusel/screens/event/event_screen_controller.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/home/home_screen_state.dart';
@@ -19,6 +20,7 @@ import '../../common_widgets/common_event_card.dart';
 import '../../common_widgets/feedback_card_widget.dart';
 import '../../common_widgets/search_widget.dart';
 import '../../common_widgets/text_styles.dart';
+import '../../common_widgets/toast_message.dart';
 import '../../navigation/navigation.dart';
 import '../events_listing/event_list_screen_parameter.dart';
 import 'package:core/sign_in_status/sign_in_status_controller.dart';
@@ -303,6 +305,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             itemBuilder: (context, index) {
               final item = eventsList[index];
               return CommonEventCard(
+                isFavorite: item.isFavorite ?? false,
+                onFavorite: () {
+                  ref.watch(favoritesProvider.notifier).toggleFavorite(item,
+                      success: ({required bool isFavorite}) {
+                    ref
+                        .read(homeScreenProvider.notifier)
+                        .setIsFavoriteEvent(isFavorite, item.id);
+                  }, error: ({required String message}) {
+                    showErrorToast(message: message, context: context);
+                  });
+                },
                 imageUrl:
                     "https://fastly.picsum.photos/id/452/200/200.jpg?hmac=f5vORXpRW2GF7jaYrCkzX3EwDowO7OXgUaVYM2NNRXY",
                 date: item.startDate ?? "",
@@ -315,7 +328,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       params: EventScreenParams(eventId: item.id));
                 },
                 isFavouriteVisible:
-                    !ref.watch(signInStatusProvider).isSignupButtonVisible,
+                    ref.watch(favoritesProvider.notifier).showFavoriteIcon(),
               );
             },
           ),
@@ -435,7 +448,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     date: listing.createdAt ?? "",
                     heading: listing.title ?? "",
                     description: listing.description ?? "",
-                    isFavourite: false,
+                    isFavourite: listing.isFavorite ?? false,
                     onPress: () {
                       ref.read(navigationProvider).navigateUsingPath(
                             context: context,
@@ -443,7 +456,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             params: EventScreenParams(eventId: listing.id),
                           );
                     },
-                    onFavouriteIconClick: () {},
+                    onFavouriteIconClick: () {
+                      ref.watch(favoritesProvider.notifier).toggleFavorite(listing,
+                          success: ({required bool isFavorite}) {
+                            ref
+                                .read(homeScreenProvider.notifier)
+                                .setIsFavoriteHighlight(isFavorite, listing.id);
+                          }, error: ({required String message}) {
+                            showErrorToast(message: message, context: context);
+                          });
+                    },
                     isVisible:
                         !ref.read(signInStatusProvider).isSignupButtonVisible,
                   ),

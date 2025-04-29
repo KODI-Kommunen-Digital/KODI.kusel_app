@@ -100,6 +100,8 @@
   "map_fav": "Favoriten",
   "map_calendar": "Veranstal",
   "map_restaurant": "Gastro",
+  "favorites": "Favoriten",
   "required": "Erforderlich",
   "please_select_the_field": "Bitte vervollständigen Sie das Formular"
+
 }
