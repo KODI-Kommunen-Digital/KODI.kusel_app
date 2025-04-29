@@ -1,0 +1,159 @@
+import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kusel/app_router.dart';
+import 'package:kusel/common_widgets/custom_button_widget.dart';
+import 'package:kusel/common_widgets/search_widget.dart';
+import 'package:kusel/screens/search/search_screen_provider.dart';
+import 'package:kusel/screens/search_result/search_result_screen_parameter.dart';
+import 'package:kusel/screens/search_result/search_result_screen_provider.dart';
+
+import '../../common_widgets/text_styles.dart';
+import '../../common_widgets/upstream_wave_clipper.dart';
+import '../../images_path.dart';
+import '../../navigation/navigation.dart';
+
+class SearchScreen extends ConsumerStatefulWidget {
+  const SearchScreen({super.key});
+
+  @override
+  ConsumerState<SearchScreen> createState() => _ExploreScreenState();
+}
+
+class _ExploreScreenState extends ConsumerState<SearchScreen> {
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.onSecondary,
+        body: SizedBox(
+            height: MediaQuery.of(context).size.height, child: buildUi()),
+      ),
+    );
+  }
+
+  Widget buildUi() {
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Stack(
+              children: [
+                ClipPath(
+                  clipper: UpstreamWaveClipper(),
+                  child: Container(
+                    height: 210.h,
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(
+                            imagePath['home_screen_background'] ?? ''),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 24.h,
+                  left: 20.w,
+                  right: 20.w,
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 190.h,
+                        width: 256.w,
+                        decoration: BoxDecoration(),
+                        child: Image.asset(
+                          imagePath['dino_with_bg'] ?? "",
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                children: [
+                  8.verticalSpace,
+                  textSemiBoldPoppins(
+                      text: AppLocalizations.of(context).search_heading,
+                      fontSize: 16),
+                  16.verticalSpace,
+                  CustomButton(
+                    onPressed: () {
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: searchResultScreenPath,
+                          context: context,
+                          params:
+                          SearchResultScreenParameter(searchType: SearchType.nearBy));
+                    },
+                    text: AppLocalizations.of(context).near_me,
+                    isOutLined: true,
+                    icon: imagePath['explore'],
+                    iconWidth: 20.w,
+                    iconHeight: 20.w,
+                    textColor: Theme.of(context).textTheme.bodyLarge?.color,
+                  ),
+                  8.verticalSpace,
+                  CustomButton(
+                      onPressed: () {
+                        ref.read(navigationProvider).navigateUsingPath(
+                            path: searchResultScreenPath,
+                            context: context,
+                            params:
+                            SearchResultScreenParameter(searchType: SearchType.recommendations));
+                      },
+                      text: AppLocalizations.of(context).recommendation,
+                      isOutLined: true,
+                      icon: imagePath['star'],
+                      iconWidth: 20.w,
+                      iconHeight: 20.w,
+                      textColor: Theme.of(context).textTheme.bodyLarge?.color),
+                  16.verticalSpace,
+                  Divider(height: 1.h),
+                  16.verticalSpace,
+                  SearchWidget(
+                    searchController: TextEditingController(),
+                    hintText: AppLocalizations.of(context).enter_search_term,
+                      suggestionCallback: (search) async {
+                        List<Listing>? list;
+                        if (search.isEmpty) return [];
+                        try {
+                          list = await ref
+                              .read(searchScreenProvider.notifier)
+                              .searchList(
+                              searchText: search,
+                              success: () {},
+                              error: (err) {});
+                        } catch (e) {
+                          print("exception >>$e");
+                          return [];
+                        }
+                        return list;
+                      },
+                  ),
+                  16.verticalSpace,
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: textSemiBoldPoppins(
+                        text: AppLocalizations.of(context).recent_search,
+                        fontSize: 18),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
