@@ -27,7 +27,7 @@ class _State extends ConsumerState<SplashScreen> {
       ref.read(splashScreenProvider.notifier).startTimer(() {
         ref.read(navigationProvider).removeAllAndNavigate(
           context: context,
-          path: onboardingScreenPath,
+          path: signInScreenPath,
         );
       });
     });
