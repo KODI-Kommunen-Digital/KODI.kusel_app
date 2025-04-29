@@ -11,6 +11,9 @@ import 'package:domain/usecase/onboarding/onboarding_user_demographics_usecase.d
 import 'package:domain/model/response_model/onboarding_model/onboarding_user_type_response_model.dart';
 import 'package:domain/model/response_model/onboarding_model/onboarding_user_demographics_response_model.dart';
 import 'package:domain/model/response_model/onboarding_model/onboarding_user_interests_response_model.dart';
+import 'package:domain/model/request_model/city_details/get_city_details_request_model.dart';
+import 'package:domain/model/response_model/city_details/get_city_details_response_model.dart';
+import 'package:domain/usecase/city_details/get_city_details_usecase.dart';
 
 final onboardingScreenProvider = StateNotifierProvider.autoDispose<
         OnboardingScreenController, OnboardingScreenState>(
@@ -19,17 +22,20 @@ final onboardingScreenProvider = StateNotifierProvider.autoDispose<
         onboardingUserDemographicsUseCase:
             ref.read(onboardingUserDemographicsUseCaseProvider),
         onboardingUserInterestsUseCase:
-            ref.read(onboardingUserInterestsUseCaseProvider)));
+            ref.read(onboardingUserInterestsUseCaseProvider),
+        getCityDetailsUseCase: ref.read(getCityDetailsUseCaseProvider)));
 
 class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   OnboardingScreenController(
       {required this.onboardingUserTypeUseCase,
       required this.onboardingUserDemographicsUseCase,
-      required this.onboardingUserInterestsUseCase})
+      required this.onboardingUserInterestsUseCase,
+      required this.getCityDetailsUseCase})
       : super(OnboardingScreenState.empty());
   OnboardingUserTypeUseCase onboardingUserTypeUseCase;
   OnboardingUserDemographicsUseCase onboardingUserDemographicsUseCase;
   OnboardingUserInterestsUseCase onboardingUserInterestsUseCase;
+  GetCityDetailsUseCase getCityDetailsUseCase;
   PageController pageController = PageController();
   TextEditingController nameEditingController = TextEditingController();
   TextEditingController yourLocationEditingController = TextEditingController();
@@ -87,6 +93,37 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     state = state.copyWith(resident: value);
   }
 
+  Future<void> fetchCities() async {
+    try {
+      GetCityDetailsRequestModel requestModel =
+          GetCityDetailsRequestModel(hasForum: false);
+      GetCityDetailsResponseModel responseModel = GetCityDetailsResponseModel();
+      final result =
+          await getCityDetailsUseCase.call(requestModel, responseModel);
+
+      result.fold((l) {
+        debugPrint('get city details fold exception : $l');
+      }, (r) async {
+        final response = r as GetCityDetailsResponseModel;
+
+        final cityDetailsMap = <int, String>{};
+
+        if (response.data != null) {
+          for (var city in response.data!) {
+            if (city.id != null && city.name != null) {
+              cityDetailsMap[city.id!] = city.name!;
+            }
+          }
+        }
+        state = state.copyWith(
+            residenceList: cityDetailsMap.values.toList(),
+            cityDetailsMap: cityDetailsMap);
+      });
+    } catch (error) {
+      debugPrint('get city details exception : $error');
+    }
+  }
+
   Future<void> updateOnboardingDetails(
       {required void Function() success}) async {
     try {
@@ -113,8 +150,8 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
               ? "married"
               : "with_family";
       String accommodationPreference = state.isWithDog ? "dog" : "low_barrier";
-      // Todo need to change
-      int cityId = 1;
+      String cityName = state.resident ?? '';
+      int cityId = getCityIdByName(state.cityDetailsMap, cityName) ?? 0;
 
       OnboardingUserDemographicsRequestModel
           onboardingUserDemographicsRequestModel =
@@ -168,6 +205,15 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
       isWithDog: isWithDogSelected ? !alreadySelected : false,
       isBarrierearm: !isWithDogSelected ? !alreadySelected : false,
     );
+  }
+
+  int? getCityIdByName(Map<int, String> cityMap, String cityName) {
+    for (var entry in cityMap.entries) {
+      if (entry.value == cityName) {
+        return entry.key;
+      }
+    }
+    return null;
   }
 
   void nextPage() {

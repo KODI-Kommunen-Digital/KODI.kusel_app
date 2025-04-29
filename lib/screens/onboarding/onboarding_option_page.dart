@@ -17,6 +17,7 @@ class OnboardingOptionPage extends ConsumerStatefulWidget {
 }
 
 class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
+
   @override
   Widget build(BuildContext context) {
     return ref.read(onboardingScreenProvider).isResident
