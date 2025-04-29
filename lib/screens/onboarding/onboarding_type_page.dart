@@ -35,17 +35,28 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingTypePage> {
               text: AppLocalizations.of(context).live_here,
               isSelected: state.isResident,
               onTap: () {
-                stateNotifier
-                    .updateOnboardingType(OnBoardingType.resident);
+                stateNotifier.updateOnboardingType(OnBoardingType.resident);
               }),
           15.verticalSpace,
           CustomSelectionButton(
               text: AppLocalizations.of(context).spend_my_free_time_here,
               isSelected: state.isTourist,
               onTap: () {
-                stateNotifier
-                    .updateOnboardingType(OnBoardingType.tourist);
+                stateNotifier.updateOnboardingType(OnBoardingType.tourist);
               }),
+          12.verticalSpace,
+          Visibility(
+              visible: state.isErrorMsgVisible,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: EdgeInsets.only(left: 10.w),
+                  child: textRegularPoppins(
+                      text: AppLocalizations.of(context).please_select_the_field,
+                      color: Theme.of(context).colorScheme.error,
+                      fontSize: 11.sp),
+                ),
+              ))
         ],
       ),
     );

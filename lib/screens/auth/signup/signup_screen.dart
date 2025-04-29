@@ -242,8 +242,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                   AppLocalizations.of(context).check_your_email,
                               context: context);
                           ref.read(navigationProvider).removeAllAndNavigate(
-                              context: context, path: dashboardScreenPath);
-                          ref.read(dashboardScreenProvider.notifier).onIndexChanged(0);
+                              context: context, path: onboardingScreenPath);
                         });
                   }
                 },

@@ -99,5 +99,7 @@
   "edit" : "Bearbeiten",
   "map_fav": "Favoriten",
   "map_calendar": "Veranstal",
-  "map_restaurant": "Gastro"
+  "map_restaurant": "Gastro",
+  "required": "Erforderlich",
+  "please_select_the_field": "Bitte vervollständigen Sie das Formular"
 }
