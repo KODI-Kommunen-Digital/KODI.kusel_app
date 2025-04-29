@@ -10,7 +10,7 @@ final exploreCategoriesUseCaseProvider = Provider(
     (ref) => ExploreCategoriesUseCase(exploreRepo: ref.read(exploreRepositoryProvider)));
 
 class ExploreCategoriesUseCase implements UseCase<BaseModel, GetAllCategoriesResponseModel> {
-  ExploreRepoImpl exploreRepo;
+  ExploreRepo exploreRepo;
 
   ExploreCategoriesUseCase({required this.exploreRepo});
 
