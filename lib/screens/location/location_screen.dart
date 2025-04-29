@@ -92,7 +92,6 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
     LocationScreenState locationScreenState = ref.watch(locationScreenProvider);
     switch (type) {
       case BottomSheetSelectedUIType.eventList:
-
         widget = SelectedFilterScreen(selectedFilterScreenParams: SelectedFilterScreenParams(categoryId: locationScreenState.selectedCategoryId ?? 0),);
         break;
       case BottomSheetSelectedUIType.eventDetail:

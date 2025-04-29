@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:core/preference_manager/preference_constant.dart';
 import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:domain/model/request_model/listings/search_request_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
@@ -48,5 +51,15 @@ class SearchScreenProvider extends StateNotifier<SearchScreenState> {
       error(e.toString());
       return <Listing>[];
     }
+  }
+
+  loadSavedListings() {
+    final jsonString = sharedPreferenceHelper.getString(searchListKey);
+    if (jsonString == null || jsonString.isEmpty) return [];
+    final savedList = jsonDecode(jsonString);
+    state = state.copyWith(
+        searchedList: (savedList as List).map((e) => Listing.fromJson(e)).toList());
+    print(state.searchedList.length);
+
   }
 }

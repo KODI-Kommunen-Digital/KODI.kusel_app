@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/providers/favorites_list_notifier.dart';
 import 'package:kusel/screens/location/bottom_sheet_selected_ui_type.dart';
 import 'package:kusel/screens/location/location_screen_provider.dart';
 import 'package:kusel/screens/location/location_screen_state.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../common_widgets/common_event_card.dart';
 import '../../../common_widgets/search_widget.dart';
+import '../../../common_widgets/toast_message.dart';
 
 class SelectedFilterScreen extends ConsumerStatefulWidget {
   SelectedFilterScreenParams selectedFilterScreenParams;
@@ -21,14 +23,15 @@ class SelectedFilterScreen extends ConsumerStatefulWidget {
 }
 
 class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
-
   @override
   void initState() {
     Future.microtask(() {
-      ref.read(locationScreenProvider.notifier).getAllEventListUsingCategoryId(widget.selectedFilterScreenParams.categoryId.toString());
+      ref.read(locationScreenProvider.notifier).getAllEventListUsingCategoryId(
+          widget.selectedFilterScreenParams.categoryId.toString());
     });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +53,7 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
                 ref
                     .read(locationScreenProvider.notifier)
                     .updateBottomSheetSelectedUIType(
-                    BottomSheetSelectedUIType.allEvent);
+                        BottomSheetSelectedUIType.allEvent);
               },
               icon: Icon(
                 Icons.arrow_back,
@@ -72,18 +75,13 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
         ),
         SearchWidget(
           searchController: TextEditingController(),
-          hintText:
-          AppLocalizations.of(context).enter_search_term,
+          hintText: AppLocalizations.of(context).enter_search_term,
           suggestionCallback: (search) async {
             List<Listing>? list;
             if (search.isEmpty) return [];
             try {
-              list = await ref
-                  .read(locationScreenProvider.notifier)
-                  .searchList(
-                  searchText: search,
-                  success: () {},
-                  error: (err) {});
+              list = await ref.read(locationScreenProvider.notifier).searchList(
+                  searchText: search, success: () {}, error: (err) {});
             } catch (e) {
               return [];
             }
@@ -92,28 +90,48 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
         ),
         Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Align(alignment: Alignment.centerLeft,child: textSemiBoldPoppins(text: "Category ${state.selectedCategoryId}", fontSize: 16.sp),),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: textSemiBoldPoppins(
+                text: "${state.selectedCategoryName}", fontSize: 16.sp),
+          ),
         ),
         Expanded(
           child: CustomScrollView(
             slivers: [
               SliverList(
                 delegate: SliverChildBuilderDelegate(
-                      (context, index) {
+                  (context, index) {
                     final item = state.allEventList[index];
                     return CommonEventCard(
+                      isFavorite: item.isFavorite ?? false,
+                      onFavorite: () {
+                        ref.watch(favoritesProvider.notifier).toggleFavorite(
+                            item, success: ({required bool isFavorite}) {
+                          ref
+                              .read(locationScreenProvider.notifier)
+                              .setIsFavorite(isFavorite, item.id);
+                        }, error: ({required String message}) {
+                          showErrorToast(message: message, context: context);
+                        });
+                      },
                       imageUrl:
-                      "https://fastly.picsum.photos/id/452/200/200.jpg?hmac=f5vORXpRW2GF7jaYrCkzX3EwDowO7OXgUaVYM2NNRXY",
+                          "https://fastly.picsum.photos/id/452/200/200.jpg?hmac=f5vORXpRW2GF7jaYrCkzX3EwDowO7OXgUaVYM2NNRXY",
                       date: item.startDate ?? "",
                       title: item.title ?? "",
                       location: item.address ?? "",
                       onTap: () {
-                        ref.read(locationScreenProvider.notifier).setEventItem(item);
-                        ref.read(locationScreenProvider.notifier)
+                        ref
+                            .read(locationScreenProvider.notifier)
+                            .setEventItem(item);
+                        ref
+                            .read(locationScreenProvider.notifier)
                             .updateBottomSheetSelectedUIType(
-                            BottomSheetSelectedUIType.eventDetail);
+                                BottomSheetSelectedUIType.eventDetail);
                       },
-                      isFavouriteVisible: false,
+                      isFavouriteVisible: ref
+                          .read(favoritesProvider.notifier)
+                          .showFavoriteIcon(),
                     );
                   },
                   childCount: state.allEventList.length,
