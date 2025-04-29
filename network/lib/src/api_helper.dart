@@ -186,9 +186,11 @@ class ApiHelper<E extends BaseModel> {
     try {
       return Right(create().fromJson(response.data));
     } on Exception catch (e) {
+      print(">>>>>>$e");
       return Left(e);
     } catch (error) {
       try {
+        print(">>>>>>$error");
         return Left(ApiError(
             error: errorModel != null
                 ? errorModel!().fromJson(response.data).message
@@ -309,6 +311,23 @@ class ApiHelper<E extends BaseModel> {
       } catch (error) {
         return Left(ApiError(error: fallbackErrorMessage));
       }
+    }
+  }
+}
+
+
+
+extension DioFetchExtension<E extends BaseModel> on ApiHelper<E> {
+  Future<Either<Exception, Response>> fetchRequest({
+    required RequestOptions requestOptions,
+  }) async {
+    try {
+      final response = await _dio.fetch(requestOptions);
+      return Right(response);
+    } on DioException catch (e) {
+      return Left(ApiError(error: e.message ?? fallbackErrorMessage));
+    } catch (e) {
+      return Left(ApiError(error: fallbackErrorMessage));
     }
   }
 }

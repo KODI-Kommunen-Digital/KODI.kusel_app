@@ -1,9 +1,14 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../../common_widgets/text_styles.dart';
-import '../../localization_manager.dart';
+import 'package:kusel/app_router.dart';
+import 'package:kusel/navigation/navigation.dart';
+import 'package:kusel/screens/home/home_screen_provider.dart';
+import 'package:kusel/screens/splash/splash_screen_provider.dart';
+import 'package:kusel/theme_manager/colors.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -14,17 +19,33 @@ class SplashScreen extends ConsumerStatefulWidget {
 
 class _State extends ConsumerState<SplashScreen> {
   @override
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      ref.read(splashScreenProvider.notifier).startTimer(() {
+        ref.read(navigationProvider).removeAllAndNavigate(
+          context: context,
+          path: onboardingScreenPath,
+        );
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-          child: InkWell(
-        onTap: () {
-          ref
-              .read(localeManagerProvider.notifier)
-              .updateCurrentSelectedLocale(Locale('de'));
-        },
-        child: regularPoppins(text: "Kusel App"),
+        body: Container(
+      color: Theme.of(context).colorScheme.secondary,
+      child: Center(
+          child: Text(
+        AppLocalizations.of(context).app_title,
+        style: TextStyle(
+            fontSize: 40,
+            color: Theme.of(context).canvasColor,
+            fontWeight: FontWeight.bold),
       )),
-    );
+    ));
   }
 }
