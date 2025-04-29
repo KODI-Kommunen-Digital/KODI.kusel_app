@@ -98,5 +98,6 @@
   "website": "Website",
   "enter_website": "Enter Website",
   "save_changes": "Save Changes",
-  "edit" : "Edit"
+  "edit" : "Edit",
+  "favorites": "Favorites"
 }

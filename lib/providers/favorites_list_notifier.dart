@@ -11,7 +11,7 @@ import 'package:domain/model/request_model/favorites/delete_favorites_request_mo
 import 'package:domain/model/response_model/favorites/add_favorites_response_model.dart';
 import 'package:data/repo_impl/favorites/favorites_repo_impl.dart';
 
-final favoritesListProvider =
+final favoritesProvider =
     StateNotifierProvider<FavoritesListNotifier, List<Listing>>(
   (ref) => FavoritesListNotifier(
     addFavoriteUseCase: ref.read(addFavoritesUseCaseProvider),
@@ -31,7 +31,8 @@ class FavoritesListNotifier extends StateNotifier<List<Listing>> {
     required this.sharedPreferenceHelper,
   }) : super([]);
 
-  Future<void> addFavorite(Listing item, void Function({required bool isFavorite}) success)  async {
+  Future<void> addFavorite(
+      Listing item, void Function({required bool isFavorite}) success) async {
     try {
       print("adding to fav");
       AddFavoritesRequestModel getFavoritesRequestModel =
@@ -47,8 +48,7 @@ class FavoritesListNotifier extends StateNotifier<List<Listing>> {
       final result = await addFavoriteUseCase.call(
           getFavoritesRequestModel, getFavoritesResponseModel);
       result.fold(
-        (l) {
-        },
+        (l) {},
         (r) {
           success(isFavorite: true);
         },
@@ -56,45 +56,51 @@ class FavoritesListNotifier extends StateNotifier<List<Listing>> {
     } catch (error) {
       print(">>>>>>>$error");
     }
-
-
   }
 
-  Future<void> removeFavorite(int id, void Function({required bool isFavorite}) success) async {
+  Future<void> removeFavorite(
+      int id,
+      void Function({required bool isFavorite}) success,
+      void Function({required String message}) error) async {
     try {
-      print("removing fav");
       DeleteFavoritesRequestModel getFavoritesRequestModel =
           DeleteFavoritesRequestModel(
-          id: id,
-          userId:
-          sharedPreferenceHelper.getInt(userIdKey));
-
+              id: id, userId: sharedPreferenceHelper.getInt(userIdKey));
+      print("111");
       GetFavoritesResponseModel getFavoritesResponseModel =
-      GetFavoritesResponseModel();
-
+          GetFavoritesResponseModel();
+      print("222");
       final result = await deleteFavoriteUsecase.call(
           getFavoritesRequestModel, getFavoritesResponseModel);
       result.fold(
-            (l) {
+        (l) {
+          print("delete error 11 ${l.toString()}");
+          error(message: l.toString());
         },
-            (r) {
+        (r) {
           success(isFavorite: false);
         },
       );
-    } catch (error) {
-      print(">>>>>>>$error");
+    } catch (e) {
+      print("delete error ${e.toString()}");
+      error(message: e.toString());
     }
   }
 
-  void toggleFavorite(Listing item, {required void Function({required bool isFavorite}) success,
-      required void Function(String message) error}) {
-    print(">>>> ${item.isFavorite == 1}");
-
-    if (state.any((fav) => item.isFavorite != 1)) {
-      removeFavorite(item.id ?? 0, success);
+  void toggleFavorite(Listing item,
+      {required void Function({required bool isFavorite}) success,
+      required void Function({required String message}) error}) {
+    if (item.isFavorite ?? false) {
+      print("is true ");
+      removeFavorite(item.id ?? 0, success, error);
     } else {
+      print("is false ");
       addFavorite(item, success);
     }
   }
 
+  bool showFavoriteIcon() {
+    final token = sharedPreferenceHelper.getString(tokenKey);
+    return token != null;
+  }
 }

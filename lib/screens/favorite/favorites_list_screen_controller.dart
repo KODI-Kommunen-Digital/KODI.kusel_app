@@ -48,4 +48,18 @@ class FavoritesListScreenController extends StateNotifier<FavoritesListScreenSta
       state = state.copyWith(loading: false, error: error.toString());
     }
   }
+
+  void removeFavorite(bool isFavorite, int? id) {
+    if (id == null) return;
+
+    for (var listing in state.eventsList) {
+      if (listing.id == id) {
+        listing.isFavorite = isFavorite;
+      }
+    }
+    final updatedList = state.eventsList.where((listing) => listing.id != id).toList();
+    state = state.copyWith(
+      list: updatedList,
+    );
+  }
 }

@@ -78,7 +78,7 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                 child: InkWell(
                   onTap: widget.onFavorite,
                   child: Icon(widget.isFavorite ? Icons.favorite_sharp : Icons.favorite_border,
-                    color: Colors.black,
+                    color: Colors.grey,
                   ),
                 ),
               ),

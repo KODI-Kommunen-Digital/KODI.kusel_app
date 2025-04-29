@@ -16,7 +16,9 @@ import 'package:kusel/screens/events_listing/event_list_screen_parameter.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 
 import '../../common_widgets/arrow_back_widget.dart';
+import '../../common_widgets/toast_message.dart';
 import '../../images_path.dart';
+import '../../providers/favorites_list_notifier.dart';
 import '../../theme_manager/colors.dart';
 import '../dashboard/dashboard_screen_provider.dart';
 import 'favorites_list_screen_controller.dart';
@@ -120,7 +122,17 @@ class _ExploreScreenState extends ConsumerState<FavoritesListScreen> {
                 date: item.startDate ?? "",
                 title: item.title ?? "",
                 location: item.address ?? "",
-                isFavorite: item.isFavorite == 1,
+                onFavorite: (){
+                  ref.watch(favoritesProvider.notifier).toggleFavorite(item,
+                      success: ({required bool isFavorite}) {
+                        ref
+                            .read(favoritesListScreenProvider.notifier)
+                            .removeFavorite(isFavorite, item.id);
+                      }, error: ({required String message}) {
+                        showErrorToast(message: message, context: context);
+                      });
+                },
+                isFavorite: item.isFavorite ?? false,
                 onTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
                     context: context,
@@ -128,7 +140,7 @@ class _ExploreScreenState extends ConsumerState<FavoritesListScreen> {
                     params: EventScreenParams(eventId: item.id),
                   );
                 },
-                isFavouriteVisible: !ref.watch(homeScreenProvider).isSignupButtonVisible,
+                isFavouriteVisible: ref.watch(favoritesProvider.notifier).showFavoriteIcon(),
               );
             },
             childCount: categoryScreenState.eventsList.length,

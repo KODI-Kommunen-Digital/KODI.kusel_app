@@ -37,11 +37,14 @@ class FavoritesService {
 
   Future<Either<Exception, BaseModel>> deleteFavorite(
       BaseModel requestModel, BaseModel responseModel) async {
+    print("delete fav serv");
     final apiHelper = ref.read(apiHelperProvider);
     final userId = requestModel.toJson()["userId"];
+    final listingId = requestModel.toJson()["id"];
+    print("delete fav serv 22");
 
-    final result = await apiHelper.getRequest(
-        path: gatFavoritesEndpoint(userId), create: () => responseModel);
+    final result = await apiHelper.delete(
+        path: deleteFavoritesEndpoint(userId.toString(), listingId.toString()), create: () => responseModel);
 
     return result.fold((l) => Left(l), (r) => Right(r));
   }

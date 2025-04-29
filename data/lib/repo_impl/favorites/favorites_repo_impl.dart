@@ -38,6 +38,7 @@ class FavoritesRepoImpl implements FavoritesRepo {
 
   @override
   Future<Either<Exception, BaseModel>> deleteFavorite(BaseModel<dynamic> requestModel, BaseModel<dynamic> responseModel) async {
+    print("delete fav repo");
     final result = await favoritesService.deleteFavorite(requestModel, responseModel);
 
     return result.fold((l) => Left(l), (r) => Right(r));
