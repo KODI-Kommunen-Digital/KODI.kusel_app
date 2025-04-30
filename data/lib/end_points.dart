@@ -8,6 +8,9 @@ const forgotPasswordEndPoint = "/users/forgotPassword";
 const listingsEndPoint = "/listings";
 const searchEndPoint = "$listingsEndPoint/search";
 const subCategoriesEndPoint = "/subcategories";
+String gatFavoritesEndpoint(String userId) =>"/users/$userId/favorites/";
+String deleteFavoritesEndpoint(String userId, String listingId) =>"/users/$userId/favorites/$listingId";
+String gatFavoritesListingEndpoint(String userId) =>"/users/$userId/favorites/listings";
 const userDetailsEndPoint = "/users";
 const uploadImageEndPoint = "/imageUpload";
 const fetchUserOwnDataEndPoint = "/me";
@@ -16,3 +19,9 @@ const onboardingUserInterestsEndPoint = "/interests";
 const onboardingUserDemographicsEndPoint = "/demographics";
 const getCitiesEndPoint = "/cities";
 const onboardingCompleteEndpoint = "/onboardingComplete";
+// WEATHER API
+const weatherEndPoint = "https://api.weatherapi.com/v1/forecast.json";
+const weatherApiKey="2ead327db48b49f28e6134655242706";
+
+// FILTER API
+const getFilterEndPoint = "";

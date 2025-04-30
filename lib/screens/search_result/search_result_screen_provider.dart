@@ -75,8 +75,56 @@ class SearchResultScreenProvider
     }
   }
 
-  void getRecommendedList() {
-    debugPrint("Recommended list");
+  Future<void> getRecommendedList() async {
+    try {
+      state = state.copyWith(loading: true, error: "");
+      GetAllListingsRequestModel getAllListingsRequestModel =
+      GetAllListingsRequestModel();
+      GetAllListingsResponseModel getAllListingsResponseModel =
+      GetAllListingsResponseModel();
+      final result = await listingsUseCase.call(
+          getAllListingsRequestModel, getAllListingsResponseModel);
+      result.fold(
+            (l) {
+          state = state.copyWith(loading: false, error: l.toString());
+        },
+            (r) {
+          var listings = getSortedTop10Listings((r as GetAllListingsResponseModel).data ?? []);
+
+          final groupedEvents = <int, List<Listing>>{};
+
+          for (final event in listings ?? []) {
+            final categoryId = event.categoryId ?? 0;
+            if (!groupedEvents.containsKey(categoryId)) {
+              groupedEvents[categoryId] = [];
+            }
+            groupedEvents[categoryId]!.add(event);
+          }
+          state = state.copyWith(
+            groupedEvents: groupedEvents,
+            eventsList: listings,
+            loading: false,
+          );
+        },
+      );
+    } catch (error) {
+      state = state.copyWith(loading: false, error: error.toString());
+    }
+  }
+
+  List<Listing> getSortedTop10Listings(List<Listing> listings) {
+    listings.sort((a, b) {
+      final aDate = a.startDate != null ? DateTime.tryParse(a.startDate!) : null;
+      final bDate = b.startDate != null ? DateTime.tryParse(b.startDate!) : null;
+
+      if (aDate == null && bDate == null) return 0;
+      if (aDate == null) return 1;
+      if (bDate == null) return -1;
+
+      return aDate.compareTo(bDate);
+    });
+
+    return listings.take(10).toList();
   }
 
   List<Listing> subList(List<Listing> list) {

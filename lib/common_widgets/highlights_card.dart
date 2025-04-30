@@ -62,7 +62,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                     child: SizedBox(
                       height: 200.h,
                       width: double.infinity,
-                      child: Image.asset(widget.imageUrl, fit: BoxFit.cover),
+                      child: Image.network(widget.imageUrl, fit: BoxFit.cover),
                     ),
                   ),
                   if (widget.isVisible)
@@ -78,9 +78,9 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                             color: Theme.of(context).primaryColor,
                             shape: BoxShape.circle,
                           ),
-                          child: const Icon(
-                            Icons.favorite_border_sharp,
-                            color: Colors.white,
+                          child: Icon(
+                            widget.isFavourite ? Icons.favorite_sharp: Icons.favorite_border_sharp,
+                            color: widget.isFavourite ? Colors.red : Colors.white,
                             size: 20,
                           ),
                         ),

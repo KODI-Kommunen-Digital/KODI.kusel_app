@@ -124,7 +124,9 @@ class EventData {
       appointmentId: json['appointmentId'],
       allCities: json['allCities'] != null ? List<int>.from(json['allCities']) : null,
       cityId: json['cityId'],
-      logo: json['logo'],
+      logo: json['logo'] != null
+          ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['logo']}"
+          : null,
       otherLogos: json['otherLogos'] != null
           ? List<OtherLogo>.from(json['otherLogos'].map((x) => OtherLogo.fromJson(x)))
           : null,
@@ -187,7 +189,9 @@ class OtherLogo {
       id: json['id'],
       imageOrder: json['imageOrder'],
       listingId: json['listingId'],
-      logo: json['logo'],
+      logo: json['logo'] != null
+          ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['logo']}"
+          : null,
     );
   }
 

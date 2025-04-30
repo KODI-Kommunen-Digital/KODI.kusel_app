@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:core/preference_manager/preference_constant.dart';
+import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,6 +19,7 @@ import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
+import '../event/event_screen_controller.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -24,6 +29,14 @@ class SearchScreen extends ConsumerStatefulWidget {
 }
 
 class _ExploreScreenState extends ConsumerState<SearchScreen> {
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(searchScreenProvider.notifier).loadSavedListings();
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -36,6 +49,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
   }
 
   Widget buildUi() {
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -122,6 +136,13 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                   Divider(height: 1.h),
                   16.verticalSpace,
                   SearchWidget(
+                    onItemClick: (listing){
+                      ref.read(navigationProvider).navigateUsingPath(
+                          context: context,
+                          path: eventScreenPath,
+                          params: EventScreenParams(eventId: listing.id)
+                      );
+                    },
                     searchController: TextEditingController(),
                     hintText: AppLocalizations.of(context).enter_search_term,
                       suggestionCallback: (search) async {
@@ -142,12 +163,40 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                       },
                   ),
                   16.verticalSpace,
-                  Align(
-                    alignment: Alignment.bottomLeft,
-                    child: textSemiBoldPoppins(
-                        text: AppLocalizations.of(context).recent_search,
-                        fontSize: 18),
+                  Visibility(
+                    visible: ref.watch(searchScreenProvider).searchedList.isNotEmpty,
+                    child: Align(
+                      alignment: Alignment.bottomLeft,
+                      child: textSemiBoldPoppins(
+                          text: AppLocalizations.of(context).recent_search,
+                          fontSize: 18),
+                    ),
                   ),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: ref.watch(searchScreenProvider).searchedList.length,
+                    itemBuilder: (context, index) {
+                      return  InkWell(
+                        onTap: (){
+                          ref.read(navigationProvider).navigateUsingPath(
+                              context: context,
+                              path: eventScreenPath,
+                              params: EventScreenParams(eventId: ref.watch(searchScreenProvider).searchedList[index].id)
+                          );
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: textRegularMontserrat(text: ref.watch(searchScreenProvider).searchedList[index].title ?? "",
+                              decoration: TextDecoration.underline),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  72.verticalSpace
                 ],
               ),
             ),
@@ -157,3 +206,4 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
     );
   }
 }
+

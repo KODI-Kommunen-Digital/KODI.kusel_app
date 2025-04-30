@@ -45,4 +45,16 @@ class EventListScreenController extends StateNotifier<EventListScreenState> {
       state = state.copyWith(loading: false, error: error.toString());
     }
   }
+
+  void setIsFavorite(bool isFavorite, int? id) {
+
+    for (var listing in state.eventsList) {
+      if (listing.id == id) {
+        listing.isFavorite = isFavorite;
+      }
+    }
+    state = state.copyWith(
+        list: state.eventsList);
+  }
+
 }
