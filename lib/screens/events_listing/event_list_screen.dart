@@ -10,6 +10,7 @@ import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/navigation/navigation.dart';
+import 'package:kusel/providers/favorites_list_notifier.dart';
 import 'package:kusel/screens/event/event_screen_controller.dart';
 import 'package:kusel/screens/events_listing/event_list_screen_controller.dart';
 import 'package:kusel/screens/events_listing/event_list_screen_parameter.dart';
@@ -115,10 +116,18 @@ class _ExploreScreenState extends ConsumerState<EventListScreen> {
               final item = categoryScreenState.eventsList[index];
               return CommonEventCard(
                 imageUrl:
-                "https://fastly.picsum.photos/id/452/200/200.jpg?hmac=f5vORXpRW2GF7jaYrCkzX3EwDowO7OXgUaVYM2NNRXY",
+                item.logo ?? "",
                 date: item.startDate ?? "",
                 title: item.title ?? "",
                 location: item.address ?? "",
+                onFavorite: (){
+                  ref.read(favoritesProvider.notifier).toggleFavorite(item, success: ({required bool isFavorite}){
+                    ref.read(eventListScreenProvider.notifier).setIsFavorite(isFavorite, item.id);
+                  }, error: ({required String message}){
+
+                  });
+                },
+                isFavorite: item.isFavorite ?? false,
                 onTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
                     context: context,
@@ -126,7 +135,7 @@ class _ExploreScreenState extends ConsumerState<EventListScreen> {
                     params: EventScreenParams(eventId: item.id),
                   );
                 },
-                isFavouriteVisible: !ref.watch(homeScreenProvider).isSignupButtonVisible,
+                isFavouriteVisible: ref.watch(favoritesProvider.notifier).showFavoriteIcon(),
               );
             },
             childCount: categoryScreenState.eventsList.length,

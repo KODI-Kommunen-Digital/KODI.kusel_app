@@ -10,6 +10,7 @@ class CommonEventCard extends ConsumerStatefulWidget {
   final String date;
   final String title;
   final String location;
+  final bool isFavorite;
   final bool isFavouriteVisible;
   final VoidCallback? onTap;
   final VoidCallback? onFavorite;
@@ -21,6 +22,7 @@ class CommonEventCard extends ConsumerStatefulWidget {
     required this.title,
     required this.location,
     required this.isFavouriteVisible,
+    required this.isFavorite,
     this.onTap,
     this.onFavorite,
   }) : super(key: key);
@@ -47,7 +49,7 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
               // Image
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.network(widget.imageUrl,
+                child: Image.network(widget.imageUrl ,
                     errorBuilder: (context, error, stackTrace) =>
                         const Icon(Icons.broken_image, size: 80),
                     width: 80,
@@ -75,9 +77,8 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                 visible: widget.isFavouriteVisible,
                 child: InkWell(
                   onTap: widget.onFavorite,
-                  child: const Icon(
-                    Icons.favorite_border,
-                    color: Colors.black,
+                  child: Icon(widget.isFavorite ? Icons.favorite_sharp : Icons.favorite_border,
+                    color: Colors.grey,
                   ),
                 ),
               ),

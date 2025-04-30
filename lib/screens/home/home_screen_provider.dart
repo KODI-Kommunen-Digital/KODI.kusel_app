@@ -1,17 +1,21 @@
 import 'package:core/preference_manager/preference_constant.dart';
 import 'package:core/preference_manager/shared_pref_helper.dart';
+import 'package:data/service/location_service/location_service.dart';
 import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
 import 'package:domain/model/request_model/listings/search_request_model.dart';
 import 'package:domain/model/request_model/user_detail/user_detail_request_model.dart';
+import 'package:domain/model/request_model/weather/weather_request_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/model/response_model/listings_model/search_listings_response_model.dart';
 import 'package:domain/model/response_model/user_detail/user_detail_response_model.dart';
+import 'package:domain/model/response_model/weather/weather_response_model.dart';
 import 'package:domain/usecase/listings/listings_usecase.dart';
 import 'package:domain/usecase/search/search_usecase.dart';
 import 'package:domain/usecase/user_detail/user_detail_usecase.dart';
+import 'package:domain/usecase/weather/weather_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:data/service/location_service/location_service.dart';
+
 import 'home_screen_state.dart';
 
 final homeScreenProvider =
@@ -21,6 +25,7 @@ final homeScreenProvider =
               searchUseCase: ref.read(searchUseCaseProvider),
               sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
               userDetailUseCase: ref.read(userDetailUseCaseProvider),
+              weatherUseCase: ref.read(weatherUseCaseProvider),
             ));
 
 class HomeScreenProvider extends StateNotifier<HomeScreenState> {
@@ -28,12 +33,14 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
   SearchUseCase searchUseCase;
   SharedPreferenceHelper sharedPreferenceHelper;
   UserDetailUseCase userDetailUseCase;
+  WeatherUseCase weatherUseCase;
 
   HomeScreenProvider(
       {required this.listingsUseCase,
       required this.searchUseCase,
       required this.sharedPreferenceHelper,
-      required this.userDetailUseCase})
+      required this.userDetailUseCase,
+      required this.weatherUseCase})
       : super(HomeScreenState.empty());
 
   Future<void> getHighlights() async {
@@ -92,20 +99,19 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       state = state.copyWith(loading: true, error: "");
 
       GetAllListingsRequestModel getAllListingsRequestModel =
-      GetAllListingsRequestModel(
-        radius: 1,
-        centerLatitude: state.latitude,
-        centerLongitude: state.longitude
-      );
+          GetAllListingsRequestModel(
+              radius: 1,
+              centerLatitude: state.latitude,
+              centerLongitude: state.longitude);
       GetAllListingsResponseModel getAllListingsResponseModel =
-      GetAllListingsResponseModel();
+          GetAllListingsResponseModel();
       final result = await listingsUseCase.call(
           getAllListingsRequestModel, getAllListingsResponseModel);
       result.fold(
-            (l) {
+        (l) {
           state = state.copyWith(loading: false, error: l.toString());
         },
-            (r) {
+        (r) {
           var listings = (r as GetAllListingsResponseModel).data;
           state = state.copyWith(nearbyEventsList: listings, loading: false);
         },
@@ -191,6 +197,59 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
     if (mounted && position != null) {
       state = state.copyWith(
           latitude: position.latitude, longitude: position.longitude);
+    }
+  }
+
+  void setIsFavorite(bool isFavorite, int? id) {
+
+    for (var listing in state.highlightsList) {
+      if (listing.id == id) {
+        listing.isFavorite = isFavorite;
+      }
+    }
+    state = state.copyWith(
+        highlightsList: state.highlightsList);
+  }
+
+  void setIsFavoriteEvent(bool isFavorite, int? id) {
+    for (var listing in state.eventsList) {
+      if (listing.id == id) {
+        listing.isFavorite = isFavorite;
+      }
+    }
+    state = state.copyWith(
+        highlightsList: state.eventsList);
+  }
+
+  void setIsFavoriteHighlight(bool isFavorite, int? id) {
+    for (var listing in state.highlightsList) {
+      if (listing.id == id) {
+        listing.isFavorite = isFavorite;
+      }
+    }
+    state = state.copyWith(
+        highlightsList: state.highlightsList);
+  }
+
+  Future<void> getWeather() async {
+    try {
+      WeatherRequestModel requestModel =
+          WeatherRequestModel(days: 3, placeName: "kusel");
+      WeatherResponseModel responseModel = WeatherResponseModel();
+
+      final response = await weatherUseCase.call(requestModel, responseModel);
+
+      response.fold((l) {
+        debugPrint('get weather fold exception = $l');
+      }, (r) {
+
+        final result = r as WeatherResponseModel;
+
+        state = state.copyWith(weatherResponseModel: result);
+
+      });
+    } catch (error) {
+      debugPrint('get weather exception = $error');
     }
   }
 }

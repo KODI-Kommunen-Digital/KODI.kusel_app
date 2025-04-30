@@ -185,7 +185,6 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
         Flexible(
           flex: 10,
           child: Slider(
-            padding: EdgeInsets.only(left: 10.w),
             value: sliderValue,
             min: 0,
             max: 100,
