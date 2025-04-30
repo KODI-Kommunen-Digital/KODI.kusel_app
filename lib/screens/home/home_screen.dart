@@ -9,6 +9,7 @@ import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/highlights_card.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/weather_widget.dart';
+import 'package:kusel/providers/favorites_list_notifier.dart';
 import 'package:kusel/screens/event/event_screen_controller.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/home/home_screen_state.dart';
@@ -19,7 +20,9 @@ import '../../common_widgets/common_event_card.dart';
 import '../../common_widgets/feedback_card_widget.dart';
 import '../../common_widgets/search_widget.dart';
 import '../../common_widgets/text_styles.dart';
+import '../../common_widgets/toast_message.dart';
 import '../../navigation/navigation.dart';
+import '../dashboard/dashboard_screen_provider.dart';
 import '../events_listing/event_list_screen_parameter.dart';
 import 'package:core/sign_in_status/sign_in_status_controller.dart';
 
@@ -40,6 +43,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ref.read(homeScreenProvider.notifier).getEvents();
       ref.read(homeScreenProvider.notifier).getNearbyEvents();
       ref.read(signInStatusProvider.notifier).getLoginStatus();
+      ref.watch(homeScreenProvider.notifier).getWeather();
     });
     super.initState();
   }
@@ -136,6 +140,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     ?.color),
                           ),
                           SearchWidget(
+                            onItemClick: (listing){
+                              ref.read(navigationProvider).navigateUsingPath(
+                                  context: context,
+                                  path: eventScreenPath,
+                                  params: EventScreenParams(eventId: listing.id)
+                              );
+                            },
                             searchController: TextEditingController(),
                             hintText:
                                 AppLocalizations.of(context).enter_search_term,
@@ -201,7 +212,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             customPageViewer(isLoading),
             20.verticalSpace,
-            WeatherWidget(),
+            WeatherWidget(weatherResponseModel: ref.watch(homeScreenProvider).weatherResponseModel,),
             eventsView(
                 state.eventsList,
                 AppLocalizations.of(context).near_you,
@@ -303,8 +314,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             itemBuilder: (context, index) {
               final item = eventsList[index];
               return CommonEventCard(
-                imageUrl:
-                    "https://fastly.picsum.photos/id/452/200/200.jpg?hmac=f5vORXpRW2GF7jaYrCkzX3EwDowO7OXgUaVYM2NNRXY",
+                isFavorite: item.isFavorite ?? false,
+                onFavorite: () {
+                  ref.watch(favoritesProvider.notifier).toggleFavorite(item,
+                      success: ({required bool isFavorite}) {
+                    ref
+                        .read(homeScreenProvider.notifier)
+                        .setIsFavoriteEvent(isFavorite, item.id);
+                  }, error: ({required String message}) {
+                    showErrorToast(message: message, context: context);
+                  });
+                },
+                imageUrl: item.logo ?? "",
                 date: item.startDate ?? "",
                 title: item.title ?? "",
                 location: item.address ?? "",
@@ -315,7 +336,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       params: EventScreenParams(eventId: item.id));
                 },
                 isFavouriteVisible:
-                    !ref.watch(signInStatusProvider).isSignupButtonVisible,
+                    ref.watch(favoritesProvider.notifier).showFavoriteIcon(),
               );
             },
           ),
@@ -323,16 +344,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
             child: CustomButton(
                 onPressed: () {
-                  ref.read(navigationProvider).navigateUsingPath(
-                      path: eventListScreenPath,
-                      context: context,
-                      // Need to be replaced with actual lat-long value
-                      params: EventListScreenParameter(
-                          radius: 1,
-                          centerLatitude: 49.53838,
-                          centerLongitude: 7.40647,
-                          categoryId: 3,
-                          listHeading: heading));
+                  ref.read(dashboardScreenProvider.notifier).onIndexChanged(3);
+                  // ref.read(navigationProvider).navigateUsingPath(
+                  //     path: eventListScreenPath,
+                  //     context: context,
+                  //     // Need to be replaced with actual lat-long value
+                  //     params: EventListScreenParameter(
+                  //         radius: 1,
+                  //         centerLatitude: 49.53838,
+                  //         centerLongitude: 7.40647,
+                  //         categoryId: 3,
+                  //         listHeading: heading));
                 },
                 text: buttonText,
                 icon: buttonIconPath),
@@ -431,11 +453,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 6.h.w),
                   child: HighlightsCard(
-                    imageUrl: imagePath['highlight_card_image'] ?? '',
+                    imageUrl: listing.logo ?? "",
                     date: listing.createdAt ?? "",
                     heading: listing.title ?? "",
                     description: listing.description ?? "",
-                    isFavourite: false,
+                    isFavourite: listing.isFavorite ?? false,
                     onPress: () {
                       ref.read(navigationProvider).navigateUsingPath(
                             context: context,
@@ -443,7 +465,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             params: EventScreenParams(eventId: listing.id),
                           );
                     },
-                    onFavouriteIconClick: () {},
+                    onFavouriteIconClick: () {
+                      ref.watch(favoritesProvider.notifier).toggleFavorite(listing,
+                          success: ({required bool isFavorite}) {
+                            ref
+                                .read(homeScreenProvider.notifier)
+                                .setIsFavoriteHighlight(isFavorite, listing.id);
+                          }, error: ({required String message}) {
+                            showErrorToast(message: message, context: context);
+                          });
+                    },
                     isVisible:
                         !ref.read(signInStatusProvider).isSignupButtonVisible,
                   ),

@@ -1,6 +1,7 @@
 import 'package:core/base_model.dart';
 
-class GetAllListingsResponseModel extends BaseModel<GetAllListingsResponseModel> {
+class GetAllListingsResponseModel
+    extends BaseModel<GetAllListingsResponseModel> {
   String? status;
   List<Listing>? data;
 
@@ -10,7 +11,9 @@ class GetAllListingsResponseModel extends BaseModel<GetAllListingsResponseModel>
   GetAllListingsResponseModel fromJson(Map<String, dynamic> json) {
     return GetAllListingsResponseModel(
       status: json['status'] as String?,
-      data: (json['data'] as List<dynamic>?)?.map((item) => Listing.fromJson(item)).toList(),
+      data: (json['data'] as List<dynamic>?)
+          ?.map((item) => Listing.fromJson(item))
+          .toList(),
     );
   }
 
@@ -54,6 +57,8 @@ class Listing {
   String? logo;
   int? logoCount;
   List<OtherLogo>? otherLogos;
+  bool? isFavorite;
+  String? categoryName;
 
   Listing({
     this.id,
@@ -84,8 +89,10 @@ class Listing {
     this.logo,
     this.logoCount,
     this.otherLogos,
+    this.isFavorite,
     this.lat,
-    this.long
+    this.long,
+    this.categoryName,
   });
 
   factory Listing.fromJson(Map<String, dynamic> json) {
@@ -114,14 +121,20 @@ class Listing {
       pdf: json['pdf'],
       cityId: json['cityId'],
       cityCount: json['cityCount'],
-      allCities: json['allCities'] != null ? List<int>.from(json['allCities']) : null,
-      logo: json['logo'],
+      allCities:
+          json['allCities'] != null ? List<int>.from(json['allCities']) : null,
+      logo: json['logo'] != null
+          ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['logo']}"
+          : null,
       logoCount: json['logoCount'],
       otherLogos: json['otherLogos'] != null
-          ? List<OtherLogo>.from(json['otherLogos'].map((x) => OtherLogo.fromJson(x)))
+          ? List<OtherLogo>.from(
+              json['otherLogos'].map((x) => OtherLogo.fromJson(x)))
           : null,
-      lat: json['latitude'],
-      long: json['longitude']
+      isFavorite: json['isFavorite'],
+        lat: json['latitude'],
+        long: json['longitude'],
+      categoryName: json['categoryName'],
     );
   }
 
@@ -155,6 +168,8 @@ class Listing {
       'logo': logo,
       'logoCount': logoCount,
       'otherLogos': otherLogos?.map((x) => x.toJson()).toList(),
+      'isFavorite': isFavorite,
+      'categoryName': categoryName,
     };
   }
 }
@@ -175,7 +190,9 @@ class OtherLogo {
   factory OtherLogo.fromJson(Map<String, dynamic> json) {
     return OtherLogo(
       id: json['id'],
-      logo: json['logo'],
+      logo: json['logo'] != null
+          ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['logo']}"
+          : null,
       listingId: json['listingId'],
       imageOrder: json['imageOrder'],
     );

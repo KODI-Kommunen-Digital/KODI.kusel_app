@@ -70,6 +70,7 @@ class _SelectedEventScreenState extends ConsumerState<SelectedEventScreen> {
           websiteText: state.selectedEvent?.website ?? "",
           title: state.selectedEvent?.title ?? "",
           startDate: state.selectedEvent?.startDate ?? "",
+          logo: state.selectedEvent?.logo ?? ""
         )
       ],
     );
