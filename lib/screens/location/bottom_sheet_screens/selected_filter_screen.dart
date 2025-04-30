@@ -8,9 +8,12 @@ import 'package:kusel/screens/location/bottom_sheet_selected_ui_type.dart';
 import 'package:kusel/screens/location/location_screen_provider.dart';
 import 'package:kusel/screens/location/location_screen_state.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../../../app_router.dart';
 import '../../../common_widgets/common_event_card.dart';
 import '../../../common_widgets/search_widget.dart';
 import '../../../common_widgets/toast_message.dart';
+import '../../../navigation/navigation.dart';
+import '../../event/event_screen_controller.dart';
 
 class SelectedFilterScreen extends ConsumerStatefulWidget {
   SelectedFilterScreenParams selectedFilterScreenParams;
@@ -74,6 +77,15 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
           ],
         ),
         SearchWidget(
+          onItemClick: (listing){
+            ref
+                .read(locationScreenProvider.notifier)
+                .setEventItem(listing);
+            ref
+                .read(locationScreenProvider.notifier)
+                .updateBottomSheetSelectedUIType(
+                BottomSheetSelectedUIType.eventDetail);
+          },
           searchController: TextEditingController(),
           hintText: AppLocalizations.of(context).enter_search_term,
           suggestionCallback: (search) async {
