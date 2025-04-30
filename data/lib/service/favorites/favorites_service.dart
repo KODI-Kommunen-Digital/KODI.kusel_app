@@ -1,15 +1,20 @@
 import 'package:core/base_model.dart';
+import 'package:core/preference_manager/preference_constant.dart';
+import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:dartz/dartz.dart';
 import 'package:data/dio_helper_object.dart';
 import 'package:data/end_points.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final favoritesServiceProvider = Provider((ref) => FavoritesService(ref: ref));
+final favoritesServiceProvider = Provider((ref) => FavoritesService(
+    ref: ref,
+    sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider)));
 
 class FavoritesService {
   Ref ref;
+  SharedPreferenceHelper sharedPreferenceHelper;
 
-  FavoritesService({required this.ref});
+  FavoritesService({required this.ref, required this.sharedPreferenceHelper});
 
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
@@ -27,24 +32,31 @@ class FavoritesService {
       BaseModel requestModel, BaseModel responseModel) async {
     final apiHelper = ref.read(apiHelperProvider);
     final userId = requestModel.toJson()["userId"];
-    print("city id");
-    print(requestModel.toJson()["cityId"]);
+
+    String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
+    final headers = {'Authorization': 'Bearer $token'};
+
     final result = await apiHelper.postRequest(
-        path: gatFavoritesEndpoint(userId), create: () => responseModel, body: requestModel.toJson());
+        path: gatFavoritesEndpoint(userId),
+        create: () => responseModel,
+        headers: headers,
+        body: requestModel.toJson());
 
     return result.fold((l) => Left(l), (r) => Right(r));
   }
 
   Future<Either<Exception, BaseModel>> deleteFavorite(
       BaseModel requestModel, BaseModel responseModel) async {
-    print("delete fav serv");
     final apiHelper = ref.read(apiHelperProvider);
     final userId = requestModel.toJson()["userId"];
     final listingId = requestModel.toJson()["id"];
-    print("delete fav serv 22");
+    String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
+    final headers = {'Authorization': 'Bearer $token'};
 
     final result = await apiHelper.delete(
-        path: deleteFavoritesEndpoint(userId.toString(), listingId.toString()), create: () => responseModel);
+        path: deleteFavoritesEndpoint(userId.toString(), listingId.toString()),
+        headers: headers,
+        create: () => responseModel);
 
     return result.fold((l) => Left(l), (r) => Right(r));
   }
