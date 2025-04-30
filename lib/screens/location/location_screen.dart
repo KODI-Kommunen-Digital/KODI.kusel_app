@@ -60,9 +60,24 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
                     width: 35.w,
                     height: 35.h,
                     point: LatLng(lat!, long!),
-                    child: Icon(Icons.location_pin,
-                        size: 40.w,
-                        color: Theme.of(context).colorScheme.onTertiaryFixed),
+                    child: InkWell(
+                      onTap: (){
+                        ref
+                            .read(locationScreenProvider.notifier)
+                            .setEventItem(value);
+                        ref
+                            .read(locationScreenProvider.notifier)
+                            .updateBottomSheetSelectedUIType(
+                            BottomSheetSelectedUIType.eventDetail);
+                      },
+                      child: Column(
+                        children: [
+                          Icon(Icons.location_pin,
+                              size: 40.w,
+                              color: Theme.of(context).colorScheme.onTertiaryFixed),
+                        ],
+                      ),
+                    ),
                   );
                 }).toList(),
               )

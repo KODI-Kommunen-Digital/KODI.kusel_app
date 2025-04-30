@@ -117,8 +117,7 @@ class _ExploreScreenState extends ConsumerState<FavoritesListScreen> {
                 (context, index) {
               final item = categoryScreenState.eventsList[index];
               return CommonEventCard(
-                imageUrl:
-                "https://fastly.picsum.photos/id/452/200/200.jpg?hmac=f5vORXpRW2GF7jaYrCkzX3EwDowO7OXgUaVYM2NNRXY",
+                imageUrl: item.logo ?? "",
                 date: item.startDate ?? "",
                 title: item.title ?? "",
                 location: item.address ?? "",
