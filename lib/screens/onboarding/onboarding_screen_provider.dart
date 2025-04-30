@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'package:domain/model/empty_request.dart';
 import 'package:domain/model/request_model/onboarding_model/onboarding_user_Demographics_request_model.dart';
 import 'package:domain/model/request_model/onboarding_model/onboarding_user_Interests_request_model.dart';
 import 'package:domain/model/request_model/onboarding_model/onboarding_user_type_request_model.dart';
+import 'package:domain/model/response_model/get_interests/get_interests_response_model.dart';
+import 'package:domain/usecase/get_interests/get_interests_usecase.dart';
 import 'package:domain/usecase/onboarding/onboarding_user_interests_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,19 +26,22 @@ final onboardingScreenProvider = StateNotifierProvider.autoDispose<
             ref.read(onboardingUserDemographicsUseCaseProvider),
         onboardingUserInterestsUseCase:
             ref.read(onboardingUserInterestsUseCaseProvider),
-        getCityDetailsUseCase: ref.read(getCityDetailsUseCaseProvider)));
+        getCityDetailsUseCase: ref.read(getCityDetailsUseCaseProvider),
+        getInterestsUseCase: ref.read(getInterestsUseCaseProvider)));
 
 class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   OnboardingScreenController(
       {required this.onboardingUserTypeUseCase,
       required this.onboardingUserDemographicsUseCase,
       required this.onboardingUserInterestsUseCase,
-      required this.getCityDetailsUseCase})
+      required this.getCityDetailsUseCase,
+      required this.getInterestsUseCase})
       : super(OnboardingScreenState.empty());
   OnboardingUserTypeUseCase onboardingUserTypeUseCase;
   OnboardingUserDemographicsUseCase onboardingUserDemographicsUseCase;
   OnboardingUserInterestsUseCase onboardingUserInterestsUseCase;
   GetCityDetailsUseCase getCityDetailsUseCase;
+  GetInterestsUseCase getInterestsUseCase;
   PageController pageController = PageController();
   TextEditingController nameEditingController = TextEditingController();
   TextEditingController yourLocationEditingController = TextEditingController();
@@ -272,6 +278,49 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     Future.delayed(const Duration(seconds: 5), () {
       callBack();
     });
+  }
+
+  Future<void> getInterests() async {
+    try {
+      state = state.copyWith(loading: true);
+
+      EmptyRequest requestModel = EmptyRequest();
+      GetInterestsResponseModel responseModel = GetInterestsResponseModel();
+      final result =
+          await getInterestsUseCase.call(requestModel, responseModel);
+
+      result.fold((l) {
+        debugPrint('get interests fold exception : $l');
+      }, (r) async {
+        final response = r as GetInterestsResponseModel;
+        List<Interest>? interests = response.data;
+        Map<int, bool> interestMap;
+        if (interests != null) {
+          interestMap = {
+            for (var interest in interests)
+              if (interest.id != null) interest.id!: false
+          };
+          state = state.copyWith(interestsMap: interestMap);
+        }
+        state = state.copyWith(loading: false, interests: interests);
+      });
+    } catch (error) {
+      debugPrint('get interests exception : $error');
+      state = state.copyWith(loading: false);
+    }
+  }
+
+  void updateInterestMap(int? id) {
+    if(id!=null){
+      Map<int, bool> interestsMap = state.interestsMap;
+      bool isSelected = interestsMap[id] ?? false;
+      bool updatedIsSelectedValue = false;
+      if (!isSelected) {
+        updatedIsSelectedValue = true;
+      }
+      interestsMap[id] = updatedIsSelectedValue;
+      state = state.copyWith(interestsMap: interestsMap);
+    }
   }
 }
 
