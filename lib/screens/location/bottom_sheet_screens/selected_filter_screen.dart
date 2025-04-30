@@ -127,8 +127,7 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
                           showErrorToast(message: message, context: context);
                         });
                       },
-                      imageUrl:
-                          "https://fastly.picsum.photos/id/452/200/200.jpg?hmac=f5vORXpRW2GF7jaYrCkzX3EwDowO7OXgUaVYM2NNRXY",
+                      imageUrl: item.logo ?? "",
                       date: item.startDate ?? "",
                       title: item.title ?? "",
                       location: item.address ?? "",

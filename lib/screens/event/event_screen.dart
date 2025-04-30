@@ -1,4 +1,3 @@
-import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -345,7 +344,7 @@ class _EventScreenState extends ConsumerState<EventScreen> {
             height: 270.h,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(imagePath['highlight_card_image'] ?? ''),
+                image: NetworkImage(state.eventDetails.logo ?? ""),
                 fit: BoxFit.cover,
               ),
             ),
