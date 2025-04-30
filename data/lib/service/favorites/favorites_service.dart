@@ -20,10 +20,13 @@ class FavoritesService {
       BaseModel requestModel, BaseModel responseModel) async {
     final apiHelper = ref.read(apiHelperProvider);
 
+
     final userId = requestModel.toJson()["userId"];
+    String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
+    final headers = {'Authorization': 'Bearer $token'};
 
     final result = await apiHelper.getRequest(
-        path: gatFavoritesListingEndpoint(userId), create: () => responseModel);
+        path: gatFavoritesListingEndpoint(userId), create: () => responseModel, headers: headers);
 
     return result.fold((l) => Left(l), (r) => Right(r));
   }
