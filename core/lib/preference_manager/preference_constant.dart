@@ -4,4 +4,5 @@ const userIdKey = "userId";
 const languageKey = "language";
 const userNameKey = "userName";
 const environmentKey="environment";
+const onboardingKey = "onboarding";
 const searchListKey="searchList";
