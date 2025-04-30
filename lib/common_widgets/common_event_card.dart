@@ -49,7 +49,7 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
               // Image
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.network(widget.imageUrl,
+                child: Image.network(widget.imageUrl ,
                     errorBuilder: (context, error, stackTrace) =>
                         const Icon(Icons.broken_image, size: 80),
                     width: 80,
