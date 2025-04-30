@@ -22,6 +22,7 @@ import '../../common_widgets/search_widget.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/toast_message.dart';
 import '../../navigation/navigation.dart';
+import '../dashboard/dashboard_screen_provider.dart';
 import '../events_listing/event_list_screen_parameter.dart';
 import 'package:core/sign_in_status/sign_in_status_controller.dart';
 
@@ -139,6 +140,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     ?.color),
                           ),
                           SearchWidget(
+                            onItemClick: (listing){
+                              ref.read(navigationProvider).navigateUsingPath(
+                                  context: context,
+                                  path: eventScreenPath,
+                                  params: EventScreenParams(eventId: listing.id)
+                              );
+                            },
                             searchController: TextEditingController(),
                             hintText:
                                 AppLocalizations.of(context).enter_search_term,
@@ -337,16 +345,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
             child: CustomButton(
                 onPressed: () {
-                  ref.read(navigationProvider).navigateUsingPath(
-                      path: eventListScreenPath,
-                      context: context,
-                      // Need to be replaced with actual lat-long value
-                      params: EventListScreenParameter(
-                          radius: 1,
-                          centerLatitude: 49.53838,
-                          centerLongitude: 7.40647,
-                          categoryId: 3,
-                          listHeading: heading));
+                  ref.read(dashboardScreenProvider.notifier).onIndexChanged(3);
+                  // ref.read(navigationProvider).navigateUsingPath(
+                  //     path: eventListScreenPath,
+                  //     context: context,
+                  //     // Need to be replaced with actual lat-long value
+                  //     params: EventListScreenParameter(
+                  //         radius: 1,
+                  //         centerLatitude: 49.53838,
+                  //         centerLongitude: 7.40647,
+                  //         categoryId: 3,
+                  //         listHeading: heading));
                 },
                 text: buttonText,
                 icon: buttonIconPath),

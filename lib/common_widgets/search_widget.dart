@@ -21,9 +21,10 @@ class SearchWidget extends ConsumerStatefulWidget {
   String hintText;
   TextEditingController searchController;
   FutureOr<List<Listing>?> Function(String) suggestionCallback;
+  Function(Listing) onItemClick;
 
   SearchWidget(
-      {super.key, required this.hintText, required this.searchController, required this.suggestionCallback});
+      {super.key, required this.hintText, required this.searchController, required this.suggestionCallback, required this.onItemClick});
 
   @override
   ConsumerState<SearchWidget> createState() => _SearchWidgetState();
@@ -108,11 +109,7 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                     widget.searchController.clear();
                     FocusScope.of(context).unfocus();
                     saveListingToPrefs(listing);
-                    ref.read(navigationProvider).navigateUsingPath(
-                      context: context,
-                      path: eventScreenPath,
-                      params: EventScreenParams(eventId: listing.id)
-                    );
+                    widget.onItemClick(listing);
                   },
                 ),
               )
@@ -133,20 +130,20 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
     }
   }
 
-  saveListingToPrefs(Listing newListing)  {
+  saveListingToPrefs(Listing newListing) {
     final existingJson = ref.read(sharedPreferenceHelperProvider).getString(searchListKey);
 
     List<Listing> currentListings = [];
-
     if (existingJson != null && existingJson.isNotEmpty) {
       final List<dynamic> decoded = jsonDecode(existingJson);
       currentListings = decoded.map((e) => Listing.fromJson(e)).toList();
     }
-
+    
     currentListings.removeWhere((item) => item.id == newListing.id);
-
     currentListings.add(newListing);
-
+    if (currentListings.length > 5) {
+      currentListings.removeAt(0);
+    }
     final updatedJson = jsonEncode(currentListings.map((e) => e.toJson()).toList());
     ref.read(sharedPreferenceHelperProvider).setString(searchListKey, updatedJson);
   }
