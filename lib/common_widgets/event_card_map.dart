@@ -16,6 +16,7 @@ class EventCardMap extends ConsumerStatefulWidget {
   final String websiteText;
   final String title;
   final String startDate;
+  final String logo;
 
   const EventCardMap({
     super.key,
@@ -23,6 +24,7 @@ class EventCardMap extends ConsumerStatefulWidget {
     required this.websiteText,
     required this.title,
     required this.startDate,
+    required this.logo,
   });
 
   @override
@@ -55,8 +57,8 @@ class _LocationCardWidgetState extends ConsumerState<EventCardMap> {
                 topLeft: Radius.circular(16.r),
                 topRight: Radius.circular(16.r),
               ),
-              child: Image.asset(
-                imagePath['highlight_card_image'] ?? "",
+              child: Image.network(
+                widget.logo,
                 height: 110.h,
                 width: double.infinity,
                 fit: BoxFit.cover,

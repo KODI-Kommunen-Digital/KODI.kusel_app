@@ -325,8 +325,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     showErrorToast(message: message, context: context);
                   });
                 },
-                imageUrl:
-                    "https://fastly.picsum.photos/id/452/200/200.jpg?hmac=f5vORXpRW2GF7jaYrCkzX3EwDowO7OXgUaVYM2NNRXY",
+                imageUrl: item.logo ?? "",
                 date: item.startDate ?? "",
                 title: item.title ?? "",
                 location: item.address ?? "",
@@ -454,7 +453,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 6.h.w),
                   child: HighlightsCard(
-                    imageUrl: imagePath['highlight_card_image'] ?? '',
+                    imageUrl: listing.logo ?? "",
                     date: listing.createdAt ?? "",
                     heading: listing.title ?? "",
                     description: listing.description ?? "",
