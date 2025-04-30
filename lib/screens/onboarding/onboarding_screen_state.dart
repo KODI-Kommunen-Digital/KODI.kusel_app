@@ -1,3 +1,5 @@
+import 'package:domain/model/response_model/get_interests/get_interests_response_model.dart';
+
 class OnboardingScreenState {
   int selectedPageIndex;
   String onBoardingButtonText;
@@ -15,6 +17,9 @@ class OnboardingScreenState {
   bool isBarrierearm;
   bool isErrorMsgVisible;
   Map<int, String> cityDetailsMap;
+  List<Interest> interests;
+  bool loading;
+  Map<int, bool> interestsMap;
 
   OnboardingScreenState(
       this.selectedPageIndex,
@@ -32,48 +37,36 @@ class OnboardingScreenState {
       this.isWithDog,
       this.isBarrierearm,
       this.isErrorMsgVisible,
-      this.cityDetailsMap
-      );
+      this.cityDetailsMap,
+      this.interests,
+      this.loading,
+      this.interestsMap);
 
   factory OnboardingScreenState.empty() {
-    return OnboardingScreenState(
-      0,
-      '',
-      [],
-      null,
-      '',
-      false,
-      false,
-      false,
-      0,
-      false,
-      false,
-      false,
-      false,
-      false,
-      false,
-      {}
-    );
+    return OnboardingScreenState(0, '', [], null, '', false, false, false, 0,
+        false, false, false, false, false, false, {}, [], false, {});
   }
 
-  OnboardingScreenState copyWith({
-    int? selectedPageIndex,
-    String? onBoardingButtonText,
-    List<String>? residenceList,
-    String? resident,
-    String? userName,
-    bool? isLoading,
-    bool? isTourist,
-    bool? isResident,
-    double? loadingPercentage,
-    bool? isSingle,
-    bool? isForTwo,
-    bool? isWithFamily,
-    bool? isWithDog,
-    bool? isBarrierearm,
-    bool? isErrorMsgVisible,
-    Map<int,String>? cityDetailsMap
-  }) {
+  OnboardingScreenState copyWith(
+      {int? selectedPageIndex,
+      String? onBoardingButtonText,
+      List<String>? residenceList,
+      String? resident,
+      String? userName,
+      bool? isLoading,
+      bool? isTourist,
+      bool? isResident,
+      double? loadingPercentage,
+      bool? isSingle,
+      bool? isForTwo,
+      bool? isWithFamily,
+      bool? isWithDog,
+      bool? isBarrierearm,
+      bool? isErrorMsgVisible,
+      Map<int, String>? cityDetailsMap,
+      List<Interest>? interests,
+      bool? loading,
+      Map<int, bool>? interestsMap}) {
     return OnboardingScreenState(
         selectedPageIndex ?? this.selectedPageIndex,
         onBoardingButtonText ?? this.onBoardingButtonText,
@@ -90,7 +83,9 @@ class OnboardingScreenState {
         isWithDog ?? this.isWithDog,
         isBarrierearm ?? this.isBarrierearm,
         isErrorMsgVisible ?? this.isErrorMsgVisible,
-        cityDetailsMap ?? this.cityDetailsMap
-    );
+        cityDetailsMap ?? this.cityDetailsMap,
+        interests ?? this.interests,
+        loading ?? this.loading,
+        interestsMap ?? this.interestsMap);
   }
 }

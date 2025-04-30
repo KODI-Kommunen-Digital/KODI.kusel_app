@@ -66,10 +66,12 @@ class SignInController extends StateNotifier<SignInState> {
             final userId = response.data?.userId ?? 0;
             final token = response.data?.accessToken ?? "";
             final refreshToken = response.data?.refreshToken ?? "";
+            final isOnboardingComplete = response.data?.isOnBoarded ?? false;
 
             sharedPreferenceHelper.setString(refreshTokenKey, refreshToken);
             sharedPreferenceHelper.setString(tokenKey, token);
             sharedPreferenceHelper.setInt(userIdKey, userId);
+            sharedPreferenceHelper.setString(onboardingKey, isOnboardingComplete.toString());
             success();
           }
         }
@@ -78,5 +80,11 @@ class SignInController extends StateNotifier<SignInState> {
       state = state.copyWith(showLoading: false);
       debugPrint(' Exception = $error');
     }
+  }
+
+  bool isOnboardingDone() {
+    String onBoardingStatus = sharedPreferenceHelper.getString(onboardingKey) ?? "false";
+    bool isOnBoarded = onBoardingStatus == 'true';
+    return isOnBoarded;
   }
 }
