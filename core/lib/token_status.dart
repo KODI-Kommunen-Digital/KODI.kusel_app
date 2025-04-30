@@ -15,18 +15,22 @@ class TokenStatus {
 
   // Gives false if token is expired
   bool isAccessTokenExpired() {
-    final token = sharedPreferenceHelper.getString(tokenKey);
+    try {
+      final token = sharedPreferenceHelper.getString(tokenKey);
 
-    if (token != null) {
-      final result = JwtDecoder.isExpired(token);
-      return result;
+      if (token != null) {
+        final result = JwtDecoder.isExpired(token);
+        return result;
+      }
+
+      return true;
+    } catch (error) {
+      return true;
     }
-
-    return false;
   }
 
   // Gives false if token is expired
-  bool isRefreshTokenExpired() {
+  bool isRefreshTokenValid() {
     final refreshToken = sharedPreferenceHelper.getString(refreshTokenKey);
 
     if (refreshToken != null) {
