@@ -62,7 +62,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                     child: SizedBox(
                       height: 200.h,
                       width: double.infinity,
-                      child: Image.asset(widget.imageUrl, fit: BoxFit.cover),
+                      child: Image.network(widget.imageUrl, fit: BoxFit.cover),
                     ),
                   ),
                   if (widget.isVisible)
