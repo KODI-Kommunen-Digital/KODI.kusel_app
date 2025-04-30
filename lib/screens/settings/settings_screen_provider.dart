@@ -62,4 +62,9 @@ class SettingsScreenProvider extends StateNotifier<SettingsScreenState> {
     }
     localeManagerController.updateSelectedLocale(Locale(languageCode, region));
   }
+
+  bool isLoggedIn() {
+    final token = sharedPreferenceHelper.getString(tokenKey);
+    return token != null;
+  }
 }
