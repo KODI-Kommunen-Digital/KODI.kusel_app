@@ -1,0 +1,43 @@
+import 'package:core/preference_manager/preference_constant.dart';
+import 'package:core/preference_manager/shared_pref_helper.dart';
+import 'package:domain/model/request_model/refresh_token/refresh_token_request_model.dart';
+import 'package:domain/model/response_model/refresh_token/refresh_token_response_model.dart';
+import 'package:domain/usecase/refresh_token/refresh_token_usecase.dart';
+import 'package:flutter/material.dart';
+
+class RefreshTokenProvider {
+  SharedPreferenceHelper sharedPreferenceHelper;
+
+  RefreshTokenProvider(
+      {required this.sharedPreferenceHelper,
+      required this.refreshTokenUseCase});
+
+  RefreshTokenUseCase refreshTokenUseCase;
+
+  Future<void> getNewToken(
+      {required void Function() onError,
+      required void Function() onSuccess}) async {
+    try {
+      final userId = sharedPreferenceHelper.getInt(userIdKey);
+
+      RefreshTokenRequestModel requestModel =
+          RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+      RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
+
+      final response =
+          await refreshTokenUseCase.call(requestModel, responseModel);
+      response.fold((l) {
+        debugPrint('refresh token fold exception = $l');
+      }, (r) {
+        final res = r as RefreshTokenResponseModel;
+        sharedPreferenceHelper.setString(tokenKey, res.data?.accessToken ?? "");
+        sharedPreferenceHelper.setString(
+            refreshTokenKey, res.data?.refreshToken ?? "");
+
+        onSuccess();
+      });
+    } catch (error) {
+      debugPrint('refresh token exception : $error');
+    }
+  }
+}
