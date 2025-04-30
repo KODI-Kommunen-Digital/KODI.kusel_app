@@ -192,8 +192,17 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                         userName: emailTextEditingController.text,
                         password: passwordTextEditingController.text,
                         success: () {
-                          ref.read(navigationProvider).removeAllAndNavigate(
-                              context: context, path: onboardingScreenPath);
+                          bool isOnboarded = ref
+                              .read(signInScreenProvider.notifier)
+                              .isOnboardingDone();
+                          if(isOnboarded){
+                            ref.read(navigationProvider).removeAllAndNavigate(
+                                context: context, path: dashboardScreenPath);
+                          } else {
+                            ref.read(navigationProvider).removeAllAndNavigate(
+                                context: context, path: onboardingScreenPath);
+                          }
+
                         },
                         error: (message) {
                           showErrorToast(message: message, context: context);
