@@ -70,13 +70,9 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
                             .updateBottomSheetSelectedUIType(
                             BottomSheetSelectedUIType.eventDetail);
                       },
-                      child: Column(
-                        children: [
-                          Icon(Icons.location_pin,
-                              size: 40.w,
-                              color: Theme.of(context).colorScheme.onTertiaryFixed),
-                        ],
-                      ),
+                      child: Icon(Icons.location_pin,
+                          size: 40.w,
+                          color: Theme.of(context).colorScheme.onTertiaryFixed),
                     ),
                   );
                 }).toList(),
