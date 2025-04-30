@@ -117,7 +117,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   }
                   break;
                 case 3:
-                  if (getErrorMessageStatus(state)) {
+                  if (stateNotifier.isAllOptionFieldsCompleted()) {
                     stateNotifier.updateErrorMsgStatus(true);
                   } else {
                     stateNotifier.updateErrorMsgStatus(false);
@@ -212,16 +212,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         ],
       ),
     );
-  }
-
-  bool getErrorMessageStatus(OnboardingScreenState state) {
-    bool martialStatusFilled =
-        (!state.isSingle && !state.isForTwo && !state.isWithFamily);
-
-    bool accommodationPreferenceFilled =
-        (!state.isWithDog && !state.isBarrierearm);
-    bool cityFilled = state.resident == null;
-    return martialStatusFilled || accommodationPreferenceFilled || cityFilled;
   }
 
   Widget _customPageViewer(List<Widget> pages, PageController pageController) {

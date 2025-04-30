@@ -32,8 +32,9 @@ class SignInResponseData implements BaseModel<SignInResponseData> {
   String? refreshToken;
   int? userId;
   List<CityUser>? cityUsers;
+  bool? isOnBoarded;
 
-  SignInResponseData({this.accessToken, this.refreshToken, this.userId, this.cityUsers});
+  SignInResponseData({this.accessToken, this.refreshToken, this.userId, this.cityUsers, this.isOnBoarded});
 
   @override
   SignInResponseData fromJson(Map<String, dynamic> json) {
@@ -44,6 +45,7 @@ class SignInResponseData implements BaseModel<SignInResponseData> {
       cityUsers: (json['cityUsers'] as List<dynamic>?)
           ?.map((e) => CityUser().fromJson(e))
           .toList(),
+      isOnBoarded: json['isOnBoarded']
     );
   }
 
@@ -54,6 +56,7 @@ class SignInResponseData implements BaseModel<SignInResponseData> {
       'refreshToken': refreshToken,
       'userId': userId,
       'cityUsers': cityUsers?.map((e) => e.toJson()).toList(),
+      'isOnBoarded': isOnBoarded
     };
   }
 }
