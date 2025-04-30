@@ -5,7 +5,7 @@ import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:kusel/screens/onboarding/onboarding_screen_provider.dart';
 
-import '../../common_widgets/category_grid_card_view.dart';
+import '../../common_widgets/interests_grid_card_view.dart';
 
 class OnBoardingPreferencesPage extends ConsumerStatefulWidget {
   const OnBoardingPreferencesPage({super.key});
@@ -16,6 +16,15 @@ class OnBoardingPreferencesPage extends ConsumerStatefulWidget {
 }
 
 class _OnBoardingPreferencesPageState extends ConsumerState<OnBoardingPreferencesPage> {
+
+  @override
+  void initState() {
+    Future.microtask(() {
+      ref.read(onboardingScreenProvider.notifier).getInterests();
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     String userName  = ref.read(onboardingScreenProvider).userNam;
@@ -41,43 +50,27 @@ class _OnBoardingPreferencesPageState extends ConsumerState<OnBoardingPreference
   }
 
   categoryView(BuildContext context) {
+    final state = ref.watch(onboardingScreenProvider);
+    final stateNotifier = ref.read(onboardingScreenProvider.notifier);
     return GridView.builder(
         padding: EdgeInsets.only(top: 0),
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2, mainAxisExtent: 135.h),
-        itemCount: 20,
+        itemCount: state.interests.length,
         itemBuilder: (BuildContext context, int index) {
-          // var exploreCategory = categoryScreenState.exploreCategories[index];
+          var interest = state.interests[index];
+          final isSelected = state.interestsMap[interest.id] ?? false;
           return GestureDetector(
             onTap: () {
-              // if (ref
-              //     .read(categoryScreenProvider.notifier)
-              //     .isSubCategoryAvailable(exploreCategory)) {
-              //   ref.read(navigationProvider).navigateUsingPath(
-              //       path: subCategoryScreenPath,
-              //       context: context,
-              //       params: SubCategoryScreenParameters(
-              //           id: exploreCategory.id ?? 0,
-              //           categoryHeading: exploreCategory.name ?? ""));
-              // } else {
-              //   ref.read(navigationProvider).navigateUsingPath(
-              //       path: eventListScreenPath,
-              //       // Need to be replaced with actual lat-long value
-              //       params: EventListScreenParameter(
-              //           radius: 1,
-              //           centerLatitude: 49.53838,
-              //           centerLongitude: 7.40647,
-              //           listHeading: exploreCategory.name ?? "" ?? '',
-              //           categoryId: exploreCategory.id),
-              //       context: context);
-              // }
+              stateNotifier.updateInterestMap(interest.id);
             },
-            child: CategoryGridCardView(
+            child: InterestsGridCardView(
               imageUrl:
               "https://fastly.picsum.photos/id/452/200/200.jpg?hmac=f5vORXpRW2GF7jaYrCkzX3EwDowO7OXgUaVYM2NNRXY",
-              title: "Digifit Parcours",
+              title: interest.name ?? '',
+              isSelected: isSelected,
             ),
           );
         });
