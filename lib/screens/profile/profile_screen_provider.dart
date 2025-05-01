@@ -196,8 +196,8 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
     }
   }
 
-  String getUrlForImage(String? imagePath) {
-    String url = "";
-    return url;
+  String? getUrlForImage(String? imagePath) {
+    if (imagePath == null || imagePath.isEmpty) return null;
+    return "$imageDownloadingEndpoint$imagePath";
   }
 }
