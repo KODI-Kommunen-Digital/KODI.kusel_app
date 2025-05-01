@@ -8,30 +8,30 @@ import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/downstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
-import 'package:kusel/screens/event/event_screen_controller.dart';
-import 'package:kusel/screens/event/event_screen_state.dart';
+import 'package:kusel/screens/event/event_detail_screen_controller.dart';
+import 'package:kusel/screens/event/event_detail_screen_state.dart';
 
 import '../../common_widgets/arrow_back_widget.dart' show ArrowBackWidget;
 import '../../common_widgets/location_card_widget.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
 
-class EventScreen extends ConsumerStatefulWidget {
-  final EventScreenParams eventScreenParams;
+class EventDetailScreen extends ConsumerStatefulWidget {
+  final EventDetailScreenParams eventScreenParams;
 
-  const EventScreen({super.key, required this.eventScreenParams});
+  const EventDetailScreen({super.key, required this.eventScreenParams});
 
   @override
-  ConsumerState<EventScreen> createState() => _EventScreenState();
+  ConsumerState<EventDetailScreen> createState() => _EventScreenState();
 }
 
-class _EventScreenState extends ConsumerState<EventScreen> {
+class _EventScreenState extends ConsumerState<EventDetailScreen> {
   @override
   void initState() {
     Future.microtask(() {
-      ref.read(eventScreenProvider.notifier).fetchAddress();
+      ref.read(eventDetailScreenProvider.notifier).fetchAddress();
       ref
-          .read(eventScreenProvider.notifier)
+          .read(eventDetailScreenProvider.notifier)
           .getEventDetails(widget.eventScreenParams.eventId);
     });
     super.initState();
@@ -39,7 +39,7 @@ class _EventScreenState extends ConsumerState<EventScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(eventScreenProvider);
+    final state = ref.watch(eventDetailScreenProvider);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.onSecondary,
       body: SingleChildScrollView(
@@ -59,7 +59,7 @@ class _EventScreenState extends ConsumerState<EventScreen> {
     );
   }
 
-  Widget _buildEventsUi(EventScreenState state) {
+  Widget _buildEventsUi(EventDetailScreenState state) {
     return Padding(
       padding: EdgeInsets.all(12.h.w),
       child: Column(
@@ -341,7 +341,7 @@ class _EventScreenState extends ConsumerState<EventScreen> {
     );
   }
 
-  Widget _buildClipperBackground(EventScreenState state) {
+  Widget _buildClipperBackground(EventDetailScreenState state) {
     return state.loading ? _buildClipperBackgroundShimmer() : Stack(
       children: [
         ClipPath(

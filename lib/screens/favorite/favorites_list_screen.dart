@@ -10,9 +10,9 @@ import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/navigation/navigation.dart';
-import 'package:kusel/screens/event/event_screen_controller.dart';
-import 'package:kusel/screens/events_listing/event_list_screen_controller.dart';
-import 'package:kusel/screens/events_listing/event_list_screen_parameter.dart';
+import 'package:kusel/screens/event/event_detail_screen_controller.dart';
+import 'package:kusel/screens/events_listing/selected_event_list_screen_controller.dart';
+import 'package:kusel/screens/events_listing/selected_event_list_screen_parameter.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 
 import '../../common_widgets/arrow_back_widget.dart';
@@ -136,7 +136,7 @@ class _ExploreScreenState extends ConsumerState<FavoritesListScreen> {
                   ref.read(navigationProvider).navigateUsingPath(
                     context: context,
                     path: eventScreenPath,
-                    params: EventScreenParams(eventId: item.id),
+                    params: EventDetailScreenParams(eventId: item.id),
                   );
                 },
                 isFavouriteVisible: ref.watch(favoritesProvider.notifier).showFavoriteIcon(),
