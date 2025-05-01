@@ -1,17 +1,18 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kusel/screens/all_event/all_event_screen.dart';
 import 'package:kusel/screens/auth/forgot_password/forgot_password_screen.dart';
 import 'package:kusel/screens/auth/signin/signin_screen.dart';
 import 'package:kusel/screens/auth/signup/signup_screen.dart';
 import 'package:kusel/screens/dashboard/dashboard_screen.dart';
-import 'package:kusel/screens/event/event_screen_controller.dart';
-import 'package:kusel/screens/events_listing/event_list_screen.dart';
-import 'package:kusel/screens/events_listing/event_list_screen_parameter.dart';
+import 'package:kusel/screens/event/event_detail_screen_controller.dart';
+import 'package:kusel/screens/events_listing/selected_event_list_screen.dart';
+import 'package:kusel/screens/events_listing/selected_event_list_screen_parameter.dart';
 import 'package:kusel/screens/favorite/favorites_list_screen.dart';
 import 'package:kusel/screens/feedback/feedback_screen.dart';
 import 'package:kusel/screens/fliter_screen/filter_screen.dart';
 import 'package:kusel/screens/highlight/highlight_screen.dart';
-import 'package:kusel/screens/event/event_screen.dart';
+import 'package:kusel/screens/event/event_detail_screen.dart';
 import 'package:kusel/screens/profile/profile_screen.dart';
 import 'package:kusel/screens/search_result/search_result_screen.dart';
 import 'package:kusel/screens/search_result/search_result_screen_parameter.dart';
@@ -41,6 +42,7 @@ const onboardingFinishPagePath = "/onboardingFinishPagePath";
 const profileScreenPath = "/profileScreenPath";
 const favoritesListScreenPath = "/favoritesListScreenPath";
 const feedbackScreenPath = "/feedbackScreenPath";
+const allEventScreenPath = "/allEventScreen";
 
 List<RouteBase> goRouteList = [
   GoRoute(
@@ -66,16 +68,16 @@ List<RouteBase> goRouteList = [
   GoRoute(
       path: eventScreenPath,
       builder: (context, state) {
-        return EventScreen(
-            eventScreenParams: state.extra as EventScreenParams
+        return EventDetailScreen(
+            eventScreenParams: state.extra as EventDetailScreenParams
         );
       }),
   GoRoute(
       path: eventListScreenPath,
       builder: (context, state) {
-        return EventListScreen(
+        return SelectedEventListScreen(
             eventListScreenParameter:
-            state.extra as EventListScreenParameter);
+            state.extra as SelectedEventListScreenParameter);
       }),
   GoRoute(
       path: forgotPasswordPath,
@@ -142,4 +144,10 @@ List<RouteBase> goRouteList = [
         return FeedbackScreen(
         );
       }),
+  GoRoute(
+      path: allEventScreenPath,
+      builder: (context, state) {
+        return AllEventScreen(
+        );
+      })
 ];

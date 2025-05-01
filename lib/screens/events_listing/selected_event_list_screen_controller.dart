@@ -2,31 +2,31 @@ import 'package:domain/model/request_model/listings/get_all_listings_request_mod
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/usecase/listings/listings_usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kusel/screens/events_listing/event_list_screen_parameter.dart';
-import 'package:kusel/screens/events_listing/event_list_screen_state.dart';
+import 'package:kusel/screens/events_listing/selected_event_list_screen_parameter.dart';
+import 'package:kusel/screens/events_listing/selected_event_list_screen_state.dart';
 
-final eventListScreenProvider = StateNotifierProvider.autoDispose<
-    EventListScreenController,
-    EventListScreenState>(
+final selectedEventListScreenProvider = StateNotifierProvider.autoDispose<
+    SelectedEventListScreenController,
+    SelectedEventListScreenState>(
         (ref) =>
-        EventListScreenController(
+        SelectedEventListScreenController(
             listingsUseCase: ref.read(listingsUseCaseProvider)));
 
-class EventListScreenController extends StateNotifier<EventListScreenState> {
-  EventListScreenController({required this.listingsUseCase})
-      : super(EventListScreenState.empty());
+class SelectedEventListScreenController extends StateNotifier<SelectedEventListScreenState> {
+  SelectedEventListScreenController({required this.listingsUseCase})
+      : super(SelectedEventListScreenState.empty());
   ListingsUseCase listingsUseCase;
 
   Future<void> getEventsList(
-      EventListScreenParameter? eventListScreenParameter) async {
+      SelectedEventListScreenParameter? eventListScreenParameter) async {
     try {
       state = state.copyWith(loading: true, error: "");
 
-      GetAllListingsRequestModel getAllListingsRequestModel =
+      GetAllListingsRequestModel getAllListingsRequestModel =(eventListScreenParameter?.categoryId!=null)?
       GetAllListingsRequestModel(
         categoryId: eventListScreenParameter?.categoryId.toString(),
         subcategoryId: eventListScreenParameter?.subCategoryId?.toString(),
-      );
+      ):GetAllListingsRequestModel();
       GetAllListingsResponseModel getAllListResponseModel =
       GetAllListingsResponseModel();
 
