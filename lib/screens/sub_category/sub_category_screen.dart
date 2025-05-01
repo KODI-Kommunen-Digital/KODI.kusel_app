@@ -17,7 +17,7 @@ import '../../common_widgets/upstream_wave_clipper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../theme_manager/colors.dart';
-import '../events_listing/event_list_screen_parameter.dart';
+import '../events_listing/selected_event_list_screen_parameter.dart';
 
 class SubCategoryScreen extends ConsumerStatefulWidget {
   final SubCategoryScreenParameters subCategoryScreenParameters;
@@ -136,7 +136,7 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
                   context: context,
                   params:
                   // Need to be replaced with actual lat-long value
-                  EventListScreenParameter(
+                  SelectedEventListScreenParameter(
                       radius: 1,
                       centerLatitude: 49.53838,
                       centerLongitude: 7.40647,

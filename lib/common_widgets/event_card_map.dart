@@ -8,7 +8,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../images_path.dart';
-import '../screens/event/event_screen_controller.dart';
+import '../screens/event/event_detail_screen_controller.dart';
 import 'custom_shimmer_widget.dart';
 
 class EventCardMap extends ConsumerStatefulWidget {
