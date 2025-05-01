@@ -327,14 +327,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     if (state.imageFile != null) {
       return FileImage(state.imageFile!);
     } else if (state.userData?.image != null) {
-      return NetworkImage(
-        ref
-            .read(profileScreenProvider.notifier)
-            .getUrlForImage(state.userData!.image!),
-      );
+      final url = ref
+          .read(profileScreenProvider.notifier)
+          .getUrlForImage(state.userData!.image!);
+
+      if (url != null && url.isNotEmpty) {
+        return NetworkImage(url);
+      }
     }
     return null;
   }
+
 
   Widget? _buildProfilePlaceholder(
       BuildContext context, ProfileScreenState state) {
