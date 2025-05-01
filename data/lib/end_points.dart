@@ -19,6 +19,7 @@ const onboardingUserInterestsEndPoint = "/interests";
 const onboardingUserDemographicsEndPoint = "/demographics";
 const getCitiesEndPoint = "/cities";
 const onboardingCompleteEndpoint = "/onboardingComplete";
+const feedbackEndpoint = "/feedbacks";
 // WEATHER API
 const weatherEndPoint = "https://api.weatherapi.com/v1/forecast.json";
 const weatherApiKey="2ead327db48b49f28e6134655242706";
