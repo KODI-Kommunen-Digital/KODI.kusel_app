@@ -100,6 +100,9 @@
   "save_changes": "Save Changes",
   "edit" : "Edit",
   "favorites": "Favorites",
-  "please_select_the_field" : "Please complete the form"
-
+  "please_select_the_field" : "Please complete the form",
+  "title" : "Title",
+  "feedback": "Feedback",
+  "enter_title": "Enter Title",
+  "feedback_sent_successfully" : "Feedback sent successfully"
 }
