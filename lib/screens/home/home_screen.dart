@@ -231,7 +231,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 isLoading,
                 latitude,
                 longitude),
-            FeedbackCardWidget(),
+            FeedbackCardWidget(
+              onTap: (){
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: feedbackScreenPath, context: context);
+              },
+            ),
             100.verticalSpace
           ],
         ),
