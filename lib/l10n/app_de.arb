@@ -102,6 +102,9 @@
   "map_restaurant": "Gastro",
   "favorites": "Favoriten",
   "required": "Erforderlich",
-  "please_select_the_field": "Bitte vervollständigen Sie das Formular"
-
+  "please_select_the_field": "Bitte vervollständigen Sie das Formular",
+  "title" : "Titel",
+  "feedback": "Rückmeldung",
+  "enter_title": "Titel eingeben",
+  "feedback_sent_successfully" : "Feedback erfolgreich gesendet"
 }
