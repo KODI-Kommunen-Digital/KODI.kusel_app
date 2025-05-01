@@ -88,12 +88,15 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                     color: Theme.of(context).textTheme.labelMedium?.color,
                     fontWeight: FontWeight.w600)),
             6.verticalSpace,
-            _buildDescriptionTextField(
-                validator: (value) {
-                  return validateField(
-                      value, AppLocalizations.of(context).description);
-                },
-                descriptionEditingController: descriptionEditingController),
+            KuselTextField(textEditingController: descriptionEditingController,
+              maxLines: 10,
+              contentPadding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 12.w),
+              hintText: AppLocalizations.of(context).enter_description,
+              validator: (value) {
+                return validateField(
+                    value, AppLocalizations.of(context).description);
+              },
+            ),
             25.verticalSpace,
             CustomButton(
                 onPressed: () {
@@ -103,6 +106,9 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                           showSuccessToast(
                               message: AppLocalizations.of(context).feedback_sent_successfully,
                               context: context);
+                          titleEditingController.clear();
+                          descriptionEditingController.clear();
+                          ref.read(navigationProvider).removeTopPage(context: context);
                         },
                         onError: (String msg) {
                       showErrorToast(message: msg, context: context);
@@ -111,38 +117,10 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                       description: descriptionEditingController.text
                     );
                   }
-                  descriptionEditingController.text = '';
+
                 },
                 text: AppLocalizations.of(context).submit),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDescriptionTextField(
-      {String? Function(String?)? validator,
-      required TextEditingController descriptionEditingController}) {
-    return TextFormField(
-      controller: descriptionEditingController,
-      keyboardType: TextInputType.multiline,
-      validator: validator,
-      maxLines: 10,
-      minLines: 8,
-      decoration: InputDecoration(
-        fillColor: Theme.of(context).canvasColor,
-        filled: true,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(20.r),
-          borderSide: BorderSide.none
-          // borderSide: BorderSide(
-          //     color: Color.fromRGBO(255, 255, 255, 0.8), width: 2),
-        ),
-        contentPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
-        hintText: AppLocalizations.of(context).enter_description,
-        hintStyle: TextStyle(
-          color: Theme.of(context).hintColor,
-          fontSize: 14,
         ),
       ),
     );
