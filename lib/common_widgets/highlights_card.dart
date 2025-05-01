@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -62,7 +63,14 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                     child: SizedBox(
                       height: 200.h,
                       width: double.infinity,
-                      child: Image.network(widget.imageUrl, fit: BoxFit.cover),
+                      child: CachedNetworkImage(
+                        imageUrl: widget.imageUrl,
+                        fit: BoxFit.cover,
+                        progressIndicatorBuilder:
+                            (context, url, downloadProgress) =>
+                                Center(child: CircularProgressIndicator()),
+                        errorWidget: (context, url, error) => Icon(Icons.error),
+                      ),
                     ),
                   ),
                   if (widget.isVisible)
@@ -79,8 +87,11 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
-                            widget.isFavourite ? Icons.favorite_sharp: Icons.favorite_border_sharp,
-                            color: widget.isFavourite ? Colors.red : Colors.white,
+                            widget.isFavourite
+                                ? Icons.favorite_sharp
+                                : Icons.favorite_border_sharp,
+                            color:
+                                widget.isFavourite ? Colors.red : Colors.white,
                             size: 20,
                           ),
                         ),
