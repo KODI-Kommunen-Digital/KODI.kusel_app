@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/downstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
@@ -46,7 +47,12 @@ class _EventScreenState extends ConsumerState<EventScreen> {
           children: [
             _buildClipperBackground(state),
             _buildEventsUi(state),
-            FeedbackCardWidget(),
+            FeedbackCardWidget(
+              onTap: (){
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: feedbackScreenPath, context: context);
+              },
+            ),
           ],
         ),
       ),

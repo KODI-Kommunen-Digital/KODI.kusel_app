@@ -1,17 +1,24 @@
 import 'package:core/base_model.dart';
 
-class FeedBackRequestModel implements BaseModel<FeedBackRequestModel>
-{
+class FeedBackRequestModel implements BaseModel<FeedBackRequestModel> {
+  final String? title;
+  final String? description;
+
+  FeedBackRequestModel({this.title, this.description});
+
   @override
   FeedBackRequestModel fromJson(Map<String, dynamic> json) {
-    // TODO: implement fromJson
-    throw UnimplementedError();
+    return FeedBackRequestModel(
+      title: json['title'] as String?,
+      description: json['description'] as String?,
+    );
   }
 
   @override
   Map<String, dynamic> toJson() {
-    // TODO: implement toJson
-    throw UnimplementedError();
+    return {
+      'title': title,
+      'description': description,
+    };
   }
-
 }
