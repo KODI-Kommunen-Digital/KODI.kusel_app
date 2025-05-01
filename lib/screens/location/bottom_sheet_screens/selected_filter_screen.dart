@@ -13,7 +13,7 @@ import '../../../common_widgets/common_event_card.dart';
 import '../../../common_widgets/search_widget.dart';
 import '../../../common_widgets/toast_message.dart';
 import '../../../navigation/navigation.dart';
-import '../../event/event_screen_controller.dart';
+import '../../event/event_detail_screen_controller.dart';
 
 class SelectedFilterScreen extends ConsumerStatefulWidget {
   SelectedFilterScreenParams selectedFilterScreenParams;

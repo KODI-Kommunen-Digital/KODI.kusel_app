@@ -3,18 +3,18 @@ import 'package:domain/model/request_model/event_details/event_details_request_m
 import 'package:domain/usecase/event_details/event_details_usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
-import 'package:kusel/screens/event/event_screen_state.dart';
+import 'package:kusel/screens/event/event_detail_screen_state.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-final eventScreenProvider =
-    StateNotifierProvider<EventScreenController, EventScreenState>(
-        (ref) => EventScreenController(
+final eventDetailScreenProvider =
+    StateNotifierProvider<EventDetailScreenController, EventDetailScreenState>(
+        (ref) => EventDetailScreenController(
               eventDetailsUseCase: ref.read(eventDetailsUseCaseProvider),
             ));
 
-class EventScreenController extends StateNotifier<EventScreenState> {
-  EventScreenController({required this.eventDetailsUseCase})
-      : super(EventScreenState.empty());
+class EventDetailScreenController extends StateNotifier<EventDetailScreenState> {
+  EventDetailScreenController({required this.eventDetailsUseCase})
+      : super(EventDetailScreenState.empty());
 
   EventDetailsUseCase eventDetailsUseCase;
 
@@ -77,8 +77,8 @@ class EventScreenController extends StateNotifier<EventScreenState> {
   }
 }
 
-class EventScreenParams {
+class EventDetailScreenParams {
   int? eventId;
 
-  EventScreenParams({required this.eventId});
+  EventDetailScreenParams({required this.eventId});
 }

@@ -19,7 +19,7 @@ import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
-import '../event/event_screen_controller.dart';
+import '../event/event_detail_screen_controller.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
@@ -140,7 +140,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                       ref.read(navigationProvider).navigateUsingPath(
                           context: context,
                           path: eventScreenPath,
-                          params: EventScreenParams(eventId: listing.id)
+                          params: EventDetailScreenParams(eventId: listing.id)
                       );
                     },
                     searchController: TextEditingController(),
@@ -182,7 +182,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                           ref.read(navigationProvider).navigateUsingPath(
                               context: context,
                               path: eventScreenPath,
-                              params: EventScreenParams(eventId: ref.watch(searchScreenProvider).searchedList[index].id)
+                              params: EventDetailScreenParams(eventId: ref.watch(searchScreenProvider).searchedList[index].id)
                           );
                         },
                         child: Padding(

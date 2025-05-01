@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/screens/fliter_screen/fliter_screen_state.dart';
 
 final filterScreenProvider =
-    StateNotifierProvider<FilterScreenProvider, FilterScreenState>(
+    StateNotifierProvider.autoDispose<FilterScreenProvider, FilterScreenState>(
         (ref) => FilterScreenProvider());
 
 class FilterScreenProvider extends StateNotifier<FilterScreenState> {

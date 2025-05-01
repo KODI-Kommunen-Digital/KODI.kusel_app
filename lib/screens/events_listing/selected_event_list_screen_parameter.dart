@@ -1,4 +1,4 @@
-class EventListScreenParameter {
+class SelectedEventListScreenParameter {
   int? categoryId;
   int? subCategoryId;
   String? listHeading;
@@ -6,7 +6,7 @@ class EventListScreenParameter {
   double? centerLongitude;
   int? radius;
 
-  EventListScreenParameter({
+  SelectedEventListScreenParameter({
     required this.categoryId,
     this.subCategoryId,
     required this.listHeading,

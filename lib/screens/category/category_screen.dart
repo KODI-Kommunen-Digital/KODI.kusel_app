@@ -16,7 +16,7 @@ import 'package:kusel/screens/sub_category/sub_category_screen_parameter.dart';
 import '../../common_widgets/category_grid_card_view.dart';
 import '../../images_path.dart';
 import '../../theme_manager/colors.dart';
-import '../events_listing/event_list_screen_parameter.dart';
+import '../events_listing/selected_event_list_screen_parameter.dart';
 
 class CategoryScreen extends ConsumerStatefulWidget {
   const CategoryScreen({super.key});
@@ -124,7 +124,7 @@ class _ExploreScreenState extends ConsumerState<CategoryScreen> {
                 ref.read(navigationProvider).navigateUsingPath(
                     path: eventListScreenPath,
                     // Need to be replaced with actual lat-long value
-                    params: EventListScreenParameter(
+                    params: SelectedEventListScreenParameter(
                         radius: 1,
                         centerLatitude: 49.53838,
                         centerLongitude: 7.40647,
