@@ -47,13 +47,6 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
           automaticallyImplyLeading: false,
           floating: true,
           pinned: false,
-          actions: [
-
-            IconButton(onPressed: (){
-              ref.read(navigationProvider).navigateUsingPath(path: filterScreenPath, context: context);
-            }, icon: Icon(Icons.filter))
-
-          ],
           expandedHeight: MediaQuery.of(context).size.height * 0.15,
           flexibleSpace: FlexibleSpaceBar(
             background: ClipPath(
