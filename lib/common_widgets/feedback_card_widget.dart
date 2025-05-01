@@ -8,7 +8,8 @@ import '../theme_manager/colors.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FeedbackCardWidget extends StatefulWidget {
-  const FeedbackCardWidget({super.key});
+  final Function() onTap;
+  const FeedbackCardWidget({super.key, required this.onTap});
 
   @override
   State<FeedbackCardWidget> createState() => _FeedbackCardWidgetState();
@@ -62,7 +63,7 @@ class _FeedbackCardWidgetState extends State<FeedbackCardWidget> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 2.h),
             child: CustomButton(
-                onPressed: () {},
+                onPressed: widget.onTap,
                 text: AppLocalizations.of(context).send_feedback,
                 buttonColor: Theme.of(context).primaryColor),
           ),

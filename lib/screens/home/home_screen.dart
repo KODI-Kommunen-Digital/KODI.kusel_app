@@ -239,7 +239,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   context: context,
                  );
             }),
-            FeedbackCardWidget(),
+            FeedbackCardWidget(
+              onTap: (){
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: feedbackScreenPath, context: context);
+              },
+            ),
             100.verticalSpace
           ],
         ),
