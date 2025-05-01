@@ -12,7 +12,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/images_path.dart';
-import 'package:kusel/screens/event/event_screen_controller.dart';
+import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 
 import '../app_router.dart';
 import '../navigation/navigation.dart';
