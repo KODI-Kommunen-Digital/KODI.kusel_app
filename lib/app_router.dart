@@ -8,6 +8,7 @@ import 'package:kusel/screens/event/event_screen_controller.dart';
 import 'package:kusel/screens/events_listing/event_list_screen.dart';
 import 'package:kusel/screens/events_listing/event_list_screen_parameter.dart';
 import 'package:kusel/screens/favorite/favorites_list_screen.dart';
+import 'package:kusel/screens/feedback/feedback_screen.dart';
 import 'package:kusel/screens/fliter_screen/filter_screen.dart';
 import 'package:kusel/screens/highlight/highlight_screen.dart';
 import 'package:kusel/screens/event/event_screen.dart';
@@ -39,6 +40,7 @@ const onboardingLoadingPagePath = "/onboardingLoadingPagePath";
 const onboardingFinishPagePath = "/onboardingFinishPagePath";
 const profileScreenPath = "/profileScreenPath";
 const favoritesListScreenPath = "/favoritesListScreenPath";
+const feedbackScreenPath = "/feedbackScreenPath";
 
 List<RouteBase> goRouteList = [
   GoRoute(
@@ -132,6 +134,12 @@ List<RouteBase> goRouteList = [
       path: favoritesListScreenPath,
       builder: (context, state) {
         return FavoritesListScreen(
+        );
+      }),
+  GoRoute(
+      path: feedbackScreenPath,
+      builder: (context, state) {
+        return FeedbackScreen(
         );
       }),
 ];
