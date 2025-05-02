@@ -21,6 +21,7 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
   void initState() {
     Future.microtask(() {
       ref.read(locationScreenProvider.notifier).getAllEventList();
+      ref.read(locationScreenProvider.notifier).setSliderHeight(BottomSheetSelectedUIType.allEvent);
     });
     super.initState();
   }
