@@ -1,12 +1,11 @@
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
-import 'package:kusel/screens/location/bottom_sheet_screens/selected_event_screen.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import 'bottom_sheet_selected_ui_type.dart';
 
 class LocationScreenState {
   List<Listing> allEventList;
-  bool isLoading;
+
   BottomSheetSelectedUIType bottomSheetSelectedUIType;
   int? selectedCategoryId;
   String? selectedCategoryName;
@@ -14,28 +13,26 @@ class LocationScreenState {
   List<Listing> distinctFilterCategoryList;
   Listing? selectedEvent;
   PanelController panelController;
-
+  bool isSelectedFilterScreenLoading;
 
   LocationScreenState(
-    this.allEventList,
-    this.isLoading,
-    this.bottomSheetSelectedUIType,
-    this.selectedCategoryId,
-    this.selectedCategoryName,
-    this.selectedSubCategoryId,
-    this.distinctFilterCategoryList,
-    this.selectedEvent,
-    this.panelController,
-  );
+      this.allEventList,
+      this.bottomSheetSelectedUIType,
+      this.selectedCategoryId,
+      this.selectedCategoryName,
+      this.selectedSubCategoryId,
+      this.distinctFilterCategoryList,
+      this.selectedEvent,
+      this.panelController,
+      this.isSelectedFilterScreenLoading);
 
   factory LocationScreenState.empty() {
-    return LocationScreenState([], false, BottomSheetSelectedUIType.allEvent,
-        null, null, null, [], null, PanelController());
+    return LocationScreenState([],  BottomSheetSelectedUIType.allEvent,
+        null, null, null, [], null, PanelController(), false);
   }
 
   LocationScreenState copyWith(
       {List<Listing>? allEventList,
-      bool? isLoading,
       BottomSheetSelectedUIType? bottomSheetSelectedUIType,
       int? selectedCategoryId,
       String? selectedCategoryName,
@@ -46,10 +43,9 @@ class LocationScreenState {
       double? maxHeight,
       double? openPosition,
       PanelController? panelController,
-      }) {
+      bool? isSelectedFilterScreenLoading}) {
     return LocationScreenState(
         allEventList ?? this.allEventList,
-        isLoading ?? this.isLoading,
         bottomSheetSelectedUIType ?? this.bottomSheetSelectedUIType,
         selectedCategoryId ?? this.selectedCategoryId,
         selectedCategoryName ?? this.selectedCategoryName,
@@ -57,6 +53,6 @@ class LocationScreenState {
         distinctFilterCategoryList ?? this.distinctFilterCategoryList,
         selectedEvent ?? this.selectedEvent,
         panelController ?? this.panelController,
-    );
+        isSelectedFilterScreenLoading ?? this.isSelectedFilterScreenLoading);
   }
 }
