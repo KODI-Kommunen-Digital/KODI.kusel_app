@@ -140,7 +140,7 @@ Widget highlightCardShimmerEffect() {
     child: Column(
       children: [
         CustomShimmerWidget.circular(
-          height: 200.h,
+          height: 350.h,
           width: double.infinity,
           shapeBorder:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),

@@ -34,10 +34,20 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: _buildBody(context),
-      ).loaderDialog(context, ref.watch(signInScreenProvider).showLoading),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, dynamicType) {
+        if (!didPop) {
+          ref
+              .read(navigationProvider)
+              .navigateUsingPath(path: dashboardScreenPath, context: context);
+        }
+      },
+      child: SafeArea(
+        child: Scaffold(
+          body: _buildBody(context),
+        ).loaderDialog(context, ref.watch(signInScreenProvider).showLoading),
+      ),
     );
   }
 
@@ -97,18 +107,16 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
           children: [
             15.verticalSpace,
             GestureDetector(
-              onLongPress: ()async{
-                if(kDebugMode)
-                  {
-                    await showEnvironmentDialog(context: context,
-                    ref: ref);
-                  }
-
+              onLongPress: () async {
+                if (kDebugMode) {
+                  await showEnvironmentDialog(context: context, ref: ref);
+                }
               },
               child: Align(
                   alignment: Alignment.center,
                   child: textBoldPoppins(
-                      text: AppLocalizations.of(context).login, fontSize: 20.sp)),
+                      text: AppLocalizations.of(context).login,
+                      fontSize: 20.sp)),
             ),
             32.verticalSpace,
             Padding(
@@ -195,14 +203,13 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                           bool isOnboarded = ref
                               .read(signInScreenProvider.notifier)
                               .isOnboardingDone();
-                          if(isOnboarded){
+                          if (isOnboarded) {
                             ref.read(navigationProvider).removeAllAndNavigate(
                                 context: context, path: dashboardScreenPath);
                           } else {
                             ref.read(navigationProvider).removeAllAndNavigate(
                                 context: context, path: onboardingScreenPath);
                           }
-
                         },
                         error: (message) {
                           showErrorToast(message: message, context: context);
