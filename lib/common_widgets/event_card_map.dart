@@ -6,7 +6,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 
+import '../app_router.dart';
 import '../images_path.dart';
+import '../navigation/navigation.dart';
+import '../screens/event/event_detail_screen_controller.dart';
 
 class EventCardMap extends ConsumerStatefulWidget {
   final String address;
@@ -14,6 +17,7 @@ class EventCardMap extends ConsumerStatefulWidget {
   final String title;
   final String startDate;
   final String logo;
+  final int id;
 
   const EventCardMap({
     super.key,
@@ -22,6 +26,7 @@ class EventCardMap extends ConsumerStatefulWidget {
     required this.title,
     required this.startDate,
     required this.logo,
+    required this.id
   });
 
   @override
@@ -33,84 +38,93 @@ class _LocationCardWidgetState extends ConsumerState<EventCardMap> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(16.w),
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 8,
-              offset: Offset(0, 4),
-            )
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(16.r),
-                topRight: Radius.circular(16.r),
-              ),
-              child: SizedBox(
-                height: 150.h,
-                width: double.infinity,
-                child: CachedNetworkImage(
-                  imageUrl: widget.logo,
-                  progressIndicatorBuilder: (context, value, _) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  },
-                  fit: BoxFit.cover,
+      child: GestureDetector(
+        onTap: (){
+          ref.read(navigationProvider).navigateUsingPath(
+              context: context,
+              path: eventScreenPath,
+              params: EventDetailScreenParams(
+                  eventId: widget.id));
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16.r),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 8,
+                offset: Offset(0, 4),
+              )
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(16.r),
+                  topRight: Radius.circular(16.r),
+                ),
+                child: SizedBox(
+                  height: 150.h,
+                  width: double.infinity,
+                  child: CachedNetworkImage(
+                    imageUrl: widget.logo,
+                    progressIndicatorBuilder: (context, value, _) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    },
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(16.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  textSemiBoldMontserrat(
-                      fontWeight: FontWeight.w600, text: widget.title),
-                  SizedBox(height: 12.h),
-                  Row(
-                    children: [
-                      SvgPicture.asset(imagePath['location_card_icon'] ?? ''),
-                      SizedBox(width: 8.w),
-                      Expanded(
-                        child: textRegularMontserrat(
-                            text: widget.address,
-                            maxLines: 2,
-                            softWrap: true,
-                            textAlign: TextAlign.start),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 12.h),
-                  Row(
-                    children: [
-                      SvgPicture.asset(imagePath['calendar_icon'] ?? ''),
-                      SizedBox(width: 8.w),
-                      textRegularMontserrat(text: widget.startDate),
-                    ],
-                  ),
-                  SizedBox(height: 16.h),
-                  Divider(),
-                  Row(
-                    children: [
-                      iconTextWidget(imagePath['man_icon'] ?? '',
-                          AppLocalizations.of(context).barrier_free, context),
-                      8.w.horizontalSpace,
-                      iconTextWidget(imagePath['paw_icon'] ?? '',
-                          AppLocalizations.of(context).dogs_allow, context),
-                    ],
-                  )
-                ],
-              ),
-            )
-          ],
+              Padding(
+                padding: EdgeInsets.all(16.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    textSemiBoldMontserrat(
+                        fontWeight: FontWeight.w600, text: widget.title),
+                    SizedBox(height: 12.h),
+                    Row(
+                      children: [
+                        SvgPicture.asset(imagePath['location_card_icon'] ?? ''),
+                        SizedBox(width: 8.w),
+                        Expanded(
+                          child: textRegularMontserrat(
+                              text: widget.address,
+                              maxLines: 2,
+                              softWrap: true,
+                              textAlign: TextAlign.start),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 12.h),
+                    Row(
+                      children: [
+                        SvgPicture.asset(imagePath['calendar_icon'] ?? ''),
+                        SizedBox(width: 8.w),
+                        textRegularMontserrat(text: widget.startDate),
+                      ],
+                    ),
+                    SizedBox(height: 16.h),
+                    Divider(),
+                    Row(
+                      children: [
+                        iconTextWidget(imagePath['man_icon'] ?? '',
+                            AppLocalizations.of(context).barrier_free, context),
+                        8.w.horizontalSpace,
+                        iconTextWidget(imagePath['paw_icon'] ?? '',
+                            AppLocalizations.of(context).dogs_allow, context),
+                      ],
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
