@@ -174,16 +174,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     visible:
                         ref.watch(signInStatusProvider).isSignupButtonVisible,
                     child: Positioned(
-                        left: 210.w,
+                        left: 15.w,
+                        right: 15.w,
                         top: 30.h,
-                        child: isLoading
-                            ? CustomShimmerWidget.circular(
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              isLoading
+                                  ? CustomShimmerWidget.circular(
                                 width: 120.w,
                                 height: 30.h,
                                 shapeBorder: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30.r)),
                               )
-                            : GestureDetector(
+                                  : GestureDetector(
                                 onTap: () {
                                   ref
                                       .read(navigationProvider)
@@ -206,7 +212,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                       fontSize: 12.sp,
                                       color: Theme.of(context).primaryColor),
                                 ),
-                              )))
+                              ),
+                            ],
+                          ),
+                        )))
               ],
             ),
             customPageViewer(isLoading),
