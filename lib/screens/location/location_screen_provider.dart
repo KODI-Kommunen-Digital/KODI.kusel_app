@@ -13,9 +13,9 @@ import 'location_screen_state.dart';
 final locationScreenProvider = StateNotifierProvider.autoDispose<
         LocationScreenProvider, LocationScreenState>(
     (ref) => LocationScreenProvider(
-        listingsUseCase: ref.read(listingsUseCaseProvider),
-        searchUseCase: ref.read(searchUseCaseProvider),
-    ));
+          listingsUseCase: ref.read(listingsUseCaseProvider),
+          searchUseCase: ref.read(searchUseCaseProvider),
+        ));
 
 class LocationScreenProvider extends StateNotifier<LocationScreenState> {
   ListingsUseCase listingsUseCase;
@@ -68,7 +68,7 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
     try {
       state = state.copyWith(isLoading: true);
       GetAllListingsRequestModel requestModel =
-      GetAllListingsRequestModel(categoryId: categoryId);
+          GetAllListingsRequestModel(categoryId: categoryId);
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
 
       final result = await listingsUseCase.call(requestModel, responseModel);
@@ -88,10 +88,12 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
 
   updateBottomSheetSelectedUIType(BottomSheetSelectedUIType type) {
     state = state.copyWith(bottomSheetSelectedUIType: type);
+    setSliderHeight(type);
   }
 
   updateSelectedCategory(int? selectedCategory, String? categoryName) {
-    state = state.copyWith(selectedCategoryId: selectedCategory,
+    state = state.copyWith(
+        selectedCategoryId: selectedCategory,
         selectedCategoryName: categoryName);
   }
 
@@ -101,8 +103,7 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
         listing.isFavorite = isFavorite;
       }
     }
-    state = state.copyWith(
-        allEventList: state.allEventList);
+    state = state.copyWith(allEventList: state.allEventList);
   }
 
   void setEventItem(Listing event) {
@@ -122,19 +123,19 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
   }) async {
     try {
       SearchRequestModel searchRequestModel =
-      SearchRequestModel(searchQuery: searchText);
+          SearchRequestModel(searchQuery: searchText);
       SearchListingsResponseModel searchListingsResponseModel =
-      SearchListingsResponseModel();
+          SearchListingsResponseModel();
 
       final result = await searchUseCase.call(
           searchRequestModel, searchListingsResponseModel);
       return result.fold(
-            (l) {
+        (l) {
           debugPrint('Exception = $l');
           error(l.toString());
           return <Listing>[];
         },
-            (r) {
+        (r) {
           final listings = (r as SearchListingsResponseModel).data;
           debugPrint('>>>> returned = ${listings?.length}');
           success();
@@ -145,6 +146,27 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
       debugPrint('>>>> Exception = $e');
       error(e.toString());
       return <Listing>[];
+    }
+  }
+
+  void setHeight(double desiredHeight) {
+    final maxHeight = 550;
+    final position = desiredHeight / maxHeight;
+
+    state.panelController?.animatePanelToPosition(
+      position,
+      duration: Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void setSliderHeight(BottomSheetSelectedUIType type) {
+    if (type == BottomSheetSelectedUIType.allEvent) {
+      setHeight(300);
+    } else if (type == BottomSheetSelectedUIType.eventList) {
+      setHeight(500);
+    } else {
+      setHeight(400);
     }
   }
 }
