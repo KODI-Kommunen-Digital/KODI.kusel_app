@@ -17,7 +17,14 @@ class DashBoardScreenProvider extends StateNotifier<DashboardScreenState> {
       : super(DashboardScreenState.empty());
 
   void onIndexChanged(int index) {
-    state = state.copyWith(selectedIndex: index);
+
+    bool canPop = false;
+    if(index==0)
+      {
+        canPop=true;
+      }
+    state = state.copyWith(selectedIndex: index,canPop: canPop);
   }
+
 
 }

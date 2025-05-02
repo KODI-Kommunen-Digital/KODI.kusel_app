@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/screens/all_event/all_event_screen_controller.dart';
+import 'package:kusel/screens/fliter_screen/filter_screen.dart';
 
 import '../../app_router.dart';
 import '../../common_widgets/arrow_back_widget.dart';
@@ -47,6 +48,37 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
           automaticallyImplyLeading: false,
           floating: true,
           pinned: false,
+          actions: [
+            GestureDetector(
+                onTap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(40.4)),
+                    ),
+                    builder: (context) => SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.80,
+                        child: FilterScreen()),
+                  );
+                },
+                child: Container(
+                  padding: EdgeInsets.all(10.r),
+                  decoration: BoxDecoration(
+                    color: Color(0xFF283583),
+                    borderRadius: BorderRadius.circular(50.r),
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.filter_alt_outlined,
+                      color: Colors.white,
+                      size: 15.w.h,
+                    ),
+                  ),
+                )
+            )
+          ],
           expandedHeight: MediaQuery.of(context).size.height * 0.15,
           flexibleSpace: FlexibleSpaceBar(
             background: ClipPath(
