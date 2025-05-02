@@ -37,6 +37,7 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
       minHeight: 200.h,
       maxHeight: 550.h,
       borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
+      controller: ref.read(locationScreenProvider).panelController,
       body: Stack(
         children: [
           FlutterMap(
