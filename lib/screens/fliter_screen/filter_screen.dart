@@ -97,7 +97,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
                     context: context,
                     enableLeadingIcon: true,
                     onTap: () {
-                      ref.read(allEventScreenProvider.notifier).applyFilter();
+                      //ref.read(allEventScreenProvider.notifier).applyFilter();
                     }),
               ],
             ),

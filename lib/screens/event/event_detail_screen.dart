@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -40,20 +41,22 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(eventDetailScreenProvider);
-    return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.onSecondary,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildClipperBackground(state),
-            _buildEventsUi(state),
-            FeedbackCardWidget(
-              onTap: (){
-                ref.read(navigationProvider).navigateUsingPath(
-                    path: feedbackScreenPath, context: context);
-              },
-            ),
-          ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.onSecondary,
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              _buildClipperBackground(state),
+              _buildEventsUi(state),
+              FeedbackCardWidget(
+                onTap: (){
+                  ref.read(navigationProvider).navigateUsingPath(
+                      path: feedbackScreenPath, context: context);
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -350,7 +353,8 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
             height: 270.h,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: NetworkImage(state.eventDetails.logo ?? ""),
+                image: CachedNetworkImageProvider(state.eventDetails.logo ?? "",
+                ),
                 fit: BoxFit.cover,
               ),
             ),
