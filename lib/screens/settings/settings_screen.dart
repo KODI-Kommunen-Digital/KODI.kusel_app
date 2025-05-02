@@ -81,6 +81,25 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               text: AppLocalizations.of(context).change_language),
           onTap: () => _showLanguageDialog(context),
         ),
+        Visibility(
+          visible: ref.watch(settingsScreenProvider).isLoggedIn,
+          child: Column(
+            children: [
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.favorite_border),
+                title: textBoldPoppins(
+                  text: AppLocalizations.of(context).favorites,
+                  textAlign: TextAlign.start,
+                ),
+                onTap: () async {
+                  ref.read(navigationProvider).navigateUsingPath(
+                      context: context, path: favoritesListScreenPath);
+                },
+              ),
+            ]
+          ),
+        ),
         const Divider(),
         Visibility(
           visible: ref.watch(settingsScreenProvider).isLoggedIn,
@@ -98,7 +117,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   });
                 },
               ),
-              const Divider()
             ],
           ),
         ),
@@ -113,20 +131,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             onTap: () async {
               ref.read(navigationProvider).removeCurrentAndNavigate(
                   context: context, path: signInScreenPath);
-            },
-          ),
-        ),
-        Visibility(
-          visible: ref.watch(settingsScreenProvider).isLoggedIn,
-          child: ListTile(
-            leading: const Icon(Icons.favorite_border),
-            title: textBoldPoppins(
-              text: AppLocalizations.of(context).favorites,
-              textAlign: TextAlign.start,
-            ),
-            onTap: () async {
-              ref.read(navigationProvider).navigateUsingPath(
-                  context: context, path: favoritesListScreenPath);
             },
           ),
         ),
