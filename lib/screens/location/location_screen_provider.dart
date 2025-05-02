@@ -27,14 +27,13 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
 
   Future<void> getAllEventList() async {
     try {
-      state = state.copyWith(isLoading: true);
       GetAllListingsRequestModel requestModel = GetAllListingsRequestModel();
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
 
+      state = state.copyWith(allEventList: []);
       final result = await listingsUseCase.call(requestModel, responseModel);
 
       result.fold((l) {
-        state = state.copyWith(isLoading: false);
         debugPrint("Get all event list fold exception = $l");
       }, (r) {
         final response = r as GetAllListingsResponseModel;
@@ -56,17 +55,15 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
               distinctFilterCategoryList: filterCategoryList);
         }
 
-        state = state.copyWith(isLoading: false);
       });
     } catch (error) {
-      state = state.copyWith(isLoading: false);
       debugPrint("Get all event list  exception = $error");
     }
   }
 
   Future<void> getAllEventListUsingCategoryId(String categoryId) async {
     try {
-      state = state.copyWith(isLoading: true);
+      state = state.copyWith(isSelectedFilterScreenLoading: true,allEventList: []);
       GetAllListingsRequestModel requestModel =
           GetAllListingsRequestModel(categoryId: categoryId);
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
@@ -74,14 +71,14 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
       final result = await listingsUseCase.call(requestModel, responseModel);
 
       result.fold((l) {
-        state = state.copyWith(isLoading: false);
+        state = state.copyWith(isSelectedFilterScreenLoading: false);
         debugPrint("Get all event list fold exception = $l");
       }, (r) {
         final response = r as GetAllListingsResponseModel;
-        state = state.copyWith(isLoading: false, allEventList: response.data);
+        state = state.copyWith(isSelectedFilterScreenLoading: false, allEventList: response.data);
       });
     } catch (error) {
-      state = state.copyWith(isLoading: false);
+      state = state.copyWith(isSelectedFilterScreenLoading: false);
       debugPrint("Get all event list  exception = $error");
     }
   }
@@ -112,8 +109,7 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
       if (item.id == event.id) list.add(item);
     });
 
-    state = state.copyWith(
-        isLoading: false, selectedEvent: event, allEventList: list);
+    state = state.copyWith(selectedEvent: event, allEventList: list);
   }
 
   Future<List<Listing>> searchList({
