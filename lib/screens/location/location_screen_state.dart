@@ -1,5 +1,6 @@
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:kusel/screens/location/bottom_sheet_screens/selected_event_screen.dart';
+import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import 'bottom_sheet_selected_ui_type.dart';
 
@@ -12,6 +13,8 @@ class LocationScreenState {
   int? selectedSubCategoryId;
   List<Listing> distinctFilterCategoryList;
   Listing? selectedEvent;
+  PanelController panelController;
+
 
   LocationScreenState(
     this.allEventList,
@@ -22,23 +25,28 @@ class LocationScreenState {
     this.selectedSubCategoryId,
     this.distinctFilterCategoryList,
     this.selectedEvent,
+    this.panelController,
   );
 
   factory LocationScreenState.empty() {
-    return LocationScreenState(
-        [], false, BottomSheetSelectedUIType.allEvent, null, null,null, [], null);
+    return LocationScreenState([], false, BottomSheetSelectedUIType.allEvent,
+        null, null, null, [], null, PanelController());
   }
 
-  LocationScreenState copyWith({
-    List<Listing>? allEventList,
-    bool? isLoading,
-    BottomSheetSelectedUIType? bottomSheetSelectedUIType,
-    int? selectedCategoryId,
-    String? selectedCategoryName,
-    int? selectedSubCategoryId,
-    Listing? selectedEvent,
-    List<Listing>? distinctFilterCategoryList,
-  }) {
+  LocationScreenState copyWith(
+      {List<Listing>? allEventList,
+      bool? isLoading,
+      BottomSheetSelectedUIType? bottomSheetSelectedUIType,
+      int? selectedCategoryId,
+      String? selectedCategoryName,
+      int? selectedSubCategoryId,
+      Listing? selectedEvent,
+      List<Listing>? distinctFilterCategoryList,
+      double? minHeight,
+      double? maxHeight,
+      double? openPosition,
+      PanelController? panelController,
+      }) {
     return LocationScreenState(
         allEventList ?? this.allEventList,
         isLoading ?? this.isLoading,
@@ -47,6 +55,8 @@ class LocationScreenState {
         selectedCategoryName ?? this.selectedCategoryName,
         selectedSubCategoryId ?? this.selectedSubCategoryId,
         distinctFilterCategoryList ?? this.distinctFilterCategoryList,
-        selectedEvent ?? this.selectedEvent);
+        selectedEvent ?? this.selectedEvent,
+        panelController ?? this.panelController,
+    );
   }
 }

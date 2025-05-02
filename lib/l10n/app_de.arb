@@ -106,5 +106,7 @@
   "title" : "Titel",
   "feedback": "Rückmeldung",
   "enter_title": "Titel eingeben",
-  "feedback_sent_successfully" : "Feedback erfolgreich gesendet"
+  "feedback_sent_successfully" : "Feedback erfolgreich gesendet",
+  "barrier_free": "Barrierefrei",
+  "dogs_allow": "Hunde erlaubt"
 }

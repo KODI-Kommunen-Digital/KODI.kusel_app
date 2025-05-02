@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../images_path.dart';
 import '../screens/event/event_detail_screen_controller.dart';
 import 'custom_shimmer_widget.dart';
@@ -130,9 +130,9 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
             padding: EdgeInsets.all(16.0),
             child: Row(
               children: [
-                iconTextWidget(imagePath['man_icon'] ?? '', "Barrierefrei", context),
+                iconTextWidget(imagePath['man_icon'] ?? '', AppLocalizations.of(context).barrier_free, context),
                 8.horizontalSpace,
-                iconTextWidget(imagePath['paw_icon'] ?? '', "Hunde erlaubt", context)
+                iconTextWidget(imagePath['paw_icon'] ?? '', AppLocalizations.of(context).dogs_allow, context)
               ],
             ),
           )
@@ -187,8 +187,7 @@ Widget _customMapWidget(
     ),
     children: [
       TileLayer(
-        urlTemplate: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        subdomains: ['a', 'b', 'c'],
+        urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
       ),
       MarkerLayer(
         markers: [
