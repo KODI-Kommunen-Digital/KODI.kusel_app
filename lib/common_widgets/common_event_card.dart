@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -49,12 +50,16 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
               // Image
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: Image.network(widget.imageUrl ,
-                    errorBuilder: (context, error, stackTrace) =>
-                        const Icon(Icons.broken_image, size: 80),
-                    width: 80,
-                    height: 80,
-                    fit: BoxFit.cover),
+                child: CachedNetworkImage(
+                  errorWidget: (context, error, stackTrace) =>
+                  const Icon(Icons.broken_image, size: 80),
+                  width: 80,
+                  height: 80,
+                  progressIndicatorBuilder: (context, value, _) {
+                    return Center(child: CircularProgressIndicator());
+                  },
+                  fit: BoxFit.cover,
+                  imageUrl: widget.imageUrl,),
               ),
               const SizedBox(width: 8),
 
@@ -64,12 +69,20 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     textRegularMontserrat(
-                        text: formatDate(widget.date), color: Theme.of(context).textTheme.labelMedium?.color),
+                        text: formatDate(widget.date), color: Theme
+                        .of(context)
+                        .textTheme
+                        .labelMedium
+                        ?.color),
                     const SizedBox(height: 4),
                     textSemiBoldMontserrat(text: widget.title),
                     const SizedBox(height: 2),
                     textRegularMontserrat(
-                        text: widget.location, color: Theme.of(context).textTheme.labelMedium?.color),
+                        text: widget.location, color: Theme
+                        .of(context)
+                        .textTheme
+                        .labelMedium
+                        ?.color),
                   ],
                 ),
               ),
@@ -77,7 +90,8 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                 visible: widget.isFavouriteVisible,
                 child: InkWell(
                   onTap: widget.onFavorite,
-                  child: Icon(widget.isFavorite ? Icons.favorite_sharp : Icons.favorite_border,
+                  child: Icon(widget.isFavorite ? Icons.favorite_sharp : Icons
+                      .favorite_border,
                     color: Colors.grey,
                   ),
                 ),
@@ -95,7 +109,7 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
       final DateFormat formatter = DateFormat('dd.MM.yyyy');
       return formatter.format(parsedDate);
     }
-    catch(e){
+    catch (e) {
       return inputDate;
     }
   }
@@ -107,10 +121,10 @@ Widget eventCartShimmerEffect() {
   return ListTile(
     leading: CustomShimmerWidget.circular(height: 60.h, width: 60.w),
     title: CustomShimmerWidget.rectangular(
-              height: 12.h,
-          ),
+      height: 12.h,
+    ),
     subtitle: CustomShimmerWidget.rectangular(
-              height: 12.h,
-          ),
+      height: 12.h,
+    ),
   );
 }

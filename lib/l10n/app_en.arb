@@ -104,5 +104,7 @@
   "title" : "Title",
   "feedback": "Feedback",
   "enter_title": "Enter Title",
-  "feedback_sent_successfully" : "Feedback sent successfully"
+  "feedback_sent_successfully" : "Feedback sent successfully",
+  "barrier_free": "Barrier-free",
+  "dogs_allow": "Dogs allowed"
 }
