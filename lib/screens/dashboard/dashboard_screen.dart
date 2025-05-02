@@ -91,14 +91,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                   DotNavigationBarItem(
                     icon: Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: SvgPicture.asset(
+                      padding: EdgeInsets.only(top: 3.h),
+                      child: SizedBox(
                         height: 13.h,
-                        width: 13.w,
-                        imagePath['discover_icon'] ?? "",
-                        color: selectedIndex == 1
-                            ? Theme.of(context).indicatorColor
-                            : Theme.of(context).canvasColor,
+                        width: 20.w,
+                        child: Center(
+                          child: SvgPicture.asset(
+                            height: 13.h,
+                            width: 13.w,
+                            imagePath['discover_icon'] ?? "",
+                            color: selectedIndex == 1
+                                ? Theme.of(context).indicatorColor
+                                : Theme.of(context).canvasColor,
+                          ),
+                        ),
                       ),
                     ),
                     selectedColor: Theme.of(context).indicatorColor,
@@ -108,13 +114,20 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                     selectedColor: Theme.of(context).indicatorColor,
                   ),
                   DotNavigationBarItem(
-                    icon: SvgPicture.asset(
-                      height: 15.h,
-                      width: 13.w,
-                      imagePath['location_icon'] ?? "",
-                      color: selectedIndex == 3
-                          ? Theme.of(context).indicatorColor
-                          : Theme.of(context).canvasColor,
+                    icon: Padding(
+                      padding: EdgeInsets.only(top: 3.h),
+                      child: SizedBox(
+                        height: 14.h,
+                        width: 20.w,
+                        child: SvgPicture.asset(
+                          height: 14.h,
+                          width: 13.w,
+                          imagePath['location_icon'] ?? "",
+                          color: selectedIndex == 3
+                              ? Theme.of(context).indicatorColor
+                              : Theme.of(context).canvasColor,
+                        ),
+                      ),
                     ),
                     selectedColor: Theme.of(context).indicatorColor,
                   ),
