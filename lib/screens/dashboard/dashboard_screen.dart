@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/category/category_screen.dart';
 import 'package:kusel/screens/search/search_screen.dart';
 
 import '../../images_path.dart';
-import '../../theme_manager/colors.dart';
 import '../home/home_screen.dart';
-import '../home/home_screen_provider.dart';
 import '../location/location_screen.dart';
 import '../settings/settings_screen.dart';
 import 'dashboard_screen_provider.dart';
@@ -22,7 +21,6 @@ class DashboardScreen extends ConsumerStatefulWidget {
 }
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
-
   final List<Widget> _pages = [
     HomeScreen(),
     CategoryScreen(),
@@ -33,80 +31,102 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
 
   @override
   void initState() {
-    Future.microtask(() {
-      ref.read(dashboardScreenProvider.notifier).onIndexChanged(0);
-    });
     super.initState();
+  }
+
+  Future<bool> _canExit() async {
+    int selectedIndex = ref.read(dashboardScreenProvider).selectedIndex;
+    if (selectedIndex != 0) {
+      ref.read(dashboardScreenProvider.notifier).onIndexChanged(0);
+      return false; // Don't exit the app
+    }
+    return true; // Exit the app
   }
 
   @override
   Widget build(BuildContext context) {
     int selectedIndex = ref.watch(dashboardScreenProvider).selectedIndex;
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          Positioned.fill(
-            child: _pages[selectedIndex],
-          ),
-          Positioned(
-            bottom: 16,
-            left: 16,
-            right: 16,
-            child: DotNavigationBar(
-              backgroundColor: Theme.of(context).colorScheme.secondary,
-              selectedItemColor: Theme.of(context).indicatorColor,
-              unselectedItemColor:  Theme.of(context).canvasColor,
-              currentIndex: selectedIndex,
-              enableFloatingNavBar: true,
-              paddingR: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-              marginR: const EdgeInsets.all(0),
-              onTap: ref.read(dashboardScreenProvider.notifier).onIndexChanged,
-              dotIndicatorColor: Theme.of(context).indicatorColor,
-              itemPadding:
-                  const EdgeInsets.only(top: 8, bottom: 0, left: 16, right: 16),
-              items: [
-                DotNavigationBarItem(
-                  icon: const Icon(Icons.home_filled),
-                  selectedColor: Theme.of(context).indicatorColor,
-                ),
-                DotNavigationBarItem(
-                  icon: Padding(
-                    padding: const EdgeInsets.only(top: 5.0),
-                    child: SvgPicture.asset(
-                      height: 13.h,
-                      width: 13.w,
-                      imagePath['discover_icon'] ?? "",
-                      color: selectedIndex == 1
-                          ? Theme.of(context).indicatorColor
-                          :  Theme.of(context).canvasColor,
-                    ),
-                  ),
-                  selectedColor: Theme.of(context).indicatorColor,
-                ),
-                DotNavigationBarItem(
-                  icon: const Icon(Icons.search),
-                  selectedColor: Theme.of(context).indicatorColor,
-                ),
-                DotNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    height: 15.h,
-                    width: 13.w,
-                    imagePath['location_icon'] ?? "",
-                    color: selectedIndex == 3
-                        ? Theme.of(context).indicatorColor
-                        :  Theme.of(context).canvasColor,
-                  ),
-                  selectedColor: Theme.of(context).indicatorColor,
-                ),
-                DotNavigationBarItem(
-                  icon: const Icon(Icons.menu),
-                  selectedColor: Theme.of(context).indicatorColor,
-                ),
-              ],
+    return PopScope(
+      canPop: ref.watch(dashboardScreenProvider).canPop,
+      onPopInvokedWithResult: (didPop, _) async {
+        if (!didPop) {
+          final res = await _canExit();
+
+          if (res) {
+            ref.read(navigationProvider).removeTopPage(context: context);
+          }
+        }
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Stack(
+          children: [
+            Positioned.fill(
+              child: IndexedStack(
+                index: selectedIndex,
+                children: _pages,
+              ),
             ),
-          ),
-        ],
+            Positioned(
+              bottom: 16,
+              left: 16,
+              right: 16,
+              child: DotNavigationBar(
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+                selectedItemColor: Theme.of(context).indicatorColor,
+                unselectedItemColor: Theme.of(context).canvasColor,
+                currentIndex: selectedIndex,
+                enableFloatingNavBar: true,
+                paddingR: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                marginR: const EdgeInsets.all(0),
+                onTap:
+                    ref.read(dashboardScreenProvider.notifier).onIndexChanged,
+                dotIndicatorColor: Theme.of(context).indicatorColor,
+                itemPadding: const EdgeInsets.only(
+                    top: 8, bottom: 0, left: 16, right: 16),
+                items: [
+                  DotNavigationBarItem(
+                    icon: const Icon(Icons.home_filled),
+                    selectedColor: Theme.of(context).indicatorColor,
+                  ),
+                  DotNavigationBarItem(
+                    icon: Padding(
+                      padding: const EdgeInsets.only(top: 5.0),
+                      child: SvgPicture.asset(
+                        height: 13.h,
+                        width: 13.w,
+                        imagePath['discover_icon'] ?? "",
+                        color: selectedIndex == 1
+                            ? Theme.of(context).indicatorColor
+                            : Theme.of(context).canvasColor,
+                      ),
+                    ),
+                    selectedColor: Theme.of(context).indicatorColor,
+                  ),
+                  DotNavigationBarItem(
+                    icon: const Icon(Icons.search),
+                    selectedColor: Theme.of(context).indicatorColor,
+                  ),
+                  DotNavigationBarItem(
+                    icon: SvgPicture.asset(
+                      height: 15.h,
+                      width: 13.w,
+                      imagePath['location_icon'] ?? "",
+                      color: selectedIndex == 3
+                          ? Theme.of(context).indicatorColor
+                          : Theme.of(context).canvasColor,
+                    ),
+                    selectedColor: Theme.of(context).indicatorColor,
+                  ),
+                  DotNavigationBarItem(
+                    icon: const Icon(Icons.menu),
+                    selectedColor: Theme.of(context).indicatorColor,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

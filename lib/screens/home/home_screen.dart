@@ -187,7 +187,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 onTap: () {
                                   ref
                                       .read(navigationProvider)
-                                      .removeAllAndNavigate(
+                                      .removeCurrentAndNavigate(
                                           context: context,
                                           path: signInScreenPath);
                                 },
@@ -461,7 +461,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
           ),
           10.verticalSpace,
-          SizedBox(
+          isLoading
+              ? highlightCardShimmerEffect()
+              :SizedBox(
             height: 350.h,
             child: PageView.builder(
               controller: PageController(
