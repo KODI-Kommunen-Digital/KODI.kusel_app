@@ -1,19 +1,18 @@
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/providers/favorites_list_notifier.dart';
 import 'package:kusel/screens/location/bottom_sheet_selected_ui_type.dart';
 import 'package:kusel/screens/location/location_screen_provider.dart';
 import 'package:kusel/screens/location/location_screen_state.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../../../app_router.dart';
+
 import '../../../common_widgets/common_event_card.dart';
 import '../../../common_widgets/search_widget.dart';
 import '../../../common_widgets/toast_message.dart';
-import '../../../navigation/navigation.dart';
-import '../../event/event_detail_screen_controller.dart';
 
 class SelectedFilterScreen extends ConsumerStatefulWidget {
   SelectedFilterScreenParams selectedFilterScreenParams;
@@ -40,7 +39,8 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).splashColor,
       body: _buildBody(context),
-    );
+    ).loaderDialog(context,
+        ref.watch(locationScreenProvider).isSelectedFilterScreenLoading);
   }
 
   _buildBody(BuildContext context) {
@@ -77,14 +77,12 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
           ],
         ),
         SearchWidget(
-          onItemClick: (listing){
-            ref
-                .read(locationScreenProvider.notifier)
-                .setEventItem(listing);
+          onItemClick: (listing) {
+            ref.read(locationScreenProvider.notifier).setEventItem(listing);
             ref
                 .read(locationScreenProvider.notifier)
                 .updateBottomSheetSelectedUIType(
-                BottomSheetSelectedUIType.eventDetail);
+                    BottomSheetSelectedUIType.eventDetail);
           },
           searchController: TextEditingController(),
           hintText: AppLocalizations.of(context).enter_search_term,
@@ -151,6 +149,7 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
             ],
           ),
         ),
+        60.verticalSpace,
       ],
     );
   }
