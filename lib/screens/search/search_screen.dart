@@ -142,6 +142,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                           path: eventScreenPath,
                           params: EventDetailScreenParams(eventId: listing.id)
                       );
+                      ref.read(searchScreenProvider.notifier).loadSavedListings();
                     },
                     searchController: TextEditingController(),
                     hintText: AppLocalizations.of(context).enter_search_term,
