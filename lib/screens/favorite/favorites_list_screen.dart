@@ -49,6 +49,7 @@ class _ExploreScreenState extends ConsumerState<FavoritesListScreen> {
     final FavoritesListScreenState categoryScreenState =
     ref.watch(favoritesListScreenProvider);
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.onSecondary,
       body: categoryScreenState.loading
           ? const Center(child: CircularProgressIndicator())
           : _buildBody(categoryScreenState, context),
