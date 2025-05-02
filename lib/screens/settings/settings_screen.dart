@@ -26,6 +26,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   void initState() {
     Future.microtask(() {
       ref.read(settingsScreenProvider.notifier).fetchCurrentLanguage();
+      ref.read(settingsScreenProvider.notifier).isLoggedIn();
     });
     super.initState();
   }
@@ -54,7 +55,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
         ),
         Visibility(
-          visible: ref.watch(settingsScreenProvider.notifier).isLoggedIn(),
+          visible: ref.watch(settingsScreenProvider).isLoggedIn,
           child: Column(
             children: [
               ListTile(
@@ -82,7 +83,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         ),
         const Divider(),
         Visibility(
-          visible: ref.watch(settingsScreenProvider.notifier).isLoggedIn(),
+          visible: ref.watch(settingsScreenProvider).isLoggedIn,
           child: Column(
             children: [
               ListTile(
@@ -102,7 +103,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
         ),
         Visibility(
-          visible: !ref.watch(settingsScreenProvider.notifier).isLoggedIn(),
+          visible: !ref.watch(settingsScreenProvider).isLoggedIn,
           child: ListTile(
             leading: const Icon(Icons.login),
             title: textBoldPoppins(
@@ -116,7 +117,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
         ),
         Visibility(
-          visible: ref.watch(settingsScreenProvider.notifier).isLoggedIn(),
+          visible: ref.watch(settingsScreenProvider).isLoggedIn,
           child: ListTile(
             leading: const Icon(Icons.favorite_border),
             title: textBoldPoppins(
