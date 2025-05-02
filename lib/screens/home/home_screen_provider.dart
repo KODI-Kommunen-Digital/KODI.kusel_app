@@ -127,7 +127,6 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
     required void Function(String message) error,
   }) async {
     try {
-      state = state.copyWith(loading: true, error: "");
       SearchRequestModel searchRequestModel =
           SearchRequestModel(searchQuery: searchText);
       SearchListingsResponseModel searchListingsResponseModel =
@@ -137,13 +136,11 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
           searchRequestModel, searchListingsResponseModel);
       return result.fold(
         (l) {
-          state = state.copyWith(loading: false);
           debugPrint('Exception = $l');
           error(l.toString());
           return <Listing>[];
         },
         (r) {
-          state = state.copyWith(loading: false);
           final listings = (r as SearchListingsResponseModel).data;
           debugPrint('>>>> returned = ${listings?.length}');
           success();
