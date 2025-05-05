@@ -3,15 +3,17 @@ import 'package:domain/model/response_model/listings_model/get_all_listings_resp
 class AllEventScreenState {
   List<Listing> listingList;
   bool isLoading;
+  int? filterCount;
 
-  AllEventScreenState(this.listingList, this.isLoading);
+  AllEventScreenState(this.listingList, this.isLoading, this.filterCount);
 
   factory AllEventScreenState.empty() {
-    return AllEventScreenState([], false);
+    return AllEventScreenState([], false, null);
   }
 
-  AllEventScreenState copyWith({List<Listing>? listingList, bool? isLoading}) {
-    return AllEventScreenState(
-        listingList ?? this.listingList, isLoading ?? this.isLoading);
+  AllEventScreenState copyWith(
+      {List<Listing>? listingList, bool? isLoading, int? filterCount}) {
+    return AllEventScreenState(listingList ?? this.listingList,
+        isLoading ?? this.isLoading, filterCount ?? this.filterCount);
   }
 }

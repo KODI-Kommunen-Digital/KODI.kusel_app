@@ -32,6 +32,7 @@ class SettingsScreenProvider extends StateNotifier<SettingsScreenState> {
   logoutUser(void Function() callBack) async {
     await sharedPreferenceHelper.clear();
     callBack();
+    isLoggedIn();
   }
 
   void fetchCurrentLanguage() {
@@ -63,8 +64,8 @@ class SettingsScreenProvider extends StateNotifier<SettingsScreenState> {
     localeManagerController.updateSelectedLocale(Locale(languageCode, region));
   }
 
-  bool isLoggedIn() {
+  void isLoggedIn() {
     final token = sharedPreferenceHelper.getString(tokenKey);
-    return token != null;
+    state = state.copyWith(isLoggedIn: token != null);
   }
 }

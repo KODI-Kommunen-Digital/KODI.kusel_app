@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/common_widgets/date_picker/date_picker_provider.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/screens/all_event/all_event_screen_controller.dart';
 import 'package:kusel/screens/fliter_screen/filter_screen.dart';
+import 'package:kusel/screens/fliter_screen/filter_screen_controller.dart';
 
 import '../../app_router.dart';
 import '../../common_widgets/arrow_back_widget.dart';
@@ -29,6 +31,8 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
   void initState() {
     Future.microtask(() {
       ref.read(allEventScreenProvider.notifier).getEventsList();
+      ref.read(filterScreenProvider.notifier).onReset();
+      ref.read(datePickerProvider.notifier).resetDates();
     });
     super.initState();
   }
@@ -48,37 +52,6 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
           automaticallyImplyLeading: false,
           floating: true,
           pinned: false,
-          actions: [
-            GestureDetector(
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(40.4)),
-                    ),
-                    builder: (context) => SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.80,
-                        child: FilterScreen()),
-                  );
-                },
-                child: Container(
-                  padding: EdgeInsets.all(10.r),
-                  decoration: BoxDecoration(
-                    color: Color(0xFF283583),
-                    borderRadius: BorderRadius.circular(50.r),
-                  ),
-                  child: Center(
-                    child: Icon(
-                      Icons.filter_alt_outlined,
-                      color: Colors.white,
-                      size: 15.w.h,
-                    ),
-                  ),
-                )
-            )
-          ],
           expandedHeight: MediaQuery.of(context).size.height * 0.15,
           flexibleSpace: FlexibleSpaceBar(
             background: ClipPath(
@@ -111,12 +84,110 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                   ),
                 ),
               ),
+              GestureDetector(
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.vertical(top: Radius.circular(20.r)),
+                      ),
+                      builder: (context) => SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.80,
+                          child: FilterScreen()),
+                    );
+                  },
+                  child: SizedBox(
+                    height: 30.h,
+                    width: 100.w,
+                    child: Stack(
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 10.r, vertical: 7.h),
+                          decoration: BoxDecoration(
+                            color: (ref
+                                            .watch(allEventScreenProvider)
+                                            .filterCount !=
+                                        null &&
+                                    ref
+                                            .watch(allEventScreenProvider)
+                                            .filterCount! >
+                                        0)
+                                ? Theme.of(context).canvasColor
+                                : Theme.of(context).primaryColor,
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: Row(
+                            children: [
+                              Center(
+                                child: Image.asset(
+                                    imagePath['filter_icon'] ?? '',
+                                    height: 14.h,
+                                    width: 20.w,
+                                    color: (ref
+                                                    .watch(
+                                                        allEventScreenProvider)
+                                                    .filterCount !=
+                                                null &&
+                                            ref
+                                                    .watch(
+                                                        allEventScreenProvider)
+                                                    .filterCount! >
+                                                0)
+                                        ? Theme.of(context).primaryColor
+                                        : Theme.of(context).canvasColor),
+                              ),
+                              4.horizontalSpace,
+                              textRegularPoppins(
+                                  text: "Filters",
+                                  fontSize: 12.sp,
+                                  color: (ref
+                                                  .watch(allEventScreenProvider)
+                                                  .filterCount !=
+                                              null &&
+                                          ref
+                                                  .watch(allEventScreenProvider)
+                                                  .filterCount! >
+                                              0)
+                                      ? Theme.of(context).primaryColor
+                                      : Theme.of(context).canvasColor),
+                            ],
+                          ),
+                        ),
+                        Visibility(
+                          visible: (ref
+                                      .watch(allEventScreenProvider)
+                                      .filterCount !=
+                                  null &&
+                              ref.watch(allEventScreenProvider).filterCount! >
+                                  0),
+                          child: Positioned(
+                            top: 4.h,
+                            left: 75.w,
+                            child: Container(
+                              padding: EdgeInsets.all(4.h.w),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Theme.of(context).primaryColor),
+                              child: textRegularPoppins(
+                                  color: Theme.of(context).canvasColor,
+                                  fontSize: 10.sp,
+                                  text: ref
+                                      .watch(allEventScreenProvider)
+                                      .filterCount
+                                      .toString()),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ))
             ],
           ),
           backgroundColor: Theme.of(context).cardColor.withValues(alpha: 0.6),
         ),
-
-        // If no events exist, show a message using a SliverFillRemaining
         ref.watch(allEventScreenProvider).listingList.isEmpty
             ? SliverFillRemaining(
                 child: Center(

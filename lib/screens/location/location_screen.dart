@@ -44,7 +44,7 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
             options: MapOptions(
               onTap: (tapPosition, LatLng latLong) {},
               initialCenter: LatLng(49.53838, 7.40647),
-              initialZoom: 13.0,
+              initialZoom: 14.0,
               interactionOptions: InteractionOptions(),
             ),
             children: [
@@ -80,9 +80,7 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
               )
             ],
           ),
-          if (ref.watch(locationScreenProvider).isLoading)
-            SizedBox().loaderDialog(
-                context, ref.read(locationScreenProvider).isLoading)
+
         ],
       ),
       panelBuilder: (controller) {
@@ -91,10 +89,17 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
           borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
           child: Container(
             color: Colors.transparent,
-            child: getBottomSheetUI(
-                ref.watch(locationScreenProvider).bottomSheetSelectedUIType),
+            child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 250),
+          transitionBuilder: (child, animation) => FadeTransition(
+            opacity: animation,
+            child: child,
           ),
-        );
+          child: getBottomSheetUI(
+            ref.watch(locationScreenProvider).bottomSheetSelectedUIType,
+          ),
+        ),
+        ));
       },
     );
   }
