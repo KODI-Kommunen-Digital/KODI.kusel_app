@@ -54,4 +54,40 @@ class AllEventScreenController extends StateNotifier<AllEventScreenState> {
     state = state.copyWith(
         listingList: state.listingList);
   }
+
+  Future<void> applyFilter({String? startAfterDate, String? endBeforeDate,
+    int? cityId, int? pageNumber, int? categoryId, int? filterCount}) async {
+    try {
+      state = state.copyWith(isLoading: true);
+
+      GetAllListingsRequestModel getAllListingsRequestModel = GetAllListingsRequestModel();
+      if (startAfterDate != null) getAllListingsRequestModel.startAfterDate = startAfterDate;
+      if (endBeforeDate != null) getAllListingsRequestModel.endBeforeDate = endBeforeDate;
+      if (cityId != null) getAllListingsRequestModel.cityId = cityId.toString();
+      if (pageNumber != null) getAllListingsRequestModel.pageNo = pageNumber;
+      if (categoryId != null) getAllListingsRequestModel.categoryId = categoryId.toString();
+      GetAllListingsResponseModel getAllListResponseModel =
+      GetAllListingsResponseModel();
+
+      final result = await listingsUseCase.call(
+          getAllListingsRequestModel, getAllListResponseModel);
+      result.fold(
+            (l) {
+          debugPrint("get filter event fold exception : $l");
+          state = state.copyWith(isLoading: false);
+        },
+            (r) {
+          var eventsList = (r as GetAllListingsResponseModel).data;
+          state = state.copyWith(listingList: eventsList, isLoading: false, filterCount: filterCount);
+        },
+      );
+    } catch (error) {
+      debugPrint("get filter event  exception : $error");
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  void onResetFilter() {
+    state = state.copyWith(filterCount: null);
+  }
 }
