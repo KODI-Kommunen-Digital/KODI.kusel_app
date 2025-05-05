@@ -103,8 +103,6 @@ class FilterScreenProvider extends StateNotifier<FilterScreenState> {
     }
 
     state = state.copyWith(startAfterDate: startAfterDate, endBeforeDate: endBeforeDate);
-
-    print("Start: ${state.startAfterDate}, End: ${state.endBeforeDate}");
   }
 
   void onSortByButtonTap(String buttonType) {
@@ -227,8 +225,9 @@ class FilterScreenProvider extends StateNotifier<FilterScreenState> {
 
   void onReset() {
     if(mounted){
-      state = FilterScreenState.empty();
-    }
+      state = FilterScreenState.empty().copyWith(
+        cityListItems: state.cityListItems,
+      );    }
   }
 }
 
