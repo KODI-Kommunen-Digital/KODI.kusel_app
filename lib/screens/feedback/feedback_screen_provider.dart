@@ -1,3 +1,5 @@
+import 'package:core/preference_manager/preference_constant.dart';
+import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:domain/model/request_model/feedback/feedback_request_model.dart';
 import 'package:domain/model/response_model/feedback/feedback_response_model.dart';
 import 'package:domain/usecase/feedback/feedback_usecase.dart';
@@ -8,27 +10,34 @@ import 'package:kusel/screens/feedback/feedback_screen_state.dart';
 final feedbackScreenProvider = StateNotifierProvider.autoDispose<
         FeedbackScreenProvider, FeedbackScreenState>(
     (ref) => FeedbackScreenProvider(
-        feedBackUseCase: ref.read(feedBackUseCaseProvider)));
+        feedBackUseCase: ref.read(feedBackUseCaseProvider),
+      sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider)
+    ));
 
 class FeedbackScreenProvider extends StateNotifier<FeedbackScreenState> {
   FeedBackUseCase feedBackUseCase;
+  SharedPreferenceHelper sharedPreferenceHelper;
 
   final TextEditingController titleEditingController = TextEditingController();
   final TextEditingController descriptionEditingController =
       TextEditingController();
+  final TextEditingController emailEditingController =
+  TextEditingController();
 
-  FeedbackScreenProvider({required this.feedBackUseCase})
+  FeedbackScreenProvider({required this.feedBackUseCase, required this.sharedPreferenceHelper})
       : super(FeedbackScreenState.empty());
 
   Future<void> sendFeedback(
       {required void Function() success,
-        required void Function(String msg) onError,
+      required void Function(String msg) onError,
+      required String email,
       required String title,
       required String description}) async {
     try {
+      String? language = sharedPreferenceHelper.getString(languageKey);
       state = state.copyWith(loading: true);
-      FeedBackRequestModel requestModel =
-          FeedBackRequestModel(title: title, description: description);
+      FeedBackRequestModel requestModel = FeedBackRequestModel(
+          userEmail: email, title: title, description: description, language: language ?? 'en');
       FeedBackResponseModel responseModel = FeedBackResponseModel();
       final r = await feedBackUseCase.call(requestModel, responseModel);
       r.fold((l) {
