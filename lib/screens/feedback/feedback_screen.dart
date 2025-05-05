@@ -34,12 +34,14 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
     final titleEditingController = stateNotifier.titleEditingController;
     final descriptionEditingController =
         stateNotifier.descriptionEditingController;
+    final emailEditingController = stateNotifier.emailEditingController;
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.onSecondary,
         body: SingleChildScrollView(
           child: _buildFeedbackUi(titleEditingController,
-              descriptionEditingController),
+              descriptionEditingController, emailEditingController),
         ),
       ).loaderDialog(context, stateWatch.loading),
     );
@@ -47,24 +49,43 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
 
   Widget _buildFeedbackUi(
       TextEditingController titleEditingController,
-      TextEditingController descriptionEditingController) {
+      TextEditingController descriptionEditingController,
+      TextEditingController emailEditingController) {
     return Column(
       children: [
         _buildClipperBackground(),
-        _buildForm(titleEditingController,
-            descriptionEditingController)
+        _buildForm(titleEditingController, descriptionEditingController,
+            emailEditingController)
       ],
     );
   }
 
-  Widget _buildForm(TextEditingController titleEditingController,
-      TextEditingController descriptionEditingController) {
+  Widget _buildForm(
+      TextEditingController titleEditingController,
+      TextEditingController descriptionEditingController,
+      TextEditingController emailEditingController) {
     return Form(
       key: feedbackFormKey,
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 20.w),
         child: Column(
           children: [
+            Align(
+                alignment: Alignment.centerLeft,
+                child: textRegularPoppins(
+                    text: AppLocalizations.of(context).email,
+                    color: Theme.of(context).textTheme.labelMedium?.color,
+                    fontWeight: FontWeight.w600)),
+            6.verticalSpace,
+            KuselTextField(
+              textEditingController: emailEditingController,
+              hintText: AppLocalizations.of(context).enter_email,
+              validator: (value) {
+                return validateField(
+                    value, AppLocalizations.of(context).enter_email);
+              },
+            ),
+            15.verticalSpace,
             Align(
                 alignment: Alignment.centerLeft,
                 child: textRegularPoppins(
@@ -88,9 +109,11 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                     color: Theme.of(context).textTheme.labelMedium?.color,
                     fontWeight: FontWeight.w600)),
             6.verticalSpace,
-            KuselTextField(textEditingController: descriptionEditingController,
+            KuselTextField(
+              textEditingController: descriptionEditingController,
               maxLines: 10,
-              contentPadding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 12.w),
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 15.h, horizontal: 12.w),
               hintText: AppLocalizations.of(context).enter_description,
               validator: (value) {
                 return validateField(
@@ -104,20 +127,22 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                     ref.read(feedbackScreenProvider.notifier).sendFeedback(
                         success: () {
                           showSuccessToast(
-                              message: AppLocalizations.of(context).feedback_sent_successfully,
+                              message: AppLocalizations.of(context)
+                                  .feedback_sent_successfully,
                               context: context);
                           titleEditingController.clear();
                           descriptionEditingController.clear();
-                          ref.read(navigationProvider).removeTopPage(context: context);
+                          ref
+                              .read(navigationProvider)
+                              .removeTopPage(context: context);
                         },
                         onError: (String msg) {
-                      showErrorToast(message: msg, context: context);
-                    },
-                      title: titleEditingController.text,
-                      description: descriptionEditingController.text
-                    );
+                          showErrorToast(message: msg, context: context);
+                        },
+                        title: titleEditingController.text,
+                        description: descriptionEditingController.text,
+                        email: emailEditingController.text);
                   }
-
                 },
                 text: AppLocalizations.of(context).submit),
           ],
