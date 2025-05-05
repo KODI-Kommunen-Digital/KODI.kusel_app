@@ -141,8 +141,7 @@ List<RouteBase> goRouteList = [
   GoRoute(
       path: feedbackScreenPath,
       builder: (context, state) {
-        return FeedbackScreen(
-        );
+        return FeedbackScreen();
       }),
   GoRoute(
       path: allEventScreenPath,

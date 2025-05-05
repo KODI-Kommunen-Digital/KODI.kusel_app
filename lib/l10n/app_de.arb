@@ -108,5 +108,19 @@
   "enter_title": "Titel eingeben",
   "feedback_sent_successfully" : "Feedback erfolgreich gesendet",
   "barrier_free": "Barrierefrei",
-  "dogs_allow": "Hunde erlaubt"
+  "dogs_allow": "Hunde erlaubt",
+  "today": "Heute",
+  "weekend": "Wochenende",
+  "next_7_days": "Nächste 7 Tage",
+  "next_30_days": "Nächste 30 Tage",
+  "define_period": "Zeitraum definieren",
+  "as_a_couple": "Zu zweit",
+  "with_children": "Mit Kindern",
+  "groups": "Gruppen",
+  "seniors": "Senioren",
+  "from": "Von",
+  "to": "Bis",
+  "select_start_date": "Startdatum auswählen",
+  "select_end_date": "Enddatum auswählen",
+  "please_select_start_and_end_date": "Bitte Start- und Enddatum auswählen"
 }
