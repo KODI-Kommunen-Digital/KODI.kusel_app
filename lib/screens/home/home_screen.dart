@@ -251,7 +251,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             FeedbackCardWidget(
               onTap: (){
                 ref.read(navigationProvider).navigateUsingPath(
-                    path: feedbackScreenPath, context: context);
+                    path: feedbackScreenPath, context: context
+                );
               },
             ),
             100.verticalSpace

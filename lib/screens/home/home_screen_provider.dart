@@ -173,7 +173,8 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
         final response = r as UserDetailResponseModel;
         await sharedPreferenceHelper.setString(
             userNameKey, response.data?.username ?? "");
-        state = state.copyWith(userName: response.data?.username ?? "");
+        state = state.copyWith(
+            userName: response.data?.firstname ?? "");
       });
     } catch (error) {
       debugPrint('get user details exception : $error');

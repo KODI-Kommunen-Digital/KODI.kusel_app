@@ -4,11 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:kusel/navigation/navigation.dart';
-import 'package:kusel/screens/all_event/all_event_screen_controller.dart';
 import 'package:kusel/screens/fliter_screen/filter_screen_controller.dart';
-
 import '../../common_widgets/custom_dropdown.dart';
 import '../../common_widgets/custom_toggle_button.dart';
+import '../../common_widgets/date_picker/date_picker_widget.dart';
+import '../all_event/all_event_screen_controller.dart';
 
 class FilterScreen extends ConsumerStatefulWidget {
   const FilterScreen({super.key});
@@ -18,134 +18,258 @@ class FilterScreen extends ConsumerStatefulWidget {
 }
 
 class _FilterScreenState extends ConsumerState<FilterScreen> {
+  DateTime? selectedDate;
+
+  @override
+  void initState() {
+    Future.microtask(() {
+      ref.read(filterScreenProvider.notifier).fetchCities();
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        body: SingleChildScrollView(child: _buildFilterScreenUi(context)),
-        backgroundColor: Theme.of(context).colorScheme.onSecondary,
-      ),
+      child: SingleChildScrollView(child: _buildFilterScreenUi(context)),
     );
   }
 
   Widget _buildFilterScreenUi(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 15.h),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              textRegularPoppins(
-                  text: AppLocalizations.of(context).settings,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(context).textTheme.labelLarge?.color),
-              GestureDetector(
-                onTap: ref.read(filterScreenProvider.notifier).onReset,
-                child: Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 14.w, vertical: 9.h),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30.r),
-                      border: Border.all(
-                          width: 1, color: Theme.of(context).primaryColor)),
-                  child: textRegularPoppins(
-                      text: AppLocalizations.of(context).reset,
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).textTheme.labelLarge?.color),
-                ),
-              )
-            ],
-          ),
-          16.verticalSpace,
-          _buildDropdownSection(),
-          13.verticalSpace,
-          Padding(
-            padding: EdgeInsets.only(left: 16.w),
-            child: textRegularPoppins(
-                text: AppLocalizations.of(context).perimeter,
-                fontWeight: FontWeight.w600,
-                fontSize: 12.sp,
-                color: Theme.of(context).primaryColor),
-          ),
-          8.verticalSpace,
-          _buildSlider(context, ref.watch(filterScreenProvider).sliderValue),
-          15.verticalSpace,
-          _buildSortBySection(),
-          12.verticalSpace,
-          _buildOptionsToggle(ref.watch(filterScreenProvider).toggleFiltersMap),
-          Padding(
-            padding: EdgeInsets.all(15.h.w),
-            child: Row(
+    final localization = AppLocalizations.of(context);
+
+    Map<IntervalType, String> timeIntervalMap = {
+      IntervalType.today: localization.today,
+      IntervalType.weekend: localization.weekend,
+      IntervalType.next7Days: localization.next_7_days,
+      IntervalType.next30Days: localization.next_30_days,
+      IntervalType.definePeriod: localization.define_period,
+    };
+
+    List<String> groupTypeList = [
+      localization.alone,
+      localization.as_a_couple,
+      localization.with_children,
+      localization.groups,
+      localization.seniors
+    ];
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.onSecondary,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20.r)),
+      ),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 15.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                textRegularPoppins(
+                    text: AppLocalizations.of(context).settings,
+                    fontSize: 16.sp,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).textTheme.labelLarge?.color),
                 GestureDetector(
-                  onTap: () {
-                    ref.read(navigationProvider).removeTopPage(context: context);
+                  onTap: (){
+                    ref.read(filterScreenProvider.notifier).onReset();
+                    ref.read(allEventScreenProvider.notifier).onResetFilter();
                   },
-                  child: textRegularPoppins(
-                      text: AppLocalizations.of(context).cancel,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 12.sp,
-                      color: Theme.of(context).primaryColor),
-                ),
-                _filterButton(
-                    text: AppLocalizations.of(context).apply,
-                    isEnabled: true,
-                    context: context,
-                    enableLeadingIcon: true,
-                    onTap: () {
-                      //ref.read(allEventScreenProvider.notifier).applyFilter();
-                    }),
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 14.w, vertical: 9.h),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30.r),
+                        border: Border.all(
+                            width: 1, color: Theme.of(context).primaryColor)),
+                    child: textRegularPoppins(
+                        text: AppLocalizations.of(context).reset,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).textTheme.labelLarge?.color),
+                  ),
+                )
               ],
             ),
-          )
-        ],
+            16.verticalSpace,
+            _buildDropdownSection(timeIntervalMap, groupTypeList),
+            13.verticalSpace,
+            Padding(
+              padding: EdgeInsets.only(left: 16.w),
+              child: textRegularPoppins(
+                  text: AppLocalizations.of(context).perimeter,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 12.sp,
+                  color: Theme.of(context).primaryColor),
+            ),
+            8.verticalSpace,
+            _buildSlider(context, ref.watch(filterScreenProvider).sliderValue),
+            15.verticalSpace,
+            _buildSortBySection(),
+            12.verticalSpace,
+            _buildOptionsToggle(
+                ref.watch(filterScreenProvider).toggleFiltersMap),
+            Padding(
+              padding: EdgeInsets.all(15.h.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      ref
+                          .read(navigationProvider)
+                          .removeTopPage(context: context);
+                    },
+                    child: textRegularPoppins(
+                        text: AppLocalizations.of(context).cancel,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12.sp,
+                        color: Theme.of(context).primaryColor),
+                  ),
+                  _filterButton(
+                      text: AppLocalizations.of(context).apply,
+                      isEnabled: true,
+                      context: context,
+                      enableLeadingIcon: true,
+                      onTap: () {
+                        final state = ref.read(filterScreenProvider);
+                        ref.read(allEventScreenProvider.notifier).applyFilter(
+                            startAfterDate: state.startAfterDate,
+                            endBeforeDate: state.endBeforeDate,
+                            cityId: state.cityId,
+                            filterCount: ref
+                                .read(filterScreenProvider.notifier)
+                                .appliedFilterCount());
+                        ref
+                            .read(navigationProvider)
+                            .removeTopPage(context: context);
+                      }),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
 
-  _buildDropdownSection() {
+  _buildDropdownSection(
+      Map<IntervalType, String> timeIntervalMap, List<String> groupTypeList) {
+    final state = ref.watch(filterScreenProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildLabel(context, AppLocalizations.of(context).period),
         CustomDropdown(
           hintText: "Select ${AppLocalizations.of(context).period}",
-          items: ref.read(filterScreenProvider).periodItems,
-          selectedItem: ref.watch(filterScreenProvider).periodValue,
+          items: timeIntervalMap.values.toList(),
+          selectedItem: state.periodValue ?? '',
           onSelected: (String? newValue) {
-            ref
-                .read(filterScreenProvider.notifier)
-                .onDropdownItemSelected(newValue ?? '', DropdownType.period);
+            ref.read(filterScreenProvider.notifier).onDropdownItemSelected(
+                newValue ?? '', DropdownType.period, timeIntervalMap, () {
+              showDialog(
+                context: context,
+                builder: (context) => customAlertDialog(),
+              );
+            });
           },
         ),
-        10.verticalSpace,
+        Visibility(
+            visible: (state.currentIntervalType == IntervalType.definePeriod) &&
+                (state.startAfterDate != null && state.endBeforeDate != null),
+            child: Column(
+              children: [
+                10.verticalSpace,
+                Padding(
+                  padding: EdgeInsets.only(left: 10.w),
+                  child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: textRegularPoppins(
+                        fontSize: 10.sp,
+                          text: AppLocalizations.of(context).from,
+                          color: Theme.of(context).primaryColor)),
+                ),
+                5.verticalSpace,
+                _buildDateSelectorButton(
+                  onDatePick: () {},
+                  isStartDate: true,
+                  displayText: state.startAfterDate ?? '',
+                ),
+                10.verticalSpace,
+                Padding(
+                  padding: EdgeInsets.only(left: 10.w),
+                  child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: textRegularPoppins(
+                          fontSize: 10.sp,
+                          text: AppLocalizations.of(context).to,
+                          color: Theme.of(context).primaryColor)),
+                ),
+                5.verticalSpace,
+                _buildDateSelectorButton(
+                  onDatePick: () {},
+                  isStartDate: false,
+                  displayText: state.endBeforeDate ?? '',
+                ),
+              ],
+            )),
+        15.verticalSpace,
         _buildLabel(context, AppLocalizations.of(context).target_group),
         CustomDropdown(
           hintText: "Select ${AppLocalizations.of(context).target_group}",
-          items: ref.read(filterScreenProvider).targetGroupItems,
-          selectedItem: ref.watch(filterScreenProvider).targetGroupValue,
+          items: groupTypeList,
+          selectedItem: ref.watch(filterScreenProvider).targetGroupValue ?? '',
           onSelected: (String? newValue) {
             ref.read(filterScreenProvider.notifier).onDropdownItemSelected(
-                newValue ?? '', DropdownType.targetGroup);
+                newValue ?? '', DropdownType.targetGroup, null, () {});
           },
         ),
         10.verticalSpace,
         _buildLabel(context, AppLocalizations.of(context).ort),
         CustomDropdown(
           hintText: "Select ${AppLocalizations.of(context).ort}",
-          selectedItem: ref.watch(filterScreenProvider).ortItemValue,
-          items: ref.read(filterScreenProvider).ortItems,
+          selectedItem: ref.watch(filterScreenProvider).ortItemValue ?? '',
+          items: ref.read(filterScreenProvider).cityListItems,
           onSelected: (String? newValue) {
-            ref
-                .read(filterScreenProvider.notifier)
-                .onDropdownItemSelected(newValue ?? '', DropdownType.ort);
+            ref.read(filterScreenProvider.notifier).onDropdownItemSelected(
+                newValue ?? '', DropdownType.ort, null, () {});
           },
         ),
       ],
+    );
+  }
+
+  Widget customAlertDialog() {
+    return AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      contentPadding: const EdgeInsets.all(16),
+      content: DatePickerWidget(),
+    );
+  }
+
+  Widget _buildDateSelectorButton({
+    required Function() onDatePick,
+    required bool isStartDate,
+    required String displayText,
+  }) {
+    return GestureDetector(
+      onTap: () async {
+        onDatePick();
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).canvasColor,
+          border: Border.all(color: Theme.of(context).dividerColor),
+          borderRadius: BorderRadius.circular(30.r),
+        ),
+        child: textRegularPoppins(
+            text: displayText,
+            textAlign: TextAlign.start,
+            color: Theme.of(context).textTheme.labelLarge?.color),
+      ),
     );
   }
 

@@ -2,16 +2,16 @@ import 'dart:convert';
 import 'package:core/base_model.dart';
 
 class GetAllListingsRequestModel extends BaseModel<GetAllListingsRequestModel> {
-  final int? pageNo;
+  int? pageNo;
   final int? pageSize;
   final bool? sortByStartDate;
   final String? statusId;
-  final String? categoryId;
+  String? categoryId;
   final String? subcategoryId;
-  final String? cityId;
+  String? cityId;
   final String? translate;
-  final String? startAfterDate;
-  final String? endBeforeDate;
+  String? startAfterDate;
+  String? endBeforeDate;
   final double? centerLatitude;
   final double? centerLongitude;
   final int? radius;
@@ -68,8 +68,8 @@ class GetAllListingsRequestModel extends BaseModel<GetAllListingsRequestModel> {
       'centerLongitude': centerLongitude,
       'radius': radius,
     };
-    data.removeWhere((key, value) =>
-    value == null || (value is String && value.isEmpty));
+    data.removeWhere(
+        (key, value) => value == null || (value is String && value.isEmpty));
     return data;
   }
 
