@@ -1,22 +1,29 @@
-import 'package:domain/model/response_model/event_details/event_details_response_model.dart';
 import 'package:domain/model/request_model/event_details/event_details_request_model.dart';
+import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
+import 'package:domain/model/response_model/event_details/event_details_response_model.dart';
+import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/usecase/event_details/event_details_usecase.dart';
+import 'package:domain/usecase/listings/listings_usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:kusel/screens/event/event_detail_screen_state.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 final eventDetailScreenProvider =
-    StateNotifierProvider<EventDetailScreenController, EventDetailScreenState>(
+    StateNotifierProvider.autoDispose<EventDetailScreenController, EventDetailScreenState>(
         (ref) => EventDetailScreenController(
               eventDetailsUseCase: ref.read(eventDetailsUseCaseProvider),
+              listingsUseCase: ref.read(listingsUseCaseProvider),
             ));
 
-class EventDetailScreenController extends StateNotifier<EventDetailScreenState> {
-  EventDetailScreenController({required this.eventDetailsUseCase})
+class EventDetailScreenController
+    extends StateNotifier<EventDetailScreenState> {
+  EventDetailScreenController(
+      {required this.eventDetailsUseCase, required this.listingsUseCase})
       : super(EventDetailScreenState.empty());
 
   EventDetailsUseCase eventDetailsUseCase;
+  ListingsUseCase listingsUseCase;
 
   Future<void> fetchAddress() async {
     String result = await getAddressFromLatLng(28.7041, 77.1025);
@@ -74,6 +81,66 @@ class EventDetailScreenController extends StateNotifier<EventDetailScreenState> 
     } else {
       throw 'Could not launch any map app or browser.';
     }
+  }
+
+  Future<void> getRecommendedList() async {
+    try {
+      GetAllListingsRequestModel getAllListingsRequestModel =
+          GetAllListingsRequestModel();
+      GetAllListingsResponseModel getAllListingsResponseModel =
+          GetAllListingsResponseModel();
+      final result = await listingsUseCase.call(
+          getAllListingsRequestModel, getAllListingsResponseModel);
+      result.fold(
+        (l) {
+          state = state.copyWith( error: l.toString());
+        },
+        (r) {
+          var listings = getSortedTop10Listings(
+              (r as GetAllListingsResponseModel).data ?? []);
+
+          final groupedEvents = <int, List<Listing>>{};
+
+          for (final event in listings ?? []) {
+            final categoryId = event.categoryId ?? 0;
+            if (!groupedEvents.containsKey(categoryId)) {
+              groupedEvents[categoryId] = [];
+            }
+            groupedEvents[categoryId]!.add(event);
+          }
+          state = state.copyWith(
+            groupedEvents: groupedEvents,
+            eventsList: listings,
+            loading: false,
+          );
+        },
+      );
+    } catch (error) {
+      state = state.copyWith( error: error.toString());
+    }
+  }
+
+  List<Listing> getSortedTop10Listings(List<Listing> listings) {
+    final now = DateTime.now();
+
+    final filteredListings = listings.where((listing) {
+      final startDate = listing.startDate != null
+          ? DateTime.tryParse(listing.startDate!)
+          : null;
+      return startDate != null && !startDate.isBefore(now);
+    }).toList();
+
+    filteredListings.sort((a, b) {
+      final aDate = DateTime.parse(a.startDate!);
+      final bDate = DateTime.parse(b.startDate!);
+      return aDate.compareTo(bDate);
+    });
+
+    return filteredListings.take(10).toList();
+  }
+
+  List<Listing> subList(List<Listing> list) {
+    return list.length > 3 ? list.sublist(0, 3) : list;
   }
 }
 

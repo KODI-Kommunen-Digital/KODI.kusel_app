@@ -41,7 +41,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ref.read(homeScreenProvider.notifier).getHighlights();
       ref.read(homeScreenProvider.notifier).getEvents();
       ref.read(homeScreenProvider.notifier).getNearbyEvents();
-      ref.read(signInStatusProvider.notifier).getLoginStatus();
+      ref.read(homeScreenProvider.notifier).getLoginStatus();
       ref.watch(homeScreenProvider.notifier).getWeather();
     });
     super.initState();
@@ -96,19 +96,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   right: 20.w,
                   child: Column(
                     children: [
-                      isLoading
-                          ? CustomShimmerWidget.rectangular(
-                              height: 20.h,
-                              width: 150.w,
-                              shapeBorder: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12.r)))
-                          : textBoldPoppins(
-                              fontSize: 20,
-                              color:
-                                  Theme.of(context).textTheme.labelLarge?.color,
-                              textAlign: TextAlign.center,
-                              text: ref.watch(homeScreenProvider).userName,
-                            ),
+                      Visibility(
+                          visible: !ref
+                              .read(homeScreenProvider)
+                              .isSignupButtonVisible,
+                          child: isLoading
+                              ? CustomShimmerWidget.rectangular(
+                                  height: 20.h,
+                                  width: 150.w,
+                                  shapeBorder: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(12.r)))
+                              : textBoldPoppins(
+                                  fontSize: 20,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .labelLarge
+                                      ?.color,
+                                  textAlign: TextAlign.center,
+                                  text: ref.watch(homeScreenProvider).userName,
+                                )),
                       isLoading ? 10.verticalSpace : 0.verticalSpace,
                       isLoading
                           ? CustomShimmerWidget.rectangular(
@@ -121,7 +128,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               color:
                                   Theme.of(context).textTheme.labelLarge?.color,
                               textAlign: TextAlign.center,
-                              text: "Heute wird's sonning!",
+                              text:
+                                  "${AppLocalizations.of(context).today_its_going_to_be} ${AppLocalizations.of(context).sunny}!",
                             ),
                       32.verticalSpace,
                       Column(
@@ -172,7 +180,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
                 Visibility(
                     visible:
-                        ref.watch(signInStatusProvider).isSignupButtonVisible,
+                        ref.watch(homeScreenProvider).isSignupButtonVisible,
                     child: Positioned(
                         left: 15.w,
                         right: 15.w,
@@ -510,7 +518,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       });
                     },
                     isVisible:
-                        !ref.read(signInStatusProvider).isSignupButtonVisible,
+                        !ref.watch(homeScreenProvider).isSignupButtonVisible,
                   ),
                 );
               },

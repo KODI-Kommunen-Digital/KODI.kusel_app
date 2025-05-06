@@ -1,12 +1,11 @@
 import 'dart:ui';
 
 import 'package:core/preference_manager/preference_constant.dart';
-import 'package:domain/model/request_model/edit_user_detail/edit_user_detail_request_model.dart';
-import 'package:domain/model/response_model/edit_user_detail/edit_user_detail_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/locale/locale_constant.dart';
 import 'package:kusel/locale/localization_manager.dart';
+import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/settings/settings_screen_state.dart';
 import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:domain/usecase/edit_user_detail/edit_user_detail_usecase.dart';
@@ -16,23 +15,28 @@ final settingsScreenProvider =
         SettingsScreenProvider(
             localeManagerController: ref.read(localeManagerProvider.notifier),
             sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
-            editUserDetailUseCase: ref.read(editUserDetailUseCaseProvider)));
+            editUserDetailUseCase: ref.read(editUserDetailUseCaseProvider),
+            homeScreenProvider: ref.read(homeScreenProvider.notifier)));
 
 class SettingsScreenProvider extends StateNotifier<SettingsScreenState> {
   LocaleManagerController localeManagerController;
   SharedPreferenceHelper sharedPreferenceHelper;
   EditUserDetailUseCase editUserDetailUseCase;
+  HomeScreenProvider homeScreenProvider;
 
   SettingsScreenProvider(
       {required this.localeManagerController,
       required this.sharedPreferenceHelper,
-      required this.editUserDetailUseCase})
+      required this.editUserDetailUseCase,
+      required this.homeScreenProvider
+      })
       : super(SettingsScreenState.empty());
 
   logoutUser(void Function() callBack) async {
     await sharedPreferenceHelper.clear();
     callBack();
     isLoggedIn();
+    homeScreenProvider.getLoginStatus();
   }
 
   void fetchCurrentLanguage() {

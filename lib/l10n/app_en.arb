@@ -120,5 +120,7 @@
   "to": "To",
   "select_start_date": "Select start date",
   "select_end_date": "Select end date",
-  "please_select_start_and_end_date": "Please select start and end date"
+  "please_select_start_and_end_date": "Please select start and end date",
+  "today_its_going_to_be" : "Today it's going to be",
+  "sunny" : "Sunny"
 }
