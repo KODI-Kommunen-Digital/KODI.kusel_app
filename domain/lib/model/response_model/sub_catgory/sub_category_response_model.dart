@@ -26,14 +26,18 @@ class SubCategoryData {
   final int? id;
   final String? name;
   final int? categoryId;
+  final String? image;
 
-  SubCategoryData({this.id, this.name, this.categoryId});
+  SubCategoryData({this.id, this.name, this.categoryId, this.image});
 
   factory SubCategoryData.fromJson(Map<String, dynamic> json) {
     return SubCategoryData(
       id: json['id'] as int?,
       name: json['name'] as String?,
       categoryId: json['categoryId'] as int?,
+      image: json['image'] != null
+          ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['image']}"
+          : null,
     );
   }
 }

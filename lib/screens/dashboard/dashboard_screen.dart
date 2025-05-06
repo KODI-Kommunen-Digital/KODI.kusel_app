@@ -62,10 +62,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
         body: Stack(
           children: [
             Positioned.fill(
-              child: IndexedStack(
-                index: selectedIndex,
-                children: _pages,
-              ),
+              child: _pages[selectedIndex],
             ),
             Positioned(
               bottom: 16,

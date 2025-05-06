@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,14 +31,17 @@ class _CommonEventCardState extends ConsumerState<CategoryGridCardView> {
       child: Column(
         children: [
           Container(
-            padding: EdgeInsets.only(top: 6.h,left: 6.w,right: 6.w),
+            padding: EdgeInsets.only(top: 6.h, left: 6.w, right: 6.w),
             height: 85.h,
             width: 180.w,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8.r),
-              child: Image.network(
-                widget.imageUrl,
-                errorBuilder: (context, error, stackTrace) =>
+              child: CachedNetworkImage(
+                progressIndicatorBuilder: (context, value, _) => Center(
+                  child: CircularProgressIndicator(),
+                ),
+                imageUrl: widget.imageUrl,
+                errorWidget: (context, error, stackTrace) =>
                     Icon(Icons.broken_image, size: 80.w.h),
                 fit: BoxFit.cover,
               ),
@@ -51,9 +55,9 @@ class _CommonEventCardState extends ConsumerState<CategoryGridCardView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding:  EdgeInsets.symmetric(horizontal: 8.w),
-                    child:
-                        textRegularMontserrat(text: widget.title, fontSize: 12.sp),
+                    padding: EdgeInsets.symmetric(horizontal: 8.w),
+                    child: textRegularMontserrat(
+                        text: widget.title, fontSize: 12.sp),
                   ),
                 ],
               ),

@@ -28,10 +28,11 @@ class GetInterestsResponseModel implements BaseModel<GetInterestsResponseModel> 
 class Interest {
   final int? id;
   final String? name;
+  final String? image;
   final int? available;
   final int? interestOrder;
 
-  Interest({this.id, this.name, this.available, this.interestOrder});
+  Interest({this.id, this.name, this.available, this.interestOrder, this.image});
 
   factory Interest.fromJson(Map<String, dynamic> json) {
     return Interest(
@@ -39,6 +40,9 @@ class Interest {
       name: json['name'] as String?,
       available: json['available'] as int?,
       interestOrder: json['interest_order'] as int?,
+      image: json['image'] != null
+          ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['image']}"
+          : null,
     );
   }
 
@@ -48,6 +52,7 @@ class Interest {
       'name': name,
       'available': available,
       'interest_order': interestOrder,
+      'image': image,
     };
   }
 }

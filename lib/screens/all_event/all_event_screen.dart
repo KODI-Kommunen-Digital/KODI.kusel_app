@@ -188,6 +188,9 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
           ),
           backgroundColor: Theme.of(context).cardColor.withValues(alpha: 0.6),
         ),
+
+        // If no events exist, show a message using a SliverFillRemaining
+        if(!ref.watch(allEventScreenProvider).isLoading)
         ref.watch(allEventScreenProvider).listingList.isEmpty
             ? SliverFillRemaining(
                 child: Center(
