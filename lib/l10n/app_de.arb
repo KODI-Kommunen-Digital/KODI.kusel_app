@@ -122,5 +122,7 @@
   "to": "Bis",
   "select_start_date": "Startdatum auswählen",
   "select_end_date": "Enddatum auswählen",
-  "please_select_start_and_end_date": "Bitte Start- und Enddatum auswählen"
+  "please_select_start_and_end_date": "Bitte Start- und Enddatum auswählen",
+  "today_its_going_to_be" : "Heute wird's",
+  "sunny" : "sonning"
 }

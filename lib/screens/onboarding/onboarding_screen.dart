@@ -112,6 +112,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     stateNotifier.updateErrorMsgStatus(true);
                   } else {
                     stateNotifier.updateErrorMsgStatus(false);
+                    stateNotifier.submitUserType();
                     stateNotifier.fetchCities();
                     stateNotifier.nextPage();
                   }
@@ -121,10 +122,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     stateNotifier.updateErrorMsgStatus(true);
                   } else {
                     stateNotifier.updateErrorMsgStatus(false);
+                    stateNotifier.submitUserDemographics();
                     stateNotifier.nextPage();
                   }
                   break;
                 case 4:
+                  stateNotifier.submitUserInterests();
                   ref.read(navigationProvider).navigateUsingPath(
                         path: onboardingLoadingPagePath,
                         context: context,

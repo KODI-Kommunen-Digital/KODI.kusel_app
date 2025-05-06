@@ -2,7 +2,7 @@ import 'package:core/base_model.dart';
 
 class OnboardingCompleteResponseModel
     extends BaseModel<OnboardingCompleteResponseModel> {
-  final String? success;
+  final bool? success;
   final String? message;
 
   OnboardingCompleteResponseModel({this.success, this.message});
@@ -10,7 +10,7 @@ class OnboardingCompleteResponseModel
   @override
   OnboardingCompleteResponseModel fromJson(Map<String, dynamic> json) {
     return OnboardingCompleteResponseModel(
-      success: json['success'] as String?,
+      success: json['success'],
       message: json['message'] as String?,
     );
   }
