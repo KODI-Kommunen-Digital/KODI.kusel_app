@@ -2,10 +2,14 @@ import 'dart:io';
 
 import 'package:core/preference_manager/preference_constant.dart';
 import 'package:core/preference_manager/shared_pref_helper.dart';
+import 'package:core/token_status.dart';
 import 'package:domain/model/request_model/edit_user_detail/edit_user_detail_request_model.dart';
+import 'package:domain/model/request_model/refresh_token/refresh_token_request_model.dart';
 import 'package:domain/model/request_model/user_detail/user_detail_request_model.dart';
 import 'package:domain/model/response_model/edit_user_detail/edit_user_detail_response_model.dart';
+import 'package:domain/model/response_model/refresh_token/refresh_token_response_model.dart';
 import 'package:domain/model/response_model/user_detail/user_detail_response_model.dart';
+import 'package:domain/usecase/refresh_token/refresh_token_usecase.dart';
 import 'package:domain/usecase/user_detail/user_detail_usecase.dart';
 import 'package:domain/usecase/edit_user_detail/edit_user_detail_usecase.dart';
 import 'package:domain/model/response_model/edit_user_detail/edit_user_image_response_model.dart';
@@ -24,19 +28,27 @@ final profileScreenProvider =
             sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
             userDetailUseCase: ref.read(userDetailUseCaseProvider),
             editUserDetailUseCase: ref.read(editUserDetailUseCaseProvider),
-            editUserImageUseCase: ref.read(editUserImageUseCaseProvider)));
+            editUserImageUseCase: ref.read(editUserImageUseCaseProvider),
+          tokenStatus: ref.read(tokenStatusProvider),
+          refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider)
+        ));
 
 class ProfileScreenController extends StateNotifier<ProfileScreenState> {
   SharedPreferenceHelper sharedPreferenceHelper;
   UserDetailUseCase userDetailUseCase;
   EditUserDetailUseCase editUserDetailUseCase;
   EditUserImageUseCase editUserImageUseCase;
+  TokenStatus tokenStatus;
+  RefreshTokenUseCase refreshTokenUseCase;
 
   ProfileScreenController(
       {required this.sharedPreferenceHelper,
       required this.userDetailUseCase,
       required this.editUserDetailUseCase,
-      required this.editUserImageUseCase})
+      required this.editUserImageUseCase,
+      required this.tokenStatus,
+      required this.refreshTokenUseCase
+      })
       : super(ProfileScreenState.empty());
   TextEditingController nameEditingController = TextEditingController();
   TextEditingController userNameEditingController = TextEditingController();
@@ -59,22 +71,59 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
   Future<void> getUserDetails() async {
     try {
       state = state.copyWith(loading: true);
-      final userId = sharedPreferenceHelper.getInt(userIdKey);
+      final response = tokenStatus.isAccessTokenExpired();
 
-      UserDetailRequestModel requestModel = UserDetailRequestModel(id: userId);
-      UserDetailResponseModel responseModel = UserDetailResponseModel();
-      final result = await userDetailUseCase.call(requestModel, responseModel);
+      if (response) {
+        final userId = sharedPreferenceHelper.getInt(userIdKey);
+        RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
+        RefreshTokenRequestModel requestModel =
+            RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+        final result =
+            await refreshTokenUseCase.call(requestModel, responseModel);
 
-      result.fold((l) {
-        debugPrint('get user details fold exception : $l');
-      }, (r) async {
-        final response = r as UserDetailResponseModel;
-        await sharedPreferenceHelper.setString(
-            userNameKey, response.data?.username ?? "");
-        state = state.copyWith(
-            loading: false, userData: response.data, editingEnabled: false);
-        initializeTextEditController();
-      });
+        result.fold((l) {
+          state = state.copyWith(loading: false);
+        }, (r) async {
+          final res = r as RefreshTokenResponseModel;
+          sharedPreferenceHelper.setString(
+              tokenKey, res.data?.accessToken ?? "");
+          sharedPreferenceHelper.setString(
+              refreshTokenKey, res.data?.refreshToken ?? "");
+
+          UserDetailRequestModel requestModel = UserDetailRequestModel(
+              id: sharedPreferenceHelper.getInt(userIdKey));
+          UserDetailResponseModel responseModel = UserDetailResponseModel();
+          final result =
+              await userDetailUseCase.call(requestModel, responseModel);
+          result.fold((l) {
+            debugPrint('get user details fold exception : $l');
+          }, (r) async {
+            final response = r as UserDetailResponseModel;
+            await sharedPreferenceHelper.setString(
+                userNameKey, response.data?.username ?? "");
+            state = state.copyWith(
+                loading: false, userData: response.data, editingEnabled: false);
+            initializeTextEditController();
+          });
+        });
+      } else {
+        UserDetailRequestModel requestModel = UserDetailRequestModel(
+            id: sharedPreferenceHelper.getInt(userIdKey));
+        UserDetailResponseModel responseModel = UserDetailResponseModel();
+        final result =
+            await userDetailUseCase.call(requestModel, responseModel);
+
+        result.fold((l) {
+          debugPrint('get user details fold exception : $l');
+        }, (r) async {
+          final response = r as UserDetailResponseModel;
+          await sharedPreferenceHelper.setString(
+              userNameKey, response.data?.username ?? "");
+          state = state.copyWith(
+              loading: false, userData: response.data, editingEnabled: false);
+          initializeTextEditController();
+        });
+      }
     } catch (error) {
       debugPrint('get user details exception : $error');
       state = state.copyWith(loading: false);

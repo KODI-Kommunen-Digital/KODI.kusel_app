@@ -13,9 +13,11 @@ import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/event/event_detail_screen_state.dart';
 
 import '../../common_widgets/arrow_back_widget.dart' show ArrowBackWidget;
+import '../../common_widgets/common_event_card.dart';
 import '../../common_widgets/location_card_widget.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
+import '../home/home_screen_provider.dart';
 
 class EventDetailScreen extends ConsumerStatefulWidget {
   final EventDetailScreenParams eventScreenParams;
@@ -34,6 +36,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
       ref
           .read(eventDetailScreenProvider.notifier)
           .getEventDetails(widget.eventScreenParams.eventId);
+      ref.read(eventDetailScreenProvider.notifier).getRecommendedList();
     });
     super.initState();
   }
@@ -41,22 +44,21 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(eventDetailScreenProvider);
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.onSecondary,
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              _buildClipperBackground(state),
-              _buildEventsUi(state),
-              FeedbackCardWidget(
-                onTap: (){
-                  ref.read(navigationProvider).navigateUsingPath(
-                      path: feedbackScreenPath, context: context);
-                },
-              ),
-            ],
-          ),
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.onSecondary,
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _buildClipperBackground(state),
+            _buildEventsUi(state),
+            _buildRecommendation(context),
+            FeedbackCardWidget(
+              onTap: () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: feedbackScreenPath, context: context);
+              },
+            ),
+          ],
         ),
       ),
     );
@@ -345,32 +347,37 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
   }
 
   Widget _buildClipperBackground(EventDetailScreenState state) {
-    return state.loading ? _buildClipperBackgroundShimmer() : Stack(
-      children: [
-        ClipPath(
-          clipper: DownstreamCurveClipper(),
-          child: Container(
-            height: 270.h,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: CachedNetworkImageProvider(state.eventDetails.logo ?? "",
+    return state.loading
+        ? _buildClipperBackgroundShimmer()
+        : Stack(
+            children: [
+              ClipPath(
+                clipper: DownstreamCurveClipper(),
+                child: Container(
+                  height: 270.h,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: CachedNetworkImageProvider(
+                        state.eventDetails.logo ?? "",
+                      ),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-                fit: BoxFit.cover,
               ),
-            ),
-          ),
-        ),
-        Positioned(
-          top: 30.h,
-          left: 15.w,
-          child: ArrowBackWidget(
-            onTap: () {
-              ref.read(navigationProvider).removeTopPage(context: context);
-            },
-          ),
-        ),
-      ],
-    );
+              Positioned(
+                top: 30.h,
+                left: 15.w,
+                child: ArrowBackWidget(
+                  onTap: () {
+                    ref
+                        .read(navigationProvider)
+                        .removeTopPage(context: context);
+                  },
+                ),
+              ),
+            ],
+          );
   }
 
   Widget _buildClipperBackgroundShimmer() {
@@ -382,5 +389,63 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
         ),
       ],
     );
+  }
+
+  _buildRecommendation(BuildContext context) {
+    return Consumer(builder: (context, ref, _) {
+      final eventDetailController =
+          ref.read(eventDetailScreenProvider.notifier);
+      final state = ref.watch(eventDetailScreenProvider);
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.only(left: 16.w),
+            child: textBoldPoppins(
+                text: AppLocalizations.of(context).recommendation,
+                fontSize: 16.sp,
+                color: Theme.of(context).textTheme.labelLarge?.color),
+          ),
+          state.groupedEvents.isEmpty
+              ? Center(
+                  child: textHeadingMontserrat(
+                      text: AppLocalizations.of(context).no_data, fontSize: 14),
+                )
+              : ListView(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  children: state.groupedEvents.entries.expand((entry) {
+                    final categoryId = entry.key;
+                    final items = eventDetailController.subList(entry.value);
+
+                    return [
+                      ...items.map((item) {
+                        return CommonEventCard(
+                          isFavorite: item.isFavorite ?? false,
+                          imageUrl: item.logo ?? "",
+                          date: item.startDate ?? "",
+                          title: item.title ?? "",
+                          location: item.address ?? "",
+                          onTap: () {
+                            ref.read(navigationProvider).navigateUsingPath(
+                                  context: context,
+                                  path: eventScreenPath,
+                                  params:
+                                      EventDetailScreenParams(eventId: item.id),
+                                );
+                          },
+                          isFavouriteVisible: !ref
+                              .watch(homeScreenProvider)
+                              .isSignupButtonVisible,
+                        );
+                      }),
+                    ];
+                  }).toList(),
+                ),
+          16.verticalSpace
+        ],
+      );
+    });
   }
 }
