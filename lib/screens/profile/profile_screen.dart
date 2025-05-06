@@ -47,7 +47,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       child: Column(
         children: [
           _buildClipperBackground(),
-          30.verticalSpace,
+          10.verticalSpace,
           _buildProfileDetailsList(state.userData),
           25.verticalSpace,
           Visibility(
@@ -294,8 +294,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             width: 1.w,
                             color: Theme.of(context).colorScheme.surface)
                         : null),
-                height: 30,
-                width: 200.w,
+                height: 26.h,
+                width: 250.w,
                 child: Center(
                   child: TextField(
                     controller: textEditingController,
