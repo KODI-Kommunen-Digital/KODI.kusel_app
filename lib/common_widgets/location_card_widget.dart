@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,7 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 import '../images_path.dart';
 import '../screens/event/event_detail_screen_controller.dart';
 import 'custom_shimmer_widget.dart';
@@ -18,21 +19,19 @@ class LocationCardWidget extends ConsumerStatefulWidget {
   final double latitude;
   final double longitude;
 
-  const LocationCardWidget({
-    super.key,
-    required this.address,
-    required this.websiteText,
-    required this.websiteUrl,
-    required this.latitude,
-    required this.longitude
-  });
+  const LocationCardWidget(
+      {super.key,
+      required this.address,
+      required this.websiteText,
+      required this.websiteUrl,
+      required this.latitude,
+      required this.longitude});
 
   @override
   ConsumerState<LocationCardWidget> createState() => _LocationCardWidgetState();
 }
 
 class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -79,8 +78,7 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
                       .read(eventDetailScreenProvider.notifier)
                       .openInMaps(widget.latitude, widget.longitude);
                 },
-                context : context
-            ),
+                context: context),
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16),
@@ -130,9 +128,11 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
             padding: EdgeInsets.all(16.0),
             child: Row(
               children: [
-                iconTextWidget(imagePath['man_icon'] ?? '', AppLocalizations.of(context).barrier_free, context),
+                iconTextWidget(imagePath['man_icon'] ?? '',
+                    AppLocalizations.of(context).barrier_free, context),
                 8.horizontalSpace,
-                iconTextWidget(imagePath['paw_icon'] ?? '', AppLocalizations.of(context).dogs_allow, context)
+                iconTextWidget(imagePath['paw_icon'] ?? '',
+                    AppLocalizations.of(context).dogs_allow, context)
               ],
             ),
           )
@@ -174,33 +174,35 @@ Widget _customMapWidget(
     {required double latitude,
     required double longitude,
     required Function() onMapTap,
-    required BuildContext context
-    }) {
-  return FlutterMap(
-    options: MapOptions(
-      onTap: (tapPosition, LatLng latLong) {
-        onMapTap();
-      },
-      initialCenter: LatLng(latitude, longitude),
-      initialZoom: 13.0,
-      interactionOptions: InteractionOptions(),
-    ),
-    children: [
-      TileLayer(
-        urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    required BuildContext context}) {
+  return Consumer(builder: (context, ref, _) {
+    return FlutterMap(
+      options: MapOptions(
+        onTap: (tapPosition, LatLng latLong) {
+          onMapTap();
+        },
+        initialCenter: LatLng(latitude, longitude),
+        initialZoom: 13.0,
+        interactionOptions: InteractionOptions(),
       ),
-      MarkerLayer(
-        markers: [
-          Marker(
-            width: 35.w,
-            height: 35.h,
-            point: LatLng(latitude, longitude),
-            child: Icon(Icons.location_pin, color: Theme.of(context).colorScheme.onTertiaryFixed),
-          ),
-        ],
-      ),
-    ],
-  );
+      children: [
+        TileLayer(
+          urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+        ),
+        MarkerLayer(
+          markers: [
+            Marker(
+              width: 35.w,
+              height: 35.h,
+              point: LatLng(latitude, longitude),
+              child: Icon(Icons.location_pin,
+                  color: Theme.of(context).colorScheme.onTertiaryFixed),
+            ),
+          ],
+        )
+      ],
+    );
+  });
 }
 
 Widget locationCardShimmerEffect(BuildContext context) {
@@ -211,13 +213,13 @@ Widget locationCardShimmerEffect(BuildContext context) {
       CustomShimmerWidget.rectangular(
         height: 20.h,
         shapeBorder:
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
       ),
       15.verticalSpace,
       CustomShimmerWidget.rectangular(
         height: 106.h,
         shapeBorder:
-        RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.r)),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.r)),
       ),
       12.verticalSpace,
       Align(
@@ -226,7 +228,7 @@ Widget locationCardShimmerEffect(BuildContext context) {
           height: 15.h,
           width: 150.w,
           shapeBorder:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
         ),
       ),
       10.verticalSpace,
@@ -236,7 +238,7 @@ Widget locationCardShimmerEffect(BuildContext context) {
           height: 15.h,
           width: 150.w,
           shapeBorder:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
         ),
       ),
       16.verticalSpace,
@@ -246,7 +248,7 @@ Widget locationCardShimmerEffect(BuildContext context) {
           height: 20.h,
           width: 200.w,
           shapeBorder:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
         ),
       ),
       20.verticalSpace,
@@ -254,16 +256,16 @@ Widget locationCardShimmerEffect(BuildContext context) {
         children: [
           CustomShimmerWidget.rectangular(
             height: 25.h,
-            width: MediaQuery.of(context).size.width/2 -20.w,
-            shapeBorder:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+            width: MediaQuery.of(context).size.width / 2 - 20.w,
+            shapeBorder: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.r)),
           ),
           5.horizontalSpace,
           CustomShimmerWidget.rectangular(
             height: 25.h,
-            width: MediaQuery.of(context).size.width/2 -20.w,
-            shapeBorder:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+            width: MediaQuery.of(context).size.width / 2 - 20.w,
+            shapeBorder: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.r)),
           ),
         ],
       ),
