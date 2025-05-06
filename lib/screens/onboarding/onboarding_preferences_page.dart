@@ -70,8 +70,7 @@ class _OnBoardingPreferencesPageState extends ConsumerState<OnBoardingPreference
               stateNotifier.updateInterestMap(interest.id);
             },
             child: InterestsGridCardView(
-              imageUrl:
-              "https://fastly.picsum.photos/id/452/200/200.jpg?hmac=f5vORXpRW2GF7jaYrCkzX3EwDowO7OXgUaVYM2NNRXY",
+              imageUrl: interest.image ?? "",
               title: interest.name ?? '',
               isSelected: isSelected,
             ),

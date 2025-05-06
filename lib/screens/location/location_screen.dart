@@ -1,4 +1,3 @@
-import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,7 +21,6 @@ class LocationScreen extends ConsumerStatefulWidget {
 }
 
 class _ExploreScreenState extends ConsumerState<LocationScreen> {
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -56,20 +54,26 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
                     ref.watch(locationScreenProvider).allEventList.map((value) {
                   final lat = value.lat;
                   final long = value.long;
+                  final categoryId = value.categoryId;
+                  final categoryName = value.categoryName;
 
                   return Marker(
                     width: 35.w,
                     height: 35.h,
                     point: LatLng(lat!, long!),
                     child: InkWell(
-                      onTap: (){
+                      onTap: () {
                         ref
                             .read(locationScreenProvider.notifier)
                             .setEventItem(value);
+
+                        ref
+                            .read(locationScreenProvider.notifier)
+                            .updateCategoryId(categoryId, categoryName);
                         ref
                             .read(locationScreenProvider.notifier)
                             .updateBottomSheetSelectedUIType(
-                            BottomSheetSelectedUIType.eventDetail);
+                                BottomSheetSelectedUIType.eventDetail);
                       },
                       child: Icon(Icons.location_pin,
                           size: 40.w,
@@ -104,12 +108,17 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
     );
   }
 
-  getBottomSheetUI(BottomSheetSelectedUIType type,) {
+  getBottomSheetUI(
+    BottomSheetSelectedUIType type,
+  ) {
     late Widget widget;
     LocationScreenState locationScreenState = ref.watch(locationScreenProvider);
     switch (type) {
       case BottomSheetSelectedUIType.eventList:
-        widget = SelectedFilterScreen(selectedFilterScreenParams: SelectedFilterScreenParams(categoryId: locationScreenState.selectedCategoryId ?? 0),);
+        widget = SelectedFilterScreen(
+          selectedFilterScreenParams: SelectedFilterScreenParams(
+              categoryId: locationScreenState.selectedCategoryId ?? 0),
+        );
         break;
       case BottomSheetSelectedUIType.eventDetail:
         widget = SelectedEventScreen();
