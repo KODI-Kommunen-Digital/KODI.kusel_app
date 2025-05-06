@@ -6,6 +6,7 @@ import 'package:domain/usecase/listings/listings_usecase.dart';
 import 'package:domain/usecase/search/search_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/screens/location/bottom_sheet_selected_ui_type.dart';
 
 import 'location_screen_state.dart';
@@ -105,9 +106,9 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
 
   void setEventItem(Listing event) {
     List<Listing> list = [];
-    state.allEventList.forEach((item) {
+    for (var item in state.allEventList) {
       if (item.id == event.id) list.add(item);
-    });
+    }
 
     state = state.copyWith(selectedEvent: event, allEventList: list);
   }
@@ -146,10 +147,10 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
   }
 
   void setHeight(double desiredHeight) {
-    final maxHeight = 550;
-    final position = desiredHeight / maxHeight;
+    final maxHeight = 550.h;
+    final position = desiredHeight.h / maxHeight;
 
-    state.panelController?.animatePanelToPosition(
+    state.panelController.animatePanelToPosition(
       position,
       duration: Duration(milliseconds: 300),
       curve: Curves.easeInOut,
@@ -163,6 +164,13 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
       setHeight(500);
     } else {
       setHeight(400);
+    }
+  }
+
+  updateCategoryId(int? categoryId, String? categoryName) {
+    if (categoryId != null && categoryName!=null) {
+      state = state.copyWith(selectedCategoryId: categoryId,
+      selectedCategoryName: categoryName);
     }
   }
 }
