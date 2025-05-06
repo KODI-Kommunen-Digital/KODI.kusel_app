@@ -19,7 +19,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'home_screen_state.dart';
 
 final homeScreenProvider =
-    StateNotifierProvider.autoDispose<HomeScreenProvider, HomeScreenState>(
+    StateNotifierProvider<HomeScreenProvider, HomeScreenState>(
         (ref) => HomeScreenProvider(
               listingsUseCase: ref.read(listingsUseCaseProvider),
               searchUseCase: ref.read(searchUseCaseProvider),
