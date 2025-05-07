@@ -42,7 +42,7 @@ class SignInController extends StateNotifier<SignInState> {
 
       result.fold((l) {
         state = state.copyWith(showLoading: false);
-        debugPrint(' Exception = $l');
+        debugPrint(' fold Exception = $l');
       }, (r) {
         state = state.copyWith(showLoading: false);
         final response = (r as SignInResponseModel);
