@@ -46,7 +46,7 @@ class SignUpController extends StateNotifier<SignUpState> {
 
       result.fold((l) {
         state = state.copyWith(isLoading: false);
-        onError("");
+        onError(l.toString());
       }, (r) {
         state = state.copyWith(isLoading: false);
         final result = r as SignUpResponseModel;
