@@ -29,7 +29,7 @@ class _DatePickerWidgetState extends ConsumerState<DatePickerWidget> {
 
     return Container(
       decoration: BoxDecoration(
-          color: Theme.of(context).canvasColor,
+          color: Theme.of(context).colorScheme.onPrimary,
           borderRadius: BorderRadius.circular(20.r)),
       width: MediaQuery.of(context).size.width * 0.8,
       height: 250.h,
@@ -43,13 +43,13 @@ class _DatePickerWidgetState extends ConsumerState<DatePickerWidget> {
               textBoldPoppins(
                   text: AppLocalizations.of(context).define_period,
                   fontSize: 16.sp,
-                  color: Theme.of(context).textTheme.labelLarge?.color),
+                  color: Theme.of(context).textTheme.bodyLarge?.color),
               10.verticalSpace,
               Padding(
                 padding: EdgeInsets.only(left: 10.w),
                 child: textRegularPoppins(
                     text: AppLocalizations.of(context).from,
-                    color: Theme.of(context).primaryColor),
+                    color: Theme.of(context).textTheme.bodyMedium?.color),
               ),
               5.verticalSpace,
               _buildDateSelectorButton(
@@ -72,7 +72,7 @@ class _DatePickerWidgetState extends ConsumerState<DatePickerWidget> {
                 padding: EdgeInsets.only(left: 10.w),
                 child: textRegularPoppins(
                     text: AppLocalizations.of(context).to,
-                    color: Theme.of(context).primaryColor),
+                    color: Theme.of(context).textTheme.bodyMedium?.color),
               ),
               5.verticalSpace,
               _buildDateSelectorButton(
@@ -123,7 +123,7 @@ class _DatePickerWidgetState extends ConsumerState<DatePickerWidget> {
                           text: AppLocalizations.of(context).cancel,
                           fontWeight: FontWeight.w600,
                           fontSize: 13.sp,
-                          color: Theme.of(context).primaryColor),
+                          color: Theme.of(context).textTheme.bodyMedium?.color),
                     ),
                   ),
                   _filterButton(
@@ -175,7 +175,7 @@ class _DatePickerWidgetState extends ConsumerState<DatePickerWidget> {
         child: textRegularPoppins(
             text: displayText,
             textAlign: TextAlign.start,
-            color: Theme.of(context).textTheme.labelLarge?.color),
+            color: Theme.of(context).textTheme.bodyLarge?.color),
       ),
     );
   }
@@ -194,7 +194,7 @@ class _DatePickerWidgetState extends ConsumerState<DatePickerWidget> {
         decoration: BoxDecoration(
             color: isEnabled
                 ? Theme.of(context).primaryColor
-                : Theme.of(context).canvasColor,
+                : Theme.of(context).colorScheme.onPrimary,
             borderRadius: BorderRadius.circular(30.sp)),
         padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 9.h),
         child: Row(
@@ -204,7 +204,7 @@ class _DatePickerWidgetState extends ConsumerState<DatePickerWidget> {
                     padding: EdgeInsets.only(right: 5.w),
                     child: Icon(
                       Icons.check,
-                      color: Theme.of(context).canvasColor,
+                      color: Theme.of(context).colorScheme.onPrimary,
                       size: 20,
                     ),
                   )
@@ -212,13 +212,13 @@ class _DatePickerWidgetState extends ConsumerState<DatePickerWidget> {
             textRegularPoppins(
                 text: text,
                 color: isEnabled
-                    ? Theme.of(context).canvasColor
-                    : Theme.of(context).primaryColor),
+                    ? Theme.of(context).textTheme.labelSmall?.color
+                    : Theme.of(context).textTheme.bodyMedium?.color),
             5.horizontalSpace,
             (!enableLeadingIcon && isEnabled)
                 ? Icon(
                     Icons.check,
-                    color: Theme.of(context).canvasColor,
+                    color: Theme.of(context).colorScheme.onPrimary,
                     size: 20,
                   )
                 : Container()

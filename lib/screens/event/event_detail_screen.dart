@@ -45,7 +45,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(eventDetailScreenProvider);
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.onSecondary,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -78,7 +78,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                 )
               : textBoldPoppins(
                   text: state.eventDetails.title ?? "",
-                  color: Theme.of(context).textTheme.labelLarge?.color,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
                   fontSize: 16.sp),
           15.verticalSpace,
           state.loading
@@ -123,21 +123,21 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
           textBoldPoppins(
               text: heading,
               fontSize: 15.sp,
-              color: Theme.of(context).textTheme.labelLarge?.color),
+              color: Theme.of(context).textTheme.bodyLarge?.color),
           12.verticalSpace,
           textSemiBoldPoppins(
               text: subHeading,
               textAlign: TextAlign.start,
               fontSize: 12.sp,
               textOverflow: TextOverflow.visible,
-              color: Theme.of(context).textTheme.labelLarge?.color,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
               fontWeight: FontWeight.w600),
           12.verticalSpace,
           textRegularPoppins(
               text: description,
               fontSize: 11.sp,
               textOverflow: TextOverflow.visible,
-              color: Theme.of(context).textTheme.labelLarge?.color,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
               textAlign: TextAlign.start),
           Align(child: _buildExpandedTile())
         ],
@@ -207,7 +207,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.all(12.h.w),
         decoration: BoxDecoration(
-            color: Theme.of(context).canvasColor,
+            color: Theme.of(context).colorScheme.onPrimary,
             borderRadius: BorderRadius.circular(20.r),
             boxShadow: [
               BoxShadow(
@@ -233,7 +233,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                     textBoldPoppins(
                         text: heading,
                         fontSize: 13.sp,
-                        color: Theme.of(context).textTheme.labelLarge?.color),
+                        color: Theme.of(context).textTheme.bodyLarge?.color),
                     textRegularPoppins(
                         textAlign: TextAlign.left,
                         text: description,
@@ -293,18 +293,17 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
       tilePadding: EdgeInsets.zero,
       iconColor: Theme.of(context).primaryColor,
       visualDensity: VisualDensity.compact,
-      // Reduces space between title & arrow
       expandedCrossAxisAlignment: CrossAxisAlignment.start,
       childrenPadding: EdgeInsets.zero,
       title: textRegularPoppins(
           text: "Weiterlesen",
-          color: Theme.of(context).textTheme.labelLarge?.color,
+          color: Theme.of(context).textTheme.bodyLarge?.color,
           textAlign: TextAlign.start,
           decoration: TextDecoration.underline),
       children: [
         textBoldPoppins(
             text: "Nächste Termine",
-            color: Theme.of(context).textTheme.labelLarge?.color),
+            color: Theme.of(context).textTheme.bodyLarge?.color),
         10.verticalSpace,
         Padding(
           padding: EdgeInsets.symmetric(vertical: 6.h),
@@ -318,7 +317,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
               textRegularMontserrat(
                 text: "Samstag, 28.10.2024 \nvon 6:30 - 22:00 Uhr",
                 textOverflow: TextOverflow.ellipsis,
-                color: Theme.of(context).textTheme.labelLarge?.color,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
             ],
           ),
@@ -337,7 +336,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
               textRegularMontserrat(
                 text: "Samstag, 28.10.2024 \nvon 6:30 - 22:00 Uhr",
                 textOverflow: TextOverflow.ellipsis,
-                color: Theme.of(context).textTheme.labelLarge?.color,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
             ],
           ),
@@ -405,7 +404,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
             child: textBoldPoppins(
                 text: AppLocalizations.of(context).recommendation,
                 fontSize: 16.sp,
-                color: Theme.of(context).textTheme.labelLarge?.color),
+                color: Theme.of(context).textTheme.bodyLarge?.color),
           ),
           state.groupedEvents.isEmpty
               ? Center(

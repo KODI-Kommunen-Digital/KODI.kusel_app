@@ -138,7 +138,7 @@ Widget iconTextWidget(String imageUrl, String text, BuildContext context) {
     padding: EdgeInsets.symmetric(horizontal: 12.w),
     decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: Theme.of(context).cardTheme.color),
+        color: Theme.of(context).colorScheme.onSecondary),
     child: Row(
       mainAxisSize: MainAxisSize.min,
       children: [

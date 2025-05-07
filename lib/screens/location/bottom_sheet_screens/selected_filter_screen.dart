@@ -37,7 +37,7 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).splashColor,
+      backgroundColor: Theme.of(context).highlightColor,
       body: _buildBody(context),
     ).loaderDialog(context,
         ref.watch(locationScreenProvider).isSelectedFilterScreenLoading);
