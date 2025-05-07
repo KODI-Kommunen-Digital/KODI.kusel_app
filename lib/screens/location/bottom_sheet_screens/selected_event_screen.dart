@@ -26,7 +26,7 @@ class _SelectedEventScreenState extends ConsumerState<SelectedEventScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).highlightColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: _buildBody(context),
     );
   }
