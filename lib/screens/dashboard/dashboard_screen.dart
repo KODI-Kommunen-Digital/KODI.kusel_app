@@ -69,9 +69,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               left: 16,
               right: 16,
               child: DotNavigationBar(
-                backgroundColor: Theme.of(context).colorScheme.secondary,
+                backgroundColor: Theme.of(context).bottomAppBarTheme.color,
                 selectedItemColor: Theme.of(context).indicatorColor,
-                unselectedItemColor: Theme.of(context).canvasColor,
+                unselectedItemColor: Theme.of(context).colorScheme.onPrimary,
                 currentIndex: selectedIndex,
                 enableFloatingNavBar: true,
                 paddingR: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
@@ -99,7 +99,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             imagePath['discover_icon'] ?? "",
                             color: selectedIndex == 1
                                 ? Theme.of(context).indicatorColor
-                                : Theme.of(context).canvasColor,
+                                : Theme.of(context).colorScheme.onPrimary,
                           ),
                         ),
                       ),
@@ -122,7 +122,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           imagePath['location_icon'] ?? "",
                           color: selectedIndex == 3
                               ? Theme.of(context).indicatorColor
-                              : Theme.of(context).canvasColor,
+                              : Theme.of(context).colorScheme.onPrimary,
                         ),
                       ),
                     ),

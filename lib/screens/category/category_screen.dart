@@ -39,7 +39,7 @@ class _ExploreScreenState extends ConsumerState<CategoryScreen> {
     final CategoryScreenState categoryScreenState =
         ref.watch(categoryScreenProvider);
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.onSecondary,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: _buildBody(categoryScreenState, context),
     ).loaderDialog(context, categoryScreenState.loading);
   }
@@ -76,7 +76,7 @@ class _ExploreScreenState extends ConsumerState<CategoryScreen> {
                       filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
                       child: Container(
                         color:
-                            Theme.of(context).cardColor.withValues(alpha: 0.4),
+                            Theme.of(context).colorScheme.onSecondary.withValues(alpha: 0.4),
                       ),
                     ),
                   ),
@@ -85,7 +85,7 @@ class _ExploreScreenState extends ConsumerState<CategoryScreen> {
                   left: 16.r,
                   top: 68.h,
                   child: textBoldPoppins(
-                      color: Theme.of(context).textTheme.labelLarge?.color,
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
                       fontSize: 18.sp,
                       text: AppLocalizations.of(context).category_heading),
                 ),

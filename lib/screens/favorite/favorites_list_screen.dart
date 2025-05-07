@@ -49,7 +49,7 @@ class _ExploreScreenState extends ConsumerState<FavoritesListScreen> {
     final FavoritesListScreenState categoryScreenState =
     ref.watch(favoritesListScreenProvider);
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.onSecondary,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: categoryScreenState.loading
           ? const Center(child: CircularProgressIndicator())
           : _buildBody(categoryScreenState, context),
@@ -102,7 +102,7 @@ class _ExploreScreenState extends ConsumerState<FavoritesListScreen> {
             ],
           ),
           backgroundColor:
-          Theme.of(context).cardColor.withValues(alpha: 0.6),
+          Theme.of(context).colorScheme.onSecondary.withValues(alpha: 0.6),
         ),
 
         // If no events exist, show a message using a SliverFillRemaining

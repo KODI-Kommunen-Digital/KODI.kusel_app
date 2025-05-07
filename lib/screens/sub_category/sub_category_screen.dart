@@ -76,7 +76,7 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
                 child: Container(
-                  color: Theme.of(context).cardColor.withValues(alpha: 0.4),
+                  color: Theme.of(context).colorScheme.onSecondary.withValues(alpha: 0.4),
                 ),
               ),
             ),
@@ -100,7 +100,7 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
                         child: Padding(
                           padding: EdgeInsets.only(right: 18.h),
                           child: textBoldPoppins(
-                              color: Theme.of(context).textTheme.labelLarge?.color,
+                              color: Theme.of(context).textTheme.bodyLarge?.color,
                               fontSize: 16.sp,
                               textAlign: TextAlign.center,
                               text: widget.subCategoryScreenParameters.categoryHeading),

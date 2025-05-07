@@ -29,13 +29,13 @@ class CustomShimmerWidget extends ConsumerStatefulWidget {
 class _CustomShimmerWidgetState extends ConsumerState<CustomShimmerWidget> {
   @override
   Widget build(BuildContext context) => Shimmer.fromColors(
-      baseColor: Theme.of(context).splashColor,
-      highlightColor: Theme.of(context).splashColor.withAlpha(10),
+      baseColor: Theme.of(context).highlightColor,
+      highlightColor: Theme.of(context).highlightColor.withAlpha(10),
       period: Duration(milliseconds: 500),
       child: Container(
         width: widget.width ?? double.infinity,
         height: widget.height,
         decoration: ShapeDecoration(
-            shape: widget.shapeBorder, color: Theme.of(context).splashColor),
+            shape: widget.shapeBorder, color: Theme.of(context).highlightColor),
       ));
 }
