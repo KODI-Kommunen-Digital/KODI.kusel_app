@@ -93,7 +93,6 @@ class CustomInterceptor extends Interceptor {
     ref.read(customLoggerProvider).logRequest(options);
     options.validateStatus = (status) {
       return true;
-      return status != null && status < 500;
     };
     super.onRequest(options, handler);
   }
