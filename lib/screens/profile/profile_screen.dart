@@ -111,7 +111,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 textBoldPoppins(
                     text: AppLocalizations.of(context).profile,
                     fontSize: 20.sp,
-                    color: Theme.of(context).textTheme.labelLarge?.color),
+                    color: Theme.of(context).textTheme.bodyLarge?.color),
                 Visibility(
                     visible: !ref.watch(profileScreenProvider).editingEnabled,
                     child: GestureDetector(
@@ -130,7 +130,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         child: textRegularPoppins(
                             text: AppLocalizations.of(context).edit,
                             fontSize: 14.sp,
-                            color: Theme.of(context).canvasColor),
+                            color: Theme.of(context).textTheme.labelSmall?.color),
                       ),
                     ))
               ],
@@ -168,7 +168,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ),
                   child: Icon(
                     Icons.edit,
-                    color: Theme.of(context).canvasColor,
+                    color: Theme.of(context).colorScheme.onPrimary,
                     size: 12.h.w,
                   ),
                 ),
@@ -284,7 +284,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 padding: EdgeInsets.only(left: 8.w),
                 child: textBoldPoppins(
                     text: detailKey,
-                    color: Theme.of(context).textTheme.labelLarge?.color),
+                    color: Theme.of(context).textTheme.bodyLarge?.color),
               ),
               Container(
                 decoration: BoxDecoration(

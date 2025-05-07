@@ -28,7 +28,7 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).splashColor,
+      backgroundColor: Theme.of(context).highlightColor,
       body: _buildBody(context),
     );
   }
@@ -82,7 +82,7 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
             elevation: 6, // adjust this value to control the shadow
             shape: const CircleBorder(),
             color:
-                Theme.of(context).scaffoldBackgroundColor, // background color
+                Theme.of(context).colorScheme.onPrimary, // background color
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
               child: SizedBox(

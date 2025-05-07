@@ -38,7 +38,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.onSecondary,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SingleChildScrollView(
           child: _buildFeedbackUi(titleEditingController,
               descriptionEditingController, emailEditingController),
@@ -188,7 +188,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                 textBoldPoppins(
                     text: AppLocalizations.of(context).feedback,
                     fontSize: 20.sp,
-                    color: Theme.of(context).textTheme.labelLarge?.color),
+                    color: Theme.of(context).textTheme.bodyLarge?.color),
               ],
             ),
           ),

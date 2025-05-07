@@ -29,17 +29,17 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingStartPage> {
           textBoldPoppins(
               text: AppLocalizations.of(context).welcome_text,
               fontSize: 18.sp,
-              color: Theme.of(context).textTheme.labelLarge?.color),
+              color: Theme.of(context).textTheme.bodyLarge?.color),
           20.verticalSpace,
           textRegularPoppins(
               text: AppLocalizations.of(context).welcome_para_first,
-              color: Theme.of(context).textTheme.labelLarge?.color,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
               textOverflow: TextOverflow.visible,
               fontSize: 12.sp),
           16.verticalSpace,
           textRegularPoppins(
               text: AppLocalizations.of(context).welcome_para_second,
-              color: Theme.of(context).textTheme.labelLarge?.color,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
               textOverflow: TextOverflow.visible,
               fontSize: 12.sp)
         ],
