@@ -8,6 +8,7 @@ import 'package:kusel/screens/category/category_screen.dart';
 import 'package:kusel/screens/search/search_screen.dart';
 
 import '../../images_path.dart';
+import '../explore/explore_screen.dart';
 import '../home/home_screen.dart';
 import '../location/location_screen.dart';
 import '../settings/settings_screen.dart';
@@ -23,7 +24,7 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   final List<Widget> _pages = [
     HomeScreen(),
-    CategoryScreen(),
+    ExploreScreen(),
     SearchScreen(),
     LocationScreen(),
     SettingsScreen()
