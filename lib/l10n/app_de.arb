@@ -124,11 +124,13 @@
   "select_end_date": "Enddatum auswählen",
   "please_select_start_and_end_date": "Bitte Start- und Enddatum auswählen",
   "today_its_going_to_be" : "Heute wird's",
-  "sunny" : "sonning",
-
   "virtual_town_hall": "Virtuelles Rathaus",
   "my_town": "Mein Ort",
   "tourism_and_leisure": "Tourismus und Freizeit",
   "mobility": "Mobilität",
-  "get_involved": "MITMACHEN"
+  "get_involved": "MITMACHEN",
+  "sunny" : "sonning",
+  "find_out_how_to" : "Schau dir hier an, wie du am besten hinkommst",
+  "read_more": "Weiterlesen",
+  "visit_website": "Website besuchen"
 }

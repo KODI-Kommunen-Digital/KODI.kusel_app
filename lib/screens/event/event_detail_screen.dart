@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,6 +12,7 @@ import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/event/event_detail_screen_state.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/arrow_back_widget.dart' show ArrowBackWidget;
 import '../../common_widgets/common_event_card.dart';
@@ -85,7 +87,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
               ? locationCardShimmerEffect(context)
               : LocationCardWidget(
                   address: state.eventDetails.address ?? "",
-                  websiteText: "Website besuchen",
+                  websiteText: AppLocalizations.of(context).visit_website,
                   websiteUrl: state.eventDetails.website ?? "",
                   latitude: state.eventDetails.latitude ?? 0,
                   longitude: state.eventDetails.longitude ?? 0,
@@ -95,8 +97,13 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
               ? _publicTransportShimmerEffect()
               : _publicTransportCard(
                   heading: AppLocalizations.of(context).public_transport_offer,
-                  description: "Schau dir hier an, wie du am besten hinkommst",
-                  onTap: () {}),
+                  description: AppLocalizations.of(context).find_out_how_to,
+                  onTap: () async {
+                    final Uri uri = Uri.parse("https://www.google.com/");
+                    if (await canLaunchUrl(uri)) {
+                    await launchUrl(uri);
+                    }
+                  }),
           16.verticalSpace,
           state.loading
               ? _eventInfoShimmerEffect()
@@ -296,13 +303,13 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
       expandedCrossAxisAlignment: CrossAxisAlignment.start,
       childrenPadding: EdgeInsets.zero,
       title: textRegularPoppins(
-          text: "Weiterlesen",
+          text: AppLocalizations.of(context).read_more,
           color: Theme.of(context).textTheme.bodyLarge?.color,
           textAlign: TextAlign.start,
           decoration: TextDecoration.underline),
       children: [
         textBoldPoppins(
-            text: "Nächste Termine",
+            text: AppLocalizations.of(context).next_dates,
             color: Theme.of(context).textTheme.bodyLarge?.color),
         10.verticalSpace,
         Padding(
