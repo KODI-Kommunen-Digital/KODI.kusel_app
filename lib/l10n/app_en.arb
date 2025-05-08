@@ -122,5 +122,11 @@
   "select_end_date": "Select end date",
   "please_select_start_and_end_date": "Please select start and end date",
   "today_its_going_to_be" : "Today it's going to be",
-  "sunny" : "Sunny"
+  "sunny" : "Sunny",
+
+  "virtual_town_hall": "Virtual Town Hall",
+  "my_town": "My Town",
+  "tourism_and_leisure": "Tourism and Leisure",
+  "mobility": "Mobility",
+  "get_involved": "GET INVOLVED"
 }

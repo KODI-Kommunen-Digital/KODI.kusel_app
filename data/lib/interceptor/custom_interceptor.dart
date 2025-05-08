@@ -92,7 +92,7 @@ class CustomInterceptor extends Interceptor {
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     ref.read(customLoggerProvider).logRequest(options);
     options.validateStatus = (status) {
-      return status != null && status < 500;
+      return true;
     };
     super.onRequest(options, handler);
   }
@@ -100,6 +100,6 @@ class CustomInterceptor extends Interceptor {
   @override
   void onError(DioException error, ErrorInterceptorHandler handler) {
     ref.read(customLoggerProvider).logError(error);
-    super.onError(error, handler);
+    handler.next(error);
   }
 }
