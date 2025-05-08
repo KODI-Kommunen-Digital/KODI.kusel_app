@@ -64,14 +64,14 @@ class CustomButton extends StatelessWidget {
                 SizedBox(width: 12),
                 textRegularPoppins(
                   fontSize: textSize,
-                  color: textColor ?? Theme.of(context).canvasColor,
+                  color: textColor ?? Theme.of(context).textTheme.labelSmall?.color,
                   text: text,
                 ),
               ],
             )
                 : textRegularPoppins(
               fontSize: textSize,
-              color: textColor ?? Theme.of(context).canvasColor,
+              color: textColor ?? Theme.of(context).textTheme.labelSmall?.color,
               text: text,
             ),
           ),
@@ -102,14 +102,14 @@ class CustomButton extends StatelessWidget {
                             SizedBox(width: 12),
                             textRegularPoppins(
                               fontSize: textSize,
-                              color: textColor ?? Theme.of(context).canvasColor,
+                              color: textColor ?? Theme.of(context).textTheme.labelSmall?.color,
                               text: text,
                             ),
                           ],
                         )
                       : textRegularPoppins(
                           fontSize: textSize,
-                          color: textColor ?? Theme.of(context).canvasColor,
+                          color: textColor ?? Theme.of(context).textTheme.labelSmall?.color,
                           text: text,
                         ),
                 ),
