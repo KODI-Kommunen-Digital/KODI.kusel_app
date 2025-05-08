@@ -38,7 +38,12 @@ Map<String, String> _pngImagePath = {
   "rain_image":"assets/png/rain_image.png",
   "spring_image":"assets/png/spring_image.png",
   "empty_profile_image" : "assets/png/empty_profile_image.png",
-  "filter_icon" : "assets/png/filter_icon.png"
+  "filter_icon" : "assets/png/filter_icon.png",
+  "virtual_town_hall":"assets/png/virtual_townhall.png",
+  "my_town":"assets/png/my_town.png",
+  "tourism_and_lesiure":"assets/png/tourism_and_lesiure.png",
+  "mobility":"assets/png/mobility.png",
+  "get_involved":"assets/png/get_involved.png"
 };
 
 Map<String, String> _jpegImagePath = {
