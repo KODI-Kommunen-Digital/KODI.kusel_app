@@ -39,6 +39,9 @@ class CustomLogger {
     logger.e("--------- API Error ---------");
     logger
         .e("URL: ${error.requestOptions.baseUrl}${error.requestOptions.path}");
+
+    logger
+        .e("response body: ${error.response?.data}");
     logger.e("Error Type: ${error.type}");
     logger.e("Message: ${error.message}");
     logger.e("Status Code: ${error.response?.statusCode}");

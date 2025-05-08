@@ -42,38 +42,24 @@ class SignInController extends StateNotifier<SignInState> {
 
       result.fold((l) {
         state = state.copyWith(showLoading: false);
-        debugPrint(' Exception = $l');
+        error(l.toString());
+        debugPrint('sign in user fold Exception = $l');
       }, (r) {
         state = state.copyWith(showLoading: false);
         final response = (r as SignInResponseModel);
-        if (response.errorCode != null) {
-          if (r.errorCode == 2003) {
-            error(r.message ?? "");
-          } else if (r.errorCode == 2002) {
-            error(r.message ?? "");
-          } else if (r.errorCode == 1002) {
-            error(r.message ?? "");
-          } else if (r.errorCode == 1001) {
-            error(r.message ?? "");
-          } else if (r.errorCode == 1003) {
-            error(r.message ?? "");
-          }else if(r.errorCode == 2006)
-            {
-              error(r.message ?? "");
-            }
-        } else {
-          if (response.data != null) {
-            final userId = response.data?.userId ?? 0;
-            final token = response.data?.accessToken ?? "";
-            final refreshToken = response.data?.refreshToken ?? "";
-            final isOnboardingComplete = response.data?.isOnBoarded ?? false;
 
-            sharedPreferenceHelper.setString(refreshTokenKey, refreshToken);
-            sharedPreferenceHelper.setString(tokenKey, token);
-            sharedPreferenceHelper.setInt(userIdKey, userId);
-            sharedPreferenceHelper.setString(onboardingKey, isOnboardingComplete.toString());
-            success();
-          }
+        if (response.data != null) {
+          final userId = response.data?.userId ?? 0;
+          final token = response.data?.accessToken ?? "";
+          final refreshToken = response.data?.refreshToken ?? "";
+          final isOnboardingComplete = response.data?.isOnBoarded ?? false;
+
+          sharedPreferenceHelper.setString(refreshTokenKey, refreshToken);
+          sharedPreferenceHelper.setString(tokenKey, token);
+          sharedPreferenceHelper.setInt(userIdKey, userId);
+          sharedPreferenceHelper.setString(
+              onboardingKey, isOnboardingComplete.toString());
+          success();
         }
       });
     } catch (error) {
@@ -83,7 +69,8 @@ class SignInController extends StateNotifier<SignInState> {
   }
 
   bool isOnboardingDone() {
-    String onBoardingStatus = sharedPreferenceHelper.getString(onboardingKey) ?? "false";
+    String onBoardingStatus =
+        sharedPreferenceHelper.getString(onboardingKey) ?? "false";
     bool isOnBoarded = onBoardingStatus == 'true';
     return isOnBoarded;
   }
