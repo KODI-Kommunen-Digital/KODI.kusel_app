@@ -6,6 +6,8 @@ import 'package:kusel/common_widgets/kusel_text_field.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/screens/feedback/feedback_screen_provider.dart';
+import 'package:kusel/screens/feedback/feedback_screen_state.dart';
+import 'package:kusel/screens/fliter_screen/fliter_screen_state.dart';
 
 import '../../common_widgets/arrow_back_widget.dart';
 import '../../common_widgets/text_styles.dart';
@@ -41,7 +43,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SingleChildScrollView(
           child: _buildFeedbackUi(titleEditingController,
-              descriptionEditingController, emailEditingController),
+              descriptionEditingController, emailEditingController, stateWatch, stateNotifier),
         ),
       ).loaderDialog(context, stateWatch.loading),
     );
@@ -50,12 +52,15 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
   Widget _buildFeedbackUi(
       TextEditingController titleEditingController,
       TextEditingController descriptionEditingController,
-      TextEditingController emailEditingController) {
+      TextEditingController emailEditingController,
+      FeedbackScreenState stateWatch,
+      FeedbackScreenProvider stateNotifier
+      ) {
     return Column(
       children: [
         _buildClipperBackground(),
         _buildForm(titleEditingController, descriptionEditingController,
-            emailEditingController)
+            emailEditingController, stateWatch, stateNotifier)
       ],
     );
   }
@@ -63,7 +68,10 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
   Widget _buildForm(
       TextEditingController titleEditingController,
       TextEditingController descriptionEditingController,
-      TextEditingController emailEditingController) {
+      TextEditingController emailEditingController,
+      FeedbackScreenState stateWatch,
+      FeedbackScreenProvider stateNotifier
+      ) {
     return Form(
       key: feedbackFormKey,
       child: Padding(
@@ -120,7 +128,18 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                     value, AppLocalizations.of(context).description);
               },
             ),
-            25.verticalSpace,
+            5.verticalSpace,
+            Row(
+              children: [
+                Checkbox(
+                    value: stateWatch.isChecked,
+                    onChanged: (value) {
+                      stateNotifier.updateCheckBox(value ?? false);
+                    }),
+                textRegularPoppins(text: "Checkbox text", fontSize: 11.sp)
+              ],
+            ),
+            10.verticalSpace,
             CustomButton(
                 onPressed: () {
                   if (feedbackFormKey.currentState!.validate()) {
@@ -144,7 +163,9 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                         email: emailEditingController.text);
                   }
                 },
-                text: AppLocalizations.of(context).submit),
+                text: AppLocalizations.of(context).submit
+            ),
+            10.verticalSpace,
           ],
         ),
       ),

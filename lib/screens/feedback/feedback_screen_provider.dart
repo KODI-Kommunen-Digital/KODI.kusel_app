@@ -55,4 +55,8 @@ class FeedbackScreenProvider extends StateNotifier<FeedbackScreenState> {
       state = state.copyWith(loading: false);
     }
   }
+
+  void updateCheckBox(bool value) {
+    state = state.copyWith(isChecked: value);
+  }
 }
