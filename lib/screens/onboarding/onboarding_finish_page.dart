@@ -22,7 +22,7 @@ class _OnboardingFinishPageState extends ConsumerState<OnboardingFinishPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.onSecondary,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         resizeToAvoidBottomInset: false,
         body: Container(
           decoration: BoxDecoration(
@@ -44,12 +44,12 @@ class _OnboardingFinishPageState extends ConsumerState<OnboardingFinishPage> {
                 textBoldPoppins(
                     text: AppLocalizations.of(context).ready,
                     fontSize: 18.sp,
-                    color: Theme.of(context).colorScheme.secondary),
+                    color: Theme.of(context).textTheme.bodyLarge?.color),
                 15.verticalSpace,
                 textRegularPoppins(
                     text: AppLocalizations.of(context)
                         .i_have_prepared_everything_text,
-                    color: Theme.of(context).colorScheme.secondary,
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
                     textOverflow: TextOverflow.visible,
                     fontSize: 12.sp),
                 25.verticalSpace,

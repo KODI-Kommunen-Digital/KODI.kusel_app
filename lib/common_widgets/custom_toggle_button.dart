@@ -27,7 +27,7 @@ class _customToggleButtonState extends ConsumerState<CustomToggleButton> {
           border: widget.selected ? Border.all(width: 2, color: Theme.of(context).indicatorColor) : Border.all(width: 2, color: Theme.of(context).primaryColor),
           color: widget.selected
               ? Theme.of(context).indicatorColor
-              : Theme.of(context).canvasColor,
+              : Theme.of(context).colorScheme.onPrimary,
         ),
         child: Stack(
           alignment: widget.selected
@@ -48,7 +48,7 @@ class _customToggleButtonState extends ConsumerState<CustomToggleButton> {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: isSelected
-              ? Theme.of(context).canvasColor
+              ? Theme.of(context).colorScheme.onPrimary
               : Theme.of(context).primaryColor,
         ),
       ),

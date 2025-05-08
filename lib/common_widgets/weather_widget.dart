@@ -24,7 +24,7 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
       height: 260.h,
       width: width,
       child: Card(
-        color: Theme.of(context).colorScheme.onSecondary,
+        color: Theme.of(context).scaffoldBackgroundColor,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
         elevation: 0,
         child: Stack(

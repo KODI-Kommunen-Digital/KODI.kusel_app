@@ -46,7 +46,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.onSecondary,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         resizeToAvoidBottomInset: false,
         body: _buildDashboardUi(pages, selectedPageIndex, pageController),
       ),
@@ -151,7 +151,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         context: context, path: dashboardScreenPath);
                   },
                   child: textBoldPoppins(
-                    color: Theme.of(context).colorScheme.secondary,
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
                     fontSize: 11.sp,
                     text: AppLocalizations.of(context).another_time,
                   ),
@@ -162,7 +162,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     GestureDetector(
                       onTap: stateNotifier.onBackPress,
                       child: textBoldPoppins(
-                        color: Theme.of(context).colorScheme.secondary,
+                        color: Theme.of(context).textTheme.bodyLarge?.color,
                         fontSize: 11.sp,
                         text: AppLocalizations.of(context).back,
                       ),
@@ -177,7 +177,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         });
                       },
                       child: textBoldPoppins(
-                        color: Theme.of(context).colorScheme.secondary,
+                        color: Theme.of(context).textTheme.bodyLarge?.color,
                         fontSize: 11.sp,
                         text: AppLocalizations.of(context).skip,
                       ),

@@ -7,6 +7,7 @@ import 'package:domain/usecase/listings/listings_usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:kusel/screens/event/event_detail_screen_state.dart';
+import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 final eventDetailScreenProvider =
@@ -85,8 +86,12 @@ class EventDetailScreenController
 
   Future<void> getRecommendedList() async {
     try {
+      LatLong kuselLatLong = LatLong(49.53603477650214, 7.392734870386151);
       GetAllListingsRequestModel getAllListingsRequestModel =
-          GetAllListingsRequestModel();
+          GetAllListingsRequestModel(
+            centerLongitude: kuselLatLong.latitude,
+            centerLatitude: kuselLatLong.longitude
+          );
       GetAllListingsResponseModel getAllListingsResponseModel =
           GetAllListingsResponseModel();
       final result = await listingsUseCase.call(
