@@ -9,14 +9,17 @@ import 'package:kusel/screens/auth/signup/signup_state.dart';
 
 final signUpScreenProvider =
     StateNotifierProvider.autoDispose<SignUpController, SignUpState>((ref) =>
-        SignUpController(signUpUseCase: ref.read(signUpUseCaseProvider), sharedPreferenceHelper : ref.read(
-            sharedPreferenceHelperProvider)));
+        SignUpController(
+            signUpUseCase: ref.read(signUpUseCaseProvider),
+            sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider)));
 
 class SignUpController extends StateNotifier<SignUpState> {
   SignUpUseCase signUpUseCase;
   SharedPreferenceHelper sharedPreferenceHelper;
 
-  SignUpController({required this.signUpUseCase, required this.sharedPreferenceHelper}) : super(SignUpState.empty());
+  SignUpController(
+      {required this.signUpUseCase, required this.sharedPreferenceHelper})
+      : super(SignUpState.empty());
 
   updateShowPasswordStatus(bool status) {
     state = state.copyWith(showPassword: status);
@@ -46,8 +49,11 @@ class SignUpController extends StateNotifier<SignUpState> {
 
       result.fold((l) {
         state = state.copyWith(isLoading: false);
+        onError(l.toString() ?? "");
+
         onError(l.toString());
       }, (r) {
+        debugPrint('sign up  fold exception');
         state = state.copyWith(isLoading: false);
         final result = r as SignUpResponseModel;
 
