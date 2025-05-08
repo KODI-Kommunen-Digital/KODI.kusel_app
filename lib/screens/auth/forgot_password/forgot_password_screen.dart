@@ -59,7 +59,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
                 child: Container(
-                  color: Theme.of(context).cardColor.withValues(alpha: 0.6),
+                  color: Theme.of(context).colorScheme.onSecondary.withValues(alpha: 0.6),
                 ),
               ),
             ),
@@ -71,7 +71,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                   height: MediaQuery.of(context).size.height * .8,
                   width: double.infinity,
                   decoration: BoxDecoration(
-                      color: Theme.of(context).cardColor,
+                      color: Theme.of(context).colorScheme.onSecondary,
                       borderRadius: BorderRadius.only(
                           topRight: borderRadius, topLeft: borderRadius)),
                   child: _buildForgotPasswordCard(context)),

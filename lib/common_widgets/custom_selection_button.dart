@@ -27,13 +27,13 @@ class _CustomSelectionButtonState extends ConsumerState<CustomSelectionButton> {
         decoration: BoxDecoration(
             color: widget.isSelected
                 ? Theme.of(context).textTheme.labelMedium?.color
-                : Theme.of(context).canvasColor,
+                : Theme.of(context).colorScheme.onPrimary,
             borderRadius: BorderRadius.circular(50.r)
         ),
         child: textRegularPoppins(
             text: widget.text,
             color: widget.isSelected
-                ? Theme.of(context).canvasColor
+                ? Theme.of(context).textTheme.labelSmall?.color
                 : Theme.of(context).textTheme.labelMedium?.color),
       ),
     );

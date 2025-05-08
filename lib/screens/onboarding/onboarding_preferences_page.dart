@@ -32,7 +32,7 @@ class _OnBoardingPreferencesPageState extends ConsumerState<OnBoardingPreference
     String displayMsg =
         "${AppLocalizations.of(context).complete}$userName${AppLocalizations.of(context).what_interest_you}";
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.onSecondary,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 18.h),
@@ -43,7 +43,7 @@ class _OnBoardingPreferencesPageState extends ConsumerState<OnBoardingPreference
                   text: displayMsg,
                   fontSize: 18.sp,
                   textOverflow: TextOverflow.visible,
-                  color: Theme.of(context).colorScheme.secondary),
+                  color: Theme.of(context).textTheme.bodyLarge?.color),
               20.verticalSpace,
               categoryView(context)
             ],

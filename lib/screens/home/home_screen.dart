@@ -51,7 +51,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.onSecondary,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SizedBox(
             height: MediaQuery.of(context).size.height, child: buildUi()),
       ),
@@ -111,7 +111,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   fontSize: 20,
                                   color: Theme.of(context)
                                       .textTheme
-                                      .labelLarge
+                                      .bodyLarge
                                       ?.color,
                                   textAlign: TextAlign.center,
                                   text: ref.watch(homeScreenProvider).userName,
@@ -126,7 +126,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           : textBoldPoppins(
                               fontSize: 20,
                               color:
-                                  Theme.of(context).textTheme.labelLarge?.color,
+                                  Theme.of(context).textTheme.bodyLarge?.color,
                               textAlign: TextAlign.center,
                               text:
                                   "${AppLocalizations.of(context).today_its_going_to_be} ${AppLocalizations.of(context).sunny}!",
@@ -143,7 +143,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 fontStyle: FontStyle.italic,
                                 color: Theme.of(context)
                                     .textTheme
-                                    .labelLarge
+                                    .bodyLarge
                                     ?.color),
                           ),
                           SearchWidget(
@@ -218,7 +218,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                       text: AppLocalizations.of(context)
                                           .log_in_sign_up,
                                       fontSize: 12.sp,
-                                      color: Theme.of(context).primaryColor),
+                                      color: Theme.of(context).textTheme.bodyMedium?.color),
                                 ),
                               ),
                             ],
@@ -325,7 +325,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         text: heading,
                         fontSize: 16.sp,
                         fontWeight: FontWeight.w600,
-                        color: Theme.of(context).textTheme.labelLarge?.color),
+                        color: Theme.of(context).textTheme.bodyLarge?.color),
                   ),
                   12.horizontalSpace,
                   SvgPicture.asset(
@@ -391,14 +391,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 text: heading,
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
-                color: Theme.of(context).textTheme.labelLarge?.color),
+                color: Theme.of(context).textTheme.bodyLarge?.color),
           ),
           16.verticalSpace,
           textRegularPoppins(
               text: AppLocalizations.of(context).no_data,
               fontSize: 12.sp,
               fontWeight: FontWeight.w600,
-              color: Theme.of(context).textTheme.labelLarge?.color),
+              color: Theme.of(context).textTheme.bodyLarge?.color),
           20.verticalSpace
         ],
       ),
@@ -431,7 +431,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               fontWeight: FontWeight.w600,
                               color: Theme.of(context)
                                   .textTheme
-                                  .labelLarge
+                                  .bodyLarge
                                   ?.color),
                           12.horizontalSpace,
                           SvgPicture.asset(
