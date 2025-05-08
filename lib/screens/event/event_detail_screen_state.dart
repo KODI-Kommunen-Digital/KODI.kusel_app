@@ -8,12 +8,13 @@ class EventDetailScreenState {
   EventData eventDetails;
   List<Listing> eventsList;
   Map<int, List<Listing>> groupedEvents;
+  bool isFavourite;
 
   EventDetailScreenState(this.address, this.error, this.loading,
-      this.eventDetails, this.eventsList, this.groupedEvents);
+      this.eventDetails, this.eventsList, this.groupedEvents, this.isFavourite);
 
   factory EventDetailScreenState.empty() {
-    return EventDetailScreenState('', '', false, EventData(), [], {});
+    return EventDetailScreenState('', '', false, EventData(), [], {}, false);
   }
 
   EventDetailScreenState copyWith(
@@ -22,13 +23,17 @@ class EventDetailScreenState {
       bool? loading,
       EventData? eventDetails,
       List<Listing>? eventsList,
-      Map<int, List<Listing>>? groupedEvents}) {
+      Map<int, List<Listing>>? groupedEvents,
+      bool? isFavourite
+      }) {
     return EventDetailScreenState(
         address ?? this.address,
         error ?? this.error,
         loading ?? this.loading,
         eventDetails ?? this.eventDetails,
         eventsList ?? this.eventsList,
-        groupedEvents ?? this.groupedEvents);
+        groupedEvents ?? this.groupedEvents,
+        isFavourite ?? this.isFavourite
+    );
   }
 }

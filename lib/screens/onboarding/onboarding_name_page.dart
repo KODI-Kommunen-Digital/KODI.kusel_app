@@ -33,7 +33,7 @@ class _OnboardingStartPageState extends ConsumerState<OnBoardingNamePage> {
             textBoldPoppins(
                 text: AppLocalizations.of(context).what_may_i_call_you,
                 fontSize: 18.sp,
-                color: Theme.of(context).colorScheme.secondary),
+                color: Theme.of(context).textTheme.bodyLarge?.color),
             20.verticalSpace,
             Padding(
               padding: EdgeInsets.only(left: 8.w),
@@ -44,7 +44,7 @@ class _OnboardingStartPageState extends ConsumerState<OnBoardingNamePage> {
                     text: AppLocalizations.of(context).your_name,
                     fontSize: 12.sp,
                     textAlign: TextAlign.left,
-                    color: Theme.of(context).colorScheme.secondary),
+                    color: Theme.of(context).textTheme.bodyLarge?.color),
               ),
             ),
             5.verticalSpace,

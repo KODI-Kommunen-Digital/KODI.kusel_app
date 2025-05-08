@@ -43,7 +43,7 @@ class _State extends ConsumerState<SplashScreen> {
         AppLocalizations.of(context).app_title,
         style: TextStyle(
             fontSize: 40,
-            color: Theme.of(context).canvasColor,
+            color: Theme.of(context).textTheme.labelSmall?.color,
             fontWeight: FontWeight.bold),
       )),
     ));

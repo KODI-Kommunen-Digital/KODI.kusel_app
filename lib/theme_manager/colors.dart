@@ -1,22 +1,28 @@
 import 'package:flutter/material.dart';
 
-const lightThemeSecondaryColor = Color(0xFF18204F);
 const lightThemePrimaryColor = Color(0xFF283583);
-const lightThemeScaffoldColor = Color.fromRGBO(255, 255, 255, 1);
-const lightThemeDisplayMediumTextColor = Color.fromRGBO(0, 0, 0, 1);
-const lightThemeDisplaySmallTextColor = Color.fromRGBO(0, 0, 0, 1);
-const lightThemeDisplayLargeTextColor = Color.fromRGBO(0, 0, 0, 1);
-const lightThemeTemperatureColor = Color.fromRGBO(105, 114, 168, 1);
-const lightThemeContainerColor = Color.fromRGBO(226, 235, 247, 1);
-const lightThemeSelectedItemColor = Color(0xFF88AF33);
-const lightThemeWhiteColor = Color(0xFFFFFFFF);
+const lightThemeSecondaryColor = Color(0xFF18204F);
+const lightThemeOnPrimaryColor = Color(0xFFFFFFFF);
 const lightThemeScaffoldBackgroundColor = Color(0xFFE2EBF7);
-const lightThemeCardGreyColor = Color(0xFFEAEBF3);
+const lightThemeIndicatorColor = Color(0xFF88AF33);
+const lightThemeCanvasColor = Color(0xFFFFFFFF);
+const lightThemeCardColor = Color.fromARGB(255, 234, 235, 243);
 const lightThemeDividerColor = Color(0xFFBFC2DA);
 const lightThemeHintColor = Color(0xFF949AC1);
 const lightThemeMapMarkerColor = Color(0xFFF75A50);
-const lightThemeCalendarIconColor = Color(0xFF5F6368);
+const lightThemeSurfaceColor = Color(0xFF5F6368);
 const lightThemeFeedbackCardColor = Color(0xFF101534);
 const lightThemeSuccessToastColor = Color(0xFF4CAF50);
 const lightThemeErrorToastColor = Color(0xFFF75A5A);
 const lightThemeShimmerColor = Color(0xFFB4CDE1);
+
+// Text Colors
+const lightThemeBodySmallColor = Color(0xFF283583);
+const lightThemeBodyMediumColor = Color(0xFF283583);
+const lightThemeBodyLargeColor = Color(0xFF18204F);
+const lightThemeDisplayMediumTextColor = Color.fromRGBO(0, 0, 0, 1);
+const lightThemeDisplaySmallTextColor = Color.fromRGBO(0, 0, 0, 1);
+const lightThemeDisplayLargeTextColor = Color.fromRGBO(0, 0, 0, 1);
+const lightThemeLabelSmallColor = Color(0xFFE2EBF7);
+const lightThemeLabelMediumColor = Color.fromRGBO(105, 114, 168, 1);
+const lightThemeLabelLargeColor = Color(0xFF283583);
