@@ -9,7 +9,7 @@ class ExploreController extends StateNotifier<ExploreState> {
   ExploreController() : super(ExploreState.empty());
 
   initialCall({required List<String> exploreTypeList, required List<
-      String> exploreTypeListImage}) {
+      String> exploreTypeListImage})async {
     state = state.copyWith(exploreTypeList: exploreTypeList,
         exploreTypeListImages: exploreTypeListImage);
   }
