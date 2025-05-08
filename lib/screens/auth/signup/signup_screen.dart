@@ -110,7 +110,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
               child: Container(
-                color: Theme.of(context).cardColor.withAlpha(150),
+                color: Theme.of(context).colorScheme.onSecondary.withAlpha(150),
               ),
             ),
           ),
@@ -123,7 +123,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               padding: EdgeInsets.only(top: 20.h),
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
+                color: Theme.of(context).colorScheme.onSecondary,
                 borderRadius: BorderRadius.only(
                   topRight: borderRadius,
                   topLeft: borderRadius,
