@@ -37,7 +37,7 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
       height: 40.h,
       width: 350.w,
       decoration: BoxDecoration(
-          color: Theme.of(context).canvasColor,
+          color: Theme.of(context).colorScheme.onPrimary,
           borderRadius: BorderRadius.circular(30.r),
           border: Border.all(width: 1, color: Theme.of(context).dividerColor)),
       child: Center(

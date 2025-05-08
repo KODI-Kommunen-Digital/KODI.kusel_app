@@ -32,7 +32,7 @@
           height: 38.h,
           padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-              color: Theme.of(context).canvasColor,
+              color: Theme.of(context).colorScheme.onPrimary,
               borderRadius: BorderRadius.circular(30.r),
               border: (widget.disableBorder ?? false)
                   ? null

@@ -40,7 +40,7 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.onSecondary,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: _buildBody(context),
     ).loaderDialog(context, ref.watch(allEventScreenProvider).isLoading);
   }
@@ -115,7 +115,7 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                                             .watch(allEventScreenProvider)
                                             .filterCount! >
                                         0)
-                                ? Theme.of(context).canvasColor
+                                ? Theme.of(context).colorScheme.onPrimary
                                 : Theme.of(context).primaryColor,
                             borderRadius: BorderRadius.circular(8.r),
                           ),
@@ -137,7 +137,7 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                                                     .filterCount! >
                                                 0)
                                         ? Theme.of(context).primaryColor
-                                        : Theme.of(context).canvasColor),
+                                        : Theme.of(context).colorScheme.onPrimary),
                               ),
                               4.horizontalSpace,
                               textRegularPoppins(
@@ -152,7 +152,7 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                                                   .filterCount! >
                                               0)
                                       ? Theme.of(context).primaryColor
-                                      : Theme.of(context).canvasColor),
+                                      : Theme.of(context).colorScheme.onPrimary),
                             ],
                           ),
                         ),
@@ -172,7 +172,7 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                                   shape: BoxShape.circle,
                                   color: Theme.of(context).primaryColor),
                               child: textRegularPoppins(
-                                  color: Theme.of(context).canvasColor,
+                                  color: Theme.of(context).textTheme.labelSmall?.color,
                                   fontSize: 10.sp,
                                   text: ref
                                       .watch(allEventScreenProvider)
@@ -186,7 +186,7 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                   ))
             ],
           ),
-          backgroundColor: Theme.of(context).cardColor.withValues(alpha: 0.6),
+          backgroundColor: Theme.of(context).colorScheme.onSecondary.withValues(alpha: 0.6),
         ),
 
         // If no events exist, show a message using a SliverFillRemaining

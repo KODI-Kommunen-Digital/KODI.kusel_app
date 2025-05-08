@@ -26,6 +26,7 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
     return SafeArea(
       child: Scaffold(
         body: _buildBody(context),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       ),
     );
   }
