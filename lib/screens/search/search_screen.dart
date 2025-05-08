@@ -41,7 +41,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.onSecondary,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: SizedBox(
             height: MediaQuery.of(context).size.height, child: buildUi()),
       ),
@@ -115,7 +115,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                     icon: imagePath['explore'],
                     iconWidth: 20.w,
                     iconHeight: 20.w,
-                    textColor: Theme.of(context).textTheme.bodyLarge?.color,
+                    textColor: Theme.of(context).textTheme.labelLarge?.color,
                   ),
                   8.verticalSpace,
                   CustomButton(
@@ -131,7 +131,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                       icon: imagePath['star'],
                       iconWidth: 20.w,
                       iconHeight: 20.w,
-                      textColor: Theme.of(context).textTheme.bodyLarge?.color),
+                      textColor: Theme.of(context).textTheme.labelLarge?.color),
                   16.verticalSpace,
                   Divider(height: 1.h),
                   16.verticalSpace,

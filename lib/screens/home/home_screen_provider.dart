@@ -15,6 +15,7 @@ import 'package:domain/usecase/user_detail/user_detail_usecase.dart';
 import 'package:domain/usecase/weather/weather_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 
 import 'home_screen_state.dart';
 
@@ -98,11 +99,13 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       getLocation();
       state = state.copyWith(loading: true, error: "");
 
+      LatLong kuselLatLong = LatLong(49.53603477650214, 7.392734870386151);
       GetAllListingsRequestModel getAllListingsRequestModel =
-          GetAllListingsRequestModel(
-              radius: 1,
-              centerLatitude: state.latitude,
-              centerLongitude: state.longitude);
+      GetAllListingsRequestModel(
+          radius: 1,
+          centerLongitude: kuselLatLong.latitude,
+          centerLatitude: kuselLatLong.longitude
+      );
       GetAllListingsResponseModel getAllListingsResponseModel =
           GetAllListingsResponseModel();
       final result = await listingsUseCase.call(

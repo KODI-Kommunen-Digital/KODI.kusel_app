@@ -8,7 +8,7 @@ showSuccessToast({required String message, required BuildContext context}) {
     primaryColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: .3),
     description: textRegularPoppins(
         text: message,
-        color: Theme.of(context).canvasColor,
+        color: Theme.of(context).textTheme.labelSmall?.color,
         textAlign: TextAlign.start,
         maxLines: 2),
     toastAlignment: Alignment.bottomCenter,
@@ -30,7 +30,7 @@ showErrorToast({required String message, required BuildContext context}) {
     primaryColor: Theme.of(context).colorScheme.onError.withValues(alpha: .3),
     description: textRegularPoppins(
         text: message,
-        color: Theme.of(context).canvasColor,
+        color: Theme.of(context).textTheme.labelSmall?.color,
         maxLines: 2,
         textAlign: TextAlign.start),
     toastAlignment: Alignment.bottomCenter,

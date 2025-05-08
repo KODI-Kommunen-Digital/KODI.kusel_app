@@ -52,7 +52,7 @@ class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
     final SearchResultScreenState categoryScreenState =
         ref.watch(searchResultScreenProvider);
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.onSecondary,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: categoryScreenState.loading
           ? const Center(child: CircularProgressIndicator())
           : _buildBody(categoryScreenState, context),
@@ -101,7 +101,7 @@ class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
               ),
             ],
           ),
-          backgroundColor: Theme.of(context).cardColor.withValues(alpha: 0.6),
+          backgroundColor: Theme.of(context).colorScheme.onSecondary.withValues(alpha: 0.6),
         ),
 
         categoryScreenState.groupedEvents.isEmpty
@@ -143,7 +143,7 @@ class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
                                     fontWeight: FontWeight.w600,
                                     color: Theme.of(context)
                                         .textTheme
-                                        .labelLarge
+                                        .bodyLarge
                                         ?.color),
                               ),
                               12.horizontalSpace,
