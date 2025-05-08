@@ -2,6 +2,7 @@ import 'package:core/base_model.dart';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:network/src/dio_factory.dart';
+
 import 'exceptions.dart';
 
 class ApiHelper<E extends BaseModel> {
@@ -28,6 +29,17 @@ class ApiHelper<E extends BaseModel> {
     );
   }
 
+  String? _extractErrorMessage(dynamic data) {
+    try {
+      if (data is Map && data['message'] != null) {
+        return data['message'].toString();
+      } else if (data is String) {
+        return data;
+      }
+    } catch (_) {}
+    return null;
+  }
+
   Future<Either<Exception, T>> postRequest<T extends BaseModel>({
     required String path,
     required CreateModel<T> create,
@@ -36,37 +48,26 @@ class ApiHelper<E extends BaseModel> {
     Map<String, dynamic>? headers,
     ProgressCallback? onReceiveProgress,
   }) async {
-    var response = await _dio
-        .post(
-      path,
-      data: body,
-      options: Options(headers: headers),
-      cancelToken: cancelToken,
-      onReceiveProgress: onReceiveProgress,
-    )
-        .catchError((error) {
-      return Response(
-        requestOptions: RequestOptions(path: ''),
-        statusMessage: error.toString(),
-        statusCode: 999,
-      );
-    });
-    if (response.statusCode == 999) {
-      return Left(ApiError(error: fallbackErrorMessage));
-    }
     try {
-      return Right(create().fromJson(response.data));
-    } on Exception catch (e) {
-      return Left(e);
-    } catch (error) {
-      try {
-        return Left(ApiError(
-            error: errorModel != null
-                ? errorModel!().fromJson(response.data).message
-                : fallbackErrorMessage));
-      } catch (error) {
-        return Left(ApiError(error: fallbackErrorMessage));
+      final response = await _dio.post(
+        path,
+        data: body,
+        options: Options(headers: headers),
+        cancelToken: cancelToken,
+        onReceiveProgress: onReceiveProgress,
+      );
+
+      if (response.statusCode != null && response.statusCode! >= 300) {
+        final errorMessage = _extractErrorMessage(response.data);
+        return Left(ApiError(error: errorMessage ?? fallbackErrorMessage));
       }
+
+      return Right(create().fromJson(response.data));
+    } on DioException catch (e) {
+      final errorMessage = _extractErrorMessage(e.response?.data);
+      return Left(ApiError(error: errorMessage ?? fallbackErrorMessage));
+    } catch (e) {
+      return Left(ApiError(error: fallbackErrorMessage));
     }
   }
 
@@ -78,37 +79,25 @@ class ApiHelper<E extends BaseModel> {
     Map<String, dynamic>? headers,
     ProgressCallback? onReceiveProgress,
   }) async {
-    var response = await _dio
-        .post(
-      path,
-      data: body,
-      options: Options(headers: headers),
-      cancelToken: cancelToken,
-      onReceiveProgress: onReceiveProgress,
-    )
-        .catchError((error) {
-      return Response(
-        requestOptions: RequestOptions(path: ''),
-        statusMessage: error.toString(),
-        statusCode: 999,
-      );
-    });
-    if (response.statusCode == 999) {
-      return Left(ApiError(error: fallbackErrorMessage));
-    }
     try {
-      return Right(create().fromJson(response.data));
-    } on Exception catch (e) {
-      return Left(e);
-    } catch (error) {
-      try {
-        return Left(ApiError(
-            error: errorModel != null
-                ? errorModel!().fromJson(response.data).message
-                : fallbackErrorMessage));
-      } catch (error) {
-        return Left(ApiError(error: fallbackErrorMessage));
+      var response = await _dio.post(
+        path,
+        data: body,
+        options: Options(headers: headers),
+        cancelToken: cancelToken,
+        onReceiveProgress: onReceiveProgress,
+      );
+      if (response.statusCode != null && response.statusCode! >= 300) {
+        final errorMessage = _extractErrorMessage(response.data);
+        return Left(ApiError(error: errorMessage ?? fallbackErrorMessage));
       }
+
+      return Right(create().fromJson(response.data));
+    } on DioException catch (e) {
+      final errorMessage = _extractErrorMessage(e.response?.data);
+      return Left(ApiError(error: errorMessage ?? fallbackErrorMessage));
+    } catch (e) {
+      return Left(ApiError(error: fallbackErrorMessage));
     }
   }
 
@@ -120,43 +109,26 @@ class ApiHelper<E extends BaseModel> {
     Map<String, dynamic>? headers,
     ProgressCallback? onReceiveProgress,
   }) async {
-    var response = await _dio
-        .post(
-      path,
-      data: body,
-      options: Options(headers: headers),
-      cancelToken: cancelToken,
-      onReceiveProgress: onReceiveProgress,
-    )
-        .catchError((error) {
-      return Response(
-        requestOptions: RequestOptions(path: ''),
-        statusMessage: error.toString(),
-        statusCode: 999,
-      );
-    });
-    if (response.statusCode == 999) {
-      return Left(ApiError(error: fallbackErrorMessage));
-    }
     try {
-      if (response.data is List) {
-        return Right((response.data as List)
-            .map<T>((e) => create().fromJson(e))
-            .toList());
-      } else {
-        return Left(ApiError(error: "Response is not list type"));
+      var response = await _dio.post(
+        path,
+        data: body,
+        options: Options(headers: headers),
+        cancelToken: cancelToken,
+        onReceiveProgress: onReceiveProgress,
+      );
+
+      if (response.statusCode != null && response.statusCode! >= 300) {
+        final errorMessage = _extractErrorMessage(response.data);
+        return Left(ApiError(error: errorMessage ?? fallbackErrorMessage));
       }
-    } on Exception catch (e) {
-      return Left(e);
-    } catch (error) {
-      try {
-        return Left(ApiError(
-            error: errorModel != null
-                ? errorModel!().fromJson(response.data).message
-                : fallbackErrorMessage));
-      } catch (error) {
-        return Left(ApiError(error: fallbackErrorMessage));
-      }
+
+      return Right(create().fromJson(response.data));
+    } on DioException catch (e) {
+      final errorMessage = _extractErrorMessage(e.response?.data);
+      return Left(ApiError(error: errorMessage ?? fallbackErrorMessage));
+    } catch (e) {
+      return Left(ApiError(error: fallbackErrorMessage));
     }
   }
 
@@ -168,36 +140,25 @@ class ApiHelper<E extends BaseModel> {
     Map<String, dynamic>? headers,
     ProgressCallback? onReceiveProgress,
   }) async {
-    var response = await _dio
-        .get(
-      path,
-      queryParameters: params,
-      options: Options(headers: headers),
-      cancelToken: cancelToken,
-      onReceiveProgress: onReceiveProgress,
-    )
-        .catchError((error) {
-      return Response(
-        requestOptions: RequestOptions(path: ''),
-        statusMessage: error.toString(),
-        statusCode: 999,
-      );
-    });
     try {
-      return Right(create().fromJson(response.data));
-    } on Exception catch (e) {
-
-      return Left(e);
-    } catch (error) {
-      try {
-
-        return Left(ApiError(
-            error: errorModel != null
-                ? errorModel!().fromJson(response.data).message
-                : fallbackErrorMessage));
-      } catch (error) {
-        return Left(ApiError(error: fallbackErrorMessage));
+      var response = await _dio.get(
+        path,
+        queryParameters: params,
+        options: Options(headers: headers),
+        cancelToken: cancelToken,
+        onReceiveProgress: onReceiveProgress,
+      );
+      if (response.statusCode != null && response.statusCode! >= 300) {
+        final errorMessage = _extractErrorMessage(response.data);
+        return Left(ApiError(error: errorMessage ?? fallbackErrorMessage));
       }
+
+      return Right(create().fromJson(response.data));
+    } on DioException catch (e) {
+      final errorMessage = _extractErrorMessage(e.response?.data);
+      return Left(ApiError(error: errorMessage ?? fallbackErrorMessage));
+    } catch (e) {
+      return Left(ApiError(error: fallbackErrorMessage));
     }
   }
 
@@ -209,36 +170,27 @@ class ApiHelper<E extends BaseModel> {
     Map<String, dynamic>? headers,
     ProgressCallback? onReceiveProgress,
   }) async {
+    try{
     var response = await _dio
-        .delete(
-      path,
-      queryParameters: params,
-      options: Options(headers: headers),
-      cancelToken: cancelToken
-    )
-        .catchError((error) {
-      return Response(
-        requestOptions: RequestOptions(path: ''),
-        statusMessage: error.toString(),
-        statusCode: 999,
-      );
-    });
-    try {
-      return Right(create().fromJson(response.data));
-    } on Exception catch (e) {
+        .delete(path,
+        queryParameters: params,
+        options: Options(headers: headers),
+        cancelToken: cancelToken);
 
-      return Left(e);
-    } catch (error) {
-      try {
-
-        return Left(ApiError(
-            error: errorModel != null
-                ? errorModel!().fromJson(response.data).message
-                : fallbackErrorMessage));
-      } catch (error) {
-        return Left(ApiError(error: fallbackErrorMessage));
-      }
+    if (response.statusCode != null && response.statusCode! >= 300) {
+      final errorMessage = _extractErrorMessage(response.data);
+      return Left(ApiError(error: errorMessage ?? fallbackErrorMessage));
     }
+
+    return Right(create().fromJson(response.data));
+
+  }on DioException catch (e) {
+      final errorMessage = _extractErrorMessage(e.response?.data);
+      return Left(ApiError(error: errorMessage ?? fallbackErrorMessage));
+    } catch (e) {
+      return Left(ApiError(error: fallbackErrorMessage));
+    }
+
   }
 
   Future<Either<Exception, List<T>>> getListRequest<T extends BaseModel>({
@@ -320,75 +272,52 @@ class ApiHelper<E extends BaseModel> {
     Map<String, dynamic>? headers,
     ProgressCallback? onReceiveProgress,
   }) async {
-    var response = await _dio
-        .put(
-      path,
-      data: body,
-      options: Options(headers: headers),
-      cancelToken: cancelToken,
-      onReceiveProgress: onReceiveProgress,
-    )
-        .catchError((error) {
-      return Response(
-        requestOptions: RequestOptions(path: ''),
-        statusMessage: error.toString(),
-        statusCode: 999,
-      );
-    });
-    if (response.statusCode == 999) {
-      return Left(ApiError(error: fallbackErrorMessage));
-    }
     try {
-      return Right(create().fromJson(response.data));
-    } on Exception catch (e) {
-      return Left(e);
-    } catch (error) {
-      try {
-        return Left(ApiError(
-            error: errorModel != null
-                ? errorModel!().fromJson(response.data).message
-                : fallbackErrorMessage));
-      } catch (error) {
-        return Left(ApiError(error: fallbackErrorMessage));
+      var response = await _dio.put(
+        path,
+        data: body,
+        options: Options(headers: headers),
+        cancelToken: cancelToken,
+        onReceiveProgress: onReceiveProgress,
+      );
+
+      if (response.statusCode != null && response.statusCode! >= 300) {
+        final errorMessage = _extractErrorMessage(response.data);
+        return Left(ApiError(error: errorMessage ?? fallbackErrorMessage));
       }
+
+      return Right(create().fromJson(response.data));
+    } on DioException catch (e) {
+      final errorMessage = _extractErrorMessage(e.response?.data);
+      return Left(ApiError(error: errorMessage ?? fallbackErrorMessage));
+    } catch (e) {
+      return Left(ApiError(error: fallbackErrorMessage));
     }
   }
 
   Future<Either<Exception, T>> patchRequest<T extends BaseModel>(
       {required String path,
-        required CreateModel<T> create,
-        Map<String, dynamic>? body,
-        Map<String, dynamic>? headers}) async {
-    var response = await _dio
-        .patch(path, data: body, options: Options(headers: headers))
-        .catchError((error) {
-      return Response(
-        requestOptions: RequestOptions(path: ''),
-        statusMessage: error.toString(),
-        statusCode: 999,
-      );
-    });
-    if (response.statusCode == 999) {
-      return Left(ApiError(error: fallbackErrorMessage));
-    }
+      required CreateModel<T> create,
+      Map<String, dynamic>? body,
+      Map<String, dynamic>? headers}) async {
     try {
-      return Right(create().fromJson(response.data));
-    } on Exception catch (e) {
-      return Left(e);
-    } catch (error) {
-      try {
-        return Left(ApiError(
-            error: errorModel != null
-                ? errorModel!().fromJson(response.data).message
-                : fallbackErrorMessage));
-      } catch (error) {
-        return Left(ApiError(error: fallbackErrorMessage));
+      var response = await _dio.patch(path,
+          data: body, options: Options(headers: headers));
+
+      if (response.statusCode != null && response.statusCode! >= 300) {
+        final errorMessage = _extractErrorMessage(response.data);
+        return Left(ApiError(error: errorMessage ?? fallbackErrorMessage));
       }
+
+      return Right(create().fromJson(response.data));
+    } on DioException catch (e) {
+      final errorMessage = _extractErrorMessage(e.response?.data);
+      return Left(ApiError(error: errorMessage ?? fallbackErrorMessage));
+    } catch (e) {
+      return Left(ApiError(error: fallbackErrorMessage));
     }
   }
 }
-
-
 
 extension DioFetchExtension<E extends BaseModel> on ApiHelper<E> {
   Future<Either<Exception, Response>> fetchRequest({

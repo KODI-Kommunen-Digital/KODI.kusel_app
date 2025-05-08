@@ -44,7 +44,7 @@ class _OnboardingLoadingPageState extends ConsumerState<OnboardingLoadingPage> {
     String textMsg = "${AppLocalizations.of(context).thanks} $userName!";
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.onSecondary,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         resizeToAvoidBottomInset: false,
         body: Container(
           decoration: BoxDecoration(
@@ -66,12 +66,12 @@ class _OnboardingLoadingPageState extends ConsumerState<OnboardingLoadingPage> {
                 textBoldPoppins(
                     text: textMsg,
                     fontSize: 18.sp,
-                    color: Theme.of(context).colorScheme.secondary),
+                    color: Theme.of(context).textTheme.bodyLarge?.color),
                 10.verticalSpace,
                 textRegularPoppins(
                     text: AppLocalizations.of(context).preparing_the_app_text,
                     textOverflow: TextOverflow.visible,
-                    color: Theme.of(context).colorScheme.secondary,
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
                     fontSize: 12.sp)
               ],
             ),

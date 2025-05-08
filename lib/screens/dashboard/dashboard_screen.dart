@@ -8,6 +8,7 @@ import 'package:kusel/screens/category/category_screen.dart';
 import 'package:kusel/screens/search/search_screen.dart';
 
 import '../../images_path.dart';
+import '../explore/explore_screen.dart';
 import '../home/home_screen.dart';
 import '../location/location_screen.dart';
 import '../settings/settings_screen.dart';
@@ -23,7 +24,7 @@ class DashboardScreen extends ConsumerStatefulWidget {
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   final List<Widget> _pages = [
     HomeScreen(),
-    CategoryScreen(),
+    ExploreScreen(),
     SearchScreen(),
     LocationScreen(),
     SettingsScreen()
@@ -69,9 +70,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
               left: 16,
               right: 16,
               child: DotNavigationBar(
-                backgroundColor: Theme.of(context).colorScheme.secondary,
+                backgroundColor: Theme.of(context).bottomAppBarTheme.color,
                 selectedItemColor: Theme.of(context).indicatorColor,
-                unselectedItemColor: Theme.of(context).canvasColor,
+                unselectedItemColor: Theme.of(context).colorScheme.onPrimary,
                 currentIndex: selectedIndex,
                 enableFloatingNavBar: true,
                 paddingR: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
@@ -99,7 +100,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             imagePath['discover_icon'] ?? "",
                             color: selectedIndex == 1
                                 ? Theme.of(context).indicatorColor
-                                : Theme.of(context).canvasColor,
+                                : Theme.of(context).colorScheme.onPrimary,
                           ),
                         ),
                       ),
@@ -122,7 +123,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           imagePath['location_icon'] ?? "",
                           color: selectedIndex == 3
                               ? Theme.of(context).indicatorColor
-                              : Theme.of(context).canvasColor,
+                              : Theme.of(context).colorScheme.onPrimary,
                         ),
                       ),
                     ),
