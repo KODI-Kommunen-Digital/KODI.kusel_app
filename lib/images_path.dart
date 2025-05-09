@@ -52,8 +52,7 @@ Map<String, String> _pngImagePath = {
   "city_background_image":"assets/png/city_background_image.png",
   "mail":"assets/png/mail.png",
   "phone":"assets/png/phone.png",
-  "crest":"assets/png/crest.png"
-  "get_involved": "assets/png/get_involved.png",
+  "crest":"assets/png/crest.png",
   "map_image" : "assets/png/map_image.png",
   "kusel_map_image" : "assets/png/kusel_map_image.png"
 };

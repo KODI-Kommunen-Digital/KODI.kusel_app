@@ -28,8 +28,9 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
   getEventsUsingCityId({required String municipalId}) async {
     try {
       state = state.copyWith(showEventLoading: true);
+      final id = "1"??municipalId;
       GetAllListingsRequestModel requestModel =
-          GetAllListingsRequestModel(cityId: municipalId, categoryId: '3');
+          GetAllListingsRequestModel(cityId: id, categoryId: '3');
 
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
 
@@ -52,8 +53,10 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
   getNewsUsingCityId({required String municipalId}) async {
     try {
       state = state.copyWith(showNewsLoading: true);
+      final id = "1"??municipalId;
+      final categoryId = "1";
       GetAllListingsRequestModel requestModel =
-          GetAllListingsRequestModel(cityId: municipalId, categoryId: "1");
+          GetAllListingsRequestModel(cityId: id);
 
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
 
