@@ -37,7 +37,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     Future.microtask(() {
       ref.read(homeScreenProvider.notifier).getLocation();
-      ref.read(homeScreenProvider.notifier).getUserDetails();
+      //ref.read(homeScreenProvider.notifier).getUserDetails();
       ref.read(homeScreenProvider.notifier).getHighlights();
       ref.read(homeScreenProvider.notifier).getEvents();
       ref.read(homeScreenProvider.notifier).getNearbyEvents();
@@ -97,7 +97,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child: Column(
                     children: [
                       Visibility(
-                          visible: !ref
+                          visible: false??!ref
                               .read(homeScreenProvider)
                               .isSignupButtonVisible,
                           child: isLoading
@@ -179,7 +179,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                 ),
                 Visibility(
-                    visible:
+                    visible:false??
                         ref.watch(homeScreenProvider).isSignupButtonVisible,
                     child: Positioned(
                         left: 15.w,
