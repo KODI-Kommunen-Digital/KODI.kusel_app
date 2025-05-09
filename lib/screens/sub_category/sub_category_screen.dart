@@ -132,7 +132,7 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
           return GestureDetector(
             onTap: () {
               ref.read(navigationProvider).navigateUsingPath(
-                  path: eventListScreenPath,
+                  path: selectedEventListScreenPath,
                   context: context,
                   params:
                   // Need to be replaced with actual lat-long value

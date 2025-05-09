@@ -18,7 +18,12 @@ Map<String, String> _svgImagePath = {
   "transport_icon": "assets/svg/transport_icon.svg",
   "eye_open":"assets/svg/eye_open.svg",
   "eye_closed":"assets/svg/eye_closed.svg",
-  "map_fav":"assets/svg/map_fav.svg"
+  "map_fav":"assets/svg/map_fav.svg",
+  "mail_icon":"assets/svg/mail_icon.svg",
+  "phone_icon":"assets/svg/phone_icon.svg",
+  "online_services": "assets/svg/online_services_icon.svg",
+  "place_holder_icon": "assets/svg/place_holder_icon.svg",
+  "news_icon": "assets/svg/news_icon.svg"
 };
 
 Map<String, String> _pngImagePath = {
@@ -43,7 +48,13 @@ Map<String, String> _pngImagePath = {
   "my_town":"assets/png/my_town.png",
   "tourism_and_lesiure":"assets/png/tourism_and_lesiure.png",
   "mobility":"assets/png/mobility.png",
-  "get_involved":"assets/png/get_involved.png"
+  "get_involved":"assets/png/get_involved.png",
+  "city_background_image":"assets/png/city_background_image.png",
+  "mail":"assets/png/mail.png",
+  "phone":"assets/png/phone.png",
+  "crest":"assets/png/crest.png",
+  "map_image" : "assets/png/map_image.png",
+  "kusel_map_image" : "assets/png/kusel_map_image.png"
 };
 
 Map<String, String> _jpegImagePath = {

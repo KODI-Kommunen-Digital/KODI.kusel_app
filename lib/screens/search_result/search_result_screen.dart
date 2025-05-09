@@ -51,11 +51,13 @@ class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
   Widget build(BuildContext context) {
     final SearchResultScreenState categoryScreenState =
         ref.watch(searchResultScreenProvider);
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: categoryScreenState.loading
-          ? const Center(child: CircularProgressIndicator())
-          : _buildBody(categoryScreenState, context),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: categoryScreenState.loading
+            ? const Center(child: CircularProgressIndicator())
+            : _buildBody(categoryScreenState, context),
+      ),
     );
   }
 
@@ -64,15 +66,16 @@ class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
     return CustomScrollView(
       slivers: [
         SliverAppBar(
+          toolbarHeight: MediaQuery.of(context).size.height * 0.1,
           automaticallyImplyLeading: false,
           floating: true,
           pinned: false,
-          expandedHeight: MediaQuery.of(context).size.height * 0.15,
+          expandedHeight: MediaQuery.of(context).size.height * 0.2,
           flexibleSpace: FlexibleSpaceBar(
             background: ClipPath(
               clipper: UpstreamWaveClipper(),
               child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.15,
+                height: MediaQuery.of(context).size.height * 0.2,
                 width: MediaQuery.of(context).size.width,
                 child: Image.asset(
                   imagePath['background_image'] ?? "",
@@ -126,7 +129,7 @@ class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
                         child: InkWell(
                           onTap: () {
                             ref.read(navigationProvider).navigateUsingPath(
-                                path: eventListScreenPath,
+                                path: selectedEventListScreenPath,
                                 params: SelectedEventListScreenParameter(
                                     listHeading: AppLocalizations.of(context)
                                         .search_heading,
