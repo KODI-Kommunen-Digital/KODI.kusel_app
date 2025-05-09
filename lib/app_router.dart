@@ -22,6 +22,7 @@ import 'package:kusel/screens/sub_category/sub_category_screen_parameter.dart';
 import 'package:kusel/screens/onboarding/onboarding_finish_page.dart';
 import 'package:kusel/screens/onboarding/onboarding_loading_page.dart';
 import 'package:kusel/screens/onboarding/onboarding_screen.dart';
+import 'package:kusel/screens/virtual_town_hall/virtual_town_hall_screen.dart';
 
 final mobileRouterProvider = Provider((ref) => GoRouter(routes: goRouteList));
 
@@ -43,6 +44,7 @@ const profileScreenPath = "/profileScreenPath";
 const favoritesListScreenPath = "/favoritesListScreenPath";
 const feedbackScreenPath = "/feedbackScreenPath";
 const allEventScreenPath = "/allEventScreen";
+const virtualTownHallScreenPath = "/virtualTownHallScreenPath";
 
 List<RouteBase> goRouteList = [
   GoRoute(
@@ -147,6 +149,12 @@ List<RouteBase> goRouteList = [
       path: allEventScreenPath,
       builder: (context, state) {
         return AllEventScreen(
+        );
+      }),
+  GoRoute(
+      path: virtualTownHallScreenPath,
+      builder: (context, state) {
+        return VirtualTownHallScreen(
         );
       })
 ];
