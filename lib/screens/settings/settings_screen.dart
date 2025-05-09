@@ -121,7 +121,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
         ),
         Visibility(
-          visible: !ref.watch(settingsScreenProvider).isLoggedIn,
+          visible: false??!ref.watch(settingsScreenProvider).isLoggedIn,
           child: ListTile(
             leading: const Icon(Icons.login),
             title: textBoldPoppins(

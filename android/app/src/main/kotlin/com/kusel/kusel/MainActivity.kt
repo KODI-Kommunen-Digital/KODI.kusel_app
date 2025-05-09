@@ -1,4 +1,4 @@
-package com.kusel.kusel
+package de.landkreiskusel.app
 
 import io.flutter.embedding.android.FlutterActivity
 

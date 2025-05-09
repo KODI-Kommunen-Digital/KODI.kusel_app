@@ -5,6 +5,7 @@ import 'package:kusel/screens/auth/forgot_password/forgot_password_screen.dart';
 import 'package:kusel/screens/auth/signin/signin_screen.dart';
 import 'package:kusel/screens/auth/signup/signup_screen.dart';
 import 'package:kusel/screens/dashboard/dashboard_screen.dart';
+import 'package:kusel/screens/event/event_detail_screen.dart';
 import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/events_listing/selected_event_list_screen.dart';
 import 'package:kusel/screens/events_listing/selected_event_list_screen_parameter.dart';
@@ -12,16 +13,18 @@ import 'package:kusel/screens/favorite/favorites_list_screen.dart';
 import 'package:kusel/screens/feedback/feedback_screen.dart';
 import 'package:kusel/screens/fliter_screen/filter_screen.dart';
 import 'package:kusel/screens/highlight/highlight_screen.dart';
-import 'package:kusel/screens/event/event_detail_screen.dart';
+import 'package:kusel/screens/municipal_party_detail/municipal_detail_screen.dart';
+import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
+import 'package:kusel/screens/onboarding/onboarding_finish_page.dart';
+import 'package:kusel/screens/onboarding/onboarding_loading_page.dart';
+import 'package:kusel/screens/onboarding/onboarding_screen.dart';
 import 'package:kusel/screens/profile/profile_screen.dart';
 import 'package:kusel/screens/search_result/search_result_screen.dart';
 import 'package:kusel/screens/search_result/search_result_screen_parameter.dart';
 import 'package:kusel/screens/splash/splash_screen.dart';
 import 'package:kusel/screens/sub_category/sub_category_screen.dart';
 import 'package:kusel/screens/sub_category/sub_category_screen_parameter.dart';
-import 'package:kusel/screens/onboarding/onboarding_finish_page.dart';
-import 'package:kusel/screens/onboarding/onboarding_loading_page.dart';
-import 'package:kusel/screens/onboarding/onboarding_screen.dart';
+import 'package:kusel/screens/virtual_town_hall/virtual_town_hall_screen.dart';
 
 final mobileRouterProvider = Provider((ref) => GoRouter(routes: goRouteList));
 
@@ -33,7 +36,7 @@ const eventScreenPath = "/eventScreenPath";
 const forgotPasswordPath = "/forgotPasswordPath";
 const highlightScreenPath = "/highlightScreenPath";
 const subCategoryScreenPath = "/subCategoryPath";
-const eventListScreenPath = "/eventListScreenPath";
+const selectedEventListScreenPath = "/eventListScreenPath";
 const filterScreenPath = "/filterScreenPath";
 const searchResultScreenPath = "/searchResultScreenPath";
 const onboardingScreenPath = "/onboardingScreenPath";
@@ -43,6 +46,8 @@ const profileScreenPath = "/profileScreenPath";
 const favoritesListScreenPath = "/favoritesListScreenPath";
 const feedbackScreenPath = "/feedbackScreenPath";
 const allEventScreenPath = "/allEventScreen";
+const virtualTownHallScreenPath = "/virtualTownHallScreenPath";
+const municipalDetailScreenPath = "/municipalDetailScreenPath";
 
 List<RouteBase> goRouteList = [
   GoRoute(
@@ -69,15 +74,14 @@ List<RouteBase> goRouteList = [
       path: eventScreenPath,
       builder: (context, state) {
         return EventDetailScreen(
-            eventScreenParams: state.extra as EventDetailScreenParams
-        );
+            eventScreenParams: state.extra as EventDetailScreenParams);
       }),
   GoRoute(
-      path: eventListScreenPath,
+      path: selectedEventListScreenPath,
       builder: (context, state) {
         return SelectedEventListScreen(
             eventListScreenParameter:
-            state.extra as SelectedEventListScreenParameter);
+                state.extra as SelectedEventListScreenParameter);
       }),
   GoRoute(
       path: forgotPasswordPath,
@@ -105,38 +109,33 @@ List<RouteBase> goRouteList = [
       path: searchResultScreenPath,
       builder: (context, state) {
         return SearchResultScreen(
-            searchResultScreenParameter: state.extra as SearchResultScreenParameter
-        );
+            searchResultScreenParameter:
+                state.extra as SearchResultScreenParameter);
       }),
   GoRoute(
       path: onboardingScreenPath,
       builder: (context, state) {
         return OnboardingScreen();
-      }
-  ),
+      }),
   GoRoute(
       path: onboardingLoadingPagePath,
       builder: (context, state) {
         return OnboardingLoadingPage();
-      }
-  ),
+      }),
   GoRoute(
       path: onboardingFinishPagePath,
       builder: (context, state) {
         return OnboardingFinishPage();
-      }
-  ),
+      }),
   GoRoute(
       path: profileScreenPath,
       builder: (context, state) {
         return ProfileScreen();
-      }
-  ),
+      }),
   GoRoute(
       path: favoritesListScreenPath,
       builder: (context, state) {
-        return FavoritesListScreen(
-        );
+        return FavoritesListScreen();
       }),
   GoRoute(
       path: feedbackScreenPath,
@@ -146,7 +145,24 @@ List<RouteBase> goRouteList = [
   GoRoute(
       path: allEventScreenPath,
       builder: (context, state) {
-        return AllEventScreen(
+        return AllEventScreen();
+      }),
+  GoRoute(
+      path: virtualTownHallScreenPath,
+      builder: (context, state) {
+        return VirtualTownHallScreen();
+      }),
+  GoRoute(
+      path: municipalDetailScreenPath,
+      builder: (context, state) {
+        return MunicipalDetailScreen(
+          municipalDetailScreenParams:
+              state.extra as MunicipalDetailScreenParams,
         );
+      }),
+  GoRoute(
+      path: virtualTownHallScreenPath,
+      builder: (context, state) {
+        return VirtualTownHallScreen();
       })
 ];
