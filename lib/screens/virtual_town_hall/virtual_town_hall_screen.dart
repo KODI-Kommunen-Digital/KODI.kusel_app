@@ -1,14 +1,31 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
+import 'package:domain/model/response_model/virtual_town_hall/virtual_town_hall_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:kusel/app_router.dart';
+import 'package:kusel/common_widgets/downstream_wave_clipper.dart';
+import 'package:kusel/common_widgets/feedback_card_widget.dart';
+import 'package:kusel/common_widgets/icon_text_widget_card.dart';
+import 'package:kusel/common_widgets/progress_indicator.dart';
+import 'package:kusel/common_widgets/town_hall_map_widget.dart';
 import 'package:kusel/navigation/navigation.dart';
+import 'package:kusel/screens/virtual_town_hall/virtual_town_hall_provider.dart';
+import 'package:kusel/screens/virtual_town_hall/virtual_town_hall_state.dart';
 
+import '../../common_widgets/common_event_card.dart';
+import '../../common_widgets/custom_button_widget.dart';
+import '../../common_widgets/custom_shimmer_widget.dart';
+import '../../common_widgets/highlights_card.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
 import '../../images_path.dart';
+import '../events_listing/selected_event_list_screen_parameter.dart';
 
 class VirtualTownHallScreen extends ConsumerStatefulWidget {
   const VirtualTownHallScreen({super.key});
@@ -19,22 +36,64 @@ class VirtualTownHallScreen extends ConsumerStatefulWidget {
 }
 
 class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
+
+  @override
+  void initState() {
+    Future.microtask((){
+      ref.read(virtualTownHallProvider.notifier).getVirtualTownHallDetails();
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: _buildBody(context),
+      ).loaderDialog(context, ref.watch(virtualTownHallProvider).loading),
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    final state = ref.read(virtualTownHallProvider);
+    final isLoading = ref.watch(virtualTownHallProvider).loading;
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          _buildClipper(context),
+          _buildTownHallDetailsUi(state),
+          _buildServicesList(onlineServicesList: state.onlineServiceList ?? []),
+          _customPageViewer(municipalityList: state.municipalitiesList ?? []),
+          eventsView(
+              state.newsList ?? [],
+              AppLocalizations.of(context).news,
+              5,
+              AppLocalizations.of(context).to_map_view,
+              imagePath['news_icon'] ?? "",
+              isLoading,
+              0,
+              0,
+              () {}),
+          eventsView(
+              state.eventList ?? [],
+              AppLocalizations.of(context).event_text,
+              5,
+              AppLocalizations.of(context).to_map_view,
+              imagePath['calendar'] ?? "",
+              isLoading,
+              0,
+              0,
+              () {}),
+          FeedbackCardWidget(onTap: (){
+            ref.read(navigationProvider).navigateUsingPath(
+                path: feedbackScreenPath, context: context);
+          })
+        ],
       ),
     );
   }
 
-  _buildBody(BuildContext context) {
-    return Column(
-      children: [_buildClipper(context)],
-    );
-  }
-
-  _buildClipper(context) {
+  Widget _buildClipper(context) {
     return Column(
       children: [
         SizedBox(
@@ -46,7 +105,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
               Positioned(
                 top: 0.h,
                 child: ClipPath(
-                  clipper: UpstreamWaveClipper(),
+                  clipper: DownstreamCurveClipper(),
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height * .3,
                     width: MediaQuery.of(context).size.width,
@@ -95,16 +154,336 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                   top: MediaQuery.of(context).size.height * .15,
                   left: 0.w,
                   right: 0.w,
+                child: Card(
+                    color: Colors.red,
+                  shape: const CircleBorder(),
+                    elevation: 10,
                   child: Container(
-                    height: 120.h,
-                    width: 70.w,
-                    decoration: BoxDecoration(shape: BoxShape.circle,
-                    color: Colors.red),
-                  ))
+                    height: 115.h,
+                    width: 115.w,
+                    padding: EdgeInsets.all(5.h.w),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Theme.of(context).canvasColor,
+                      // image: DecorationImage(
+                      //   image: CachedNetworkImageProvider(
+                      //     "",
+                      //   ),
+                      //   fit: BoxFit.cover,
+                      // ),
+                    ),
+                    child: FittedBox(
+                        fit: BoxFit.contain,
+                        child: Image.asset(imagePath['map_image'] ?? "" , height: 20.h, width: 15.w)),
+                  ),
+                  ),
+                  )
             ],
           ),
         )
       ],
     );
   }
+
+  Widget _buildTownHallDetailsUi(VirtualTownHallState state) {
+    return Padding(
+      padding: EdgeInsets.all(12.h.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          textBoldPoppins(
+              text: state.cityName ?? "",
+              color: Theme.of(context).textTheme.bodyLarge?.color,
+              fontSize: 16.sp),
+          15.verticalSpace,
+          TownHallMapWidget(
+            address: state.address ?? "",
+            websiteText: AppLocalizations.of(context).visit_website,
+            websiteUrl: state.websiteUrl ?? "www.google.com",
+            latitude: state.latitude ?? 49.53603477650214,
+            longitude: state.longitude ?? 7.392734870386151,
+            phoneNumber: state.phoneNumber ?? '',
+            email : state.phoneNumber ?? '',
+            calendarText: 'Geöffnet',
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildServicesList({required List<OnlineService> onlineServicesList}) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal : 12.w),
+      child: Column(
+        children: [
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: onlineServicesList.length,
+            itemBuilder: (context, index) {
+              final item = onlineServicesList[index];
+              return IconTextWidgetCard(
+                  onTap: (){},
+                  imageUrl: item.iconUrl ?? 'https://picsum.photos/200',
+                  text: item.title ?? '',
+                  description: item.description ?? '');
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _customPageViewer({required List<Municipality> municipalityList}) {
+    VirtualTownHallState state = ref.watch(virtualTownHallProvider);
+    int currentIndex = state.highlightCount;
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+      child: Column(
+        children: [
+          20.verticalSpace,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.w),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    textRegularPoppins(
+                        text: AppLocalizations.of(context).our_communities,
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context)
+                            .textTheme
+                            .bodyLarge
+                            ?.color),
+                    12.horizontalSpace,
+                    SvgPicture.asset(
+                      imagePath['arrow_icon'] ?? "",
+                      height: 10.h,
+                      width: 16.w,
+                    )
+                  ],
+                ),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      municipalityList.length,
+                          (index) => InkWell(
+                        onTap: () {
+                          // ref.read(navigationProvider).navigateUsingPath(
+                          //     context: context,
+                          //     path: eventScreenPath,
+                          //     params: EventDetailScreenParams(
+                          //         eventId:
+                          //         state.highlightsList[index].id));
+                        },
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.circle,
+                              size: currentIndex == index ? 11 : 8,
+                              color: currentIndex == index
+                                  ? Theme.of(context).primaryColor
+                                  : Theme.of(context)
+                                  .primaryColor
+                                  .withAlpha(130),
+                            ),
+                            // if (index != state.highlightsList.length - 1)
+                            if (index != municipalityList.length - 1)
+                              4.horizontalSpace
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          10.verticalSpace,
+          SizedBox(
+            height: 315.h,
+            child: PageView.builder(
+              controller: PageController(
+                  viewportFraction: 317 / MediaQuery.of(context).size.width),
+              scrollDirection: Axis.horizontal,
+              padEnds: false,
+              itemCount: municipalityList.length,
+              itemBuilder: (context, index) {
+                final municipalities = municipalityList[index];
+                return Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 6.h.w),
+                  child: HighlightsCard(
+                    imageUrl: municipalities.image ?? "https://picsum.photos/200",
+                    date: municipalities.createdAt ?? "",
+                    heading: municipalities.name ?? "",
+                    description: municipalities.description ?? "",
+                    isFavourite: false,
+                    errorImagePath: imagePath['kusel_map_image'],
+                    onPress: () {
+                      // ref.read(navigationProvider).navigateUsingPath(
+                      //   context: context,
+                      //   path: eventScreenPath,
+                      //   params:
+                      //   EventDetailScreenParams(eventId: listing.id),
+                      // );
+                    },
+                    onFavouriteIconClick: () {
+                    },
+                    // isVisible:
+                    // !ref.watch(homeScreenProvider).isSignupButtonVisible,
+                    isVisible: false,
+                  ),
+                );
+              },
+              onPageChanged: (index) {
+                ref
+                    .read(virtualTownHallProvider.notifier)
+                    .updateCardIndex(index);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget eventsView(
+      List<Listing> eventsList,
+      String heading,
+      int maxListLimit,
+      String buttonText,
+      String buttonIconPath,
+      bool isLoading,
+      double? latitude,
+      double? longitude,
+      void Function() onPress) {
+    if (isLoading) {
+      return Column(
+        children: [
+          Padding(
+              padding: EdgeInsets.fromLTRB(12.w, 16.w, 12.w, 0),
+              child: CustomShimmerWidget.rectangular(
+                  height: 15.h,
+                  shapeBorder: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.r)))),
+          ListView.builder(
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: 4,
+              itemBuilder: (_, index) {
+                return eventCartShimmerEffect();
+              }),
+        ],
+      );
+    } else if (eventsList.isNotEmpty) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(8.w, 16.w, 0, 0),
+            child: InkWell(
+              onTap: () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: eventListScreenPath,
+                    context: context,
+                    params: SelectedEventListScreenParameter(
+                        radius: 1,
+                        centerLatitude: latitude,
+                        centerLongitude: longitude,
+                        categoryId: 3,
+                        listHeading: heading));
+              },
+              child: Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 10.w),
+                    child: textRegularPoppins(
+                        text: heading,
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).textTheme.bodyLarge?.color),
+                  ),
+                  12.horizontalSpace,
+                  SvgPicture.asset(
+                    imagePath['arrow_icon'] ?? "",
+                    height: 10.h,
+                    width: 16.w,
+                  )
+                ],
+              ),
+            ),
+          ),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: eventsList.length > maxListLimit
+                ? maxListLimit
+                : eventsList.length,
+            itemBuilder: (context, index) {
+              final item = eventsList[index];
+              return CommonEventCard(
+                isFavorite: item.isFavorite ?? false,
+                onFavorite: () {
+                  // ref.watch(favoritesProvider.notifier).toggleFavorite(item,
+                  //     success: ({required bool isFavorite}) {
+                  //       ref
+                  //           .read(homeScreenProvider.notifier)
+                  //           .setIsFavoriteEvent(isFavorite, item.id);
+                  //     }, error: ({required String message}) {
+                  //       showErrorToast(message: message, context: context);
+                  //     });
+                },
+                imageUrl: item.logo ?? "",
+                date: item.startDate ?? "",
+                title: item.title ?? "",
+                location: item.address ?? "",
+                onTap: () {
+                  // ref.read(navigationProvider).navigateUsingPath(
+                  //     context: context,
+                  //     path: eventScreenPath,
+                  //     params: EventDetailScreenParams(eventId: item.id));
+                },
+                // isFavouriteVisible:
+                // ref.watch(favoritesProvider.notifier).showFavoriteIcon(),
+                isFavouriteVisible: false,
+              );
+            },
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+            child: CustomButton(
+                onPressed: onPress, text: buttonText, icon: buttonIconPath),
+          ),
+          15.verticalSpace
+        ],
+      );
+    }
+    return Padding(
+      padding: EdgeInsets.only(left: 16.w),
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.topLeft,
+            child: textRegularPoppins(
+                text: heading,
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).textTheme.bodyLarge?.color),
+          ),
+          16.verticalSpace,
+          textRegularPoppins(
+              text: AppLocalizations.of(context).no_data,
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).textTheme.bodyLarge?.color),
+          20.verticalSpace
+        ],
+      ),
+    );
+  }
+
 }

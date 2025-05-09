@@ -130,12 +130,14 @@
   "sunny" : "Sunny",
   "find_out_how_to" : "Find out how to get there here.",
   "read_more": "Read more",
-  "visit_website": "Visit website",
   "places_of_the_community": "Places of the community",
   "show_all_locations": "Show all locations",
-  "news": "News",
   "all_news": "View all news",
   "municipality": "municipality",
   "open": "Open",
-  "close": "Close"
+  "close": "Close",
+  "visit_website": "Visit website",
+  "our_communities": "Our communities",
+  "news": "News",
+  "event_text" : "Events"
 }
