@@ -28,3 +28,6 @@ const weatherApiKey="2ead327db48b49f28e6134655242706";
 
 // FILTER API
 const getFilterEndPoint = "";
+
+// VIRTUAL TOWN HALL
+const virtualTownHallEndPoint = "/virtualTownhall";
