@@ -130,5 +130,8 @@
   "sunny" : "Sunny",
   "find_out_how_to" : "Find out how to get there here.",
   "read_more": "Read more",
-  "visit_website": "Visit website"
+  "visit_website": "Visit website",
+  "our_communities": "Our communities",
+  "news": "News",
+  "event_text" : "Events"
 }

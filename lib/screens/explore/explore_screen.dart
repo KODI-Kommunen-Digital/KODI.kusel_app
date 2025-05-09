@@ -46,8 +46,11 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _buildBody(context),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.onSecondary,
+        body: _buildBody(context),
+      ),
     );
   }
 
@@ -134,9 +137,29 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
           ),
           itemBuilder: (context, index) {
             return ExploreGridCardView(
-                imageName: state.exploreTypeListImages[index],
-                title: state.exploreTypeList[index]);
+              imageName: state.exploreTypeListImages[index],
+              title: state.exploreTypeList[index],
+              onTap: whereToNavigate(index),
+            );
           });
     });
+  }
+
+  whereToNavigate(int index) {
+    void Function()? onTap;
+
+    switch (index) {
+      case 0:
+        onTap = () {
+          ref.read(navigationProvider).navigateUsingPath(
+              path: virtualTownHallScreenPath, context: context);
+        };
+        break;
+
+      default:
+        onTap = null;
+    }
+
+    return onTap;
   }
 }

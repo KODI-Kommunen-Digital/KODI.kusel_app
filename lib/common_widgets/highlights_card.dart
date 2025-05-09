@@ -8,24 +8,26 @@ import 'package:kusel/common_widgets/text_styles.dart';
 
 class HighlightsCard extends ConsumerStatefulWidget {
   final String imageUrl;
-  final String date;
+  final String? date;
   final String heading;
   final String description;
   final bool isFavourite;
   final VoidCallback onPress;
   final VoidCallback onFavouriteIconClick;
   final bool isVisible;
+  final String? errorImagePath;
 
   const HighlightsCard({
     super.key,
     required this.imageUrl,
-    required this.date,
+    this.date,
     required this.heading,
     required this.description,
     required this.isFavourite,
     required this.onPress,
     required this.onFavouriteIconClick,
     required this.isVisible,
+    this.errorImagePath
   });
 
   @override
@@ -52,6 +54,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
           ],
         ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
               height: 200.h,
@@ -69,7 +72,10 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                         progressIndicatorBuilder:
                             (context, url, downloadProgress) =>
                                 Center(child: CircularProgressIndicator()),
-                        errorWidget: (context, url, error) => Icon(Icons.error),
+                        errorWidget: (context, url, error) =>
+                            (widget.errorImagePath != null)
+                                ? Image.asset(widget.errorImagePath ?? '')
+                                : Icon(Icons.error),
                       ),
                     ),
                   ),
@@ -100,19 +106,23 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                 ],
               ),
             ),
-            6.verticalSpace,
+            2.verticalSpace,
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                (widget.date!=null) ? textSemiBoldMontserrat(
+                    text: formatDate(widget.date ?? ""), fontSize: 14) : SizedBox.shrink(),
+                (widget.date!=null) ? 4.verticalSpace : SizedBox.shrink(),
                 textSemiBoldMontserrat(
-                    text: formatDate(widget.date), fontSize: 14),
-                4.verticalSpace,
-                textSemiBoldMontserrat(text: widget.heading, fontSize: 16),
+                    text: widget.heading,
+                    fontSize: 14.sp,
+                    color: Theme.of(context).textTheme.bodyLarge?.color),
                 4.verticalSpace,
                 textSemiBoldMontserrat(
                     text: widget.description,
-                    fontSize: 14,
+                    fontSize: 12.sp,
                     textAlign: TextAlign.start,
+                    color: Theme.of(context).textTheme.labelMedium?.color,
                     textOverflow: TextOverflow.ellipsis,
                     maxLines: 3),
               ],
