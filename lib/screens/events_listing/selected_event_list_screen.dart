@@ -42,11 +42,13 @@ class _ExploreScreenState extends ConsumerState<SelectedEventListScreen> {
   Widget build(BuildContext context) {
     final SelectedEventListScreenState categoryScreenState =
         ref.watch(selectedEventListScreenProvider);
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: categoryScreenState.loading
-          ? const Center(child: CircularProgressIndicator())
-          : _buildBody(categoryScreenState, context),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: categoryScreenState.loading
+            ? const Center(child: CircularProgressIndicator())
+            : _buildBody(categoryScreenState, context),
+      ),
     );
   }
 
@@ -55,15 +57,17 @@ class _ExploreScreenState extends ConsumerState<SelectedEventListScreen> {
     return CustomScrollView(
       slivers: [
         SliverAppBar(
+
           automaticallyImplyLeading: false,
           floating: true,
           pinned: false,
-          expandedHeight: MediaQuery.of(context).size.height * 0.15,
+          toolbarHeight: MediaQuery.of(context).size.height * .1 ,
+          expandedHeight: MediaQuery.of(context).size.height * 0.2,
           flexibleSpace: FlexibleSpaceBar(
             background: ClipPath(
               clipper: UpstreamWaveClipper(),
               child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.15,
+                height: MediaQuery.of(context).size.height * 0.2,
                 width: MediaQuery.of(context).size.width,
                 child: Image.asset(
                   imagePath['background_image'] ?? "",

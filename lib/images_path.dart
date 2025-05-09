@@ -43,7 +43,11 @@ Map<String, String> _pngImagePath = {
   "my_town":"assets/png/my_town.png",
   "tourism_and_lesiure":"assets/png/tourism_and_lesiure.png",
   "mobility":"assets/png/mobility.png",
-  "get_involved":"assets/png/get_involved.png"
+  "get_involved":"assets/png/get_involved.png",
+  "city_background_image":"assets/png/city_background_image.png",
+  "mail":"assets/png/mail.png",
+  "phone":"assets/png/phone.png",
+  "crest":"assets/png/crest.png"
 };
 
 Map<String, String> _jpegImagePath = {
