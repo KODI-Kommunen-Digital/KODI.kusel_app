@@ -132,5 +132,10 @@
   "sunny" : "sonning",
   "find_out_how_to" : "Schau dir hier an, wie du am besten hinkommst",
   "read_more": "Weiterlesen",
-  "visit_website": "Website besuchen"
+  "visit_website": "Website besuchen",
+  "our_communities": "Unsere Gemeinden",
+  "news": "Aktuelles",
+  "event_text" : "Events"
+
+
 }

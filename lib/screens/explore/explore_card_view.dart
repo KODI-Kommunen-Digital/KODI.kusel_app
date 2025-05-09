@@ -23,39 +23,42 @@ class ExploreGridCardView extends ConsumerStatefulWidget {
 class _CommonEventCardState extends ConsumerState<ExploreGridCardView> {
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Colors.white,
-      margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
-      elevation: 4,
-      child: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.only(top: 6.h, left: 6.w, right: 6.w),
-            height: 85.h,
-            width: 180.w,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8.r),
-              child: Image.asset(imagePath[widget.imageName]!),
-            ),
-          ),
-          Expanded(
-            child: SizedBox(
-              width: 175.w,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w),
-                    child: textRegularMontserrat(
-                        text: widget.title, fontSize: 12.sp),
-                  ),
-                ],
+    return GestureDetector(
+      onTap: widget.onTap,
+      child: Card(
+        color: Colors.white,
+        margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+        elevation: 4,
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.only(top: 6.h, left: 6.w, right: 6.w),
+              height: 85.h,
+              width: 180.w,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8.r),
+                child: Image.asset(imagePath[widget.imageName]!),
               ),
             ),
-          )
-        ],
+            Expanded(
+              child: SizedBox(
+                width: 175.w,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w),
+                      child: textRegularMontserrat(
+                          text: widget.title, fontSize: 12.sp),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
