@@ -5,7 +5,6 @@ import 'package:kusel/screens/auth/forgot_password/forgot_password_screen.dart';
 import 'package:kusel/screens/auth/signin/signin_screen.dart';
 import 'package:kusel/screens/auth/signup/signup_screen.dart';
 import 'package:kusel/screens/dashboard/dashboard_screen.dart';
-import 'package:kusel/screens/event/event_detail_screen.dart';
 import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/events_listing/selected_event_list_screen.dart';
 import 'package:kusel/screens/events_listing/selected_event_list_screen_parameter.dart';
@@ -24,6 +23,10 @@ import 'package:kusel/screens/search_result/search_result_screen_parameter.dart'
 import 'package:kusel/screens/splash/splash_screen.dart';
 import 'package:kusel/screens/sub_category/sub_category_screen.dart';
 import 'package:kusel/screens/sub_category/sub_category_screen_parameter.dart';
+import 'package:kusel/screens/virtual_town_hall/virtual_town_hall_screen.dart';
+import 'package:kusel/screens/onboarding/onboarding_finish_page.dart';
+import 'package:kusel/screens/onboarding/onboarding_loading_page.dart';
+import 'package:kusel/screens/onboarding/onboarding_screen.dart';
 import 'package:kusel/screens/virtual_town_hall/virtual_town_hall_screen.dart';
 
 final mobileRouterProvider = Provider((ref) => GoRouter(routes: goRouteList));
@@ -48,6 +51,7 @@ const feedbackScreenPath = "/feedbackScreenPath";
 const allEventScreenPath = "/allEventScreen";
 const virtualTownHallScreenPath = "/virtualTownHallScreenPath";
 const municipalDetailScreenPath = "/municipalDetailScreenPath";
+const virtualTownHallScreenPath = "/virtualTownHallScreenPath";
 
 List<RouteBase> goRouteList = [
   GoRoute(
@@ -158,6 +162,12 @@ List<RouteBase> goRouteList = [
         return MunicipalDetailScreen(
           municipalDetailScreenParams:
               state.extra as MunicipalDetailScreenParams,
+        );
+      }),
+  GoRoute(
+      path: virtualTownHallScreenPath,
+      builder: (context, state) {
+        return VirtualTownHallScreen(
         );
       })
 ];
