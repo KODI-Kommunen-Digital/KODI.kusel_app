@@ -5,6 +5,7 @@ class SelectedEventListScreenParameter {
   double? centerLatitude;
   double? centerLongitude;
   int? radius;
+  int? cityId;
 
   SelectedEventListScreenParameter({
     required this.categoryId,
@@ -13,6 +14,7 @@ class SelectedEventListScreenParameter {
     this.centerLatitude,
     this.centerLongitude,
     this.radius,
+    this.cityId
   });
 }
 

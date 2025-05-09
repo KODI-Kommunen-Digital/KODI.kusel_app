@@ -307,7 +307,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             child: InkWell(
               onTap: () {
                 ref.read(navigationProvider).navigateUsingPath(
-                    path: eventListScreenPath,
+                    path: selectedEventListScreenPath,
                     context: context,
                     // Need to be replaced with actual lat-long value
                     params: SelectedEventListScreenParameter(

@@ -13,6 +13,7 @@ import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
+import '../municipal_party_detail/widget/municipal_detail_screen_params.dart';
 
 class ExploreScreen extends ConsumerStatefulWidget {
   const ExploreScreen({super.key});
@@ -128,22 +129,32 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
       final controller = ref.read(exploreControllerProvider.notifier);
       final state = ref.watch(exploreControllerProvider);
 
+      if (state.exploreTypeList.isEmpty) {
+        // Show a placeholder during initial load
+        return SizedBox(
+          height: 300.h, // reserve space to avoid layout shift
+          child: Center(child: CircularProgressIndicator()),
+        );
+      }
+
       return GridView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: state.exploreTypeList.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-          ),
-          itemBuilder: (context, index) {
-            return ExploreGridCardView(
-              imageName: state.exploreTypeListImages[index],
-              title: state.exploreTypeList[index],
-              onTap: whereToNavigate(index),
-            );
-          });
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: state.exploreTypeList.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+        ),
+        itemBuilder: (context, index) {
+          return ExploreGridCardView(
+            imageName: state.exploreTypeListImages[index],
+            title: state.exploreTypeList[index],
+            onTap: whereToNavigate(index),
+          );
+        },
+      );
     });
   }
+
 
   whereToNavigate(int index) {
     void Function()? onTap;
@@ -153,6 +164,14 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
         onTap = () {
           ref.read(navigationProvider).navigateUsingPath(
               path: virtualTownHallScreenPath, context: context);
+        };
+        break;
+
+      case 1:
+        onTap = () {
+          ref.read(navigationProvider).navigateUsingPath(
+              path: municipalDetailScreenPath, context: context,
+          params: MunicipalDetailScreenParams(municipalId: '1'));
         };
         break;
 
