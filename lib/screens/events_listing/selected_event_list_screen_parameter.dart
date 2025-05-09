@@ -8,7 +8,7 @@ class SelectedEventListScreenParameter {
   int? cityId;
 
   SelectedEventListScreenParameter({
-    required this.categoryId,
+     this.categoryId,
     this.subCategoryId,
     required this.listHeading,
     this.centerLatitude,

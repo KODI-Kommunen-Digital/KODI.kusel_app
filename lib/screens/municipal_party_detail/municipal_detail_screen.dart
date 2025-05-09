@@ -53,63 +53,58 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isLoading = ref.watch(municipalDetailControllerProvider.select((state) => state.isLoading));
+    final isLoading = ref.watch(
+        municipalDetailControllerProvider.select((state) => state.isLoading));
 
     return SafeArea(
       child: Scaffold(
-        body:    Stack(
-          children: [
-
-
-
-            Positioned.fill(child: _buildBody(context)),
-
-            if(isLoading)
-              Center(child:Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
-                height: 100.h,
-                width: 100.w,
-                child: const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              )),
-          ],
-        )
-
-      ),
+          body: Stack(
+        children: [
+          Positioned.fill(child: _buildBody(context)),
+          if (isLoading)
+            Center(
+                child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              height: 100.h,
+              width: 100.w,
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            )),
+        ],
+      )),
     );
   }
 
   _buildBody(BuildContext context) {
     return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                _buildClipper(context),
-                _buildDescription(context),
-                32.verticalSpace,
-                _buildLocationCard(),
-                32.verticalSpace,
-                _buildPlacesOfTheCommunity(context),
-                32.verticalSpace,
-                _buildEvents(context),
-                32.verticalSpace,
-                _buildNews(context),
-                32.verticalSpace,
-                FeedbackCardWidget(
-                  onTap: () {
-                    ref.read(navigationProvider).navigateUsingPath(
-                        path: feedbackScreenPath, context: context);
-                  },
-                ),
-                20.verticalSpace
-              ],
-            ),
-          );
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          _buildClipper(context),
+          _buildDescription(context),
+          32.verticalSpace,
+          _buildLocationCard(),
+          32.verticalSpace,
+          _buildPlacesOfTheCommunity(context),
+          32.verticalSpace,
+          _buildEvents(context),
+          32.verticalSpace,
+          _buildNews(context),
+          32.verticalSpace,
+          FeedbackCardWidget(
+            onTap: () {
+              ref.read(navigationProvider).navigateUsingPath(
+                  path: feedbackScreenPath, context: context);
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   _buildClipper(context) {
@@ -176,9 +171,11 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                               },
                             )
                           : Center(
-                              child: Image.asset(imagePath['crest']!,
+                              child: Image.asset(
+                                imagePath['crest']!,
                                 height: 120.h,
-                                width: 100.w,),
+                                width: 100.w,
+                              ),
                             ),
                     ),
                   )
@@ -408,9 +405,10 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
               Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: CustomButton(
+                      icon: imagePath['calendar'] ?? "",
                       onPressed: () {
                         final categoryId = 3;
-                        final municipalId = ref
+                        final municipalId = 1??ref
                             .watch(municipalDetailControllerProvider)
                             .municipalPartyDetailDataModel
                             ?.id;
@@ -419,10 +417,9 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                             path: selectedEventListScreenPath,
                             context: context,
                             params: SelectedEventListScreenParameter(
-                                categoryId: categoryId,
-                                cityId: municipalId,
+                                cityId: 1,
                                 listHeading:
-                                    AppLocalizations.of(context).events));
+                                    AppLocalizations.of(context).events, categoryId: null));
                       },
                       text: AppLocalizations.of(context).all_events))
             ],
@@ -541,10 +538,9 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                             path: selectedEventListScreenPath,
                             context: context,
                             params: SelectedEventListScreenParameter(
-                                categoryId: categoryId,
-                                cityId: municipalId,
+                                cityId: 1,
                                 listHeading:
-                                    AppLocalizations.of(context).news));
+                                AppLocalizations.of(context).news, categoryId: null));
                       },
                       text: AppLocalizations.of(context).all_news))
             ],
