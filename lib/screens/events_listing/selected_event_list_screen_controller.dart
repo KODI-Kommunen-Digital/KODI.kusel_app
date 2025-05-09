@@ -6,13 +6,12 @@ import 'package:kusel/screens/events_listing/selected_event_list_screen_paramete
 import 'package:kusel/screens/events_listing/selected_event_list_screen_state.dart';
 
 final selectedEventListScreenProvider = StateNotifierProvider.autoDispose<
-    SelectedEventListScreenController,
-    SelectedEventListScreenState>(
-        (ref) =>
-        SelectedEventListScreenController(
-            listingsUseCase: ref.read(listingsUseCaseProvider)));
+        SelectedEventListScreenController, SelectedEventListScreenState>(
+    (ref) => SelectedEventListScreenController(
+        listingsUseCase: ref.read(listingsUseCaseProvider)));
 
-class SelectedEventListScreenController extends StateNotifier<SelectedEventListScreenState> {
+class SelectedEventListScreenController
+    extends StateNotifier<SelectedEventListScreenState> {
   SelectedEventListScreenController({required this.listingsUseCase})
       : super(SelectedEventListScreenState.empty());
   ListingsUseCase listingsUseCase;
@@ -22,21 +21,32 @@ class SelectedEventListScreenController extends StateNotifier<SelectedEventListS
     try {
       state = state.copyWith(loading: true, error: "");
 
-      GetAllListingsRequestModel getAllListingsRequestModel =(eventListScreenParameter?.categoryId!=null)?
-      GetAllListingsRequestModel(
-        categoryId: eventListScreenParameter?.categoryId.toString(),
-        subcategoryId: eventListScreenParameter?.subCategoryId?.toString(),
-      ):GetAllListingsRequestModel();
+      GetAllListingsRequestModel getAllListingsRequestModel =GetAllListingsRequestModel();
+          if(eventListScreenParameter?.categoryId != null)
+          {
+             getAllListingsRequestModel.categoryId = eventListScreenParameter?.categoryId.toString();
+          }
+
+      // if(eventListScreenParameter?.subCategoryId != null)
+      // {
+      //   getAllListingsRequestModel. = eventListScreenParameter?.categoryId.toString();
+      // }
+
+      if (eventListScreenParameter?.cityId != null) {
+        getAllListingsRequestModel.cityId =
+            eventListScreenParameter!.cityId!.toString();
+      }
+
       GetAllListingsResponseModel getAllListResponseModel =
-      GetAllListingsResponseModel();
+          GetAllListingsResponseModel();
 
       final result = await listingsUseCase.call(
           getAllListingsRequestModel, getAllListResponseModel);
       result.fold(
-            (l) {
+        (l) {
           state = state.copyWith(loading: false, error: l.toString());
         },
-            (r) {
+        (r) {
           var eventsList = (r as GetAllListingsResponseModel).data;
           state = state.copyWith(list: eventsList, loading: false);
         },
@@ -47,14 +57,11 @@ class SelectedEventListScreenController extends StateNotifier<SelectedEventListS
   }
 
   void setIsFavorite(bool isFavorite, int? id) {
-
     for (var listing in state.eventsList) {
       if (listing.id == id) {
         listing.isFavorite = isFavorite;
       }
     }
-    state = state.copyWith(
-        list: state.eventsList);
+    state = state.copyWith(list: state.eventsList);
   }
-
 }
