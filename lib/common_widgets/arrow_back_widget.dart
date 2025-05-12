@@ -29,7 +29,7 @@ class _ArrowBackWidgetState extends ConsumerState<ArrowBackWidget> {
           child: Icon(
             Icons.arrow_back,
             color: Colors.white,
-            size: widget.size?.w.h ?? 15.w.h,
+            size: widget.size?.w ?? 15.w,
           ),
         ),
       ),

@@ -38,7 +38,10 @@ class _CommonEventCardState extends ConsumerState<ExploreGridCardView> {
               width: 180.w,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.r),
-                child: Image.asset(imagePath[widget.imageName]!),
+                child: Image.asset(
+                    imagePath[widget.imageName]!,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             Expanded(
