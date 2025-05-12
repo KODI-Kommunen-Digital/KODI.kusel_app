@@ -132,7 +132,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
               //   await launchUrl(uri);
               // }
             },
-            imageUrl: 'https://picsum.photos/200',
+            imageUrl: 'train_icon',
             text: 'Ruftaxi',
           ),
           IconTextWidgetCard(
@@ -143,18 +143,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
               //   await launchUrl(uri);
               // }
             },
-            imageUrl: 'https://picsum.photos/200',
-            text: 'Mitfahrersuche',
-          ),
-          IconTextWidgetCard(
-            onTap: () async {
-              // final Uri uri =
-              // Uri.parse(item.linkUrl ?? "https://google.com");
-              // if (await canLaunchUrl(uri)) {
-              //   await launchUrl(uri);
-              // }
-            },
-            imageUrl: 'https://picsum.photos/200',
+            imageUrl: 'groups',
             text: 'Bürgerbus',
           ),
           IconTextWidgetCard(
@@ -165,7 +154,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
               //   await launchUrl(uri);
               // }
             },
-            imageUrl: 'https://picsum.photos/200',
+            imageUrl: 'glass_icon',
             text: 'Jugendtaxi',
             description: "Komm gud hääm!",
           ),
@@ -177,7 +166,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
               //   await launchUrl(uri);
               // }
             },
-            imageUrl: 'https://picsum.photos/200',
+            imageUrl: 'cap_icon',
             text: "Schülerbeförderung",
           ),
           IconTextWidgetCard(
@@ -188,19 +177,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
               //   await launchUrl(uri);
               // }
             },
-            imageUrl: 'https://picsum.photos/200',
-            text: 'Jugendtaxi',
-            description: "Komm gud hääm!",
-          ),
-          IconTextWidgetCard(
-            onTap: () async {
-              // final Uri uri =
-              // Uri.parse(item.linkUrl ?? "https://google.com");
-              // if (await canLaunchUrl(uri)) {
-              //   await launchUrl(uri);
-              // }
-            },
-            imageUrl: 'https://picsum.photos/200',
+            imageUrl: 'train_icon',
             text: 'Das Deutschlandticket',
             description: "Mobil mit der Bahn",
           )
