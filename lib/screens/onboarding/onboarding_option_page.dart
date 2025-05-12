@@ -36,7 +36,7 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
             65.verticalSpace,
             textBoldPoppins(
                 text: AppLocalizations.of(context).i_live_in_district,
-                fontSize: 18.sp,
+                fontSize: 18,
                 color: Theme.of(context).textTheme.bodyLarge?.color),
             20.verticalSpace,
             Align(
@@ -46,7 +46,7 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
                 child: textSemiBoldPoppins(
                   text: AppLocalizations.of(context).your_place_of_residence,
                   fontStyle: FontStyle.italic,
-                  fontSize: 11.sp,
+                  fontSize: 11,
                   color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
               ),
@@ -121,7 +121,7 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
                         text:
                             AppLocalizations.of(context).please_select_the_field,
                         color: Theme.of(context).colorScheme.error,
-                        fontSize: 11.sp),
+                        fontSize: 11),
                   ),
                 )),
             5.verticalSpace,
@@ -142,7 +142,7 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
             65.verticalSpace,
             textBoldPoppins(
                 text: AppLocalizations.of(context).i_live_in_district,
-                fontSize: 18.sp,
+                fontSize: 18,
                 color: Theme.of(context).textTheme.bodyLarge?.color),
             20.verticalSpace,
             Align(
@@ -152,7 +152,7 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
                 child: textSemiBoldPoppins(
                   text: AppLocalizations.of(context).your_location,
                   fontStyle: FontStyle.italic,
-                  fontSize: 11.sp,
+                  fontSize: 11,
                   color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
               ),
@@ -227,7 +227,7 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
                         text:
                             AppLocalizations.of(context).please_select_the_field,
                         color: Theme.of(context).colorScheme.error,
-                        fontSize: 11.sp),
+                        fontSize: 11),
                   ),
                 )),
           ],

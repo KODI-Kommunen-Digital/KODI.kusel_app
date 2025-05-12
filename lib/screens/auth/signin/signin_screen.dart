@@ -116,14 +116,14 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                   alignment: Alignment.center,
                   child: textBoldPoppins(
                       text: AppLocalizations.of(context).login,
-                      fontSize: 20.sp)),
+                      fontSize: 20)),
             ),
             32.verticalSpace,
             Padding(
               padding: EdgeInsets.only(left: 8.w),
               child: textSemiBoldPoppins(
                   text: AppLocalizations.of(context).enter_email_id,
-                  fontSize: 12.sp,
+                  fontSize: 12,
                   color: Theme.of(context).textTheme.displayMedium?.color),
             ),
             5.verticalSpace,
@@ -138,7 +138,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               padding: EdgeInsets.only(left: 8.w),
               child: textSemiBoldPoppins(
                   text: AppLocalizations.of(context).password,
-                  fontSize: 12.sp,
+                  fontSize: 12,
                   color: Theme.of(context).textTheme.displayMedium?.color),
             ),
             5.verticalSpace,
@@ -188,7 +188,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                 padding: EdgeInsets.only(left: 8.w),
                 child: textRegularPoppins(
                     text: AppLocalizations.of(context).forgot_password,
-                    fontSize: 12.sp,
+                    fontSize: 12,
                     decoration: TextDecoration.underline),
               ),
             ),
@@ -221,7 +221,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             Align(
                 alignment: Alignment.center,
                 child: textRegularPoppins(
-                    text: AppLocalizations.of(context).or, fontSize: 12.sp)),
+                    text: AppLocalizations.of(context).or, fontSize: 12)),
             12.verticalSpace,
             GestureDetector(
               onTap: () {
@@ -233,7 +233,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                 child: textRegularPoppins(
                     text: AppLocalizations.of(context).signup,
                     decoration: TextDecoration.underline,
-                    fontSize: 12.sp),
+                    fontSize: 12),
               ),
             )
           ],

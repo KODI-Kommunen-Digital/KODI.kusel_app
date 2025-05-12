@@ -78,7 +78,7 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                 child: Center(
                   child: textBoldPoppins(
                     color: lightThemeSecondaryColor,
-                    fontSize: 16.sp,
+                    fontSize: 16,
                     textAlign: TextAlign.center,
                     text: "Events",
                   ),
@@ -142,7 +142,7 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                               4.horizontalSpace,
                               textRegularPoppins(
                                   text: "Filters",
-                                  fontSize: 12.sp,
+                                  fontSize: 12,
                                   color: (ref
                                                   .watch(allEventScreenProvider)
                                                   .filterCount !=
@@ -173,7 +173,7 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                                   color: Theme.of(context).primaryColor),
                               child: textRegularPoppins(
                                   color: Theme.of(context).textTheme.labelSmall?.color,
-                                  fontSize: 10.sp,
+                                  fontSize: 10,
                                   text: ref
                                       .watch(allEventScreenProvider)
                                       .filterCount

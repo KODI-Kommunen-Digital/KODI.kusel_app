@@ -153,7 +153,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 alignment: Alignment.center,
                 child: textBoldPoppins(
                   text: AppLocalizations.of(context).signup,
-                  fontSize: 20.sp,
+                  fontSize: 20,
                 ),
               ),
               32.verticalSpace,
@@ -253,7 +253,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 alignment: Alignment.center,
                 child: textRegularPoppins(
                   text: AppLocalizations.of(context).or,
-                  fontSize: 12.sp,
+                  fontSize: 12,
                 ),
               ),
               12.verticalSpace,
@@ -269,7 +269,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   child: textRegularPoppins(
                     text: AppLocalizations.of(context).login,
                     decoration: TextDecoration.underline,
-                    fontSize: 12.sp,
+                    fontSize: 12,
                   ),
                 ),
               ),
@@ -286,7 +286,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       padding: EdgeInsets.only(left: 8.w),
       child: textSemiBoldPoppins(
         text: text,
-        fontSize: 12.sp,
+        fontSize: 12,
         color: Theme.of(context).textTheme.displayMedium?.color,
       ),
     );

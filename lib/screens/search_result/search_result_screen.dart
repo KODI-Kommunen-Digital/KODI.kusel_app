@@ -96,7 +96,7 @@ class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
                 child: Center(
                   child: textBoldPoppins(
                     color: lightThemeSecondaryColor,
-                    fontSize: 16.sp,
+                    fontSize: 16,
                     textAlign: TextAlign.center,
                     text: AppLocalizations.of(context).search_result ?? "",
                   ),
@@ -142,7 +142,7 @@ class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
                                 padding: EdgeInsets.only(left: 10.w),
                                 child: textRegularPoppins(
                                     text: items.isNotEmpty ? items.first.categoryName ?? "" : "",
-                                    fontSize: 16.sp,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.w600,
                                     color: Theme.of(context)
                                         .textTheme

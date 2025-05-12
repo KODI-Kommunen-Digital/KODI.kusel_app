@@ -98,7 +98,8 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
               ),
             ),
             Positioned(
-              left: (width * .45).w,
+              left: 100.w,
+               right: 100.w,
                bottom: 10.h,
               child: SizedBox(
                 width: 170.w,

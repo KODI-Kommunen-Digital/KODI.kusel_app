@@ -65,14 +65,14 @@ class _OnboardingLoadingPageState extends ConsumerState<OnboardingLoadingPage> {
                 30.verticalSpace,
                 textBoldPoppins(
                     text: textMsg,
-                    fontSize: 18.sp,
+                    fontSize: 18,
                     color: Theme.of(context).textTheme.bodyLarge?.color),
                 10.verticalSpace,
                 textRegularPoppins(
                     text: AppLocalizations.of(context).preparing_the_app_text,
                     textOverflow: TextOverflow.visible,
                     color: Theme.of(context).textTheme.bodyLarge?.color,
-                    fontSize: 12.sp)
+                    fontSize: 12)
               ],
             ),
           ),

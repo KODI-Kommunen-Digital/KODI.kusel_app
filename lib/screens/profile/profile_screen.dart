@@ -110,7 +110,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 ),
                 textBoldPoppins(
                     text: AppLocalizations.of(context).profile,
-                    fontSize: 20.sp,
+                    fontSize: 20,
                     color: Theme.of(context).textTheme.bodyLarge?.color),
                 Visibility(
                     visible: !ref.watch(profileScreenProvider).editingEnabled,
@@ -129,7 +129,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             horizontal: 20.w, vertical: 5.h),
                         child: textRegularPoppins(
                             text: AppLocalizations.of(context).edit,
-                            fontSize: 14.sp,
+                            fontSize: 14,
                             color: Theme.of(context).textTheme.labelSmall?.color),
                       ),
                     ))
