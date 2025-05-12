@@ -38,12 +38,17 @@ class _PlaceOfAnotherCommunityCardState
         children: [
           Row(
             children: [
-              CachedNetworkImage(progressIndicatorBuilder: (context,val,_){
-                return Center(child: CircularProgressIndicator(),);
-              },
-                imageUrl: widget.imageUrl,
-                width: 80.w,
-                height: 80.h,
+              CachedNetworkImage(
+                imageUrl:
+                widget.imageUrl,
+                errorWidget: (context, val, _) {
+                  return Icon(Icons.error);
+                },
+                progressIndicatorBuilder: (context, val, _) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
               ),
               16.horizontalSpace,
               textRegularMontserrat(text: widget.text,
