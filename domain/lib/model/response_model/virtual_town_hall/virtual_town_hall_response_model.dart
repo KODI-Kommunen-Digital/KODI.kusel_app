@@ -1,6 +1,7 @@
 import 'package:core/base_model.dart';
 
-class VirtualTownHallResponseModel extends BaseModel<VirtualTownHallResponseModel> {
+class VirtualTownHallResponseModel
+    extends BaseModel<VirtualTownHallResponseModel> {
   String? status;
   DistrictData? data;
 
@@ -227,7 +228,9 @@ class Municipality {
       type: json['type'],
       connectionString: json['connectionString'],
       isAdminListings: json['isAdminListings'],
-      image: json['image'],
+      image: (json['image'] != null)
+          ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['image']}"
+          : null,
       description: json['description'],
       address: json['address'],
       latitude: json['latitude'],
