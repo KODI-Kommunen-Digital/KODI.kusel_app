@@ -130,7 +130,7 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
               //   await launchUrl(uri);
               // }
             },
-            imageUrl: 'https://picsum.photos/200',
+            imageUrl: 'chat_icon',
             text: 'Jetzt mitmachen!',
             description: "So funktioniert’s",
           ),
@@ -142,7 +142,7 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
               //   await launchUrl(uri);
               // }
             },
-            imageUrl: 'https://picsum.photos/200',
+            imageUrl: 'alert_icon',
             text: 'Aktive Projekte',
           ),
           IconTextWidgetCard(
@@ -153,7 +153,7 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
               //   await launchUrl(uri);
               // }
             },
-            imageUrl: 'https://picsum.photos/200',
+            imageUrl: 'man_icon_2',
             text: 'Zur Anmeldung',
           ),
         ],
