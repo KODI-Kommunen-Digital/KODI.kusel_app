@@ -215,7 +215,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                 text:
                     "${state.municipalPartyDetailDataModel?.name ?? ""} ${AppLocalizations.of(context).municipality}",
                 color: Theme.of(context).textTheme.bodyLarge?.color,
-                fontSize: 13.sp)
+                fontSize: 13)
           ],
         ),
       );
@@ -261,18 +261,18 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
             textBaseline: TextBaseline.alphabetic,
             children: [
               Baseline(
-                baseline: 16.sp, // Adjust based on your text size
+                baseline: 16, // Adjust based on your text size
                 baselineType: TextBaseline.alphabetic,
                 child: textRegularPoppins(
                   text: AppLocalizations.of(context).places_of_the_community,
-                  fontSize: 14.sp,
+                  fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
               ),
               10.horizontalSpace, // spacing between text and icon
               Baseline(
-                baseline: 16.sp,
+                baseline: 16,
                 baselineType: TextBaseline.alphabetic,
                 child: SvgPicture.asset(
                   imagePath['arrow_icon'] ?? "",
@@ -317,11 +317,11 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
             textBaseline: TextBaseline.alphabetic,
             children: [
               Baseline(
-                baseline: 16.sp, // Adjust based on your text size
+                baseline: 16, // Adjust based on your text size
                 baselineType: TextBaseline.alphabetic,
                 child: textRegularPoppins(
                   text: AppLocalizations.of(context).events,
-                  fontSize: 14.sp,
+                  fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
@@ -333,7 +333,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                     .eventList
                     .isNotEmpty,
                 child: Baseline(
-                  baseline: 16.sp,
+                  baseline: 16,
                   baselineType: TextBaseline.alphabetic,
                   child: SvgPicture.asset(
                     imagePath['arrow_icon'] ?? "",
@@ -358,7 +358,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
               : (state.eventList.isEmpty)
                   ? textRegularPoppins(
                       text: AppLocalizations.of(context).no_data,
-                      fontSize: 12.sp,
+                      fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).textTheme.bodyLarge?.color)
                   : ListView.builder(
@@ -439,11 +439,11 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
             textBaseline: TextBaseline.alphabetic,
             children: [
               Baseline(
-                baseline: 16.sp, // Adjust based on your text size
+                baseline: 16, // Adjust based on your text size
                 baselineType: TextBaseline.alphabetic,
                 child: textRegularPoppins(
                   text: AppLocalizations.of(context).news,
-                  fontSize: 14.sp,
+                  fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
@@ -455,7 +455,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                     .newsList
                     .isNotEmpty,
                 child: Baseline(
-                  baseline: 16.sp,
+                  baseline: 16,
                   baselineType: TextBaseline.alphabetic,
                   child: SvgPicture.asset(
                     imagePath['arrow_icon'] ?? "",
@@ -480,7 +480,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
               : (state.newsList.isEmpty)
                   ? textRegularPoppins(
                       text: AppLocalizations.of(context).no_data,
-                      fontSize: 12.sp,
+                      fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).textTheme.bodyLarge?.color)
                   : ListView.builder(

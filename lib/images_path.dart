@@ -54,7 +54,8 @@ Map<String, String> _pngImagePath = {
   "phone":"assets/png/phone.png",
   "crest":"assets/png/crest.png",
   "map_image" : "assets/png/map_image.png",
-  "kusel_map_image" : "assets/png/kusel_map_image.png"
+  "kusel_map_image" : "assets/png/kusel_map_image.png",
+  "participate_image" : "assets/png/participate_image.png",
 };
 
 Map<String, String> _jpegImagePath = {

@@ -103,7 +103,7 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
           child: Align(
             alignment: Alignment.centerLeft,
             child: textSemiBoldPoppins(
-                text: "${state.selectedCategoryName}", fontSize: 16.sp),
+                text: "${state.selectedCategoryName}", fontSize: 16),
           ),
         ),
         Expanded(
