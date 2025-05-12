@@ -39,7 +39,7 @@ class CustomButton extends StatelessWidget {
     final theme = Theme.of(context);
     return SizedBox(
         width: width ?? double.infinity,
-        height: height ?? 45,
+        height: height ?? 36.h,
         child: isOutLined
             ? OutlinedButton(
           style: OutlinedButton.styleFrom(

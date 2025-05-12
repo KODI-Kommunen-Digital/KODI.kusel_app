@@ -144,17 +144,6 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
               // }
             },
             imageUrl: 'https://picsum.photos/200',
-            text: 'Ruftaxi',
-          ),
-          IconTextWidgetCard(
-            onTap: () async {
-              // final Uri uri =
-              // Uri.parse(item.linkUrl ?? "https://google.com");
-              // if (await canLaunchUrl(uri)) {
-              //   await launchUrl(uri);
-              // }
-            },
-            imageUrl: 'https://picsum.photos/200',
             text: 'Mitfahrersuche',
           ),
           IconTextWidgetCard(
@@ -238,7 +227,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
             children: [
               Icon(
                 Icons.call_outlined,
-                size: 25.h.w,
+                size: 25.w,
                 color: Theme.of(context).primaryColor,
               ),
               30.horizontalSpace,
