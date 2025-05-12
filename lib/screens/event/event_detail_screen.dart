@@ -261,8 +261,8 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
     return Row(
       children: [
         CustomShimmerWidget.circular(
-            width: 60.w,
-            height: 50.h,
+            width: 50.w,
+            height: 40.h,
             shapeBorder: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.r))),
         10.horizontalSpace,
