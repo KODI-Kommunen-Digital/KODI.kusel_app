@@ -42,7 +42,7 @@ class _DatePickerWidgetState extends ConsumerState<DatePickerWidget> {
             children: [
               textBoldPoppins(
                   text: AppLocalizations.of(context).define_period,
-                  fontSize: 16.sp,
+                  fontSize: 16,
                   color: Theme.of(context).textTheme.bodyLarge?.color),
               10.verticalSpace,
               Padding(
@@ -122,7 +122,7 @@ class _DatePickerWidgetState extends ConsumerState<DatePickerWidget> {
                       child: textRegularPoppins(
                           text: AppLocalizations.of(context).cancel,
                           fontWeight: FontWeight.w600,
-                          fontSize: 13.sp,
+                          fontSize: 13,
                           color: Theme.of(context).textTheme.bodyMedium?.color),
                     ),
                   ),
@@ -195,7 +195,7 @@ class _DatePickerWidgetState extends ConsumerState<DatePickerWidget> {
             color: isEnabled
                 ? Theme.of(context).primaryColor
                 : Theme.of(context).colorScheme.onPrimary,
-            borderRadius: BorderRadius.circular(30.sp)),
+            borderRadius: BorderRadius.circular(30)),
         padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 9.h),
         child: Row(
           children: [

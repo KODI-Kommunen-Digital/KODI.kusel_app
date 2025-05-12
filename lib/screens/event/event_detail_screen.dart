@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -81,7 +80,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
               : textBoldPoppins(
                   text: state.eventDetails.title ?? "",
                   color: Theme.of(context).textTheme.bodyLarge?.color,
-                  fontSize: 16.sp),
+                  fontSize: 16),
           15.verticalSpace,
           state.loading
               ? locationCardShimmerEffect(context)
@@ -129,20 +128,20 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
         children: [
           textBoldPoppins(
               text: heading,
-              fontSize: 15.sp,
+              fontSize: 15,
               color: Theme.of(context).textTheme.bodyLarge?.color),
           12.verticalSpace,
           textSemiBoldPoppins(
               text: subHeading,
               textAlign: TextAlign.start,
-              fontSize: 12.sp,
+              fontSize: 12,
               textOverflow: TextOverflow.visible,
               color: Theme.of(context).textTheme.bodyLarge?.color,
               fontWeight: FontWeight.w600),
           12.verticalSpace,
           textRegularPoppins(
               text: description,
-              fontSize: 11.sp,
+              fontSize: 11,
               textOverflow: TextOverflow.visible,
               color: Theme.of(context).textTheme.bodyLarge?.color,
               textAlign: TextAlign.start),
@@ -239,12 +238,12 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                   children: [
                     textBoldPoppins(
                         text: heading,
-                        fontSize: 13.sp,
+                        fontSize: 13,
                         color: Theme.of(context).textTheme.bodyLarge?.color),
                     textRegularPoppins(
                         textAlign: TextAlign.left,
                         text: description,
-                        fontSize: 11.sp,
+                        fontSize: 11,
                         color: Theme.of(context).textTheme.labelMedium?.color,
                         textOverflow: TextOverflow.visible)
                   ],
@@ -262,8 +261,8 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
     return Row(
       children: [
         CustomShimmerWidget.circular(
-            width: 60.w,
-            height: 50.h,
+            width: 50.w,
+            height: 40.h,
             shapeBorder: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.r))),
         10.horizontalSpace,
@@ -410,7 +409,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
             padding: EdgeInsets.only(left: 16.w),
             child: textBoldPoppins(
                 text: AppLocalizations.of(context).recommendation,
-                fontSize: 16.sp,
+                fontSize: 16,
                 color: Theme.of(context).textTheme.bodyLarge?.color),
           ),
           state.groupedEvents.isEmpty

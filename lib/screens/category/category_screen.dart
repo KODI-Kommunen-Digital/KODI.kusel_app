@@ -86,7 +86,7 @@ class _ExploreScreenState extends ConsumerState<CategoryScreen> {
                   top: 68.h,
                   child: textBoldPoppins(
                       color: Theme.of(context).textTheme.bodyLarge?.color,
-                      fontSize: 18.sp,
+                      fontSize: 18,
                       text: AppLocalizations.of(context).category_heading),
                 ),
               ],

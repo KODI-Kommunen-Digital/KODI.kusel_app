@@ -38,7 +38,10 @@ class _CommonEventCardState extends ConsumerState<ExploreGridCardView> {
               width: 180.w,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(8.r),
-                child: Image.asset(imagePath[widget.imageName]!),
+                child: Image.asset(
+                    imagePath[widget.imageName]!,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             Expanded(
@@ -51,7 +54,7 @@ class _CommonEventCardState extends ConsumerState<ExploreGridCardView> {
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8.w),
                       child: textRegularMontserrat(
-                          text: widget.title, fontSize: 12.sp),
+                          text: widget.title, fontSize: 12),
                     ),
                   ],
                 ),

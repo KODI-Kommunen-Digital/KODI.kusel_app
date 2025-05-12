@@ -139,7 +139,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             padding: EdgeInsets.only(left: 15.w),
                             child: textRegularPoppins(
                                 text: AppLocalizations.of(context).search,
-                                fontSize: 12.sp,
+                                fontSize: 12,
                                 fontStyle: FontStyle.italic,
                                 color: Theme.of(context)
                                     .textTheme
@@ -217,7 +217,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   child: textBoldPoppins(
                                       text: AppLocalizations.of(context)
                                           .log_in_sign_up,
-                                      fontSize: 12.sp,
+                                      fontSize: 12,
                                       color: Theme.of(context).textTheme.bodyMedium?.color),
                                 ),
                               ),
@@ -323,7 +323,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     padding: EdgeInsets.only(left: 10.w),
                     child: textRegularPoppins(
                         text: heading,
-                        fontSize: 16.sp,
+                        fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).textTheme.bodyLarge?.color),
                   ),
@@ -389,14 +389,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             alignment: Alignment.topLeft,
             child: textRegularPoppins(
                 text: heading,
-                fontSize: 16.sp,
+                fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).textTheme.bodyLarge?.color),
           ),
           16.verticalSpace,
           textRegularPoppins(
               text: AppLocalizations.of(context).no_data,
-              fontSize: 12.sp,
+              fontSize: 12,
               fontWeight: FontWeight.w600,
               color: Theme.of(context).textTheme.bodyLarge?.color),
           20.verticalSpace
@@ -427,7 +427,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         children: [
                           textRegularPoppins(
                               text: AppLocalizations.of(context).highlights,
-                              fontSize: 16.sp,
+                              fontSize: 16,
                               fontWeight: FontWeight.w600,
                               color: Theme.of(context)
                                   .textTheme
@@ -485,7 +485,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             height: 350.h,
             child: PageView.builder(
               controller: PageController(
-                  viewportFraction: 317 / MediaQuery.of(context).size.width),
+                  viewportFraction: 317.w / MediaQuery.of(context).size.width),
               scrollDirection: Axis.horizontal,
               padEnds: false,
               itemCount: state.highlightsList.length,
