@@ -37,7 +37,9 @@ class City {
     return City(
       id: json['id'],
       name: json['name'],
-      image: json['image'],
+      image: json['image'] != null
+          ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['image']}"
+          : null,
       hasForum: json['hasForum'],
     );
   }

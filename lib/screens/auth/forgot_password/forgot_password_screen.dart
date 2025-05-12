@@ -95,13 +95,13 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                 alignment: Alignment.center,
                 child: textBoldPoppins(
                     text: AppLocalizations.of(context).forgot,
-                    fontSize: 20.sp)),
+                    fontSize: 20)),
             40.verticalSpace,
             Padding(
               padding: EdgeInsets.only(left: 8.w),
               child: textSemiBoldPoppins(
                   text: AppLocalizations.of(context).enter_email_id,
-                  fontSize: 12.sp,
+                  fontSize: 12,
                   color: Theme.of(context).textTheme.displayMedium?.color),
             ),
             5.verticalSpace,
@@ -139,7 +139,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
             Align(
                 alignment: Alignment.center,
                 child: textRegularPoppins(
-                    text: AppLocalizations.of(context).or, fontSize: 12.sp)),
+                    text: AppLocalizations.of(context).or, fontSize: 12)),
             12.verticalSpace,
             GestureDetector(
               onTap: () {
@@ -151,7 +151,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                 child: textRegularPoppins(
                     text: AppLocalizations.of(context).login,
                     decoration: TextDecoration.underline,
-                    fontSize: 12.sp),
+                    fontSize: 12),
               ),
             )
           ],

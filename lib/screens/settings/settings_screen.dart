@@ -9,6 +9,7 @@ import 'package:kusel/images_path.dart';
 import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/settings/settings_screen_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../theme_manager/colors.dart';
 import '../dashboard/dashboard_screen_provider.dart';
@@ -65,9 +66,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   textAlign: TextAlign.start,
                 ),
                 onTap: () {
-                  ref
-                      .read(navigationProvider)
-                      .navigateUsingPath(path: profileScreenPath, context: context);
+                  ref.read(navigationProvider).navigateUsingPath(
+                      path: profileScreenPath, context: context);
                 },
               ),
               const Divider(),
@@ -81,24 +81,64 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               text: AppLocalizations.of(context).change_language),
           onTap: () => _showLanguageDialog(context),
         ),
+        const Divider(),
+        ListTile(
+          leading: const Icon(Icons.link),
+          title: textBoldPoppins(
+              textAlign: TextAlign.start,
+              text: AppLocalizations.of(context).imprint_page),
+          onTap: () async {
+            final Uri uri =
+                Uri.parse("https://heidi.troisdorf.dksr.city/ImprintPage");
+            if (await canLaunchUrl(uri)) {
+              await launchUrl(uri);
+            }
+          },
+        ),
+        const Divider(),
+        ListTile(
+          leading: const Icon(Icons.text_snippet_outlined),
+          title: textBoldPoppins(
+              textAlign: TextAlign.start,
+              text: AppLocalizations.of(context).terms_of_use),
+          onTap: () async {
+            final Uri uri =
+                Uri.parse("https://heidi.troisdorf.dksr.city/TermsOfUse");
+            if (await canLaunchUrl(uri)) {
+              await launchUrl(uri);
+            }
+          },
+        ),
+        const Divider(),
+        ListTile(
+          leading: const Icon(Icons.privacy_tip_outlined),
+          title: textBoldPoppins(
+              textAlign: TextAlign.start,
+              text: AppLocalizations.of(context).privacy_policy),
+          onTap: () async {
+            final Uri uri =
+                Uri.parse("https://heidi.troisdorf.dksr.city/PrivacyPolicy");
+            if (await canLaunchUrl(uri)) {
+              await launchUrl(uri);
+            }
+          },
+        ),
         Visibility(
           visible: ref.watch(settingsScreenProvider).isLoggedIn,
-          child: Column(
-            children: [
-              const Divider(),
-              ListTile(
-                leading: const Icon(Icons.favorite_border),
-                title: textBoldPoppins(
-                  text: AppLocalizations.of(context).favorites,
-                  textAlign: TextAlign.start,
-                ),
-                onTap: () async {
-                  ref.read(navigationProvider).navigateUsingPath(
-                      context: context, path: favoritesListScreenPath);
-                },
+          child: Column(children: [
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.favorite_border),
+              title: textBoldPoppins(
+                text: AppLocalizations.of(context).favorites,
+                textAlign: TextAlign.start,
               ),
-            ]
-          ),
+              onTap: () async {
+                ref.read(navigationProvider).navigateUsingPath(
+                    context: context, path: favoritesListScreenPath);
+              },
+            ),
+          ]),
         ),
         const Divider(),
         Visibility(
@@ -113,7 +153,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 ),
                 onTap: () async {
                   ref.read(settingsScreenProvider.notifier).logoutUser(() {
-                    ref.read(dashboardScreenProvider.notifier).onIndexChanged(0);
+                    ref
+                        .read(dashboardScreenProvider.notifier)
+                        .onIndexChanged(0);
                   });
                 },
               ),
@@ -121,7 +163,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
         ),
         Visibility(
-          visible: false??!ref.watch(settingsScreenProvider).isLoggedIn,
+          visible: false ?? !ref.watch(settingsScreenProvider).isLoggedIn,
           child: ListTile(
             leading: const Icon(Icons.login),
             title: textBoldPoppins(

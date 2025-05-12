@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kusel/screens/all_city/all_city_screen.dart';
 import 'package:kusel/screens/all_event/all_event_screen.dart';
 import 'package:kusel/screens/auth/forgot_password/forgot_password_screen.dart';
 import 'package:kusel/screens/auth/signin/signin_screen.dart';
@@ -13,11 +14,13 @@ import 'package:kusel/screens/favorite/favorites_list_screen.dart';
 import 'package:kusel/screens/feedback/feedback_screen.dart';
 import 'package:kusel/screens/fliter_screen/filter_screen.dart';
 import 'package:kusel/screens/highlight/highlight_screen.dart';
+import 'package:kusel/screens/mobility_screen/mobility_screen.dart';
 import 'package:kusel/screens/municipal_party_detail/municipal_detail_screen.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
 import 'package:kusel/screens/onboarding/onboarding_finish_page.dart';
 import 'package:kusel/screens/onboarding/onboarding_loading_page.dart';
 import 'package:kusel/screens/onboarding/onboarding_screen.dart';
+import 'package:kusel/screens/participate_screen/participate_screen.dart';
 import 'package:kusel/screens/profile/profile_screen.dart';
 import 'package:kusel/screens/search_result/search_result_screen.dart';
 import 'package:kusel/screens/search_result/search_result_screen_parameter.dart';
@@ -48,6 +51,9 @@ const feedbackScreenPath = "/feedbackScreenPath";
 const allEventScreenPath = "/allEventScreen";
 const virtualTownHallScreenPath = "/virtualTownHallScreenPath";
 const municipalDetailScreenPath = "/municipalDetailScreenPath";
+const mobilityScreenPath = "/mobilityScreenPath";
+const participateScreenPath = "/participateScreenPath";
+const allCityScreenPath = "/allCityScreenPath";
 
 List<RouteBase> goRouteList = [
   GoRoute(
@@ -164,5 +170,21 @@ List<RouteBase> goRouteList = [
       path: virtualTownHallScreenPath,
       builder: (context, state) {
         return VirtualTownHallScreen();
-      })
+      }),
+  GoRoute(
+      path: mobilityScreenPath,
+      builder: (context, state) {
+        return MobilityScreen();
+      }),
+  GoRoute(
+      path: participateScreenPath,
+      builder: (context, state) {
+        return ParticipateScreen();
+      }),
+  GoRoute(
+      path: allCityScreenPath,
+      builder: (context, state) {
+        return AllCityScreen();
+      }),
+
 ];

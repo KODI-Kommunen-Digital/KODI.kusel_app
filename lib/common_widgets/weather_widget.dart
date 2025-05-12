@@ -33,8 +33,8 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
             Positioned(
               bottom: 15.h,
               child: Container(
-                padding: EdgeInsets.only(left: 16.w),
-                width: width * .7,
+                padding: EdgeInsets.only(left: 10.w),
+                width: 220.w,
                 height: 240.h,
                 color: Colors.white,
                 child: Column(
@@ -98,8 +98,8 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
               ),
             ),
             Positioned(
-              left: (width * .45).w,
-               bottom: 10.h,
+               right: 20.w,
+               bottom: 5.h,
               child: SizedBox(
                 width: 170.w,
                 child: Image.asset(

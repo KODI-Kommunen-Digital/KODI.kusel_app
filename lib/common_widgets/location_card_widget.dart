@@ -256,14 +256,14 @@ Widget locationCardShimmerEffect(BuildContext context) {
         children: [
           CustomShimmerWidget.rectangular(
             height: 25.h,
-            width: MediaQuery.of(context).size.width / 2 - 20.w,
+            width: 150.w,
             shapeBorder: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.r)),
           ),
           5.horizontalSpace,
           CustomShimmerWidget.rectangular(
             height: 25.h,
-            width: MediaQuery.of(context).size.width / 2 - 20.w,
+            width: 180.w - 20.w,
             shapeBorder: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.r)),
           ),

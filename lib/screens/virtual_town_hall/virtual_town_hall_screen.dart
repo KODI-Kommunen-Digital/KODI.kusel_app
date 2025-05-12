@@ -181,7 +181,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                     16.horizontalSpace,
                     textBoldPoppins(
                         color: Theme.of(context).textTheme.labelLarge?.color,
-                        fontSize: 18.sp,
+                        fontSize: 18,
                         text: AppLocalizations.of(context).virtual_town_hall),
                   ],
                 ),
@@ -232,7 +232,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
           textBoldPoppins(
               text: state.cityName ?? "",
               color: Theme.of(context).textTheme.bodyLarge?.color,
-              fontSize: 16.sp),
+              fontSize: 16),
           15.verticalSpace,
           TownHallMapWidget(
             address: state.address ?? "",
@@ -295,7 +295,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                   children: [
                     textRegularPoppins(
                         text: AppLocalizations.of(context).our_communities,
-                        fontSize: 16.sp,
+                        fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).textTheme.bodyLarge?.color),
                     12.horizontalSpace,
@@ -349,7 +349,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
             height: 315.h,
             child: PageView.builder(
               controller: PageController(
-                  viewportFraction: 317 / MediaQuery.of(context).size.width),
+                  viewportFraction: 317.w / MediaQuery.of(context).size.width),
               scrollDirection: Axis.horizontal,
               padEnds: false,
               itemCount: municipalityList.length,
@@ -444,7 +444,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                     padding: EdgeInsets.only(left: 10.w),
                     child: textRegularPoppins(
                         text: heading,
-                        fontSize: 16.sp,
+                        fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).textTheme.bodyLarge?.color),
                   ),
@@ -511,14 +511,14 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
             alignment: Alignment.topLeft,
             child: textRegularPoppins(
                 text: heading,
-                fontSize: 16.sp,
+                fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).textTheme.bodyLarge?.color),
           ),
           16.verticalSpace,
           textRegularPoppins(
               text: AppLocalizations.of(context).no_data,
-              fontSize: 12.sp,
+              fontSize: 12,
               fontWeight: FontWeight.w600,
               color: Theme.of(context).textTheme.bodyLarge?.color),
           20.verticalSpace
