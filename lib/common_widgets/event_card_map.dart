@@ -116,7 +116,7 @@ class _LocationCardWidgetState extends ConsumerState<EventCardMap> {
                       children: [
                         iconTextWidget(imagePath['man_icon'] ?? '',
                             AppLocalizations.of(context).barrier_free, context),
-                        8.w.horizontalSpace,
+                        8.horizontalSpace,
                         iconTextWidget(imagePath['paw_icon'] ?? '',
                             AppLocalizations.of(context).dogs_allow, context),
                       ],
