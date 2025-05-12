@@ -152,7 +152,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   },
                   child: textBoldPoppins(
                     color: Theme.of(context).textTheme.bodyLarge?.color,
-                    fontSize: 11.sp,
+                    fontSize: 11,
                     text: AppLocalizations.of(context).another_time,
                   ),
                 )
@@ -163,7 +163,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       onTap: stateNotifier.onBackPress,
                       child: textBoldPoppins(
                         color: Theme.of(context).textTheme.bodyLarge?.color,
-                        fontSize: 11.sp,
+                        fontSize: 11,
                         text: AppLocalizations.of(context).back,
                       ),
                     ),
@@ -178,7 +178,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       },
                       child: textBoldPoppins(
                         color: Theme.of(context).textTheme.bodyLarge?.color,
-                        fontSize: 11.sp,
+                        fontSize: 11,
                         text: AppLocalizations.of(context).skip,
                       ),
                     )

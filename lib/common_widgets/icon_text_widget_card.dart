@@ -57,7 +57,7 @@ class _IconTextWidgetCardState extends ConsumerState<IconTextWidgetCard> {
                     (widget.description != null)
                         ? textRegularMontserrat(
                             text: widget.description ?? '',
-                            fontSize: 11.sp,
+                            fontSize: 11,
                             textOverflow: TextOverflow.visible,
                             textAlign: TextAlign.start)
                         : SizedBox.shrink()

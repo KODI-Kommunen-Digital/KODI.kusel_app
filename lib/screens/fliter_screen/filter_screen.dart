@@ -69,7 +69,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
               children: [
                 textRegularPoppins(
                     text: AppLocalizations.of(context).settings,
-                    fontSize: 16.sp,
+                    fontSize: 16,
                     fontWeight: FontWeight.w600,
                     color: Theme.of(context).textTheme.bodyLarge?.color),
                 GestureDetector(
@@ -100,7 +100,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
               child: textRegularPoppins(
                   text: AppLocalizations.of(context).perimeter,
                   fontWeight: FontWeight.w600,
-                  fontSize: 12.sp,
+                  fontSize: 12,
                   color: Theme.of(context).textTheme.bodyMedium?.color),
             ),
             8.verticalSpace,
@@ -124,7 +124,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
                     child: textRegularPoppins(
                         text: AppLocalizations.of(context).cancel,
                         fontWeight: FontWeight.w600,
-                        fontSize: 12.sp,
+                        fontSize: 12,
                         color: Theme.of(context).textTheme.bodyMedium?.color),
                   ),
                   _filterButton(
@@ -186,7 +186,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
                   child: Align(
                       alignment: Alignment.centerLeft,
                       child: textRegularPoppins(
-                        fontSize: 10.sp,
+                        fontSize: 10,
                           text: AppLocalizations.of(context).from,
                           color: Theme.of(context).textTheme.bodyMedium?.color)),
                 ),
@@ -202,7 +202,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
                   child: Align(
                       alignment: Alignment.centerLeft,
                       child: textRegularPoppins(
-                          fontSize: 10.sp,
+                          fontSize: 10,
                           text: AppLocalizations.of(context).to,
                           color: Theme.of(context).textTheme.bodyMedium?.color)),
                 ),
@@ -279,7 +279,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
       children: [
         textBoldPoppins(
             text: AppLocalizations.of(context).sort_by,
-            fontSize: 16.sp,
+            fontSize: 16,
             fontWeight: FontWeight.w500,
             color: Theme.of(context).textTheme.bodyLarge?.color),
         12.verticalSpace,
@@ -335,7 +335,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
             child: textRegularPoppins(
                 text: "${sliderValue.round().toString()} km",
                 fontWeight: FontWeight.w600,
-                fontSize: 12.sp,
+                fontSize: 12,
                 color: Theme.of(context).textTheme.bodyMedium?.color),
           ),
         )
@@ -349,7 +349,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
       children: [
         textBoldPoppins(
             text: AppLocalizations.of(context).options,
-            fontSize: 16.sp,
+            fontSize: 16,
             fontWeight: FontWeight.w500,
             color: Theme.of(context).textTheme.bodyLarge?.color),
         8.verticalSpace,
@@ -395,7 +395,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
             child: textRegularPoppins(
                 text: text,
                 fontWeight: FontWeight.w600,
-                fontSize: 12.sp,
+                fontSize: 12,
                 color: Theme.of(context).textTheme.bodyMedium?.color),
           ),
         ],
@@ -418,7 +418,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
             color: isEnabled
                 ? Theme.of(context).primaryColor
                 : Theme.of(context).colorScheme.onPrimary,
-            borderRadius: BorderRadius.circular(30.sp)),
+            borderRadius: BorderRadius.circular(30)),
         padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 9.h),
         child: Row(
           children: [
@@ -456,7 +456,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
       padding: EdgeInsets.only(left: 12.w, bottom: 4.h),
       child: textSemiBoldPoppins(
         text: text,
-        fontSize: 10.sp,
+        fontSize: 10,
         color: Theme.of(context).textTheme.bodyLarge?.color,
       ),
     );
