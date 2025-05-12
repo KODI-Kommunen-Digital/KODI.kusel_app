@@ -28,7 +28,7 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingTypePage> {
           65.verticalSpace,
           textBoldPoppins(
               text: AppLocalizations.of(context).ich_text,
-              fontSize: 18.sp,
+              fontSize: 18,
               color: Theme.of(context).textTheme.bodyLarge?.color),
           20.verticalSpace,
           CustomSelectionButton(
@@ -54,7 +54,7 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingTypePage> {
                   child: textRegularPoppins(
                       text: AppLocalizations.of(context).please_select_the_field,
                       color: Theme.of(context).colorScheme.error,
-                      fontSize: 11.sp),
+                      fontSize: 11),
                 ),
               ))
         ],

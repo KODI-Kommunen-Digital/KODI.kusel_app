@@ -92,7 +92,7 @@ class _ExploreScreenState extends ConsumerState<FavoritesListScreen> {
                 child: Center(
                   child: textBoldPoppins(
                     color: lightThemeSecondaryColor,
-                    fontSize: 16.sp,
+                    fontSize: 16,
                     textAlign: TextAlign.center,
                     text:
                     AppLocalizations.of(context).favorites,

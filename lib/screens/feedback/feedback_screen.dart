@@ -136,7 +136,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                     onChanged: (value) {
                       stateNotifier.updateCheckBox(value ?? false);
                     }),
-                textRegularPoppins(text: "Checkbox text", fontSize: 11.sp)
+                textRegularPoppins(text: "Checkbox text", fontSize: 11)
               ],
             ),
             10.verticalSpace,
@@ -208,7 +208,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                 70.horizontalSpace,
                 textBoldPoppins(
                     text: AppLocalizations.of(context).feedback,
-                    fontSize: 20.sp,
+                    fontSize: 20,
                     color: Theme.of(context).textTheme.bodyLarge?.color),
               ],
             ),

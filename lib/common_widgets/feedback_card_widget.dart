@@ -38,7 +38,7 @@ class _FeedbackCardWidgetState extends State<FeedbackCardWidget> {
                       textBoldPoppins(
                         fontWeight: FontWeight.w600,
                         text: AppLocalizations.of(context).feedback_heading,
-                        fontSize: 13.sp,
+                        fontSize: 13,
                         color: Colors.white,
                         textOverflow: TextOverflow.visible,
                         textAlign: TextAlign.start,
@@ -49,7 +49,7 @@ class _FeedbackCardWidgetState extends State<FeedbackCardWidget> {
                       textSemiBoldPoppins(
                         text: AppLocalizations.of(context).feedback_description,
                         color: Colors.white,
-                        fontSize: 12.sp,
+                        fontSize: 12,
                         textAlign: TextAlign.start,
                         fontWeight: FontWeight.w200,
                         textOverflow: TextOverflow.visible,

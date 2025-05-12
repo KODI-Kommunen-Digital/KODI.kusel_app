@@ -63,7 +63,7 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                           hintText: widget.hintText,
                           border: InputBorder.none,
                           hintStyle: TextStyle(
-                              fontSize: 14.sp,
+                              fontSize: 14,
                               fontFamily: "Poppins",
                               fontWeight: FontWeight.w400,
                               color: Theme.of(context).hintColor,
