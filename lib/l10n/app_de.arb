@@ -145,6 +145,7 @@
   "feedback_text" : "Ich habe die Datenschutzerklärung zur Kenntnis genommen",
   "imprint_page": "Impressum",
   "terms_of_use" : "Nutzungsbedingungen",
-  "privacy_policy" : "Datenschutzerklärung"
+  "privacy_policy" : "Datenschutzerklärung",
+  "cities": "Städte"
 
 }

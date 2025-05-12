@@ -317,7 +317,10 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
               }),
           16.verticalSpace,
           CustomButton(
-              onPressed: () {},
+              onPressed: () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: allCityScreenPath, context: context);
+              },
               text: AppLocalizations.of(context).show_all_locations)
         ],
       ),
