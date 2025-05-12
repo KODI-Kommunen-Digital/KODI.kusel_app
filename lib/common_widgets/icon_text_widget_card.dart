@@ -43,7 +43,7 @@ class _IconTextWidgetCardState extends ConsumerState<IconTextWidgetCard> {
             children: [
               Expanded(
                   flex: 3, child:
-              SvgPicture.asset(imagePath['online_services'] ?? '')
+              SvgPicture.asset(imagePath[widget.imageUrl] ?? '')
                 // CachedNetworkImage(imageUrl: widget.imageUrl
               ),
               Expanded(
@@ -54,13 +54,12 @@ class _IconTextWidgetCardState extends ConsumerState<IconTextWidgetCard> {
                     textBoldMontserrat(
                         text: widget.text,
                         color: Theme.of(context).textTheme.bodyLarge?.color),
-                    (widget.description != null)
-                        ? textRegularMontserrat(
+                    if(widget.description != null)
+                        textRegularMontserrat(
                             text: widget.description ?? '',
                             fontSize: 11,
                             textOverflow: TextOverflow.visible,
                             textAlign: TextAlign.start)
-                        : SizedBox.shrink()
                   ],
                 ),
               ),
