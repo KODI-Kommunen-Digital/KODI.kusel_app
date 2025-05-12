@@ -47,6 +47,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
       ref
           .read(municipalDetailControllerProvider.notifier)
           .getNewsUsingCityId(municipalId: id);
+      ref.read(municipalDetailControllerProvider.notifier).fetchCities();
     });
     super.initState();
   }
@@ -59,6 +60,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
     return SafeArea(
       child: Scaffold(
           body: Stack(
+        fit: StackFit.expand,
         children: [
           Positioned.fill(child: _buildBody(context)),
           if (isLoading)
@@ -158,18 +160,24 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                           shape: BoxShape.circle, color: Colors.white),
                       child: (state.municipalPartyDetailDataModel?.image !=
                               null)
-                          ? CachedNetworkImage(
-                              imageUrl:
-                                  state.municipalPartyDetailDataModel!.image!,
-                              errorWidget: (context, val, _) {
-                                return Image.asset(imagePath['crest']!);
-                              },
-                              progressIndicatorBuilder: (context, val, _) {
-                                return Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              },
-                            )
+                          ? FittedBox(
+                        fit: BoxFit.contain,
+                            child: CachedNetworkImage(
+                              height: 60.h,
+                                width: 55.w,
+                                fit: BoxFit.contain,
+                                imageUrl:
+                                    state.municipalPartyDetailDataModel!.image!,
+                                errorWidget: (context, val, _) {
+                                  return Image.asset(imagePath['crest']!);
+                                },
+                                progressIndicatorBuilder: (context, val, _) {
+                                  return Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                },
+                              ),
+                          )
                           : Center(
                               child: Image.asset(
                                 imagePath['crest']!,
@@ -215,7 +223,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                 text:
                     "${state.municipalPartyDetailDataModel?.name ?? ""} ${AppLocalizations.of(context).municipality}",
                 color: Theme.of(context).textTheme.bodyLarge?.color,
-                fontSize: 13.sp)
+                fontSize: 13)
           ],
         ),
       );
@@ -261,18 +269,18 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
             textBaseline: TextBaseline.alphabetic,
             children: [
               Baseline(
-                baseline: 16.sp, // Adjust based on your text size
+                baseline: 16, // Adjust based on your text size
                 baselineType: TextBaseline.alphabetic,
                 child: textRegularPoppins(
                   text: AppLocalizations.of(context).places_of_the_community,
-                  fontSize: 14.sp,
+                  fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
               ),
               10.horizontalSpace, // spacing between text and icon
               Baseline(
-                baseline: 16.sp,
+                baseline: 16,
                 baselineType: TextBaseline.alphabetic,
                 child: SvgPicture.asset(
                   imagePath['arrow_icon'] ?? "",
@@ -283,24 +291,36 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
             ],
           ),
           16.verticalSpace,
-          PlaceOfAnotherCommunityCard(
-            onTap: () {},
-            imageUrl:
-                'https://images.unsplash.com/photo-1584713503693-bb386ec95cf2?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            text: 'Ort',
-            isFav: false,
-          ),
-          16.verticalSpace,
-          PlaceOfAnotherCommunityCard(
-            onTap: () {},
-            imageUrl:
-                'https://images.unsplash.com/photo-1584713503693-bb386ec95cf2?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-            text: 'Ort',
-            isFav: false,
-          ),
+          ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: (ref
+                          .read(municipalDetailControllerProvider)
+                          .cityList
+                          .length >
+                      5)
+                  ? 5
+                  : ref.read(municipalDetailControllerProvider).cityList.length,
+              itemBuilder: (context, index) {
+                final item =
+                    ref.read(municipalDetailControllerProvider).cityList[index];
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 5.h),
+                  child: PlaceOfAnotherCommunityCard(
+                    onTap: () {},
+                    imageUrl: item.image ??
+                        'https://images.unsplash.com/photo-1584713503693-bb386ec95cf2?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    text: item.name ?? '',
+                    isFav: false,
+                  ),
+                );
+              }),
           16.verticalSpace,
           CustomButton(
-              onPressed: () {},
+              onPressed: () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: allCityScreenPath, context: context);
+              },
               text: AppLocalizations.of(context).show_all_locations)
         ],
       ),
@@ -317,11 +337,11 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
             textBaseline: TextBaseline.alphabetic,
             children: [
               Baseline(
-                baseline: 16.sp, // Adjust based on your text size
+                baseline: 16, // Adjust based on your text size
                 baselineType: TextBaseline.alphabetic,
                 child: textRegularPoppins(
                   text: AppLocalizations.of(context).events,
-                  fontSize: 14.sp,
+                  fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
@@ -333,7 +353,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                     .eventList
                     .isNotEmpty,
                 child: Baseline(
-                  baseline: 16.sp,
+                  baseline: 16,
                   baselineType: TextBaseline.alphabetic,
                   child: SvgPicture.asset(
                     imagePath['arrow_icon'] ?? "",
@@ -358,7 +378,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
               : (state.eventList.isEmpty)
                   ? textRegularPoppins(
                       text: AppLocalizations.of(context).no_data,
-                      fontSize: 12.sp,
+                      fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).textTheme.bodyLarge?.color)
                   : ListView.builder(
@@ -408,10 +428,11 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                       icon: imagePath['calendar'] ?? "",
                       onPressed: () {
                         final categoryId = 3;
-                        final municipalId = 1??ref
-                            .watch(municipalDetailControllerProvider)
-                            .municipalPartyDetailDataModel
-                            ?.id;
+                        final municipalId = 1 ??
+                            ref
+                                .watch(municipalDetailControllerProvider)
+                                .municipalPartyDetailDataModel
+                                ?.id;
 
                         ref.read(navigationProvider).navigateUsingPath(
                             path: selectedEventListScreenPath,
@@ -419,7 +440,8 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                             params: SelectedEventListScreenParameter(
                                 cityId: 1,
                                 listHeading:
-                                    AppLocalizations.of(context).events, categoryId: null));
+                                    AppLocalizations.of(context).events,
+                                categoryId: null));
                       },
                       text: AppLocalizations.of(context).all_events))
             ],
@@ -439,11 +461,11 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
             textBaseline: TextBaseline.alphabetic,
             children: [
               Baseline(
-                baseline: 16.sp, // Adjust based on your text size
+                baseline: 16, // Adjust based on your text size
                 baselineType: TextBaseline.alphabetic,
                 child: textRegularPoppins(
                   text: AppLocalizations.of(context).news,
-                  fontSize: 14.sp,
+                  fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
@@ -455,7 +477,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                     .newsList
                     .isNotEmpty,
                 child: Baseline(
-                  baseline: 16.sp,
+                  baseline: 16,
                   baselineType: TextBaseline.alphabetic,
                   child: SvgPicture.asset(
                     imagePath['arrow_icon'] ?? "",
@@ -480,7 +502,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
               : (state.newsList.isEmpty)
                   ? textRegularPoppins(
                       text: AppLocalizations.of(context).no_data,
-                      fontSize: 12.sp,
+                      fontSize: 12,
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).textTheme.bodyLarge?.color)
                   : ListView.builder(
@@ -539,8 +561,8 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                             context: context,
                             params: SelectedEventListScreenParameter(
                                 cityId: 1,
-                                listHeading:
-                                AppLocalizations.of(context).news, categoryId: null));
+                                listHeading: AppLocalizations.of(context).news,
+                                categoryId: null));
                       },
                       text: AppLocalizations.of(context).all_news))
             ],

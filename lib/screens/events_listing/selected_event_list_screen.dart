@@ -88,7 +88,7 @@ class _ExploreScreenState extends ConsumerState<SelectedEventListScreen> {
                 child: Center(
                   child: textBoldPoppins(
                     color: lightThemeSecondaryColor,
-                    fontSize: 16.sp,
+                    fontSize: 16,
                     textAlign: TextAlign.center,
                     text: widget.eventListScreenParameter.listHeading ?? "",
                   ),

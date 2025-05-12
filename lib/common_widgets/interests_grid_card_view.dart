@@ -57,7 +57,7 @@ class _CommonEventCardState extends ConsumerState<InterestsGridCardView> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 8.w),
                     child: textRegularMontserrat(
-                        text: widget.title, fontSize: 12.sp),
+                        text: widget.title, fontSize: 12),
                   ),
                 ],
               ),

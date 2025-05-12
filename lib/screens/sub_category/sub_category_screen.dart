@@ -101,7 +101,7 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
                           padding: EdgeInsets.only(right: 18.h),
                           child: textBoldPoppins(
                               color: Theme.of(context).textTheme.bodyLarge?.color,
-                              fontSize: 16.sp,
+                              fontSize: 16,
                               textAlign: TextAlign.center,
                               text: widget.subCategoryScreenParameters.categoryHeading),
                         ),
