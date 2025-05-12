@@ -114,7 +114,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                 top: 68.h,
                 child: textBoldPoppins(
                     color: Theme.of(context).textTheme.labelLarge?.color,
-                    fontSize: 18.sp,
+                    fontSize: 18,
                     text: AppLocalizations.of(context).category_heading),
               ),
             ],
@@ -158,7 +158,6 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
 
   whereToNavigate(int index) {
     void Function()? onTap;
-
     switch (index) {
       case 0:
         onTap = () {
@@ -166,7 +165,6 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
               path: virtualTownHallScreenPath, context: context);
         };
         break;
-
       case 1:
         onTap = () {
           ref.read(navigationProvider).navigateUsingPath(
@@ -174,7 +172,20 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
           params: MunicipalDetailScreenParams(municipalId: '1'));
         };
         break;
-
+      case 3:
+        onTap = () {
+          ref.read(navigationProvider).navigateUsingPath(
+              path: mobilityScreenPath, context: context,
+          );
+        };
+        break;
+      case 4:
+        onTap = () {
+          ref.read(navigationProvider).navigateUsingPath(
+            path: participateScreenPath, context: context,
+          );
+        };
+        break;
       default:
         onTap = null;
     }

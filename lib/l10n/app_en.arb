@@ -139,5 +139,10 @@
   "visit_website": "Visit website",
   "our_communities": "Our communities",
   "news": "News",
-  "event_text" : "Events"
+  "event_text" : "Events",
+  "feedback_text" : "I have read the privacy policy",
+  "imprint_page": "Imprint Page",
+  "terms_of_use" : "Terms of Use",
+  "privacy_policy" : "Privacy Policy",
+  "cities": "Cities"
 }
