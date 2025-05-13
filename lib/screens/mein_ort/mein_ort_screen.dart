@@ -10,6 +10,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/navigation/navigation.dart';
+import 'package:kusel/screens/all_municipality/all_municipality_provider.dart';
 import 'package:kusel/screens/mein_ort/mein_ort_provider.dart';
 import 'package:kusel/screens/mein_ort/mein_ort_state.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
@@ -20,14 +21,12 @@ import '../../common_widgets/highlights_card.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
 import '../../images_path.dart';
-import '../events_listing/selected_event_list_screen_parameter.dart';
 
 class MeinOrtScreen extends ConsumerStatefulWidget {
   const MeinOrtScreen({super.key});
 
   @override
-  ConsumerState<MeinOrtScreen> createState() =>
-      _MeinOrtScreenState();
+  ConsumerState<MeinOrtScreen> createState() => _MeinOrtScreenState();
 }
 
 class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
@@ -42,28 +41,28 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
   @override
   Widget build(BuildContext context) {
     final isLoading =
-    ref.watch(meinOrtProvider.select((state) => state.isLoading));
+        ref.watch(meinOrtProvider.select((state) => state.isLoading));
 
     return SafeArea(
         child: Scaffold(
             body: Stack(
-              children: [
-                _buildBody(context),
-                if (isLoading)
-                  Center(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10.r),
-                        ),
-                        height: 100.h,
-                        width: 100.w,
-                        child: const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                      )),
-              ],
-            )));
+      children: [
+        _buildBody(context),
+        if (isLoading)
+          Center(
+              child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            height: 100.h,
+            width: 100.w,
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          )),
+      ],
+    )));
   }
 
   Widget _buildBody(BuildContext context) {
@@ -72,33 +71,39 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          _buildClipper(context),
-          _buildInfoContainer(),
+          SizedBox(
+            height: 155.h,
+            width: MediaQuery.of(context).size.width,
+            child: Stack(
+              children: [
+                _buildClipper(context),
+                Positioned(top: 70, child: _buildInfoContainer(context)),
+              ],
+            ),
+          ),
           _customPageViewer(municipalityList: state.municipalityList ?? []),
           ListView.builder(
-            itemCount: state.municipalityList.length,
+              itemCount: state.municipalityList.length,
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemBuilder: (context, index){
-              final item = state.municipalityList[index];
-            return eventsView(
-                item.topFiveCities ?? [],
-                item.name ?? '',
-                5,
-                AppLocalizations.of(context).show_all_places,
-                imagePath['calendar'] ?? "",
-                isLoading,
-                0,
-                0, () {
-              ref.read(navigationProvider).navigateUsingPath(
-                  path: selectedEventListScreenPath,
-                  context: context,
-                  params: SelectedEventListScreenParameter(
-                      cityId: 1,
-                      listHeading: AppLocalizations.of(context).news,
-                      categoryId: null));
-            });
-          }),
+              itemBuilder: (context, index) {
+                final item = state.municipalityList[index];
+                return eventsView(
+                    item.topFiveCities ?? [],
+                    item.name ?? '',
+                    5,
+                    AppLocalizations.of(context).show_all_places,
+                    imagePath['calendar'] ?? "",
+                    isLoading,
+                    0,
+                    0, () {
+                  ref.read(navigationProvider).navigateUsingPath(
+                      path: allMunicipalityScreenPath,
+                      context: context,
+                      params: MunicipalityScreenParams(
+                          municipalityId: item.id ?? 0));
+                });
+              }),
           FeedbackCardWidget(onTap: () {
             ref
                 .read(navigationProvider)
@@ -143,7 +148,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                       filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
                       child: Container(
                         color:
-                        Theme.of(context).cardColor.withValues(alpha: 0.4),
+                            Theme.of(context).cardColor.withValues(alpha: 0.4),
                       ),
                     ),
                   ),
@@ -176,24 +181,27 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
     );
   }
 
-  _buildInfoContainer() {
+  Widget _buildInfoContainer(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(12.h.w),
+      padding: EdgeInsets.symmetric(vertical: 18.h, horizontal: 15.w),
       child: Card(
         elevation: 6,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(6.r),
         ),
         child: Container(
-          padding: EdgeInsets.all(8.h.w),
+          width: MediaQuery.of(context).size.width - 24.h * 2 + 12.h,
+          padding: EdgeInsets.all(8.h), // Uniform padding
           decoration: BoxDecoration(
-              color: Theme.of(context).canvasColor,
+            color: Theme.of(context).canvasColor,
             borderRadius: BorderRadius.circular(6.r),
           ),
-          child: textRegularPoppins(text: "Willkommen auf der Übersichtsseite für deine Orte im Kuseler Land – Deinem Guide zu den Orten der Region.",
+          child: textRegularPoppins(
+            text:
+            AppLocalizations.of(context).mein_ort_display_message,
             textOverflow: TextOverflow.visible,
             fontSize: 13,
-            textAlign: TextAlign.start
+            textAlign: TextAlign.start,
           ),
         ),
       ),
@@ -234,7 +242,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
                       municipalityList.length,
-                          (index) => InkWell(
+                      (index) => InkWell(
                         onTap: () {
                           // ref.read(navigationProvider).navigateUsingPath(
                           //     context: context,
@@ -251,8 +259,8 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                               color: currentIndex == index
                                   ? Theme.of(context).primaryColor
                                   : Theme.of(context)
-                                  .primaryColor
-                                  .withAlpha(130),
+                                      .primaryColor
+                                      .withAlpha(130),
                             ),
                             // if (index != state.highlightsList.length - 1)
                             if (index != municipalityList.length - 1)
@@ -281,7 +289,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 6.h.w),
                   child: HighlightsCard(
                     imageUrl:
-                    municipalities.image ?? "https://picsum.photos/200",
+                        municipalities.image ?? "https://picsum.photos/200",
                     date: municipalities.createdAt ?? "",
                     heading: municipalities.name ?? "",
                     description: municipalities.description ?? "",
@@ -289,11 +297,11 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                     errorImagePath: imagePath['kusel_map_image'],
                     onPress: () {
                       ref.read(navigationProvider).navigateUsingPath(
-                        context: context,
-                        path: municipalDetailScreenPath,
-                        params: MunicipalDetailScreenParams(
-                            municipalId: municipalities.id!.toString()),
-                      );
+                            context: context,
+                            path: municipalDetailScreenPath,
+                            params: MunicipalDetailScreenParams(
+                                municipalId: municipalities.id!.toString()),
+                          );
                     },
                     onFavouriteIconClick: () {},
                     // isVisible:
@@ -303,9 +311,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                 );
               },
               onPageChanged: (index) {
-                ref
-                    .read(meinOrtProvider.notifier)
-                    .updateCardIndex(index);
+                ref.read(meinOrtProvider.notifier).updateCardIndex(index);
               },
             ),
           ),
@@ -388,15 +394,15 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                 : eventsList.length,
             itemBuilder: (context, index) {
               final item = eventsList[index];
-              return _buildImageTextCard(
-                item.name, item.image
-              );
+              return _buildImageTextCard(item.name, item.image);
             },
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
             child: CustomButton(
-                onPressed: onPress, text: buttonText,),
+              onPressed: onPress,
+              text: buttonText,
+            ),
           ),
           15.verticalSpace
         ],
@@ -429,7 +435,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
   _buildImageTextCard(String? text, String? imageUrl) {
     return Card(
       color: Colors.white,
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       elevation: 4,
       child: Padding(
@@ -440,20 +446,20 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
               borderRadius: BorderRadius.circular(8),
               child: CachedNetworkImage(
                 errorWidget: (context, error, stackTrace) =>
-                const Icon(Icons.broken_image, size: 80),
+                    const Icon(Icons.broken_image, size: 80),
                 width: 80,
                 height: 80,
                 progressIndicatorBuilder: (context, value, _) {
                   return Center(child: CircularProgressIndicator());
                 },
-                fit: BoxFit.cover,
-                imageUrl: imageUrl ?? 'https://images.unsplash.com/photo-1584713503693-bb386ec95cf2?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',),
+                fit: BoxFit.fill,
+                imageUrl: imageUrl ??
+                    'https://images.unsplash.com/photo-1584713503693-bb386ec95cf2?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+              ),
             ),
-            const SizedBox(width: 8),
+            SizedBox(width: 30.w),
             // Texts
-            Expanded(
-              child: textRegularMontserrat(text: text ?? ''),
-            ),
+            textRegularMontserrat(text: text ?? ''),
           ],
         ),
       ),
