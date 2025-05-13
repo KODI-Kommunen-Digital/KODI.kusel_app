@@ -28,8 +28,10 @@ class VirtualTownHallProvider extends StateNotifier<VirtualTownHallState> {
 
   Future<void> getEventsUsingCityId({required String cityId}) async {
     try {
+
+      final id = cityId;
       GetAllListingsRequestModel requestModel =
-          GetAllListingsRequestModel(categoryId: '3');
+          GetAllListingsRequestModel(categoryId: '3',cityId: cityId);
 
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
 
@@ -50,11 +52,11 @@ class VirtualTownHallProvider extends StateNotifier<VirtualTownHallState> {
   Future<void> getNewsUsingCityId({required String cityId}) async {
     try {
 
-      final id ="1" ;
+      final id =cityId ;
       final categoryId = "1";
 
       GetAllListingsRequestModel requestModel =
-          GetAllListingsRequestModel(cityId: id);
+          GetAllListingsRequestModel(cityId: id,categoryId: categoryId);
 
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
 

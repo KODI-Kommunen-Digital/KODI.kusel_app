@@ -8,7 +8,7 @@ class MunicipalDetailState {
   bool showEventLoading;
   bool showNewsLoading;
   bool isLoading;
-  List<City> cityList;
+  List<MunicipalDetailCityModel> cityList;
   MunicipalPartyDetailDataModel? municipalPartyDetailDataModel;
 
   MunicipalDetailState(
@@ -30,7 +30,7 @@ class MunicipalDetailState {
       bool? showEventLoading,
       bool? showNewsLoading,
       bool? isLoading,
-      List<City>? cityList,
+      List<MunicipalDetailCityModel>? cityList,
       MunicipalPartyDetailDataModel? municipalPartyDetailDataModel}) {
     return MunicipalDetailState(
         eventList ?? this.eventList,

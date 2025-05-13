@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/images_path.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/arrow_back_widget.dart';
@@ -138,8 +138,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
           ),
           IconTextWidgetCard(
             onTap: () async {
-              final Uri uri =
-              Uri.parse("https://www.landkreis-kusel.de");
+              final Uri uri = Uri.parse("https://www.landkreis-kusel.de");
               if (await canLaunchUrl(uri)) {
                 await launchUrl(uri);
               }
@@ -149,8 +148,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
           ),
           IconTextWidgetCard(
             onTap: () async {
-              final Uri uri =
-              Uri.parse("https://www.landkreis-kusel.de");
+              final Uri uri = Uri.parse("https://www.landkreis-kusel.de");
               if (await canLaunchUrl(uri)) {
                 await launchUrl(uri);
               }
@@ -161,10 +159,9 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
           ),
           IconTextWidgetCard(
             onTap: () async {
-               final Uri uri =
-              Uri.parse("https://www.landkreis-kusel.de");
+              final Uri uri = Uri.parse("https://www.landkreis-kusel.de");
               if (await canLaunchUrl(uri)) {
-              await launchUrl(uri);
+                await launchUrl(uri);
               }
             },
             imageUrl: 'cap_icon',
@@ -172,8 +169,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
           ),
           IconTextWidgetCard(
             onTap: () async {
-              final Uri uri =
-              Uri.parse("https://www.landkreis-kusel.de");
+              final Uri uri = Uri.parse("https://www.landkreis-kusel.de");
               if (await canLaunchUrl(uri)) {
                 await launchUrl(uri);
               }
@@ -211,8 +207,9 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
               30.horizontalSpace,
               textBoldMontserrat(
                   text: phoneNumber,
-                  decoration: TextDecoration.underline,
                   color: Theme.of(context).textTheme.bodyLarge?.color)
+
+              ////decoration: TextDecoration.underline,
             ],
           ),
         ),
@@ -234,7 +231,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
               text: "Fahrplanauskunft und Ruftaxibuchungen rund um die Uhr",
               textOverflow: TextOverflow.visible),
           10.verticalSpace,
-          _phoneNumberCard(onTap: () {}, phoneNumber: "0621 1077077"),
+          _phoneNumberCard(onTap: () {}, phoneNumber: "-"),
           5.verticalSpace,
           textBoldPoppins(
             color: Theme.of(context).textTheme.bodyLarge?.color,
@@ -250,7 +247,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
                   "Bei weiteren Rückfragen zum Bus- und Ruftaxiangebot wenden Sie sich gerne an die Mobilitätszentrale des Landkreises ",
               textOverflow: TextOverflow.visible),
           10.verticalSpace,
-          _phoneNumberCard(onTap: () {}, phoneNumber: "0621 1077077")
+          _phoneNumberCard(onTap: () {}, phoneNumber: "-")
         ],
       ),
     );
@@ -273,20 +270,20 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
           _contactDetailsCard(
               onTap: () {},
               heading: "Wolfgang Borm",
-              phoneNumber: "06831 424-240",
-              email: "wolfgang.borm@kv-kus.de"),
+              phoneNumber: "-",
+              email: "-"),
           10.verticalSpace,
           _contactDetailsCard(
               onTap: () {},
               heading: "Mathias Börtzler",
-              phoneNumber: "06831 424-240",
-              email: "wolfgang.borm@kv-kus.de"),
+              phoneNumber: "-",
+              email: "-"),
           10.verticalSpace,
           _contactDetailsCard(
               onTap: () {},
               heading: "Manuela Weber",
-              phoneNumber: "06831 424-240",
-              email: "wolfgang.borm@kv-kus.de"),
+              phoneNumber: "-",
+              email: "-"),
           25.verticalSpace
         ],
       ),
@@ -306,51 +303,49 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          padding:
-              EdgeInsets.only(left: 20.w, right: 14.w, top: 22.h, bottom: 22.h),
-          decoration: BoxDecoration(
-              color: Theme.of(context).canvasColor,
-              borderRadius: BorderRadius.circular(12.r)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              textBoldMontserrat(
+            padding: EdgeInsets.only(
+                left: 20.w, right: 14.w, top: 22.h, bottom: 22.h),
+            decoration: BoxDecoration(
+                color: Theme.of(context).canvasColor,
+                borderRadius: BorderRadius.circular(12.r)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                textBoldMontserrat(
                   text: heading,
-                color: Theme.of(context).textTheme.bodyLarge?.color,
-              ),
-              15.verticalSpace,
-              Row(
-                children: [
-                  Icon(
-                    Icons.call_outlined,
-                    size: 14.h.w,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  20.horizontalSpace,
-                  textBoldMontserrat(
-                      text: phoneNumber,
-                      decoration: TextDecoration.underline,
-                      color: Theme.of(context).textTheme.bodyLarge?.color)
-                ],
-              ),
-              14.verticalSpace,
-              Row(
-                children: [
-                  Icon(
-                    Icons.email_outlined,
-                    size: 16.h.w,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  20.horizontalSpace,
-                  textBoldMontserrat(
-                      text: email,
-                      color: Theme.of(context).textTheme.bodyLarge?.color
-                  )
-                ],
-              ),
-            ],
-          )
-        ),
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
+                15.verticalSpace,
+                Row(
+                  children: [
+                    Icon(
+                      Icons.call_outlined,
+                      size: 14.h.w,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    20.horizontalSpace,
+                    textBoldMontserrat(
+                        text: phoneNumber,
+                        color: Theme.of(context).textTheme.bodyLarge?.color)
+                    //decoration: TextDecoration.underline,
+                  ],
+                ),
+                14.verticalSpace,
+                Row(
+                  children: [
+                    Icon(
+                      Icons.email_outlined,
+                      size: 16.h.w,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    20.horizontalSpace,
+                    textBoldMontserrat(
+                        text: email,
+                        color: Theme.of(context).textTheme.bodyLarge?.color)
+                  ],
+                ),
+              ],
+            )),
       ),
     );
   }

@@ -1,203 +1,54 @@
 import 'package:core/base_model.dart';
 
-class VirtualTownHallResponseModel
-    extends BaseModel<VirtualTownHallResponseModel> {
-  String? status;
-  DistrictData? data;
+    class MeinOrtResponseModel extends BaseModel<MeinOrtResponseModel> {
+  final String? status;
+  final List<Municipality>? data;
 
-  VirtualTownHallResponseModel({this.status, this.data});
-
-  @override
-  VirtualTownHallResponseModel fromJson(Map<String, dynamic> json) {
-    return VirtualTownHallResponseModel(
-      status: json['status'] as String?,
-      data: json['data'] != null ? DistrictData.fromJson(json['data']) : null,
-    );
-  }
+  MeinOrtResponseModel({this.status, this.data});
 
   @override
   Map<String, dynamic> toJson() {
     return {
       'status': status,
-      'data': data?.toJson(),
+      'data': data?.map((e) => e.toJson()).toList(),
     };
   }
-}
 
-class DistrictData {
-  int? id;
-  String? name;
-  String? type;
-  String? connectionString;
-  bool? isAdminListings;
-  String? image;
-  String? description;
-  String? address;
-  String? latitude;
-  String? longitude;
-  String? phone;
-  String? email;
-  String? websiteUrl;
-  String? openUntil;
-  int? isActive;
-  String? createdAt;
-  String? updatedAt;
-  bool? inCityServer;
-  bool? hasForum;
-  int? parentId;
-  List<OnlineService>? onlineServices;
-  List<Municipality>? municipalities;
-
-  DistrictData({
-    this.id,
-    this.name,
-    this.type,
-    this.connectionString,
-    this.isAdminListings,
-    this.image,
-    this.description,
-    this.address,
-    this.latitude,
-    this.longitude,
-    this.phone,
-    this.email,
-    this.websiteUrl,
-    this.openUntil,
-    this.isActive,
-    this.createdAt,
-    this.updatedAt,
-    this.inCityServer,
-    this.hasForum,
-    this.parentId,
-    this.onlineServices,
-    this.municipalities,
-  });
-
-  factory DistrictData.fromJson(Map<String, dynamic> json) {
-    return DistrictData(
-      id: json['id'],
-      name: json['name'],
-      type: json['type'],
-      connectionString: json['connectionString'],
-      isAdminListings: json['isAdminListings'],
-      image: json['image'],
-      description: json['description'],
-      address: json['address'],
-      latitude: json['latitude'],
-      longitude: json['longitude'],
-      phone: json['phone'],
-      email: json['email'],
-      websiteUrl: json['websiteUrl'],
-      openUntil: json['openUntil'],
-      isActive: json['isActive'],
-      createdAt: json['createdAt'],
-      updatedAt: json['updatedAt'],
-      inCityServer: json['inCityServer'],
-      hasForum: json['hasForum'],
-      parentId: json['parentId'],
-      onlineServices: (json['onlineServices'] as List<dynamic>?)
-          ?.map((e) => OnlineService.fromJson(e))
-          .toList(),
-      municipalities: (json['municipalities'] as List<dynamic>?)
+  @override
+  MeinOrtResponseModel fromJson(Map<String, dynamic> json) {
+    return MeinOrtResponseModel(
+      status: json['status'],
+      data: (json['data'] as List<dynamic>?)
           ?.map((e) => Municipality.fromJson(e))
           .toList(),
     );
   }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'type': type,
-      'connectionString': connectionString,
-      'isAdminListings': isAdminListings,
-      'image': image,
-      'description': description,
-      'address': address,
-      'latitude': latitude,
-      'longitude': longitude,
-      'phone': phone,
-      'email': email,
-      'websiteUrl': websiteUrl,
-      'openUntil': openUntil,
-      'isActive': isActive,
-      'createdAt': createdAt,
-      'updatedAt': updatedAt,
-      'inCityServer': inCityServer,
-      'hasForum': hasForum,
-      'parentId': parentId,
-      'onlineServices': onlineServices?.map((e) => e.toJson()).toList(),
-      'municipalities': municipalities?.map((e) => e.toJson()).toList(),
-    };
-  }
-}
-
-class OnlineService {
-  int? id;
-  String? title;
-  String? description;
-  String? linkUrl;
-  String? iconUrl;
-  int? displayOrder;
-  int? isActive;
-
-  OnlineService({
-    this.id,
-    this.title,
-    this.description,
-    this.linkUrl,
-    this.iconUrl,
-    this.displayOrder,
-    this.isActive,
-  });
-
-  factory OnlineService.fromJson(Map<String, dynamic> json) {
-    return OnlineService(
-      id: json['id'],
-      title: json['title'],
-      description: json['description'],
-      linkUrl: json['linkUrl'],
-      iconUrl: json['iconUrl'],
-      displayOrder: json['displayOrder'],
-      isActive: json['isActive'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'title': title,
-      'description': description,
-      'linkUrl': linkUrl,
-      'iconUrl': iconUrl,
-      'displayOrder': displayOrder,
-      'isActive': isActive,
-    };
-  }
 }
 
 class Municipality {
-  int? id;
-  String? name;
-  String? type;
-  String? mapImage;
-  String? connectionString;
-  bool? isAdminListings;
-  String? image;
-  String? description;
-  String? address;
-  String? latitude;
-  String? longitude;
-  String? phone;
-  String? email;
-  String? websiteUrl;
-  String? openUntil;
-  int? isActive;
-  String? createdAt;
-  String? updatedAt;
-  bool? inCityServer;
-  bool? hasForum;
-  int? parentId;
+  final int? id;
+  final String? name;
+  final String? type;
+  final String? mapImage;
+  final String? connectionString;
+  final bool? isAdminListings;
+  final String? image;
+  final String? description;
+  final String? subtitle;
+  final String? address;
+  final String? latitude;
+  final String? longitude;
+  final String? phone;
+  final String? email;
+  final String? websiteUrl;
+  final String? openUntil;
+  final bool? isActive;
+  final String? createdAt;
+  final String? updatedAt;
+  final bool? inCityServer;
+  final bool? hasForum;
+  final int? parentId;
+  final List<City>? topFiveCities;
 
   Municipality({
     this.id,
@@ -208,6 +59,115 @@ class Municipality {
     this.isAdminListings,
     this.image,
     this.description,
+    this.subtitle,
+    this.address,
+    this.latitude,
+    this.longitude,
+    this.phone,
+    this.email,
+    this.websiteUrl,
+    this.openUntil,
+    this.isActive,
+    this.createdAt,
+    this.updatedAt,
+    this.inCityServer,
+    this.hasForum,
+    this.parentId,
+    this.topFiveCities,
+  });
+
+  factory Municipality.fromJson(Map<String, dynamic> json) {
+    return Municipality(
+      id: json['id'],
+      mapImage: json['mapImage']!=null?"https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['mapImage']}":null,
+      name: json['name'],
+      type: json['type'],
+      connectionString: json['connectionString'],
+      isAdminListings: json['isAdminListings'],
+      image: json['image'] != null
+          ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['image']}"
+          : null,
+      description: json['description'],
+      subtitle: json['subtitle'],
+      address: json['address'],
+      latitude: json['latitude'],
+      longitude: json['longitude'],
+      phone: json['phone'],
+      email: json['email'],
+      websiteUrl: json['websiteUrl'],
+      openUntil: json['openUntil'],
+      isActive: json['isActive'] == 1,
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+      inCityServer: json['inCityServer'],
+      hasForum: json['hasForum'],
+      parentId: json['parentId'],
+      topFiveCities: (json['topFiveCities'] as List<dynamic>?)
+          ?.map((e) => City.fromJson(e))
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'type': type,
+      'connectionString': connectionString,
+      'isAdminListings': isAdminListings,
+      'image': image,
+      'description': description,
+      'subtitle': subtitle,
+      'address': address,
+      'latitude': latitude,
+      'longitude': longitude,
+      'phone': phone,
+      'email': email,
+      'websiteUrl': websiteUrl,
+      'openUntil': openUntil,
+      'isActive': isActive == true ? 1 : 0,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+      'inCityServer': inCityServer,
+      'hasForum': hasForum,
+      'parentId': parentId,
+      'topFiveCities': topFiveCities?.map((e) => e.toJson()).toList(),
+    };
+  }
+}
+
+class City {
+  final int? id;
+  final String? name;
+  final String? type;
+  final String? connectionString;
+  final bool? isAdminListings;
+  final String? image;
+  final String? description;
+  final String? subtitle;
+  final String? address;
+  final String? latitude;
+  final String? longitude;
+  final String? phone;
+  final String? email;
+  final String? websiteUrl;
+  final String? openUntil;
+  final bool? isActive;
+  final String? createdAt;
+  final String? updatedAt;
+  final bool? inCityServer;
+  final bool? hasForum;
+  final int? parentId;
+
+  City({
+    this.id,
+    this.name,
+    this.type,
+    this.connectionString,
+    this.isAdminListings,
+    this.image,
+    this.description,
+    this.subtitle,
     this.address,
     this.latitude,
     this.longitude,
@@ -223,18 +183,18 @@ class Municipality {
     this.parentId,
   });
 
-  factory Municipality.fromJson(Map<String, dynamic> json) {
-    return Municipality(
+  factory City.fromJson(Map<String, dynamic> json) {
+    return City(
       id: json['id'],
       name: json['name'],
       type: json['type'],
-      mapImage: json['mapImage']!=null?"https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['mapImage']}":null,
       connectionString: json['connectionString'],
       isAdminListings: json['isAdminListings'],
-      image: (json['image'] != null)
+      image: json['image'] != null
           ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['image']}"
           : null,
       description: json['description'],
+      subtitle: json['subtitle'],
       address: json['address'],
       latitude: json['latitude'],
       longitude: json['longitude'],
@@ -242,7 +202,7 @@ class Municipality {
       email: json['email'],
       websiteUrl: json['websiteUrl'],
       openUntil: json['openUntil'],
-      isActive: json['isActive'],
+      isActive: json['isActive'] == 1,
       createdAt: json['createdAt'],
       updatedAt: json['updatedAt'],
       inCityServer: json['inCityServer'],
@@ -260,6 +220,7 @@ class Municipality {
       'isAdminListings': isAdminListings,
       'image': image,
       'description': description,
+      'subtitle': subtitle,
       'address': address,
       'latitude': latitude,
       'longitude': longitude,
@@ -267,7 +228,7 @@ class Municipality {
       'email': email,
       'websiteUrl': websiteUrl,
       'openUntil': openUntil,
-      'isActive': isActive,
+      'isActive': isActive == true ? 1 : 0,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'inCityServer': inCityServer,

@@ -201,8 +201,8 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
           _contactDetailsCard(
               onTap: () {},
               heading: "Nadine Kropp-Meyer",
-              phoneNumber: "0170 9306507",
-              email: "email@mail.de"),
+              phoneNumber: "-",
+              email: "-"),
           15.verticalSpace,
         ],
       ),
@@ -245,7 +245,6 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
                     20.horizontalSpace,
                     textBoldMontserrat(
                         text: phoneNumber,
-                        decoration: TextDecoration.underline,
                         color: Theme.of(context).textTheme.bodyLarge?.color)
                   ],
                 ),

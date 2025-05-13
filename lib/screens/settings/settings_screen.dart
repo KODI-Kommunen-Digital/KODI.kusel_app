@@ -89,7 +89,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               text: AppLocalizations.of(context).imprint_page),
           onTap: () async {
             final Uri uri =
-                Uri.parse("http://116.202.186.81:4000/impressum");
+                Uri.parse("http://deinkuselerland.de/impressum");
             if (await canLaunchUrl(uri)) {
               await launchUrl(uri);
             }
@@ -103,7 +103,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               text: AppLocalizations.of(context).terms_of_use),
           onTap: () async {
             final Uri uri =
-                Uri.parse("http://116.202.186.81:4000/terms");
+                Uri.parse("http://deinkuselerland.de/terms");
             if (await canLaunchUrl(uri)) {
               await launchUrl(uri);
             }
@@ -117,7 +117,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               text: AppLocalizations.of(context).privacy_policy),
           onTap: () async {
             final Uri uri =
-                Uri.parse("http://116.202.186.81:4000/privacy-policy");
+                Uri.parse("http://deinkuselerland.de/privacy-policy");
             if (await canLaunchUrl(uri)) {
               await launchUrl(uri);
             }
