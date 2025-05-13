@@ -52,21 +52,22 @@ class _PlaceOfAnotherCommunityCardState
               ),
               16.horizontalSpace,
               textRegularMontserrat(text: widget.text,
-                  fontSize: 16),
+                  textOverflow: TextOverflow.visible,
+                  fontSize: 14),
 
             ],
           ),
-          Padding(
-            padding:  EdgeInsets.only(right: 10.w),
-            child: Icon(
-              widget.isFav
-                  ? Icons.favorite_sharp
-                  : Icons.favorite_border_sharp,
-              color:
-              widget.isFav ? Colors.red : Colors.black,
-              size: 25,
-            ),
-          )
+          // Padding(
+          //   padding:  EdgeInsets.only(right: 10.w),
+          //   child: Icon(
+          //     widget.isFav
+          //         ? Icons.favorite_sharp
+          //         : Icons.favorite_border_sharp,
+          //     color:
+          //     widget.isFav ? Colors.red : Colors.black,
+          //     size: 25,
+          //   ),
+          // )
         ],
       ),
     ));

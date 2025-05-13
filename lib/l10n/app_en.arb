@@ -146,5 +146,6 @@
   "privacy_policy" : "Privacy Policy",
   "cities": "Cities",
   "my_place": "My Place",
-  "show_all_places": "Show all places"
+  "show_all_places": "Show all places",
+  "mein_ort_display_message" : "Welcome to the overview page for your places in the Kuseler Land – your guide to the places in the region."
 }

@@ -54,7 +54,7 @@ class _AllCityScreenState extends ConsumerState<AllCityScreen> {
         children: [
           _buildClipper(context),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.w),
+            padding: EdgeInsets.symmetric(horizontal: 12.w),
             child: ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
@@ -63,7 +63,7 @@ class _AllCityScreenState extends ConsumerState<AllCityScreen> {
                   final item =
                       ref.read(allCityScreenProvider).cityList[index];
                   return Padding(
-                    padding: EdgeInsets.symmetric(vertical: 5.h),
+                    padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 12.w),
                     child: PlaceOfAnotherCommunityCard(
                       onTap: () {},
                       imageUrl: item.image ??
@@ -101,24 +101,25 @@ class _AllCityScreenState extends ConsumerState<AllCityScreen> {
               Positioned(
                 top: 30.h,
                 left: 15.w,
-                child: ArrowBackWidget(
-                  onTap: () {
-                    ref
-                        .read(navigationProvider)
-                        .removeTopPage(context: context);
-                  },
+                child: Row(
+                  children: [
+                    ArrowBackWidget(
+                      onTap: () {
+                        ref
+                            .read(navigationProvider)
+                            .removeTopPage(context: context);
+                      },
+                    ),
+                    100.horizontalSpace,
+                    textBoldPoppins(
+                      color: lightThemeSecondaryColor,
+                      fontSize: 18,
+                      textAlign: TextAlign.center,
+                      text: AppLocalizations.of(context).cities,
+                    )
+                  ],
                 ),
               ),
-              Positioned(
-                top: 65,
-                left: 350,
-                child: textBoldPoppins(
-                  color: lightThemeSecondaryColor,
-                  fontSize: 16,
-                  textAlign: TextAlign.center,
-                  text: AppLocalizations.of(context).cities,
-                ),
-              )
             ],
           ),
         )

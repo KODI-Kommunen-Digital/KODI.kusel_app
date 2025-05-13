@@ -34,3 +34,5 @@ const virtualTownHallEndPoint = "/virtualTownhall";
 
 // MEIN ORT
 const meinOrtEndPoint = "/meinOrt";
+
+const getPlacesInMunicipalitiesPath = "/getPlacesInMunicipalities";
