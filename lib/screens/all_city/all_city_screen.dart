@@ -23,6 +23,7 @@ import '../../providers/favorites_list_notifier.dart';
 import '../../theme_manager/colors.dart';
 import '../event/event_detail_screen_controller.dart';
 import '../municipal_party_detail/widget/place_of_another_community_card.dart';
+import '../ort_detail/ort_detail_screen_params.dart';
 
 class AllCityScreen extends ConsumerStatefulWidget {
   const AllCityScreen({super.key});
@@ -54,7 +55,7 @@ class _AllCityScreenState extends ConsumerState<AllCityScreen> {
         children: [
           _buildClipper(context),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.w),
+            padding: EdgeInsets.symmetric(horizontal: 12.w),
             child: ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
@@ -63,9 +64,10 @@ class _AllCityScreenState extends ConsumerState<AllCityScreen> {
                   final item =
                       ref.read(allCityScreenProvider).cityList[index];
                   return Padding(
-                    padding: EdgeInsets.symmetric(vertical: 5.h),
+                    padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 12.w),
                     child: PlaceOfAnotherCommunityCard(
-                      onTap: () {},
+                      onTap: () {
+                      },
                       imageUrl: item.image ??
                           'https://images.unsplash.com/photo-1584713503693-bb386ec95cf2?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
                       text: item.name ?? '',
@@ -101,24 +103,25 @@ class _AllCityScreenState extends ConsumerState<AllCityScreen> {
               Positioned(
                 top: 30.h,
                 left: 15.w,
-                child: ArrowBackWidget(
-                  onTap: () {
-                    ref
-                        .read(navigationProvider)
-                        .removeTopPage(context: context);
-                  },
+                child: Row(
+                  children: [
+                    ArrowBackWidget(
+                      onTap: () {
+                        ref
+                            .read(navigationProvider)
+                            .removeTopPage(context: context);
+                      },
+                    ),
+                    100.horizontalSpace,
+                    textBoldPoppins(
+                      color: lightThemeSecondaryColor,
+                      fontSize: 18,
+                      textAlign: TextAlign.center,
+                      text: AppLocalizations.of(context).cities,
+                    )
+                  ],
                 ),
               ),
-              Positioned(
-                top: 65,
-                left: 350,
-                child: textBoldPoppins(
-                  color: lightThemeSecondaryColor,
-                  fontSize: 16,
-                  textAlign: TextAlign.center,
-                  text: AppLocalizations.of(context).cities,
-                ),
-              )
             ],
           ),
         )
