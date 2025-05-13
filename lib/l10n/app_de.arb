@@ -150,5 +150,6 @@
   "soon_service":"Bald wird der Service verfügbar sein",
   "cities": "Städte",
   "my_place": "Mein Ort",
-  "show_all_places": "Alle Orte anzeigen"
+  "show_all_places": "Alle Orte anzeigen",
+  "mein_ort_display_message" : "Willkommen auf der Übersichtsseite für deine Orte im Kuseler Land – Deinem Guide zu den Orten der Region."
 }

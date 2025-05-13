@@ -10,11 +10,12 @@ class PlaceOfAnotherCommunityCard extends ConsumerStatefulWidget {
   bool isFav;
   void Function()? onTap;
 
-   PlaceOfAnotherCommunityCard({super.key,
-    required this.onTap,
-    required this.imageUrl,
-    required this.text,
-    required this.isFav});
+  PlaceOfAnotherCommunityCard(
+      {super.key,
+      required this.onTap,
+      required this.imageUrl,
+      required this.text,
+      required this.isFav});
 
   @override
   ConsumerState<PlaceOfAnotherCommunityCard> createState() =>
@@ -25,24 +26,20 @@ class _PlaceOfAnotherCommunityCardState
     extends ConsumerState<PlaceOfAnotherCommunityCard> {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(onTap:widget.onTap, child: Container(
-      padding: EdgeInsets.symmetric(vertical: 8.h,horizontal: 10.w),
-      height: 70.h,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10.r)
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
+    return GestureDetector(
+        onTap: widget.onTap,
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 10.w),
+          height: 70.h,
+          width: double.infinity,
+          decoration: BoxDecoration(
+              color: Colors.white, borderRadius: BorderRadius.circular(10.r)),
+          child:  Row(
             children: [
               CachedNetworkImage(
                 height: 70.h,
                 width: 70.w,
-                imageUrl:
-                widget.imageUrl,
+                imageUrl: widget.imageUrl,
                 errorWidget: (context, val, _) {
                   return Icon(Icons.error);
                 },
@@ -53,14 +50,15 @@ class _PlaceOfAnotherCommunityCardState
                 },
               ),
               16.horizontalSpace,
-              textRegularMontserrat(text: widget.text,
-                  fontSize: 16),
-
+              Flexible(
+                child: textRegularMontserrat(
+                  textAlign: TextAlign.start,
+                    text: widget.text,
+                    textOverflow: TextOverflow.visible,
+                    fontSize: 14),
+              ),
             ],
           ),
-
-        ],
-      ),
-    ));
+        ));
   }
 }

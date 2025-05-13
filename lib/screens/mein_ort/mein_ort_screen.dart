@@ -10,6 +10,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/navigation/navigation.dart';
+import 'package:kusel/screens/all_municipality/all_municipality_provider.dart';
 import 'package:kusel/screens/mein_ort/mein_ort_provider.dart';
 import 'package:kusel/screens/mein_ort/mein_ort_state.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
@@ -22,7 +23,6 @@ import '../../common_widgets/highlights_card.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
 import '../../images_path.dart';
-import '../events_listing/selected_event_list_screen_parameter.dart';
 
 class MeinOrtScreen extends ConsumerStatefulWidget {
   const MeinOrtScreen({super.key});
@@ -73,8 +73,16 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          _buildClipper(context),
-          _buildInfoContainer(),
+          SizedBox(
+            height: 155.h,
+            width: MediaQuery.of(context).size.width,
+            child: Stack(
+              children: [
+                _buildClipper(context),
+                Positioned(top: 70, child: _buildInfoContainer(context)),
+              ],
+            ),
+          ),
           _customPageViewer(municipalityList: state.municipalityList ?? []),
           ListView.builder(
               itemCount: state.municipalityList.length,
@@ -92,12 +100,10 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                     0,
                     0, () {
                   ref.read(navigationProvider).navigateUsingPath(
-                      path: selectedEventListScreenPath,
+                      path: allMunicipalityScreenPath,
                       context: context,
-                      params: SelectedEventListScreenParameter(
-                          cityId: 1,
-                          listHeading: AppLocalizations.of(context).news,
-                          categoryId: null));
+                      params: MunicipalityScreenParams(
+                          municipalityId: item.id ?? 0));
                 });
               }),
           FeedbackCardWidget(onTap: () {
@@ -177,26 +183,27 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
     );
   }
 
-  _buildInfoContainer() {
+  Widget _buildInfoContainer(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(12.h.w),
+      padding: EdgeInsets.symmetric(vertical: 18.h, horizontal: 15.w),
       child: Card(
         elevation: 6,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(6.r),
         ),
         child: Container(
-          padding: EdgeInsets.all(8.h.w),
+          width: MediaQuery.of(context).size.width - 24.h * 2 + 12.h,
+          padding: EdgeInsets.all(8.h), // Uniform padding
           decoration: BoxDecoration(
             color: Theme.of(context).canvasColor,
             borderRadius: BorderRadius.circular(6.r),
           ),
           child: textRegularPoppins(
-              text:
-                  "Willkommen auf der Übersichtsseite für deine Orte im Kuseler Land – Deinem Guide zu den Orten der Region.",
-              textOverflow: TextOverflow.visible,
-              fontSize: 13,
-              textAlign: TextAlign.start),
+            text: AppLocalizations.of(context).mein_ort_display_message,
+            textOverflow: TextOverflow.visible,
+            fontSize: 13,
+            textAlign: TextAlign.start,
+          ),
         ),
       ),
     );
@@ -315,16 +322,15 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
   }
 
   Widget eventsView(
-    List<City> eventsList,
-    String heading,
-    int maxListLimit,
-    String buttonText,
-    String buttonIconPath,
-    bool isLoading,
-    double? latitude,
-    double? longitude,
-    void Function() onPress,
-  ) {
+      List<City> eventsList,
+      String heading,
+      int maxListLimit,
+      String buttonText,
+      String buttonIconPath,
+      bool isLoading,
+      double? latitude,
+      double? longitude,
+      void Function() onPress) {
     if (isLoading) {
       return Column(
         children: [
@@ -389,8 +395,16 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                 : eventsList.length,
             itemBuilder: (context, index) {
               final item = eventsList[index];
-              return _buildImageTextCard(
-                  item.name, item.image, item.id.toString());
+              return GestureDetector(
+                onTap: () {
+                  ref.read(navigationProvider).navigateUsingPath(
+                      path: ortDetailScreenPath,
+                      context: context,
+                      params:
+                          OrtDetailScreenParams(ortId: item.id!.toString()));
+                },
+                child: _buildImageTextCard(item.name, item.image),
+              );
             },
           ),
           Padding(
@@ -428,45 +442,40 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
     );
   }
 
-  _buildImageTextCard(String? text, String? imageUrl, String id) {
-    return GestureDetector(
-      onTap: () {
-        ref.read(navigationProvider).navigateUsingPath(
-            path: ortDetailScreenPath,
-            context: context,
-            params: OrtDetailScreenParams(ortId: id));
-      },
-      child: Card(
-        color: Colors.white,
-        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        elevation: 4,
-        child: Padding(
-          padding: EdgeInsets.all(8.h.w),
-          child: Row(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: CachedNetworkImage(
-                  errorWidget: (context, error, stackTrace) =>
-                      const Icon(Icons.broken_image, size: 80),
-                  width: 80,
-                  height: 80,
-                  progressIndicatorBuilder: (context, value, _) {
-                    return Center(child: CircularProgressIndicator());
-                  },
-                  fit: BoxFit.cover,
-                  imageUrl: imageUrl ??
-                      'https://images.unsplash.com/photo-1584713503693-bb386ec95cf2?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                ),
+  _buildImageTextCard(String? text, String? imageUrl) {
+    return Card(
+      color: Colors.white,
+      margin: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      elevation: 4,
+      child: Padding(
+        padding: EdgeInsets.all(8.h.w),
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: CachedNetworkImage(
+                errorWidget: (context, error, stackTrace) =>
+                    const Icon(Icons.broken_image, size: 80),
+                width: 80,
+                height: 80,
+                progressIndicatorBuilder: (context, value, _) {
+                  return Center(child: CircularProgressIndicator());
+                },
+                fit: BoxFit.fill,
+                imageUrl: imageUrl ??
+                    'https://images.unsplash.com/photo-1584713503693-bb386ec95cf2?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
               ),
-              const SizedBox(width: 8),
-              // Texts
-              Expanded(
-                child: textRegularMontserrat(text: text ?? ''),
-              ),
-            ],
-          ),
+            ),
+            SizedBox(width: 30.w),
+            // Texts
+            Flexible(
+                child: textRegularMontserrat(
+                    textAlign: TextAlign.start,
+                    text: text ?? '',
+                    textOverflow: TextOverflow.visible,
+                    fontSize: 14)),
+          ],
         ),
       ),
     );
