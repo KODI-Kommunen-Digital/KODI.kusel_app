@@ -34,3 +34,6 @@ const virtualTownHallEndPoint = "/virtualTownhall";
 
 
 const ortDetailEndPoint = "/cities";
+
+// MEIN ORT
+const meinOrtEndPoint = "/meinOrt";
