@@ -40,7 +40,7 @@ class _OnboardingLoadingPageState extends ConsumerState<OnboardingLoadingPage> {
 
   @override
   Widget build(BuildContext context) {
-    String userName = ref.read(onboardingScreenProvider).userNam;
+    String userName = ref.read(onboardingScreenProvider).userName;
     String textMsg = "${AppLocalizations.of(context).thanks} $userName!";
     return SafeArea(
       child: Scaffold(

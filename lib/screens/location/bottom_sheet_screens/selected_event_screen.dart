@@ -1,4 +1,3 @@
-import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,9 +7,7 @@ import 'package:kusel/screens/location/location_screen_state.dart';
 
 import '../bottom_sheet_selected_ui_type.dart';
 
-
 class SelectedEventScreen extends ConsumerStatefulWidget {
-
   SelectedEventScreen({super.key});
 
   @override
@@ -72,7 +69,8 @@ class _SelectedEventScreenState extends ConsumerState<SelectedEventScreen> {
           title: state.selectedEvent?.title ?? "",
           startDate: state.selectedEvent?.startDate ?? "",
           logo: state.selectedEvent?.logo ?? "",
-          id: state.selectedEvent?.id ?? 0
+          id: state.selectedEvent?.id ?? 0,
+          sourceId: state.selectedEvent?.sourceId ?? 3,
         )
       ],
     );
