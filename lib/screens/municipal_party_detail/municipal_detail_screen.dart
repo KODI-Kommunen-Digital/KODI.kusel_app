@@ -11,6 +11,7 @@ import 'package:kusel/screens/events_listing/selected_event_list_screen_paramete
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_location_widget.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/place_of_another_community_card.dart';
+import 'package:kusel/screens/ort_detail/ort_detail_screen_params.dart';
 
 import '../../app_router.dart';
 import '../../common_widgets/arrow_back_widget.dart';
@@ -47,7 +48,6 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
       ref
           .read(municipalDetailControllerProvider.notifier)
           .getNewsUsingCityId(municipalId: id);
-      ref.read(municipalDetailControllerProvider.notifier).fetchCities();
     });
     super.initState();
   }
@@ -150,41 +150,34 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                   ),
 
                   Positioned(
-                    top: MediaQuery.of(context).size.height * .17,
+                    top: 120.h,
                     left: 0.w,
                     right: 0.w,
                     child: Container(
                       height: 120.h,
                       width: 70.w,
+                      padding: EdgeInsets.all(25.w),
                       decoration: BoxDecoration(
                           shape: BoxShape.circle, color: Colors.white),
-                      child: (state.municipalPartyDetailDataModel?.image !=
-                              null)
-                          ? FittedBox(
-                        fit: BoxFit.contain,
-                            child: CachedNetworkImage(
-                              height: 60.h,
-                                width: 55.w,
-                                fit: BoxFit.contain,
-                                imageUrl:
-                                    state.municipalPartyDetailDataModel!.image!,
-                                errorWidget: (context, val, _) {
-                                  return Image.asset(imagePath['crest']!);
-                                },
-                                progressIndicatorBuilder: (context, val, _) {
-                                  return Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                },
-                              ),
-                          )
+                      child: (state.municipalPartyDetailDataModel?.image != null)
+                          ? CachedNetworkImage(
+                        imageUrl: state.municipalPartyDetailDataModel!.image!,
+                        errorWidget: (context, val, _) {
+                          return Image.asset(imagePath['crest']!);
+                        },
+                        progressIndicatorBuilder: (context, val, _) {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        },
+                      )
                           : Center(
-                              child: Image.asset(
-                                imagePath['crest']!,
-                                height: 120.h,
-                                width: 100.w,
-                              ),
-                            ),
+                        child: Image.asset(
+                          imagePath['crest']!,
+                          height: 120.h,
+                          width: 100.w,
+                        ),
+                      ),
                     ),
                   )
                 ],
@@ -249,7 +242,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
           lat: (state.municipalPartyDetailDataModel?.latitude != null)
               ? double.parse(state.municipalPartyDetailDataModel!.latitude!)
               : 49.5384,
-          websiteText: 'https://google.com',
+          websiteText: 'https://www.landkreis-kusel.de/',
           calendarText:
               state.municipalPartyDetailDataModel?.openUntil ?? "16:00:00",
         ),
@@ -307,7 +300,13 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 5.h),
                   child: PlaceOfAnotherCommunityCard(
-                    onTap: () {},
+                    onTap: () {
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: ortDetailScreenPath,
+                          context: context,
+                          params: OrtDetailScreenParams(
+                              ortId: item.id!.toString()));
+                    },
                     imageUrl: item.image ??
                         'https://images.unsplash.com/photo-1584713503693-bb386ec95cf2?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
                     text: item.name ?? '',
@@ -328,7 +327,10 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
   }
 
   _buildEvents(BuildContext context) {
-    return Column(
+    return (ref
+        .watch(municipalDetailControllerProvider)
+        .eventList
+        .isNotEmpty)?Column(
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -448,11 +450,14 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
           ),
         )
       ],
-    );
+    ):SizedBox.shrink();
   }
 
   _buildNews(BuildContext context) {
-    return Column(
+    return (ref
+        .watch(municipalDetailControllerProvider)
+        .eventList
+        .isNotEmpty)?Column(
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -569,6 +574,6 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
           ),
         )
       ],
-    );
+    ):SizedBox.shrink();
   }
 }

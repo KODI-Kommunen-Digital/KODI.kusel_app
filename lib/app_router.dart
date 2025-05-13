@@ -14,6 +14,7 @@ import 'package:kusel/screens/favorite/favorites_list_screen.dart';
 import 'package:kusel/screens/feedback/feedback_screen.dart';
 import 'package:kusel/screens/fliter_screen/filter_screen.dart';
 import 'package:kusel/screens/highlight/highlight_screen.dart';
+import 'package:kusel/screens/mein_ort/mein_ort_screen.dart';
 import 'package:kusel/screens/mobility_screen/mobility_screen.dart';
 import 'package:kusel/screens/municipal_party_detail/municipal_detail_screen.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
@@ -56,6 +57,7 @@ const municipalDetailScreenPath = "/municipalDetailScreenPath";
 const mobilityScreenPath = "/mobilityScreenPath";
 const participateScreenPath = "/participateScreenPath";
 const allCityScreenPath = "/allCityScreenPath";
+const meinOrtScreenPath = "/meinOrtScreenPath";
 const ortDetailScreenPath = "/ortDetailScreenPath";
 
 List<RouteBase> goRouteList = [
@@ -194,5 +196,11 @@ List<RouteBase> goRouteList = [
       builder: (context, state) {
         return OrtDetailScreen(
             ortDetailScreenParams: state.extra as OrtDetailScreenParams);
-      })
+      }),
+  GoRoute(
+      path: meinOrtScreenPath,
+      builder: (context, state) {
+        return MeinOrtScreen();
+      }),
+
 ];
