@@ -35,9 +35,7 @@ class Category {
     return Category(
       id: json['id'] as int?,
       name: json['name'] as String?,
-      image: json['image'] != null
-          ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['image']}"
-          : null,
+      image: json['image'],
       noOfSubcategories: json['noOfSubcategories'] as int?,
     );
   }

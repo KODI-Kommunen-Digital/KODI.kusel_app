@@ -40,9 +40,7 @@ class Interest {
       name: json['name'] as String?,
       available: json['available'] as int?,
       interestOrder: json['interest_order'] as int?,
-      image: json['image'] != null
-          ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['image']}"
-          : null,
+      image: json['image'] ,
     );
   }
 

@@ -79,14 +79,12 @@ class Municipality {
   factory Municipality.fromJson(Map<String, dynamic> json) {
     return Municipality(
       id: json['id'],
-      mapImage: json['mapImage']!=null?"https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['mapImage']}":null,
+      mapImage: json['mapImage'],
       name: json['name'],
       type: json['type'],
       connectionString: json['connectionString'],
       isAdminListings: json['isAdminListings'],
-      image: json['image'] != null
-          ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['image']}"
-          : null,
+      image: json['image'] ,
       description: json['description'],
       subtitle: json['subtitle'],
       address: json['address'],
@@ -190,9 +188,7 @@ class City {
       type: json['type'],
       connectionString: json['connectionString'],
       isAdminListings: json['isAdminListings'],
-      image: json['image'] != null
-          ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['image']}"
-          : null,
+      image: json['image'],
       description: json['description'],
       subtitle: json['subtitle'],
       address: json['address'],
