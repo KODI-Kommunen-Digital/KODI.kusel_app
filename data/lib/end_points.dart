@@ -37,3 +37,5 @@ const ortDetailEndPoint = "/cities";
 
 // MEIN ORT
 const meinOrtEndPoint = "/meinOrt";
+
+const getPlacesInMunicipalitiesPath = "/getPlacesInMunicipalities";
