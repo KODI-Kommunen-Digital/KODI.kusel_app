@@ -81,42 +81,42 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
           _buildTownHallDetailsUi(state),
           _buildServicesList(onlineServicesList: state.onlineServiceList ?? []),
           _customPageViewer(municipalityList: state.municipalitiesList ?? []),
-          if(state.newsList!=null && state.newsList!.isNotEmpty)
-          eventsView(
-              state.newsList ?? [],
-              AppLocalizations.of(context).news,
-              5,
-              AppLocalizations.of(context).all_news,
-              imagePath['calendar'] ?? "",
-              isLoading,
-              0,
-              0, () {
-            ref.read(navigationProvider).navigateUsingPath(
-                path: selectedEventListScreenPath,
-                context: context,
-                params: SelectedEventListScreenParameter(
-                    cityId: 1,
-                    listHeading: AppLocalizations.of(context).news,
-                    categoryId: null));
-          }),
-          if(state.eventList!=null && state.eventList!.isNotEmpty)
-          eventsView(
-              state.eventList ?? [],
-              AppLocalizations.of(context).event_text,
-              5,
-              AppLocalizations.of(context).all_events,
-              imagePath['calendar'] ?? "",
-              isLoading,
-              0,
-              0, () {
-            ref.read(navigationProvider).navigateUsingPath(
-                path: selectedEventListScreenPath,
-                context: context,
-                params: SelectedEventListScreenParameter(
-                    cityId: 1,
-                    listHeading: AppLocalizations.of(context).events,
-                    categoryId: null));
-          }),
+          if (state.newsList != null && state.newsList!.isNotEmpty)
+            eventsView(
+                state.newsList ?? [],
+                AppLocalizations.of(context).news,
+                5,
+                AppLocalizations.of(context).all_news,
+                imagePath['calendar'] ?? "",
+                isLoading,
+                0,
+                0, () {
+              ref.read(navigationProvider).navigateUsingPath(
+                  path: selectedEventListScreenPath,
+                  context: context,
+                  params: SelectedEventListScreenParameter(
+                      cityId: 1,
+                      listHeading: AppLocalizations.of(context).news,
+                      categoryId: null));
+            }),
+          if (state.eventList != null && state.eventList!.isNotEmpty)
+            eventsView(
+                state.eventList ?? [],
+                AppLocalizations.of(context).event_text,
+                5,
+                AppLocalizations.of(context).all_events,
+                imagePath['calendar'] ?? "",
+                isLoading,
+                0,
+                0, () {
+              ref.read(navigationProvider).navigateUsingPath(
+                  path: selectedEventListScreenPath,
+                  context: context,
+                  params: SelectedEventListScreenParameter(
+                      cityId: 1,
+                      listHeading: AppLocalizations.of(context).events,
+                      categoryId: null));
+            }),
           FeedbackCardWidget(onTap: () {
             ref
                 .read(navigationProvider)
@@ -264,13 +264,13 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
               final item = onlineServicesList[index];
               return IconTextWidgetCard(
                   onTap: () async {
-                    final Uri uri =
-                        Uri.parse(item.linkUrl ?? "https://www.landkreis-kusel.de");
+                    final Uri uri = Uri.parse(
+                        item.linkUrl ?? "https://www.landkreis-kusel.de");
                     if (await canLaunchUrl(uri)) {
                       await launchUrl(uri);
                     }
                   },
-                  imageUrl:   'alert_icon',//??item.iconUrl
+                  imageUrl: 'alert_icon', //??item.iconUrl
                   text: item.title ?? '',
                   description: item.description ?? '');
             },
@@ -379,7 +379,9 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                     // isVisible:
                     // !ref.watch(homeScreenProvider).isSignupButtonVisible,
                     isVisible: false,
+                    sourceId: 1,
                   ),
+                  // TODO: need to change source id
                 );
               },
               onPageChanged: (index) {
@@ -493,6 +495,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                 // isFavouriteVisible:
                 // ref.watch(favoritesProvider.notifier).showFavoriteIcon(),
                 isFavouriteVisible: false,
+                sourceId: item.sourceId!,
               );
             },
           ),

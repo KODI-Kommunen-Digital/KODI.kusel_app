@@ -1,6 +1,7 @@
 import 'package:core/base_model.dart';
 
-class GetEventDetailsResponseModel extends BaseModel<GetEventDetailsResponseModel> {
+class GetEventDetailsResponseModel
+    extends BaseModel<GetEventDetailsResponseModel> {
   String? status;
   EventData? data;
 
@@ -122,13 +123,13 @@ class EventData {
       zipcode: json['zipcode'],
       showExternal: json['showExternal'],
       appointmentId: json['appointmentId'],
-      allCities: json['allCities'] != null ? List<int>.from(json['allCities']) : null,
+      allCities:
+          json['allCities'] != null ? List<int>.from(json['allCities']) : null,
       cityId: json['cityId'],
-      logo: json['logo'] != null
-          ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['logo']}"
-          : null,
-      otherLogos: json['otherLogos'] != null
-          ? List<OtherLogo>.from(json['otherLogos'].map((x) => OtherLogo.fromJson(x)))
+      logo: json['logo'] ,
+      otherLogos: (json['otherLogos'] != null)
+          ? List<OtherLogo>.from(
+              json['otherLogos'].map((x) => OtherLogo.fromJson(x)))
           : null,
     );
   }
@@ -186,13 +187,10 @@ class OtherLogo {
 
   factory OtherLogo.fromJson(Map<String, dynamic> json) {
     return OtherLogo(
-      id: json['id'],
-      imageOrder: json['imageOrder'],
-      listingId: json['listingId'],
-      logo: json['logo'] != null
-          ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['logo']}"
-          : null,
-    );
+        id: json['id'],
+        imageOrder: json['imageOrder'],
+        listingId: json['listingId'],
+        logo: json['logo']);
   }
 
   Map<String, dynamic> toJson() {
