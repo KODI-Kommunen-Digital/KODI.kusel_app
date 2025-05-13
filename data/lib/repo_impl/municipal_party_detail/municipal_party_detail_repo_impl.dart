@@ -4,9 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../service/municipal_party_detail/municipal_party_detail_service.dart';
 
-final municipalPartyDetailRepositoryProvider = Provider((ref) =>
+final municipalPartyDetailRepoProvider = Provider((ref) =>
     MunicipalPartyDetailRepoImpl(
-        municipalPartyDetailRepository:
+        municipalPartyDetailService:
             ref.read(municipalPartyDetailServiceProvider)));
 
 abstract class MunicipalPartyDetailRepo {
@@ -15,15 +15,15 @@ abstract class MunicipalPartyDetailRepo {
 }
 
 class MunicipalPartyDetailRepoImpl implements MunicipalPartyDetailRepo {
-  MunicipalPartyDetailService municipalPartyDetailRepository;
+  MunicipalPartyDetailService municipalPartyDetailService;
 
-  MunicipalPartyDetailRepoImpl({required this.municipalPartyDetailRepository});
+  MunicipalPartyDetailRepoImpl({required this.municipalPartyDetailService});
 
   @override
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
     final result =
-        await municipalPartyDetailRepository.call(requestModel, responseModel);
+        await municipalPartyDetailService.call(requestModel, responseModel);
 
     return result.fold((l) => Left(l), (r) => Right(r));
   }

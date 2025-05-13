@@ -31,3 +31,6 @@ const getFilterEndPoint = "";
 
 // VIRTUAL TOWN HALL
 const virtualTownHallEndPoint = "/virtualTownhall";
+
+
+const ortDetailEndPoint = "/cities";

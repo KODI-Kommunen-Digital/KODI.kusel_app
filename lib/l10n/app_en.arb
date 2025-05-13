@@ -144,5 +144,7 @@
   "imprint_page": "Imprint Page",
   "terms_of_use" : "Terms of Use",
   "privacy_policy" : "Privacy Policy",
-  "cities": "Cities"
+  "cities": "Cities",
+  "view_ort": "View Ort",
+  "soon_service":"Soon service will be availbale"
 }

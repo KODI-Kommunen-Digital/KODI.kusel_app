@@ -1,11 +1,13 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/screens/explore/explore_card_view.dart';
 import 'package:kusel/screens/explore/explore_controller.dart';
+import 'package:kusel/screens/ort_detail/ort_detail_screen_params.dart';
 
 import '../../app_router.dart';
 import '../../common_widgets/feedback_card_widget.dart';
@@ -172,6 +174,16 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
           params: MunicipalDetailScreenParams(municipalId: '1'));
         };
         break;
+
+      case 2:
+        onTap = () {
+          // ref.read(navigationProvider).navigateUsingPath(
+          //   path: ortDetailScreenPath, context: context,
+          //   params: OrtDetailScreenParams(ortId: '42')
+          // );
+          showSoonServiceDialog(context);
+        };
+        break;
       case 3:
         onTap = () {
           ref.read(navigationProvider).navigateUsingPath(
@@ -192,4 +204,24 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
 
     return onTap;
   }
+
+
+
+  void showSoonServiceDialog(BuildContext context) {
+    showCupertinoDialog(
+      context: context,
+      builder: (context) => CupertinoAlertDialog(
+
+        content: textSemiBoldPoppins(text: AppLocalizations.of(context).soon_service,
+        maxLines: 3),
+        actions: [
+          CupertinoDialogAction(
+            child: textBoldPoppins(text: AppLocalizations.of(context).close),
+            onPressed: () => ref.read(navigationProvider).removeTopPage(context: context),
+          ),
+        ],
+      ),
+    );
+  }
+
 }
