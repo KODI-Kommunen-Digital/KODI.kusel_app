@@ -100,7 +100,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                   onTap: () async {
                     final Uri uri = Uri.parse("https://www.google.com/");
                     if (await canLaunchUrl(uri)) {
-                    await launchUrl(uri);
+                      await launchUrl(uri);
                     }
                   }),
           16.verticalSpace,
@@ -108,8 +108,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
               ? _eventInfoShimmerEffect()
               : _eventInfoWidget(
                   heading: AppLocalizations.of(context).description,
-                  subHeading:
-                      "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod",
+                  subHeading: '',
                   description: state.eventDetails.description ?? "",
                 )
         ],
@@ -352,9 +351,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
   }
 
   Widget _buildClipperBackground(EventDetailScreenState state) {
-    return state.loading
-        ? _buildClipperBackgroundShimmer()
-        : Stack(
+    return  Stack(
             children: [
               ClipPath(
                 clipper: DownstreamCurveClipper(),
@@ -442,7 +439,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                           },
                           isFavouriteVisible: !ref
                               .watch(homeScreenProvider)
-                              .isSignupButtonVisible,
+                              .isSignupButtonVisible, sourceId: item.sourceId!,
                         );
                       }),
                     ];

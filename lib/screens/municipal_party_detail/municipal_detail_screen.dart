@@ -12,6 +12,7 @@ import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_loc
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/place_of_another_community_card.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen_params.dart';
+import 'package:kusel/screens/utility/image_loader_utility.dart';
 
 import '../../app_router.dart';
 import '../../common_widgets/arrow_back_widget.dart';
@@ -94,17 +95,11 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
           32.verticalSpace,
           _buildPlacesOfTheCommunity(context),
           32.verticalSpace,
-          if(ref
-              .watch(municipalDetailControllerProvider)
-              .eventList
-              .isNotEmpty)
-          _buildEvents(context),
+          if (ref.watch(municipalDetailControllerProvider).eventList.isNotEmpty)
+            _buildEvents(context),
           32.verticalSpace,
-          if(ref
-              .watch(municipalDetailControllerProvider)
-              .newsList
-              .isNotEmpty)
-          _buildNews(context),
+          if (ref.watch(municipalDetailControllerProvider).newsList.isNotEmpty)
+            _buildNews(context),
           32.verticalSpace,
           FeedbackCardWidget(
             onTap: () {
@@ -167,25 +162,30 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                       padding: EdgeInsets.all(25.w),
                       decoration: BoxDecoration(
                           shape: BoxShape.circle, color: Colors.white),
-                      child: (state.municipalPartyDetailDataModel?.image != null)
-                          ? CachedNetworkImage(
-                        imageUrl: state.municipalPartyDetailDataModel!.image!,
-                        errorWidget: (context, val, _) {
-                          return Image.asset(imagePath['crest']!);
-                        },
-                        progressIndicatorBuilder: (context, val, _) {
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        },
-                      )
-                          : Center(
-                        child: Image.asset(
-                          imagePath['crest']!,
-                          height: 120.h,
-                          width: 100.w,
-                        ),
-                      ),
+                      child:
+                          (state.municipalPartyDetailDataModel?.image != null)
+                              ? CachedNetworkImage(
+                                  imageUrl: imageLoaderUtility(
+                                      image: state
+                                          .municipalPartyDetailDataModel!
+                                          .image!,
+                                      sourceId: 1),
+                                  errorWidget: (context, val, _) {
+                                    return Image.asset(imagePath['crest']!);
+                                  },
+                                  progressIndicatorBuilder: (context, val, _) {
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  },
+                                )
+                              : Center(
+                                  child: Image.asset(
+                                    imagePath['crest']!,
+                                    height: 120.h,
+                                    width: 100.w,
+                                  ),
+                                ),
                     ),
                   )
                 ],
@@ -315,10 +315,10 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                           params: OrtDetailScreenParams(
                               ortId: item.id!.toString()));
                     },
-                    imageUrl: item.image ??
-                        'https://images.unsplash.com/photo-1584713503693-bb386ec95cf2?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    imageUrl: item.image!,
                     text: item.name ?? '',
                     isFav: false,
+                    sourceId: 1,
                   ),
                 );
               }),
@@ -420,6 +420,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                           isFavouriteVisible: ref
                               .watch(favoritesProvider.notifier)
                               .showFavoriteIcon(),
+                          sourceId: item.sourceId!,
                         );
                       });
         }),
@@ -544,6 +545,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                           isFavouriteVisible: ref
                               .watch(favoritesProvider.notifier)
                               .showFavoriteIcon(),
+                          sourceId: item.sourceId!,
                         );
                       });
         }),

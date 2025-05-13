@@ -373,7 +373,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       params: EventDetailScreenParams(eventId: item.id));
                 },
                 isFavouriteVisible:
-                    ref.watch(favoritesProvider.notifier).showFavoriteIcon(),
+                    ref.watch(favoritesProvider.notifier).showFavoriteIcon(), sourceId: item.sourceId!,
               );
             },
           ),
@@ -527,7 +527,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           },
                           isVisible: !ref
                               .watch(homeScreenProvider)
-                              .isSignupButtonVisible,
+                              .isSignupButtonVisible, sourceId: listing.sourceId!,
                         ),
                       );
                     },

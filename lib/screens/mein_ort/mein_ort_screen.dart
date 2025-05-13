@@ -15,6 +15,7 @@ import 'package:kusel/screens/mein_ort/mein_ort_provider.dart';
 import 'package:kusel/screens/mein_ort/mein_ort_state.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen_params.dart';
+import 'package:kusel/screens/utility/image_loader_utility.dart';
 
 import '../../common_widgets/common_event_card.dart';
 import '../../common_widgets/custom_button_widget.dart';
@@ -307,7 +308,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                     onFavouriteIconClick: () {},
                     // isVisible:
                     // !ref.watch(homeScreenProvider).isSignupButtonVisible,
-                    isVisible: false,
+                    isVisible: false, sourceId: 1,
                   ),
                 );
               },
@@ -463,7 +464,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                   return Center(child: CircularProgressIndicator());
                 },
                 fit: BoxFit.fill,
-                imageUrl: imageUrl ??
+                imageUrl: imageLoaderUtility(image: imageUrl??"", sourceId: 1) ??
                     'https://images.unsplash.com/photo-1584713503693-bb386ec95cf2?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
               ),
             ),

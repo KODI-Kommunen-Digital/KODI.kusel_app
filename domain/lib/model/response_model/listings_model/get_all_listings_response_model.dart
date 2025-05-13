@@ -126,9 +126,7 @@ class Listing {
       allCities: json['allCities'] != null
           ? List<int>.from(json['allCities'] as List)
           : null,
-      logo: json['logo'] != null
-          ? 'https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['logo']}'
-          : null,
+      logo: json['logo'],
       logoCount: json['logoCount'] as int?,
       otherLogos: json['otherLogos'] != null
           ? (json['otherLogos'] as List)
@@ -189,9 +187,7 @@ class OtherLogo {
   factory OtherLogo.fromJson(Map<String, dynamic> json) {
     return OtherLogo(
       id: json['id'] as int?,
-      logo: json['logo'] != null
-          ? 'https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['logo']}'
-          : null,
+      logo: json['logo'],
       listingId: json['listingId'] as int?,
       imageOrder: json['imageOrder'] as int?,
     );

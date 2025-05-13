@@ -140,7 +140,7 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
                       },
                       isFavouriteVisible: ref
                           .read(favoritesProvider.notifier)
-                          .showFavoriteIcon(),
+                          .showFavoriteIcon(), sourceId: item.sourceId!,
                     );
                   },
                   childCount: state.allEventList.length,

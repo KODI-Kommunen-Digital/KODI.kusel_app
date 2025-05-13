@@ -80,12 +80,12 @@ class MunicipalPartyDetailDataModel {
   factory MunicipalPartyDetailDataModel.fromJson(Map<String, dynamic> json) {
     return MunicipalPartyDetailDataModel(
       id: json['id'],
-      mapImage: json['mapImage']!=null?"https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['mapImage']}":null,
+      mapImage: json['mapImage'],
       name: json['name'],
       type: json['type'],
       connectionString: json['connectionString'],
       isAdminListings: json['isAdminListings'],
-      image: json['image'] != null ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['image']}" : null,
+      image: json['image'] ,
       description: json['description'],
       address: json['address'],
       latitude: json['latitude'],
@@ -162,9 +162,7 @@ class OnlineService {
       title: json['title'],
       description: json['description'],
       linkUrl: json['linkUrl'],
-      iconUrl: json['iconUrl'] != null
-          ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['iconUrl']}"
-          : null,
+      iconUrl: json['iconUrl'],
       displayOrder: json['displayOrder'],
       isActive: json['isActive'],
     );
@@ -238,7 +236,7 @@ class MunicipalDetailCityModel {
       type: json['type'],
       connectionString: json['connectionString'],
       isAdminListings: json['isAdminListings'],
-      image: json['image'] != null ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['image']}" : null,
+      image: json['image'] ,
       description: json['description'],
       subtitle: json['subtitle'],
       address: json['address'],

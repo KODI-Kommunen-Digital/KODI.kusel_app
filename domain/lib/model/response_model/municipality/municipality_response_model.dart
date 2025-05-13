@@ -62,14 +62,10 @@ class MunicipalityCities extends BaseModel<MunicipalityCities> {
       ..type = json['type']
       ..connectionString = json['connectionString']
       ..isAdminListings = json['isAdminListings']
-      ..image = json['image'] != null
-          ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['image']}"
-          : null
+      ..image = json['image']
       ..description = json['description']
       ..subtitle = json['subtitle']
-      ..mapImage = json['mapImage'] != null
-          ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['mapImage']}"
-          : null
+      ..mapImage = json['mapImage']
       ..address = json['address']
       ..latitude = double.tryParse(json['latitude'].toString())
       ..longitude = double.tryParse(json['longitude'].toString())

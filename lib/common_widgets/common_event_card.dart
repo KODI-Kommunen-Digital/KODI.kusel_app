@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/screens/utility/image_loader_utility.dart';
 
 class CommonEventCard extends ConsumerStatefulWidget {
   final String imageUrl;
@@ -15,6 +16,7 @@ class CommonEventCard extends ConsumerStatefulWidget {
   final bool isFavouriteVisible;
   final VoidCallback? onTap;
   final VoidCallback? onFavorite;
+  final int sourceId;
 
   const CommonEventCard({
     Key? key,
@@ -24,6 +26,7 @@ class CommonEventCard extends ConsumerStatefulWidget {
     required this.location,
     required this.isFavouriteVisible,
     required this.isFavorite,
+    required this.sourceId,
     this.onTap,
     this.onFavorite,
   }) : super(key: key);
@@ -52,14 +55,16 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                 borderRadius: BorderRadius.circular(8),
                 child: CachedNetworkImage(
                   errorWidget: (context, error, stackTrace) =>
-                  const Icon(Icons.broken_image, size: 80),
+                      const Icon(Icons.broken_image, size: 80),
                   width: 80,
                   height: 80,
                   progressIndicatorBuilder: (context, value, _) {
                     return Center(child: CircularProgressIndicator());
                   },
                   fit: BoxFit.cover,
-                  imageUrl: widget.imageUrl,),
+                  imageUrl: imageLoaderUtility(
+                      image: widget.imageUrl, sourceId: widget.sourceId),
+                ),
               ),
               const SizedBox(width: 8),
 
@@ -69,20 +74,14 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     textRegularMontserrat(
-                        text: formatDate(widget.date), color: Theme
-                        .of(context)
-                        .textTheme
-                        .labelMedium
-                        ?.color),
+                        text: formatDate(widget.date),
+                        color: Theme.of(context).textTheme.labelMedium?.color),
                     const SizedBox(height: 4),
                     textSemiBoldMontserrat(text: widget.title),
                     const SizedBox(height: 2),
                     textRegularMontserrat(
-                        text: widget.location, color: Theme
-                        .of(context)
-                        .textTheme
-                        .labelMedium
-                        ?.color),
+                        text: widget.location,
+                        color: Theme.of(context).textTheme.labelMedium?.color),
                   ],
                 ),
               ),
@@ -90,8 +89,10 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                 visible: widget.isFavouriteVisible,
                 child: InkWell(
                   onTap: widget.onFavorite,
-                  child: Icon(widget.isFavorite ? Icons.favorite_sharp : Icons
-                      .favorite_border,
+                  child: Icon(
+                    widget.isFavorite
+                        ? Icons.favorite_sharp
+                        : Icons.favorite_border,
                     color: Colors.grey,
                   ),
                 ),
@@ -108,14 +109,11 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
       final DateTime parsedDate = DateTime.parse(inputDate);
       final DateFormat formatter = DateFormat('dd.MM.yyyy');
       return formatter.format(parsedDate);
-    }
-    catch (e) {
+    } catch (e) {
       return inputDate;
     }
   }
-
 }
-
 
 Widget eventCartShimmerEffect() {
   return ListTile(

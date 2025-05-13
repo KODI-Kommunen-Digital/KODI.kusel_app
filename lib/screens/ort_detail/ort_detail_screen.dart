@@ -8,6 +8,7 @@ import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen_controller.dart';
+import 'package:kusel/screens/utility/image_loader_utility.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/downstream_wave_clipper.dart';
@@ -58,9 +59,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
         32.verticalSpace,
         _buildButton(context),
         32.verticalSpace,
-        FeedbackCardWidget(onTap: (){
-
-        })
+        FeedbackCardWidget(onTap: () {})
       ],
     ));
   }
@@ -117,16 +116,18 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                           shape: BoxShape.circle, color: Colors.white),
                       child: (state.ortDetailDataModel?.image != null)
                           ? CachedNetworkImage(
-                            imageUrl: state.ortDetailDataModel!.image!,
-                            errorWidget: (context, val, _) {
-                              return Image.asset(imagePath['crest']!);
-                            },
-                            progressIndicatorBuilder: (context, val, _) {
-                              return Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            },
-                          )
+                              imageUrl: imageLoaderUtility(
+                                  image: state.ortDetailDataModel!.image!,
+                                  sourceId: 1),
+                              errorWidget: (context, val, _) {
+                                return Image.asset(imagePath['crest']!);
+                              },
+                              progressIndicatorBuilder: (context, val, _) {
+                                return Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              },
+                            )
                           : Center(
                               child: Image.asset(
                                 imagePath['crest']!,

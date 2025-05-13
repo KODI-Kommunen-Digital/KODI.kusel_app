@@ -3,15 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/screens/utility/image_loader_utility.dart';
 
 class PlaceOfAnotherCommunityCard extends ConsumerStatefulWidget {
   String text;
   String imageUrl;
   bool isFav;
+  int sourceId;
   void Function()? onTap;
 
   PlaceOfAnotherCommunityCard(
       {super.key,
+      required this.sourceId,
       required this.onTap,
       required this.imageUrl,
       required this.text,
@@ -34,12 +37,13 @@ class _PlaceOfAnotherCommunityCardState
           width: double.infinity,
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(10.r)),
-          child:  Row(
+          child: Row(
             children: [
               CachedNetworkImage(
                 height: 70.h,
                 width: 70.w,
-                imageUrl: widget.imageUrl,
+                imageUrl: imageLoaderUtility(
+                    image: widget.imageUrl, sourceId: widget.sourceId),
                 errorWidget: (context, val, _) {
                   return Icon(Icons.error);
                 },
@@ -52,7 +56,7 @@ class _PlaceOfAnotherCommunityCardState
               16.horizontalSpace,
               Flexible(
                 child: textRegularMontserrat(
-                  textAlign: TextAlign.start,
+                    textAlign: TextAlign.start,
                     text: widget.text,
                     textOverflow: TextOverflow.visible,
                     fontSize: 14),
