@@ -232,6 +232,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               weatherResponseModel:
                   ref.watch(homeScreenProvider).weatherResponseModel,
             ),
+            if(state.nearbyEventsList.isNotEmpty)
             eventsView(
                 state.nearbyEventsList,
                 AppLocalizations.of(context).near_you,
@@ -242,6 +243,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 latitude,
                 longitude,
                 () {}),
+            if(state.eventsList.isNotEmpty)
             eventsView(
                 state.eventsList,
                 AppLocalizations.of(context).all_events,

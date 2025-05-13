@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/arrow_back_widget.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
+import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -54,7 +55,12 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
         _buildClipper(context),
         _buildTitle(context),
         _buildDescription(context),
-        _buildButton(context)
+        32.verticalSpace,
+        _buildButton(context),
+        32.verticalSpace,
+        FeedbackCardWidget(onTap: (){
+
+        })
       ],
     ));
   }
@@ -106,26 +112,21 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                     child: Container(
                       height: 120.h,
                       width: 70.w,
+                      padding: EdgeInsets.all(25.w),
                       decoration: BoxDecoration(
                           shape: BoxShape.circle, color: Colors.white),
                       child: (state.ortDetailDataModel?.image != null)
-                          ? FittedBox(
-                              fit: BoxFit.contain,
-                              child: CachedNetworkImage(
-                                height: 70.h,
-                                width: 55.w,
-                                fit: BoxFit.contain,
-                                imageUrl: state.ortDetailDataModel!.image!,
-                                errorWidget: (context, val, _) {
-                                  return Image.asset(imagePath['crest']!);
-                                },
-                                progressIndicatorBuilder: (context, val, _) {
-                                  return Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                },
-                              ),
-                            )
+                          ? CachedNetworkImage(
+                            imageUrl: state.ortDetailDataModel!.image!,
+                            errorWidget: (context, val, _) {
+                              return Image.asset(imagePath['crest']!);
+                            },
+                            progressIndicatorBuilder: (context, val, _) {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            },
+                          )
                           : Center(
                               child: Image.asset(
                                 imagePath['crest']!,
@@ -156,7 +157,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
             children: [
               textBoldPoppins(
                   color: Theme.of(context).textTheme.bodyLarge?.color,
-                  text: AppLocalizations.of(context).mobility,
+                  text: state.ortDetailDataModel?.name ?? "",
                   fontSize: 18),
               10.verticalSpace,
               textSemiBoldMontserrat(
@@ -178,13 +179,11 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
 
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 12.h),
-        child: Row(
-          children: [
-            textRegularMontserrat(
-                text: state.ortDetailDataModel?.description ?? "",
-                fontSize: 14),
-          ],
-        ),
+        child: textRegularMontserrat(
+            text: state.ortDetailDataModel?.description ?? "",
+            fontSize: 12,
+            textAlign: TextAlign.start,
+            maxLines: 50),
       );
     });
   }
@@ -193,7 +192,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
     return Consumer(builder: (context, ref, _) {
       final state = ref.watch(ortDetailScreenControllerProvider);
       return Padding(
-        padding:  EdgeInsets.symmetric(horizontal: 16.w),
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: CustomButton(
             onPressed: () async {
               final Uri uri = Uri.parse(state.ortDetailDataModel!.websiteUrl!);

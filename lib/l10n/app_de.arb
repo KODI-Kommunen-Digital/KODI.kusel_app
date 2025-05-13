@@ -146,7 +146,9 @@
   "imprint_page": "Impressum",
   "terms_of_use" : "Nutzungsbedingungen",
   "privacy_policy" : "Datenschutzerklärung",
-  "cities": "Städte",
   "view_ort": "Ort anzeigen",
-  "soon_service":"Bald wird der Service verfügbar sein"
+  "soon_service":"Bald wird der Service verfügbar sein",
+  "cities": "Städte",
+  "my_place": "Mein Ort",
+  "show_all_places": "Alle Orte anzeigen"
 }

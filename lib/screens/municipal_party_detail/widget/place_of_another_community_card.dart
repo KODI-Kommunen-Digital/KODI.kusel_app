@@ -39,6 +39,8 @@ class _PlaceOfAnotherCommunityCardState
           Row(
             children: [
               CachedNetworkImage(
+                height: 70.h,
+                width: 70.w,
                 imageUrl:
                 widget.imageUrl,
                 errorWidget: (context, val, _) {
@@ -56,17 +58,7 @@ class _PlaceOfAnotherCommunityCardState
 
             ],
           ),
-          Padding(
-            padding:  EdgeInsets.only(right: 10.w),
-            child: Icon(
-              widget.isFav
-                  ? Icons.favorite_sharp
-                  : Icons.favorite_border_sharp,
-              color:
-              widget.isFav ? Colors.red : Colors.black,
-              size: 25,
-            ),
-          )
+
         ],
       ),
     ));
