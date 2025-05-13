@@ -11,6 +11,7 @@ import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/event/event_detail_screen_state.dart';
+import 'package:kusel/screens/utility/image_loader_utility.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/arrow_back_widget.dart' show ArrowBackWidget;
@@ -45,22 +46,46 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(eventDetailScreenProvider);
+    final isLoading =
+        ref.watch(eventDetailScreenProvider.select((state) => state.loading));
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _buildClipperBackground(state),
-            _buildEventsUi(state),
+      body: Stack(
+        children: [
+          _buildBody(context, state),
+          if (isLoading)
+            Center(
+                child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              height: 100.h,
+              width: 100.w,
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            )),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBody(BuildContext context, EventDetailScreenState state) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          _buildClipperBackground(state),
+          _buildEventsUi(state),
+          if (ref.watch(eventDetailScreenProvider).groupedEvents.isNotEmpty)
             _buildRecommendation(context),
-            FeedbackCardWidget(
-              onTap: () {
-                ref.read(navigationProvider).navigateUsingPath(
-                    path: feedbackScreenPath, context: context);
-              },
-            ),
-          ],
-        ),
+          FeedbackCardWidget(
+            onTap: () {
+              ref.read(navigationProvider).navigateUsingPath(
+                  path: feedbackScreenPath, context: context);
+            },
+          ),
+        ],
       ),
     );
   }
@@ -71,26 +96,28 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          state.loading
-              ? CustomShimmerWidget.rectangular(
-                  height: 25.h,
-                  shapeBorder: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.r)),
-                )
-              : textBoldPoppins(
-                  text: state.eventDetails.title ?? "",
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
-                  fontSize: 16),
+          // state.loading
+          //     ? CustomShimmerWidget.rectangular(
+          //         height: 25.h,
+          //         shapeBorder: RoundedRectangleBorder(
+          //             borderRadius: BorderRadius.circular(20.r)),
+          //       )
+          //     :
+          textBoldPoppins(
+              text: state.eventDetails.title ?? "",
+              color: Theme.of(context).textTheme.bodyLarge?.color,
+              fontSize: 16),
           15.verticalSpace,
-          state.loading
-              ? locationCardShimmerEffect(context)
-              : LocationCardWidget(
-                  address: state.eventDetails.address ?? "",
-                  websiteText: AppLocalizations.of(context).visit_website,
-                  websiteUrl: state.eventDetails.website ?? "",
-                  latitude: state.eventDetails.latitude ?? 0,
-                  longitude: state.eventDetails.longitude ?? 0,
-                ),
+          // state.loading
+          //     ? locationCardShimmerEffect(context)
+          //     :
+          LocationCardWidget(
+            address: state.eventDetails.address ?? "",
+            websiteText: AppLocalizations.of(context).visit_website,
+            websiteUrl: state.eventDetails.website ?? "",
+            latitude: state.eventDetails.latitude ?? 0,
+            longitude: state.eventDetails.longitude ?? 0,
+          ),
           12.verticalSpace,
           state.loading
               ? _publicTransportShimmerEffect()
@@ -351,35 +378,39 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
   }
 
   Widget _buildClipperBackground(EventDetailScreenState state) {
-    return  Stack(
-            children: [
-              ClipPath(
-                clipper: DownstreamCurveClipper(),
-                child: Container(
-                  height: 270.h,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      image: CachedNetworkImageProvider(
-                        state.eventDetails.logo ?? "",
-                      ),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
+    return Stack(
+      children: [
+        ClipPath(
+          clipper: DownstreamCurveClipper(),
+          child: Container(
+            height: 270.h,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: (state.eventDetails.logo != null)
+                    ? CachedNetworkImageProvider(
+                        imageLoaderUtility(
+                                image: state.eventDetails.logo ?? "",
+                                sourceId: state.eventDetails.sourceId!) ??
+                            "",
+                      )
+                    : CachedNetworkImageProvider(
+                        "https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg"),
+                fit: BoxFit.cover,
               ),
-              Positioned(
-                top: 30.h,
-                left: 15.w,
-                child: ArrowBackWidget(
-                  onTap: () {
-                    ref
-                        .read(navigationProvider)
-                        .removeTopPage(context: context);
-                  },
-                ),
-              ),
-            ],
-          );
+            ),
+          ),
+        ),
+        Positioned(
+          top: 30.h,
+          left: 15.w,
+          child: ArrowBackWidget(
+            onTap: () {
+              ref.read(navigationProvider).removeTopPage(context: context);
+            },
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _buildClipperBackgroundShimmer() {
@@ -439,7 +470,8 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                           },
                           isFavouriteVisible: !ref
                               .watch(homeScreenProvider)
-                              .isSignupButtonVisible, sourceId: item.sourceId!,
+                              .isSignupButtonVisible,
+                          sourceId: item.sourceId!,
                         );
                       }),
                     ];
