@@ -94,8 +94,16 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
           32.verticalSpace,
           _buildPlacesOfTheCommunity(context),
           32.verticalSpace,
+          if(ref
+              .watch(municipalDetailControllerProvider)
+              .eventList
+              .isNotEmpty)
           _buildEvents(context),
           32.verticalSpace,
+          if(ref
+              .watch(municipalDetailControllerProvider)
+              .newsList
+              .isNotEmpty)
           _buildNews(context),
           32.verticalSpace,
           FeedbackCardWidget(
@@ -327,10 +335,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
   }
 
   _buildEvents(BuildContext context) {
-    return (ref
-        .watch(municipalDetailControllerProvider)
-        .eventList
-        .isNotEmpty)?Column(
+    return Column(
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -450,14 +455,11 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
           ),
         )
       ],
-    ):SizedBox.shrink();
+    );
   }
 
   _buildNews(BuildContext context) {
-    return (ref
-        .watch(municipalDetailControllerProvider)
-        .eventList
-        .isNotEmpty)?Column(
+    return Column(
       children: [
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -574,6 +576,6 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
           ),
         )
       ],
-    ):SizedBox.shrink();
+    );
   }
 }
