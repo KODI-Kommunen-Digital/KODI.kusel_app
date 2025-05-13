@@ -89,7 +89,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               text: AppLocalizations.of(context).imprint_page),
           onTap: () async {
             final Uri uri =
-                Uri.parse("https://heidi.troisdorf.dksr.city/ImprintPage");
+                Uri.parse("http://116.202.186.81:4000/impressum");
             if (await canLaunchUrl(uri)) {
               await launchUrl(uri);
             }
@@ -103,7 +103,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               text: AppLocalizations.of(context).terms_of_use),
           onTap: () async {
             final Uri uri =
-                Uri.parse("https://heidi.troisdorf.dksr.city/TermsOfUse");
+                Uri.parse("http://116.202.186.81:4000/terms");
             if (await canLaunchUrl(uri)) {
               await launchUrl(uri);
             }
@@ -117,7 +117,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               text: AppLocalizations.of(context).privacy_policy),
           onTap: () async {
             final Uri uri =
-                Uri.parse("https://heidi.troisdorf.dksr.city/PrivacyPolicy");
+                Uri.parse("http://116.202.186.81:4000/privacy-policy");
             if (await canLaunchUrl(uri)) {
               await launchUrl(uri);
             }

@@ -6,6 +6,7 @@ import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/images_path.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/arrow_back_widget.dart';
 import '../../common_widgets/downstream_wave_clipper.dart';
@@ -137,22 +138,22 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
           ),
           IconTextWidgetCard(
             onTap: () async {
-              // final Uri uri =
-              // Uri.parse(item.linkUrl ?? "https://google.com");
-              // if (await canLaunchUrl(uri)) {
-              //   await launchUrl(uri);
-              // }
+              final Uri uri =
+              Uri.parse("https://www.landkreis-kusel.de");
+              if (await canLaunchUrl(uri)) {
+                await launchUrl(uri);
+              }
             },
             imageUrl: 'groups',
             text: 'Bürgerbus',
           ),
           IconTextWidgetCard(
             onTap: () async {
-              // final Uri uri =
-              // Uri.parse(item.linkUrl ?? "https://google.com");
-              // if (await canLaunchUrl(uri)) {
-              //   await launchUrl(uri);
-              // }
+              final Uri uri =
+              Uri.parse("https://www.landkreis-kusel.de");
+              if (await canLaunchUrl(uri)) {
+                await launchUrl(uri);
+              }
             },
             imageUrl: 'glass_icon',
             text: 'Jugendtaxi',
@@ -160,22 +161,22 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
           ),
           IconTextWidgetCard(
             onTap: () async {
-              // final Uri uri =
-              // Uri.parse(item.linkUrl ?? "https://google.com");
-              // if (await canLaunchUrl(uri)) {
-              //   await launchUrl(uri);
-              // }
+               final Uri uri =
+              Uri.parse("https://www.landkreis-kusel.de");
+              if (await canLaunchUrl(uri)) {
+              await launchUrl(uri);
+              }
             },
             imageUrl: 'cap_icon',
             text: "Schülerbeförderung",
           ),
           IconTextWidgetCard(
             onTap: () async {
-              // final Uri uri =
-              // Uri.parse(item.linkUrl ?? "https://google.com");
-              // if (await canLaunchUrl(uri)) {
-              //   await launchUrl(uri);
-              // }
+              final Uri uri =
+              Uri.parse("https://www.landkreis-kusel.de");
+              if (await canLaunchUrl(uri)) {
+                await launchUrl(uri);
+              }
             },
             imageUrl: 'train_icon',
             text: 'Das Deutschlandticket',

@@ -20,6 +20,8 @@ import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_scr
 import 'package:kusel/screens/onboarding/onboarding_finish_page.dart';
 import 'package:kusel/screens/onboarding/onboarding_loading_page.dart';
 import 'package:kusel/screens/onboarding/onboarding_screen.dart';
+import 'package:kusel/screens/ort_detail/ort_detail_screen.dart';
+import 'package:kusel/screens/ort_detail/ort_detail_screen_params.dart';
 import 'package:kusel/screens/participate_screen/participate_screen.dart';
 import 'package:kusel/screens/profile/profile_screen.dart';
 import 'package:kusel/screens/search_result/search_result_screen.dart';
@@ -54,6 +56,7 @@ const municipalDetailScreenPath = "/municipalDetailScreenPath";
 const mobilityScreenPath = "/mobilityScreenPath";
 const participateScreenPath = "/participateScreenPath";
 const allCityScreenPath = "/allCityScreenPath";
+const ortDetailScreenPath = "/ortDetailScreenPath";
 
 List<RouteBase> goRouteList = [
   GoRoute(
@@ -186,5 +189,10 @@ List<RouteBase> goRouteList = [
       builder: (context, state) {
         return AllCityScreen();
       }),
-
+  GoRoute(
+      path: ortDetailScreenPath,
+      builder: (context, state) {
+        return OrtDetailScreen(
+            ortDetailScreenParams: state.extra as OrtDetailScreenParams);
+      })
 ];
