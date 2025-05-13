@@ -2,6 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kusel/screens/all_city/all_city_screen.dart';
 import 'package:kusel/screens/all_event/all_event_screen.dart';
+import 'package:kusel/screens/all_municipality/all_municipality_provider.dart';
+import 'package:kusel/screens/all_municipality/all_municipality_screen.dart';
 import 'package:kusel/screens/auth/forgot_password/forgot_password_screen.dart';
 import 'package:kusel/screens/auth/signin/signin_screen.dart';
 import 'package:kusel/screens/auth/signup/signup_screen.dart';
@@ -58,6 +60,7 @@ const mobilityScreenPath = "/mobilityScreenPath";
 const participateScreenPath = "/participateScreenPath";
 const allCityScreenPath = "/allCityScreenPath";
 const meinOrtScreenPath = "/meinOrtScreenPath";
+const allMunicipalityScreenPath = "/allMunicipalityScreenPath";
 const ortDetailScreenPath = "/ortDetailScreenPath";
 
 List<RouteBase> goRouteList = [
@@ -202,5 +205,11 @@ List<RouteBase> goRouteList = [
       builder: (context, state) {
         return MeinOrtScreen();
       }),
-
+  GoRoute(
+      path: allMunicipalityScreenPath,
+      builder: (context, state) {
+        return AllMunicipalityScreen(
+          municipalityScreenParams: state.extra as MunicipalityScreenParams,
+        );
+      }),
 ];

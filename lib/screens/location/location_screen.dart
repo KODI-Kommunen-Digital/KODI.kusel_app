@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/screens/location/bottom_sheet_screens/selected_filter_screen.dart';
 import 'package:kusel/screens/location/location_screen_state.dart';
 import 'package:latlong2/latlong.dart';
@@ -53,8 +52,8 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
               MarkerLayer(
                 markers:
                     ref.watch(locationScreenProvider).allEventList.map((value) {
-                  final lat = value.lat;
-                  final long = value.long;
+                  final lat = value.latitude;
+                  final long = value.longitude;
                   final categoryId = value.categoryId;
                   final categoryName = value.categoryName;
 
@@ -85,26 +84,24 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
               )
             ],
           ),
-
         ],
       ),
       panelBuilder: (controller) {
-
         return ClipRRect(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
-          child: Container(
-            color: Colors.transparent,
-            child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 250),
-          transitionBuilder: (child, animation) => FadeTransition(
-            opacity: animation,
-            child: child,
-          ),
-          child: getBottomSheetUI(
-            ref.watch(locationScreenProvider).bottomSheetSelectedUIType,
-          ),
-        ),
-        ));
+            borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
+            child: Container(
+              color: Colors.transparent,
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 250),
+                transitionBuilder: (child, animation) => FadeTransition(
+                  opacity: animation,
+                  child: child,
+                ),
+                child: getBottomSheetUI(
+                  ref.watch(locationScreenProvider).bottomSheetSelectedUIType,
+                ),
+              ),
+            ));
       },
     );
   }
