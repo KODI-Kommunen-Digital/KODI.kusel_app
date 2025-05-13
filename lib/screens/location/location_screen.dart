@@ -51,36 +51,40 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
               ),
               MarkerLayer(
                 markers:
-                    ref.watch(locationScreenProvider).allEventList.map((value) {
-                  final lat = value.latitude;
-                  final long = value.longitude;
+                ref
+                    .watch(locationScreenProvider)
+                    .allEventList
+                    .where((value) => value.latitude != null && value.longitude != null)
+                    .map((value) {
+                  final lat = value.latitude!;
+                  final long = value.longitude!;
                   final categoryId = value.categoryId;
                   final categoryName = value.categoryName;
 
                   return Marker(
                     width: 35.w,
                     height: 35.h,
-                    point: LatLng(lat!, long!),
+                    point: LatLng(lat, long),
                     child: InkWell(
                       onTap: () {
-                        ref
-                            .read(locationScreenProvider.notifier)
-                            .setEventItem(value);
-
+                        ref.read(locationScreenProvider.notifier).setEventItem(value);
                         ref
                             .read(locationScreenProvider.notifier)
                             .updateCategoryId(categoryId, categoryName);
                         ref
                             .read(locationScreenProvider.notifier)
                             .updateBottomSheetSelectedUIType(
-                                BottomSheetSelectedUIType.eventDetail);
+                            BottomSheetSelectedUIType.eventDetail);
                       },
-                      child: Icon(Icons.location_pin,
-                          size: 40.w,
-                          color: Theme.of(context).colorScheme.onTertiaryFixed),
+                      child: Icon(
+                        Icons.location_pin,
+                        size: 40.w,
+                        color: Theme.of(context).colorScheme.onTertiaryFixed,
+                      ),
                     ),
                   );
                 }).toList(),
+
               )
             ],
           ),
