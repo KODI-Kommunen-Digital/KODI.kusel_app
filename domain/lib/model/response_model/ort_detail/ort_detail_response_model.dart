@@ -58,7 +58,7 @@ class OrtDetailDataModel implements BaseModel<OrtDetailDataModel> {
       ..type = json['type'] as String?
       ..connectionString = json['connectionString'] as String?
       ..isAdminListings = json['isAdminListings'] as bool?
-      ..image = json['image']!=null?"https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['image']}": null
+      ..image = json['image']
       ..description = json['description'] as String?
       ..subtitle = json['subtitle'] as String?
       ..address = json['address'] as String?

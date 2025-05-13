@@ -228,12 +228,10 @@ class Municipality {
       id: json['id'],
       name: json['name'],
       type: json['type'],
-      mapImage: json['mapImage']!=null?"https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['mapImage']}":null,
+      mapImage: json['mapImage'],
       connectionString: json['connectionString'],
       isAdminListings: json['isAdminListings'],
-      image: (json['image'] != null)
-          ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['image']}"
-          : null,
+      image: json['image'],
       description: json['description'],
       address: json['address'],
       latitude: json['latitude'],

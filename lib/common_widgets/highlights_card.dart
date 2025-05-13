@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 
+import '../screens/utility/image_loader_utility.dart';
+
 class HighlightsCard extends ConsumerStatefulWidget {
   final String imageUrl;
   final String? date;
@@ -16,19 +18,20 @@ class HighlightsCard extends ConsumerStatefulWidget {
   final VoidCallback onFavouriteIconClick;
   final bool isVisible;
   final String? errorImagePath;
+  final int sourceId;
 
-  const HighlightsCard({
-    super.key,
-    required this.imageUrl,
-    this.date,
-    required this.heading,
-    required this.description,
-    required this.isFavourite,
-    required this.onPress,
-    required this.onFavouriteIconClick,
-    required this.isVisible,
-    this.errorImagePath
-  });
+  const HighlightsCard(
+      {super.key,
+        required this.sourceId,
+      required this.imageUrl,
+      this.date,
+      required this.heading,
+      required this.description,
+      required this.isFavourite,
+      required this.onPress,
+      required this.onFavouriteIconClick,
+      required this.isVisible,
+      this.errorImagePath});
 
   @override
   ConsumerState<HighlightsCard> createState() => _HighlightsCardState();
@@ -67,7 +70,8 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                       height: 200.h,
                       width: double.infinity,
                       child: CachedNetworkImage(
-                        imageUrl: widget.imageUrl,
+                        imageUrl: imageLoaderUtility(
+                            image: widget.imageUrl, sourceId:widget.sourceId ),
                         fit: BoxFit.cover,
                         progressIndicatorBuilder:
                             (context, url, downloadProgress) =>
@@ -110,9 +114,11 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                (widget.date!=null) ? textSemiBoldMontserrat(
-                    text: formatDate(widget.date ?? ""), fontSize: 14) : SizedBox.shrink(),
-                (widget.date!=null) ? 4.verticalSpace : SizedBox.shrink(),
+                (widget.date != null)
+                    ? textSemiBoldMontserrat(
+                        text: formatDate(widget.date ?? ""), fontSize: 14)
+                    : SizedBox.shrink(),
+                (widget.date != null) ? 4.verticalSpace : SizedBox.shrink(),
                 textSemiBoldMontserrat(
                     text: widget.heading,
                     fontSize: 14,
