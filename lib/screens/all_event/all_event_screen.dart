@@ -226,7 +226,7 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                       },
                       isFavouriteVisible: ref
                           .watch(favoritesProvider.notifier)
-                          .showFavoriteIcon(),
+                          .showFavoriteIcon(), sourceId: item.sourceId!,
                     );
                   },
                   childCount:

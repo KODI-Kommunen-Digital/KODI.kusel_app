@@ -146,6 +146,10 @@
   "imprint_page": "Impressum",
   "terms_of_use" : "Nutzungsbedingungen",
   "privacy_policy" : "Datenschutzerklärung",
-  "cities": "Städte"
-
+  "view_ort": "Ort anzeigen",
+  "soon_service":"Bald wird der Service verfügbar sein",
+  "cities": "Städte",
+  "my_place": "Mein Ort",
+  "show_all_places": "Alle Orte anzeigen",
+  "mein_ort_display_message" : "Willkommen auf der Übersichtsseite für deine Orte im Kuseler Land – Deinem Guide zu den Orten der Region."
 }
