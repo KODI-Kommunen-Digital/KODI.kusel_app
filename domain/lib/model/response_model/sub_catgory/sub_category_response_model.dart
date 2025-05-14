@@ -35,9 +35,7 @@ class SubCategoryData {
       id: json['id'] as int?,
       name: json['name'] as String?,
       categoryId: json['categoryId'] as int?,
-      image: json['image'] != null
-          ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['image']}"
-          : null,
+      image: json['image']
     );
   }
 }

@@ -12,7 +12,7 @@ class GetAllListingsResponseModel
     return GetAllListingsResponseModel(
       status: json['status'] as String?,
       data: (json['data'] as List<dynamic>?)
-          ?.map((item) => Listing.fromJson(item))
+          ?.map((item) => Listing.fromJson(item as Map<String, dynamic>))
           .toList(),
     );
   }
@@ -31,8 +31,8 @@ class Listing {
   String? title;
   String? description;
   String? createdAt;
-  double? lat;
-  double?long;
+  double? latitude;
+  double? longitude;
   int? userId;
   String? startDate;
   String? endDate;
@@ -42,7 +42,7 @@ class Listing {
   bool? showExternal;
   int? appointmentId;
   int? viewCount;
-  int? externalId;
+  String? externalId;
   String? expiryDate;
   int? sourceId;
   String? website;
@@ -65,6 +65,8 @@ class Listing {
     this.title,
     this.description,
     this.createdAt,
+    this.latitude,
+    this.longitude,
     this.userId,
     this.startDate,
     this.endDate,
@@ -90,51 +92,49 @@ class Listing {
     this.logoCount,
     this.otherLogos,
     this.isFavorite,
-    this.lat,
-    this.long,
     this.categoryName,
   });
 
   factory Listing.fromJson(Map<String, dynamic> json) {
     return Listing(
-      id: json['id'],
-      title: json['title'],
-      description: json['description'],
-      createdAt: json['createdAt'],
-      userId: json['userId'],
-      startDate: json['startDate'],
-      endDate: json['endDate'],
-      statusId: json['statusId'],
-      categoryId: json['categoryId'],
-      subcategoryId: json['subcategoryId'],
-      showExternal: json['showExternal'],
-      appointmentId: json['appointmentId'],
-      viewCount: json['viewCount'],
-      externalId: json['externalId'],
-      expiryDate: json['expiryDate'],
-      sourceId: json['sourceId'],
-      website: json['website'],
-      address: json['address'],
-      email: json['email'],
-      phone: json['phone'],
-      zipcode: json['zipcode'],
-      pdf: json['pdf'],
-      cityId: json['cityId'],
-      cityCount: json['cityCount'],
-      allCities:
-          json['allCities'] != null ? List<int>.from(json['allCities']) : null,
-      logo: json['logo'] != null
-          ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['logo']}"
+      id: json['id'] as int?,
+      title: json['title'] as String?,
+      description: json['description'] as String?,
+      createdAt: json['createdAt'] as String?,
+      latitude: (json['latitude'] as num?)?.toDouble(),
+      longitude: (json['longitude'] as num?)?.toDouble(),
+      userId: json['userId'] as int?,
+      startDate: json['startDate'] as String?,
+      endDate: json['endDate'] as String?,
+      statusId: json['statusId'] as int?,
+      categoryId: json['categoryId'] as int?,
+      subcategoryId: json['subcategoryId'] as int?,
+      showExternal: (json['showExternal'] as int?) == 1,
+      appointmentId: json['appointmentId'] as int?,
+      viewCount: json['viewCount'] as int?,
+      externalId: json['externalId'] as String?,
+      expiryDate: json['expiryDate'] as String?,
+      sourceId: json['sourceId'] as int?,
+      website: json['website'] as String?,
+      address: json['address'] as String?,
+      email: json['email'] as String?,
+      phone: json['phone'] as String?,
+      zipcode: json['zipcode'] as int?,
+      pdf: json['pdf'] as String?,
+      cityId: json['cityId'] as int?,
+      cityCount: json['cityCount'] as int?,
+      allCities: json['allCities'] != null
+          ? List<int>.from(json['allCities'] as List)
           : null,
-      logoCount: json['logoCount'],
+      logo: json['logo'],
+      logoCount: json['logoCount'] as int?,
       otherLogos: json['otherLogos'] != null
-          ? List<OtherLogo>.from(
-              json['otherLogos'].map((x) => OtherLogo.fromJson(x)))
+          ? (json['otherLogos'] as List)
+          .map((x) => OtherLogo.fromJson(x as Map<String, dynamic>))
+          .toList()
           : null,
-      isFavorite: json['isFavorite'],
-        lat: json['latitude'],
-        long: json['longitude'],
-      categoryName: json['categoryName'],
+      isFavorite: json['isFavorite'] as bool?,
+      categoryName: json['categoryName'] as String?,
     );
   }
 
@@ -144,13 +144,15 @@ class Listing {
       'title': title,
       'description': description,
       'createdAt': createdAt,
+      'latitude': latitude,
+      'longitude': longitude,
       'userId': userId,
       'startDate': startDate,
       'endDate': endDate,
       'statusId': statusId,
       'categoryId': categoryId,
       'subcategoryId': subcategoryId,
-      'showExternal': showExternal,
+      'showExternal': showExternal! ? 1 : 0,
       'appointmentId': appointmentId,
       'viewCount': viewCount,
       'externalId': externalId,
@@ -180,21 +182,14 @@ class OtherLogo {
   int? listingId;
   int? imageOrder;
 
-  OtherLogo({
-    this.id,
-    this.logo,
-    this.listingId,
-    this.imageOrder,
-  });
+  OtherLogo({this.id, this.logo, this.listingId, this.imageOrder});
 
   factory OtherLogo.fromJson(Map<String, dynamic> json) {
     return OtherLogo(
-      id: json['id'],
-      logo: json['logo'] != null
-          ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['logo']}"
-          : null,
-      listingId: json['listingId'],
-      imageOrder: json['imageOrder'],
+      id: json['id'] as int?,
+      logo: json['logo'],
+      listingId: json['listingId'] as int?,
+      imageOrder: json['imageOrder'] as int?,
     );
   }
 

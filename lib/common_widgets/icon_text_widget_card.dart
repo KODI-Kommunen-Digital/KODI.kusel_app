@@ -66,7 +66,7 @@ class _IconTextWidgetCardState extends ConsumerState<IconTextWidgetCard> {
               Expanded(
                   flex: 1,
                   child:
-                      SvgPicture.asset(imagePath["place_holder_icon"] ?? '')),
+                      Image.asset(imagePath["link_icon"] ?? '')),
             ],
           ),
         ),
