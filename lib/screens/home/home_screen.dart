@@ -1,4 +1,3 @@
-import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -42,7 +41,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ref.read(homeScreenProvider.notifier).getEvents();
       ref.read(homeScreenProvider.notifier).getNearbyEvents();
       ref.read(homeScreenProvider.notifier).getLoginStatus();
-      ref.watch(homeScreenProvider.notifier).getWeather();
+      ref.read(homeScreenProvider.notifier).getWeather();
     });
     super.initState();
   }
@@ -97,9 +96,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child: Column(
                     children: [
                       Visibility(
-                          visible: false??!ref
-                              .read(homeScreenProvider)
-                              .isSignupButtonVisible,
+                          visible: false ??
+                              !ref
+                                  .read(homeScreenProvider)
+                                  .isSignupButtonVisible,
                           child: isLoading
                               ? CustomShimmerWidget.rectangular(
                                   height: 20.h,
@@ -128,6 +128,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               color:
                                   Theme.of(context).textTheme.bodyLarge?.color,
                               textAlign: TextAlign.center,
+                              textOverflow: TextOverflow.visible,
                               text:
                                   "${AppLocalizations.of(context).today_its_going_to_be} ${AppLocalizations.of(context).sunny}!",
                             ),
@@ -179,7 +180,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ),
                 ),
                 Visibility(
-                    visible:false??
+                    visible: false ??
                         ref.watch(homeScreenProvider).isSignupButtonVisible,
                     child: Positioned(
                         left: 15.w,
@@ -192,35 +193,40 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             children: [
                               isLoading
                                   ? CustomShimmerWidget.circular(
-                                width: 120.w,
-                                height: 30.h,
-                                shapeBorder: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.r)),
-                              )
+                                      width: 120.w,
+                                      height: 30.h,
+                                      shapeBorder: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(30.r)),
+                                    )
                                   : GestureDetector(
-                                onTap: () {
-                                  ref
-                                      .read(navigationProvider)
-                                      .removeCurrentAndNavigate(
-                                          context: context,
-                                          path: signInScreenPath);
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(30.r),
-                                      border: Border.all(
-                                          width: 2.w,
-                                          color:
-                                              Theme.of(context).primaryColor)),
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 8.w, vertical: 5.h),
-                                  child: textBoldPoppins(
-                                      text: AppLocalizations.of(context)
-                                          .log_in_sign_up,
-                                      fontSize: 12,
-                                      color: Theme.of(context).textTheme.bodyMedium?.color),
-                                ),
-                              ),
+                                      onTap: () {
+                                        ref
+                                            .read(navigationProvider)
+                                            .removeCurrentAndNavigate(
+                                                context: context,
+                                                path: signInScreenPath);
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(30.r),
+                                            border: Border.all(
+                                                width: 2.w,
+                                                color: Theme.of(context)
+                                                    .primaryColor)),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 8.w, vertical: 5.h),
+                                        child: textBoldPoppins(
+                                            text: AppLocalizations.of(context)
+                                                .log_in_sign_up,
+                                            fontSize: 12,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.color),
+                                      ),
+                                    ),
                             ],
                           ),
                         )))
@@ -232,35 +238,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               weatherResponseModel:
                   ref.watch(homeScreenProvider).weatherResponseModel,
             ),
+            if(ref.watch(homeScreenProvider).nearbyEventsList.isNotEmpty)
             eventsView(
-                state.nearbyEventsList,
-                AppLocalizations.of(context).near_you,
-                5,
-                AppLocalizations.of(context).to_map_view,
-                imagePath['map_icon'] ?? "",
-                isLoading,
-                latitude,
-                longitude,
-                () {}),
-            eventsView(
-                state.eventsList,
-                AppLocalizations.of(context).all_events,
-                3,
-                AppLocalizations.of(context).all_events,
-                imagePath['calendar'] ?? "",
-                isLoading,
-                latitude,
-                longitude, () {
-              ref.read(navigationProvider).navigateUsingPath(
-                  path: allEventScreenPath,
-                  context: context,
-                 );
-            }),
-            FeedbackCardWidget(
-              onTap: (){
+                  state.nearbyEventsList,
+                  AppLocalizations.of(context).near_you,
+                  5,
+                  AppLocalizations.of(context).to_map_view,
+                  imagePath['map_icon'] ?? "",
+                  isLoading,
+                  latitude,
+                  longitude,
+                  () {}),
+            if(ref.watch(homeScreenProvider).eventsList.isNotEmpty)
+              eventsView(
+                  state.eventsList,
+                  AppLocalizations.of(context).all_events,
+                  3,
+                  AppLocalizations.of(context).all_events,
+                  imagePath['calendar'] ?? "",
+                  isLoading,
+                  latitude,
+                  longitude, () {
                 ref.read(navigationProvider).navigateUsingPath(
-                    path: feedbackScreenPath, context: context
-                );
+                      path: allEventScreenPath,
+                      context: context,
+                    );
+              }),
+            FeedbackCardWidget(
+              onTap: () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: feedbackScreenPath, context: context);
               },
             ),
             100.verticalSpace
@@ -368,7 +375,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       params: EventDetailScreenParams(eventId: item.id));
                 },
                 isFavouriteVisible:
-                    ref.watch(favoritesProvider.notifier).showFavoriteIcon(),
+                    ref.watch(favoritesProvider.notifier).showFavoriteIcon(), sourceId: item.sourceId!,
               );
             },
           ),
@@ -429,10 +436,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               text: AppLocalizations.of(context).highlights,
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
-                              color: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
-                                  ?.color),
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge?.color),
                           12.horizontalSpace,
                           SvgPicture.asset(
                             imagePath['arrow_icon'] ?? "",
@@ -481,52 +486,60 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           10.verticalSpace,
           isLoading
               ? highlightCardShimmerEffect()
-              :SizedBox(
-            height: 350.h,
-            child: PageView.builder(
-              controller: PageController(
-                  viewportFraction: 317.w / MediaQuery.of(context).size.width),
-              scrollDirection: Axis.horizontal,
-              padEnds: false,
-              itemCount: state.highlightsList.length,
-              itemBuilder: (context, index) {
-                final listing = state.highlightsList[index];
-                return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 6.h.w),
-                  child: HighlightsCard(
-                    imageUrl: listing.logo ?? "",
-                    date: listing.createdAt ?? "",
-                    heading: listing.title ?? "",
-                    description: listing.description ?? "",
-                    isFavourite: listing.isFavorite ?? false,
-                    onPress: () {
-                      ref.read(navigationProvider).navigateUsingPath(
-                            context: context,
-                            path: eventScreenPath,
-                            params:
-                                EventDetailScreenParams(eventId: listing.id),
-                          );
+              : SizedBox(
+                  height: 350.h,
+                  child: PageView.builder(
+                    controller: PageController(
+                        viewportFraction:
+                            317.w / MediaQuery.of(context).size.width),
+                    scrollDirection: Axis.horizontal,
+                    padEnds: false,
+                    itemCount: state.highlightsList.length,
+                    itemBuilder: (context, index) {
+                      final listing = state.highlightsList[index];
+                      return Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 6.h.w),
+                        child: HighlightsCard(
+                          imageUrl: listing.logo ?? "",
+                          date: listing.createdAt ?? "",
+                          heading: listing.title ?? "",
+                          description: listing.description ?? "",
+                          isFavourite: listing.isFavorite ?? false,
+                          onPress: () {
+                            ref.read(navigationProvider).navigateUsingPath(
+                                  context: context,
+                                  path: eventScreenPath,
+                                  params: EventDetailScreenParams(
+                                      eventId: listing.id),
+                                );
+                          },
+                          onFavouriteIconClick: () {
+                            ref
+                                .watch(favoritesProvider.notifier)
+                                .toggleFavorite(listing,
+                                    success: ({required bool isFavorite}) {
+                              ref
+                                  .read(homeScreenProvider.notifier)
+                                  .setIsFavoriteHighlight(
+                                      isFavorite, listing.id);
+                            }, error: ({required String message}) {
+                              showErrorToast(
+                                  message: message, context: context);
+                            });
+                          },
+                          isVisible: !ref
+                              .watch(homeScreenProvider)
+                              .isSignupButtonVisible, sourceId: listing.sourceId!,
+                        ),
+                      );
                     },
-                    onFavouriteIconClick: () {
-                      ref.watch(favoritesProvider.notifier).toggleFavorite(
-                          listing, success: ({required bool isFavorite}) {
-                        ref
-                            .read(homeScreenProvider.notifier)
-                            .setIsFavoriteHighlight(isFavorite, listing.id);
-                      }, error: ({required String message}) {
-                        showErrorToast(message: message, context: context);
-                      });
+                    onPageChanged: (index) {
+                      ref
+                          .read(homeScreenProvider.notifier)
+                          .updateCardIndex(index);
                     },
-                    isVisible:
-                        !ref.watch(homeScreenProvider).isSignupButtonVisible,
                   ),
-                );
-              },
-              onPageChanged: (index) {
-                ref.read(homeScreenProvider.notifier).updateCardIndex(index);
-              },
-            ),
-          ),
+                ),
         ],
       ),
     );

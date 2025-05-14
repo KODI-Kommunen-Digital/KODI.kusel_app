@@ -175,7 +175,7 @@ class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
                           },
                           isFavouriteVisible: !ref
                               .watch(homeScreenProvider)
-                              .isSignupButtonVisible,
+                              .isSignupButtonVisible, sourceId: item.sourceId!,
                         );
                       }),
                     ];

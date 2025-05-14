@@ -2,6 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kusel/screens/all_city/all_city_screen.dart';
 import 'package:kusel/screens/all_event/all_event_screen.dart';
+import 'package:kusel/screens/all_municipality/all_municipality_provider.dart';
+import 'package:kusel/screens/all_municipality/all_municipality_screen.dart';
 import 'package:kusel/screens/auth/forgot_password/forgot_password_screen.dart';
 import 'package:kusel/screens/auth/signin/signin_screen.dart';
 import 'package:kusel/screens/auth/signup/signup_screen.dart';
@@ -14,12 +16,15 @@ import 'package:kusel/screens/favorite/favorites_list_screen.dart';
 import 'package:kusel/screens/feedback/feedback_screen.dart';
 import 'package:kusel/screens/fliter_screen/filter_screen.dart';
 import 'package:kusel/screens/highlight/highlight_screen.dart';
+import 'package:kusel/screens/mein_ort/mein_ort_screen.dart';
 import 'package:kusel/screens/mobility_screen/mobility_screen.dart';
 import 'package:kusel/screens/municipal_party_detail/municipal_detail_screen.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
 import 'package:kusel/screens/onboarding/onboarding_finish_page.dart';
 import 'package:kusel/screens/onboarding/onboarding_loading_page.dart';
 import 'package:kusel/screens/onboarding/onboarding_screen.dart';
+import 'package:kusel/screens/ort_detail/ort_detail_screen.dart';
+import 'package:kusel/screens/ort_detail/ort_detail_screen_params.dart';
 import 'package:kusel/screens/participate_screen/participate_screen.dart';
 import 'package:kusel/screens/profile/profile_screen.dart';
 import 'package:kusel/screens/search_result/search_result_screen.dart';
@@ -54,6 +59,9 @@ const municipalDetailScreenPath = "/municipalDetailScreenPath";
 const mobilityScreenPath = "/mobilityScreenPath";
 const participateScreenPath = "/participateScreenPath";
 const allCityScreenPath = "/allCityScreenPath";
+const meinOrtScreenPath = "/meinOrtScreenPath";
+const allMunicipalityScreenPath = "/allMunicipalityScreenPath";
+const ortDetailScreenPath = "/ortDetailScreenPath";
 
 List<RouteBase> goRouteList = [
   GoRoute(
@@ -186,5 +194,22 @@ List<RouteBase> goRouteList = [
       builder: (context, state) {
         return AllCityScreen();
       }),
-
+  GoRoute(
+      path: ortDetailScreenPath,
+      builder: (context, state) {
+        return OrtDetailScreen(
+            ortDetailScreenParams: state.extra as OrtDetailScreenParams);
+      }),
+  GoRoute(
+      path: meinOrtScreenPath,
+      builder: (context, state) {
+        return MeinOrtScreen();
+      }),
+  GoRoute(
+      path: allMunicipalityScreenPath,
+      builder: (context, state) {
+        return AllMunicipalityScreen(
+          municipalityScreenParams: state.extra as MunicipalityScreenParams,
+        );
+      }),
 ];

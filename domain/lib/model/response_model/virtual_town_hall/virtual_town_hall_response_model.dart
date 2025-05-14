@@ -180,6 +180,7 @@ class Municipality {
   int? id;
   String? name;
   String? type;
+  String? mapImage;
   String? connectionString;
   bool? isAdminListings;
   String? image;
@@ -200,6 +201,7 @@ class Municipality {
 
   Municipality({
     this.id,
+    this.mapImage,
     this.name,
     this.type,
     this.connectionString,
@@ -226,11 +228,10 @@ class Municipality {
       id: json['id'],
       name: json['name'],
       type: json['type'],
+      mapImage: json['mapImage'],
       connectionString: json['connectionString'],
       isAdminListings: json['isAdminListings'],
-      image: (json['image'] != null)
-          ? "https://kusel1heidi.obs.eu-de.otc.t-systems.com/${json['image']}"
-          : null,
+      image: json['image'],
       description: json['description'],
       address: json['address'],
       latitude: json['latitude'],

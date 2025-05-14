@@ -1,5 +1,5 @@
 const baseUrlProd = "http://116.202.186.81:4001/v1";
-const imageDownloadingEndpoint = "https://kusel1heidi.obs.eu-de.otc.t-systems.com/";
+const imageDownloadingEndpoint = "";
 const baseUrlStage = "";
 const sigInEndPoint = "/users/login";
 const exploreEndpoint = "/categories";
@@ -31,3 +31,11 @@ const getFilterEndPoint = "";
 
 // VIRTUAL TOWN HALL
 const virtualTownHallEndPoint = "/virtualTownhall";
+
+
+const ortDetailEndPoint = "/cities";
+
+// MEIN ORT
+const meinOrtEndPoint = "/meinOrt";
+
+const getPlacesInMunicipalitiesPath = "/getPlacesInMunicipalities";
