@@ -32,6 +32,7 @@ import 'package:kusel/screens/search_result/search_result_screen_parameter.dart'
 import 'package:kusel/screens/splash/splash_screen.dart';
 import 'package:kusel/screens/sub_category/sub_category_screen.dart';
 import 'package:kusel/screens/sub_category/sub_category_screen_parameter.dart';
+import 'package:kusel/screens/tourism/tourism_screen.dart';
 import 'package:kusel/screens/virtual_town_hall/virtual_town_hall_screen.dart';
 
 final mobileRouterProvider = Provider((ref) => GoRouter(routes: goRouteList));
@@ -62,6 +63,7 @@ const allCityScreenPath = "/allCityScreenPath";
 const meinOrtScreenPath = "/meinOrtScreenPath";
 const allMunicipalityScreenPath = "/allMunicipalityScreenPath";
 const ortDetailScreenPath = "/ortDetailScreenPath";
+const tourismScreenPath = "/tourismScreenPath";
 
 List<RouteBase> goRouteList = [
   GoRoute(
@@ -211,5 +213,10 @@ List<RouteBase> goRouteList = [
         return AllMunicipalityScreen(
           municipalityScreenParams: state.extra as MunicipalityScreenParams,
         );
+      }),
+  GoRoute(
+      path: tourismScreenPath,
+      builder: (context, state) {
+        return TourismScreen();
       }),
 ];
