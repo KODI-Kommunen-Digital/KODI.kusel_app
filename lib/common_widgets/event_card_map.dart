@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/screens/utility/image_loader_utility.dart';
 
 import '../app_router.dart';
 import '../images_path.dart';
@@ -19,16 +19,17 @@ class EventCardMap extends ConsumerStatefulWidget {
   final String startDate;
   final String logo;
   final int id;
+  final int sourceId;
 
-  const EventCardMap({
-    super.key,
-    required this.address,
-    required this.websiteText,
-    required this.title,
-    required this.startDate,
-    required this.logo,
-    required this.id
-  });
+  const EventCardMap(
+      {super.key,
+      required this.address,
+      required this.websiteText,
+      required this.title,
+      required this.startDate,
+      required this.logo,
+      required this.id,
+      required this.sourceId});
 
   @override
   ConsumerState<EventCardMap> createState() => _LocationCardWidgetState();
@@ -40,12 +41,11 @@ class _LocationCardWidgetState extends ConsumerState<EventCardMap> {
     return Padding(
       padding: EdgeInsets.all(16.w),
       child: GestureDetector(
-        onTap: (){
+        onTap: () {
           ref.read(navigationProvider).navigateUsingPath(
               context: context,
               path: eventScreenPath,
-              params: EventDetailScreenParams(
-                  eventId: widget.id));
+              params: EventDetailScreenParams(eventId: widget.id));
         },
         child: Container(
           decoration: BoxDecoration(
@@ -71,7 +71,8 @@ class _LocationCardWidgetState extends ConsumerState<EventCardMap> {
                   height: 150.h,
                   width: double.infinity,
                   child: CachedNetworkImage(
-                    imageUrl: widget.logo,
+                    imageUrl: imageLoaderUtility(
+                        image: widget.logo, sourceId: widget.sourceId),
                     progressIndicatorBuilder: (context, value, _) {
                       return Center(
                         child: CircularProgressIndicator(),

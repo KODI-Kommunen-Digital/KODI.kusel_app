@@ -8,7 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final municipalPartyDetailUseCaseProvider = Provider((ref) =>
     MunicipalPartyDetailUseCase(
         municipalPartyDetailRepository:
-            ref.read(municipalPartyDetailRepositoryProvider)));
+            ref.read(municipalPartyDetailRepoProvider)));
 
 class MunicipalPartyDetailUseCase
     implements UseCase<BaseModel, GetAllListingsResponseModel> {

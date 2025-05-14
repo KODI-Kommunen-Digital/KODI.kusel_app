@@ -134,7 +134,7 @@ class _ExploreScreenState extends ConsumerState<SelectedEventListScreen> {
                       },
                       isFavouriteVisible: ref
                           .watch(favoritesProvider.notifier)
-                          .showFavoriteIcon(),
+                          .showFavoriteIcon(), sourceId: item.sourceId!,
                     );
                   },
                   childCount: categoryScreenState.eventsList.length,

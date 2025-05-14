@@ -11,11 +11,15 @@ import 'package:kusel/screens/events_listing/selected_event_list_screen_paramete
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_location_widget.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/place_of_another_community_card.dart';
+import 'package:kusel/screens/ort_detail/ort_detail_screen_params.dart';
+import 'package:kusel/screens/utility/image_loader_utility.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../app_router.dart';
 import '../../common_widgets/arrow_back_widget.dart';
 import '../../common_widgets/common_event_card.dart';
 import '../../common_widgets/feedback_card_widget.dart';
+import '../../common_widgets/icon_text_widget_card.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
 import '../../providers/favorites_list_notifier.dart';
@@ -47,7 +51,6 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
       ref
           .read(municipalDetailControllerProvider.notifier)
           .getNewsUsingCityId(municipalId: id);
-      ref.read(municipalDetailControllerProvider.notifier).fetchCities();
     });
     super.initState();
   }
@@ -90,13 +93,19 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
           _buildClipper(context),
           _buildDescription(context),
           32.verticalSpace,
+
+          _buildServicesList(context),
+
+          32.verticalSpace,
           _buildLocationCard(),
           32.verticalSpace,
           _buildPlacesOfTheCommunity(context),
           32.verticalSpace,
-          _buildEvents(context),
+          if (ref.watch(municipalDetailControllerProvider).eventList.isNotEmpty)
+            _buildEvents(context),
           32.verticalSpace,
-          _buildNews(context),
+          if (ref.watch(municipalDetailControllerProvider).newsList.isNotEmpty)
+            _buildNews(context),
           32.verticalSpace,
           FeedbackCardWidget(
             onTap: () {
@@ -150,41 +159,39 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                   ),
 
                   Positioned(
-                    top: MediaQuery.of(context).size.height * .17,
+                    top: 120.h,
                     left: 0.w,
                     right: 0.w,
                     child: Container(
                       height: 120.h,
                       width: 70.w,
+                      padding: EdgeInsets.all(25.w),
                       decoration: BoxDecoration(
                           shape: BoxShape.circle, color: Colors.white),
-                      child: (state.municipalPartyDetailDataModel?.image !=
-                              null)
-                          ? FittedBox(
-                        fit: BoxFit.contain,
-                            child: CachedNetworkImage(
-                              height: 60.h,
-                                width: 55.w,
-                                fit: BoxFit.contain,
-                                imageUrl:
-                                    state.municipalPartyDetailDataModel!.image!,
-                                errorWidget: (context, val, _) {
-                                  return Image.asset(imagePath['crest']!);
-                                },
-                                progressIndicatorBuilder: (context, val, _) {
-                                  return Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                },
-                              ),
-                          )
-                          : Center(
-                              child: Image.asset(
-                                imagePath['crest']!,
-                                height: 120.h,
-                                width: 100.w,
-                              ),
-                            ),
+                      child:
+                          (state.municipalPartyDetailDataModel?.image != null)
+                              ? CachedNetworkImage(
+                                  imageUrl: imageLoaderUtility(
+                                      image: state
+                                          .municipalPartyDetailDataModel!
+                                          .image!,
+                                      sourceId: 1),
+                                  errorWidget: (context, val, _) {
+                                    return Image.asset(imagePath['crest']!);
+                                  },
+                                  progressIndicatorBuilder: (context, val, _) {
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  },
+                                )
+                              : Center(
+                                  child: Image.asset(
+                                    imagePath['crest']!,
+                                    height: 120.h,
+                                    width: 100.w,
+                                  ),
+                                ),
                     ),
                   )
                 ],
@@ -249,7 +256,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
           lat: (state.municipalPartyDetailDataModel?.latitude != null)
               ? double.parse(state.municipalPartyDetailDataModel!.latitude!)
               : 49.5384,
-          websiteText: 'https://google.com',
+          websiteText: 'https://www.landkreis-kusel.de/',
           calendarText:
               state.municipalPartyDetailDataModel?.openUntil ?? "16:00:00",
         ),
@@ -307,11 +314,17 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 5.h),
                   child: PlaceOfAnotherCommunityCard(
-                    onTap: () {},
-                    imageUrl: item.image ??
-                        'https://images.unsplash.com/photo-1584713503693-bb386ec95cf2?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    onTap: () {
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: ortDetailScreenPath,
+                          context: context,
+                          params: OrtDetailScreenParams(
+                              ortId: item.id!.toString()));
+                    },
+                    imageUrl: item.image!,
                     text: item.name ?? '',
                     isFav: false,
+                    sourceId: 1,
                   ),
                 );
               }),
@@ -413,6 +426,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                           isFavouriteVisible: ref
                               .watch(favoritesProvider.notifier)
                               .showFavoriteIcon(),
+                          sourceId: item.sourceId!,
                         );
                       });
         }),
@@ -537,6 +551,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                           isFavouriteVisible: ref
                               .watch(favoritesProvider.notifier)
                               .showFavoriteIcon(),
+                          sourceId: item.sourceId!,
                         );
                       });
         }),
@@ -569,6 +584,114 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
           ),
         )
       ],
+    );
+  }
+
+  Widget _buildServicesList(BuildContext context) {
+    return Consumer(
+      builder: (context, ref, _) {
+        final state = ref.watch(municipalDetailControllerProvider);
+
+        return Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12.w),
+          child: Column(
+            children: [
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount:
+                    state.municipalPartyDetailDataModel?.onlineServices?.length ?? 0,
+                itemBuilder: (context, index) {
+                  if(state.municipalPartyDetailDataModel?.onlineServices!=null)
+                    {
+                      final item = state
+                          .municipalPartyDetailDataModel!.onlineServices![index];
+                      return _customTextIconCard(
+                          onTap: () async {
+                            final Uri uri = Uri.parse(
+                                item.linkUrl ?? "https://www.landkreis-kusel.de");
+                            if (await canLaunchUrl(uri)) {
+                              await launchUrl(uri);
+                            }
+                          },
+                          imageUrl: item.iconUrl!, //??item.iconUrl
+                          text: item.title ?? '',
+                          description: item.description ?? '');
+                    }else{
+                    return SizedBox.shrink();
+                  }
+
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _customTextIconCard(
+      {required Function() onTap,
+        required String imageUrl,
+        required String text,
+        String? description}) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.r),
+      ),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding:
+          EdgeInsets.only(left: 2.w, right: 14.w, top: 20.h, bottom: 20.h),
+          decoration: BoxDecoration(
+              color: Theme.of(context).canvasColor,
+              borderRadius: BorderRadius.circular(15.r)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  20.horizontalSpace,
+                  CachedNetworkImage(
+                    height: 35.h,
+                    width: 35.w,
+                    progressIndicatorBuilder: (context, value, _) => Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    imageUrl: imageLoaderUtility(image: imageUrl, sourceId: 3),
+                    errorWidget: (context, error, stackTrace) =>
+                        Icon(Icons.broken_image, size: 40.w.h),
+                    fit: BoxFit.cover,
+                  ),
+                  10.horizontalSpace,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      textBoldMontserrat(
+                          text: text,
+                          color: Theme.of(context).textTheme.bodyLarge?.color),
+                      if (description != null)
+                        textRegularMontserrat(
+                            text: description ?? '',
+                            fontSize: 11,
+                            textOverflow: TextOverflow.visible,
+                            textAlign: TextAlign.start)
+                    ],
+                  ),
+                ],
+              ),
+              Align(
+                  alignment: Alignment.centerRight,
+                  child:
+                  Image.asset(imagePath["link_icon"] ?? '',
+                    height: 40.h,
+                    width: 40.w,)),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

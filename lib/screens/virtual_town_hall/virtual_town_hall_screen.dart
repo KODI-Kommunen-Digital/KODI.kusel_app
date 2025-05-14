@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/model/response_model/virtual_town_hall/virtual_town_hall_response_model.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +11,10 @@ import 'package:flutter_svg/svg.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/downstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
-import 'package:kusel/common_widgets/icon_text_widget_card.dart';
 import 'package:kusel/common_widgets/town_hall_map_widget.dart';
 import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
+import 'package:kusel/screens/utility/image_loader_utility.dart';
 import 'package:kusel/screens/virtual_town_hall/virtual_town_hall_provider.dart';
 import 'package:kusel/screens/virtual_town_hall/virtual_town_hall_state.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -81,40 +82,42 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
           _buildTownHallDetailsUi(state),
           _buildServicesList(onlineServicesList: state.onlineServiceList ?? []),
           _customPageViewer(municipalityList: state.municipalitiesList ?? []),
-          eventsView(
-              state.newsList ?? [],
-              AppLocalizations.of(context).news,
-              5,
-              AppLocalizations.of(context).all_news,
-              imagePath['calendar'] ?? "",
-              isLoading,
-              0,
-              0, () {
-            ref.read(navigationProvider).navigateUsingPath(
-                path: selectedEventListScreenPath,
-                context: context,
-                params: SelectedEventListScreenParameter(
-                    cityId: 1,
-                    listHeading: AppLocalizations.of(context).news,
-                    categoryId: null));
-          }),
-          eventsView(
-              state.eventList ?? [],
-              AppLocalizations.of(context).event_text,
-              5,
-              AppLocalizations.of(context).all_events,
-              imagePath['calendar'] ?? "",
-              isLoading,
-              0,
-              0, () {
-            ref.read(navigationProvider).navigateUsingPath(
-                path: selectedEventListScreenPath,
-                context: context,
-                params: SelectedEventListScreenParameter(
-                    cityId: 1,
-                    listHeading: AppLocalizations.of(context).events,
-                    categoryId: null));
-          }),
+          if (state.newsList != null && state.newsList!.isNotEmpty)
+            eventsView(
+                state.newsList ?? [],
+                AppLocalizations.of(context).news,
+                5,
+                AppLocalizations.of(context).all_news,
+                imagePath['calendar'] ?? "",
+                isLoading,
+                0,
+                0, () {
+              ref.read(navigationProvider).navigateUsingPath(
+                  path: selectedEventListScreenPath,
+                  context: context,
+                  params: SelectedEventListScreenParameter(
+                      cityId: 1,
+                      listHeading: AppLocalizations.of(context).news,
+                      categoryId: null));
+            }),
+          if (state.eventList != null && state.eventList!.isNotEmpty)
+            eventsView(
+                state.eventList ?? [],
+                AppLocalizations.of(context).event_text,
+                5,
+                AppLocalizations.of(context).all_events,
+                imagePath['calendar'] ?? "",
+                isLoading,
+                0,
+                0, () {
+              ref.read(navigationProvider).navigateUsingPath(
+                  path: selectedEventListScreenPath,
+                  context: context,
+                  params: SelectedEventListScreenParameter(
+                      cityId: 1,
+                      listHeading: AppLocalizations.of(context).events,
+                      categoryId: null));
+            }),
           FeedbackCardWidget(onTap: () {
             ref
                 .read(navigationProvider)
@@ -260,15 +263,15 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
             itemCount: onlineServicesList.length,
             itemBuilder: (context, index) {
               final item = onlineServicesList[index];
-              return IconTextWidgetCard(
+              return _customTextIconCard(
                   onTap: () async {
-                    final Uri uri =
-                        Uri.parse(item.linkUrl ?? "https://google.com");
+                    final Uri uri = Uri.parse(
+                        item.linkUrl ?? "https://www.landkreis-kusel.de");
                     if (await canLaunchUrl(uri)) {
                       await launchUrl(uri);
                     }
                   },
-                  imageUrl: item.iconUrl ?? 'https://picsum.photos/200',
+                  imageUrl: item.iconUrl!,
                   text: item.title ?? '',
                   description: item.description ?? '');
             },
@@ -359,7 +362,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 6.h.w),
                   child: HighlightsCard(
                     imageUrl:
-                        municipalities.image ?? "https://picsum.photos/200",
+                        municipalities.mapImage ?? "https://picsum.photos/200",
                     date: municipalities.createdAt ?? "",
                     heading: municipalities.name ?? "",
                     description: municipalities.description ?? "",
@@ -377,7 +380,9 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                     // isVisible:
                     // !ref.watch(homeScreenProvider).isSignupButtonVisible,
                     isVisible: false,
+                    sourceId: 1,
                   ),
+                  // TODO: need to change source id
                 );
               },
               onPageChanged: (index) {
@@ -491,6 +496,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                 // isFavouriteVisible:
                 // ref.watch(favoritesProvider.notifier).showFavoriteIcon(),
                 isFavouriteVisible: false,
+                sourceId: item.sourceId!,
               );
             },
           ),
@@ -523,6 +529,71 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
               color: Theme.of(context).textTheme.bodyLarge?.color),
           20.verticalSpace
         ],
+      ),
+    );
+  }
+
+  Widget _customTextIconCard(
+      {required Function() onTap,
+      required String imageUrl,
+      required String text,
+      String? description}) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.r),
+      ),
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding:
+              EdgeInsets.only(left: 2.w, right: 14.w, top: 20.h, bottom: 20.h),
+          decoration: BoxDecoration(
+              color: Theme.of(context).canvasColor,
+              borderRadius: BorderRadius.circular(15.r)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+            Row(
+              children: [
+                20.horizontalSpace,
+                CachedNetworkImage(
+                  height: 35.h,
+                  width: 35.w,
+                  progressIndicatorBuilder: (context, value, _) => Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                  imageUrl: imageLoaderUtility(image: imageUrl, sourceId: 3),
+                  errorWidget: (context, error, stackTrace) =>
+                      Icon(Icons.broken_image, size: 40.w.h),
+                  fit: BoxFit.cover,
+                ),
+                10.horizontalSpace,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    textBoldMontserrat(
+                        text: text,
+                        color: Theme.of(context).textTheme.bodyLarge?.color),
+                    if (description != null)
+                      textRegularMontserrat(
+                          text: description ?? '',
+                          fontSize: 11,
+                          textOverflow: TextOverflow.visible,
+                          textAlign: TextAlign.start)
+                  ],
+                ),
+              ],
+            ),
+              Align(
+                  alignment: Alignment.centerRight,
+                  child:
+                      Image.asset(imagePath["link_icon"] ?? '',
+                      height: 40.h,
+                      width: 40.w,)),
+            ],
+          ),
+        ),
       ),
     );
   }

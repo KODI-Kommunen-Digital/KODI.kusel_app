@@ -6,9 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/navigation/navigation.dart';
-import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/splash/splash_screen_provider.dart';
-import 'package:kusel/theme_manager/colors.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key});
@@ -24,13 +22,21 @@ class _State extends ConsumerState<SplashScreen> {
     super.initState();
 
     Future.microtask(() {
-      ref.read(splashScreenProvider.notifier).startTimer(() {
-        ref.read(navigationProvider).removeAllAndNavigate(
-          context: context,
-          path: dashboardScreenPath,
-        );
+      ref.read(splashScreenProvider.notifier).startTimer((bool isOnBoardingDone) {
+        if (isOnBoardingDone) {
+          ref.read(navigationProvider).removeAllAndNavigate(
+            context: context,
+            path: dashboardScreenPath,
+          );
+        } else {
+          ref.read(navigationProvider).removeAllAndNavigate(
+            context: context,
+            path: onboardingScreenPath,
+          );
+        }
       });
     });
+
   }
 
   @override

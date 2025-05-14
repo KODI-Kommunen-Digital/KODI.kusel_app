@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/screens/location/bottom_sheet_screens/selected_filter_screen.dart';
 import 'package:kusel/screens/location/location_screen_state.dart';
 import 'package:latlong2/latlong.dart';
@@ -52,59 +51,61 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
               ),
               MarkerLayer(
                 markers:
-                    ref.watch(locationScreenProvider).allEventList.map((value) {
-                  final lat = value.lat;
-                  final long = value.long;
+                ref
+                    .watch(locationScreenProvider)
+                    .allEventList
+                    .where((value) => value.latitude != null && value.longitude != null)
+                    .map((value) {
+                  final lat = value.latitude!;
+                  final long = value.longitude!;
                   final categoryId = value.categoryId;
                   final categoryName = value.categoryName;
 
                   return Marker(
                     width: 35.w,
                     height: 35.h,
-                    point: LatLng(lat!, long!),
+                    point: LatLng(lat, long),
                     child: InkWell(
                       onTap: () {
-                        ref
-                            .read(locationScreenProvider.notifier)
-                            .setEventItem(value);
-
+                        ref.read(locationScreenProvider.notifier).setEventItem(value);
                         ref
                             .read(locationScreenProvider.notifier)
                             .updateCategoryId(categoryId, categoryName);
                         ref
                             .read(locationScreenProvider.notifier)
                             .updateBottomSheetSelectedUIType(
-                                BottomSheetSelectedUIType.eventDetail);
+                            BottomSheetSelectedUIType.eventDetail);
                       },
-                      child: Icon(Icons.location_pin,
-                          size: 40.w,
-                          color: Theme.of(context).colorScheme.onTertiaryFixed),
+                      child: Icon(
+                        Icons.location_pin,
+                        size: 40.w,
+                        color: Theme.of(context).colorScheme.onTertiaryFixed,
+                      ),
                     ),
                   );
                 }).toList(),
+
               )
             ],
           ),
-
         ],
       ),
       panelBuilder: (controller) {
-
         return ClipRRect(
-          borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
-          child: Container(
-            color: Colors.transparent,
-            child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 250),
-          transitionBuilder: (child, animation) => FadeTransition(
-            opacity: animation,
-            child: child,
-          ),
-          child: getBottomSheetUI(
-            ref.watch(locationScreenProvider).bottomSheetSelectedUIType,
-          ),
-        ),
-        ));
+            borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
+            child: Container(
+              color: Colors.transparent,
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 250),
+                transitionBuilder: (child, animation) => FadeTransition(
+                  opacity: animation,
+                  child: child,
+                ),
+                child: getBottomSheetUI(
+                  ref.watch(locationScreenProvider).bottomSheetSelectedUIType,
+                ),
+              ),
+            ));
       },
     );
   }
