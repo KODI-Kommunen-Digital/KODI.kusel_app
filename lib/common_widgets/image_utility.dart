@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kusel/images_path.dart';
+import 'package:kusel/screens/utility/image_loader_utility.dart';
 
 class ImageUtil {
   static Widget loadNetworkImage(
@@ -12,12 +13,19 @@ class ImageUtil {
       required BuildContext context,
       double? height,
       double? width,
-      BoxFit? fit}) {
+      BoxFit? fit,
+      int? sourceId
+      }) {
     return CachedNetworkImage(
       fit: fit ?? BoxFit.cover,
       height: height,
       width: width,
-      imageUrl: imageUrl,
+      imageUrl: imageLoaderUtility(image: imageUrl, sourceId: sourceId ?? 3),
+      progressIndicatorBuilder: (context, value ,_) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
       errorWidget: (context, value, _) {
         return (svgErrorImagePath != null)
             ? SvgPicture.asset(svgErrorImagePath)
