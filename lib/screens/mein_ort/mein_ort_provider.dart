@@ -44,19 +44,6 @@ class MeinOrtProvider extends StateNotifier<MeinOrtState> {
         final result = r as MeinOrtResponseModel;
         if (result.data != null) {
           state = state.copyWith(
-            // cityName : result.data?.name,
-            // cityId : result.data?.id.toString(),
-            // imageUrl : result.data?.image,
-            // description : result.data?.description ,
-            // address : result.data?.address,
-            // latitude : double.parse(result.data?.latitude ?? ''),
-            // longitude : double.parse(result.data?.longitude ?? ''),
-            // phoneNumber : result.data?.phone,
-            // email : result.data?.email,
-            // openUntil : result.data?.openUntil,
-            // websiteUrl: result.data?.websiteUrl,
-            // onlineServiceList : result.data?.onlineServices,
-            // municipalitiesList : result.data?.municipalities,
             municipalityList: result.data,
             isLoading: false,
           );
