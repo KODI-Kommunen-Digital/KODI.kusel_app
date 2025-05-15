@@ -5,11 +5,15 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/common_event_card.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/highlights_card.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
+import 'package:kusel/common_widgets/listing_id_enum.dart';
+import 'package:kusel/screens/event/event_detail_screen_controller.dart';
+import 'package:kusel/screens/events_listing/selected_event_list_screen_parameter.dart';
 import 'package:kusel/screens/tourism/tourism_screen_controller.dart';
 import 'package:latlong2/latlong.dart';
 
@@ -62,7 +66,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
           _buildNearYou(context),
           _buildAllEvent(context),
           32.verticalSpace,
-          FeedbackCardWidget(onTap: (){})
+          FeedbackCardWidget(onTap: () {})
         ],
       ),
     );
@@ -129,7 +133,14 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
               32.verticalSpace,
               CommonTextArrowWidget(
                 text: AppLocalizations.of(context).recommendation,
-                onTap: () {},
+                onTap: () {
+                  ref.read(navigationProvider).navigateUsingPath(
+                      path: selectedEventListScreenPath,
+                      context: context,
+                      params: SelectedEventListScreenParameter(
+                          listHeading:
+                              AppLocalizations.of(context).recommendation));
+                },
               ),
               16.verticalSpace,
               SizedBox(
@@ -154,7 +165,13 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                             heading: item.title ?? "",
                             description: item.description ?? "",
                             isFavourite: false,
-                            onPress: () {},
+                            onPress: () {
+                              ref.read(navigationProvider).navigateUsingPath(
+                                  path: eventDetailScreenPath,
+                                  context: context,
+                                  params: EventDetailScreenParams(
+                                      eventId: item.id));
+                            },
                             onFavouriteIconClick: () {},
                             isVisible: false),
                       );
@@ -205,8 +222,10 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                         }),
                     16.verticalSpace,
                     Padding(
-                      padding:  EdgeInsets.symmetric(horizontal: 16.w),
-                      child: CustomButton(onPressed: (){}, text: AppLocalizations.of(context).all_news),
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      child: CustomButton(
+                          onPressed: () {},
+                          text: AppLocalizations.of(context).all_news),
                     )
                   ],
                 ),
@@ -249,13 +268,30 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                         location: '',
                         isFavouriteVisible: false,
                         isFavorite: false,
-                        sourceId: item.sourceId ?? 3),
+                        sourceId: item.sourceId ?? 3,
+                    onTap: (){
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: eventDetailScreenPath,
+                          context: context,
+                          params: EventDetailScreenParams(
+                              eventId: item.id));
+                    },),
                   );
                 }),
             16.verticalSpace,
             Padding(
-              padding:  EdgeInsets.symmetric(horizontal: 16.w),
-              child: CustomButton(onPressed: (){}, text: AppLocalizations.of(context).all_events),
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: CustomButton(
+                  onPressed: () {
+                    ref.read(navigationProvider).navigateUsingPath(
+                        path: selectedEventListScreenPath,
+                        context: context,
+                        params: SelectedEventListScreenParameter(
+                            listHeading:
+                                AppLocalizations.of(context).all_events,
+                            categoryId: ListingCategoryId.event.eventId));
+                  },
+                  text: AppLocalizations.of(context).all_events),
             )
           ],
         );
@@ -267,8 +303,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
     return Consumer(
       builder: (BuildContext context, WidgetRef ref, Widget? child) {
         final borderRadius = 10.r;
-        final list =
-            ref.watch(tourismScreenControllerProvider).nearByList;
+        final list = ref.watch(tourismScreenControllerProvider).nearByList;
 
         return Container(
           margin: EdgeInsets.symmetric(horizontal: 16.w),
@@ -302,8 +337,10 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                     SizedBox(
                       height: 18.h,
                       width: 18.w,
-                      child: ImageUtil.loadLocalSvgImage(imageUrl: 'expand_full', context: context,
-                     fit:BoxFit.contain ),
+                      child: ImageUtil.loadLocalSvgImage(
+                          imageUrl: 'expand_full',
+                          context: context,
+                          fit: BoxFit.contain),
                     )
                   ],
                 ),

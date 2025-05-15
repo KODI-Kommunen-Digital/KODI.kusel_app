@@ -128,7 +128,7 @@ class _ExploreScreenState extends ConsumerState<SelectedEventListScreen> {
                       onTap: () {
                         ref.read(navigationProvider).navigateUsingPath(
                               context: context,
-                              path: eventScreenPath,
+                              path: eventDetailScreenPath,
                               params: EventDetailScreenParams(eventId: item.id),
                             );
                       },

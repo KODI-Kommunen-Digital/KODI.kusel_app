@@ -41,7 +41,7 @@ const splashScreenPath = "/";
 const signInScreenPath = "/signInScreen";
 const signUpScreenPath = "/signUpScreen";
 const dashboardScreenPath = "/dashboardScreenPath";
-const eventScreenPath = "/eventScreenPath";
+const eventDetailScreenPath = "/eventScreenPath";
 const forgotPasswordPath = "/forgotPasswordPath";
 const highlightScreenPath = "/highlightScreenPath";
 const subCategoryScreenPath = "/subCategoryPath";
@@ -87,7 +87,7 @@ List<RouteBase> goRouteList = [
         return DashboardScreen();
       }),
   GoRoute(
-      path: eventScreenPath,
+      path: eventDetailScreenPath,
       builder: (context, state) {
         return EventDetailScreen(
             eventScreenParams: state.extra as EventDetailScreenParams);

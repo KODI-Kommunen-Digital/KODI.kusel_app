@@ -409,7 +409,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                           onTap: () {
                             ref.read(navigationProvider).navigateUsingPath(
                                   context: context,
-                                  path: eventScreenPath,
+                                  path: eventDetailScreenPath,
                                   params:
                                       EventDetailScreenParams(eventId: item.id),
                                 );
@@ -534,7 +534,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                           onTap: () {
                             ref.read(navigationProvider).navigateUsingPath(
                                   context: context,
-                                  path: eventScreenPath,
+                                  path: eventDetailScreenPath,
                                   params:
                                       EventDetailScreenParams(eventId: item.id),
                                 );
