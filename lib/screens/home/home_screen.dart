@@ -151,7 +151,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             onItemClick: (listing) {
                               ref.read(navigationProvider).navigateUsingPath(
                                   context: context,
-                                  path: eventScreenPath,
+                                  path: eventDetailScreenPath,
                                   params: EventDetailScreenParams(
                                       eventId: listing.id));
                             },
@@ -371,7 +371,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 onTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
                       context: context,
-                      path: eventScreenPath,
+                      path: eventDetailScreenPath,
                       params: EventDetailScreenParams(eventId: item.id));
                 },
                 isFavouriteVisible:
@@ -456,7 +456,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               onTap: () {
                                 ref.read(navigationProvider).navigateUsingPath(
                                     context: context,
-                                    path: eventScreenPath,
+                                    path: eventDetailScreenPath,
                                     params: EventDetailScreenParams(
                                         eventId:
                                             state.highlightsList[index].id));
@@ -500,15 +500,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       return Padding(
                         padding: EdgeInsets.symmetric(horizontal: 6.h.w),
                         child: HighlightsCard(
-                          imageUrl: listing.logo ?? "",
+                          imageUrl: listing.logo ?? '',
                           date: listing.createdAt ?? "",
                           heading: listing.title ?? "",
                           description: listing.description ?? "",
+                          errorImagePath: imagePath['kusel_map_image'],
                           isFavourite: listing.isFavorite ?? false,
                           onPress: () {
                             ref.read(navigationProvider).navigateUsingPath(
                                   context: context,
-                                  path: eventScreenPath,
+                                  path: eventDetailScreenPath,
                                   params: EventDetailScreenParams(
                                       eventId: listing.id),
                                 );

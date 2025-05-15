@@ -11,7 +11,7 @@ Map<String, String> _svgImagePath = {
   "arrow_icon": "assets/svg/arrow_icon.svg",
   "search_icon": "assets/svg/search_icon.svg",
   "calendar_icon": "assets/svg/calendar_icon.svg",
-  "link_icon": "assets/svg/link_icon.svg",
+  "map_link_icon": "assets/svg/map_link_icon.svg",
   "location_card_icon": "assets/svg/location_card_icon.svg",
   "man_icon": "assets/svg/man_icon.svg",
   "paw_icon": "assets/svg/paw_icon.svg",
@@ -33,6 +33,9 @@ Map<String, String> _svgImagePath = {
   "alert_icon": "assets/svg/alert_icon.svg",
   "chat_icon": "assets/svg/chat_icon.svg",
   "man_icon_2": "assets/svg/man_icon_2.svg",
+  "expand_full":"assets/svg/expand_full.svg",
+  "tourism_service_image":"assets/svg/tourism_service_image.svg",
+  "virtual_town_hall_map_image": "assets/svg/virtual_town_hall_map_image.svg"
 };
 
 Map<String, String> _pngImagePath = {

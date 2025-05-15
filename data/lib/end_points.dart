@@ -39,3 +39,7 @@ const ortDetailEndPoint = "/cities";
 const meinOrtEndPoint = "/meinOrt";
 
 const getPlacesInMunicipalitiesPath = "/getPlacesInMunicipalities";
+
+const mobilityPath = "/mobility";
+
+const participatePath = "/participate";

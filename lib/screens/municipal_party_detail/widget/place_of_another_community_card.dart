@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/screens/utility/image_loader_utility.dart';
 
@@ -39,21 +40,14 @@ class _PlaceOfAnotherCommunityCardState
               color: Colors.white, borderRadius: BorderRadius.circular(10.r)),
           child: Row(
             children: [
-              CachedNetworkImage(
-                height: 70.h,
-                width: 70.w,
-                imageUrl: imageLoaderUtility(
-                    image: widget.imageUrl, sourceId: widget.sourceId),
-                errorWidget: (context, val, _) {
-                  return Icon(Icons.error);
-                },
-                progressIndicatorBuilder: (context, val, _) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                },
-              ),
-              16.horizontalSpace,
+              ImageUtil.loadNetworkImage(
+                  imageUrl: widget.imageUrl,
+                  sourceId: widget.sourceId,
+                  height: 40.h,
+                  width: 40.w,
+                  fit: BoxFit.contain,
+                  context: context),
+              25.horizontalSpace,
               Flexible(
                 child: textRegularMontserrat(
                     textAlign: TextAlign.start,
