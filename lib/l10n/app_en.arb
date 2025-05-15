@@ -151,5 +151,10 @@
   "show_all_places": "Show all places",
   "mein_ort_display_message" : "Welcome to the overview page for your places in the Kuseler Land – your guide to the places in the region.",
   "hiking_trails": "Hiking trails app",
-  "discover_kusel_on_foot": "Discover Kusel on foot"
+  "discover_kusel_on_foot": "Discover Kusel on foot",
+  "our_offers": "Our offers",
+  "your_contact_persons": "Your contact persons",
+  "participate": "PARTICIPATE",
+  "register_here": "Register here",
+  "develop_kusel_together_text" : "We want to further develop the Kusel district together."
 }
