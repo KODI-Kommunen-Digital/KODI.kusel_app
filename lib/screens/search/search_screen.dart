@@ -139,7 +139,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                     onItemClick: (listing){
                       ref.read(navigationProvider).navigateUsingPath(
                           context: context,
-                          path: eventScreenPath,
+                          path: eventDetailScreenPath,
                           params: EventDetailScreenParams(eventId: listing.id)
                       );
                       ref.read(searchScreenProvider.notifier).loadSavedListings();
@@ -182,7 +182,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                         onTap: (){
                           ref.read(navigationProvider).navigateUsingPath(
                               context: context,
-                              path: eventScreenPath,
+                              path: eventDetailScreenPath,
                               params: EventDetailScreenParams(eventId: ref.watch(searchScreenProvider).searchedList[index].id)
                           );
                         },

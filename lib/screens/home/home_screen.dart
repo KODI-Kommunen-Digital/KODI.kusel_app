@@ -151,7 +151,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             onItemClick: (listing) {
                               ref.read(navigationProvider).navigateUsingPath(
                                   context: context,
-                                  path: eventScreenPath,
+                                  path: eventDetailScreenPath,
                                   params: EventDetailScreenParams(
                                       eventId: listing.id));
                             },
@@ -371,7 +371,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 onTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
                       context: context,
-                      path: eventScreenPath,
+                      path: eventDetailScreenPath,
                       params: EventDetailScreenParams(eventId: item.id));
                 },
                 isFavouriteVisible:
@@ -456,7 +456,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               onTap: () {
                                 ref.read(navigationProvider).navigateUsingPath(
                                     context: context,
-                                    path: eventScreenPath,
+                                    path: eventDetailScreenPath,
                                     params: EventDetailScreenParams(
                                         eventId:
                                             state.highlightsList[index].id));
@@ -509,7 +509,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           onPress: () {
                             ref.read(navigationProvider).navigateUsingPath(
                                   context: context,
-                                  path: eventScreenPath,
+                                  path: eventDetailScreenPath,
                                   params: EventDetailScreenParams(
                                       eventId: listing.id),
                                 );

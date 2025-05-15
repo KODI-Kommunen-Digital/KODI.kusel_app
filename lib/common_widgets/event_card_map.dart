@@ -45,7 +45,7 @@ class _LocationCardWidgetState extends ConsumerState<EventCardMap> {
         onTap: () {
           ref.read(navigationProvider).navigateUsingPath(
               context: context,
-              path: eventScreenPath,
+              path: eventDetailScreenPath,
               params: EventDetailScreenParams(eventId: widget.id));
         },
         child: Container(
