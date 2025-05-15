@@ -39,25 +39,28 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: _buildBody(context),
-    ).loaderDialog(context, ref.watch(allEventScreenProvider).isLoading);
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: _buildBody(context),
+      ).loaderDialog(context, ref.watch(allEventScreenProvider).isLoading),
+    );
   }
 
   Widget _buildBody(BuildContext context) {
     return CustomScrollView(
       slivers: [
         SliverAppBar(
+          toolbarHeight: 80.h,
           automaticallyImplyLeading: false,
           floating: true,
           pinned: false,
-          expandedHeight: MediaQuery.of(context).size.height * 0.15,
+          expandedHeight: 150.h,
           flexibleSpace: FlexibleSpaceBar(
             background: ClipPath(
               clipper: UpstreamWaveClipper(),
               child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.15,
+                height: 150.h,
                 width: MediaQuery.of(context).size.width,
                 child: Image.asset(
                   imagePath['background_image'] ?? "",
@@ -80,7 +83,7 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                     color: lightThemeSecondaryColor,
                     fontSize: 16,
                     textAlign: TextAlign.center,
-                    text: "Events",
+                    text: AppLocalizations.of(context).events,
                   ),
                 ),
               ),
