@@ -43,10 +43,11 @@ class _PlaceOfAnotherCommunityCardState
               ImageUtil.loadNetworkImage(
                   imageUrl: widget.imageUrl,
                   sourceId: widget.sourceId,
-                  height: 70.h,
-                  width: 70.w,
+                  height: 40.h,
+                  width: 40.w,
+                  fit: BoxFit.contain,
                   context: context),
-              16.horizontalSpace,
+              25.horizontalSpace,
               Flexible(
                 child: textRegularMontserrat(
                     textAlign: TextAlign.start,
