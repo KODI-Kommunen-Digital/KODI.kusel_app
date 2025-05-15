@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
+import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 
 import '../screens/utility/image_loader_utility.dart';
@@ -69,18 +70,11 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                     child: SizedBox(
                       height: 200.h,
                       width: double.infinity,
-                      child: CachedNetworkImage(
-                        imageUrl: imageLoaderUtility(
-                            image: widget.imageUrl, sourceId:widget.sourceId ),
-                        fit: BoxFit.cover,
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) =>
-                                Center(child: CircularProgressIndicator()),
-                        errorWidget: (context, url, error) =>
-                            (widget.errorImagePath != null)
-                                ? Image.asset(widget.errorImagePath ?? '')
-                                : Icon(Icons.error),
-                      ),
+                      child: ImageUtil.loadNetworkImage(
+                          imageUrl: widget.imageUrl,
+                          sourceId: widget.sourceId,
+                          svgErrorImagePath: widget.errorImagePath,
+                          context: context),
                     ),
                   ),
                   if (widget.isVisible)
