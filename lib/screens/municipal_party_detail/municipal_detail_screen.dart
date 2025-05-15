@@ -170,6 +170,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                               imageUrl:
                                   state.municipalPartyDetailDataModel!.image!,
                               sourceId: 1,
+                              fit: BoxFit.contain,
                               svgErrorImagePath: imagePath['crest']!,
                               context: context,
                             )

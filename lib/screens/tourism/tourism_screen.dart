@@ -66,7 +66,10 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
           _buildNearYou(context),
           _buildAllEvent(context),
           32.verticalSpace,
-          FeedbackCardWidget(onTap: () {})
+          FeedbackCardWidget(onTap: () {
+            ref.read(navigationProvider).navigateUsingPath(
+                path: feedbackScreenPath, context: context);
+          })
         ],
       ),
     );
@@ -144,7 +147,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
               ),
               16.verticalSpace,
               SizedBox(
-                height: 300.h,
+                height: 320.h,
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
                     shrinkWrap: true,

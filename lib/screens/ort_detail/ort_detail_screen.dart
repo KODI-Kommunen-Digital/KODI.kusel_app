@@ -12,6 +12,7 @@ import 'package:kusel/screens/ort_detail/ort_detail_screen_controller.dart';
 import 'package:kusel/screens/utility/image_loader_utility.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../app_router.dart';
 import '../../common_widgets/downstream_wave_clipper.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../images_path.dart';
@@ -60,7 +61,10 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
         32.verticalSpace,
         _buildButton(context),
         32.verticalSpace,
-        FeedbackCardWidget(onTap: () {})
+        FeedbackCardWidget(onTap: () {
+          ref.read(navigationProvider).navigateUsingPath(
+              path: feedbackScreenPath, context: context);
+        })
       ],
     ));
   }
@@ -119,6 +123,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                           ? ImageUtil.loadNetworkImage(
                               imageUrl: state.ortDetailDataModel!.image!,
                               sourceId: 1,
+                              fit: BoxFit.contain,
                               context: context,
                               svgErrorImagePath: imagePath['crest']!,
                             )

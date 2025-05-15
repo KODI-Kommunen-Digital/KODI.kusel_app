@@ -49,6 +49,7 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
     return CustomScrollView(
       slivers: [
         SliverAppBar(
+          toolbarHeight: 80.h,
           automaticallyImplyLeading: false,
           floating: true,
           pinned: false,
