@@ -19,24 +19,27 @@ class CommonTextArrowWidget extends StatelessWidget {
       {required BuildContext context,
       void Function()? onTap,
       required String text}) {
-    return Row(
-      children: [
-        textRegularPoppins(
-            text: text,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Theme.of(context).textTheme.bodyLarge?.color),
-        12.horizontalSpace,
-        GestureDetector(
-          onTap: onTap,
-          child: ImageUtil.loadLocalSvgImage(
-            imageUrl: 'arrow_icon',
-            height: 10.h,
-            width: 16.w,
-            context: context,
-          ),
-        )
-      ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        children: [
+          textRegularPoppins(
+              text: text,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).textTheme.bodyLarge?.color),
+          12.horizontalSpace,
+          GestureDetector(
+            onTap: onTap,
+            child: ImageUtil.loadLocalSvgImage(
+              imageUrl: 'arrow_icon',
+              height: 10.h,
+              width: 16.w,
+              context: context,
+            ),
+          )
+        ],
+      ),
     );
   }
 }
