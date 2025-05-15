@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/arrow_back_widget.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
+import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen_controller.dart';
 import 'package:kusel/screens/utility/image_loader_utility.dart';
@@ -115,18 +116,11 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                       decoration: BoxDecoration(
                           shape: BoxShape.circle, color: Colors.white),
                       child: (state.ortDetailDataModel?.image != null)
-                          ? CachedNetworkImage(
-                              imageUrl: imageLoaderUtility(
-                                  image: state.ortDetailDataModel!.image!,
-                                  sourceId: 1),
-                              errorWidget: (context, val, _) {
-                                return Image.asset(imagePath['crest']!);
-                              },
-                              progressIndicatorBuilder: (context, val, _) {
-                                return Center(
-                                  child: CircularProgressIndicator(),
-                                );
-                              },
+                          ? ImageUtil.loadNetworkImage(
+                              imageUrl: state.ortDetailDataModel!.image!,
+                              sourceId: 1,
+                              context: context,
+                              svgErrorImagePath: imagePath['crest']!,
                             )
                           : Center(
                               child: Image.asset(

@@ -8,6 +8,7 @@ import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/downstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
+import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/event/event_detail_screen_state.dart';
@@ -48,25 +49,27 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
     final state = ref.watch(eventDetailScreenProvider);
     final isLoading =
         ref.watch(eventDetailScreenProvider.select((state) => state.loading));
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: Stack(
-        children: [
-          _buildBody(context, state),
-          if (isLoading)
-            Center(
-                child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              height: 100.h,
-              width: 100.w,
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
-            )),
-        ],
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: Stack(
+          children: [
+            _buildBody(context, state),
+            if (isLoading)
+              Center(
+                  child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.r),
+                ),
+                height: 100.h,
+                width: 100.w,
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              )),
+          ],
+        ),
       ),
     );
   }
@@ -115,29 +118,31 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
             address: state.eventDetails.address ?? "",
             websiteText: AppLocalizations.of(context).visit_website,
             websiteUrl: state.eventDetails.website ?? "",
-            latitude: state.eventDetails.latitude ?? 0,
-            longitude: state.eventDetails.longitude ?? 0,
+            latitude: state.eventDetails.latitude ?? 49.53603477650214,
+            longitude: state.eventDetails.longitude ?? 7.392734870386151,
           ),
           12.verticalSpace,
-          state.loading
-              ? _publicTransportShimmerEffect()
-              : _publicTransportCard(
-                  heading: AppLocalizations.of(context).public_transport_offer,
-                  description: AppLocalizations.of(context).find_out_how_to,
-                  onTap: () async {
-                    final Uri uri = Uri.parse("https://www.google.com/");
-                    if (await canLaunchUrl(uri)) {
-                      await launchUrl(uri);
-                    }
-                  }),
+          // state.loading
+          //     ? _publicTransportShimmerEffect()
+          //     :
+          _publicTransportCard(
+              heading: AppLocalizations.of(context).public_transport_offer,
+              description: AppLocalizations.of(context).find_out_how_to,
+              onTap: () async {
+                final Uri uri = Uri.parse("https://www.google.com/");
+                if (await canLaunchUrl(uri)) {
+                  await launchUrl(uri);
+                }
+              }),
           16.verticalSpace,
-          state.loading
-              ? _eventInfoShimmerEffect()
-              : _eventInfoWidget(
-                  heading: AppLocalizations.of(context).description,
-                  subHeading: '',
-                  description: state.eventDetails.description ?? "",
-                )
+          // state.loading
+          //     ? _eventInfoShimmerEffect()
+          //     :
+          _eventInfoWidget(
+            heading: AppLocalizations.of(context).description,
+            subHeading: '',
+            description: state.eventDetails.description ?? "",
+          )
         ],
       ),
     );
@@ -252,11 +257,11 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
           padding: EdgeInsets.symmetric(horizontal: 8.h),
           child: Row(
             children: [
-              SvgPicture.asset(
-                imagePath['transport_icon'] ?? '',
-                height: 25.h,
-                width: 25.w,
-              ),
+              ImageUtil.loadSvgImage(
+                  imageUrl: imagePath['transport_icon'] ?? '',
+                  height: 25.h,
+                  width: 25.w,
+                  context: context),
               20.horizontalSpace,
               Expanded(
                 child: Column(
@@ -275,7 +280,8 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                   ],
                 ),
               ),
-              SvgPicture.asset(imagePath['link_icon'] ?? ''),
+              ImageUtil.loadSvgImage(
+                  imageUrl: imagePath['map_link_icon'] ?? '', context: context),
             ],
           ),
         ),
@@ -341,10 +347,8 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
           padding: EdgeInsets.symmetric(vertical: 6.h),
           child: Row(
             children: [
-              SvgPicture.asset(
-                imagePath['calendar_icon'] ?? '',
-                color: Theme.of(context).colorScheme.surface,
-              ),
+              ImageUtil.loadSvgImage(
+                  imageUrl: imagePath['calendar_icon'] ?? '', context: context),
               8.horizontalSpace,
               textRegularMontserrat(
                 text: "Samstag, 28.10.2024 \nvon 6:30 - 22:00 Uhr",
@@ -360,10 +364,8 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
           ),
           child: Row(
             children: [
-              SvgPicture.asset(
-                imagePath['calendar_icon'] ?? '',
-                color: Theme.of(context).colorScheme.surface,
-              ),
+              ImageUtil.loadSvgImage(
+                  imageUrl: imagePath['calendar_icon'] ?? '', context: context),
               8.horizontalSpace,
               textRegularMontserrat(
                 text: "Samstag, 28.10.2024 \nvon 6:30 - 22:00 Uhr",
@@ -382,22 +384,17 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
       children: [
         ClipPath(
           clipper: DownstreamCurveClipper(),
-          child: Container(
+          child: SizedBox(
             height: 270.h,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: (state.eventDetails.logo != null)
-                    ? CachedNetworkImageProvider(
-                        imageLoaderUtility(
-                                image: state.eventDetails.logo ?? "",
-                                sourceId: state.eventDetails.sourceId!) ??
-                            "",
-                      )
-                    : CachedNetworkImageProvider(
+            child: (state.eventDetails.logo != null)
+                ? ImageUtil.loadNetworkImage(
+                    imageUrl: state.eventDetails.logo ?? '',
+                    sourceId: state.eventDetails.sourceId,
+                    context: context)
+                : ImageUtil.loadNetworkImage(
+                    context: context,
+                    imageUrl:
                         "https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg"),
-                fit: BoxFit.cover,
-              ),
-            ),
           ),
         ),
         Positioned(
