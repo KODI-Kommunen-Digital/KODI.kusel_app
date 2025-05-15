@@ -4,6 +4,7 @@ import 'package:domain/usecase/listings/listings_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/common_widgets/get_current_location.dart';
+import 'package:kusel/common_widgets/listing_id_enum.dart';
 import 'package:kusel/screens/tourism/tourism_screen_state.dart';
 
 final tourismScreenControllerProvider = StateNotifierProvider.autoDispose<
@@ -19,11 +20,11 @@ class TourismScreenController extends StateNotifier<TourismScreenState> {
 
   getAllEvents() async {
     try {
-      final categoryId = "3";
+      final categoryId = ListingCategoryId.event.eventId;
 
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
       GetAllListingsRequestModel requestModel =
-          GetAllListingsRequestModel(categoryId: categoryId);
+          GetAllListingsRequestModel(categoryId: categoryId.toString());
 
       final response = await listingsUseCase.call(requestModel, responseModel);
 
@@ -48,15 +49,20 @@ class TourismScreenController extends StateNotifier<TourismScreenState> {
 
       final lat = position.latitude;
       final long = position.longitude;
+      final radius = SearchRadius.radius.value;
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
       GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(
-          centerLatitude: lat, centerLongitude: long,radius: 20);
+          centerLatitude: lat, centerLongitude: long, radius: radius);
 
       final response = await listingsUseCase.call(requestModel, responseModel);
 
       response.fold((left) {
         debugPrint(" getNearByEvents fold exception : ${left.toString()}");
-      }, (right) {});
+      }, (right) {
+        final r = right as GetAllListingsResponseModel;
+
+        state = state.copyWith(nearByList: r.data, lat: lat, long: long);
+      });
     } catch (error) {
       debugPrint(" getNearByEvents exception:$error");
     }
@@ -64,20 +70,24 @@ class TourismScreenController extends StateNotifier<TourismScreenState> {
 
   getRecommendationListing() async {
     try {
+      state = state.copyWith(isRecommendationLoading: true);
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
       GetAllListingsRequestModel requestModel = GetAllListingsRequestModel();
 
       final response = await listingsUseCase.call(requestModel, responseModel);
 
       response.fold((left) {
+        state = state.copyWith(isRecommendationLoading: false);
         debugPrint(
             " getRecommendationListing fold exception : ${left.toString()}");
       }, (right) {
         final r = right as GetAllListingsResponseModel;
 
-        state = state.copyWith(recommendationList: r.data);
+        state = state.copyWith(
+            recommendationList: r.data, isRecommendationLoading: false);
       });
     } catch (error) {
+      state = state.copyWith(isRecommendationLoading: false);
       debugPrint(" getRecommendationListing exception:$error");
     }
   }
