@@ -36,8 +36,8 @@ class EventData {
   final String? email;
   final String? phone;
   final String? website;
-  final int? price;
-  final int? discountPrice;
+  final double? price;
+  final double? discountPrice;
   final int? statusId;
   final int? sourceId;
   final double? longitude;
@@ -50,12 +50,13 @@ class EventData {
   final String? pdf;
   final String? expiryDate;
   final int? zipcode;
-  final bool? showExternal;
+  final int? showExternal;
   final int? appointmentId;
   final List<int>? allCities;
   final int? cityId;
   final String? logo;
   final List<OtherLogo>? otherLogos;
+  final bool? isFavorite;
 
   EventData({
     this.id,
@@ -90,6 +91,7 @@ class EventData {
     this.cityId,
     this.logo,
     this.otherLogos,
+    this.isFavorite,
   });
 
   factory EventData.fromJson(Map<String, dynamic> json) {
@@ -106,12 +108,12 @@ class EventData {
       email: json['email'],
       phone: json['phone'],
       website: json['website'],
-      price: json['price'],
-      discountPrice: json['discountPrice'],
+      price: (json['price'] != null) ? json['price'].toDouble() : null,
+      discountPrice: (json['discountPrice'] != null) ? json['discountPrice'].toDouble() : null,
       statusId: json['statusId'],
       sourceId: json['sourceId'],
-      longitude: json['longitude'],
-      latitude: json['latitude'],
+      longitude: json['longitude'] != null ? json['longitude'].toDouble() : null,
+      latitude: json['latitude'] != null ? json['latitude'].toDouble() : null,
       villageId: json['villageId'],
       startDate: json['startDate'],
       endDate: json['endDate'],
@@ -122,16 +124,11 @@ class EventData {
       zipcode: json['zipcode'],
       showExternal: json['showExternal'],
       appointmentId: json['appointmentId'],
-      allCities: json['allCities'] != null
-          ? List<int>.from(json['allCities'])
-          : null,
+      allCities: (json['allCities'] as List?)?.map((e) => e as int).toList(),
       cityId: json['cityId'],
       logo: json['logo'],
-      otherLogos: json['otherLogos'] != null
-          ? (json['otherLogos'] as List)
-          .map((e) => OtherLogo.fromJson(e))
-          .toList()
-          : null,
+      otherLogos: (json['otherLogos'] as List?)?.map((e) => OtherLogo.fromJson(e)).toList(),
+      isFavorite: json['isFavorite'],
     );
   }
 
@@ -167,8 +164,8 @@ class EventData {
     'allCities': allCities,
     'cityId': cityId,
     'logo': logo,
-    'otherLogos':
-    otherLogos?.map((logo) => logo.toJson()).toList(),
+    'otherLogos': otherLogos?.map((e) => e.toJson()).toList(),
+    'isFavorite': isFavorite,
   };
 }
 

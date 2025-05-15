@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 
 class CategoryGridCardView extends ConsumerStatefulWidget {
@@ -36,15 +37,8 @@ class _CommonEventCardState extends ConsumerState<CategoryGridCardView> {
             width: 180.w,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8.r),
-              child: CachedNetworkImage(
-                progressIndicatorBuilder: (context, value, _) => Center(
-                  child: CircularProgressIndicator(),
-                ),
-                imageUrl: widget.imageUrl,
-                errorWidget: (context, error, stackTrace) =>
-                    Icon(Icons.broken_image, size: 80.w.h),
-                fit: BoxFit.cover,
-              ),
+              child: ImageUtil.loadNetworkImage(
+                  imageUrl: widget.imageUrl, context: context),
             ),
           ),
           Expanded(

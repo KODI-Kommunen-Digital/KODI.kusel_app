@@ -11,7 +11,7 @@ Map<String, String> _svgImagePath = {
   "arrow_icon": "assets/svg/arrow_icon.svg",
   "search_icon": "assets/svg/search_icon.svg",
   "calendar_icon": "assets/svg/calendar_icon.svg",
-  "link_icon": "assets/svg/link_icon.svg",
+  "map_link_icon": "assets/svg/map_link_icon.svg",
   "location_card_icon": "assets/svg/location_card_icon.svg",
   "man_icon": "assets/svg/man_icon.svg",
   "paw_icon": "assets/svg/paw_icon.svg",
