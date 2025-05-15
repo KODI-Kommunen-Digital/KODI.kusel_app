@@ -177,11 +177,10 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
 
       case 2:
         onTap = () {
-          // ref.read(navigationProvider).navigateUsingPath(
-          //   path: ortDetailScreenPath, context: context,
-          //   params: OrtDetailScreenParams(ortId: '42')
-          // );
-          showSoonServiceDialog(context);
+          ref.read(navigationProvider).navigateUsingPath(
+            path: tourismScreenPath, context: context,
+          );
+         // showSoonServiceDialog(context);
         };
         break;
       case 3:

@@ -7,6 +7,7 @@ import 'package:domain/usecase/listings/listings_usecase.dart';
 import 'package:domain/usecase/municipal_party_detail/municipal_party_detail_use_case.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kusel/common_widgets/listing_id_enum.dart';
 
 import 'municipal_detail_state.dart';
 
@@ -32,9 +33,9 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
   getEventsUsingCityId({required String municipalId}) async {
     try {
       state = state.copyWith(showEventLoading: true);
-      final id =  municipalId;
-      GetAllListingsRequestModel requestModel =
-          GetAllListingsRequestModel(cityId: id, categoryId: '3');
+      final id = municipalId;
+      GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(
+          cityId: id, categoryId: ListingCategoryId.event.eventId.toString());
 
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
 
@@ -57,10 +58,10 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
   getNewsUsingCityId({required String municipalId}) async {
     try {
       state = state.copyWith(showNewsLoading: true);
-      final id =  municipalId;
-      final categoryId = "1";
+      final id = municipalId;
+      final categoryId = ListingCategoryId.news.eventId.toString();
       GetAllListingsRequestModel requestModel =
-          GetAllListingsRequestModel(cityId: id,categoryId: categoryId);
+          GetAllListingsRequestModel(cityId: id, categoryId: categoryId);
 
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
 

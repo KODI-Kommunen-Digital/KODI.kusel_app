@@ -11,6 +11,7 @@ import '../app_router.dart';
 import '../images_path.dart';
 import '../navigation/navigation.dart';
 import '../screens/event/event_detail_screen_controller.dart';
+import 'image_utility.dart';
 
 class EventCardMap extends ConsumerStatefulWidget {
   final String address;
@@ -44,7 +45,7 @@ class _LocationCardWidgetState extends ConsumerState<EventCardMap> {
         onTap: () {
           ref.read(navigationProvider).navigateUsingPath(
               context: context,
-              path: eventScreenPath,
+              path: eventDetailScreenPath,
               params: EventDetailScreenParams(eventId: widget.id));
         },
         child: Container(
@@ -70,16 +71,12 @@ class _LocationCardWidgetState extends ConsumerState<EventCardMap> {
                 child: SizedBox(
                   height: 150.h,
                   width: double.infinity,
-                  child: CachedNetworkImage(
-                    imageUrl: imageLoaderUtility(
-                        image: widget.logo, sourceId: widget.sourceId),
-                    progressIndicatorBuilder: (context, value, _) {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    },
-                    fit: BoxFit.cover,
-                  ),
+                  child: ImageUtil.loadNetworkImage(
+                      height: 75.h,
+                      width: 80.w,
+                      imageUrl: imageLoaderUtility(
+                          image: widget.logo, sourceId: widget.sourceId),
+                      context: context),
                 ),
               ),
               Padding(

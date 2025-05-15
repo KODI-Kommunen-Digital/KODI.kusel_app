@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/model/response_model/virtual_town_hall/virtual_town_hall_response_model.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +10,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/downstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
+import 'package:kusel/common_widgets/image_utility.dart';
+import 'package:kusel/common_widgets/listing_id_enum.dart';
 import 'package:kusel/common_widgets/town_hall_map_widget.dart';
 import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
@@ -26,6 +27,7 @@ import '../../common_widgets/highlights_card.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
 import '../../images_path.dart';
+import '../event/event_detail_screen_controller.dart';
 import '../events_listing/selected_event_list_screen_parameter.dart';
 
 class VirtualTownHallScreen extends ConsumerStatefulWidget {
@@ -91,14 +93,16 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                 imagePath['calendar'] ?? "",
                 isLoading,
                 0,
-                0, () {
+                0,
+                ListingCategoryId.news.eventId, () {
               ref.read(navigationProvider).navigateUsingPath(
                   path: selectedEventListScreenPath,
                   context: context,
                   params: SelectedEventListScreenParameter(
-                      cityId: 1,
+                      cityId:
+                          (state.cityId != null) ? int.parse(state.cityId!) : 1,
                       listHeading: AppLocalizations.of(context).news,
-                      categoryId: null));
+                      categoryId: ListingCategoryId.news.eventId));
             }),
           if (state.eventList != null && state.eventList!.isNotEmpty)
             eventsView(
@@ -109,14 +113,15 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                 imagePath['calendar'] ?? "",
                 isLoading,
                 0,
-                0, () {
+                0,
+                ListingCategoryId.event.eventId, () {
               ref.read(navigationProvider).navigateUsingPath(
                   path: selectedEventListScreenPath,
                   context: context,
                   params: SelectedEventListScreenParameter(
                       cityId: 1,
                       listHeading: AppLocalizations.of(context).events,
-                      categoryId: null));
+                      categoryId: ListingCategoryId.event.eventId));
             }),
           FeedbackCardWidget(onTap: () {
             ref
@@ -129,101 +134,119 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
   }
 
   Widget _buildClipper(context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.35,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              // Background image at the top
-              Positioned(
-                top: 0.h,
-                child: ClipPath(
-                  clipper: DownstreamCurveClipper(),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * .3,
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.asset(
-                      imagePath['background_image'] ?? "",
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ),
-              // Blurred overlay
-              Positioned(
-                top: 0.h,
-                child: ClipPath(
-                  clipper: UpstreamWaveClipper(),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * .3,
-                    width: MediaQuery.of(context).size.width,
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
-                      child: Container(
-                        color:
-                            Theme.of(context).cardColor.withValues(alpha: 0.4),
+    return Consumer(builder: (context, ref, _) {
+      final imageUrl = ref.watch(virtualTownHallProvider).imageUrl;
+      return Column(
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.35,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                // Background image at the top
+                Positioned(
+                  top: 0.h,
+                  child: ClipPath(
+                    clipper: DownstreamCurveClipper(),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * .3,
+                      width: MediaQuery.of(context).size.width,
+                      child: Image.asset(
+                        imagePath['background_image'] ?? "",
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
                 ),
-              ),
-              Positioned(
-                left: 0.r,
-                top: 15.h,
-                child: Row(
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          ref
-                              .read(navigationProvider)
-                              .removeTopPage(context: context);
-                        },
-                        icon: Icon(Icons.arrow_back)),
-                    16.horizontalSpace,
-                    textBoldPoppins(
-                        color: Theme.of(context).textTheme.labelLarge?.color,
-                        fontSize: 18,
-                        text: AppLocalizations.of(context).virtual_town_hall),
-                  ],
-                ),
-              ),
-
-              Positioned(
-                top: MediaQuery.of(context).size.height * .15,
-                left: 0.w,
-                right: 0.w,
-                child: Card(
-                  color: Colors.red,
-                  shape: const CircleBorder(),
-                  elevation: 10,
-                  child: Container(
-                    height: 115.h,
-                    width: 115.w,
-                    padding: EdgeInsets.all(5.h.w),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Theme.of(context).canvasColor,
-                      // image: DecorationImage(
-                      //   image: CachedNetworkImageProvider(
-                      //     "",
-                      //   ),
-                      //   fit: BoxFit.cover,
-                      // ),
+                // Blurred overlay
+                Positioned(
+                  top: 0.h,
+                  child: ClipPath(
+                    clipper: UpstreamWaveClipper(),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * .3,
+                      width: MediaQuery.of(context).size.width,
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
+                        child: Container(
+                          color: Theme.of(context)
+                              .cardColor
+                              .withValues(alpha: 0.4),
+                        ),
+                      ),
                     ),
-                    child: FittedBox(
-                        fit: BoxFit.contain,
-                        child: Image.asset(imagePath['map_image'] ?? "",
-                            height: 20.h, width: 15.w)),
                   ),
                 ),
-              )
-            ],
-          ),
-        )
-      ],
-    );
+                Positioned(
+                  left: 0.r,
+                  top: 15.h,
+                  child: Row(
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            ref
+                                .read(navigationProvider)
+                                .removeTopPage(context: context);
+                          },
+                          icon: Icon(Icons.arrow_back)),
+                      16.horizontalSpace,
+                      textBoldPoppins(
+                          color: Theme.of(context).textTheme.labelLarge?.color,
+                          fontSize: 18,
+                          text: AppLocalizations.of(context).virtual_town_hall),
+                    ],
+                  ),
+                ),
+
+                Positioned(
+                  top: 120.h,
+                  left: 0.w,
+                  right: 0.w,
+                  child: Container(
+                    height: 120.h,
+                    width: 70.w,
+                    padding: EdgeInsets.all(25.w),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.white),
+                    child: ImageUtil.loadNetworkImage(
+                      imageUrl: imageUrl ?? '',
+                      sourceId: 1,
+                      svgErrorImagePath:
+                          imagePath['virtual_town_hall_map_image']!,
+                      context: context,
+                    ),
+                  ),
+                )
+
+                // Positioned(
+                //   top: MediaQuery.of(context).size.height * .15,
+                //   left: 0.w,
+                //   right: 0.w,
+                //   child: Card(
+                //     color: Colors.red,
+                //     shape: const CircleBorder(),
+                //     elevation: 10,
+                //     child: Container(
+                //       height: 115.h,
+                //       width: 115.w,
+                //       padding: EdgeInsets.all(5.h.w),
+                //       decoration: BoxDecoration(
+                //         shape: BoxShape.circle,
+                //         color: Theme.of(context).canvasColor,
+                //       ),
+                //       child: FittedBox(
+                //           fit: BoxFit.contain,
+                //           child: Image.asset(imagePath['map_image'] ?? "",
+                //               height: 20.h, width: 15.w)),
+                //     ),
+                //   ),
+                // )
+              ],
+            ),
+          )
+        ],
+      );
+    });
   }
 
   Widget _buildTownHallDetailsUi(VirtualTownHallState state) {
@@ -406,6 +429,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
       bool isLoading,
       double? latitude,
       double? longitude,
+      int categoryId,
       void Function() onPress) {
     if (isLoading) {
       return Column(
@@ -437,10 +461,10 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                     path: selectedEventListScreenPath,
                     context: context,
                     params: SelectedEventListScreenParameter(
-                        radius: 1,
+                        radius: SearchRadius.radius.value,
                         centerLatitude: latitude,
                         centerLongitude: longitude,
-                        categoryId: 3,
+                        categoryId: categoryId,
                         listHeading: heading));
               },
               child: Row(
@@ -454,10 +478,11 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                         color: Theme.of(context).textTheme.bodyLarge?.color),
                   ),
                   12.horizontalSpace,
-                  SvgPicture.asset(
-                    imagePath['arrow_icon'] ?? "",
+                  ImageUtil.loadLocalSvgImage(
+                    imageUrl: 'arrow_icon',
                     height: 10.h,
                     width: 16.w,
+                    context: context,
                   )
                 ],
               ),
@@ -488,10 +513,10 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                 title: item.title ?? "",
                 location: item.address ?? "",
                 onTap: () {
-                  // ref.read(navigationProvider).navigateUsingPath(
-                  //     context: context,
-                  //     path: eventScreenPath,
-                  //     params: EventDetailScreenParams(eventId: item.id));
+                  ref.read(navigationProvider).navigateUsingPath(
+                      context: context,
+                      path: eventDetailScreenPath,
+                      params: EventDetailScreenParams(eventId: item.id));
                 },
                 // isFavouriteVisible:
                 // ref.watch(favoritesProvider.notifier).showFavoriteIcon(),
@@ -554,43 +579,39 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-            Row(
-              children: [
-                20.horizontalSpace,
-                CachedNetworkImage(
-                  height: 35.h,
-                  width: 35.w,
-                  progressIndicatorBuilder: (context, value, _) => Center(
-                    child: CircularProgressIndicator(),
+              Row(
+                children: [
+                  20.horizontalSpace,
+                  ImageUtil.loadNetworkImage(
+                      height: 35.h,
+                      width: 35.w,
+                      imageUrl:
+                          imageLoaderUtility(image: imageUrl, sourceId: 3),
+                      context: context),
+                  10.horizontalSpace,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      textBoldMontserrat(
+                          text: text,
+                          color: Theme.of(context).textTheme.bodyLarge?.color),
+                      if (description != null)
+                        textRegularMontserrat(
+                            text: description ?? '',
+                            fontSize: 11,
+                            textOverflow: TextOverflow.visible,
+                            textAlign: TextAlign.start)
+                    ],
                   ),
-                  imageUrl: imageLoaderUtility(image: imageUrl, sourceId: 3),
-                  errorWidget: (context, error, stackTrace) =>
-                      Icon(Icons.broken_image, size: 40.w.h),
-                  fit: BoxFit.cover,
-                ),
-                10.horizontalSpace,
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    textBoldMontserrat(
-                        text: text,
-                        color: Theme.of(context).textTheme.bodyLarge?.color),
-                    if (description != null)
-                      textRegularMontserrat(
-                          text: description ?? '',
-                          fontSize: 11,
-                          textOverflow: TextOverflow.visible,
-                          textAlign: TextAlign.start)
-                  ],
-                ),
-              ],
-            ),
+                ],
+              ),
               Align(
                   alignment: Alignment.centerRight,
-                  child:
-                      Image.asset(imagePath["link_icon"] ?? '',
-                      height: 40.h,
-                      width: 40.w,)),
+                  child: Image.asset(
+                    imagePath["link_icon"] ?? '',
+                    height: 40.h,
+                    width: 40.w,
+                  )),
             ],
           ),
         ),
