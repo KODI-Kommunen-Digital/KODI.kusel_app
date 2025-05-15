@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,14 +12,12 @@ import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_loc
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/place_of_another_community_card.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen_params.dart';
-import 'package:kusel/screens/utility/image_loader_utility.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../app_router.dart';
 import '../../common_widgets/arrow_back_widget.dart';
 import '../../common_widgets/common_event_card.dart';
 import '../../common_widgets/feedback_card_widget.dart';
-import '../../common_widgets/icon_text_widget_card.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
 import '../../providers/favorites_list_notifier.dart';
