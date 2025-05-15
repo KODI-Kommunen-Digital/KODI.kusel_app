@@ -183,7 +183,7 @@ class _LocationCardWidgetState extends ConsumerState<TownHallMapWidget> {
                   child: Row(
                     children: [
                       SvgPicture.asset(
-                        imagePath['link_icon'] ?? '',
+                        imagePath['map_link_icon'] ?? '',
                         color: Theme.of(context).textTheme.labelMedium?.color,
                       ),
                       10.horizontalSpace,
