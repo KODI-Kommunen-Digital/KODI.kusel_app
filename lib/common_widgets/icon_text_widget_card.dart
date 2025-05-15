@@ -44,7 +44,6 @@ class _IconTextWidgetCardState extends ConsumerState<IconTextWidgetCard> {
               Expanded(
                   flex: 3, child:
               SvgPicture.asset(imagePath[widget.imageUrl] ?? '')
-                // CachedNetworkImage(imageUrl: widget.imageUrl
               ),
               Expanded(
                 flex: 6,
