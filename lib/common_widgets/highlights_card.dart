@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
+import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 
 import '../screens/utility/image_loader_utility.dart';
@@ -19,10 +20,15 @@ class HighlightsCard extends ConsumerStatefulWidget {
   final bool isVisible;
   final String? errorImagePath;
   final int sourceId;
+  final double? imageWidth;
+  final double? imageHeight;
+  final BoxFit? imageFit;
+  final double? cardWidth;
+  final double? cardHeight;
 
   const HighlightsCard(
       {super.key,
-        required this.sourceId,
+      required this.sourceId,
       required this.imageUrl,
       this.date,
       required this.heading,
@@ -31,7 +37,12 @@ class HighlightsCard extends ConsumerStatefulWidget {
       required this.onPress,
       required this.onFavouriteIconClick,
       required this.isVisible,
-      this.errorImagePath});
+      this.errorImagePath,
+      this.imageFit,
+      this.imageHeight,
+      this.imageWidth,
+      this.cardWidth,
+      this.cardHeight});
 
   @override
   ConsumerState<HighlightsCard> createState() => _HighlightsCardState();
@@ -44,6 +55,8 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
       onTap: widget.onPress,
       borderRadius: BorderRadius.circular(25.r),
       child: Container(
+        width: widget.cardWidth,
+        height: widget.cardHeight,
         padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 10.w),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -60,27 +73,23 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: 200.h,
+              height: widget.imageHeight ?? 200.h,
               child: Stack(
                 fit: StackFit.loose,
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(18.r),
                     child: SizedBox(
-                      height: 200.h,
-                      width: double.infinity,
-                      child: CachedNetworkImage(
-                        imageUrl: imageLoaderUtility(
-                            image: widget.imageUrl, sourceId:widget.sourceId ),
-                        fit: BoxFit.cover,
-                        progressIndicatorBuilder:
-                            (context, url, downloadProgress) =>
-                                Center(child: CircularProgressIndicator()),
-                        errorWidget: (context, url, error) =>
-                            (widget.errorImagePath != null)
-                                ? Image.asset(widget.errorImagePath ?? '')
-                                : Icon(Icons.error),
-                      ),
+                      height: widget.imageHeight ?? 200.h,
+                      width: widget.imageWidth ?? double.infinity,
+
+                      child: ImageUtil.loadNetworkImage(
+                          imageUrl: widget.imageUrl,
+                          fit: widget.imageFit ?? BoxFit.cover,
+
+                          sourceId: widget.sourceId,
+                          svgErrorImagePath: widget.errorImagePath,
+                          context: context),
                     ),
                   ),
                   if (widget.isVisible)
@@ -110,7 +119,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                 ],
               ),
             ),
-            2.verticalSpace,
+            10.verticalSpace,
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

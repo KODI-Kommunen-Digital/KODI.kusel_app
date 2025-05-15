@@ -4,6 +4,7 @@ import 'package:domain/model/response_model/event_details/event_details_response
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/usecase/event_details/event_details_usecase.dart';
 import 'package:domain/usecase/listings/listings_usecase.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:kusel/screens/event/event_detail_screen_state.dart';
@@ -45,14 +46,17 @@ class EventDetailScreenController
             getEventDetailsRequestModel, getEventDetailsResponseModel);
         result.fold(
           (l) {
+            debugPrint("Event details fold exception $l");
             state = state.copyWith(loading: false, error: l.toString());
           },
           (r) {
             var eventData = (r as GetEventDetailsResponseModel).data;
             state = state.copyWith(eventDetails: eventData, loading: false);
+            print("Printing description - ${eventData?.description}");
           },
         );
       } catch (error) {
+        debugPrint("Event details exception $error");
         state = state.copyWith(loading: false, error: error.toString());
       }
     }
@@ -89,9 +93,9 @@ class EventDetailScreenController
       LatLong kuselLatLong = LatLong(49.53603477650214, 7.392734870386151);
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
-            centerLongitude: kuselLatLong.latitude,
-            centerLatitude: kuselLatLong.longitude
-          );
+              centerLongitude: kuselLatLong.latitude,
+              centerLatitude: kuselLatLong.longitude,
+              radius: 20);
       GetAllListingsResponseModel getAllListingsResponseModel =
           GetAllListingsResponseModel();
       final result = await listingsUseCase.call(

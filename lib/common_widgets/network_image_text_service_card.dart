@@ -2,16 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/images_path.dart';
 
-class IconTextWidgetCard extends ConsumerStatefulWidget {
+class NetworkImageTextServiceCard extends ConsumerStatefulWidget {
   final Function() onTap;
   final String imageUrl;
   final String text;
   final String? description;
 
-  const IconTextWidgetCard(
+  const NetworkImageTextServiceCard(
       {super.key,
       required this.onTap,
       required this.imageUrl,
@@ -19,10 +20,10 @@ class IconTextWidgetCard extends ConsumerStatefulWidget {
       this.description});
 
   @override
-  ConsumerState<IconTextWidgetCard> createState() => _IconTextWidgetCardState();
+  ConsumerState<NetworkImageTextServiceCard> createState() => _IconTextWidgetCardState();
 }
 
-class _IconTextWidgetCardState extends ConsumerState<IconTextWidgetCard> {
+class _IconTextWidgetCardState extends ConsumerState<NetworkImageTextServiceCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -42,9 +43,12 @@ class _IconTextWidgetCardState extends ConsumerState<IconTextWidgetCard> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Expanded(
-                  flex: 3, child:
-              SvgPicture.asset(imagePath[widget.imageUrl] ?? '')
-                // CachedNetworkImage(imageUrl: widget.imageUrl
+                flex: 3,
+                child: ImageUtil.loadNetworkImage(
+                  fit: BoxFit.contain,
+                  height: 30.h,
+                    width: 30.w,
+                    imageUrl: widget.imageUrl, context: context),
               ),
               Expanded(
                 flex: 6,
