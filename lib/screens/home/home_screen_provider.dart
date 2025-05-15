@@ -15,6 +15,7 @@ import 'package:domain/usecase/user_detail/user_detail_usecase.dart';
 import 'package:domain/usecase/weather/weather_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kusel/common_widgets/listing_id_enum.dart';
 import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 
 import 'home_screen_state.dart';
@@ -74,7 +75,7 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       state = state.copyWith(loading: true, error: "");
 
       GetAllListingsRequestModel getAllListingsRequestModel =
-          GetAllListingsRequestModel(categoryId: "3");
+          GetAllListingsRequestModel(categoryId: ListingCategoryId.event.eventId.toString());
 
       GetAllListingsResponseModel getAllListingsResponseModel =
           GetAllListingsResponseModel();
@@ -139,20 +140,19 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
           searchRequestModel, searchListingsResponseModel);
       return result.fold(
         (l) {
-          debugPrint('Exception = $l');
+          debugPrint('fold Exception = $l');
           error(l.toString());
           return <Listing>[];
         },
         (r) {
           final listings = (r as SearchListingsResponseModel).data;
-          debugPrint('>>>> returned = ${listings?.length}');
           success();
           return listings ?? <Listing>[];
         },
       );
     } catch (e) {
       state = state.copyWith(loading: false);
-      debugPrint('>>>> Exception = $e');
+      debugPrint(' Exception = $e');
       error(e.toString());
       return <Listing>[];
     }
