@@ -6,3 +6,11 @@ enum ListingCategoryId {
 
   const ListingCategoryId(this.eventId);
 }
+
+enum SearchRadius {
+  radius(40);
+
+  final int value;
+
+  const SearchRadius(this.value);
+}

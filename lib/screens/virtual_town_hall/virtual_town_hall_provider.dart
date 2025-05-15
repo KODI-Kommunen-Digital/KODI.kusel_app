@@ -6,6 +6,7 @@ import 'package:domain/usecase/listings/listings_usecase.dart';
 import 'package:domain/usecase/virtual_town_hall/virtual_town_hall_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kusel/common_widgets/listing_id_enum.dart';
 import 'package:kusel/screens/virtual_town_hall/virtual_town_hall_state.dart';
 
 final virtualTownHallProvider =
@@ -28,10 +29,10 @@ class VirtualTownHallProvider extends StateNotifier<VirtualTownHallState> {
 
   Future<void> getEventsUsingCityId({required String cityId}) async {
     try {
-
       final id = cityId;
-      GetAllListingsRequestModel requestModel =
-          GetAllListingsRequestModel(categoryId: '3',cityId: cityId);
+      GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(
+          categoryId: ListingCategoryId.event.eventId.toString(),
+          cityId: cityId);
 
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
 
@@ -51,12 +52,11 @@ class VirtualTownHallProvider extends StateNotifier<VirtualTownHallState> {
 
   Future<void> getNewsUsingCityId({required String cityId}) async {
     try {
-
-      final id =cityId ;
+      final id = cityId;
       final categoryId = "1";
 
       GetAllListingsRequestModel requestModel =
-          GetAllListingsRequestModel(cityId: id,categoryId: categoryId);
+          GetAllListingsRequestModel(cityId: id, categoryId: categoryId);
 
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
 
@@ -83,28 +83,29 @@ class VirtualTownHallProvider extends StateNotifier<VirtualTownHallState> {
       VirtualTownHallResponseModel responseModel =
           VirtualTownHallResponseModel();
 
-      final response = await virtualTownHallUseCase.call(requestModel, responseModel);
+      final response =
+          await virtualTownHallUseCase.call(requestModel, responseModel);
 
       response.fold((l) {
         debugPrint("getEventsUsingCityId fold exception = ${l.toString()}");
       }, (r) {
         final result = r as VirtualTownHallResponseModel;
-        if(result.data!=null){
+        if (result.data != null) {
           state = state.copyWith(
-            cityName : result.data?.name,
-            cityId : result.data?.id.toString(),
-            imageUrl : result.data?.image,
-            description : result.data?.description ,
-            address : result.data?.address,
-            latitude : double.parse(result.data?.latitude ?? ''),
-            longitude : double.parse(result.data?.longitude ?? ''),
-            phoneNumber : result.data?.phone,
-            email : result.data?.email,
-            openUntil : result.data?.openUntil,
+            cityName: result.data?.name,
+            cityId: result.data?.id.toString(),
+            imageUrl: result.data?.image,
+            description: result.data?.description,
+            address: result.data?.address,
+            latitude: double.parse(result.data?.latitude ?? ''),
+            longitude: double.parse(result.data?.longitude ?? ''),
+            phoneNumber: result.data?.phone,
+            email: result.data?.email,
+            openUntil: result.data?.openUntil,
             websiteUrl: result.data?.websiteUrl,
-            onlineServiceList : result.data?.onlineServices,
-            municipalitiesList : result.data?.municipalities,
-            loading : false,
+            onlineServiceList: result.data?.onlineServices,
+            municipalitiesList: result.data?.municipalities,
+            loading: false,
           );
           getEventsUsingCityId(cityId: state.cityId ?? '1');
           getNewsUsingCityId(cityId: state.cityId ?? '1');
