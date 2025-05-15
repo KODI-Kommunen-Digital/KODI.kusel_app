@@ -33,6 +33,7 @@ Map<String, String> _svgImagePath = {
   "alert_icon": "assets/svg/alert_icon.svg",
   "chat_icon": "assets/svg/chat_icon.svg",
   "man_icon_2": "assets/svg/man_icon_2.svg",
+  "expand_full":"assets/svg/expand_full.svg"
 };
 
 Map<String, String> _pngImagePath = {

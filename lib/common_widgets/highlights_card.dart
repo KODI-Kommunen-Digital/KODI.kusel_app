@@ -19,10 +19,15 @@ class HighlightsCard extends ConsumerStatefulWidget {
   final bool isVisible;
   final String? errorImagePath;
   final int sourceId;
+  final double? imageWidth;
+  final double? imageHeight;
+  final BoxFit? imageFit;
+  final double? cardWidth;
+  final double? cardHeight;
 
   const HighlightsCard(
       {super.key,
-        required this.sourceId,
+      required this.sourceId,
       required this.imageUrl,
       this.date,
       required this.heading,
@@ -31,7 +36,12 @@ class HighlightsCard extends ConsumerStatefulWidget {
       required this.onPress,
       required this.onFavouriteIconClick,
       required this.isVisible,
-      this.errorImagePath});
+      this.errorImagePath,
+      this.imageFit,
+      this.imageHeight,
+      this.imageWidth,
+      this.cardWidth,
+      this.cardHeight});
 
   @override
   ConsumerState<HighlightsCard> createState() => _HighlightsCardState();
@@ -44,6 +54,8 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
       onTap: widget.onPress,
       borderRadius: BorderRadius.circular(25.r),
       child: Container(
+        width: widget.cardWidth,
+        height: widget.cardHeight,
         padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 10.w),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -60,19 +72,19 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              height: 200.h,
+              height: widget.imageHeight ?? 200.h,
               child: Stack(
                 fit: StackFit.loose,
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(18.r),
                     child: SizedBox(
-                      height: 200.h,
-                      width: double.infinity,
+                      height: widget.imageHeight ?? 200.h,
+                      width: widget.imageWidth ?? double.infinity,
                       child: CachedNetworkImage(
                         imageUrl: imageLoaderUtility(
-                            image: widget.imageUrl, sourceId:widget.sourceId ),
-                        fit: BoxFit.cover,
+                            image: widget.imageUrl, sourceId: widget.sourceId),
+                        fit: widget.imageFit ?? BoxFit.cover,
                         progressIndicatorBuilder:
                             (context, url, downloadProgress) =>
                                 Center(child: CircularProgressIndicator()),
@@ -110,7 +122,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                 ],
               ),
             ),
-            2.verticalSpace,
+            10.verticalSpace,
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

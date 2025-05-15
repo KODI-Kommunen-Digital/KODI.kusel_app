@@ -3,6 +3,7 @@ import 'package:domain/model/response_model/listings_model/get_all_listings_resp
 import 'package:domain/usecase/listings/listings_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kusel/common_widgets/get_current_location.dart';
 import 'package:kusel/screens/tourism/tourism_screen_state.dart';
 
 final tourismScreenControllerProvider = StateNotifierProvider.autoDispose<
@@ -28,17 +29,28 @@ class TourismScreenController extends StateNotifier<TourismScreenState> {
 
       response.fold((left) {
         debugPrint(" get all events fold exception : ${left.toString()}");
-      }, (right) {});
+      }, (right) {
+        final r = right as GetAllListingsResponseModel;
+
+        state = state.copyWith(allEventList: r.data);
+      });
     } catch (error) {
       debugPrint(" get all events exception:$error");
     }
   }
 
-  getNearByListing({required double lat, required double long}) async {
+  getNearByListing() async {
     try {
+      final position = await getLatLong();
+
+      debugPrint(
+          "user coordinates [ lat : ${position.latitude}, long: ${position.longitude} ");
+
+      final lat = position.latitude;
+      final long = position.longitude;
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
       GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(
-          centerLatitude: lat, centerLongitude: long);
+          centerLatitude: lat, centerLongitude: long,radius: 20);
 
       final response = await listingsUseCase.call(requestModel, responseModel);
 
@@ -60,7 +72,11 @@ class TourismScreenController extends StateNotifier<TourismScreenState> {
       response.fold((left) {
         debugPrint(
             " getRecommendationListing fold exception : ${left.toString()}");
-      }, (right) {});
+      }, (right) {
+        final r = right as GetAllListingsResponseModel;
+
+        state = state.copyWith(recommendationList: r.data);
+      });
     } catch (error) {
       debugPrint(" getRecommendationListing exception:$error");
     }
