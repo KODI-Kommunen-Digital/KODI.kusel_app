@@ -130,95 +130,118 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
   }
 
   Widget _buildClipper(context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.35,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              // Background image at the top
-              Positioned(
-                top: 0.h,
-                child: ClipPath(
-                  clipper: DownstreamCurveClipper(),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * .3,
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.asset(
-                      imagePath['background_image'] ?? "",
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ),
-              // Blurred overlay
-              Positioned(
-                top: 0.h,
-                child: ClipPath(
-                  clipper: UpstreamWaveClipper(),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * .3,
-                    width: MediaQuery.of(context).size.width,
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
-                      child: Container(
-                        color:
-                            Theme.of(context).cardColor.withValues(alpha: 0.4),
+    return Consumer(builder: (context, ref, _){
+      final imageUrl = ref.watch(virtualTownHallProvider).imageUrl;
+      return Column(
+        children: [
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.35,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                // Background image at the top
+                Positioned(
+                  top: 0.h,
+                  child: ClipPath(
+                    clipper: DownstreamCurveClipper(),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * .3,
+                      width: MediaQuery.of(context).size.width,
+                      child: Image.asset(
+                        imagePath['background_image'] ?? "",
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
                 ),
-              ),
-              Positioned(
-                left: 0.r,
-                top: 15.h,
-                child: Row(
-                  children: [
-                    IconButton(
-                        onPressed: () {
-                          ref
-                              .read(navigationProvider)
-                              .removeTopPage(context: context);
-                        },
-                        icon: Icon(Icons.arrow_back)),
-                    16.horizontalSpace,
-                    textBoldPoppins(
-                        color: Theme.of(context).textTheme.labelLarge?.color,
-                        fontSize: 18,
-                        text: AppLocalizations.of(context).virtual_town_hall),
-                  ],
-                ),
-              ),
-
-              Positioned(
-                top: MediaQuery.of(context).size.height * .15,
-                left: 0.w,
-                right: 0.w,
-                child: Card(
-                  color: Colors.red,
-                  shape: const CircleBorder(),
-                  elevation: 10,
-                  child: Container(
-                    height: 115.h,
-                    width: 115.w,
-                    padding: EdgeInsets.all(5.h.w),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Theme.of(context).canvasColor,
+                // Blurred overlay
+                Positioned(
+                  top: 0.h,
+                  child: ClipPath(
+                    clipper: UpstreamWaveClipper(),
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * .3,
+                      width: MediaQuery.of(context).size.width,
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
+                        child: Container(
+                          color:
+                          Theme.of(context).cardColor.withValues(alpha: 0.4),
+                        ),
+                      ),
                     ),
-                    child: FittedBox(
-                        fit: BoxFit.contain,
-                        child: Image.asset(imagePath['map_image'] ?? "",
-                            height: 20.h, width: 15.w)),
                   ),
                 ),
-              )
-            ],
-          ),
-        )
-      ],
-    );
+                Positioned(
+                  left: 0.r,
+                  top: 15.h,
+                  child: Row(
+                    children: [
+                      IconButton(
+                          onPressed: () {
+                            ref
+                                .read(navigationProvider)
+                                .removeTopPage(context: context);
+                          },
+                          icon: Icon(Icons.arrow_back)),
+                      16.horizontalSpace,
+                      textBoldPoppins(
+                          color: Theme.of(context).textTheme.labelLarge?.color,
+                          fontSize: 18,
+                          text: AppLocalizations.of(context).virtual_town_hall),
+                    ],
+                  ),
+                ),
+
+                Positioned(
+                  top: 120.h,
+                  left: 0.w,
+                  right: 0.w,
+                  child: Container(
+                    height: 120.h,
+                    width: 70.w,
+                    padding: EdgeInsets.all(25.w),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.white),
+                    child: ImageUtil.loadNetworkImage(
+                      imageUrl:
+                      imageUrl ?? '',
+                      sourceId: 1,
+                      svgErrorImagePath: imagePath['virtual_town_hall_map_image']!,
+                      context: context,
+                    ),
+                  ),
+                )
+
+                // Positioned(
+                //   top: MediaQuery.of(context).size.height * .15,
+                //   left: 0.w,
+                //   right: 0.w,
+                //   child: Card(
+                //     color: Colors.red,
+                //     shape: const CircleBorder(),
+                //     elevation: 10,
+                //     child: Container(
+                //       height: 115.h,
+                //       width: 115.w,
+                //       padding: EdgeInsets.all(5.h.w),
+                //       decoration: BoxDecoration(
+                //         shape: BoxShape.circle,
+                //         color: Theme.of(context).canvasColor,
+                //       ),
+                //       child: FittedBox(
+                //           fit: BoxFit.contain,
+                //           child: Image.asset(imagePath['map_image'] ?? "",
+                //               height: 20.h, width: 15.w)),
+                //     ),
+                //   ),
+                // )
+              ],
+            ),
+          )
+        ],
+      );
+    });
   }
 
   Widget _buildTownHallDetailsUi(VirtualTownHallState state) {
