@@ -17,14 +17,13 @@ class ParticipateService {
 
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
-    final path = "$virtualTownHallEndPoint$getPlacesInMunicipalitiesPath";
+    final path = participatePath;
 
     final apiHelper = ref.read(apiHelperProvider);
 
     final result =
     await apiHelper.getRequest(
         path: path,
-        params: requestModel.toJson(),
         create: () => responseModel
     );
 

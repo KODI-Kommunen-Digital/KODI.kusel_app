@@ -153,6 +153,10 @@
   "show_all_places": "Alle Orte anzeigen",
   "mein_ort_display_message" : "Willkommen auf der Übersichtsseite für deine Orte im Kuseler Land – Deinem Guide zu den Orten der Region.",
   "hiking_trails": "Wanderwege App",
-  "discover_kusel_on_foot": "Entdecke Kusel zu Fuß"
-
+  "discover_kusel_on_foot": "Entdecke Kusel zu Fuß",
+  "our_offers": "Unsere Angebote",
+  "your_contact_persons": "Deine Ansprechpartner:innen",
+  "participate": "MITMACHEN",
+  "register_here": "Hier anmelden",
+  "develop_kusel_together_text" : "Wir möchten gemeinsam den Landkreis Kusel weiterentwickeln."
 }

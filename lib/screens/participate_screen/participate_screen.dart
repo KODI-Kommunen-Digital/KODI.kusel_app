@@ -5,12 +5,15 @@ import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/downstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
+import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
-import 'package:kusel/images_path.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kusel/screens/participate_screen/participate_screen_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/arrow_back_widget.dart';
-import '../../common_widgets/icon_text_widget_card.dart';
+import '../../common_widgets/image_utility.dart';
+import '../../common_widgets/network_image_text_service_card.dart';
 import '../../navigation/navigation.dart';
 
 class ParticipateScreen extends ConsumerStatefulWidget {
@@ -21,24 +24,48 @@ class ParticipateScreen extends ConsumerStatefulWidget {
 }
 
 class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
+
+  @override
+  void initState() {
+    Future.microtask((){
+      ref.read(participateScreenProvider.notifier).fetchParticipateDetails();
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         body: _buildBody(),
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      ),
+      ).loaderDialog(context, ref.watch(participateScreenProvider).isLoading),
     );
   }
 
   _buildBody() {
+    final state = ref.watch(participateScreenProvider);
+
     return SingleChildScrollView(
       child: Column(
         children: [
           _buildClipperBackground(),
           _buildParticipateDescription(),
           _buildParticipateList(),
-          _buildInfoMessage(),
+          if (state.participateData != null &&
+              state.participateData!.moreInformations!.isNotEmpty)
+            ListView.builder(
+                itemCount: state.participateData?.moreInformations?.length ?? 0,
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  final item = state.participateData?.moreInformations?[index];
+                  return _buildInfoMessage(
+                    heading: item?.title ?? '_',
+                    description: item?.description?? "_"
+                  );
+                })
+          ,
           _buildContactDetailsList(),
           FeedbackCardWidget(onTap: () {
             ref
@@ -51,18 +78,22 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
   }
 
   _buildClipperBackground() {
+    final state = ref.watch(participateScreenProvider);
     return Stack(
       children: [
         ClipPath(
           clipper: DownstreamCurveClipper(),
-          child: Container(
+          child: SizedBox(
             height: 270.h,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(imagePath["participate_image"] ?? ''),
-                fit: BoxFit.cover,
-              ),
-            ),
+            width: MediaQuery.of(context).size.width,
+            child: (state.participateData?.iconUrl != null)
+                ? ImageUtil.loadNetworkImage(
+                imageUrl: state.participateData?.iconUrl ?? '',
+                context: context)
+                : ImageUtil.loadNetworkImage(
+                context: context,
+                imageUrl:
+                "https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg"),
           ),
         ),
         Positioned(
@@ -79,6 +110,7 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
   }
 
   _buildParticipateDescription() {
+    final state = ref.read(participateScreenProvider);
     return Padding(
       padding: EdgeInsets.all(12.h.w),
       child: Column(
@@ -86,7 +118,7 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
         children: [
           textBoldPoppins(
               color: Theme.of(context).textTheme.bodyLarge?.color,
-              text: "GESTALTE DIE ZUKUNFT DES LANDKREISES KUSEL MIT",
+              text: state.participateData?.title ?? "_",
               textOverflow: TextOverflow.visible,
               textAlign: TextAlign.left,
               fontSize: 16),
@@ -96,72 +128,62 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
               textAlign: TextAlign.start,
               fontSize: 12,
               text:
-                  "Wir möchten gemeinsam den Landkreis Kusel weiterentwickeln.",
+                  AppLocalizations.of(context).develop_kusel_together_text,
               textOverflow: TextOverflow.visible),
           10.verticalSpace,
           textRegularMontserrat(
               textAlign: TextAlign.start,
-              text:
-                  "Deine Ideen und Meinungen sind der Schlüssel, um unsere Region zukunftsfähig zu gestalten. Bring Dich ein und gestalte aktiv mit!",
+              text: state.participateData?.description ?? "_",
               textOverflow: TextOverflow.visible),
           8.verticalSpace,
-          CustomButton(onPressed: () {}, text: "Hier anmelden")
+          CustomButton(onPressed: () {}, text: AppLocalizations.of(context).register_here)
         ],
       ),
     );
   }
 
   _buildParticipateList() {
+    final state = ref.read(participateScreenProvider);
+
     return Padding(
       padding: EdgeInsets.all(12.h.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           textBoldPoppins(
-              text: "MITMACHEN",
+              text: AppLocalizations.of(context).participate,
               textAlign: TextAlign.start,
               fontSize: 14),
           10.verticalSpace,
-          IconTextWidgetCard(
-            onTap: () async {
-              // final Uri uri =
-              // Uri.parse(item.linkUrl ?? "https://google.com");
-              // if (await canLaunchUrl(uri)) {
-              //   await launchUrl(uri);
-              // }
-            },
-            imageUrl: 'chat_icon',
-            text: 'Jetzt mitmachen!',
-            description: "So funktioniert’s",
-          ),
-          IconTextWidgetCard(
-            onTap: () async {
-              // final Uri uri =
-              // Uri.parse(item.linkUrl ?? "https://google.com");
-              // if (await canLaunchUrl(uri)) {
-              //   await launchUrl(uri);
-              // }
-            },
-            imageUrl: 'alert_icon',
-            text: 'Aktive Projekte',
-          ),
-          IconTextWidgetCard(
-            onTap: () async {
-              // final Uri uri =
-              // Uri.parse(item.linkUrl ?? "https://google.com");
-              // if (await canLaunchUrl(uri)) {
-              //   await launchUrl(uri);
-              // }
-            },
-            imageUrl: 'man_icon_2',
-            text: 'Zur Anmeldung',
-          ),
+          if (state.participateData != null &&
+              state.participateData!.servicesOffered!.isNotEmpty)
+            ListView.builder(
+                itemCount: state.participateData?.servicesOffered?.length ?? 0,
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  final item = state.participateData?.servicesOffered?[index];
+                  return NetworkImageTextServiceCard(
+                    onTap: () async {
+                      final Uri uri = Uri.parse(
+                          item?.linkUrl ?? 'https://www.landkreis-kusel.de');
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri);
+                      }
+                    },
+                    imageUrl: item?.iconUrl ?? '',
+                    text: item?.title ?? '_',
+                    description: item?.description,
+                  );
+                })
         ],
       ),
     );
   }
 
-  _buildInfoMessage() {
+  _buildInfoMessage(
+  {required String heading, required String description}
+      ) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w),
       child: Column(
@@ -169,15 +191,14 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
         children: [
           8.verticalSpace,
           textBoldPoppins(
-              text: "MACH MIT UND GESTALTE DIE ZUKUNFT DES LANDKREISES KUSEL!",
+              text: heading,
               fontSize: 15,
               textAlign: TextAlign.left,
               textOverflow: TextOverflow.visible),
           10.verticalSpace,
           textRegularMontserrat(
               textAlign: TextAlign.left,
-              text:
-                  "Auf dieser Plattform kannst du Ideen einbringen, Projekte unterstützen und über wichtige Themen abstimmen. Du möchtest wissen, wie das genau funktioniert? Hier erfährst Du alles, was Du zur Anmeldung und Teilhabe wissen musst - ganz einfach erklärt!",
+              text: description,
               textOverflow: TextOverflow.visible)
         ],
       ),
@@ -185,6 +206,7 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
   }
 
   _buildContactDetailsList() {
+    final state = ref.read(participateScreenProvider);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w),
       child: Column(
@@ -194,15 +216,25 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
           textBoldPoppins(
             textAlign: TextAlign.start,
             color: Theme.of(context).textTheme.bodyLarge?.color,
-            text: "Deine Ansprechpartner:innen",
+            text: AppLocalizations.of(context).your_contact_persons,
             fontSize: 14,
           ),
           15.verticalSpace,
-          _contactDetailsCard(
-              onTap: () {},
-              heading: "Nadine Kropp-Meyer",
-              phoneNumber: "-",
-              email: "-"),
+          if (state.participateData != null &&
+              state.participateData!.contactDetails!.isNotEmpty)
+            ListView.builder(
+                itemCount: state.participateData?.contactDetails?.length ?? 0,
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  final item = state.participateData?.contactDetails?[index];
+                  return _contactDetailsCard(
+                      onTap: () {},
+                      heading: item?.title ?? "_",
+                      phoneNumber: item?.phone ?? '_',
+                      email: item?.email ?? "_");
+                })
+          ,
           15.verticalSpace,
         ],
       ),
