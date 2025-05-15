@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/downstream_wave_clipper.dart';
+import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/screens/events_listing/selected_event_list_screen_parameter.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_location_widget.dart';
@@ -93,9 +94,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
           _buildClipper(context),
           _buildDescription(context),
           32.verticalSpace,
-
           _buildServicesList(context),
-
           32.verticalSpace,
           _buildLocationCard(),
           32.verticalSpace,
@@ -168,30 +167,22 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                       padding: EdgeInsets.all(25.w),
                       decoration: BoxDecoration(
                           shape: BoxShape.circle, color: Colors.white),
-                      child:
-                          (state.municipalPartyDetailDataModel?.image != null)
-                              ? CachedNetworkImage(
-                                  imageUrl: imageLoaderUtility(
-                                      image: state
-                                          .municipalPartyDetailDataModel!
-                                          .image!,
-                                      sourceId: 1),
-                                  errorWidget: (context, val, _) {
-                                    return Image.asset(imagePath['crest']!);
-                                  },
-                                  progressIndicatorBuilder: (context, val, _) {
-                                    return Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  },
-                                )
-                              : Center(
-                                  child: Image.asset(
-                                    imagePath['crest']!,
-                                    height: 120.h,
-                                    width: 100.w,
-                                  ),
-                                ),
+                      child: (state.municipalPartyDetailDataModel?.image !=
+                              null)
+                          ? ImageUtil.loadNetworkImage(
+                              imageUrl:
+                                  state.municipalPartyDetailDataModel!.image!,
+                              sourceId: 1,
+                              svgErrorImagePath: imagePath['crest']!,
+                              context: context,
+                            )
+                          : Center(
+                              child: Image.asset(
+                                imagePath['crest']!,
+                                height: 120.h,
+                                width: 100.w,
+                              ),
+                            ),
                     ),
                   )
                 ],
@@ -599,28 +590,28 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount:
-                    state.municipalPartyDetailDataModel?.onlineServices?.length ?? 0,
+                itemCount: state.municipalPartyDetailDataModel?.onlineServices
+                        ?.length ??
+                    0,
                 itemBuilder: (context, index) {
-                  if(state.municipalPartyDetailDataModel?.onlineServices!=null)
-                    {
-                      final item = state
-                          .municipalPartyDetailDataModel!.onlineServices![index];
-                      return _customTextIconCard(
-                          onTap: () async {
-                            final Uri uri = Uri.parse(
-                                item.linkUrl ?? "https://www.landkreis-kusel.de");
-                            if (await canLaunchUrl(uri)) {
-                              await launchUrl(uri);
-                            }
-                          },
-                          imageUrl: item.iconUrl!, //??item.iconUrl
-                          text: item.title ?? '',
-                          description: item.description ?? '');
-                    }else{
+                  if (state.municipalPartyDetailDataModel?.onlineServices !=
+                      null) {
+                    final item = state
+                        .municipalPartyDetailDataModel!.onlineServices![index];
+                    return _customTextIconCard(
+                        onTap: () async {
+                          final Uri uri = Uri.parse(
+                              item.linkUrl ?? "https://www.landkreis-kusel.de");
+                          if (await canLaunchUrl(uri)) {
+                            await launchUrl(uri);
+                          }
+                        },
+                        imageUrl: item.iconUrl!, //??item.iconUrl
+                        text: item.title ?? '',
+                        description: item.description ?? '');
+                  } else {
                     return SizedBox.shrink();
                   }
-
                 },
               ),
             ],
@@ -632,9 +623,9 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
 
   Widget _customTextIconCard(
       {required Function() onTap,
-        required String imageUrl,
-        required String text,
-        String? description}) {
+      required String imageUrl,
+      required String text,
+      String? description}) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(
@@ -644,7 +635,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
         onTap: onTap,
         child: Container(
           padding:
-          EdgeInsets.only(left: 2.w, right: 14.w, top: 20.h, bottom: 20.h),
+              EdgeInsets.only(left: 2.w, right: 14.w, top: 20.h, bottom: 20.h),
           decoration: BoxDecoration(
               color: Theme.of(context).canvasColor,
               borderRadius: BorderRadius.circular(15.r)),
@@ -654,15 +645,12 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
               Row(
                 children: [
                   20.horizontalSpace,
-                  CachedNetworkImage(
+                  ImageUtil.loadNetworkImage(
                     height: 35.h,
                     width: 35.w,
-                    progressIndicatorBuilder: (context, value, _) => Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                    imageUrl: imageLoaderUtility(image: imageUrl, sourceId: 3),
-                    errorWidget: (context, error, stackTrace) =>
-                        Icon(Icons.broken_image, size: 40.w.h),
+                    imageUrl: imageUrl,
+                    context: context,
+                    sourceId: 3,
                     fit: BoxFit.cover,
                   ),
                   10.horizontalSpace,
@@ -684,10 +672,11 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
               ),
               Align(
                   alignment: Alignment.centerRight,
-                  child:
-                  Image.asset(imagePath["link_icon"] ?? '',
+                  child: Image.asset(
+                    imagePath["link_icon"] ?? '',
                     height: 40.h,
-                    width: 40.w,)),
+                    width: 40.w,
+                  )),
             ],
           ),
         ),
