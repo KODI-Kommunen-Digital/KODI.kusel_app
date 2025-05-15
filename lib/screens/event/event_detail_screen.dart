@@ -161,15 +161,15 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
               text: heading,
               fontSize: 15,
               color: Theme.of(context).textTheme.bodyLarge?.color),
-          12.verticalSpace,
-          textSemiBoldPoppins(
-              text: subHeading,
-              textAlign: TextAlign.start,
-              fontSize: 12,
-              textOverflow: TextOverflow.visible,
-              color: Theme.of(context).textTheme.bodyLarge?.color,
-              fontWeight: FontWeight.w600),
-          12.verticalSpace,
+          8.verticalSpace,
+          // textSemiBoldPoppins(
+          //     text: subHeading,
+          //     textAlign: TextAlign.start,
+          //     fontSize: 12,
+          //     textOverflow: TextOverflow.visible,
+          //     color: Theme.of(context).textTheme.bodyLarge?.color,
+          //     fontWeight: FontWeight.w600),
+          //     12.verticalSpace,
           textRegularPoppins(
               text: description,
               fontSize: 11,
@@ -386,6 +386,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
           clipper: DownstreamCurveClipper(),
           child: SizedBox(
             height: 270.h,
+            width: MediaQuery.of(context).size.width,
             child: (state.eventDetails.logo != null)
                 ? ImageUtil.loadNetworkImage(
                     imageUrl: state.eventDetails.logo ?? '',
