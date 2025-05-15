@@ -106,7 +106,7 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
               },
               child: Row(
                 children: [
-                  SvgPicture.asset(imagePath['link_icon'] ?? ''),
+                  SvgPicture.asset(imagePath['map_link_icon'] ?? ''),
                   8.horizontalSpace,
                   textRegularPoppins(
                     text: widget.websiteText,

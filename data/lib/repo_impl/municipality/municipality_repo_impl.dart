@@ -6,12 +6,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 final municipalityRepositoryProvider = Provider((ref) => MunicipalityRepoImpl(
     municipalityService: ref.read(municipalityServiceProvider)));
 
-abstract class GetCityDetailsRepository {
+abstract class MunicipalityRepository {
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel);
 }
 
-class MunicipalityRepoImpl implements GetCityDetailsRepository {
+class MunicipalityRepoImpl implements MunicipalityRepository {
   MunicipalityService municipalityService;
 
   MunicipalityRepoImpl({required this.municipalityService});

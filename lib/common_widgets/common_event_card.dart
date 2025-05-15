@@ -1,9 +1,9 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
+import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/screens/utility/image_loader_utility.dart';
 
@@ -53,18 +53,12 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
               // Image
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
-                child: CachedNetworkImage(
-                  errorWidget: (context, error, stackTrace) =>
-                      const Icon(Icons.broken_image, size: 80),
-                  width: 80,
-                  height: 80,
-                  progressIndicatorBuilder: (context, value, _) {
-                    return Center(child: CircularProgressIndicator());
-                  },
-                  fit: BoxFit.cover,
-                  imageUrl: imageLoaderUtility(
-                      image: widget.imageUrl, sourceId: widget.sourceId),
-                ),
+                child: ImageUtil.loadNetworkImage(
+                    height: 75.h,
+                    width: 80.w,
+                    imageUrl: imageLoaderUtility(
+                        image: widget.imageUrl, sourceId: widget.sourceId),
+                    context: context),
               ),
               const SizedBox(width: 8),
 

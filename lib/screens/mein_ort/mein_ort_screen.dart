@@ -21,6 +21,7 @@ import '../../common_widgets/common_event_card.dart';
 import '../../common_widgets/custom_button_widget.dart';
 import '../../common_widgets/custom_shimmer_widget.dart';
 import '../../common_widgets/highlights_card.dart';
+import '../../common_widgets/image_utility.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
 import '../../images_path.dart';
@@ -453,20 +454,14 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
         padding: EdgeInsets.all(8.h.w),
         child: Row(
           children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: CachedNetworkImage(
-                errorWidget: (context, error, stackTrace) =>
-                    const Icon(Icons.broken_image, size: 80),
-                width: 80,
-                height: 80,
-                progressIndicatorBuilder: (context, value, _) {
-                  return Center(child: CircularProgressIndicator());
-                },
-                fit: BoxFit.fill,
-                imageUrl: imageLoaderUtility(image: imageUrl??"", sourceId: 1) ??
-                    'https://images.unsplash.com/photo-1584713503693-bb386ec95cf2?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-              ),
+            SizedBox(
+              height: 50.h,
+              width: 50.w,
+              child: ImageUtil.loadNetworkImage(
+                fit: BoxFit.contain,
+                  imageUrl: imageLoaderUtility(
+                      image: imageUrl ?? '', sourceId: 1),
+                  context: context),
             ),
             SizedBox(width: 30.w),
             // Texts

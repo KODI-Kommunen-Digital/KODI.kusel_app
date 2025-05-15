@@ -11,6 +11,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/downstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
+import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/town_hall_map_widget.dart';
 import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
@@ -205,12 +206,6 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Theme.of(context).canvasColor,
-                      // image: DecorationImage(
-                      //   image: CachedNetworkImageProvider(
-                      //     "",
-                      //   ),
-                      //   fit: BoxFit.cover,
-                      // ),
                     ),
                     child: FittedBox(
                         fit: BoxFit.contain,
@@ -554,43 +549,38 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-            Row(
-              children: [
-                20.horizontalSpace,
-                CachedNetworkImage(
-                  height: 35.h,
-                  width: 35.w,
-                  progressIndicatorBuilder: (context, value, _) => Center(
-                    child: CircularProgressIndicator(),
+              Row(
+                children: [
+                  20.horizontalSpace,
+                  ImageUtil.loadNetworkImage(
+                      height: 35.h,
+                      width: 35.w,
+                      imageUrl: imageLoaderUtility(image: imageUrl, sourceId: 3),
+                      context: context),
+                  10.horizontalSpace,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      textBoldMontserrat(
+                          text: text,
+                          color: Theme.of(context).textTheme.bodyLarge?.color),
+                      if (description != null)
+                        textRegularMontserrat(
+                            text: description ?? '',
+                            fontSize: 11,
+                            textOverflow: TextOverflow.visible,
+                            textAlign: TextAlign.start)
+                    ],
                   ),
-                  imageUrl: imageLoaderUtility(image: imageUrl, sourceId: 3),
-                  errorWidget: (context, error, stackTrace) =>
-                      Icon(Icons.broken_image, size: 40.w.h),
-                  fit: BoxFit.cover,
-                ),
-                10.horizontalSpace,
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    textBoldMontserrat(
-                        text: text,
-                        color: Theme.of(context).textTheme.bodyLarge?.color),
-                    if (description != null)
-                      textRegularMontserrat(
-                          text: description ?? '',
-                          fontSize: 11,
-                          textOverflow: TextOverflow.visible,
-                          textAlign: TextAlign.start)
-                  ],
-                ),
-              ],
-            ),
+                ],
+              ),
               Align(
                   alignment: Alignment.centerRight,
-                  child:
-                      Image.asset(imagePath["link_icon"] ?? '',
-                      height: 40.h,
-                      width: 40.w,)),
+                  child: Image.asset(
+                    imagePath["link_icon"] ?? '',
+                    height: 40.h,
+                    width: 40.w,
+                  )),
             ],
           ),
         ),

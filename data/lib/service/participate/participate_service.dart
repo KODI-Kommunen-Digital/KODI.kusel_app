@@ -5,26 +5,26 @@ import 'package:data/dio_helper_object.dart';
 import 'package:data/end_points.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final municipalityServiceProvider = Provider((ref) => MunicipalityService(
+final participateServiceProvider = Provider((ref) => ParticipateService(
     ref: ref,
     sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider)));
 
-class MunicipalityService {
+class ParticipateService {
   Ref ref;
   SharedPreferenceHelper sharedPreferenceHelper;
 
-  MunicipalityService({required this.ref, required this.sharedPreferenceHelper});
+  ParticipateService({required this.ref, required this.sharedPreferenceHelper});
 
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
-    final path =
-        "$virtualTownHallEndPoint$getPlacesInMunicipalitiesPath?municipalityId=${requestModel.toJson()['municipalityId']}";
+    final path = "$virtualTownHallEndPoint$getPlacesInMunicipalitiesPath";
 
     final apiHelper = ref.read(apiHelperProvider);
 
     final result =
     await apiHelper.getRequest(
         path: path,
+        params: requestModel.toJson(),
         create: () => responseModel
     );
 
