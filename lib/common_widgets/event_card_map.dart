@@ -89,7 +89,9 @@ class _LocationCardWidgetState extends ConsumerState<EventCardMap> {
                     SizedBox(height: 12.h),
                     Row(
                       children: [
-                        SvgPicture.asset(imagePath['location_card_icon'] ?? ''),
+                        ImageUtil.loadSvgImage(
+                            imageUrl: imagePath['location_card_icon'] ?? '',
+                            context: context),
                         SizedBox(width: 8.w),
                         Expanded(
                           child: textRegularMontserrat(
@@ -103,7 +105,9 @@ class _LocationCardWidgetState extends ConsumerState<EventCardMap> {
                     SizedBox(height: 12.h),
                     Row(
                       children: [
-                        SvgPicture.asset(imagePath['calendar_icon'] ?? ''),
+                        ImageUtil.loadSvgImage(
+                            imageUrl: imagePath['calendar_icon'] ?? '',
+                            context: context),
                         SizedBox(width: 8.w),
                         textRegularMontserrat(text: widget.startDate),
                       ],
@@ -141,8 +145,9 @@ Widget iconTextWidget(String imageUrl, String text, BuildContext context) {
     child: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SvgPicture.asset(
-          imageUrl,
+        ImageUtil.loadSvgImage(
+          imageUrl : imageUrl,
+          context: context,
           height: 18.h,
           width: 18.w,
         ),

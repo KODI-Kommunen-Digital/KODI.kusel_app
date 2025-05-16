@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -11,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../images_path.dart';
 import '../screens/event/event_detail_screen_controller.dart';
 import 'custom_shimmer_widget.dart';
+import 'image_utility.dart';
 
 class TownHallMapWidget extends ConsumerStatefulWidget {
   final String address;
@@ -57,7 +56,9 @@ class _LocationCardWidgetState extends ConsumerState<TownHallMapWidget> {
             padding: EdgeInsets.all(12.h.w),
             child: Row(
               children: [
-                SvgPicture.asset(imagePath['location_card_icon'] ?? ''),
+                ImageUtil.loadSvgImage(
+                    imageUrl: imagePath['location_card_icon'] ?? '',
+                    context: context),
                 Flexible(
                   child: Padding(
                     padding: EdgeInsets.only(left: 8.0.w),
@@ -92,8 +93,9 @@ class _LocationCardWidgetState extends ConsumerState<TownHallMapWidget> {
               children: [
                 Row(
                   children: [
-                    SvgPicture.asset(
-                      imagePath['calendar_icon'] ?? '',
+                    ImageUtil.loadSvgImage(
+                      imageUrl : imagePath['calendar_icon'] ?? '',
+                      context: context,
                       color: Theme.of(context).textTheme.labelMedium?.color,
                     ),
                     10.horizontalSpace,
@@ -129,8 +131,9 @@ class _LocationCardWidgetState extends ConsumerState<TownHallMapWidget> {
                   },
                   child: Row(
                     children: [
-                      SvgPicture.asset(
-                        imagePath['phone_icon'] ?? '',
+                      ImageUtil.loadSvgImage(
+                        imageUrl : imagePath['phone_icon'] ?? '',
+                        context: context,
                         color: Theme.of(context).textTheme.labelMedium?.color,
                       ),
                       10.horizontalSpace,
@@ -158,8 +161,9 @@ class _LocationCardWidgetState extends ConsumerState<TownHallMapWidget> {
                   },
                   child: Row(
                     children: [
-                      SvgPicture.asset(
-                        imagePath['mail_icon'] ?? '',
+                      ImageUtil.loadSvgImage(
+                        imageUrl : imagePath['mail_icon'] ?? '',
+                        context: context,
                         color: Theme.of(context).textTheme.labelMedium?.color,
                       ),
                       10.horizontalSpace,
@@ -182,8 +186,10 @@ class _LocationCardWidgetState extends ConsumerState<TownHallMapWidget> {
                   },
                   child: Row(
                     children: [
-                      SvgPicture.asset(
+                      ImageUtil.loadSvgImage(
+                        imageUrl:
                         imagePath['map_link_icon'] ?? '',
+                        context: context,
                         color: Theme.of(context).textTheme.labelMedium?.color,
                       ),
                       10.horizontalSpace,

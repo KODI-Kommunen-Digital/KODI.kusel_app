@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/highlights_card.dart';
+import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/weather_widget.dart';
 import 'package:kusel/providers/favorites_list_notifier.dart';
@@ -335,8 +335,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         color: Theme.of(context).textTheme.bodyLarge?.color),
                   ),
                   12.horizontalSpace,
-                  SvgPicture.asset(
-                    imagePath['arrow_icon'] ?? "",
+                  ImageUtil.loadSvgImage(
+                    imageUrl : imagePath['arrow_icon'] ?? "",
+                    context: context,
                     height: 10.h,
                     width: 16.w,
                   )
@@ -439,8 +440,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               color:
                                   Theme.of(context).textTheme.bodyLarge?.color),
                           12.horizontalSpace,
-                          SvgPicture.asset(
-                            imagePath['arrow_icon'] ?? "",
+                          ImageUtil.loadSvgImage(
+                            imageUrl : imagePath['arrow_icon'] ?? "",
+                            context: context,
                             height: 10.h,
                             width: 16.w,
                           )
