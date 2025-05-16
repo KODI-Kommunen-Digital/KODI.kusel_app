@@ -15,9 +15,11 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../app_router.dart';
 import '../../common_widgets/arrow_back_widget.dart';
+import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/common_event_card.dart';
 import '../../common_widgets/event_list_section_widget.dart';
 import '../../common_widgets/feedback_card_widget.dart';
+import '../../common_widgets/upstream_wave_clipper.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
 import '../../providers/favorites_list_notifier.dart';
@@ -89,7 +91,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          _buildClipper(context),
+          _buildClipper(),
           _buildDescription(context),
           32.verticalSpace,
           _buildServicesList(context),
@@ -201,81 +203,48 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
     );
   }
 
-  _buildClipper(context) {
-    return Consumer(
-      builder: (context, ref, _) {
-        final state = ref.watch(municipalDetailControllerProvider);
-
-        return Column(
-          children: [
-            SizedBox(
-              height: MediaQuery.of(context).size.height * 0.35,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  // Background image at the top
-                  Positioned(
-                    top: 0.h,
-                    child: ClipPath(
-                      clipper: DownstreamCurveClipper(),
-                      child: SizedBox(
-                        height: MediaQuery.of(context).size.height * .3,
-                        width: MediaQuery.of(context).size.width,
-                        child: Image.asset(
-                          imagePath['city_background_image'] ?? "",
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  Positioned(
-                    top: 30.h,
-                    left: 15.w,
-                    child: ArrowBackWidget(
-                      onTap: () {
-                        ref
-                            .read(navigationProvider)
-                            .removeTopPage(context: context);
-                      },
-                    ),
-                  ),
-
-                  Positioned(
-                    top: 120.h,
-                    left: 0.w,
-                    right: 0.w,
-                    child: Container(
-                      height: 120.h,
-                      width: 70.w,
-                      padding: EdgeInsets.all(25.w),
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle, color: Colors.white),
-                      child: (state.municipalPartyDetailDataModel?.image !=
-                              null)
-                          ? ImageUtil.loadNetworkImage(
-                              imageUrl:
-                                  state.municipalPartyDetailDataModel!.image!,
-                              sourceId: 1,
-                              fit: BoxFit.contain,
-                              svgErrorImagePath: imagePath['crest']!,
-                              context: context,
-                            )
-                          : Center(
-                              child: Image.asset(
-                                imagePath['crest']!,
-                                height: 120.h,
-                                width: 100.w,
-                              ),
-                            ),
-                    ),
-                  )
-                ],
-              ),
+  _buildClipper() {
+    final state = ref.watch(municipalDetailControllerProvider);
+    return Stack(
+      children: [
+        SizedBox(
+          height: 250.h,
+          child: CommonBackgroundClipperWidget(
+            clipperType: DownstreamCurveClipper(),
+            imageUrl: imagePath['city_background_image'] ?? "",
+            height: 210.h,
+            isBackArrowEnabled: true,
+            isStaticImage: true,
+          ),
+        ),
+        Positioned(
+          top: 120.h,
+          left: 0.w,
+          right: 0.w,
+          child: Container(
+            height: 120.h,
+            width: 70.w,
+            padding: EdgeInsets.all(25.w),
+            decoration:
+            BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+            child: (state.municipalPartyDetailDataModel?.image != null)
+                ? ImageUtil.loadNetworkImage(
+              imageUrl: state.municipalPartyDetailDataModel!.image!,
+              sourceId: 1,
+              fit: BoxFit.contain,
+              svgErrorImagePath: imagePath['crest']!,
+              context: context,
             )
-          ],
-        );
-      },
+                : Center(
+              child: Image.asset(
+                imagePath['crest']!,
+                height: 120.h,
+                width: 100.w,
+              ),
+            ),
+          ),
+        )
+      ],
     );
   }
 
