@@ -16,6 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../app_router.dart';
 import '../../common_widgets/arrow_back_widget.dart';
 import '../../common_widgets/common_event_card.dart';
+import '../../common_widgets/event_list_section_widget.dart';
 import '../../common_widgets/feedback_card_widget.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
@@ -82,6 +83,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
   }
 
   _buildBody(BuildContext context) {
+    final state = ref.watch(municipalDetailControllerProvider);
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -97,10 +99,96 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
           _buildPlacesOfTheCommunity(context),
           32.verticalSpace,
           if (ref.watch(municipalDetailControllerProvider).eventList.isNotEmpty)
-            _buildEvents(context),
+            EventsListSectionWidget(
+              context: context,
+              eventsList: state.eventList,
+              heading: AppLocalizations.of(context).events,
+              maxListLimit: 5,
+              buttonText: AppLocalizations.of(context).all_events,
+              buttonIconPath: imagePath['calendar'] ?? "",
+              isLoading: false,
+              showEventLoading: state.showEventLoading,
+              onButtonTap: () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: selectedEventListScreenPath,
+                    context: context,
+                    params: SelectedEventListScreenParameter(
+                        cityId: 1,
+                        listHeading: AppLocalizations.of(context).news,
+                        categoryId: null));
+              },
+              eventCardBuilder: (item) => CommonEventCard(
+                imageUrl: item.logo ?? "",
+                date: item.startDate ?? "",
+                title: item.title ?? "",
+                location: item.address ?? "",
+                onFavorite: () {},
+                isFavorite: item.isFavorite ?? false,
+                onCardTap: () {
+                  ref.read(navigationProvider).navigateUsingPath(
+                        context: context,
+                        path: eventDetailScreenPath,
+                        params: EventDetailScreenParams(eventId: item.id),
+                      );
+                },
+                isFavouriteVisible:
+                    ref.watch(favoritesProvider.notifier).showFavoriteIcon(),
+                sourceId: item.sourceId!,
+              ),
+              onHeadingTap: () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: selectedEventListScreenPath,
+                    context: context,
+                    params: SelectedEventListScreenParameter(
+                        cityId: 1,
+                        listHeading: AppLocalizations.of(context).news,
+                        categoryId: null));
+              },
+            ),
           32.verticalSpace,
           if (ref.watch(municipalDetailControllerProvider).newsList.isNotEmpty)
-            _buildNews(context),
+            EventsListSectionWidget(
+              context: context,
+              eventsList: state.newsList,
+              heading: AppLocalizations.of(context).news,
+              maxListLimit: 5,
+              buttonText: AppLocalizations.of(context).all_news,
+              buttonIconPath: imagePath['calendar'] ?? "",
+              isLoading: false,
+              showEventLoading: state.showNewsLoading,
+              onButtonTap: () {
+                ref.read(navigationProvider).navigateUsingPath(
+                      path: allEventScreenPath,
+                      context: context,
+                    );
+              },
+              eventCardBuilder: (item) => CommonEventCard(
+                imageUrl: item.logo ?? "",
+                date: item.startDate ?? "",
+                title: item.title ?? "",
+                location: item.address ?? "",
+                onFavorite: () {},
+                isFavorite: item.isFavorite ?? false,
+                onCardTap: () {
+                  ref.read(navigationProvider).navigateUsingPath(
+                        context: context,
+                        path: eventDetailScreenPath,
+                        params: EventDetailScreenParams(eventId: item.id),
+                      );
+                },
+                isFavouriteVisible: false,
+                sourceId: item.sourceId!,
+              ),
+              onHeadingTap: () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: selectedEventListScreenPath,
+                    context: context,
+                    params: SelectedEventListScreenParameter(
+                        cityId: 1,
+                        listHeading: AppLocalizations.of(context).news,
+                        categoryId: null));
+              },
+            ),
           32.verticalSpace,
           FeedbackCardWidget(
             onTap: () {
@@ -278,7 +366,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                 baseline: 16,
                 baselineType: TextBaseline.alphabetic,
                 child: ImageUtil.loadSvgImage(
-                  imageUrl : imagePath['arrow_icon'] ?? "",
+                  imageUrl: imagePath['arrow_icon'] ?? "",
                   context: context,
                   height: 10.h,
                   width: 16.w,
@@ -325,255 +413,6 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
               text: AppLocalizations.of(context).show_all_locations)
         ],
       ),
-    );
-  }
-
-  _buildEvents(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              Baseline(
-                baseline: 16, // Adjust based on your text size
-                baselineType: TextBaseline.alphabetic,
-                child: textRegularPoppins(
-                  text: AppLocalizations.of(context).events,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
-                ),
-              ),
-              10.horizontalSpace, // spacing between text and icon
-              Visibility(
-                visible: ref
-                    .watch(municipalDetailControllerProvider)
-                    .eventList
-                    .isNotEmpty,
-                child: Baseline(
-                  baseline: 16,
-                  baselineType: TextBaseline.alphabetic,
-                  child: ImageUtil.loadSvgImage(
-                    imageUrl : imagePath['arrow_icon'] ?? "",
-                    context: context,
-                    height: 10.h,
-                    width: 16.w,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        16.verticalSpace,
-        Consumer(builder: (context, ref, _) {
-          final state = ref.watch(municipalDetailControllerProvider);
-
-          return (state.showEventLoading)
-              ? SizedBox(
-                  height: 20.h,
-                  width: 20.w,
-                  child: CircularProgressIndicator(),
-                )
-              : (state.eventList.isEmpty)
-                  ? textRegularPoppins(
-                      text: AppLocalizations.of(context).no_data,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).textTheme.bodyLarge?.color)
-                  : ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: state.eventList.length % 5,
-                      itemBuilder: (context, index) {
-                        final item = state.eventList[index];
-
-                        return CommonEventCard(
-                          imageUrl: item.logo ?? "",
-                          date: item.startDate ?? "",
-                          title: item.title ?? "",
-                          location: item.address ?? "",
-                          onFavorite: () {
-                            // ref.read(favoritesProvider.notifier).toggleFavorite(
-                            //     item, success: ({required bool isFavorite}) {
-                            //   ref
-                            //       .read(allEventScreenProvider.notifier)
-                            //       .setIsFavorite(isFavorite, item.id);
-                            // }, error: ({required String message}) {});
-                          },
-                          isFavorite: item.isFavorite ?? false,
-                          onTap: () {
-                            ref.read(navigationProvider).navigateUsingPath(
-                                  context: context,
-                                  path: eventDetailScreenPath,
-                                  params:
-                                      EventDetailScreenParams(eventId: item.id),
-                                );
-                          },
-                          isFavouriteVisible: ref
-                              .watch(favoritesProvider.notifier)
-                              .showFavoriteIcon(),
-                          sourceId: item.sourceId!,
-                        );
-                      });
-        }),
-        Visibility(
-          visible:
-              ref.watch(municipalDetailControllerProvider).eventList.isNotEmpty,
-          child: Column(
-            children: [
-              16.verticalSpace,
-              Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  child: CustomButton(
-                      icon: imagePath['calendar'] ?? "",
-                      onPressed: () {
-                        final categoryId = 3;
-                        final municipalId = 1 ??
-                            ref
-                                .watch(municipalDetailControllerProvider)
-                                .municipalPartyDetailDataModel
-                                ?.id;
-
-                        ref.read(navigationProvider).navigateUsingPath(
-                            path: selectedEventListScreenPath,
-                            context: context,
-                            params: SelectedEventListScreenParameter(
-                                cityId: 1,
-                                listHeading:
-                                    AppLocalizations.of(context).events,
-                                categoryId: null));
-                      },
-                      text: AppLocalizations.of(context).all_events))
-            ],
-          ),
-        )
-      ],
-    );
-  }
-
-  _buildNews(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              Baseline(
-                baseline: 16, // Adjust based on your text size
-                baselineType: TextBaseline.alphabetic,
-                child: textRegularPoppins(
-                  text: AppLocalizations.of(context).news,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
-                ),
-              ),
-              10.horizontalSpace, // spacing between text and icon
-              Visibility(
-                visible: ref
-                    .watch(municipalDetailControllerProvider)
-                    .newsList
-                    .isNotEmpty,
-                child: Baseline(
-                  baseline: 16,
-                  baselineType: TextBaseline.alphabetic,
-                  child: ImageUtil.loadSvgImage(
-                    imageUrl : imagePath['arrow_icon'] ?? "",
-                    context: context,
-                    height: 10.h,
-                    width: 16.w,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        16.verticalSpace,
-        Consumer(builder: (context, ref, _) {
-          final state = ref.watch(municipalDetailControllerProvider);
-
-          return (state.showNewsLoading)
-              ? SizedBox(
-                  height: 20.h,
-                  width: 20.w,
-                  child: CircularProgressIndicator(),
-                )
-              : (state.newsList.isEmpty)
-                  ? textRegularPoppins(
-                      text: AppLocalizations.of(context).no_data,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).textTheme.bodyLarge?.color)
-                  : ListView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      itemCount: state.newsList.length % 5,
-                      itemBuilder: (context, index) {
-                        final item = state.newsList[index];
-
-                        return CommonEventCard(
-                          imageUrl: item.logo ?? "",
-                          date: item.startDate ?? "",
-                          title: item.title ?? "",
-                          location: item.address ?? "",
-                          onFavorite: () {
-                            // ref.read(favoritesProvider.notifier).toggleFavorite(
-                            //     item, success: ({required bool isFavorite}) {
-                            //   ref
-                            //       .read(allEventScreenProvider.notifier)
-                            //       .setIsFavorite(isFavorite, item.id);
-                            // }, error: ({required String message}) {});
-                          },
-                          isFavorite: item.isFavorite ?? false,
-                          onTap: () {
-                            ref.read(navigationProvider).navigateUsingPath(
-                                  context: context,
-                                  path: eventDetailScreenPath,
-                                  params:
-                                      EventDetailScreenParams(eventId: item.id),
-                                );
-                          },
-                          isFavouriteVisible: ref
-                              .watch(favoritesProvider.notifier)
-                              .showFavoriteIcon(),
-                          sourceId: item.sourceId!,
-                        );
-                      });
-        }),
-        Visibility(
-          visible:
-              ref.watch(municipalDetailControllerProvider).newsList.isNotEmpty,
-          child: Column(
-            children: [
-              16.verticalSpace,
-              Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
-                  child: CustomButton(
-                      onPressed: () {
-                        final categoryId = 1;
-                        final municipalId = ref
-                            .watch(municipalDetailControllerProvider)
-                            .municipalPartyDetailDataModel
-                            ?.id;
-
-                        ref.read(navigationProvider).navigateUsingPath(
-                            path: selectedEventListScreenPath,
-                            context: context,
-                            params: SelectedEventListScreenParameter(
-                                cityId: 1,
-                                listHeading: AppLocalizations.of(context).news,
-                                categoryId: null));
-                      },
-                      text: AppLocalizations.of(context).all_news))
-            ],
-          ),
-        )
-      ],
     );
   }
 

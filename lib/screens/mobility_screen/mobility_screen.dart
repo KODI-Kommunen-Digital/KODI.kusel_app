@@ -10,6 +10,8 @@ import 'package:kusel/screens/mobility_screen/mobility_screen_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/arrow_back_widget.dart';
+import '../../common_widgets/common_contact_details_card.dart';
+import '../../common_widgets/common_more_info_card.dart';
 import '../../common_widgets/downstream_wave_clipper.dart';
 import '../../common_widgets/image_utility.dart';
 import '../../common_widgets/network_image_text_service_card.dart';
@@ -49,7 +51,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
           _buildMobilityDescription(),
           _buildReadMoreSection(),
           _buildOffersList(),
-          _taxiDetailsUi(),
+          _buildContactListUi(),
           _buildContactDetailsList(),
           FeedbackCardWidget(onTap: () {
             ref
@@ -167,41 +169,8 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
     );
   }
 
-  _phoneNumberCard({required Function() onTap, required String phoneNumber}) {
-    return Card(
-      elevation: 1,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding:
-              EdgeInsets.only(left: 20.w, right: 14.w, top: 22.h, bottom: 22.h),
-          decoration: BoxDecoration(
-              color: Theme.of(context).canvasColor,
-              borderRadius: BorderRadius.circular(12.r)),
-          child: Row(
-            children: [
-              Icon(
-                Icons.call_outlined,
-                size: 25.w,
-                color: Theme.of(context).primaryColor,
-              ),
-              30.horizontalSpace,
-              textBoldMontserrat(
-                  text: phoneNumber,
-                  color: Theme.of(context).textTheme.bodyLarge?.color)
 
-              ////decoration: TextDecoration.underline,
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  _taxiDetailsUi() {
+  _buildContactListUi() {
     final state = ref.watch(mobilityScreenProvider);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w),
@@ -217,40 +186,13 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   final item = state.mobilityData?.moreInformations?[index];
-                  return _buildMoreInfoCard(
+                  return CommonMoreInfoCard(
                       title: item?.title ?? '_',
                       phoneNumber: item?.phone ?? '_',
                       description: item?.description);
                 })
         ],
       ),
-    );
-  }
-
-  _buildMoreInfoCard(
-      {required String title,
-      required String phoneNumber,
-      String? description}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        5.verticalSpace,
-        textBoldPoppins(
-          color: Theme.of(context).textTheme.bodyLarge?.color,
-          text: title,
-          fontSize: 14,
-        ),
-        8.verticalSpace,
-        if (description != null)
-          textRegularMontserrat(
-              textAlign: TextAlign.start,
-              fontSize: 12,
-              color: Theme.of(context).textTheme.bodyLarge?.color,
-              text: description,
-              textOverflow: TextOverflow.visible),
-        10.verticalSpace,
-        _phoneNumberCard(onTap: () {}, phoneNumber: phoneNumber)
-      ],
     );
   }
 
@@ -277,7 +219,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   final item = state.mobilityData?.contactDetails?[index];
-                  return _contactDetailsCard(
+                  return CommonContactDetailsCard(
                       onTap: () {},
                       heading: item?.title ?? "_",
                       phoneNumber: item?.phone ?? '_',
@@ -285,66 +227,6 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
                 }),
           25.verticalSpace
         ],
-      ),
-    );
-  }
-
-  _contactDetailsCard(
-      {required Function() onTap,
-      required String heading,
-      required String phoneNumber,
-      required String email}) {
-    return Card(
-      elevation: 1,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-            padding: EdgeInsets.only(
-                left: 20.w, right: 14.w, top: 22.h, bottom: 22.h),
-            decoration: BoxDecoration(
-                color: Theme.of(context).canvasColor,
-                borderRadius: BorderRadius.circular(12.r)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                textBoldMontserrat(
-                  text: heading,
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
-                ),
-                15.verticalSpace,
-                Row(
-                  children: [
-                    Icon(
-                      Icons.call_outlined,
-                      size: 14.h.w,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                    20.horizontalSpace,
-                    textBoldMontserrat(
-                        text: phoneNumber,
-                        color: Theme.of(context).textTheme.bodyLarge?.color)
-                    //decoration: TextDecoration.underline,
-                  ],
-                ),
-                14.verticalSpace,
-                Row(
-                  children: [
-                    Icon(
-                      Icons.email_outlined,
-                      size: 16.h.w,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                    20.horizontalSpace,
-                    textBoldMontserrat(
-                        text: email,
-                        color: Theme.of(context).textTheme.bodyLarge?.color)
-                  ],
-                ),
-              ],
-            )),
       ),
     );
   }
