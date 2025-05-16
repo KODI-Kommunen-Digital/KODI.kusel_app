@@ -208,14 +208,52 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
       builder: (context, ref, _) {
         final state = ref.watch(tourismScreenControllerProvider);
         return (state.nearByList.isNotEmpty)
-            ? Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                child: Column(
-                  children: [
-                    32.verticalSpace,
-                    CommonTextArrowWidget(
-                      text: AppLocalizations.of(context).near_you,
-                      onTap: () {
+            ? Column(
+              children: [
+                32.verticalSpace,
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: CommonTextArrowWidget(
+                    text: AppLocalizations.of(context).near_you,
+                    onTap: () {
+                      final searchRadius = SearchRadius.radius.value;
+
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: selectedEventListScreenPath,
+                          context: context,
+                          params: SelectedEventListScreenParameter(
+                              listHeading:
+                                  AppLocalizations.of(context).near_you,
+                              centerLongitude: state.long,
+                              centerLatitude: state.lat,
+                              radius: searchRadius));
+                    },
+                  ),
+                ),
+                16.verticalSpace,
+                ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: (state.nearByList.isNotEmpty)
+                        ? min(state.nearByList.length, 5)
+                        : 0,
+                    itemBuilder: (context, index) {
+                      final item = state.nearByList[index];
+
+                      return CommonEventCard(
+                          imageUrl: item.logo ?? '',
+                          date: item.startDate ?? '',
+                          title: item.title ?? '',
+                          location: '',
+                          isFavouriteVisible: false,
+                          isFavorite: false,
+                          sourceId: item.sourceId ?? 3);
+                    }),
+                16.verticalSpace,
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  child: CustomButton(
+                      onPressed: () {
                         final searchRadius = SearchRadius.radius.value;
 
                         ref.read(navigationProvider).navigateUsingPath(
@@ -228,51 +266,10 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                                 centerLatitude: state.lat,
                                 radius: searchRadius));
                       },
-                    ),
-                    16.verticalSpace,
-                    ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: (state.nearByList.isNotEmpty)
-                            ? min(state.nearByList.length, 5)
-                            : 0,
-                        itemBuilder: (context, index) {
-                          final item = state.nearByList[index];
-
-                          return Padding(
-                            padding: EdgeInsets.only(right: 16.w),
-                            child: CommonEventCard(
-                                imageUrl: item.logo ?? '',
-                                date: item.startDate ?? '',
-                                title: item.title ?? '',
-                                location: '',
-                                isFavouriteVisible: false,
-                                isFavorite: false,
-                                sourceId: item.sourceId ?? 3),
-                          );
-                        }),
-                    16.verticalSpace,
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w),
-                      child: CustomButton(
-                          onPressed: () {
-                            final searchRadius = SearchRadius.radius.value;
-
-                            ref.read(navigationProvider).navigateUsingPath(
-                                path: selectedEventListScreenPath,
-                                context: context,
-                                params: SelectedEventListScreenParameter(
-                                    listHeading:
-                                        AppLocalizations.of(context).near_you,
-                                    centerLongitude: state.long,
-                                    centerLatitude: state.lat,
-                                    radius: searchRadius));
-                          },
-                          text: AppLocalizations.of(context).near_you),
-                    )
-                  ],
-                ),
-              )
+                      text: AppLocalizations.of(context).near_you),
+                )
+              ],
+            )
             : SizedBox.shrink();
       },
     );
@@ -310,25 +307,21 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                           : 0,
                       itemBuilder: (context, index) {
                         final item = state.allEventList[index];
-
-                        return Padding(
-                          padding: EdgeInsets.only(right: 16.w),
-                          child: CommonEventCard(
-                            imageUrl: item.logo ?? '',
-                            date: item.startDate ?? '',
-                            title: item.title ?? '',
-                            location: '',
-                            isFavouriteVisible: false,
-                            isFavorite: false,
-                            sourceId: item.sourceId ?? 3,
-                            onTap: () {
-                              ref.read(navigationProvider).navigateUsingPath(
-                                  path: eventDetailScreenPath,
-                                  context: context,
-                                  params: EventDetailScreenParams(
-                                      eventId: item.id));
-                            },
-                          ),
+                        return CommonEventCard(
+                          imageUrl: item.logo ?? '',
+                          date: item.startDate ?? '',
+                          title: item.title ?? '',
+                          location: '',
+                          isFavouriteVisible: false,
+                          isFavorite: false,
+                          sourceId: item.sourceId ?? 3,
+                          onTap: () {
+                            ref.read(navigationProvider).navigateUsingPath(
+                                path: eventDetailScreenPath,
+                                context: context,
+                                params: EventDetailScreenParams(
+                                    eventId: item.id));
+                          },
                         );
                       }),
                   16.verticalSpace,

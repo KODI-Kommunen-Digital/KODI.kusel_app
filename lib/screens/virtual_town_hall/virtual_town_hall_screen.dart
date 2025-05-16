@@ -320,8 +320,9 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).textTheme.bodyLarge?.color),
                     12.horizontalSpace,
-                    SvgPicture.asset(
-                      imagePath['arrow_icon'] ?? "",
+                    ImageUtil.loadSvgImage(
+                      imageUrl : imagePath['arrow_icon'] ?? "",
+                      context: context,
                       height: 10.h,
                       width: 16.w,
                     )
@@ -472,8 +473,9 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                         color: Theme.of(context).textTheme.bodyLarge?.color),
                   ),
                   12.horizontalSpace,
-                  SvgPicture.asset(
-                    imagePath['arrow_icon'] ?? "",
+                  ImageUtil.loadSvgImage(
+                    imageUrl : imagePath['arrow_icon'] ?? "",
+                    context: context,
                     height: 10.h,
                     width: 16.w,
                   )
