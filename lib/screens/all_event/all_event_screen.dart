@@ -200,7 +200,7 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                         }, error: ({required String message}) {});
                       },
                       isFavorite: item.isFavorite ?? false,
-                      onTap: () {
+                      onCardTap: () {
                         ref.read(navigationProvider).navigateUsingPath(
                               context: context,
                               path: eventDetailScreenPath,

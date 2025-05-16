@@ -129,7 +129,7 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
                       date: item.startDate ?? "",
                       title: item.title ?? "",
                       location: item.address ?? "",
-                      onTap: () {
+                      onCardTap: () {
                         ref
                             .read(locationScreenProvider.notifier)
                             .setEventItem(item);
