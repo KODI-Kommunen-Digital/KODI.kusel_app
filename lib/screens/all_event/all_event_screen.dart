@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
 import 'package:kusel/common_widgets/date_picker/date_picker_provider.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/screens/all_event/all_event_screen_controller.dart';
@@ -48,175 +49,150 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
   }
 
   Widget _buildBody(BuildContext context) {
-    bool isFilterApplied = ref
-        .watch(allEventScreenProvider)
-        .filterCount !=
-        null &&
-        ref.watch(allEventScreenProvider).filterCount! >
-            0;
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          toolbarHeight: 80.h,
-          automaticallyImplyLeading: false,
-          floating: true,
-          pinned: false,
-          expandedHeight: 150.h,
-          flexibleSpace: FlexibleSpaceBar(
-            background: ClipPath(
-              clipper: UpstreamWaveClipper(),
-              child: SizedBox(
-                height: 150.h,
-                width: MediaQuery.of(context).size.width,
-                child: Image.asset(
-                  imagePath['background_image'] ?? "",
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
+    bool isFilterApplied =
+        ref.watch(allEventScreenProvider).filterCount != null &&
+            ref.watch(allEventScreenProvider).filterCount! > 0;
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          CommonBackgroundClipperWidget(
+            clipperType: UpstreamWaveClipper(),
+            height: 130.h,
+            imageUrl: imagePath['home_screen_background'] ?? '',
+            isStaticImage: true,
+            isBackArrowEnabled: true,
+            headingText: AppLocalizations.of(context).events,
+            filterWidget: _buildFilterWidget(isFilterApplied),
           ),
-          title: Row(
-            children: [
-              ArrowBackWidget(
-                onTap: () {
-                  ref.read(navigationProvider).removeTopPage(context: context);
-                },
-                size: 15,
-              ),
-              Expanded(
-                child: Center(
-                  child: textBoldPoppins(
-                    color: lightThemeSecondaryColor,
-                    fontSize: 16,
-                    textAlign: TextAlign.center,
-                    text: AppLocalizations.of(context).events,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: 5.w),
-                child: GestureDetector(
-                    onTap: () {
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.vertical(top: Radius.circular(20.r)),
-                        ),
-                        builder: (context) => SizedBox(
-                            height: MediaQuery.of(context).size.height * 0.80,
-                            child: FilterScreen()),
+          if (!ref.watch(allEventScreenProvider).isLoading)
+            ref.watch(allEventScreenProvider).listingList.isEmpty
+                ? Center(
+                    child: textHeadingMontserrat(
+                        text: AppLocalizations.of(context).no_data),
+                  )
+                : ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount:
+                        ref.watch(allEventScreenProvider).listingList.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      final item =
+                          ref.read(allEventScreenProvider).listingList[index];
+                      return CommonEventCard(
+                        imageUrl: item.logo ?? "",
+                        date: item.startDate ?? "",
+                        title: item.title ?? "",
+                        location: item.address ?? "",
+                        onFavorite: () {
+                          ref.read(favoritesProvider.notifier).toggleFavorite(
+                              item, success: ({required bool isFavorite}) {
+                            ref
+                                .read(allEventScreenProvider.notifier)
+                                .setIsFavorite(isFavorite, item.id);
+                          }, error: ({required String message}) {});
+                        },
+                        isFavorite: item.isFavorite ?? false,
+                        onCardTap: () {
+                          ref.read(navigationProvider).navigateUsingPath(
+                                context: context,
+                                path: eventDetailScreenPath,
+                                params:
+                                    EventDetailScreenParams(eventId: item.id),
+                              );
+                        },
+                        isFavouriteVisible: ref
+                            .watch(favoritesProvider.notifier)
+                            .showFavoriteIcon(),
+                        sourceId: item.sourceId!,
                       );
                     },
-                    child: SizedBox(
-                      width: isFilterApplied ? 100.w: 80.w,
-                      child: Stack(
-                        children: [
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 10.r, vertical: 7.h),
-                            decoration: BoxDecoration(
-                              color: isFilterApplied
-                                  ? Theme.of(context).colorScheme.onPrimary
-                                  : Theme.of(context).primaryColor,
-                              borderRadius: BorderRadius.circular(8.r),
-                            ),
-                            child: Row(
-                              children: [
-                                Center(
-                                  child: Image.asset(
-                                      imagePath['filter_icon'] ?? '',
-                                      height: 14.h,
-                                      width: 20.w,
-                                      color: isFilterApplied
-                                          ? Theme.of(context).primaryColor
-                                          : Theme.of(context).colorScheme.onPrimary),
-                                ),
-                                4.horizontalSpace,
-                                textRegularPoppins(
-                                    text: "Filters",
-                                    fontSize: 12,
-                                    color: isFilterApplied
-                                        ? Theme.of(context).primaryColor
-                                        : Theme.of(context).colorScheme.onPrimary),
-                              ],
-                            ),
-                          ),
-                          Visibility(
-                            visible: isFilterApplied,
-                            child: Positioned(
-                              top: 4.h,
-                              left: 75.w,
-                              child: Container(
-                                padding: EdgeInsets.all(4.h.w),
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Theme.of(context).primaryColor),
-                                child: textRegularPoppins(
-                                    color: Theme.of(context).textTheme.labelSmall?.color,
-                                    fontSize: 10,
-                                    text: ref
-                                        .watch(allEventScreenProvider)
-                                        .filterCount
-                                        .toString()),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    )),
-              )
-            ],
-          ),
-          backgroundColor: Theme.of(context).colorScheme.onSecondary.withValues(alpha: 0.6),
-        ),
+                  )
+        ],
+      ),
+    );
+  }
 
-        // If no events exist, show a message using a SliverFillRemaining
-        if(!ref.watch(allEventScreenProvider).isLoading)
-        ref.watch(allEventScreenProvider).listingList.isEmpty
-            ? SliverFillRemaining(
-                child: Center(
-                  child: textHeadingMontserrat(
-                      text: AppLocalizations.of(context).no_data),
-                ),
-              )
-            : SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final item =
-                        ref.read(allEventScreenProvider).listingList[index];
-                    return CommonEventCard(
-                      imageUrl: item.logo ?? "",
-                      date: item.startDate ?? "",
-                      title: item.title ?? "",
-                      location: item.address ?? "",
-                      onFavorite: () {
-                        ref.read(favoritesProvider.notifier).toggleFavorite(
-                            item, success: ({required bool isFavorite}) {
-                          ref
-                              .read(allEventScreenProvider.notifier)
-                              .setIsFavorite(isFavorite, item.id);
-                        }, error: ({required String message}) {});
-                      },
-                      isFavorite: item.isFavorite ?? false,
-                      onCardTap: () {
-                        ref.read(navigationProvider).navigateUsingPath(
-                              context: context,
-                              path: eventDetailScreenPath,
-                              params: EventDetailScreenParams(eventId: item.id),
-                            );
-                      },
-                      isFavouriteVisible: ref
-                          .watch(favoritesProvider.notifier)
-                          .showFavoriteIcon(), sourceId: item.sourceId!,
-                    );
-                  },
-                  childCount:
-                      ref.watch(allEventScreenProvider).listingList.length,
-                ),
+  _buildFilterWidget(bool isFilterApplied) {
+    return Padding(
+      padding: EdgeInsets.only(left: 5.w),
+      child: GestureDetector(
+          onTap: () {
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                BorderRadius.vertical(top: Radius.circular(20.r)),
               ),
-      ],
+              builder: (context) => SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.80,
+                  child: FilterScreen()),
+            );
+          },
+          child: SizedBox(
+            width: isFilterApplied ? 100.w : 80.w,
+            child: Stack(
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: 10.r, vertical: 7.h),
+                  decoration: BoxDecoration(
+                    color: isFilterApplied
+                        ? Theme.of(context).colorScheme.onPrimary
+                        : Theme.of(context).primaryColor,
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: Row(
+                    children: [
+                      Center(
+                        child: Image.asset(
+                            imagePath['filter_icon'] ?? '',
+                            height: 14.h,
+                            width: 20.w,
+                            color: isFilterApplied
+                                ? Theme.of(context).primaryColor
+                                : Theme.of(context)
+                                .colorScheme
+                                .onPrimary),
+                      ),
+                      4.horizontalSpace,
+                      textRegularPoppins(
+                          text: "Filters",
+                          fontSize: 12,
+                          color: isFilterApplied
+                              ? Theme.of(context).primaryColor
+                              : Theme.of(context)
+                              .colorScheme
+                              .onPrimary),
+                    ],
+                  ),
+                ),
+                Visibility(
+                  visible: isFilterApplied,
+                  child: Positioned(
+                    top: 4.h,
+                    left: 75.w,
+                    child: Container(
+                      padding: EdgeInsets.all(4.h.w),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Theme.of(context).primaryColor),
+                      child: textRegularPoppins(
+                          color: Theme.of(context)
+                              .textTheme
+                              .labelSmall
+                              ?.color,
+                          fontSize: 10,
+                          text: ref
+                              .watch(allEventScreenProvider)
+                              .filterCount
+                              .toString()),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          )),
     );
   }
 }

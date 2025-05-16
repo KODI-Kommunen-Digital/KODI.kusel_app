@@ -10,6 +10,7 @@ import 'package:kusel/screens/mobility_screen/mobility_screen_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/arrow_back_widget.dart';
+import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/common_contact_details_card.dart';
 import '../../common_widgets/common_more_info_card.dart';
 import '../../common_widgets/downstream_wave_clipper.dart';
@@ -44,10 +45,16 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
   }
 
   _buildBody() {
+    final state = ref.watch(mobilityScreenProvider);
     return SingleChildScrollView(
       child: Column(
         children: [
-          _buildClipperBackground(),
+          CommonBackgroundClipperWidget(
+              clipperType: DownstreamCurveClipper(),
+              imageUrl: state.mobilityData?.iconUrl ??
+                  'https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg',
+              isBackArrowEnabled: true,
+              isStaticImage: false),
           _buildMobilityDescription(),
           _buildReadMoreSection(),
           _buildOffersList(),
@@ -97,38 +104,6 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
           Icon(Icons.keyboard_arrow_down_sharp)
         ],
       ),
-    );
-  }
-
-  _buildClipperBackground() {
-    final state = ref.watch(mobilityScreenProvider);
-    return Stack(
-      children: [
-        ClipPath(
-          clipper: DownstreamCurveClipper(),
-          child: SizedBox(
-            height: 270.h,
-            width: MediaQuery.of(context).size.width,
-            child: (state.mobilityData?.iconUrl != null)
-                ? ImageUtil.loadNetworkImage(
-                    imageUrl: state.mobilityData?.iconUrl ?? '',
-                    context: context)
-                : ImageUtil.loadNetworkImage(
-                    context: context,
-                    imageUrl:
-                        "https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg"),
-          ),
-        ),
-        Positioned(
-          top: 30.h,
-          left: 15.w,
-          child: ArrowBackWidget(
-            onTap: () {
-              ref.read(navigationProvider).removeTopPage(context: context);
-            },
-          ),
-        ),
-      ],
     );
   }
 

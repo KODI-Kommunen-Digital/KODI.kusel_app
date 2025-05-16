@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
 import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/event_list_section_widget.dart';
 import 'package:kusel/common_widgets/highlights_card.dart';
@@ -70,167 +71,146 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Stack(
-              children: [
-                isLoading
-                    ? Container(
-                        height: 285.h,
-                      )
-                    : ClipPath(
-                        clipper: UpstreamWaveClipper(),
-                        child: Container(
-                          height: 285.h,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: AssetImage(
-                                  imagePath['home_screen_background'] ?? ''),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ),
-                Positioned(
-                  top: 85.h,
-                  left: 20.w,
-                  right: 20.w,
-                  child: Column(
-                    children: [
-                      Visibility(
-                          visible: false ??
-                              !ref
-                                  .read(homeScreenProvider)
-                                  .isSignupButtonVisible,
-                          child: isLoading
-                              ? CustomShimmerWidget.rectangular(
-                                  height: 20.h,
-                                  width: 150.w,
-                                  shapeBorder: RoundedRectangleBorder(
-                                      borderRadius:
-                                          BorderRadius.circular(12.r)))
-                              : textBoldPoppins(
-                                  fontSize: 20,
-                                  color: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge
-                                      ?.color,
-                                  textAlign: TextAlign.center,
-                                  text: ref.watch(homeScreenProvider).userName,
-                                )),
-                      isLoading ? 10.verticalSpace : 0.verticalSpace,
-                      isLoading
-                          ? CustomShimmerWidget.rectangular(
-                              height: 20.h,
-                              width: 200.w,
-                              shapeBorder: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12.r)))
-                          : textBoldPoppins(
-                              fontSize: 20,
-                              color:
-                                  Theme.of(context).textTheme.bodyLarge?.color,
-                              textAlign: TextAlign.center,
-                              textOverflow: TextOverflow.visible,
-                              text:
-                                  "${AppLocalizations.of(context).today_its_going_to_be} ${AppLocalizations.of(context).sunny}!",
-                            ),
-                      32.verticalSpace,
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 15.w),
-                            child: textRegularPoppins(
-                                text: AppLocalizations.of(context).search,
-                                fontSize: 12,
-                                fontStyle: FontStyle.italic,
+            CommonBackgroundClipperWidget(
+              clipperType: UpstreamWaveClipper(),
+              imageUrl: imagePath['home_screen_background'] ?? '',
+              isStaticImage: true,
+              height: 285.h,
+              customWidget1: Positioned(
+                top: 85.h,
+                left: 20.w,
+                right: 20.w,
+                child: Column(
+                  children: [
+                    Visibility(
+                        visible: false ??
+                            !ref.read(homeScreenProvider).isSignupButtonVisible,
+                        child: isLoading
+                            ? CustomShimmerWidget.rectangular(
+                                height: 20.h,
+                                width: 150.w,
+                                shapeBorder: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.r)))
+                            : textBoldPoppins(
+                                fontSize: 20,
                                 color: Theme.of(context)
                                     .textTheme
                                     .bodyLarge
-                                    ?.color),
+                                    ?.color,
+                                textAlign: TextAlign.center,
+                                text: ref.watch(homeScreenProvider).userName,
+                              )),
+                    isLoading ? 10.verticalSpace : 0.verticalSpace,
+                    isLoading
+                        ? CustomShimmerWidget.rectangular(
+                            height: 20.h,
+                            width: 200.w,
+                            shapeBorder: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.r)))
+                        : textBoldPoppins(
+                            fontSize: 20,
+                            color: Theme.of(context).textTheme.bodyLarge?.color,
+                            textAlign: TextAlign.center,
+                            textOverflow: TextOverflow.visible,
+                            text:
+                                "${AppLocalizations.of(context).today_its_going_to_be} ${AppLocalizations.of(context).sunny}!",
                           ),
-                          SearchWidget(
-                            onItemClick: (listing) {
-                              ref.read(navigationProvider).navigateUsingPath(
-                                  context: context,
-                                  path: eventDetailScreenPath,
-                                  params: EventDetailScreenParams(
-                                      eventId: listing.id));
-                            },
-                            searchController: TextEditingController(),
-                            hintText:
-                                AppLocalizations.of(context).enter_search_term,
-                            suggestionCallback: (search) async {
-                              List<Listing>? list;
-                              if (search.isEmpty) return [];
-                              try {
-                                list = await ref
-                                    .read(homeScreenProvider.notifier)
-                                    .searchList(
-                                        searchText: search,
-                                        success: () {},
-                                        error: (err) {});
-                              } catch (e) {
-                                return [];
-                              }
-                              return list;
-                            },
-                          )
-                        ],
-                      )
-                    ],
-                  ),
+                    32.verticalSpace,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(left: 15.w),
+                          child: textRegularPoppins(
+                              text: AppLocalizations.of(context).search,
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic,
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge?.color),
+                        ),
+                        SearchWidget(
+                          onItemClick: (listing) {
+                            ref.read(navigationProvider).navigateUsingPath(
+                                context: context,
+                                path: eventDetailScreenPath,
+                                params: EventDetailScreenParams(
+                                    eventId: listing.id));
+                          },
+                          searchController: TextEditingController(),
+                          hintText:
+                              AppLocalizations.of(context).enter_search_term,
+                          suggestionCallback: (search) async {
+                            List<Listing>? list;
+                            if (search.isEmpty) return [];
+                            try {
+                              list = await ref
+                                  .read(homeScreenProvider.notifier)
+                                  .searchList(
+                                      searchText: search,
+                                      success: () {},
+                                      error: (err) {});
+                            } catch (e) {
+                              return [];
+                            }
+                            return list;
+                          },
+                        )
+                      ],
+                    )
+                  ],
                 ),
-                Visibility(
-                    visible: false ??
-                        ref.watch(homeScreenProvider).isSignupButtonVisible,
-                    child: Positioned(
-                        left: 15.w,
-                        right: 15.w,
-                        top: 30.h,
-                        child: SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              isLoading
-                                  ? CustomShimmerWidget.circular(
-                                      width: 120.w,
-                                      height: 30.h,
-                                      shapeBorder: RoundedRectangleBorder(
+              ),
+              customWidget2: Visibility(
+                  visible: false ??
+                      ref.watch(homeScreenProvider).isSignupButtonVisible,
+                  child: Positioned(
+                      left: 15.w,
+                      right: 15.w,
+                      top: 30.h,
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            isLoading
+                                ? CustomShimmerWidget.circular(
+                                    width: 120.w,
+                                    height: 30.h,
+                                    shapeBorder: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(30.r)),
+                                  )
+                                : GestureDetector(
+                                    onTap: () {
+                                      ref
+                                          .read(navigationProvider)
+                                          .removeCurrentAndNavigate(
+                                              context: context,
+                                              path: signInScreenPath);
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
                                           borderRadius:
-                                              BorderRadius.circular(30.r)),
-                                    )
-                                  : GestureDetector(
-                                      onTap: () {
-                                        ref
-                                            .read(navigationProvider)
-                                            .removeCurrentAndNavigate(
-                                                context: context,
-                                                path: signInScreenPath);
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(30.r),
-                                            border: Border.all(
-                                                width: 2.w,
-                                                color: Theme.of(context)
-                                                    .primaryColor)),
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 8.w, vertical: 5.h),
-                                        child: textBoldPoppins(
-                                            text: AppLocalizations.of(context)
-                                                .log_in_sign_up,
-                                            fontSize: 12,
-                                            color: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium
-                                                ?.color),
-                                      ),
+                                              BorderRadius.circular(30.r),
+                                          border: Border.all(
+                                              width: 2.w,
+                                              color: Theme.of(context)
+                                                  .primaryColor)),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 8.w, vertical: 5.h),
+                                      child: textBoldPoppins(
+                                          text: AppLocalizations.of(context)
+                                              .log_in_sign_up,
+                                          fontSize: 12,
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium
+                                              ?.color),
                                     ),
-                            ],
-                          ),
-                        )))
-              ],
+                                  ),
+                          ],
+                        ),
+                      ))),
             ),
             customPageViewer(isLoading),
             20.verticalSpace,

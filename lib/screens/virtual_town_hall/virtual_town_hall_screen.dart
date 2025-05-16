@@ -17,6 +17,7 @@ import 'package:kusel/screens/virtual_town_hall/virtual_town_hall_provider.dart'
 import 'package:kusel/screens/virtual_town_hall/virtual_town_hall_state.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/common_event_card.dart';
 import '../../common_widgets/event_list_section_widget.dart';
 import '../../common_widgets/highlights_card.dart';
@@ -75,7 +76,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          _buildClipper(context),
+          _buildClipper(),
           _buildTownHallDetailsUi(state),
           _buildServicesList(onlineServicesList: state.onlineServiceList ?? []),
           _customPageViewer(municipalityList: state.municipalitiesList ?? []),
@@ -168,95 +169,61 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
     );
   }
 
-  Widget _buildClipper(context) {
-    return Consumer(builder: (context, ref, _){
-      final imageUrl = ref.watch(virtualTownHallProvider).imageUrl;
-      return Column(
-        children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.35,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                // Background image at the top
-                Positioned(
-                  top: 0.h,
-                  child: ClipPath(
-                    clipper: DownstreamCurveClipper(),
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * .3,
-                      width: MediaQuery.of(context).size.width,
-                      child: Image.asset(
-                        imagePath['background_image'] ?? "",
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-                // Blurred overlay
-                Positioned(
-                  top: 0.h,
-                  child: ClipPath(
-                    clipper: UpstreamWaveClipper(),
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * .3,
-                      width: MediaQuery.of(context).size.width,
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
-                        child: Container(
-                          color:
-                          Theme.of(context).cardColor.withValues(alpha: 0.4),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: 0.r,
-                  top: 15.h,
-                  child: Row(
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            ref
-                                .read(navigationProvider)
-                                .removeTopPage(context: context);
-                          },
-                          icon: Icon(Icons.arrow_back)),
-                      16.horizontalSpace,
-                      textBoldPoppins(
-                          color: Theme.of(context).textTheme.labelLarge?.color,
-                          fontSize: 18,
-                          text: AppLocalizations.of(context).virtual_town_hall),
-                    ],
-                  ),
-                ),
-
-                Positioned(
-                  top: 120.h,
-                  left: 0.w,
-                  right: 0.w,
-                  child: Container(
-                    height: 120.h,
-                    width: 70.w,
-                    padding: EdgeInsets.all(25.w),
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.white),
-                    child: ImageUtil.loadNetworkImage(
-                      imageUrl:
-                      imageUrl ?? '',
-                      sourceId: 1,
-                      svgErrorImagePath: imagePath['virtual_town_hall_map_image']!,
-                      context: context,
-                    ),
-                  ),
-                )
-              ],
+  Widget _buildClipper() {
+    final imageUrl = ref.watch(virtualTownHallProvider).imageUrl;
+    return Stack(
+      children: [
+        SizedBox(
+          height: 250.h,
+          child: CommonBackgroundClipperWidget(
+            clipperType: DownstreamCurveClipper(),
+            imageUrl: imagePath['background_image'] ?? "",
+            height: 210.h,
+            blurredBackground: true,
+            isStaticImage: true,
+            customWidget1:                 Positioned(
+              left: 0.r,
+              top: 15.h,
+              child: Row(
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        ref
+                            .read(navigationProvider)
+                            .removeTopPage(context: context);
+                      },
+                      icon: Icon(Icons.arrow_back)),
+                  16.horizontalSpace,
+                  textBoldPoppins(
+                      color: Theme.of(context).textTheme.labelLarge?.color,
+                      fontSize: 18,
+                      text: AppLocalizations.of(context).virtual_town_hall),
+                ],
+              ),
             ),
-          )
-        ],
-      );
-    });
+          ),
+        ),
+        Positioned(
+          top: 120.h,
+          left: 0.w,
+          right: 0.w,
+          child: Container(
+            height: 120.h,
+            width: 70.w,
+            padding: EdgeInsets.all(25.w),
+            decoration: BoxDecoration(
+                shape: BoxShape.circle, color: Colors.white),
+            child: ImageUtil.loadNetworkImage(
+              imageUrl:
+              imageUrl ?? '',
+              sourceId: 1,
+              svgErrorImagePath: imagePath['virtual_town_hall_map_image']!,
+              context: context,
+            ),
+          ),
+        )
+      ],
+    );
   }
 
   Widget _buildTownHallDetailsUi(VirtualTownHallState state) {
