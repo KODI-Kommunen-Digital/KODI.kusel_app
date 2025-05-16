@@ -1,18 +1,14 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/common_event_card.dart';
-import 'package:kusel/common_widgets/progress_indicator.dart';
+import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/event/event_detail_screen_controller.dart';
-import 'package:kusel/screens/events_listing/selected_event_list_screen_controller.dart';
 import 'package:kusel/screens/events_listing/selected_event_list_screen_parameter.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/search_result/search_result_screen_parameter.dart';
@@ -22,9 +18,6 @@ import 'package:kusel/screens/search_result/search_result_screen_state.dart';
 import '../../common_widgets/arrow_back_widget.dart';
 import '../../images_path.dart';
 import '../../theme_manager/colors.dart';
-import '../dashboard/dashboard_screen_provider.dart';
-import '../events_listing/selected_event_list_screen_parameter.dart';
-import '../search/search_screen_provider.dart';
 
 class SearchResultScreen extends ConsumerStatefulWidget {
   final SearchResultScreenParameter searchResultScreenParameter;
@@ -150,8 +143,9 @@ class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
                                         ?.color),
                               ),
                               12.horizontalSpace,
-                              SvgPicture.asset(
-                                imagePath['arrow_icon'] ?? "",
+                              ImageUtil.loadSvgImage(
+                                imageUrl : imagePath['arrow_icon'] ?? "",
+                                context: context,
                                 height: 10.h,
                                 width: 16.w,
                               )

@@ -1,21 +1,19 @@
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:domain/model/response_model/mein_ort/mein_ort_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
+import 'package:kusel/common_widgets/image_text_card_widget.dart';
 import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/all_municipality/all_municipality_provider.dart';
 import 'package:kusel/screens/mein_ort/mein_ort_provider.dart';
 import 'package:kusel/screens/mein_ort/mein_ort_state.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen_params.dart';
-import 'package:kusel/screens/utility/image_loader_utility.dart';
 
 import '../../common_widgets/common_event_card.dart';
 import '../../common_widgets/custom_button_widget.dart';
@@ -232,10 +230,12 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).textTheme.bodyLarge?.color),
                     12.horizontalSpace,
-                    SvgPicture.asset(
+                    ImageUtil.loadSvgImage(
+                      imageUrl :
                       imagePath['arrow_icon'] ?? "",
                       height: 10.h,
                       width: 16.w,
+                      context: context
                     )
                   ],
                 ),
@@ -380,8 +380,9 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                         color: Theme.of(context).textTheme.bodyLarge?.color),
                   ),
                   12.horizontalSpace,
-                  SvgPicture.asset(
-                    imagePath['arrow_icon'] ?? "",
+                  ImageUtil.loadSvgImage(
+                    imageUrl : imagePath['arrow_icon'] ?? "",
+                    context: context,
                     height: 10.h,
                     width: 16.w,
                   )
@@ -397,15 +398,19 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                 : eventsList.length,
             itemBuilder: (context, index) {
               final item = eventsList[index];
-              return GestureDetector(
-                onTap: () {
-                  ref.read(navigationProvider).navigateUsingPath(
-                      path: ortDetailScreenPath,
-                      context: context,
-                      params:
-                          OrtDetailScreenParams(ortId: item.id!.toString()));
-                },
-                child: _buildImageTextCard(item.name, item.image),
+              return Padding(
+                padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 12.w),
+                child: ImageTextCardWidget(
+                  text: item.name,
+                  imageUrl: item.image,
+                  onTap: () {
+                    ref.read(navigationProvider).navigateUsingPath(
+                        path: ortDetailScreenPath,
+                        context: context,
+                        params:
+                            OrtDetailScreenParams(ortId: item.id!.toString()));
+                  },
+                ),
               );
             },
           ),
@@ -440,39 +445,6 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
               color: Theme.of(context).textTheme.bodyLarge?.color),
           20.verticalSpace
         ],
-      ),
-    );
-  }
-
-  _buildImageTextCard(String? text, String? imageUrl) {
-    return Card(
-      color: Colors.white,
-      margin: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 4,
-      child: Padding(
-        padding: EdgeInsets.all(8.h.w),
-        child: Row(
-          children: [
-            SizedBox(
-              height: 50.h,
-              width: 50.w,
-              child: ImageUtil.loadNetworkImage(
-                fit: BoxFit.contain,
-                  imageUrl: imageLoaderUtility(
-                      image: imageUrl ?? '', sourceId: 1),
-                  context: context),
-            ),
-            SizedBox(width: 30.w),
-            // Texts
-            Flexible(
-                child: textRegularMontserrat(
-                    textAlign: TextAlign.start,
-                    text: text ?? '',
-                    textOverflow: TextOverflow.visible,
-                    fontSize: 14)),
-          ],
-        ),
       ),
     );
   }

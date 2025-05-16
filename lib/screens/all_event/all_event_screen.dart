@@ -48,6 +48,12 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
   }
 
   Widget _buildBody(BuildContext context) {
+    bool isFilterApplied = ref
+        .watch(allEventScreenProvider)
+        .filterCount !=
+        null &&
+        ref.watch(allEventScreenProvider).filterCount! >
+            0;
     return CustomScrollView(
       slivers: [
         SliverAppBar(
@@ -87,106 +93,80 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                   ),
                 ),
               ),
-              GestureDetector(
-                  onTap: () {
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.vertical(top: Radius.circular(20.r)),
-                      ),
-                      builder: (context) => SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.80,
-                          child: FilterScreen()),
-                    );
-                  },
-                  child: SizedBox(
-                    height: 30.h,
-                    width: 100.w,
-                    child: Stack(
-                      children: [
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 10.r, vertical: 7.h),
-                          decoration: BoxDecoration(
-                            color: (ref
-                                            .watch(allEventScreenProvider)
-                                            .filterCount !=
-                                        null &&
-                                    ref
-                                            .watch(allEventScreenProvider)
-                                            .filterCount! >
-                                        0)
-                                ? Theme.of(context).colorScheme.onPrimary
-                                : Theme.of(context).primaryColor,
-                            borderRadius: BorderRadius.circular(8.r),
-                          ),
-                          child: Row(
-                            children: [
-                              Center(
-                                child: Image.asset(
-                                    imagePath['filter_icon'] ?? '',
-                                    height: 14.h,
-                                    width: 20.w,
-                                    color: (ref
-                                                    .watch(
-                                                        allEventScreenProvider)
-                                                    .filterCount !=
-                                                null &&
-                                            ref
-                                                    .watch(
-                                                        allEventScreenProvider)
-                                                    .filterCount! >
-                                                0)
+              Padding(
+                padding: EdgeInsets.only(left: 5.w),
+                child: GestureDetector(
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(20.r)),
+                        ),
+                        builder: (context) => SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.80,
+                            child: FilterScreen()),
+                      );
+                    },
+                    child: SizedBox(
+                      width: isFilterApplied ? 100.w: 80.w,
+                      child: Stack(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 10.r, vertical: 7.h),
+                            decoration: BoxDecoration(
+                              color: isFilterApplied
+                                  ? Theme.of(context).colorScheme.onPrimary
+                                  : Theme.of(context).primaryColor,
+                              borderRadius: BorderRadius.circular(8.r),
+                            ),
+                            child: Row(
+                              children: [
+                                Center(
+                                  child: Image.asset(
+                                      imagePath['filter_icon'] ?? '',
+                                      height: 14.h,
+                                      width: 20.w,
+                                      color: isFilterApplied
+                                          ? Theme.of(context).primaryColor
+                                          : Theme.of(context).colorScheme.onPrimary),
+                                ),
+                                4.horizontalSpace,
+                                textRegularPoppins(
+                                    text: "Filters",
+                                    fontSize: 12,
+                                    color: isFilterApplied
                                         ? Theme.of(context).primaryColor
                                         : Theme.of(context).colorScheme.onPrimary),
-                              ),
-                              4.horizontalSpace,
-                              textRegularPoppins(
-                                  text: "Filters",
-                                  fontSize: 12,
-                                  color: (ref
-                                                  .watch(allEventScreenProvider)
-                                                  .filterCount !=
-                                              null &&
-                                          ref
-                                                  .watch(allEventScreenProvider)
-                                                  .filterCount! >
-                                              0)
-                                      ? Theme.of(context).primaryColor
-                                      : Theme.of(context).colorScheme.onPrimary),
-                            ],
-                          ),
-                        ),
-                        Visibility(
-                          visible: (ref
-                                      .watch(allEventScreenProvider)
-                                      .filterCount !=
-                                  null &&
-                              ref.watch(allEventScreenProvider).filterCount! >
-                                  0),
-                          child: Positioned(
-                            top: 4.h,
-                            left: 75.w,
-                            child: Container(
-                              padding: EdgeInsets.all(4.h.w),
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Theme.of(context).primaryColor),
-                              child: textRegularPoppins(
-                                  color: Theme.of(context).textTheme.labelSmall?.color,
-                                  fontSize: 10,
-                                  text: ref
-                                      .watch(allEventScreenProvider)
-                                      .filterCount
-                                      .toString()),
+                              ],
                             ),
                           ),
-                        )
-                      ],
-                    ),
-                  ))
+                          Visibility(
+                            visible: isFilterApplied,
+                            child: Positioned(
+                              top: 4.h,
+                              left: 75.w,
+                              child: Container(
+                                padding: EdgeInsets.all(4.h.w),
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Theme.of(context).primaryColor),
+                                child: textRegularPoppins(
+                                    color: Theme.of(context).textTheme.labelSmall?.color,
+                                    fontSize: 10,
+                                    text: ref
+                                        .watch(allEventScreenProvider)
+                                        .filterCount
+                                        .toString()),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    )),
+              )
             ],
           ),
           backgroundColor: Theme.of(context).colorScheme.onSecondary.withValues(alpha: 0.6),
