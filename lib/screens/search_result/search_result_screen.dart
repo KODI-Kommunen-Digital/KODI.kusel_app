@@ -160,7 +160,7 @@ class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
                           date: item.startDate ?? "",
                           title: item.title ?? "",
                           location: item.address ?? "",
-                          onTap: () {
+                          onCardTap: () {
                             ref.read(navigationProvider).navigateUsingPath(
                                   context: context,
                                   path: eventDetailScreenPath,

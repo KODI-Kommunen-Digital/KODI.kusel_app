@@ -14,7 +14,7 @@ class CommonEventCard extends ConsumerStatefulWidget {
   final String location;
   final bool isFavorite;
   final bool isFavouriteVisible;
-  final VoidCallback? onTap;
+  final VoidCallback? onCardTap;
   final VoidCallback? onFavorite;
   final int sourceId;
 
@@ -27,7 +27,7 @@ class CommonEventCard extends ConsumerStatefulWidget {
     required this.isFavouriteVisible,
     required this.isFavorite,
     required this.sourceId,
-    this.onTap,
+    this.onCardTap,
     this.onFavorite,
   }) : super(key: key);
 
@@ -45,7 +45,7 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
       elevation: 4,
       child: InkWell(
         borderRadius: BorderRadius.circular(8),
-        onTap: widget.onTap,
+        onTap: widget.onCardTap,
         child: Padding(
           padding: const EdgeInsets.all(8),
           child: Row(

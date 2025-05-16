@@ -1,28 +1,24 @@
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/model/response_model/virtual_town_hall/virtual_town_hall_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/downstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
+import 'package:kusel/common_widgets/network_image_text_service_card.dart';
 import 'package:kusel/common_widgets/town_hall_map_widget.dart';
 import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
-import 'package:kusel/screens/utility/image_loader_utility.dart';
 import 'package:kusel/screens/virtual_town_hall/virtual_town_hall_provider.dart';
 import 'package:kusel/screens/virtual_town_hall/virtual_town_hall_state.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/common_event_card.dart';
-import '../../common_widgets/custom_button_widget.dart';
-import '../../common_widgets/custom_shimmer_widget.dart';
+import '../../common_widgets/event_list_section_widget.dart';
 import '../../common_widgets/highlights_card.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
@@ -84,41 +80,84 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
           _buildServicesList(onlineServicesList: state.onlineServiceList ?? []),
           _customPageViewer(municipalityList: state.municipalitiesList ?? []),
           if (state.newsList != null && state.newsList!.isNotEmpty)
-            eventsView(
-                state.newsList ?? [],
-                AppLocalizations.of(context).news,
-                5,
-                AppLocalizations.of(context).all_news,
-                imagePath['calendar'] ?? "",
-                isLoading,
-                0,
-                0, () {
-              ref.read(navigationProvider).navigateUsingPath(
-                  path: selectedEventListScreenPath,
-                  context: context,
-                  params: SelectedEventListScreenParameter(
-                      cityId: 1,
-                      listHeading: AppLocalizations.of(context).news,
-                      categoryId: null));
-            }),
+            EventsListSectionWidget(
+              context: context,
+              eventsList: state.newsList ?? [],
+              heading: AppLocalizations.of(context).news,
+              maxListLimit: 5,
+              buttonText: AppLocalizations.of(context).all_news,
+              buttonIconPath: imagePath['map_icon'] ?? "",
+              isLoading: false,
+              onButtonTap: () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: selectedEventListScreenPath,
+                    context: context,
+                    params: SelectedEventListScreenParameter(
+                        cityId: 1,
+                        listHeading: AppLocalizations.of(context).news,
+                        categoryId: null));
+              },
+              eventCardBuilder: (item) => CommonEventCard(
+                isFavorite: item.isFavorite ?? false,
+                onFavorite: () {},
+                imageUrl: item.logo ?? "",
+                date: item.startDate ?? "",
+                title: item.title ?? "",
+                location: item.address ?? "",
+                onCardTap: () {},
+                isFavouriteVisible: false,
+                sourceId: item.sourceId!,
+              ),
+              onHeadingTap: () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: selectedEventListScreenPath,
+                    context: context,
+                    params: SelectedEventListScreenParameter(
+                        cityId: 1,
+                        listHeading: AppLocalizations.of(context).news,
+                        categoryId: null));
+              },
+            ),
           if (state.eventList != null && state.eventList!.isNotEmpty)
-            eventsView(
-                state.eventList ?? [],
-                AppLocalizations.of(context).event_text,
-                5,
-                AppLocalizations.of(context).all_events,
-                imagePath['calendar'] ?? "",
-                isLoading,
-                0,
-                0, () {
+            EventsListSectionWidget(
+              context: context,
+              eventsList: state.eventList ?? [],
+              heading: AppLocalizations.of(context).event_text,
+              maxListLimit: 5,
+              buttonText: AppLocalizations.of(context).all_events,
+              buttonIconPath: imagePath['calendar'] ?? "",
+              isLoading: false,
+              onButtonTap: () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: selectedEventListScreenPath,
+                    context: context,
+                    params: SelectedEventListScreenParameter(
+                        cityId: 1,
+                        listHeading: AppLocalizations.of(context).news,
+                        categoryId: null));
+              },
+              eventCardBuilder: (item) => CommonEventCard(
+              isFavorite: item.isFavorite ?? false,
+              onFavorite: () {},
+              imageUrl: item.logo ?? "",
+              date: item.startDate ?? "",
+              title: item.title ?? "",
+              location: item.address ?? "",
+              onCardTap: () {},
+              isFavouriteVisible: false,
+              sourceId: item.sourceId!,
+            ),
+            onHeadingTap: () {
               ref.read(navigationProvider).navigateUsingPath(
                   path: selectedEventListScreenPath,
                   context: context,
                   params: SelectedEventListScreenParameter(
                       cityId: 1,
                       listHeading: AppLocalizations.of(context).events,
-                      categoryId: null));
-            }),
+                      categoryId: null)
+              );
+            },
+          ),
           FeedbackCardWidget(onTap: () {
             ref
                 .read(navigationProvider)
@@ -212,30 +251,6 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                     ),
                   ),
                 )
-
-                // Positioned(
-                //   top: MediaQuery.of(context).size.height * .15,
-                //   left: 0.w,
-                //   right: 0.w,
-                //   child: Card(
-                //     color: Colors.red,
-                //     shape: const CircleBorder(),
-                //     elevation: 10,
-                //     child: Container(
-                //       height: 115.h,
-                //       width: 115.w,
-                //       padding: EdgeInsets.all(5.h.w),
-                //       decoration: BoxDecoration(
-                //         shape: BoxShape.circle,
-                //         color: Theme.of(context).canvasColor,
-                //       ),
-                //       child: FittedBox(
-                //           fit: BoxFit.contain,
-                //           child: Image.asset(imagePath['map_image'] ?? "",
-                //               height: 20.h, width: 15.w)),
-                //     ),
-                //   ),
-                // )
               ],
             ),
           )
@@ -281,7 +296,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
             itemCount: onlineServicesList.length,
             itemBuilder: (context, index) {
               final item = onlineServicesList[index];
-              return _customTextIconCard(
+              return NetworkImageTextServiceCard(
                   onTap: () async {
                     final Uri uri = Uri.parse(
                         item.linkUrl ?? "https://www.landkreis-kusel.de");
@@ -336,12 +351,6 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                       municipalityList.length,
                       (index) => InkWell(
                         onTap: () {
-                          // ref.read(navigationProvider).navigateUsingPath(
-                          //     context: context,
-                          //     path: eventScreenPath,
-                          //     params: EventDetailScreenParams(
-                          //         eventId:
-                          //         state.highlightsList[index].id));
                         },
                         child: Row(
                           children: [
@@ -396,12 +405,9 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                           );
                     },
                     onFavouriteIconClick: () {},
-                    // isVisible:
-                    // !ref.watch(homeScreenProvider).isSignupButtonVisible,
                     isVisible: false,
                     sourceId: 1,
                   ),
-                  // TODO: need to change source id
                 );
               },
               onPageChanged: (index) {
@@ -416,200 +422,4 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
     );
   }
 
-  Widget eventsView(
-      List<Listing> eventsList,
-      String heading,
-      int maxListLimit,
-      String buttonText,
-      String buttonIconPath,
-      bool isLoading,
-      double? latitude,
-      double? longitude,
-      void Function() onPress) {
-    if (isLoading) {
-      return Column(
-        children: [
-          Padding(
-              padding: EdgeInsets.fromLTRB(12.w, 16.w, 12.w, 0),
-              child: CustomShimmerWidget.rectangular(
-                  height: 15.h,
-                  shapeBorder: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.r)))),
-          ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: 4,
-              itemBuilder: (_, index) {
-                return eventCartShimmerEffect();
-              }),
-        ],
-      );
-    } else if (eventsList.isNotEmpty) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(8.w, 16.w, 0, 0),
-            child: InkWell(
-              onTap: () {
-                ref.read(navigationProvider).navigateUsingPath(
-                    path: selectedEventListScreenPath,
-                    context: context,
-                    params: SelectedEventListScreenParameter(
-                        radius: 1,
-                        centerLatitude: latitude,
-                        centerLongitude: longitude,
-                        categoryId: 3,
-                        listHeading: heading));
-              },
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 10.w),
-                    child: textRegularPoppins(
-                        text: heading,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).textTheme.bodyLarge?.color),
-                  ),
-                  12.horizontalSpace,
-                  ImageUtil.loadSvgImage(
-                    imageUrl : imagePath['arrow_icon'] ?? "",
-                    context: context,
-                    height: 10.h,
-                    width: 16.w,
-                  )
-                ],
-              ),
-            ),
-          ),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: eventsList.length > maxListLimit
-                ? maxListLimit
-                : eventsList.length,
-            itemBuilder: (context, index) {
-              final item = eventsList[index];
-              return CommonEventCard(
-                isFavorite: item.isFavorite ?? false,
-                onFavorite: () {
-                  // ref.watch(favoritesProvider.notifier).toggleFavorite(item,
-                  //     success: ({required bool isFavorite}) {
-                  //       ref
-                  //           .read(homeScreenProvider.notifier)
-                  //           .setIsFavoriteEvent(isFavorite, item.id);
-                  //     }, error: ({required String message}) {
-                  //       showErrorToast(message: message, context: context);
-                  //     });
-                },
-                imageUrl: item.logo ?? "",
-                date: item.startDate ?? "",
-                title: item.title ?? "",
-                location: item.address ?? "",
-                onTap: () {
-                  // ref.read(navigationProvider).navigateUsingPath(
-                  //     context: context,
-                  //     path: eventScreenPath,
-                  //     params: EventDetailScreenParams(eventId: item.id));
-                },
-                // isFavouriteVisible:
-                // ref.watch(favoritesProvider.notifier).showFavoriteIcon(),
-                isFavouriteVisible: false,
-                sourceId: item.sourceId!,
-              );
-            },
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
-            child: CustomButton(
-                onPressed: onPress, text: buttonText, icon: buttonIconPath),
-          ),
-          15.verticalSpace
-        ],
-      );
-    }
-    return Padding(
-      padding: EdgeInsets.only(left: 16.w),
-      child: Column(
-        children: [
-          Align(
-            alignment: Alignment.topLeft,
-            child: textRegularPoppins(
-                text: heading,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).textTheme.bodyLarge?.color),
-          ),
-          16.verticalSpace,
-          textRegularPoppins(
-              text: AppLocalizations.of(context).no_data,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: Theme.of(context).textTheme.bodyLarge?.color),
-          20.verticalSpace
-        ],
-      ),
-    );
-  }
-
-  Widget _customTextIconCard(
-      {required Function() onTap,
-      required String imageUrl,
-      required String text,
-      String? description}) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.r),
-      ),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding:
-              EdgeInsets.only(left: 2.w, right: 14.w, top: 20.h, bottom: 20.h),
-          decoration: BoxDecoration(
-              color: Theme.of(context).canvasColor,
-              borderRadius: BorderRadius.circular(15.r)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  20.horizontalSpace,
-                  ImageUtil.loadNetworkImage(
-                      height: 35.h,
-                      width: 35.w,
-                      imageUrl: imageLoaderUtility(image: imageUrl, sourceId: 3),
-                      context: context),
-                  10.horizontalSpace,
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      textBoldMontserrat(
-                          text: text,
-                          color: Theme.of(context).textTheme.bodyLarge?.color),
-                      if (description != null)
-                        textRegularMontserrat(
-                            text: description ?? '',
-                            fontSize: 11,
-                            textOverflow: TextOverflow.visible,
-                            textAlign: TextAlign.start)
-                    ],
-                  ),
-                ],
-              ),
-              Align(
-                  alignment: Alignment.centerRight,
-                  child: Image.asset(
-                    imagePath["link_icon"] ?? '',
-                    height: 40.h,
-                    width: 40.w,
-                  )),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }
