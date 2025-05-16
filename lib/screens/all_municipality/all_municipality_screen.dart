@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/common_widgets/image_text_card_widget.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 
 import '../../app_router.dart';
@@ -51,35 +52,32 @@ class _AllMunicipalityScreenState extends ConsumerState<AllMunicipalityScreen> {
       child: Column(
         children: [
           _buildClipper(context),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.w),
-            child: ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount:
-                    ref.read(allMunicipalityScreenProvider).cityList.length,
-                itemBuilder: (context, index) {
-                  final item =
-                      ref.read(allMunicipalityScreenProvider).cityList[index];
-                  return Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 5.h, horizontal: 12.w),
-                    child: PlaceOfAnotherCommunityCard(
-                      onTap: () {
-                        ref.read(navigationProvider).navigateUsingPath(
-                            path: ortDetailScreenPath,
-                            context: context,
-                            params: OrtDetailScreenParams(
-                                ortId: item.id!.toString()));
-                      },
-                      imageUrl: item.image ??
-                          'https://images.unsplash.com/photo-1584713503693-bb386ec95cf2?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                      text: item.name ?? '',
-                      isFav: false, sourceId: 1,
-                    ),
-                  );
-                }),
-          )
+          ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount:
+                  ref.read(allMunicipalityScreenProvider).cityList.length,
+              itemBuilder: (context, index) {
+                final item =
+                    ref.read(allMunicipalityScreenProvider).cityList[index];
+                return Padding(
+                  padding:
+                      EdgeInsets.symmetric(vertical: 5.h, horizontal: 12.w),
+                  child: ImageTextCardWidget(
+                    onTap: () {
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: ortDetailScreenPath,
+                          context: context,
+                          params: OrtDetailScreenParams(
+                              ortId: item.id!.toString()));
+                    },
+                    imageUrl: item.image ??
+                        'https://images.unsplash.com/photo-1584713503693-bb386ec95cf2?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                    text: item.name ?? '',
+                    sourceId: 1,
+                  ),
+                );
+              })
         ],
       ),
     );

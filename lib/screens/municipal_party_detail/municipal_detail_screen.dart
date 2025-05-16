@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/downstream_wave_clipper.dart';
+import 'package:kusel/common_widgets/image_text_card_widget.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/screens/events_listing/selected_event_list_screen_parameter.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_location_widget.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
-import 'package:kusel/screens/municipal_party_detail/widget/place_of_another_community_card.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen_params.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -255,7 +254,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
 
   _buildPlacesOfTheCommunity(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.0),
+      padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 12.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -278,8 +277,9 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
               Baseline(
                 baseline: 16,
                 baselineType: TextBaseline.alphabetic,
-                child: SvgPicture.asset(
-                  imagePath['arrow_icon'] ?? "",
+                child: ImageUtil.loadSvgImage(
+                  imageUrl : imagePath['arrow_icon'] ?? "",
+                  context: context,
                   height: 10.h,
                   width: 16.w,
                 ),
@@ -302,7 +302,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                     ref.read(municipalDetailControllerProvider).cityList[index];
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 5.h),
-                  child: PlaceOfAnotherCommunityCard(
+                  child: ImageTextCardWidget(
                     onTap: () {
                       ref.read(navigationProvider).navigateUsingPath(
                           path: ortDetailScreenPath,
@@ -312,7 +312,6 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                     },
                     imageUrl: item.image!,
                     text: item.name ?? '',
-                    isFav: false,
                     sourceId: 1,
                   ),
                 );
@@ -357,8 +356,9 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                 child: Baseline(
                   baseline: 16,
                   baselineType: TextBaseline.alphabetic,
-                  child: SvgPicture.asset(
-                    imagePath['arrow_icon'] ?? "",
+                  child: ImageUtil.loadSvgImage(
+                    imageUrl : imagePath['arrow_icon'] ?? "",
+                    context: context,
                     height: 10.h,
                     width: 16.w,
                   ),
@@ -482,8 +482,9 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                 child: Baseline(
                   baseline: 16,
                   baselineType: TextBaseline.alphabetic,
-                  child: SvgPicture.asset(
-                    imagePath['arrow_icon'] ?? "",
+                  child: ImageUtil.loadSvgImage(
+                    imageUrl : imagePath['arrow_icon'] ?? "",
+                    context: context,
                     height: 10.h,
                     width: 16.w,
                   ),
