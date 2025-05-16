@@ -12,7 +12,6 @@ import '../../common_widgets/upstream_wave_clipper.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
 import '../../theme_manager/colors.dart';
-import '../municipal_party_detail/widget/place_of_another_community_card.dart';
 import '../ort_detail/ort_detail_screen_params.dart';
 import 'all_municipality_provider.dart';
 

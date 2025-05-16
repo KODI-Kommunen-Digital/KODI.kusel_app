@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
+import 'package:kusel/common_widgets/event_list_section_widget.dart';
 import 'package:kusel/common_widgets/highlights_card.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
@@ -238,32 +238,124 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               weatherResponseModel:
                   ref.watch(homeScreenProvider).weatherResponseModel,
             ),
-            if(ref.watch(homeScreenProvider).nearbyEventsList.isNotEmpty)
-            eventsView(
-                  state.nearbyEventsList,
-                  AppLocalizations.of(context).near_you,
-                  5,
-                  AppLocalizations.of(context).to_map_view,
-                  imagePath['map_icon'] ?? "",
-                  isLoading,
-                  latitude,
-                  longitude,
-                  () {}),
-            if(ref.watch(homeScreenProvider).eventsList.isNotEmpty)
-              eventsView(
-                  state.eventsList,
-                  AppLocalizations.of(context).all_events,
-                  3,
-                  AppLocalizations.of(context).all_events,
-                  imagePath['calendar'] ?? "",
-                  isLoading,
-                  latitude,
-                  longitude, () {
-                ref.read(navigationProvider).navigateUsingPath(
-                      path: allEventScreenPath,
-                      context: context,
+            if (ref.watch(homeScreenProvider).nearbyEventsList.isNotEmpty)
+              EventsListSectionWidget(
+                context: context,
+                eventsList: state.nearbyEventsList,
+                heading: AppLocalizations.of(context).near_you,
+                maxListLimit: 5,
+                buttonText: AppLocalizations.of(context).to_map_view,
+                buttonIconPath: imagePath['map_icon'] ?? "",
+                isLoading: isLoading,
+                onButtonTap: () {
+                  ref.read(navigationProvider).navigateUsingPath(
+                        path: allEventScreenPath,
+                        context: context,
+                      );
+                },
+                eventCardBuilder: (item) => CommonEventCard(
+                  isFavorite: item.isFavorite ?? false,
+                  onFavorite: () {
+                    ref.watch(favoritesProvider.notifier).toggleFavorite(
+                      item,
+                      success: ({required bool isFavorite}) {
+                        ref
+                            .read(homeScreenProvider.notifier)
+                            .setIsFavoriteEvent(isFavorite, item.id);
+                      },
+                      error: ({required String message}) {
+                        showErrorToast(message: message, context: context);
+                      },
                     );
-              }),
+                  },
+                  imageUrl: item.logo ?? "",
+                  date: item.startDate ?? "",
+                  title: item.title ?? "",
+                  location: item.address ?? "",
+                  onCardTap: () {
+                    ref.read(navigationProvider).navigateUsingPath(
+                          context: context,
+                          path: eventDetailScreenPath,
+                          params: EventDetailScreenParams(eventId: item.id),
+                        );
+                  },
+                  isFavouriteVisible:
+                      ref.watch(favoritesProvider.notifier).showFavoriteIcon(),
+                  sourceId: item.sourceId!,
+                ),
+                onHeadingTap: () {
+                  ref.read(navigationProvider).navigateUsingPath(
+                        path: selectedEventListScreenPath,
+                        context: context,
+                        params: SelectedEventListScreenParameter(
+                          radius: 1,
+                          centerLatitude: latitude,
+                          centerLongitude: longitude,
+                          categoryId: 3,
+                          listHeading: "Events in your area",
+                        ),
+                      );
+                },
+              ),
+            if (ref.watch(homeScreenProvider).eventsList.isNotEmpty)
+              EventsListSectionWidget(
+                context: context,
+                eventsList: state.eventsList,
+                heading: AppLocalizations.of(context).all_events,
+                maxListLimit: 3,
+                buttonText: AppLocalizations.of(context).all_events,
+                buttonIconPath: imagePath['calendar'] ?? "",
+                isLoading: isLoading,
+                onButtonTap: () {
+                  ref.read(navigationProvider).navigateUsingPath(
+                        path: allEventScreenPath,
+                        context: context,
+                      );
+                },
+                eventCardBuilder: (item) => CommonEventCard(
+                  isFavorite: item.isFavorite ?? false,
+                  onFavorite: () {
+                    ref.watch(favoritesProvider.notifier).toggleFavorite(
+                      item,
+                      success: ({required bool isFavorite}) {
+                        ref
+                            .read(homeScreenProvider.notifier)
+                            .setIsFavoriteEvent(isFavorite, item.id);
+                      },
+                      error: ({required String message}) {
+                        showErrorToast(message: message, context: context);
+                      },
+                    );
+                  },
+                  imageUrl: item.logo ?? "",
+                  date: item.startDate ?? "",
+                  title: item.title ?? "",
+                  location: item.address ?? "",
+                  onCardTap: () {
+                    ref.read(navigationProvider).navigateUsingPath(
+                          context: context,
+                          path: eventDetailScreenPath,
+                          params: EventDetailScreenParams(eventId: item.id),
+                        );
+                  },
+                  isFavouriteVisible:
+                      ref.watch(favoritesProvider.notifier).showFavoriteIcon(),
+                  sourceId: item.sourceId!,
+                ),
+                onHeadingTap: () {
+                  ref.read(navigationProvider).navigateUsingPath(
+                        path: selectedEventListScreenPath,
+                        context: context,
+                        params: SelectedEventListScreenParameter(
+                          radius: 1,
+                          centerLatitude: latitude,
+                          centerLongitude: longitude,
+                          categoryId: 3,
+                          listHeading: "Events in your area",
+                        ),
+                      );
+                },
+              ),
             FeedbackCardWidget(
               onTap: () {
                 ref.read(navigationProvider).navigateUsingPath(
@@ -273,142 +365,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             100.verticalSpace
           ],
         ),
-      ),
-    );
-  }
-
-  Widget eventsView(
-      List<Listing> eventsList,
-      String heading,
-      int maxListLimit,
-      String buttonText,
-      String buttonIconPath,
-      bool isLoading,
-      double? latitude,
-      double? longitude,
-      void Function() onPress) {
-    if (isLoading) {
-      return Column(
-        children: [
-          Padding(
-              padding: EdgeInsets.fromLTRB(12.w, 16.w, 12.w, 0),
-              child: CustomShimmerWidget.rectangular(
-                  height: 15.h,
-                  shapeBorder: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.r)))),
-          ListView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: 4,
-              itemBuilder: (_, index) {
-                return eventCartShimmerEffect();
-              }),
-        ],
-      );
-    } else if (eventsList.isNotEmpty) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.fromLTRB(8.w, 16.w, 0, 0),
-            child: InkWell(
-              onTap: () {
-                ref.read(navigationProvider).navigateUsingPath(
-                    path: selectedEventListScreenPath,
-                    context: context,
-                    // Need to be replaced with actual lat-long value
-                    params: SelectedEventListScreenParameter(
-                        radius: 1,
-                        centerLatitude: latitude,
-                        centerLongitude: longitude,
-                        categoryId: 3,
-                        listHeading: heading));
-              },
-              child: Row(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(left: 10.w),
-                    child: textRegularPoppins(
-                        text: heading,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).textTheme.bodyLarge?.color),
-                  ),
-                  12.horizontalSpace,
-                  ImageUtil.loadSvgImage(
-                    imageUrl : imagePath['arrow_icon'] ?? "",
-                    context: context,
-                    height: 10.h,
-                    width: 16.w,
-                  )
-                ],
-              ),
-            ),
-          ),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: eventsList.length > maxListLimit
-                ? maxListLimit
-                : eventsList.length,
-            itemBuilder: (context, index) {
-              final item = eventsList[index];
-              return CommonEventCard(
-                isFavorite: item.isFavorite ?? false,
-                onFavorite: () {
-                  ref.watch(favoritesProvider.notifier).toggleFavorite(item,
-                      success: ({required bool isFavorite}) {
-                    ref
-                        .read(homeScreenProvider.notifier)
-                        .setIsFavoriteEvent(isFavorite, item.id);
-                  }, error: ({required String message}) {
-                    showErrorToast(message: message, context: context);
-                  });
-                },
-                imageUrl: item.logo ?? "",
-                date: item.startDate ?? "",
-                title: item.title ?? "",
-                location: item.address ?? "",
-                onTap: () {
-                  ref.read(navigationProvider).navigateUsingPath(
-                      context: context,
-                      path: eventDetailScreenPath,
-                      params: EventDetailScreenParams(eventId: item.id));
-                },
-                isFavouriteVisible:
-                    ref.watch(favoritesProvider.notifier).showFavoriteIcon(), sourceId: item.sourceId!,
-              );
-            },
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
-            child: CustomButton(
-                onPressed: onPress, text: buttonText, icon: buttonIconPath),
-          ),
-          15.verticalSpace
-        ],
-      );
-    }
-    return Padding(
-      padding: EdgeInsets.only(left: 16.w),
-      child: Column(
-        children: [
-          Align(
-            alignment: Alignment.topLeft,
-            child: textRegularPoppins(
-                text: heading,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).textTheme.bodyLarge?.color),
-          ),
-          16.verticalSpace,
-          textRegularPoppins(
-              text: AppLocalizations.of(context).no_data,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: Theme.of(context).textTheme.bodyLarge?.color),
-          20.verticalSpace
-        ],
       ),
     );
   }
@@ -441,7 +397,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   Theme.of(context).textTheme.bodyLarge?.color),
                           12.horizontalSpace,
                           ImageUtil.loadSvgImage(
-                            imageUrl : imagePath['arrow_icon'] ?? "",
+                            imageUrl: imagePath['arrow_icon'] ?? "",
                             context: context,
                             height: 10.h,
                             width: 16.w,
@@ -532,7 +488,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           },
                           isVisible: !ref
                               .watch(homeScreenProvider)
-                              .isSignupButtonVisible, sourceId: listing.sourceId!,
+                              .isSignupButtonVisible,
+                          sourceId: listing.sourceId!,
                         ),
                       );
                     },
