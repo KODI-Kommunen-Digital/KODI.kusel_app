@@ -7,6 +7,7 @@ import 'package:kusel/common_widgets/progress_indicator.dart';
 
 import '../../app_router.dart';
 import '../../common_widgets/arrow_back_widget.dart';
+import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
 import '../../images_path.dart';
@@ -50,7 +51,14 @@ class _AllMunicipalityScreenState extends ConsumerState<AllMunicipalityScreen> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          _buildClipper(context),
+          CommonBackgroundClipperWidget(
+              clipperType: UpstreamWaveClipper(),
+              imageUrl: imagePath['background_image'] ?? "",
+              headingText: AppLocalizations.of(context).cities,
+              height: 120.h,
+              blurredBackground: true,
+              isBackArrowEnabled: true,
+              isStaticImage: true),
           ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
@@ -77,50 +85,6 @@ class _AllMunicipalityScreenState extends ConsumerState<AllMunicipalityScreen> {
                   ),
                 );
               })
-        ],
-      ),
-    );
-  }
-
-  _buildClipper(context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.16,
-      child: Stack(
-        children: [
-          ClipPath(
-            clipper: UpstreamWaveClipper(),
-            child: Container(
-              height: 270.h,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(imagePath['background_image'] ?? ''),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            top: 30.h,
-            left: 15.w,
-            child: Row(
-              children: [
-                ArrowBackWidget(
-                  onTap: () {
-                    ref
-                        .read(navigationProvider)
-                        .removeTopPage(context: context);
-                  },
-                ),
-                100.horizontalSpace,
-                textBoldPoppins(
-                  color: lightThemeSecondaryColor,
-                  fontSize: 18,
-                  textAlign: TextAlign.center,
-                  text: AppLocalizations.of(context).cities,
-                )
-              ],
-            ),
-          ),
         ],
       ),
     );

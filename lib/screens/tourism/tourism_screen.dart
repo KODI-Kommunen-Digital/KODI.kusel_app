@@ -20,6 +20,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/arrow_back_widget.dart';
+import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/common_text_arrow_widget.dart';
 import '../../common_widgets/event_list_section_widget.dart';
 import '../../common_widgets/text_styles.dart';
@@ -68,7 +69,14 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildClipper(context),
+          CommonBackgroundClipperWidget(
+              clipperType: UpstreamWaveClipper(),
+              imageUrl: imagePath['background_image'] ?? "",
+              headingText: AppLocalizations.of(context).tourism_and_leisure,
+              height: 150.h,
+              blurredBackground: true,
+              isBackArrowEnabled: true,
+              isStaticImage: true),
           _buildRecommendation(context),
           32.verticalSpace,
           _buildLocationWidget(context),
@@ -171,56 +179,6 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
           })
         ],
       ),
-    );
-  }
-
-  _buildClipper(context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 150.h,
-          width: double.infinity,
-          child: Stack(
-            children: [
-              ClipPath(
-                clipper: UpstreamWaveClipper(),
-                child: Container(
-                  decoration: BoxDecoration(),
-                  height: 150.h,
-                  width: double.infinity,
-                  child: ImageUtil.loadLocalAssetImage(
-                    imageUrl: 'background_image',
-                    context: context,
-                  ),
-                ),
-              ),
-              Positioned(
-                top: 30.h,
-                left: 15.w,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    ArrowBackWidget(
-                      onTap: () {
-                        ref
-                            .read(navigationProvider)
-                            .removeTopPage(context: context);
-                      },
-                    ),
-                    20.horizontalSpace,
-                    textBoldPoppins(
-                      color: lightThemeSecondaryColor,
-                      fontSize: 18,
-                      textAlign: TextAlign.center,
-                      text: AppLocalizations.of(context).tourism_and_leisure,
-                    )
-                  ],
-                ),
-              ),
-            ],
-          ),
-        )
-      ],
     );
   }
 

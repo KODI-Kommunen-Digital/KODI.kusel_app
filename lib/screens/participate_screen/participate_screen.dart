@@ -12,6 +12,7 @@ import 'package:kusel/screens/participate_screen/participate_screen_provider.dar
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/arrow_back_widget.dart';
+import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/common_contact_details_card.dart';
 import '../../common_widgets/image_utility.dart';
 import '../../common_widgets/network_image_text_service_card.dart';
@@ -49,7 +50,12 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          _buildClipperBackground(),
+          CommonBackgroundClipperWidget(
+              clipperType: DownstreamCurveClipper(),
+              imageUrl: state.participateData?.iconUrl ??
+                  'https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg',
+              isBackArrowEnabled: true,
+              isStaticImage: false),
           _buildParticipateDescription(),
           _buildParticipateList(),
           if (state.participateData != null &&
@@ -72,38 +78,6 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
           })
         ],
       ),
-    );
-  }
-
-  _buildClipperBackground() {
-    final state = ref.watch(participateScreenProvider);
-    return Stack(
-      children: [
-        ClipPath(
-          clipper: DownstreamCurveClipper(),
-          child: SizedBox(
-            height: 270.h,
-            width: MediaQuery.of(context).size.width,
-            child: (state.participateData?.iconUrl != null)
-                ? ImageUtil.loadNetworkImage(
-                    imageUrl: state.participateData?.iconUrl ?? '',
-                    context: context)
-                : ImageUtil.loadNetworkImage(
-                    context: context,
-                    imageUrl:
-                        "https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg"),
-          ),
-        ),
-        Positioned(
-          top: 30.h,
-          left: 15.w,
-          child: ArrowBackWidget(
-            onTap: () {
-              ref.read(navigationProvider).removeTopPage(context: context);
-            },
-          ),
-        ),
-      ],
     );
   }
 
