@@ -3,7 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -55,7 +55,9 @@ class _CityDetailLocationWidgetState
             padding: EdgeInsets.all(12.h.w),
             child: Row(
               children: [
-                SvgPicture.asset(imagePath['location_card_icon'] ?? ''),
+                ImageUtil.loadSvgImage(
+                    imageUrl: imagePath['location_card_icon'] ?? '',
+                    context: context),
                 Flexible(
                   child: Padding(
                     padding: EdgeInsets.only(left: 8.0.w),
@@ -83,7 +85,9 @@ class _CityDetailLocationWidgetState
             padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16),
             child: Row(
               children: [
-                SvgPicture.asset(imagePath['calendar_icon'] ?? ''),
+                ImageUtil.loadSvgImage(
+                    imageUrl: imagePath['calendar_icon'] ?? '',
+                    context: context),
                 10.horizontalSpace,
                 textRegularPoppins(
                   text:
@@ -130,7 +134,8 @@ class _CityDetailLocationWidgetState
               child: Row(
                 children: [
                   5.horizontalSpace,
-                  SvgPicture.asset(imagePath['link_icon'] ?? ''),
+                  ImageUtil.loadSvgImage(
+                      imageUrl: imagePath['link_icon'] ?? '', context: context),
                   15.horizontalSpace,
                   textRegularPoppins(
                     text: widget.websiteText,

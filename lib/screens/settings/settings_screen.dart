@@ -11,6 +11,7 @@ import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/settings/settings_screen_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../theme_manager/colors.dart';
 import '../dashboard/dashboard_screen_provider.dart';
 import 'package:core/sign_in_status/sign_in_status_controller.dart';
@@ -44,16 +45,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget _buildBody(BuildContext context) {
     return Column(
       children: [
-        ClipPath(
-          clipper: UpstreamWaveClipper(),
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height * .15,
-            width: MediaQuery.of(context).size.width,
-            child: Image.asset(
-              imagePath['background_image'] ?? "",
-              fit: BoxFit.cover,
-            ),
-          ),
+        CommonBackgroundClipperWidget(
+            clipperType: UpstreamWaveClipper(),
+            imageUrl: imagePath['background_image'] ?? "",
+            height: 100.h,
+            blurredBackground: true,
+            isStaticImage: true
         ),
         Visibility(
           visible: ref.watch(settingsScreenProvider).isLoggedIn,

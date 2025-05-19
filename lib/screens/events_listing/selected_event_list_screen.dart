@@ -125,7 +125,7 @@ class _ExploreScreenState extends ConsumerState<SelectedEventListScreen> {
                         }, error: ({required String message}) {});
                       },
                       isFavorite: item.isFavorite ?? false,
-                      onTap: () {
+                      onCardTap: () {
                         ref.read(navigationProvider).navigateUsingPath(
                               context: context,
                               path: eventDetailScreenPath,

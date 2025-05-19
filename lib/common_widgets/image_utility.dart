@@ -81,9 +81,10 @@ class ImageUtil {
       required BuildContext context,
       double? height,
       double? width,
+      Color? color,
       BoxFit? fit}) {
     return SvgPicture.asset(imageUrl,
-        fit: fit ?? BoxFit.cover, height: height, width: width);
+        color: color, fit: fit ?? BoxFit.cover, height: height, width: width);
   }
 
   static Widget loadLocalSvgImage(

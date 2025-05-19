@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
 import 'package:kusel/screens/explore/explore_card_view.dart';
 import 'package:kusel/screens/explore/explore_controller.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen_params.dart';
@@ -61,7 +62,13 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          _buildClipper(context),
+          CommonBackgroundClipperWidget(
+              clipperType: UpstreamWaveClipper(),
+              imageUrl: imagePath['background_image'] ?? "",
+              headingText: AppLocalizations.of(context).category_heading,
+              height: 100.h,
+              blurredBackground: true,
+              isStaticImage: true),
           _buildExploreView(context),
           32.verticalSpace,
           FeedbackCardWidget(
@@ -73,56 +80,6 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
           100.verticalSpace
         ],
       ),
-    );
-  }
-
-  _buildClipper(context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: MediaQuery.of(context).size.height * 0.16,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              // Background image at the top
-              Positioned(
-                top: 0.h,
-                child: ClipPath(
-                  clipper: UpstreamWaveClipper(),
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * .16,
-                    width: MediaQuery.of(context).size.width,
-                    child: Image.asset(
-                      imagePath['background_image'] ?? "",
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ),
-              // Blurred overlay
-              Positioned.fill(
-                child: ClipPath(
-                  clipper: UpstreamWaveClipper(),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
-                    child: Container(
-                      color: Theme.of(context).cardColor.withValues(alpha: 0.4),
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                left: 16.r,
-                top: 68.h,
-                child: textBoldPoppins(
-                    color: Theme.of(context).textTheme.labelLarge?.color,
-                    fontSize: 18,
-                    text: AppLocalizations.of(context).category_heading),
-              ),
-            ],
-          ),
-        )
-      ],
     );
   }
 
@@ -157,7 +114,6 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
     });
   }
 
-
   whereToNavigate(int index) {
     void Function()? onTap;
     switch (index) {
@@ -170,31 +126,35 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
       case 1:
         onTap = () {
           ref.read(navigationProvider).navigateUsingPath(
-              path: meinOrtScreenPath, context: context,
-          );
+                path: meinOrtScreenPath,
+                context: context,
+              );
         };
         break;
 
       case 2:
         onTap = () {
           ref.read(navigationProvider).navigateUsingPath(
-            path: tourismScreenPath, context: context,
-          );
-         // showSoonServiceDialog(context);
+                path: tourismScreenPath,
+                context: context,
+              );
+          // showSoonServiceDialog(context);
         };
         break;
       case 3:
         onTap = () {
           ref.read(navigationProvider).navigateUsingPath(
-              path: mobilityScreenPath, context: context,
-          );
+                path: mobilityScreenPath,
+                context: context,
+              );
         };
         break;
       case 4:
         onTap = () {
           ref.read(navigationProvider).navigateUsingPath(
-            path: participateScreenPath, context: context,
-          );
+                path: participateScreenPath,
+                context: context,
+              );
         };
         break;
       default:
@@ -204,23 +164,20 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
     return onTap;
   }
 
-
-
   void showSoonServiceDialog(BuildContext context) {
     showCupertinoDialog(
       context: context,
       builder: (context) => CupertinoAlertDialog(
-
-        content: textSemiBoldPoppins(text: AppLocalizations.of(context).soon_service,
-        maxLines: 3),
+        content: textSemiBoldPoppins(
+            text: AppLocalizations.of(context).soon_service, maxLines: 3),
         actions: [
           CupertinoDialogAction(
             child: textBoldPoppins(text: AppLocalizations.of(context).close),
-            onPressed: () => ref.read(navigationProvider).removeTopPage(context: context),
+            onPressed: () =>
+                ref.read(navigationProvider).removeTopPage(context: context),
           ),
         ],
       ),
     );
   }
-
 }

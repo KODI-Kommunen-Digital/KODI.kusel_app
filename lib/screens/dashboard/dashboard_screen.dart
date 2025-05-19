@@ -2,9 +2,8 @@ import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/navigation/navigation.dart';
-import 'package:kusel/screens/category/category_screen.dart';
 import 'package:kusel/screens/search/search_screen.dart';
 
 import '../../images_path.dart';
@@ -94,10 +93,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                         height: 13.h,
                         width: 20.w,
                         child: Center(
-                          child: SvgPicture.asset(
+                          child: ImageUtil.loadSvgImage(
                             height: 13.h,
                             width: 13.w,
-                            imagePath['discover_icon'] ?? "",
+                            imageUrl : imagePath['discover_icon'] ?? "",
+                            context: context,
                             color: selectedIndex == 1
                                 ? Theme.of(context).indicatorColor
                                 : Theme.of(context).colorScheme.onPrimary,
@@ -113,14 +113,16 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                   DotNavigationBarItem(
                     icon: Padding(
-                      padding: EdgeInsets.only(top: 3.h),
+                      padding: EdgeInsets.only(top: 2.h),
                       child: SizedBox(
                         height: 14.h,
                         width: 20.w,
-                        child: SvgPicture.asset(
+                        child: ImageUtil.loadSvgImage(
+                          context: context,
                           height: 14.h,
-                          width: 13.w,
-                          imagePath['location_icon'] ?? "",
+                          width: 15.w,
+                          fit: BoxFit.contain,
+                          imageUrl : imagePath['location_icon'] ?? "",
                           color: selectedIndex == 3
                               ? Theme.of(context).indicatorColor
                               : Theme.of(context).colorScheme.onPrimary,
