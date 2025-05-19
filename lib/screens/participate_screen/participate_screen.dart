@@ -12,6 +12,8 @@ import 'package:kusel/screens/participate_screen/participate_screen_provider.dar
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/arrow_back_widget.dart';
+import '../../common_widgets/common_background_clipper_widget.dart';
+import '../../common_widgets/common_contact_details_card.dart';
 import '../../common_widgets/image_utility.dart';
 import '../../common_widgets/network_image_text_service_card.dart';
 import '../../navigation/navigation.dart';
@@ -24,10 +26,9 @@ class ParticipateScreen extends ConsumerStatefulWidget {
 }
 
 class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
-
   @override
   void initState() {
-    Future.microtask((){
+    Future.microtask(() {
       ref.read(participateScreenProvider.notifier).fetchParticipateDetails();
     });
     super.initState();
@@ -49,7 +50,12 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          _buildClipperBackground(),
+          CommonBackgroundClipperWidget(
+              clipperType: DownstreamCurveClipper(),
+              imageUrl: state.participateData?.iconUrl ??
+                  'https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg',
+              isBackArrowEnabled: true,
+              isStaticImage: false),
           _buildParticipateDescription(),
           _buildParticipateList(),
           if (state.participateData != null &&
@@ -61,11 +67,9 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
                 itemBuilder: (context, index) {
                   final item = state.participateData?.moreInformations?[index];
                   return _buildInfoMessage(
-                    heading: item?.title ?? '_',
-                    description: item?.description?? "_"
-                  );
-                })
-          ,
+                      heading: item?.title ?? '_',
+                      description: item?.description ?? "_");
+                }),
           _buildContactDetailsList(),
           FeedbackCardWidget(onTap: () {
             ref
@@ -74,38 +78,6 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
           })
         ],
       ),
-    );
-  }
-
-  _buildClipperBackground() {
-    final state = ref.watch(participateScreenProvider);
-    return Stack(
-      children: [
-        ClipPath(
-          clipper: DownstreamCurveClipper(),
-          child: SizedBox(
-            height: 270.h,
-            width: MediaQuery.of(context).size.width,
-            child: (state.participateData?.iconUrl != null)
-                ? ImageUtil.loadNetworkImage(
-                imageUrl: state.participateData?.iconUrl ?? '',
-                context: context)
-                : ImageUtil.loadNetworkImage(
-                context: context,
-                imageUrl:
-                "https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg"),
-          ),
-        ),
-        Positioned(
-          top: 30.h,
-          left: 15.w,
-          child: ArrowBackWidget(
-            onTap: () {
-              ref.read(navigationProvider).removeTopPage(context: context);
-            },
-          ),
-        ),
-      ],
     );
   }
 
@@ -127,8 +99,7 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
               color: Theme.of(context).textTheme.bodyLarge?.color,
               textAlign: TextAlign.start,
               fontSize: 12,
-              text:
-                  AppLocalizations.of(context).develop_kusel_together_text,
+              text: AppLocalizations.of(context).develop_kusel_together_text,
               textOverflow: TextOverflow.visible),
           10.verticalSpace,
           textRegularMontserrat(
@@ -136,7 +107,9 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
               text: state.participateData?.description ?? "_",
               textOverflow: TextOverflow.visible),
           8.verticalSpace,
-          CustomButton(onPressed: () {}, text: AppLocalizations.of(context).register_here)
+          CustomButton(
+              onPressed: () {},
+              text: AppLocalizations.of(context).register_here)
         ],
       ),
     );
@@ -181,9 +154,7 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
     );
   }
 
-  _buildInfoMessage(
-  {required String heading, required String description}
-      ) {
+  _buildInfoMessage({required String heading, required String description}) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w),
       child: Column(
@@ -228,74 +199,14 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   final item = state.participateData?.contactDetails?[index];
-                  return _contactDetailsCard(
+                  return CommonContactDetailsCard(
                       onTap: () {},
                       heading: item?.title ?? "_",
                       phoneNumber: item?.phone ?? '_',
                       email: item?.email ?? "_");
-                })
-          ,
+                }),
           15.verticalSpace,
         ],
-      ),
-    );
-  }
-
-  _contactDetailsCard(
-      {required Function() onTap,
-      required String heading,
-      required String phoneNumber,
-      required String email}) {
-    return Card(
-      elevation: 1,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-            padding: EdgeInsets.only(
-                left: 20.w, right: 14.w, top: 22.h, bottom: 22.h),
-            decoration: BoxDecoration(
-                color: Theme.of(context).canvasColor,
-                borderRadius: BorderRadius.circular(12.r)),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                textBoldMontserrat(
-                  text: heading,
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
-                ),
-                15.verticalSpace,
-                Row(
-                  children: [
-                    Icon(
-                      Icons.call_outlined,
-                      size: 14.h.w,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                    20.horizontalSpace,
-                    textBoldMontserrat(
-                        text: phoneNumber,
-                        color: Theme.of(context).textTheme.bodyLarge?.color)
-                  ],
-                ),
-                14.verticalSpace,
-                Row(
-                  children: [
-                    Icon(
-                      Icons.email_outlined,
-                      size: 16.h.w,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                    20.horizontalSpace,
-                    textBoldMontserrat(
-                        text: email,
-                        color: Theme.of(context).textTheme.bodyLarge?.color)
-                  ],
-                ),
-              ],
-            )),
       ),
     );
   }
