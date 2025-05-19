@@ -11,6 +11,7 @@ import 'package:kusel/screens/feedback/feedback_screen_state.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/arrow_back_widget.dart';
+import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/toast_message.dart';
 import '../../images_path.dart';
@@ -60,7 +61,14 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
       FeedbackScreenProvider stateNotifier) {
     return Column(
       children: [
-        _buildClipperBackground(),
+        CommonBackgroundClipperWidget(
+            clipperType: UpstreamWaveClipper(),
+            imageUrl: imagePath['background_image'] ?? "",
+            headingText: AppLocalizations.of(context).feedback,
+            height: 130.h,
+            blurredBackground: true,
+            isBackArrowEnabled: true,
+            isStaticImage: true),
         _buildForm(titleEditingController, descriptionEditingController,
             emailEditingController, stateWatch, stateNotifier)
       ],
@@ -191,49 +199,4 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
     );
   }
 
-  Widget _buildClipperBackground() {
-    return Stack(
-      children: [
-        Padding(
-          padding: EdgeInsets.only(bottom: 10.h),
-          child: ClipPath(
-            clipper: UpstreamWaveClipper(),
-            child: Container(
-              height: 130.h,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(imagePath['home_screen_background'] ?? ''),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ),
-        ),
-        Positioned(
-          top: 30.h,
-          left: 15.w,
-          right: 15.w,
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: Row(
-              children: [
-                ArrowBackWidget(
-                  onTap: () {
-                    ref
-                        .read(navigationProvider)
-                        .removeTopPage(context: context);
-                  },
-                ),
-                70.horizontalSpace,
-                textBoldPoppins(
-                    text: AppLocalizations.of(context).feedback,
-                    fontSize: 20,
-                    color: Theme.of(context).textTheme.bodyLarge?.color),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 }

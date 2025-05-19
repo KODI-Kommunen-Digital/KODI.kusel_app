@@ -3,7 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -51,7 +51,9 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
             padding: EdgeInsets.all(12.h.w),
             child: Row(
               children: [
-                SvgPicture.asset(imagePath['location_card_icon'] ?? ''),
+                ImageUtil.loadSvgImage(
+                    imageUrl: imagePath['location_card_icon'] ?? '',
+                    context: context),
                 Flexible(
                   child: Padding(
                     padding: EdgeInsets.only(left: 8.0.w),
@@ -84,7 +86,9 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
             padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16),
             child: Row(
               children: [
-                SvgPicture.asset(imagePath['calendar_icon'] ?? ''),
+                ImageUtil.loadSvgImage(
+                    imageUrl: imagePath['calendar_icon'] ?? '',
+                    context: context),
                 8.horizontalSpace,
                 textRegularPoppins(
                   text: "Samstag, 28.10.2024 \nvon 6:30 - 22:00 Uhr",
@@ -106,7 +110,9 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
               },
               child: Row(
                 children: [
-                  SvgPicture.asset(imagePath['map_link_icon'] ?? ''),
+                  ImageUtil.loadSvgImage(
+                      imageUrl: imagePath['map_link_icon'] ?? '',
+                      context: context),
                   8.horizontalSpace,
                   textRegularPoppins(
                     text: widget.websiteText,
@@ -153,8 +159,9 @@ Widget iconTextWidget(String imageUrl, String text, BuildContext context) {
     child: Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SvgPicture.asset(
-          imageUrl,
+        ImageUtil.loadSvgImage(
+          imageUrl : imageUrl,
+          context: context,
           height: 18.h,
           width: 18.w,
         ),

@@ -1,0 +1,157 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/common_widgets/text_styles.dart';
+
+import '../images_path.dart';
+import 'common_event_card.dart';
+import 'custom_button_widget.dart';
+import 'custom_shimmer_widget.dart';
+import 'image_utility.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+class EventsListSectionWidget<T> extends ConsumerStatefulWidget {
+  final List<T> eventsList;
+  final String heading;
+  final int maxListLimit;
+  final String buttonText;
+  final String buttonIconPath;
+  final bool isLoading;
+  final bool? showEventLoading;
+  final VoidCallback onButtonTap;
+  final BuildContext context;
+  final Widget Function(T item) eventCardBuilder;
+  final VoidCallback onHeadingTap;
+
+  const EventsListSectionWidget({
+    super.key,
+    required this.eventsList,
+    required this.heading,
+    required this.maxListLimit,
+    required this.buttonText,
+    required this.buttonIconPath,
+    required this.isLoading,
+    this.showEventLoading,
+    required this.onButtonTap,
+    required this.context,
+    required this.eventCardBuilder,
+    required this.onHeadingTap,
+  });
+
+  @override
+  ConsumerState<EventsListSectionWidget<T>> createState() =>
+      _EventsListSectionWidgetState<T>();
+}
+
+class _EventsListSectionWidgetState<T>
+    extends ConsumerState<EventsListSectionWidget<T>> {
+  @override
+  Widget build(BuildContext context) {
+    if (widget.isLoading) {
+      return Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.fromLTRB(12.w, 16.w, 12.w, 0),
+            child: CustomShimmerWidget.rectangular(
+              height: 15.h,
+              shapeBorder: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+            ),
+          ),
+          ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: 4,
+            itemBuilder: (_, index) => eventCartShimmerEffect(),
+          ),
+        ],
+      );
+    }
+
+    return Consumer(builder: (context, ref, _) {
+      return (widget.showEventLoading ?? false)
+          ? SizedBox(
+              height: 20.h,
+              width: 20.w,
+              child: CircularProgressIndicator(),
+            )
+          : (widget.eventsList.isEmpty)
+              ? Padding(
+                  padding: EdgeInsets.only(left: 16.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      textRegularPoppins(
+                        text: widget.heading,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).textTheme.bodyLarge?.color,
+                      ),
+                      16.verticalSpace,
+                      textRegularPoppins(
+                        text: AppLocalizations.of(context).no_data,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).textTheme.bodyLarge?.color,
+                      ),
+                      20.verticalSpace,
+                    ],
+                  ),
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(8.w, 16.w, 0, 0),
+                      child: InkWell(
+                        onTap: widget.onHeadingTap,
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(left: 10.w),
+                              child: textRegularPoppins(
+                                text: widget.heading,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.color,
+                              ),
+                            ),
+                            12.horizontalSpace,
+                            ImageUtil.loadSvgImage(
+                              imageUrl: imagePath['arrow_icon'] ?? "",
+                              context: context,
+                              height: 10.h,
+                              width: 16.w,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: widget.eventsList.length > widget.maxListLimit
+                          ? widget.maxListLimit
+                          : widget.eventsList.length,
+                      itemBuilder: (_, index) =>
+                          widget.eventCardBuilder(widget.eventsList[index]),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 16.w, vertical: 20.h),
+                      child: CustomButton(
+                        onPressed: widget.onButtonTap,
+                        text: widget.buttonText,
+                        icon: widget.buttonIconPath,
+                      ),
+                    ),
+                    15.verticalSpace,
+                  ],
+                );
+    });
+  }
+}

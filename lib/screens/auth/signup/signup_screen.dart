@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
+import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/kusel_text_field.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
@@ -180,8 +181,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         },
                         child: Padding(
                           padding: EdgeInsets.only(right: 10.w),
-                          child: SvgPicture.asset(
-                            imagePath['eye_open']!,
+                          child: ImageUtil.loadSvgImage(
+                            imageUrl :imagePath['eye_open']!,
+                            context: context
                           ),
                         ),
                       )
@@ -193,7 +195,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         },
                         child: Padding(
                           padding: EdgeInsets.only(right: 10.w),
-                          child: SvgPicture.asset(imagePath['eye_closed']!),
+                          child: ImageUtil.loadSvgImage(
+                              imageUrl: imagePath['eye_closed']!,
+                              context: context),
                         ),
                       ),
                 suffixIconConstraints:

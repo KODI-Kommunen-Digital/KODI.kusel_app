@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:kusel/app_router.dart';
+import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/search_widget.dart';
 import 'package:kusel/screens/search/search_screen_provider.dart';
@@ -49,7 +50,6 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
   }
 
   Widget buildUi() {
-
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -58,22 +58,11 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            Stack(
-              children: [
-                ClipPath(
-                  clipper: UpstreamWaveClipper(),
-                  child: Container(
-                    height: 210.h,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage(
-                            imagePath['home_screen_background'] ?? ''),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
+            CommonBackgroundClipperWidget(
+                clipperType: UpstreamWaveClipper(),
+                imageUrl: imagePath['home_screen_background'] ?? '',
+                height: 210.h,
+                customWidget1: Positioned(
                   top: 24.h,
                   left: 20.w,
                   right: 20.w,
@@ -91,8 +80,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                     ],
                   ),
                 ),
-              ],
-            ),
+                isStaticImage: true),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(

@@ -118,7 +118,7 @@ class _ExploreScreenState extends ConsumerState<FavoritesListScreen> {
                         });
                       },
                       isFavorite: item.isFavorite ?? false,
-                      onTap: () {
+                      onCardTap: () {
                         ref.read(navigationProvider).navigateUsingPath(
                               context: context,
                               path: eventDetailScreenPath,

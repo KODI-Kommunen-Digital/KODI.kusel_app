@@ -13,6 +13,7 @@ import 'package:kusel/screens/utility/image_loader_utility.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../app_router.dart';
+import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/downstream_wave_clipper.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../images_path.dart';
@@ -55,7 +56,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        _buildClipper(context),
+        _buildClipper(),
         _buildTitle(context),
         _buildDescription(context),
         32.verticalSpace,
@@ -69,79 +70,48 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
     ));
   }
 
-  _buildClipper(context) {
-    return Consumer(
-      builder: (context, ref, _) {
-        final state = ref.watch(ortDetailScreenControllerProvider);
-
-        return Column(
-          children: [
-            SizedBox(
-              height: 250.h,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  // Background image at the top
-                  Positioned(
-                    top: 0.h,
-                    child: ClipPath(
-                      clipper: DownstreamCurveClipper(),
-                      child: SizedBox(
-                        height: MediaQuery.of(context).size.height * .3,
-                        width: MediaQuery.of(context).size.width,
-                        child: Image.asset(
-                          imagePath['city_background_image'] ?? "",
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  Positioned(
-                    top: 30.h,
-                    left: 15.w,
-                    child: ArrowBackWidget(
-                      onTap: () {
-                        ref
-                            .read(navigationProvider)
-                            .removeTopPage(context: context);
-                      },
-                    ),
-                  ),
-
-                  Positioned(
-                    top: 120.h,
-                    left: 0.w,
-                    right: 0.w,
-                    child: Container(
-                      height: 120.h,
-                      width: 70.w,
-                      padding: EdgeInsets.all(25.w),
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle, color: Colors.white),
-                      child: (state.ortDetailDataModel?.image != null)
-                          ? ImageUtil.loadNetworkImage(
-                              imageUrl: state.ortDetailDataModel!.image!,
-                              sourceId: 1,
-                              fit: BoxFit.contain,
-                              context: context,
-                              svgErrorImagePath: imagePath['crest']!,
-                            )
-                          : Center(
-                              child: Image.asset(
-                                imagePath['crest']!,
-                                height: 120.h,
-                                width: 100.w,
-                              ),
-                            ),
-                    ),
-                  )
-                ],
-              ),
+  _buildClipper() {
+    final state = ref.watch(ortDetailScreenControllerProvider);
+    return Stack(
+      children: [
+        SizedBox(
+          height: 250.h,
+          child: CommonBackgroundClipperWidget(
+            clipperType: DownstreamCurveClipper(),
+            imageUrl: imagePath['city_background_image'] ?? "",
+            height: 210.h,
+            isBackArrowEnabled: true,
+            isStaticImage: true,
+          ),
+        ),
+        Positioned(
+          top: 120.h,
+          left: 0.w,
+          right: 0.w,
+          child: Container(
+            height: 120.h,
+            width: 70.w,
+            padding: EdgeInsets.all(25.w),
+            decoration:
+            BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+            child: (state.ortDetailDataModel?.image != null)
+                ? ImageUtil.loadNetworkImage(
+              imageUrl: state.ortDetailDataModel!.image!,
+              sourceId: 1,
+              fit: BoxFit.contain,
+              svgErrorImagePath: imagePath['crest']!,
+              context: context,
             )
-          ],
-        );
-      },
+                : Center(
+              child: Image.asset(
+                imagePath['crest']!,
+                height: 120.h,
+                width: 100.w,
+              ),
+            ),
+          ),
+        )
+      ],
     );
   }
 

@@ -7,15 +7,12 @@ import 'package:domain/model/response_model/listings_model/get_all_listings_resp
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/images_path.dart';
-import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 
-import '../app_router.dart';
-import '../navigation/navigation.dart';
+import 'image_utility.dart';
 
 class SearchWidget extends ConsumerStatefulWidget {
   String hintText;
@@ -45,7 +42,7 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
           padding: EdgeInsets.symmetric(horizontal: 14.0.w),
           child: Row(
             children: [
-              SvgPicture.asset(imagePath['search_icon'] ?? ''),
+              ImageUtil.loadSvgImage(imageUrl : imagePath['search_icon'] ?? '', context : context),
               8.horizontalSpace,
               Expanded(
                 child: TypeAheadField<Listing>(

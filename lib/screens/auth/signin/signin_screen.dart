@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
+import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/kusel_text_field.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
@@ -16,7 +16,6 @@ import 'package:kusel/images_path.dart';
 import 'package:kusel/navigator/navigator.dart';
 import 'package:kusel/screens/auth/signin/signin_controller.dart';
 
-import '../../dashboard/dashboard_screen_provider.dart';
 import '../../environment/environment_dialog.dart';
 import '../validator/empty_field_validator.dart';
 
@@ -155,8 +154,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                       },
                       child: Padding(
                         padding: EdgeInsets.only(right: 10.w),
-                        child: SvgPicture.asset(
-                          imagePath['eye_open']!,
+                        child: ImageUtil.loadSvgImage(
+                          imageUrl : imagePath['eye_open']!,
+                          context: context
                         ),
                       ),
                     )
@@ -168,7 +168,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                       },
                       child: Padding(
                         padding: EdgeInsets.only(right: 10.w),
-                        child: SvgPicture.asset(imagePath['eye_closed']!),
+                        child: ImageUtil.loadSvgImage(
+                            imageUrl: imagePath['eye_closed']!,
+                            context: context),
                       ),
                     ),
               validator: (value) {
