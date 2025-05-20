@@ -7,14 +7,11 @@ import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/navigation/navigation.dart';
-import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/settings/settings_screen_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/common_background_clipper_widget.dart';
-import '../../theme_manager/colors.dart';
 import '../dashboard/dashboard_screen_provider.dart';
-import 'package:core/sign_in_status/sign_in_status_controller.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
