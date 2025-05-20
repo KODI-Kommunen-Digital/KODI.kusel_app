@@ -55,8 +55,11 @@ class _OnboardingFinishPageState extends ConsumerState<OnboardingFinishPage> {
                 25.verticalSpace,
                 CustomButton(
                     onPressed: () {
+                      // ref.read(navigationProvider).removeAllAndNavigate(
+                      //     path: dashboardScreenPath, context: context);
+
                       ref.read(navigationProvider).removeAllAndNavigate(
-                          path: dashboardScreenPath, context: context);
+                          path: homeScreenPath, context: context);
                     },
                     text: AppLocalizations.of(context).continue_to_homepage)
               ],
