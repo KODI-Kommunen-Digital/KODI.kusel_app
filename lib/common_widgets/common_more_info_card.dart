@@ -33,6 +33,8 @@ class _CommonMoreInfoCardState extends ConsumerState<CommonMoreInfoCard> {
         textBoldPoppins(
           color: Theme.of(context).textTheme.bodyLarge?.color,
           text: widget.title,
+          textOverflow: TextOverflow.visible,
+          textAlign: TextAlign.left,
           fontSize: 14,
         ),
         8.verticalSpace,
