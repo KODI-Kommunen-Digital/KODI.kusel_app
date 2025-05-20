@@ -149,8 +149,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           selectedPageIndex == 0
               ? GestureDetector(
                   onTap: () {
+                    // ref.read(navigationProvider).removeAllAndNavigate(
+                    //     context: context, path: dashboardScreenPath);
+
                     ref.read(navigationProvider).removeAllAndNavigate(
-                        context: context, path: dashboardScreenPath);
+                        path: homeScreenPath, context: context);
                   },
                   child: textBoldPoppins(
                     color: Theme.of(context).textTheme.bodyLarge?.color,

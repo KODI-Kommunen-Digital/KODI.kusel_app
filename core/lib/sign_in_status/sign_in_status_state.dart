@@ -1,16 +1,11 @@
 class SignInStatusState {
-  bool isSignupButtonVisible;
-
-  SignInStatusState(this.isSignupButtonVisible);
+  SignInStatusState();
 
   factory SignInStatusState.empty() {
-    return SignInStatusState(true);
+    return SignInStatusState();
   }
 
-  SignInStatusState copyWith({
-    bool? isSignupButtonVisible,
-  }) {
-    return SignInStatusState(
-        isSignupButtonVisible ?? this.isSignupButtonVisible);
+  SignInStatusState copyWith() {
+    return SignInStatusState();
   }
 }

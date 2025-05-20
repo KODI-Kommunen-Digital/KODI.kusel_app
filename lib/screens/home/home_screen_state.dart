@@ -9,7 +9,7 @@ class HomeScreenState {
   final List<Listing> eventsList;
   String userName;
   final List<Listing> nearbyEventsList;
-  bool isSignupButtonVisible;
+  bool isSignInButtonVisible;
   double? latitude;
   double? longitude;
   WeatherResponseModel? weatherResponseModel;
@@ -22,7 +22,7 @@ class HomeScreenState {
       this.eventsList,
       this.userName,
       this.nearbyEventsList,
-      this.isSignupButtonVisible,
+      this.isSignInButtonVisible,
       this.latitude,
       this.longitude,
       this.weatherResponseModel);
@@ -40,7 +40,7 @@ class HomeScreenState {
       List<Listing>? eventsList,
       String? userName,
       List<Listing>? nearbyEventsList,
-      bool? isSignupButtonVisible,
+      bool? isSignInButtonVisible,
       double? latitude,
       double? longitude,
       WeatherResponseModel? weatherResponseModel}) {
@@ -52,7 +52,7 @@ class HomeScreenState {
         eventsList ?? this.eventsList,
         userName ?? this.userName,
         nearbyEventsList ?? this.nearbyEventsList,
-        isSignupButtonVisible ?? this.isSignupButtonVisible,
+        isSignInButtonVisible ?? this.isSignInButtonVisible,
         latitude ?? this.latitude,
         longitude ?? this.latitude,
         weatherResponseModel ?? this.weatherResponseModel);
