@@ -6,8 +6,6 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/app_router.dart';
-import 'package:kusel/common_widgets/common_event_card.dart';
-import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/highlights_card.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
@@ -19,7 +17,6 @@ import 'package:kusel/screens/tourism/tourism_screen_controller.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../common_widgets/arrow_back_widget.dart';
 import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/common_text_arrow_widget.dart';
 import '../../common_widgets/event_list_section_widget.dart';
@@ -27,7 +24,6 @@ import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
-import '../../theme_manager/colors.dart';
 
 class TourismScreen extends ConsumerStatefulWidget {
   const TourismScreen({super.key});
@@ -100,14 +96,6 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                       centerLatitude: state.lat,
                       radius: searchRadius));
             },
-            eventCardBuilder: (item) => CommonEventCard(
-                imageUrl: item.logo ?? '',
-                date: item.startDate ?? '',
-                title: item.title ?? '',
-                location: '',
-                isFavouriteVisible: false,
-                isFavorite: false,
-                sourceId: item.sourceId ?? 3),
             onHeadingTap: () {
               final searchRadius = SearchRadius.radius.value;
               ref.read(navigationProvider).navigateUsingPath(
@@ -119,6 +107,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                       centerLatitude: state.lat,
                       radius: searchRadius));
             },
+            isFavVisible: state.isUserLoggedIn,
           ),
           LocalSvgImageTextServiceCard(
             onTap: () async {
@@ -147,21 +136,6 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                       listHeading: AppLocalizations.of(context).all_events,
                       categoryId: ListingCategoryId.event.eventId));
             },
-            eventCardBuilder: (item) => CommonEventCard(
-              imageUrl: item.logo ?? '',
-              date: item.startDate ?? '',
-              title: item.title ?? '',
-              location: '',
-              isFavouriteVisible: false,
-              isFavorite: false,
-              sourceId: item.sourceId ?? 3,
-              onCardTap: () {
-                ref.read(navigationProvider).navigateUsingPath(
-                    path: eventDetailScreenPath,
-                    context: context,
-                    params: EventDetailScreenParams(eventId: item.id));
-              },
-            ),
             onHeadingTap: () {
               ref.read(navigationProvider).navigateUsingPath(
                   path: selectedEventListScreenPath,
@@ -170,6 +144,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                       listHeading: AppLocalizations.of(context).all_events,
                       categoryId: ListingCategoryId.event.eventId));
             },
+            isFavVisible: state.isUserLoggedIn,
           ),
           32.verticalSpace,
           FeedbackCardWidget(onTap: () {

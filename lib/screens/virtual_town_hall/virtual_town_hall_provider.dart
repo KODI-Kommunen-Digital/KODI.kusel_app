@@ -1,3 +1,4 @@
+import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:domain/model/empty_request.dart';
 import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
@@ -13,14 +14,18 @@ final virtualTownHallProvider =
     StateNotifierProvider<VirtualTownHallProvider, VirtualTownHallState>(
         (ref) => VirtualTownHallProvider(
             listingsUseCase: ref.read(listingsUseCaseProvider),
-            virtualTownHallUseCase: ref.read(virtualTownHallUseCaseProvider)));
+            virtualTownHallUseCase: ref.read(virtualTownHallUseCaseProvider),
+            signInStatusController: ref.read(signInStatusProvider.notifier)));
 
 class VirtualTownHallProvider extends StateNotifier<VirtualTownHallState> {
   ListingsUseCase listingsUseCase;
   VirtualTownHallUseCase virtualTownHallUseCase;
+  SignInStatusController signInStatusController;
 
   VirtualTownHallProvider(
-      {required this.listingsUseCase, required this.virtualTownHallUseCase})
+      {required this.listingsUseCase,
+      required this.virtualTownHallUseCase,
+      required this.signInStatusController})
       : super(VirtualTownHallState.empty());
 
   updateCardIndex(int index) {
@@ -29,7 +34,6 @@ class VirtualTownHallProvider extends StateNotifier<VirtualTownHallState> {
 
   Future<void> getEventsUsingCityId({required String cityId}) async {
     try {
-
       GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(
           categoryId: ListingCategoryId.event.eventId.toString(),
           cityId: cityId);
@@ -115,4 +119,11 @@ class VirtualTownHallProvider extends StateNotifier<VirtualTownHallState> {
       debugPrint("getEventsUsingCityId exception = $e");
     }
   }
+
+  isUserLoggedIn()async{
+    final status = await signInStatusController.isUserLoggedIn();
+
+    state = state.copyWith(isUserLoggedIn: status);
+  }
+
 }
