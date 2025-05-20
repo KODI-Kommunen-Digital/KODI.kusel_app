@@ -449,7 +449,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                           },
                           isFavouriteVisible: !ref
                               .watch(homeScreenProvider)
-                              .isSignupButtonVisible,
+                              .isSignInButtonVisible,
                           sourceId: item.sourceId!,
                         );
                       }),

@@ -37,7 +37,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     Future.microtask(() {
       ref.read(homeScreenProvider.notifier).getLocation();
-      //ref.read(homeScreenProvider.notifier).getUserDetails();
+      ref.read(homeScreenProvider.notifier).getUserDetails();
       ref.read(homeScreenProvider.notifier).getHighlights();
       ref.read(homeScreenProvider.notifier).getEvents();
       ref.read(homeScreenProvider.notifier).getNearbyEvents();
@@ -83,8 +83,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: Column(
                   children: [
                     Visibility(
-                        visible: false ??
-                            !ref.read(homeScreenProvider).isSignupButtonVisible,
+                        visible:
+                            ref.watch(homeScreenProvider).isSignInButtonVisible,
                         child: isLoading
                             ? CustomShimmerWidget.rectangular(
                                 height: 20.h,
@@ -160,8 +160,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               ),
               customWidget2: Visibility(
-                  visible: false ??
-                      ref.watch(homeScreenProvider).isSignupButtonVisible,
+                  visible: ref.watch(homeScreenProvider).isSignInButtonVisible,
                   child: Positioned(
                       left: 15.w,
                       right: 15.w,
@@ -467,7 +466,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           },
                           isVisible: !ref
                               .watch(homeScreenProvider)
-                              .isSignupButtonVisible,
+                              .isSignInButtonVisible,
                           sourceId: listing.sourceId!,
                         ),
                       );
