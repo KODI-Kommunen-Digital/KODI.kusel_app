@@ -37,9 +37,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       canPop: false,
       onPopInvokedWithResult: (didPop, dynamicType) {
         if (!didPop) {
+          //TODO: need to check this as for now we are using shell route
           ref
               .read(navigationProvider)
-              .navigateUsingPath(path: dashboardScreenPath, context: context);
+              .navigateUsingPath(path: homeScreenPath, context: context);
         }
       },
       child: SafeArea(
@@ -73,7 +74,10 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
                 child: Container(
-                  color: Theme.of(context).colorScheme.onSecondary.withValues(alpha: 0.6),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSecondary
+                      .withValues(alpha: 0.6),
                 ),
               ),
             ),
@@ -114,8 +118,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               child: Align(
                   alignment: Alignment.center,
                   child: textBoldPoppins(
-                      text: AppLocalizations.of(context).login,
-                      fontSize: 20)),
+                      text: AppLocalizations.of(context).login, fontSize: 20)),
             ),
             32.verticalSpace,
             Padding(
@@ -155,9 +158,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                       child: Padding(
                         padding: EdgeInsets.only(right: 10.w),
                         child: ImageUtil.loadSvgImage(
-                          imageUrl : imagePath['eye_open']!,
-                          context: context
-                        ),
+                            imageUrl: imagePath['eye_open']!, context: context),
                       ),
                     )
                   : GestureDetector(
@@ -207,7 +208,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                               .isOnboardingDone();
                           if (isOnboarded) {
                             ref.read(navigationProvider).removeAllAndNavigate(
-                                context: context, path: dashboardScreenPath);
+                                context: context, path: homeScreenPath);
                           } else {
                             ref.read(navigationProvider).removeAllAndNavigate(
                                 context: context, path: onboardingScreenPath);
