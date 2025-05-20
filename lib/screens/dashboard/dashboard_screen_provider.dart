@@ -16,6 +16,7 @@ class DashBoardScreenProvider extends StateNotifier<DashboardScreenState> {
       { required this.sharedPreferenceHelper})
       : super(DashboardScreenState.empty());
 
+
   void onIndexChanged(int index) {
 
     bool canPop = false;
