@@ -1,3 +1,4 @@
+import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
 import 'package:domain/model/request_model/municipal_party_detail/municipal_party_detail_request_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
@@ -17,17 +18,20 @@ final municipalDetailControllerProvider = StateNotifierProvider.autoDispose<
         listingsUseCase: ref.read(listingsUseCaseProvider),
         municipalPartyDetailUseCase:
             ref.read(municipalPartyDetailUseCaseProvider),
-        getCityDetailsUseCase: ref.read(getCityDetailsUseCaseProvider)));
+        getCityDetailsUseCase: ref.read(getCityDetailsUseCaseProvider),
+        signInStatusController: ref.read(signInStatusProvider.notifier)));
 
 class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
   ListingsUseCase listingsUseCase;
   MunicipalPartyDetailUseCase municipalPartyDetailUseCase;
   GetCityDetailsUseCase getCityDetailsUseCase;
+  SignInStatusController signInStatusController;
 
   MunicipalDetailController(
       {required this.listingsUseCase,
       required this.municipalPartyDetailUseCase,
-      required this.getCityDetailsUseCase})
+      required this.getCityDetailsUseCase,
+      required this.signInStatusController})
       : super(MunicipalDetailState.empty());
 
   getEventsUsingCityId({required String municipalId}) async {
@@ -108,5 +112,13 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
       state = state.copyWith(isLoading: false);
       debugPrint("getMunicipalPartyDetailUsingId exception = $e");
     }
+  }
+
+  isUserLoggedIn() async {
+
+    final status = await signInStatusController.isUserLoggedIn();
+
+    state = state.copyWith(isUserLoggedIn: status);
+
   }
 }

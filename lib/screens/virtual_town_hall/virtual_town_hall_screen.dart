@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:domain/model/response_model/virtual_town_hall/virtual_town_hall_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -18,11 +16,9 @@ import 'package:kusel/screens/virtual_town_hall/virtual_town_hall_state.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/common_background_clipper_widget.dart';
-import '../../common_widgets/common_event_card.dart';
 import '../../common_widgets/event_list_section_widget.dart';
 import '../../common_widgets/highlights_card.dart';
 import '../../common_widgets/text_styles.dart';
-import '../../common_widgets/upstream_wave_clipper.dart';
 import '../../images_path.dart';
 import '../events_listing/selected_event_list_screen_parameter.dart';
 
@@ -39,6 +35,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
   void initState() {
     Future.microtask(() {
       ref.read(virtualTownHallProvider.notifier).getVirtualTownHallDetails();
+      ref.read(virtualTownHallProvider.notifier).isUserLoggedIn();
     });
     super.initState();
   }
@@ -98,17 +95,6 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                         listHeading: AppLocalizations.of(context).news,
                         categoryId: null));
               },
-              eventCardBuilder: (item) => CommonEventCard(
-                isFavorite: item.isFavorite ?? false,
-                onFavorite: () {},
-                imageUrl: item.logo ?? "",
-                date: item.startDate ?? "",
-                title: item.title ?? "",
-                location: item.address ?? "",
-                onCardTap: () {},
-                isFavouriteVisible: false,
-                sourceId: item.sourceId!,
-              ),
               onHeadingTap: () {
                 ref.read(navigationProvider).navigateUsingPath(
                     path: selectedEventListScreenPath,
@@ -118,6 +104,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                         listHeading: AppLocalizations.of(context).news,
                         categoryId: null));
               },
+              isFavVisible: state.isUserLoggedIn,
             ),
           if (state.eventList != null && state.eventList!.isNotEmpty)
             EventsListSectionWidget(
@@ -137,28 +124,17 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                         listHeading: AppLocalizations.of(context).news,
                         categoryId: null));
               },
-              eventCardBuilder: (item) => CommonEventCard(
-              isFavorite: item.isFavorite ?? false,
-              onFavorite: () {},
-              imageUrl: item.logo ?? "",
-              date: item.startDate ?? "",
-              title: item.title ?? "",
-              location: item.address ?? "",
-              onCardTap: () {},
-              isFavouriteVisible: false,
-              sourceId: item.sourceId!,
+              onHeadingTap: () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: selectedEventListScreenPath,
+                    context: context,
+                    params: SelectedEventListScreenParameter(
+                        cityId: 1,
+                        listHeading: AppLocalizations.of(context).events,
+                        categoryId: null));
+              },
+              isFavVisible: state.isUserLoggedIn,
             ),
-            onHeadingTap: () {
-              ref.read(navigationProvider).navigateUsingPath(
-                  path: selectedEventListScreenPath,
-                  context: context,
-                  params: SelectedEventListScreenParameter(
-                      cityId: 1,
-                      listHeading: AppLocalizations.of(context).events,
-                      categoryId: null)
-              );
-            },
-          ),
           FeedbackCardWidget(onTap: () {
             ref
                 .read(navigationProvider)
@@ -181,7 +157,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
             height: 210.h,
             blurredBackground: true,
             isStaticImage: true,
-            customWidget1:                 Positioned(
+            customWidget1: Positioned(
               left: 0.r,
               top: 15.h,
               child: Row(
@@ -211,11 +187,10 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
             height: 120.h,
             width: 70.w,
             padding: EdgeInsets.all(25.w),
-            decoration: BoxDecoration(
-                shape: BoxShape.circle, color: Colors.white),
+            decoration:
+                BoxDecoration(shape: BoxShape.circle, color: Colors.white),
             child: ImageUtil.loadNetworkImage(
-              imageUrl:
-              imageUrl ?? '',
+              imageUrl: imageUrl ?? '',
               sourceId: 1,
               svgErrorImagePath: imagePath['virtual_town_hall_map_image']!,
               context: context,
@@ -303,7 +278,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                         color: Theme.of(context).textTheme.bodyLarge?.color),
                     12.horizontalSpace,
                     ImageUtil.loadSvgImage(
-                      imageUrl : imagePath['arrow_icon'] ?? "",
+                      imageUrl: imagePath['arrow_icon'] ?? "",
                       context: context,
                       height: 10.h,
                       width: 16.w,
@@ -317,8 +292,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                     children: List.generate(
                       municipalityList.length,
                       (index) => InkWell(
-                        onTap: () {
-                        },
+                        onTap: () {},
                         child: Row(
                           children: [
                             Icon(
@@ -388,5 +362,4 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
       ),
     );
   }
-
 }

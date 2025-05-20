@@ -168,20 +168,27 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
 
   Future<void> getUserDetails() async {
     try {
+
+
+
       final userId = sharedPreferenceHelper.getInt(userIdKey);
 
-      UserDetailRequestModel requestModel = UserDetailRequestModel(id: userId);
-      UserDetailResponseModel responseModel = UserDetailResponseModel();
-      final result = await userDetailUseCase.call(requestModel, responseModel);
+      if(userId!=null )
+        {
+          UserDetailRequestModel requestModel = UserDetailRequestModel(id: userId);
+          UserDetailResponseModel responseModel = UserDetailResponseModel();
+          final result = await userDetailUseCase.call(requestModel, responseModel);
 
-      result.fold((l) {
-        debugPrint('get user details fold exception : $l');
-      }, (r) async {
-        final response = r as UserDetailResponseModel;
-        await sharedPreferenceHelper.setString(
-            userNameKey, response.data?.username ?? "");
-        state = state.copyWith(userName: response.data?.firstname ?? "");
-      });
+          result.fold((l) {
+            debugPrint('get user details fold exception : $l');
+          }, (r) async {
+            final response = r as UserDetailResponseModel;
+            await sharedPreferenceHelper.setString(
+                userNameKey, response.data?.username ?? "");
+            state = state.copyWith(userName: response.data?.firstname ?? "");
+          });
+        }
+
     } catch (error) {
       debugPrint('get user details exception : $error');
     }
