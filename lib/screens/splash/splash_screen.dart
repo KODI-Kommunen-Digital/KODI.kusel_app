@@ -26,7 +26,7 @@ class _State extends ConsumerState<SplashScreen> {
         if (isOnBoardingDone) {
           ref.read(navigationProvider).removeAllAndNavigate(
             context: context,
-            path: dashboardScreenPath,
+            path: homeScreenPath,//TODO: to be update
           );
         } else {
           ref.read(navigationProvider).removeAllAndNavigate(

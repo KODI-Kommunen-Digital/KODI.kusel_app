@@ -7,14 +7,11 @@ import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/navigation/navigation.dart';
-import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/settings/settings_screen_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/common_background_clipper_widget.dart';
-import '../../theme_manager/colors.dart';
 import '../dashboard/dashboard_screen_provider.dart';
-import 'package:core/sign_in_status/sign_in_status_controller.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -50,8 +47,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             imageUrl: imagePath['background_image'] ?? "",
             height: 100.h,
             blurredBackground: true,
-            isStaticImage: true
-        ),
+            isStaticImage: true),
         Visibility(
           visible: ref.watch(settingsScreenProvider).isLoggedIn,
           child: Column(
@@ -85,8 +81,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               textAlign: TextAlign.start,
               text: AppLocalizations.of(context).imprint_page),
           onTap: () async {
-            final Uri uri =
-                Uri.parse("http://deinkuselerland.de/impressum");
+            final Uri uri = Uri.parse("http://deinkuselerland.de/impressum");
             if (await canLaunchUrl(uri)) {
               await launchUrl(uri);
             }
@@ -99,8 +94,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               textAlign: TextAlign.start,
               text: AppLocalizations.of(context).terms_of_use),
           onTap: () async {
-            final Uri uri =
-                Uri.parse("http://deinkuselerland.de/terms");
+            final Uri uri = Uri.parse("http://deinkuselerland.de/terms");
             if (await canLaunchUrl(uri)) {
               await launchUrl(uri);
             }
@@ -160,7 +154,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
         ),
         Visibility(
-          visible: false ?? !ref.watch(settingsScreenProvider).isLoggedIn,
+          visible: !ref.watch(settingsScreenProvider).isLoggedIn,
           child: ListTile(
             leading: const Icon(Icons.login),
             title: textBoldPoppins(
