@@ -1,3 +1,4 @@
+import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/usecase/listings/listings_usecase.dart';
@@ -10,12 +11,15 @@ import 'package:kusel/screens/tourism/tourism_screen_state.dart';
 final tourismScreenControllerProvider = StateNotifierProvider.autoDispose<
         TourismScreenController, TourismScreenState>(
     (ref) => TourismScreenController(
-        listingsUseCase: ref.read(listingsUseCaseProvider)));
+        listingsUseCase: ref.read(listingsUseCaseProvider),
+        signInStatusController: ref.read(signInStatusProvider.notifier)));
 
 class TourismScreenController extends StateNotifier<TourismScreenState> {
   ListingsUseCase listingsUseCase;
+  SignInStatusController signInStatusController;
 
-  TourismScreenController({required this.listingsUseCase})
+  TourismScreenController(
+      {required this.listingsUseCase, required this.signInStatusController})
       : super(TourismScreenState.empty());
 
   getAllEvents() async {
@@ -90,5 +94,10 @@ class TourismScreenController extends StateNotifier<TourismScreenState> {
       state = state.copyWith(isRecommendationLoading: false);
       debugPrint(" getRecommendationListing exception:$error");
     }
+  }
+
+  isUserLoggedIn() async {
+    final status = await signInStatusController.isUserLoggedIn();
+    state = state.copyWith(isUserLoggedIn: status);
   }
 }

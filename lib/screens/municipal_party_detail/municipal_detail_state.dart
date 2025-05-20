@@ -1,4 +1,3 @@
-import 'package:domain/model/response_model/city_details/get_city_details_response_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/model/response_model/municipal_party_detail/municipal_party_detail_response_model.dart';
 
@@ -10,6 +9,7 @@ class MunicipalDetailState {
   bool isLoading;
   List<MunicipalDetailCityModel> cityList;
   MunicipalPartyDetailDataModel? municipalPartyDetailDataModel;
+  bool isUserLoggedIn;
 
   MunicipalDetailState(
       this.eventList,
@@ -18,10 +18,11 @@ class MunicipalDetailState {
       this.showNewsLoading,
       this.isLoading,
       this.cityList,
-      this.municipalPartyDetailDataModel);
+      this.municipalPartyDetailDataModel,
+      this.isUserLoggedIn);
 
   factory MunicipalDetailState.empty() {
-    return MunicipalDetailState([], [], false, false, false, [], null);
+    return MunicipalDetailState([], [], false, false, false, [], null, false);
   }
 
   MunicipalDetailState copyWith(
@@ -31,7 +32,8 @@ class MunicipalDetailState {
       bool? showNewsLoading,
       bool? isLoading,
       List<MunicipalDetailCityModel>? cityList,
-      MunicipalPartyDetailDataModel? municipalPartyDetailDataModel}) {
+      MunicipalPartyDetailDataModel? municipalPartyDetailDataModel,
+      bool? isUserLoggedIn}) {
     return MunicipalDetailState(
         eventList ?? this.eventList,
         newsList ?? this.newsList,
@@ -39,6 +41,7 @@ class MunicipalDetailState {
         showNewsLoading ?? this.showNewsLoading,
         isLoading ?? this.isLoading,
         cityList ?? this.cityList,
-        municipalPartyDetailDataModel ?? this.municipalPartyDetailDataModel);
+        municipalPartyDetailDataModel ?? this.municipalPartyDetailDataModel,
+        isUserLoggedIn ?? this.isUserLoggedIn);
   }
 }
