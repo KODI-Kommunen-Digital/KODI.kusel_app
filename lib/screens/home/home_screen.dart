@@ -17,7 +17,6 @@ import 'package:kusel/screens/home/home_screen_state.dart';
 
 import '../../../images_path.dart';
 import '../../app_router.dart';
-import '../../common_widgets/common_event_card.dart';
 import '../../common_widgets/feedback_card_widget.dart';
 import '../../common_widgets/search_widget.dart';
 import '../../common_widgets/text_styles.dart';
@@ -232,36 +231,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         context: context,
                       );
                 },
-                eventCardBuilder: (item) => CommonEventCard(
-                  isFavorite: item.isFavorite ?? false,
-                  onFavorite: () {
-                    ref.watch(favoritesProvider.notifier).toggleFavorite(
-                      item,
-                      success: ({required bool isFavorite}) {
-                        ref
-                            .read(homeScreenProvider.notifier)
-                            .setIsFavoriteEvent(isFavorite, item.id);
-                      },
-                      error: ({required String message}) {
-                        showErrorToast(message: message, context: context);
-                      },
-                    );
-                  },
-                  imageUrl: item.logo ?? "",
-                  date: item.startDate ?? "",
-                  title: item.title ?? "",
-                  location: item.address ?? "",
-                  onCardTap: () {
-                    ref.read(navigationProvider).navigateUsingPath(
-                          context: context,
-                          path: eventDetailScreenPath,
-                          params: EventDetailScreenParams(eventId: item.id),
-                        );
-                  },
-                  isFavouriteVisible:
-                      ref.watch(favoritesProvider.notifier).showFavoriteIcon(),
-                  sourceId: item.sourceId!,
-                ),
                 onHeadingTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
                         path: selectedEventListScreenPath,
@@ -275,6 +244,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                       );
                 },
+                isFavVisible: (state.isSignInButtonVisible) ? false : true,
               ),
             if (ref.watch(homeScreenProvider).eventsList.isNotEmpty)
               EventsListSectionWidget(
@@ -291,36 +261,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         context: context,
                       );
                 },
-                eventCardBuilder: (item) => CommonEventCard(
-                  isFavorite: item.isFavorite ?? false,
-                  onFavorite: () {
-                    ref.watch(favoritesProvider.notifier).toggleFavorite(
-                      item,
-                      success: ({required bool isFavorite}) {
-                        ref
-                            .read(homeScreenProvider.notifier)
-                            .setIsFavoriteEvent(isFavorite, item.id);
-                      },
-                      error: ({required String message}) {
-                        showErrorToast(message: message, context: context);
-                      },
-                    );
-                  },
-                  imageUrl: item.logo ?? "",
-                  date: item.startDate ?? "",
-                  title: item.title ?? "",
-                  location: item.address ?? "",
-                  onCardTap: () {
-                    ref.read(navigationProvider).navigateUsingPath(
-                          context: context,
-                          path: eventDetailScreenPath,
-                          params: EventDetailScreenParams(eventId: item.id),
-                        );
-                  },
-                  isFavouriteVisible:
-                      ref.watch(favoritesProvider.notifier).showFavoriteIcon(),
-                  sourceId: item.sourceId!,
-                ),
                 onHeadingTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
                         path: selectedEventListScreenPath,
@@ -334,6 +274,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                       );
                 },
+                isFavVisible: (state.isSignInButtonVisible) ? false : true,
               ),
             FeedbackCardWidget(
               onTap: () {
