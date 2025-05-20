@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:kusel/common_widgets/custom_selection_button.dart';
 import 'package:kusel/screens/onboarding/onboarding_screen_provider.dart';
 
-import '../../common_widgets/custom_dropdown.dart';
 import '../../common_widgets/text_styles.dart';
 
 class OnboardingOptionPage extends ConsumerStatefulWidget {
@@ -51,15 +50,11 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
                 ),
               ),
             ),
-            CustomDropdown(
-              hintText: AppLocalizations.of(context).select_residence,
-              items: ref.read(onboardingScreenProvider).residenceList,
-              selectedItem: ref.watch(onboardingScreenProvider).resident ?? '',
-              textAlignCenter: true,
-              onSelected: (String? newValue) {
-                stateNotifier.updateUserType(newValue ?? '');
+            GestureDetector(
+              onTap: (){
+                FocusScope.of(context).unfocus();
               },
-            ),
+                child: _autoCompleteTextDropDown()),
             20.verticalSpace,
             Divider(
               height: 3.h,
@@ -157,15 +152,11 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
                 ),
               ),
             ),
-            CustomDropdown(
-              hintText: AppLocalizations.of(context).select_residence,
-              items: ref.read(onboardingScreenProvider).residenceList,
-              selectedItem: ref.watch(onboardingScreenProvider).resident ?? '',
-              textAlignCenter: true,
-              onSelected: (String? newValue) {
-                stateNotifier.updateUserType(newValue ?? '');
-              },
-            ),
+            GestureDetector(
+                onTap: (){
+                  FocusScope.of(context).unfocus();
+                },
+                child: _autoCompleteTextDropDown()),
             20.verticalSpace,
             Divider(
               height: 3.h,
@@ -232,6 +223,46 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
                 )),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _autoCompleteTextDropDown() {
+    final stateNotifier = ref.read(onboardingScreenProvider.notifier);
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16,),
+      decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.onPrimary,
+          borderRadius: BorderRadius.circular(30.r),
+      ),
+      child: Autocomplete<String>(
+        optionsBuilder: (TextEditingValue textEditingValue) {
+          if (textEditingValue.text.isEmpty) {
+            return const Iterable<String>.empty();
+          }
+          return ref.read(onboardingScreenProvider).residenceList.where(
+              (String city) => city
+                  .toLowerCase()
+                  .contains(textEditingValue.text.toLowerCase()));
+        },
+        onSelected: (String selection) {
+          stateNotifier.updateUserType(selection ?? '');
+          FocusScope.of(context).unfocus();
+        },
+        fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
+          return TextField(
+            textAlign: TextAlign.center,
+            controller: controller,
+            focusNode: focusNode,
+            maxLines: 1,
+            style: TextStyle(
+              color: Theme.of(context).textTheme.labelMedium?.color),
+            decoration: InputDecoration(
+              hintText: AppLocalizations.of(context).select_residence,
+              border: InputBorder.none,
+            ),
+          );
+        },
       ),
     );
   }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CommonPhoneNumberCard extends ConsumerStatefulWidget {
   final VoidCallback onTap;
@@ -26,8 +27,15 @@ class _CommonPhoneNumberCardState extends ConsumerState<CommonPhoneNumberCard> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.r),
       ),
-      child: GestureDetector(
-        onTap: widget.onTap,
+      child: InkWell(
+        onTap: () async {
+          final sanitizedNumber = widget.phoneNumber.replaceAll(' ', '');
+          final Uri url = Uri(scheme: 'tel', path: sanitizedNumber);
+
+          if (await canLaunchUrl(url)) {
+            await launchUrl(url);
+          }
+        },
         child: Container(
           padding: EdgeInsets.only(
             left: 20.w,

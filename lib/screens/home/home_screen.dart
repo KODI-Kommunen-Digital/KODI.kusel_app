@@ -112,8 +112,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             color: Theme.of(context).textTheme.bodyLarge?.color,
                             textAlign: TextAlign.center,
                             textOverflow: TextOverflow.visible,
-                            text:
-                                "${AppLocalizations.of(context).today_its_going_to_be} ${AppLocalizations.of(context).sunny}!",
+                            text: AppLocalizations.of(context).today_its_going_to_be,
                           ),
                     32.verticalSpace,
                     Column(

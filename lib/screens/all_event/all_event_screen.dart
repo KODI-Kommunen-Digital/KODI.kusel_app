@@ -62,7 +62,7 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
             isStaticImage: true,
             isBackArrowEnabled: true,
             headingText: AppLocalizations.of(context).events,
-            filterWidget: _buildFilterWidget(isFilterApplied),
+            customWidget1 : _buildFilterWidget(isFilterApplied),
           ),
           if (!ref.watch(allEventScreenProvider).isLoading)
             ref.watch(allEventScreenProvider).listingList.isEmpty
@@ -113,29 +113,31 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
   }
 
   _buildFilterWidget(bool isFilterApplied) {
-    return Padding(
-      padding: EdgeInsets.only(left: 5.w),
-      child: GestureDetector(
-          onTap: () {
-            showModalBottomSheet(
-              context: context,
-              isScrollControlled: true,
-              shape: RoundedRectangleBorder(
-                borderRadius:
-                BorderRadius.vertical(top: Radius.circular(20.r)),
-              ),
-              builder: (context) => SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.80,
-                  child: FilterScreen()),
-            );
-          },
-          child: SizedBox(
-            width: isFilterApplied ? 100.w : 80.w,
-            child: Stack(
-              children: [
-                Container(
+    return Positioned(
+      top: 120,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12.w),
+        width: MediaQuery.of(context).size.width,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            GestureDetector(
+                onTap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    isScrollControlled: true,
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                      BorderRadius.vertical(top: Radius.circular(20.r)),
+                    ),
+                    builder: (context) => SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.80,
+                        child: FilterScreen()),
+                  );
+                },
+                child: Container(
                   padding: EdgeInsets.symmetric(
-                      horizontal: 10.r, vertical: 7.h),
+                      horizontal: 10.r, vertical: 5.h),
                   decoration: BoxDecoration(
                     color: isFilterApplied
                         ? Theme.of(context).colorScheme.onPrimary
@@ -157,42 +159,39 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                       ),
                       4.horizontalSpace,
                       textRegularPoppins(
-                          text: "Filters",
+                          text: AppLocalizations.of(context).settings,
                           fontSize: 12,
                           color: isFilterApplied
                               ? Theme.of(context).primaryColor
                               : Theme.of(context)
                               .colorScheme
                               .onPrimary),
+                      8.horizontalSpace,
+                      Visibility(
+                        visible: isFilterApplied,
+                        child: Container(
+                          padding: EdgeInsets.all(4.h.w),
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Theme.of(context).primaryColor),
+                          child: textRegularPoppins(
+                              color: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall
+                                  ?.color,
+                              fontSize: 10,
+                              text: ref
+                                  .watch(allEventScreenProvider)
+                                  .filterCount
+                                  .toString()),
+                        ),
+                      )
                     ],
                   ),
-                ),
-                Visibility(
-                  visible: isFilterApplied,
-                  child: Positioned(
-                    top: 4.h,
-                    left: 75.w,
-                    child: Container(
-                      padding: EdgeInsets.all(4.h.w),
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Theme.of(context).primaryColor),
-                      child: textRegularPoppins(
-                          color: Theme.of(context)
-                              .textTheme
-                              .labelSmall
-                              ?.color,
-                          fontSize: 10,
-                          text: ref
-                              .watch(allEventScreenProvider)
-                              .filterCount
-                              .toString()),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          )),
+                )),
+          ],
+        ),
+      ),
     );
   }
 }
