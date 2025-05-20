@@ -146,12 +146,22 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                       stateNotifier.updateCheckBox(value ?? false);
                     }),
                 Expanded(
-                  child: textRegularPoppins(
-                      text: AppLocalizations.of(context).feedback_text,
-                      textOverflow: TextOverflow.visible,
-                      textAlign: TextAlign.start,
-                      fontSize: 11),
-                )
+                  child: GestureDetector(
+                    onTap: () async {
+                      final Uri uri = Uri.parse(
+                          "https://heidi.troisdorf.dksr.city/PrivacyPolicy");
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri);
+                      }
+                    },
+                    child: textRegularPoppins(
+                        text: AppLocalizations.of(context).feedback_text,
+                        textOverflow: TextOverflow.visible,
+                        textAlign: TextAlign.start,
+                        decoration: TextDecoration.underline,
+                        fontSize: 11),
+                  ),
+                ),
               ],
             ),
             10.verticalSpace,
@@ -180,19 +190,6 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                 },
                 text: AppLocalizations.of(context).submit),
             25.verticalSpace,
-            GestureDetector(
-              onTap: () async {
-                final Uri uri = Uri.parse(
-                    "https://heidi.troisdorf.dksr.city/PrivacyPolicy");
-                if (await canLaunchUrl(uri)) {
-                  await launchUrl(uri);
-                }
-              },
-              child: textRegularMontserrat(
-                  text: AppLocalizations.of(context).privacy_policy,
-                  decoration: TextDecoration.underline),
-            ),
-            10.verticalSpace,
           ],
         ),
       ),
