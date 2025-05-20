@@ -50,6 +50,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
 
     return SafeArea(
         child: Scaffold(
+            backgroundColor: Theme.of(context).colorScheme.onSecondary,
             body: Stack(
       children: [
         _buildBody(context),
@@ -123,7 +124,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
             EventsListSectionWidget(
               context: context,
               eventsList: state.eventList ?? [],
-              heading: AppLocalizations.of(context).event_text,
+              heading: AppLocalizations.of(context).current_events,
               maxListLimit: 5,
               buttonText: AppLocalizations.of(context).all_events,
               buttonIconPath: imagePath['calendar'] ?? "",
@@ -297,7 +298,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                 Row(
                   children: [
                     textRegularPoppins(
-                        text: AppLocalizations.of(context).our_communities,
+                        text: AppLocalizations.of(context).associated_municipalities,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).textTheme.bodyLarge?.color),
@@ -374,6 +375,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                     onFavouriteIconClick: () {},
                     isVisible: false,
                     sourceId: 1,
+                    imageFit: BoxFit.contain,
                   ),
                 );
               },

@@ -426,23 +426,19 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   bool isAllOptionFieldsCompleted() {
     bool martialStatusFilled =
     (!state.isSingle && !state.isForTwo && !state.isWithFamily);
-
-    bool accommodationPreferenceFilled =
-    (!state.isWithDog && !state.isBarrierearm);
     bool cityFilled = state.resident == null;
-    return martialStatusFilled || accommodationPreferenceFilled || cityFilled;
+    return martialStatusFilled || cityFilled;
   }
 
   void updateCompanionType(OnBoardingCompanionType onBoardingCompanionType) {
-    final isWithDogSelected =
-        onBoardingCompanionType == OnBoardingCompanionType.withDog;
-    final alreadySelected =
-        isWithDogSelected ? state.isWithDog : state.isBarrierearm;
-
-    state = state.copyWith(
-      isWithDog: isWithDogSelected ? !alreadySelected : false,
-      isBarrierearm: !isWithDogSelected ? !alreadySelected : false,
-    );
+    switch (onBoardingCompanionType) {
+      case OnBoardingCompanionType.withDog:
+        state = state.copyWith(isWithDog: !state.isWithDog);
+        break;
+      case OnBoardingCompanionType.barrierearm:
+        state = state.copyWith(isBarrierearm: !state.isBarrierearm);
+        break;
+    }
   }
 
   int? getCityIdByName(Map<int, String> cityMap, String cityName) {

@@ -73,7 +73,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
                     fontWeight: FontWeight.w600,
                     color: Theme.of(context).textTheme.bodyLarge?.color),
                 GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     ref.read(filterScreenProvider.notifier).onReset();
                     ref.read(allEventScreenProvider.notifier).onResetFilter();
                   },
@@ -186,9 +186,10 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
                   child: Align(
                       alignment: Alignment.centerLeft,
                       child: textRegularPoppins(
-                        fontSize: 10,
+                          fontSize: 10,
                           text: AppLocalizations.of(context).from,
-                          color: Theme.of(context).textTheme.bodyMedium?.color)),
+                          color:
+                              Theme.of(context).textTheme.bodyMedium?.color)),
                 ),
                 5.verticalSpace,
                 _buildDateSelectorButton(
@@ -204,7 +205,8 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
                       child: textRegularPoppins(
                           fontSize: 10,
                           text: AppLocalizations.of(context).to,
-                          color: Theme.of(context).textTheme.bodyMedium?.color)),
+                          color:
+                              Theme.of(context).textTheme.bodyMedium?.color)),
                 ),
                 5.verticalSpace,
                 _buildDateSelectorButton(
@@ -364,12 +366,13 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
             child: Column(
               children: toggleFilterMap.entries.map((entry) {
                 return _toggleWidget(
+                    context: context,
                     text: entry.key,
                     isToggled: entry.value,
                     onValueChange: (value, type) {
                       ref
                           .read(filterScreenProvider.notifier)
-                          .onToggleUpdate(value, type);
+                          .onToggleUpdate(value, entry.key);
                     });
               }).toList(),
             ),
@@ -380,9 +383,22 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
   }
 
   Widget _toggleWidget(
-      {required String text,
+      {required BuildContext context,
+      required String text,
       required bool isToggled,
       required Function(bool value, String type) onValueChange}) {
+    final localization = AppLocalizations.of(context);
+    Map<String, String> toggleTextLocalizationMap = {
+      'Dogs allowed': localization.dogs_allow,
+      'Accessible': localization.accessible,
+      'Reachable by public transport':
+          localization.reachable_by_public_transport,
+      'Free of charge': localization.free_of_charge,
+      'Bookable online': localization.bookable_online,
+      'Open air': localization.open_air,
+      'Card payment possible': localization.card_payment_possible,
+    };
+    String? displayText = toggleTextLocalizationMap[text] ?? '';
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
       child: Row(
@@ -393,7 +409,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
           Padding(
             padding: EdgeInsets.only(left: 10.w),
             child: textRegularPoppins(
-                text: text,
+                text: displayText,
                 fontWeight: FontWeight.w600,
                 fontSize: 12,
                 color: Theme.of(context).textTheme.bodyMedium?.color),
