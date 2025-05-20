@@ -2,33 +2,24 @@ import 'package:dot_navigation_bar/dot_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/navigation/navigation.dart';
-import 'package:kusel/screens/search/search_screen.dart';
 
 import '../../images_path.dart';
-import '../explore/explore_screen.dart';
-import '../home/home_screen.dart';
-import '../location/location_screen.dart';
-import '../settings/settings_screen.dart';
 import 'dashboard_screen_provider.dart';
 
 class DashboardScreen extends ConsumerStatefulWidget {
-  DashboardScreen({super.key});
+  final StatefulNavigationShell child;
+
+  DashboardScreen({super.key, required this.child});
 
   @override
   ConsumerState<DashboardScreen> createState() => _DashboardScreenState();
 }
 
 class _DashboardScreenState extends ConsumerState<DashboardScreen> {
-  final List<Widget> _pages = [
-    HomeScreen(),
-    ExploreScreen(),
-    SearchScreen(),
-    LocationScreen(),
-    SettingsScreen()
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -38,6 +29,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
     int selectedIndex = ref.read(dashboardScreenProvider).selectedIndex;
     if (selectedIndex != 0) {
       ref.read(dashboardScreenProvider.notifier).onIndexChanged(0);
+      ref
+          .read(navigationProvider)
+          .removeAllAndNavigate(context: context, path: homeScreenPath);
       return false; // Don't exit the app
     }
     return true; // Exit the app
@@ -59,15 +53,14 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       },
       child: Scaffold(
         resizeToAvoidBottomInset: false,
+        extendBody: true,
         body: Stack(
           children: [
-            Positioned.fill(
-              child: _pages[selectedIndex],
-            ),
+            Positioned.fill(child: widget.child),
             Positioned(
-              bottom: 16,
-              left: 16,
-              right: 16,
+              left: 16.w,
+              right: 16.w,
+              bottom: 16.h,
               child: DotNavigationBar(
                 backgroundColor: Theme.of(context).bottomAppBarTheme.color,
                 selectedItemColor: Theme.of(context).indicatorColor,
@@ -76,8 +69,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 enableFloatingNavBar: true,
                 paddingR: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                 marginR: const EdgeInsets.all(0),
-                onTap:
-                    ref.read(dashboardScreenProvider.notifier).onIndexChanged,
+                onTap: (index) {
+                  ref
+                      .read(dashboardScreenProvider.notifier)
+                      .onIndexChanged(index);
+
+                  widget.child.goBranch(index);
+                },
                 dotIndicatorColor: Theme.of(context).indicatorColor,
                 itemPadding: const EdgeInsets.only(
                     top: 8, bottom: 0, left: 16, right: 16),
@@ -96,7 +94,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           child: ImageUtil.loadSvgImage(
                             height: 13.h,
                             width: 13.w,
-                            imageUrl : imagePath['discover_icon'] ?? "",
+                            imageUrl: imagePath['discover_icon'] ?? "",
                             context: context,
                             color: selectedIndex == 1
                                 ? Theme.of(context).indicatorColor
@@ -122,7 +120,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           height: 14.h,
                           width: 15.w,
                           fit: BoxFit.contain,
-                          imageUrl : imagePath['location_icon'] ?? "",
+                          imageUrl: imagePath['location_icon'] ?? "",
                           color: selectedIndex == 3
                               ? Theme.of(context).indicatorColor
                               : Theme.of(context).colorScheme.onPrimary,
@@ -137,7 +135,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   ),
                 ],
               ),
-            ),
+            )
           ],
         ),
       ),

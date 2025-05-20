@@ -47,8 +47,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             imageUrl: imagePath['background_image'] ?? "",
             height: 100.h,
             blurredBackground: true,
-            isStaticImage: true
-        ),
+            isStaticImage: true),
         Visibility(
           visible: ref.watch(settingsScreenProvider).isLoggedIn,
           child: Column(
@@ -82,8 +81,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               textAlign: TextAlign.start,
               text: AppLocalizations.of(context).imprint_page),
           onTap: () async {
-            final Uri uri =
-                Uri.parse("http://deinkuselerland.de/impressum");
+            final Uri uri = Uri.parse("http://deinkuselerland.de/impressum");
             if (await canLaunchUrl(uri)) {
               await launchUrl(uri);
             }
@@ -96,8 +94,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               textAlign: TextAlign.start,
               text: AppLocalizations.of(context).terms_of_use),
           onTap: () async {
-            final Uri uri =
-                Uri.parse("http://deinkuselerland.de/terms");
+            final Uri uri = Uri.parse("http://deinkuselerland.de/terms");
             if (await canLaunchUrl(uri)) {
               await launchUrl(uri);
             }
@@ -157,7 +154,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
         ),
         Visibility(
-          visible: false ?? !ref.watch(settingsScreenProvider).isLoggedIn,
+          visible: !ref.watch(settingsScreenProvider).isLoggedIn,
           child: ListTile(
             leading: const Icon(Icons.login),
             title: textBoldPoppins(
