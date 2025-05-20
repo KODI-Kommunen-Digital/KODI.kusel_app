@@ -145,7 +145,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                   textBoldPoppins(
                       color: Theme.of(context).textTheme.labelLarge?.color,
                       fontSize: 18,
-                      text: AppLocalizations.of(context).my_place),
+                      text: AppLocalizations.of(context).my_town),
                 ],
               ),
             ),
@@ -198,7 +198,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                 Row(
                   children: [
                     textRegularPoppins(
-                        text: AppLocalizations.of(context).our_communities,
+                        text: AppLocalizations.of(context).associated_municipalities,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).textTheme.bodyLarge?.color),

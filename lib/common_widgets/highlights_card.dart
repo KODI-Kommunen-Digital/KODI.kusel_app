@@ -125,6 +125,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
               children: [
                 (widget.date != null)
                     ? textSemiBoldMontserrat(
+                  color: Theme.of(context).textTheme.labelMedium?.color,
                         text: formatDate(widget.date ?? ""), fontSize: 14)
                     : SizedBox.shrink(),
                 (widget.date != null) ? 4.verticalSpace : SizedBox.shrink(),
