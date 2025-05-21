@@ -220,7 +220,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
               ),
               16.verticalSpace,
               SizedBox(
-                height: 290.h,
+                height: 300.h,
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
                     shrinkWrap: true,
@@ -255,7 +255,8 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                                   success: ({required bool isFavorite}) {
                                     ref
                                         .read(tourismScreenControllerProvider.notifier)
-                                        .updateRecommendationIsFav(
+                                        .updateRecommendationIsFav
+                                      (
                                         isFavorite, item.id);
                                   }, error: ({required String message}) {
                                     showErrorToast(
