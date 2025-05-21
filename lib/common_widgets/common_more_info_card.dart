@@ -48,7 +48,6 @@ class _CommonMoreInfoCardState extends ConsumerState<CommonMoreInfoCard> {
           ),
         10.verticalSpace,
         CommonPhoneNumberCard(
-          onTap: widget.onTap ?? () {},
           phoneNumber: widget.phoneNumber,
         ),
       ],

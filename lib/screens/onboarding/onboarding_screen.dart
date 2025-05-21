@@ -26,6 +26,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   void initState() {
     ref.read(onboardingScreenProvider.notifier).initializerPageController();
+    ref.read(onboardingScreenProvider.notifier).updateCurrentCity();
     super.initState();
   }
 
