@@ -22,9 +22,11 @@ import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/common_text_arrow_widget.dart';
 import '../../common_widgets/event_list_section_widget.dart';
 import '../../common_widgets/text_styles.dart';
+import '../../common_widgets/toast_message.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
+import '../../providers/favorites_list_notifier.dart';
 
 class TourismScreen extends ConsumerStatefulWidget {
   const TourismScreen({super.key});
@@ -218,7 +220,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
               ),
               16.verticalSpace,
               SizedBox(
-                height: 320.h,
+                height: 290.h,
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
                     shrinkWrap: true,
@@ -233,7 +235,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                         padding: EdgeInsets.only(right: 16.w),
                         child: HighlightsCard(
                             date: item.startDate,
-                            cardWidth: 250.w,
+                            cardWidth: 280.w,
                             sourceId: item.sourceId ?? 3,
                             imageUrl: item.logo ?? "",
                             heading: item.title ?? "",
@@ -246,7 +248,20 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                                   params: EventDetailScreenParams(
                                       eventId: item.id));
                             },
-                            onFavouriteIconClick: () {},
+                            onFavouriteIconClick: () {
+                              ref
+                                  .watch(favoritesProvider.notifier)
+                                  .toggleFavorite(item,
+                                  success: ({required bool isFavorite}) {
+                                    ref
+                                        .read(tourismScreenControllerProvider.notifier)
+                                        .updateRecommendationIsFav(
+                                        isFavorite, item.id);
+                                  }, error: ({required String message}) {
+                                    showErrorToast(
+                                        message: message, context: context);
+                                  });
+                            },
                             isVisible: state.isUserLoggedIn),
                       );
                     }),

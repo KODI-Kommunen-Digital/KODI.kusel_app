@@ -251,7 +251,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
           ),
           10.verticalSpace,
           SizedBox(
-            height: 315.h,
+            height: 280.h,
             child: PageView.builder(
               controller: PageController(
                   viewportFraction: 317.w / MediaQuery.of(context).size.width),
