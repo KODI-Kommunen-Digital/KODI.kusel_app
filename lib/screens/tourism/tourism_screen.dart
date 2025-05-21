@@ -172,7 +172,9 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
             },
           ),
           32.verticalSpace,
-          FeedbackCardWidget(onTap: () {
+          FeedbackCardWidget(
+              height: 270.h,
+              onTap: () {
             ref
                 .read(navigationProvider)
                 .navigateUsingPath(path: feedbackScreenPath, context: context);

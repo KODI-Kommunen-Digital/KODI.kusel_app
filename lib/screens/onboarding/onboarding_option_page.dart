@@ -230,10 +230,10 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
   Widget _autoCompleteTextDropDown() {
     final stateNotifier = ref.read(onboardingScreenProvider.notifier);
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16,),
+      padding: EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.onPrimary,
-          borderRadius: BorderRadius.circular(30.r),
+        color: Theme.of(context).colorScheme.onPrimary,
+        borderRadius: BorderRadius.circular(30.r),
       ),
       child: Autocomplete<String>(
         optionsBuilder: (TextEditingValue textEditingValue) {
@@ -241,7 +241,7 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
             return const Iterable<String>.empty();
           }
           return ref.read(onboardingScreenProvider).residenceList.where(
-              (String city) => city
+                  (String city) => city
                   .toLowerCase()
                   .contains(textEditingValue.text.toLowerCase()));
         },
@@ -256,10 +256,36 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
             focusNode: focusNode,
             maxLines: 1,
             style: TextStyle(
-              color: Theme.of(context).textTheme.labelMedium?.color),
+                color: Theme.of(context).textTheme.labelMedium?.color),
             decoration: InputDecoration(
               hintText: AppLocalizations.of(context).select_residence,
               border: InputBorder.none,
+            ),
+          );
+        },
+        optionsViewBuilder: (context, onSelected, options) {
+          return Align(
+            alignment: Alignment.topLeft,
+            child: Material(
+              elevation: 4,
+              borderRadius: BorderRadius.circular(8),
+              child: SizedBox(
+                width: 285.w,
+                child: ListView.builder(
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: true,
+                  itemCount: options.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final option = options.elementAt(index);
+                    return ListTile(
+                      title: Text(option),
+                      onTap: () {
+                        onSelected(option);
+                      },
+                    );
+                  },
+                ),
+              ),
             ),
           );
         },

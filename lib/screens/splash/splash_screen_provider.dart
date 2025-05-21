@@ -17,18 +17,7 @@ class SplashScreenProvider extends StateNotifier<SplashScreenState> {
   SplashScreenProvider({required this.sharedPreferenceHelper})
       : super(SplashScreenState.empty());
 
-  void startTimer(void Function(bool isOnBoardingDone) callBack) {
-    bool isOnboardingDone = onBoardingStatus();
-    Timer(const Duration(seconds: 2), () {
-      callBack(isOnboardingDone);
-    });
-  }
-
-
-  bool onBoardingStatus() {
-    String onBoardingStatus =
-        sharedPreferenceHelper.getString(onboardingKey) ?? "false";
-    bool isOnBoarded = onBoardingStatus == 'true';
-    return isOnBoarded;
+  void startTimer(VoidCallback callBack) {
+    Timer(const Duration(seconds: 2), callBack);
   }
 }

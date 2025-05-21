@@ -16,6 +16,7 @@ class OnboardingTypePage extends ConsumerStatefulWidget {
 }
 
 class _OnboardingStartPageState extends ConsumerState<OnboardingTypePage> {
+
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(onboardingScreenProvider);
@@ -32,14 +33,15 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingTypePage> {
               color: Theme.of(context).textTheme.bodyLarge?.color),
           20.verticalSpace,
           CustomSelectionButton(
-              text: AppLocalizations.of(context).live_here,
+              text:
+                  "${AppLocalizations.of(context).live_here} ${state.userCurrentCity ?? AppLocalizations.of(context).kusel}",
               isSelected: state.isResident,
               onTap: () {
                 stateNotifier.updateOnboardingType(OnBoardingType.resident);
               }),
           15.verticalSpace,
           CustomSelectionButton(
-              text: AppLocalizations.of(context).spend_my_free_time_here,
+              text: "${AppLocalizations.of(context).spend_my_free_time_here} ${state.userCurrentCity ?? AppLocalizations.of(context).kusel}",
               isSelected: state.isTourist,
               onTap: () {
                 stateNotifier.updateOnboardingType(OnBoardingType.tourist);

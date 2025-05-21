@@ -108,8 +108,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
             KuselTextField(
               textEditingController: emailTextEditingController,
               validator: (value) {
-                return validateField(
-                    value, AppLocalizations.of(context).enter_email_id);
+                return validateField(value,
+                    "${AppLocalizations.of(context).enter_email_id} ${AppLocalizations.of(context).is_required}");
               },
             ),
             55.verticalSpace,
