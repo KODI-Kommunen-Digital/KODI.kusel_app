@@ -20,6 +20,7 @@ class OnboardingScreenState {
   List<Interest> interests;
   bool loading;
   Map<int, bool> interestsMap;
+  String? userCurrentCity;
 
   OnboardingScreenState(
       this.selectedPageIndex,
@@ -40,11 +41,13 @@ class OnboardingScreenState {
       this.cityDetailsMap,
       this.interests,
       this.loading,
-      this.interestsMap);
+      this.interestsMap,
+      this.userCurrentCity
+      );
 
   factory OnboardingScreenState.empty() {
     return OnboardingScreenState(0, '', [], null, '', false, false, false, 0,
-        false, false, false, false, false, false, {}, [], false, {});
+        false, false, false, false, false, false, {}, [], false, {}, null);
   }
 
   OnboardingScreenState copyWith(
@@ -66,7 +69,9 @@ class OnboardingScreenState {
       Map<int, String>? cityDetailsMap,
       List<Interest>? interests,
       bool? loading,
-      Map<int, bool>? interestsMap}) {
+      Map<int, bool>? interestsMap,
+      String? userCurrentCity
+      }) {
     return OnboardingScreenState(
         selectedPageIndex ?? this.selectedPageIndex,
         onBoardingButtonText ?? this.onBoardingButtonText,
@@ -86,6 +91,8 @@ class OnboardingScreenState {
         cityDetailsMap ?? this.cityDetailsMap,
         interests ?? this.interests,
         loading ?? this.loading,
-        interestsMap ?? this.interestsMap);
+        interestsMap ?? this.interestsMap,
+        userCurrentCity ?? this.userCurrentCity
+    );
   }
 }

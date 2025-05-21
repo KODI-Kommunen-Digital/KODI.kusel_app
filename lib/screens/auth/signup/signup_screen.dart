@@ -208,8 +208,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               KuselTextField(
                 textEditingController: userNameTextEditingController,
                 focusNode: userNameFocusNode,
-                validator: (value) =>
-                    validateField(value, AppLocalizations.of(context).username),
+                validator: (value) => validateField(value,
+                    "${AppLocalizations.of(context).username} ${AppLocalizations.of(context).is_required}"),
               ),
               22.verticalSpace,
               _buildLabel(context, AppLocalizations.of(context).firstName),
@@ -217,8 +217,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 textEditingController: firstNameTextEditingController,
                 focusNode: firstNameFocusNode,
                 validator: (value) => validateField(
-                    value, AppLocalizations.of(context).firstName),
-              ),
+                    value,
+                      "${AppLocalizations.of(context).firstName} ${AppLocalizations.of(context).is_required}")),
               22.verticalSpace,
               _buildLabel(context, AppLocalizations.of(context).lastName),
               KuselTextField(

@@ -9,7 +9,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FeedbackCardWidget extends StatefulWidget {
   final Function() onTap;
-  const FeedbackCardWidget({super.key, required this.onTap});
+  final double? height;
+  FeedbackCardWidget({super.key, required this.onTap, this.height});
 
   @override
   State<FeedbackCardWidget> createState() => _FeedbackCardWidgetState();
@@ -19,6 +20,7 @@ class _FeedbackCardWidgetState extends State<FeedbackCardWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: widget.height,
       color: lightThemeFeedbackCardColor,
       child: Column(
         children: [
@@ -46,13 +48,16 @@ class _FeedbackCardWidgetState extends State<FeedbackCardWidget> {
                       SizedBox(
                         height: 8.h,
                       ),
-                      textSemiBoldPoppins(
-                        text: AppLocalizations.of(context).feedback_description,
-                        color: Colors.white,
-                        fontSize: 12,
-                        textAlign: TextAlign.start,
-                        fontWeight: FontWeight.w200,
-                        textOverflow: TextOverflow.visible,
+                      Padding(
+                        padding: EdgeInsets.only(right: 10.w),
+                        child: textSemiBoldPoppins(
+                          text: AppLocalizations.of(context).feedback_description,
+                          color: Colors.white,
+                          fontSize: 12,
+                          textAlign: TextAlign.start,
+                          fontWeight: FontWeight.w200,
+                          textOverflow: TextOverflow.visible,
+                        ),
                       )
                     ],
                   ),

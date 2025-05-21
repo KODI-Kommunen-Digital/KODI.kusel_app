@@ -36,23 +36,19 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     Future.microtask(() {
-      ref.read(homeScreenProvider.notifier).getLocation();
-      ref.read(homeScreenProvider.notifier).getUserDetails();
-      ref.read(homeScreenProvider.notifier).getHighlights();
-      ref.read(homeScreenProvider.notifier).getEvents();
-      ref.read(homeScreenProvider.notifier).getNearbyEvents();
-      ref.read(homeScreenProvider.notifier).getLoginStatus();
-      ref.read(homeScreenProvider.notifier).getWeather();
+      ref.read(homeScreenProvider.notifier).fetchHomeScreenInitMethod();
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: SizedBox(
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await ref.read(homeScreenProvider.notifier).refresh();
+        },        child: SizedBox(
             height: MediaQuery.of(context).size.height, child: buildUi()),
       ),
     );
@@ -335,12 +331,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 },
               ),
             FeedbackCardWidget(
+              height: 270.h,
               onTap: () {
                 ref.read(navigationProvider).navigateUsingPath(
                     path: feedbackScreenPath, context: context);
               },
             ),
-            100.verticalSpace
           ],
         ),
       ),
@@ -423,7 +419,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           isLoading
               ? highlightCardShimmerEffect()
               : SizedBox(
-                  height: 350.h,
+                  height: 300.h,
                   child: PageView.builder(
                     controller: PageController(
                         viewportFraction:
