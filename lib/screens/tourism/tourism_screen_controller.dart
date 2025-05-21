@@ -133,4 +133,5 @@ class TourismScreenController extends StateNotifier<TourismScreenState> {
     }
     state = state.copyWith(allEventList: list);
   }
+
 }
