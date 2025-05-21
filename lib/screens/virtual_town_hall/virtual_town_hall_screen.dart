@@ -351,7 +351,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
           ),
           10.verticalSpace,
           SizedBox(
-            height: 315.h,
+            height: 280.h,
             child: PageView.builder(
               controller: PageController(
                   viewportFraction: 317.w / MediaQuery.of(context).size.width),
@@ -379,7 +379,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                           );
                     },
                     onFavouriteIconClick: () {},
-                    isVisible: false,
+                    isVisible: ref.watch(virtualTownHallProvider).isUserLoggedIn,
                     sourceId: 1,
                     imageFit: BoxFit.contain,
                   ),
