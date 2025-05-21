@@ -7,9 +7,6 @@ import '../app_router.dart';
 
 final navigationProvider = Provider((ref)=>(Navigator()));
 
-
-
-
 class Navigator {
 
   navigateUsingPath(

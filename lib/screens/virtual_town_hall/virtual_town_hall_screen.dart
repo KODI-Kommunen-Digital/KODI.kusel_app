@@ -160,7 +160,9 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
               );
             },
           ),
-          FeedbackCardWidget(onTap: () {
+          FeedbackCardWidget(
+              height: 270.h,
+              onTap: () {
             ref
                 .read(navigationProvider)
                 .navigateUsingPath(path: feedbackScreenPath, context: context);

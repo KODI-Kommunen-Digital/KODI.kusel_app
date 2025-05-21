@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,8 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
-
-import '../screens/utility/image_loader_utility.dart';
 
 class HighlightsCard extends ConsumerStatefulWidget {
   final String imageUrl;
@@ -57,7 +54,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
       child: Container(
         width: widget.cardWidth,
         height: widget.cardHeight,
-        padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 10.w),
+        padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 8.w),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(25.r),
@@ -82,11 +79,9 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                     child: SizedBox(
                       height: widget.imageHeight ?? 200.h,
                       width: widget.imageWidth ?? double.infinity,
-
                       child: ImageUtil.loadNetworkImage(
                           imageUrl: widget.imageUrl,
                           fit: widget.imageFit ?? BoxFit.cover,
-
                           sourceId: widget.sourceId,
                           svgErrorImagePath: widget.errorImagePath,
                           context: context),
@@ -131,7 +126,8 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                 (widget.date != null) ? 4.verticalSpace : SizedBox.shrink(),
                 textSemiBoldMontserrat(
                     text: widget.heading,
-                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 12,
                     color: Theme.of(context).textTheme.bodyLarge?.color),
                 4.verticalSpace,
                 textSemiBoldMontserrat(

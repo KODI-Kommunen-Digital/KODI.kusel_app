@@ -67,8 +67,8 @@
   "welcome_text": "Welcome!",
   "welcome_para_first": "In order to offer you tailored content from the region that will also interest you, we would need a little information.",
   "welcome_para_second": "This information is voluntary and can be skipped. You can adjust it at any time in the settings.",
-  "live_here": "live in Kusel",
-  "spend_my_free_time_here": "Spend my free time in Kusel",
+  "live_here": "live in",
+  "spend_my_free_time_here": "Spend my free time in",
   "your_place_of_residence": "Your place of residence",
   "select_residence": "Select residence",
   "alone": "Alone",
@@ -115,7 +115,7 @@
   "as_a_couple": "As a couple",
   "with_children": "With children",
   "groups": "Groups",
-  "seniors": "Seniors",
+  "seniors": "Senior citizen",
   "from": "From",
   "to": "To",
   "select_start_date": "Select start date",
@@ -170,5 +170,8 @@
   "free_of_charge": "Free of charge",
   "bookable_online": "Bookable online",
   "open_air": "Open air",
-  "card_payment_possible": "Card payment possible"
+  "card_payment_possible": "Card payment possible",
+  "is_required": "is Required",
+  "name_or_email": "Name or Email",
+  "kusel" : "Kusel"
 }
