@@ -24,7 +24,7 @@ class _OnboardingLoadingPageState extends ConsumerState<OnboardingLoadingPage> {
 
   @override
   void initState() {
-    super.initState(); // super.initState FIRST is better practice
+    super.initState();
 
     Future.delayed(Duration.zero, () {
       ref.read(onboardingScreenProvider.notifier).startLoadingTimer(() {

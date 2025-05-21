@@ -60,7 +60,9 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
           _buildOffersList(),
           _buildContactListUi(),
           _buildContactDetailsList(),
-          FeedbackCardWidget(onTap: () {
+          FeedbackCardWidget(
+              height: 270.h,
+              onTap: () {
             ref
                 .read(navigationProvider)
                 .navigateUsingPath(path: feedbackScreenPath, context: context);

@@ -99,7 +99,8 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
               hintText: AppLocalizations.of(context).enter_email,
               validator: (value) {
                 return validateField(
-                    value, AppLocalizations.of(context).enter_email);
+                    value,
+                    "${AppLocalizations.of(context).email} ${AppLocalizations.of(context).is_required}");
               },
             ),
             15.verticalSpace,
@@ -115,7 +116,8 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
               hintText: AppLocalizations.of(context).enter_title,
               validator: (value) {
                 return validateField(
-                    value, AppLocalizations.of(context).enter_title);
+                    value,
+                    "${AppLocalizations.of(context).title} ${AppLocalizations.of(context).is_required}");
               },
             ),
             15.verticalSpace,
@@ -134,7 +136,8 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
               hintText: AppLocalizations.of(context).enter_description,
               validator: (value) {
                 return validateField(
-                    value, AppLocalizations.of(context).description);
+                    value,
+                    "${AppLocalizations.of(context).description} ${AppLocalizations.of(context).is_required}");
               },
             ),
             5.verticalSpace,

@@ -1,7 +1,6 @@
-String? validateField(String? value, String fieldName ) {
+String? validateField(String? value, String fieldNameRequiredMessage) {
   if (value == null || value.isEmpty) {
-    return '$fieldName is required';
+    return fieldNameRequiredMessage;
   }
-
   return null;
 }

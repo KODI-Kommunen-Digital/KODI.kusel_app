@@ -106,7 +106,9 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                           municipalityId: item.id ?? 0));
                 });
               }),
-          FeedbackCardWidget(onTap: () {
+          FeedbackCardWidget(
+              height: 270.h,
+              onTap: () {
             ref
                 .read(navigationProvider)
                 .navigateUsingPath(path: feedbackScreenPath, context: context);

@@ -6,4 +6,3 @@ const userNameKey = "userName";
 const environmentKey="environment";
 const onboardingKey = "onboarding";
 const searchListKey= "searchList";
-const onboardingDataKey = "onboardingDataKey";

@@ -254,4 +254,36 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       debugPrint('get weather exception = $error');
     }
   }
+
+  Future<void> fetchHomeScreenInitMethod() async {
+    await getLocation();
+    await getUserDetails();
+    await getHighlights();
+    await getEvents();
+    await getNearbyEvents();
+    await getLoginStatus();
+    await getWeather();
+  }
+
+  Future<void> refresh() async {
+    try {
+      state = state.copyWith(loading: true);
+      await Future.wait([
+        getLocation(),
+        getUserDetails(),
+        getHighlights(),
+        getEvents(),
+        getNearbyEvents(),
+        getLoginStatus(),
+        getWeather(),
+      ]);
+      state = state.copyWith(loading: false, error: "");
+    } catch (error) {
+      state = state.copyWith(
+        loading: false,
+        error: "Failed to refresh: ${error.toString()}",
+      );
+      debugPrint('Refresh error: $error');
+    }
+  }
 }
