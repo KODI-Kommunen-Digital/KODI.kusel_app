@@ -71,7 +71,9 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
                       description: item?.description ?? "_");
                 }),
           _buildContactDetailsList(),
-          FeedbackCardWidget(onTap: () {
+          FeedbackCardWidget(
+              height: 270.h,
+              onTap: () {
             ref
                 .read(navigationProvider)
                 .navigateUsingPath(path: feedbackScreenPath, context: context);

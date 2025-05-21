@@ -66,8 +66,8 @@
   "welcome_text": "Willkommen!",
   "welcome_para_first" : "Um dir maßgeschneiderte Inhalte aus der Region zu bieten, die dich auch interessieren, bräuchten wir ein paar kleine Infos.",
   "welcome_para_second" : "Es sind freiwillige Angaben und können auch übersprungen werden. In den Einstellungen kannst du diese jederzeit anpassen.",
-  "live_here" : "lebe in Kusel",
-  "spend_my_free_time_here" : "Meine Freizeit in Kusel verbringen",
+  "live_here" : "lebe in",
+  "spend_my_free_time_here" : "Verbringe meine Freizeit in",
   "your_place_of_residence" : "Dein Wohnort",
   "select_residence" : "Wohnort auswählen",
   "alone" : "Alleine",
@@ -173,5 +173,8 @@
   "free_of_charge": "Kostenlos",
   "bookable_online": "Online buchbar",
   "open_air": "Freiluft",
-  "card_payment_possible": "Kartenzahlung möglich"
+  "card_payment_possible": "Kartenzahlung möglich",
+  "is_required": "ist erforderlich",
+  "name_or_email": "Name oder E-Mail",
+  "kusel": "Kusel"
 }
