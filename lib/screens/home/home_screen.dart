@@ -11,6 +11,7 @@ import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/weather_widget.dart';
 import 'package:kusel/providers/favorites_list_notifier.dart';
+import 'package:kusel/screens/all_event/all_event_screen_param.dart';
 import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/home/home_screen_state.dart';
@@ -59,7 +60,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   Widget buildUi() {
     final isLoading = ref.watch(homeScreenProvider).loading;
-    HomeScreenState state = ref.watch(homeScreenProvider);
+    final state = ref.watch(homeScreenProvider);
     final latitude = ref.watch(homeScreenProvider).latitude;
     final longitude = ref.watch(homeScreenProvider).longitude;
     return GestureDetector(
@@ -111,7 +112,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             color: Theme.of(context).textTheme.bodyLarge?.color,
                             textAlign: TextAlign.center,
                             textOverflow: TextOverflow.visible,
-                            text: AppLocalizations.of(context).today_its_going_to_be,
+                            text: AppLocalizations.of(context)
+                                .today_its_going_to_be,
                           ),
                     32.verticalSpace,
                     Column(
@@ -226,8 +228,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 isLoading: isLoading,
                 onButtonTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
-                        path: allEventScreenPath,
+                        path: selectedEventListScreenPath,
                         context: context,
+                        params: SelectedEventListScreenParameter(
+                          radius: 1,
+                          centerLatitude: latitude,
+                          centerLongitude: longitude,
+                          categoryId: 3,
+                          listHeading: "Events in your area",
+                          onFavChange: () {
+                            ref
+                                .read(homeScreenProvider.notifier)
+                                .getNearbyEvents();
+                          },
+                        ),
                       );
                 },
                 onHeadingTap: () {
@@ -240,10 +254,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           centerLongitude: longitude,
                           categoryId: 3,
                           listHeading: "Events in your area",
+                          onFavChange: () {
+                            ref
+                                .read(homeScreenProvider.notifier)
+                                .getNearbyEvents();
+                          },
                         ),
                       );
                 },
                 isFavVisible: (state.isSignInButtonVisible) ? false : true,
+                onSuccess: (bool isFav, int? id) {
+                  ref
+                      .read(homeScreenProvider.notifier)
+                      .setIsFavoriteNearBy(isFav, id);
+                },
               ),
             if (ref.watch(homeScreenProvider).eventsList.isNotEmpty)
               EventsListSectionWidget(
@@ -256,22 +280,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 isLoading: isLoading,
                 onButtonTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
-                        path: allEventScreenPath,
-                        context: context,
-                      );
+                      path: allEventScreenPath,
+                      context: context,
+                      params: AllEventScreenParam(onFavChange: () {
+                        ref.read(homeScreenProvider.notifier).getEvents();
+                      }));
                 },
                 onHeadingTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
-                        path: selectedEventListScreenPath,
-                        context: context,
-                        params: SelectedEventListScreenParameter(
-                          radius: 1,
-                          centerLatitude: latitude,
-                          centerLongitude: longitude,
-                          categoryId: 3,
-                          listHeading: "Events in your area",
-                        ),
-                      );
+                      path: allEventScreenPath,
+                      context: context,
+                      params: AllEventScreenParam(onFavChange: () {
+                        ref.read(homeScreenProvider.notifier).getEvents();
+                      }));
+                },
+                onSuccess: (isFav, eventId) {
+                  ref
+                      .read(homeScreenProvider.notifier)
+                      .setIsFavoriteEvent(isFav, eventId);
                 },
                 isFavVisible: (state.isSignInButtonVisible) ? false : true,
               ),

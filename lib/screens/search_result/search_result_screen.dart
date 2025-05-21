@@ -3,21 +3,18 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/app_router.dart';
-import 'package:kusel/common_widgets/common_event_card.dart';
-import 'package:kusel/common_widgets/image_utility.dart';
+import 'package:kusel/common_widgets/listing_id_enum.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
-import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/navigation/navigation.dart';
-import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/events_listing/selected_event_list_screen_parameter.dart';
-import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/search_result/search_result_screen_parameter.dart';
 import 'package:kusel/screens/search_result/search_result_screen_provider.dart';
 import 'package:kusel/screens/search_result/search_result_screen_state.dart';
 
-import '../../common_widgets/arrow_back_widget.dart';
+import '../../common_widgets/common_background_clipper_widget.dart';
+import '../../common_widgets/event_list_section_widget.dart';
+import '../../common_widgets/upstream_wave_clipper.dart';
 import '../../images_path.dart';
-import '../../theme_manager/colors.dart';
 
 class SearchResultScreen extends ConsumerStatefulWidget {
   final SearchResultScreenParameter searchResultScreenParameter;
@@ -34,149 +31,116 @@ class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref
-          .watch(searchResultScreenProvider.notifier)
+          .read(searchResultScreenProvider.notifier)
           .getEventsList(widget.searchResultScreenParameter.searchType);
+
+      ref.read(searchResultScreenProvider.notifier).isUserLoggedIn();
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final SearchResultScreenState categoryScreenState =
+    final SearchResultScreenState searchResultScreenState =
         ref.watch(searchResultScreenProvider);
     return SafeArea(
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: categoryScreenState.loading
+        body: searchResultScreenState.loading
             ? const Center(child: CircularProgressIndicator())
-            : _buildBody(categoryScreenState, context),
+            : _buildBody(searchResultScreenState, context),
       ),
     );
   }
 
   Widget _buildBody(
-      SearchResultScreenState categoryScreenState, BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverAppBar(
-          toolbarHeight: MediaQuery.of(context).size.height * 0.1,
-          automaticallyImplyLeading: false,
-          floating: true,
-          pinned: false,
-          expandedHeight: MediaQuery.of(context).size.height * 0.2,
-          flexibleSpace: FlexibleSpaceBar(
-            background: ClipPath(
-              clipper: UpstreamWaveClipper(),
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.2,
-                width: MediaQuery.of(context).size.width,
-                child: Image.asset(
-                  imagePath['background_image'] ?? "",
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
+      SearchResultScreenState searchResultScreenState, BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          CommonBackgroundClipperWidget(
+            clipperType: UpstreamWaveClipper(),
+            height: 130.h,
+            imageUrl: imagePath['home_screen_background'] ?? '',
+            isStaticImage: true,
+            isBackArrowEnabled: true,
+            headingText: AppLocalizations.of(context).search_result,
           ),
-          title: Row(
-            children: [
-              ArrowBackWidget(
-                onTap: () {
-                  ref.read(navigationProvider).removeTopPage(context: context);
-                },
-                size: 15,
-              ),
-              Expanded(
-                child: Center(
-                  child: textBoldPoppins(
-                    color: lightThemeSecondaryColor,
-                    fontSize: 16,
-                    textAlign: TextAlign.center,
-                    text: AppLocalizations.of(context).search_result ?? "",
-                  ),
-                ),
-              ),
-            ],
-          ),
-          backgroundColor: Theme.of(context).colorScheme.onSecondary.withValues(alpha: 0.6),
-        ),
-
-        categoryScreenState.groupedEvents.isEmpty
-            ? SliverFillRemaining(
-                child: Center(
+          searchResultScreenState.groupedEvents.isEmpty
+              ? Center(
                   child: textHeadingMontserrat(
                       text: AppLocalizations.of(context).no_data),
-                ),
-              )
-            : SliverList(
-                delegate: SliverChildListDelegate(
-                  categoryScreenState.groupedEvents.entries.expand((entry) {
-                    final categoryId = entry.key;
-                    final items = ref
-                        .read(searchResultScreenProvider.notifier)
-                        .subList(entry.value);
-
-                    return [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 24),
-                        child: InkWell(
-                          onTap: () {
-                            ref.read(navigationProvider).navigateUsingPath(
-                                path: selectedEventListScreenPath,
-                                params: SelectedEventListScreenParameter(
-                                    listHeading: AppLocalizations.of(context)
-                                        .search_heading,
-                                    categoryId: items.first.categoryId),
-                                context: context);
-                          },
-                          child: Row(
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.only(left: 10.w),
-                                child: textRegularPoppins(
-                                    text: items.isNotEmpty ? items.first.categoryName ?? "" : "",
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .bodyLarge
-                                        ?.color),
-                              ),
-                              12.horizontalSpace,
-                              ImageUtil.loadSvgImage(
-                                imageUrl : imagePath['arrow_icon'] ?? "",
-                                context: context,
-                                height: 10.h,
-                                width: 16.w,
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      ...items.map((item) {
-                        return CommonEventCard(
-                          isFavorite: item.isFavorite ?? false,
-                          imageUrl: item.logo ?? "",
-                          date: item.startDate ?? "",
-                          title: item.title ?? "",
-                          location: item.address ?? "",
-                          onCardTap: () {
-                            ref.read(navigationProvider).navigateUsingPath(
-                                  context: context,
-                                  path: eventDetailScreenPath,
-                                  params: EventDetailScreenParams(eventId: item.id),
-                                );
-                          },
-                          isFavouriteVisible: !ref
-                              .watch(homeScreenProvider)
-                              .isSignInButtonVisible, sourceId: item.sourceId!,
-                        );
-                      }),
-                    ];
-                  }).toList(),
-                ),
-              )
-      ],
+                )
+              : Column(
+                  children: _buildList(searchResultScreenState, context),
+                )
+        ],
+      ),
     );
+  }
+
+  List<Widget> _buildList(
+      SearchResultScreenState searchResultScreenState, BuildContext context) {
+    return searchResultScreenState.groupedEvents.entries.expand((entry) {
+      final categoryId = entry.key;
+      final items =
+          ref.read(searchResultScreenProvider.notifier).subList(entry.value);
+
+      return [
+        EventsListSectionWidget(
+          eventsList: items,
+          heading: items.first.categoryName,
+          maxListLimit: 3,
+          buttonText: null,
+          buttonIconPath: null,
+          isLoading: false,
+          onButtonTap: () {},
+          context: context,
+          isFavVisible: searchResultScreenState.isUserLoggedIn,
+          onHeadingTap: () {
+            if (widget.searchResultScreenParameter.searchType ==
+                SearchType.nearBy) {
+              ref.read(navigationProvider).navigateUsingPath(
+                    path: selectedEventListScreenPath,
+                    context: context,
+                    params: SelectedEventListScreenParameter(
+                      listHeading: items.first.categoryName,
+                      categoryId: categoryId,
+                      radius: SearchRadius.radius.value,
+                      centerLatitude: 49.53838,
+                      centerLongitude: 7.40647,
+                      onFavChange: () {
+                        ref
+                            .read(searchResultScreenProvider.notifier)
+                            .getEventsList(
+                                widget.searchResultScreenParameter.searchType);
+                      },
+                    ),
+                  );
+            } else {
+              ref.read(navigationProvider).navigateUsingPath(
+                    path: selectedEventListScreenPath,
+                    context: context,
+                    params: SelectedEventListScreenParameter(
+                      listHeading: items.first.categoryName,
+                      categoryId: categoryId,
+                      onFavChange: () {
+                        ref
+                            .read(searchResultScreenProvider.notifier)
+                            .getEventsList(
+                                widget.searchResultScreenParameter.searchType);
+                      },
+                    ),
+                  );
+            }
+          },
+          onSuccess: (bool isFav, int? id) {
+            ref
+                .read(searchResultScreenProvider.notifier)
+                .updateIsFav(isFav, id);
+          },
+        )
+      ];
+    }).toList();
   }
 }

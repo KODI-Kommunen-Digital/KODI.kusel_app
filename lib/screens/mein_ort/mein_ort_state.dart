@@ -5,23 +5,26 @@ class MeinOrtState {
   final int highlightCount;
   final List<Municipality> municipalityList;
   final String description;
+  bool isUserLoggedIn;
 
   MeinOrtState(this.isLoading, this.highlightCount, this.description,
-      this.municipalityList);
+      this.municipalityList, this.isUserLoggedIn);
 
   factory MeinOrtState.empty() {
-    return MeinOrtState(false, 0, "", []);
+    return MeinOrtState(false, 0, "", [], false);
   }
 
   MeinOrtState copyWith(
       {bool? isLoading,
       int? highlightCount,
       String? description,
-      List<Municipality>? municipalityList}) {
+      List<Municipality>? municipalityList,
+      bool? isUserLoggedIn}) {
     return MeinOrtState(
         isLoading ?? this.isLoading,
         highlightCount ?? this.highlightCount,
         description ?? this.description,
-        municipalityList ?? this.municipalityList);
+        municipalityList ?? this.municipalityList,
+        isUserLoggedIn ?? this.isUserLoggedIn);
   }
 }

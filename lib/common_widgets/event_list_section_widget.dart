@@ -4,10 +4,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/common_widgets/toast_message.dart';
 
 import '../app_router.dart';
 import '../images_path.dart';
 import '../navigation/navigation.dart';
+import '../providers/favorites_list_notifier.dart';
 import '../screens/event/event_detail_screen_controller.dart';
 import 'common_event_card.dart';
 import 'custom_button_widget.dart';
@@ -26,21 +28,25 @@ class EventsListSectionWidget extends ConsumerStatefulWidget {
   final BuildContext context;
   final VoidCallback onHeadingTap;
   final bool isFavVisible;
+  void Function(bool isFav, int? id) onSuccess;
 
-  const EventsListSectionWidget({
-    super.key,
-    required this.eventsList,
-    required this.heading,
-    required this.maxListLimit,
-    required this.buttonText,
-    required this.buttonIconPath,
-    required this.isLoading,
-    this.showEventLoading,
-    required this.onButtonTap,
-    required this.context,
-    required this.isFavVisible,
-    required this.onHeadingTap,
-  });
+  bool? shrinkWrap; // by default it is true
+
+  EventsListSectionWidget(
+      {super.key,
+      required this.eventsList,
+      required this.heading,
+      required this.maxListLimit,
+      required this.buttonText,
+      required this.buttonIconPath,
+      required this.isLoading,
+      this.showEventLoading,
+      required this.onButtonTap,
+      required this.context,
+      required this.isFavVisible,
+      required this.onHeadingTap,
+      this.shrinkWrap,
+      required this.onSuccess});
 
   @override
   ConsumerState<EventsListSectionWidget> createState() =>
@@ -70,7 +76,7 @@ class _EventsListSectionWidgetState
           ),
           ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
+            shrinkWrap: widget.shrinkWrap ?? true,
             itemCount: 4,
             itemBuilder: (_, index) => eventCartShimmerEffect(),
           ),
@@ -143,7 +149,7 @@ class _EventsListSectionWidgetState
                         ),
                       ),
                     ListView.builder(
-                      shrinkWrap: true,
+                      shrinkWrap: widget.shrinkWrap ?? true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: widget.eventsList.length > widget.maxListLimit
                           ? widget.maxListLimit
@@ -154,17 +160,18 @@ class _EventsListSectionWidgetState
                         return CommonEventCard(
                           isFavorite: item.isFavorite ?? false,
                           onFavorite: () {
-                            // ref.watch(favoritesProvider.notifier).toggleFavorite(
-                            // item,
-                            // success: ({required bool isFavorite}) {
-                            // ref
-                            //     .read(homeScreenProvider.notifier)
-                            //     .setIsFavoriteEvent(isFavorite, item.id);
-                            // },
-                            // error: ({required String message}) {
-                            // showErrorToast(message: message, context: context);
-                            // },
-                            // );
+                            ref
+                                .watch(favoritesProvider.notifier)
+                                .toggleFavorite(
+                              item,
+                              success: ({required bool isFavorite}) {
+                                _updateList(isFavorite, item.id!);
+                              },
+                              error: ({required String message}) {
+                                showErrorToast(
+                                    message: message, context: context);
+                              },
+                            );
                           },
                           imageUrl: item.logo ?? "",
                           date: item.startDate ?? "",
@@ -197,5 +204,9 @@ class _EventsListSectionWidgetState
                   ],
                 );
     });
+  }
+
+  _updateList(bool isFav, int eventId) {
+    widget.onSuccess(isFav, eventId);
   }
 }

@@ -111,4 +111,15 @@ class AllEventScreenController extends StateNotifier<AllEventScreenState> {
     state = state.copyWith(isUserLoggedIn: status);
   }
 
+  updateIsFav(bool isFav, int? eventId)
+  {
+    final list = state.listingList;
+    for (var listing in list) {
+      if (listing.id == eventId) {
+        listing.isFavorite = isFav;
+      }
+    }
+    state = state.copyWith(listingList: list);
+  }
+
 }

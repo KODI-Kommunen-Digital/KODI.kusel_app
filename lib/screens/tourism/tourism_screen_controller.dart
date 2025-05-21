@@ -100,4 +100,37 @@ class TourismScreenController extends StateNotifier<TourismScreenState> {
     final status = await signInStatusController.isUserLoggedIn();
     state = state.copyWith(isUserLoggedIn: status);
   }
+
+  updateNearByIsFav(bool isFav, int? eventId)
+  {
+    final list = state.nearByList;
+    for (var listing in list) {
+      if (listing.id == eventId) {
+        listing.isFavorite = isFav;
+      }
+    }
+    state = state.copyWith(nearByList: list);
+  }
+
+  updateRecommendationIsFav(bool isFav, int? eventId)
+  {
+    final list = state.recommendationList;
+    for (var listing in list) {
+      if (listing.id == eventId) {
+        listing.isFavorite = isFav;
+      }
+    }
+    state = state.copyWith(recommendationList: list);
+  }
+
+  updateEventIsFav(bool isFav, int? eventId)
+  {
+    final list = state.allEventList;
+    for (var listing in list) {
+      if (listing.id == eventId) {
+        listing.isFavorite = isFav;
+      }
+    }
+    state = state.copyWith(allEventList: list);
+  }
 }

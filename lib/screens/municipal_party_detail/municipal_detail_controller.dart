@@ -121,4 +121,27 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
     state = state.copyWith(isUserLoggedIn: status);
 
   }
+
+  updateEventIsFav(bool isFav, int? eventId)
+  {
+    final list = state.eventList;
+    for (var listing in list) {
+      if (listing.id == eventId) {
+        listing.isFavorite = isFav;
+      }
+    }
+    state = state.copyWith(eventList: list);
+  }
+
+
+  updateNewsIsFav(bool isFav, int? eventId)
+  {
+    final list = state.newsList;
+    for (var listing in list) {
+      if (listing.id == eventId) {
+        listing.isFavorite = isFav;
+      }
+    }
+    state = state.copyWith(newsList: list);
+  }
 }

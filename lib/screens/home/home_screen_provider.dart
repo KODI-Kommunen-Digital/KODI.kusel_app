@@ -208,7 +208,7 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
     }
   }
 
-  void setIsFavorite(bool isFavorite, int? id) {
+  void setIsFavoriteNearBy(bool isFavorite, int? id) {
     for (var listing in state.highlightsList) {
       if (listing.id == id) {
         listing.isFavorite = isFavorite;
