@@ -72,12 +72,12 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
           _buildExploreView(context),
           32.verticalSpace,
           FeedbackCardWidget(
+            height: 270.h,
             onTap: () {
               ref.read(navigationProvider).navigateUsingPath(
                   path: feedbackScreenPath, context: context);
             },
           ),
-          100.verticalSpace
         ],
       ),
     );

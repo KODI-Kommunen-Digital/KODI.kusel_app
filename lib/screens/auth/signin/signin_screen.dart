@@ -132,7 +132,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             KuselTextField(
               textEditingController: emailTextEditingController,
               validator: (value) {
-                return validateField(value, "Email or Username");
+                return validateField(value,
+                    "${AppLocalizations.of(context).name_or_email} ${AppLocalizations.of(context).is_required}");
               },
             ),
             22.verticalSpace,
@@ -176,7 +177,11 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                     ),
               validator: (value) {
                 return validateField(
-                    value, AppLocalizations.of(context).password);
+                    value, "${AppLocalizations
+                    .of(context)
+                    .password} ${AppLocalizations
+                    .of(context)
+                    .is_required}");
               },
               suffixIconConstraints:
                   BoxConstraints(maxWidth: 40.w, maxHeight: 40.h),
