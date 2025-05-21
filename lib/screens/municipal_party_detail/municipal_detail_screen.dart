@@ -6,6 +6,7 @@ import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/downstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/image_text_card_widget.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
+import 'package:kusel/common_widgets/listing_id_enum.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/screens/events_listing/selected_event_list_screen_parameter.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_location_widget.dart';
@@ -48,7 +49,6 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
           .getNewsUsingCityId(municipalId: id);
 
       ref.read(municipalDetailControllerProvider.notifier).isUserLoggedIn();
-
     });
     super.initState();
   }
@@ -113,20 +113,41 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                     path: selectedEventListScreenPath,
                     context: context,
                     params: SelectedEventListScreenParameter(
-                        cityId: 1,
-                        listHeading: AppLocalizations.of(context).news,
-                        categoryId: null));
+                        cityId: int.parse(
+                            widget.municipalDetailScreenParams.municipalId),
+                        listHeading: AppLocalizations.of(context).events,
+                        categoryId: ListingCategoryId.event.eventId,
+                        onFavChange: () {
+                          ref
+                              .read(municipalDetailControllerProvider.notifier)
+                              .getEventsUsingCityId(
+                                  municipalId: widget
+                                      .municipalDetailScreenParams.municipalId);
+                        }));
               },
               onHeadingTap: () {
                 ref.read(navigationProvider).navigateUsingPath(
                     path: selectedEventListScreenPath,
                     context: context,
                     params: SelectedEventListScreenParameter(
-                        cityId: 1,
-                        listHeading: AppLocalizations.of(context).news,
-                        categoryId: null));
+                        cityId: int.parse(
+                            widget.municipalDetailScreenParams.municipalId),
+                        listHeading: AppLocalizations.of(context).events,
+                        categoryId: ListingCategoryId.event.eventId,
+                        onFavChange: () {
+                          ref
+                              .read(municipalDetailControllerProvider.notifier)
+                              .getEventsUsingCityId(
+                                  municipalId: widget
+                                      .municipalDetailScreenParams.municipalId);
+                        }));
               },
               isFavVisible: state.isUserLoggedIn,
+              onSuccess: (bool isFav, int? id) {
+                ref
+                    .read(municipalDetailControllerProvider.notifier)
+                    .updateEventIsFav(isFav, id);
+              },
             ),
           32.verticalSpace,
           if (ref.watch(municipalDetailControllerProvider).newsList.isNotEmpty)
@@ -141,20 +162,44 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
               showEventLoading: state.showNewsLoading,
               onButtonTap: () {
                 ref.read(navigationProvider).navigateUsingPath(
-                      path: allEventScreenPath,
-                      context: context,
-                    );
+                    path: selectedEventListScreenPath,
+                    context: context,
+                    params: SelectedEventListScreenParameter(
+                        cityId: int.parse(
+                            widget.municipalDetailScreenParams.municipalId),
+                        listHeading: AppLocalizations.of(context).news,
+                        categoryId: ListingCategoryId.news.eventId,
+                        onFavChange: () {
+                          ref
+                              .read(municipalDetailControllerProvider.notifier)
+                              .getNewsUsingCityId(
+                                  municipalId: widget
+                                      .municipalDetailScreenParams.municipalId);
+                        }));
               },
               onHeadingTap: () {
                 ref.read(navigationProvider).navigateUsingPath(
                     path: selectedEventListScreenPath,
                     context: context,
                     params: SelectedEventListScreenParameter(
-                        cityId: 1,
+                        cityId: int.parse(
+                            widget.municipalDetailScreenParams.municipalId),
                         listHeading: AppLocalizations.of(context).news,
-                        categoryId: null));
+                        categoryId: ListingCategoryId.news.eventId,
+                        onFavChange: () {
+                          ref
+                              .read(municipalDetailControllerProvider.notifier)
+                              .getNewsUsingCityId(
+                                  municipalId: widget
+                                      .municipalDetailScreenParams.municipalId);
+                        }));
               },
               isFavVisible: state.isUserLoggedIn,
+              onSuccess: (bool isFav, int? id) {
+                ref
+                    .read(municipalDetailControllerProvider.notifier)
+                    .updateNewsIsFav(isFav, id);
+              },
             ),
           32.verticalSpace,
           FeedbackCardWidget(

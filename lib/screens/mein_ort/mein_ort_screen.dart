@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:domain/model/response_model/mein_ort/mein_ort_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -19,7 +17,6 @@ import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/common_event_card.dart';
 import '../../common_widgets/custom_button_widget.dart';
 import '../../common_widgets/custom_shimmer_widget.dart';
-import '../../common_widgets/downstream_wave_clipper.dart';
 import '../../common_widgets/highlights_card.dart';
 import '../../common_widgets/image_utility.dart';
 import '../../common_widgets/text_styles.dart';
@@ -38,6 +35,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
   void initState() {
     Future.microtask(() {
       ref.read(meinOrtProvider.notifier).getMeinOrtDetails();
+      ref.read(meinOrtProvider.notifier).isUserLoggedIn();
     });
     super.initState();
   }
@@ -198,7 +196,8 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                 Row(
                   children: [
                     textRegularPoppins(
-                        text: AppLocalizations.of(context).associated_municipalities,
+                        text: AppLocalizations.of(context)
+                            .associated_municipalities,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).textTheme.bodyLarge?.color),
@@ -278,10 +277,9 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                           );
                     },
                     onFavouriteIconClick: () {},
-                    // isVisible:
-                    // !ref.watch(homeScreenProvider).isSignupButtonVisible,
-                    isVisible: false,
+                    isVisible: state.isUserLoggedIn,
                     sourceId: 1,
+                    imageFit: BoxFit.contain,
                   ),
                 );
               },

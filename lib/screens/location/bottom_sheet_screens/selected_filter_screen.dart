@@ -3,16 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kusel/common_widgets/progress_indicator.dart';
+import 'package:kusel/common_widgets/event_list_section_widget.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
-import 'package:kusel/providers/favorites_list_notifier.dart';
 import 'package:kusel/screens/location/bottom_sheet_selected_ui_type.dart';
 import 'package:kusel/screens/location/location_screen_provider.dart';
 import 'package:kusel/screens/location/location_screen_state.dart';
 
-import '../../../common_widgets/common_event_card.dart';
 import '../../../common_widgets/search_widget.dart';
-import '../../../common_widgets/toast_message.dart';
 
 class SelectedFilterScreen extends ConsumerStatefulWidget {
   SelectedFilterScreenParams selectedFilterScreenParams;
@@ -39,8 +36,7 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: _buildBody(context),
-    ).loaderDialog(context,
-        ref.watch(locationScreenProvider).isSelectedFilterScreenLoading);
+    );
   }
 
   _buildBody(BuildContext context) {
@@ -106,50 +102,32 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
                 text: "${state.selectedCategoryName}", fontSize: 16),
           ),
         ),
-        Expanded(
-          child: CustomScrollView(
-            slivers: [
-              SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    final item = state.allEventList[index];
-                    return CommonEventCard(
-                      isFavorite: item.isFavorite ?? false,
-                      onFavorite: () {
-                        ref.watch(favoritesProvider.notifier).toggleFavorite(
-                            item, success: ({required bool isFavorite}) {
-                          ref
-                              .read(locationScreenProvider.notifier)
-                              .setIsFavorite(isFavorite, item.id);
-                        }, error: ({required String message}) {
-                          showErrorToast(message: message, context: context);
-                        });
-                      },
-                      imageUrl: item.logo ?? "",
-                      date: item.startDate ?? "",
-                      title: item.title ?? "",
-                      location: item.address ?? "",
-                      onCardTap: () {
-                        ref
-                            .read(locationScreenProvider.notifier)
-                            .setEventItem(item);
-                        ref
-                            .read(locationScreenProvider.notifier)
-                            .updateBottomSheetSelectedUIType(
-                                BottomSheetSelectedUIType.eventDetail);
-                      },
-                      isFavouriteVisible: ref
-                          .read(favoritesProvider.notifier)
-                          .showFavoriteIcon(), sourceId: item.sourceId!,
-                    );
-                  },
-                  childCount: state.allEventList.length,
-                ),
+        if (ref.watch(locationScreenProvider).isSelectedFilterScreenLoading)
+          CircularProgressIndicator(),
+        if (!ref.read(locationScreenProvider).isSelectedFilterScreenLoading)
+          Expanded(
+            child: SingleChildScrollView(
+              child: EventsListSectionWidget(
+                shrinkWrap: true,
+                eventsList: state.allEventList,
+                heading: null,
+                maxListLimit: state.allEventList.length,
+                buttonText: null,
+                buttonIconPath: null,
+                isLoading: false,
+                onButtonTap: () {},
+                context: context,
+                isFavVisible: state.isUserLoggedIn,
+                onHeadingTap: () {},
+                onSuccess: (bool isFav, int? id) {
+                  ref
+                      .read(locationScreenProvider.notifier)
+                      .updateIsFav(isFav, id);
+                },
               ),
-            ],
+            ),
           ),
-        ),
-        60.verticalSpace,
+        40.verticalSpace,
       ],
     );
   }
