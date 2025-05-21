@@ -11,6 +11,7 @@ import 'package:kusel/common_widgets/highlights_card.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/listing_id_enum.dart';
 import 'package:kusel/common_widgets/local_image_text_service_card.dart';
+import 'package:kusel/screens/all_event/all_event_screen_param.dart';
 import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/events_listing/selected_event_list_screen_parameter.dart';
 import 'package:kusel/screens/tourism/tourism_screen_controller.dart';
@@ -41,6 +42,8 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
           .getRecommendationListing();
       ref.read(tourismScreenControllerProvider.notifier).getAllEvents();
       ref.read(tourismScreenControllerProvider.notifier).getNearByListing();
+
+      ref.read(tourismScreenControllerProvider.notifier).isUserLoggedIn();
     });
     super.initState();
   }
@@ -77,38 +80,54 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
           32.verticalSpace,
           _buildLocationWidget(context),
           16.verticalSpace,
-          EventsListSectionWidget(
-            context: context,
-            eventsList: state.nearByList,
-            heading: AppLocalizations.of(context).near_you,
-            maxListLimit: 5,
-            buttonText: AppLocalizations.of(context).near_you,
-            buttonIconPath: imagePath['map_icon'] ?? "",
-            isLoading: false,
-            onButtonTap: () {
-              final searchRadius = SearchRadius.radius.value;
-              ref.read(navigationProvider).navigateUsingPath(
-                  path: selectedEventListScreenPath,
-                  context: context,
-                  params: SelectedEventListScreenParameter(
-                      listHeading: AppLocalizations.of(context).near_you,
-                      centerLongitude: state.long,
-                      centerLatitude: state.lat,
-                      radius: searchRadius));
-            },
-            onHeadingTap: () {
-              final searchRadius = SearchRadius.radius.value;
-              ref.read(navigationProvider).navigateUsingPath(
-                  path: selectedEventListScreenPath,
-                  context: context,
-                  params: SelectedEventListScreenParameter(
-                      listHeading: AppLocalizations.of(context).near_you,
-                      centerLongitude: state.long,
-                      centerLatitude: state.lat,
-                      radius: searchRadius));
-            },
-            isFavVisible: state.isUserLoggedIn,
-          ),
+          if (state.nearByList.isNotEmpty)
+            EventsListSectionWidget(
+              context: context,
+              eventsList: state.nearByList,
+              heading: AppLocalizations.of(context).near_you,
+              maxListLimit: 5,
+              buttonText: AppLocalizations.of(context).near_you,
+              buttonIconPath: imagePath['map_icon'] ?? "",
+              isLoading: false,
+              onButtonTap: () {
+                final searchRadius = SearchRadius.radius.value;
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: selectedEventListScreenPath,
+                    context: context,
+                    params: SelectedEventListScreenParameter(
+                        listHeading: AppLocalizations.of(context).near_you,
+                        centerLongitude: state.long,
+                        centerLatitude: state.lat,
+                        radius: searchRadius,
+                        onFavChange: () {
+                          ref
+                              .read(tourismScreenControllerProvider.notifier)
+                              .getNearByListing();
+                        }));
+              },
+              onHeadingTap: () {
+                final searchRadius = SearchRadius.radius.value;
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: selectedEventListScreenPath,
+                    context: context,
+                    params: SelectedEventListScreenParameter(
+                        listHeading: AppLocalizations.of(context).near_you,
+                        centerLongitude: state.long,
+                        centerLatitude: state.lat,
+                        radius: searchRadius,
+                        onFavChange: () {
+                          ref
+                              .read(tourismScreenControllerProvider.notifier)
+                              .getNearByListing();
+                        }));
+              },
+              isFavVisible: state.isUserLoggedIn,
+              onSuccess: (bool isFav, int? id) {
+                ref
+                    .read(tourismScreenControllerProvider.notifier)
+                    .updateNearByIsFav(isFav, id);
+              },
+            ),
           LocalSvgImageTextServiceCard(
             onTap: () async {
               final Uri uri = Uri.parse("https://www.landkreis-kusel.de");
@@ -120,32 +139,48 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
             text: AppLocalizations.of(context).hiking_trails,
             description: AppLocalizations.of(context).discover_kusel_on_foot,
           ),
-          EventsListSectionWidget(
-            context: context,
-            eventsList: state.allEventList,
-            heading: AppLocalizations.of(context).all_events,
-            maxListLimit: 5,
-            buttonText: AppLocalizations.of(context).all_events,
-            buttonIconPath: imagePath['calendar'] ?? "",
-            isLoading: false,
-            onButtonTap: () {
-              ref.read(navigationProvider).navigateUsingPath(
-                  path: selectedEventListScreenPath,
-                  context: context,
-                  params: SelectedEventListScreenParameter(
-                      listHeading: AppLocalizations.of(context).all_events,
-                      categoryId: ListingCategoryId.event.eventId));
-            },
-            onHeadingTap: () {
-              ref.read(navigationProvider).navigateUsingPath(
-                  path: selectedEventListScreenPath,
-                  context: context,
-                  params: SelectedEventListScreenParameter(
-                      listHeading: AppLocalizations.of(context).all_events,
-                      categoryId: ListingCategoryId.event.eventId));
-            },
-            isFavVisible: state.isUserLoggedIn,
-          ),
+          if (state.allEventList.isNotEmpty)
+            EventsListSectionWidget(
+              context: context,
+              eventsList: state.allEventList,
+              heading: AppLocalizations.of(context).all_events,
+              maxListLimit: 5,
+              buttonText: AppLocalizations.of(context).all_events,
+              buttonIconPath: imagePath['calendar'] ?? "",
+              isLoading: false,
+              onButtonTap: () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: selectedEventListScreenPath,
+                    context: context,
+                    params: SelectedEventListScreenParameter(
+                        listHeading: AppLocalizations.of(context).all_events,
+                        categoryId: ListingCategoryId.event.eventId,
+                        onFavChange: () {
+                          ref
+                              .read(tourismScreenControllerProvider.notifier)
+                              .getAllEvents();
+                        }));
+              },
+              onHeadingTap: () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: selectedEventListScreenPath,
+                    context: context,
+                    params: SelectedEventListScreenParameter(
+                        listHeading: AppLocalizations.of(context).all_events,
+                        categoryId: ListingCategoryId.event.eventId,
+                        onFavChange: () {
+                          ref
+                              .read(tourismScreenControllerProvider.notifier)
+                              .getAllEvents();
+                        }));
+              },
+              isFavVisible: state.isUserLoggedIn,
+              onSuccess: (bool isFav, int? id) {
+                ref
+                    .read(tourismScreenControllerProvider.notifier)
+                    .updateEventIsFav(isFav, id);
+              },
+            ),
           32.verticalSpace,
           FeedbackCardWidget(onTap: () {
             ref
@@ -170,9 +205,13 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                 text: AppLocalizations.of(context).recommendation,
                 onTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
-                        path: allEventScreenPath,
-                        context: context,
-                      );
+                      path: allEventScreenPath,
+                      context: context,
+                      params: AllEventScreenParam(onFavChange: () {
+                        ref
+                            .read(tourismScreenControllerProvider.notifier)
+                            .getRecommendationListing();
+                      }));
                 },
               ),
               16.verticalSpace,
@@ -197,7 +236,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                             imageUrl: item.logo ?? "",
                             heading: item.title ?? "",
                             description: item.description ?? "",
-                            isFavourite: false,
+                            isFavourite: item.isFavorite ?? false,
                             onPress: () {
                               ref.read(navigationProvider).navigateUsingPath(
                                   path: eventDetailScreenPath,
@@ -206,7 +245,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                                       eventId: item.id));
                             },
                             onFavouriteIconClick: () {},
-                            isVisible: false),
+                            isVisible: state.isUserLoggedIn),
                       );
                     }),
               )

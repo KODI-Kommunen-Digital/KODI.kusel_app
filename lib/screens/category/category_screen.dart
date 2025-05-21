@@ -15,7 +15,6 @@ import 'package:kusel/screens/sub_category/sub_category_screen_parameter.dart';
 
 import '../../common_widgets/category_grid_card_view.dart';
 import '../../images_path.dart';
-import '../../theme_manager/colors.dart';
 import '../events_listing/selected_event_list_screen_parameter.dart';
 
 class CategoryScreen extends ConsumerStatefulWidget {
@@ -75,8 +74,10 @@ class _ExploreScreenState extends ConsumerState<CategoryScreen> {
                     child: BackdropFilter(
                       filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
                       child: Container(
-                        color:
-                            Theme.of(context).colorScheme.onSecondary.withValues(alpha: 0.4),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSecondary
+                            .withValues(alpha: 0.4),
                       ),
                     ),
                   ),
@@ -129,13 +130,13 @@ class _ExploreScreenState extends ConsumerState<CategoryScreen> {
                         centerLatitude: 49.53838,
                         centerLongitude: 7.40647,
                         listHeading: exploreCategory.name ?? "" ?? '',
-                        categoryId: exploreCategory.id),
+                        categoryId: exploreCategory.id,
+                        onFavChange: () {}),
                     context: context);
               }
             },
             child: CategoryGridCardView(
-              imageUrl:
-                  exploreCategory.image ?? "",
+              imageUrl: exploreCategory.image ?? "",
               title: exploreCategory.name ?? "",
             ),
           );

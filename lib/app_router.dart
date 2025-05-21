@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kusel/screens/all_city/all_city_screen.dart';
 import 'package:kusel/screens/all_event/all_event_screen.dart';
+import 'package:kusel/screens/all_event/all_event_screen_param.dart';
 import 'package:kusel/screens/all_municipality/all_municipality_provider.dart';
 import 'package:kusel/screens/all_municipality/all_municipality_screen.dart';
 import 'package:kusel/screens/auth/forgot_password/forgot_password_screen.dart';
@@ -134,7 +135,11 @@ List<RouteBase> goRouteList = [
   GoRoute(
       path: favoritesListScreenPath, builder: (_, __) => FavoritesListScreen()),
   GoRoute(path: feedbackScreenPath, builder: (_, __) => FeedbackScreen()),
-  GoRoute(path: allEventScreenPath, builder: (_, __) => AllEventScreen()),
+  GoRoute(
+      path: allEventScreenPath,
+      builder: (_, state) => AllEventScreen(
+            allEventScreenParam: state.extra as AllEventScreenParam,
+          )),
   GoRoute(
       path: municipalDetailScreenPath,
       builder: (_, state) => MunicipalDetailScreen(
