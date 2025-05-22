@@ -8,6 +8,7 @@ import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/screens/feedback/feedback_screen_provider.dart';
 import 'package:kusel/screens/feedback/feedback_screen_state.dart';
+import 'package:kusel/utility/url_constants/url_constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/arrow_back_widget.dart';
@@ -16,6 +17,7 @@ import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/toast_message.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
+import '../../utility/url_launcher_utility.dart';
 import '../auth/validator/empty_field_validator.dart';
 
 class FeedbackScreen extends ConsumerStatefulWidget {
@@ -99,7 +101,8 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
               hintText: AppLocalizations.of(context).enter_email,
               validator: (value) {
                 return validateField(
-                    value, AppLocalizations.of(context).enter_email);
+                    value,
+                    "${AppLocalizations.of(context).email} ${AppLocalizations.of(context).is_required}");
               },
             ),
             15.verticalSpace,
@@ -115,7 +118,8 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
               hintText: AppLocalizations.of(context).enter_title,
               validator: (value) {
                 return validateField(
-                    value, AppLocalizations.of(context).enter_title);
+                    value,
+                    "${AppLocalizations.of(context).title} ${AppLocalizations.of(context).is_required}");
               },
             ),
             15.verticalSpace,
@@ -134,7 +138,8 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
               hintText: AppLocalizations.of(context).enter_description,
               validator: (value) {
                 return validateField(
-                    value, AppLocalizations.of(context).description);
+                    value,
+                    "${AppLocalizations.of(context).description} ${AppLocalizations.of(context).is_required}");
               },
             ),
             5.verticalSpace,
@@ -146,12 +151,16 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                       stateNotifier.updateCheckBox(value ?? false);
                     }),
                 Expanded(
-                  child: textRegularPoppins(
-                      text: AppLocalizations.of(context).feedback_text,
-                      textOverflow: TextOverflow.visible,
-                      textAlign: TextAlign.start,
-                      fontSize: 11),
-                )
+                  child: GestureDetector(
+                    onTap: () => UrlLauncherUtil.launchWebUrl(url: privacyPolicyUrl),
+                    child: textRegularPoppins(
+                        text: AppLocalizations.of(context).feedback_text,
+                        textOverflow: TextOverflow.visible,
+                        textAlign: TextAlign.start,
+                        decoration: TextDecoration.underline,
+                        fontSize: 11),
+                  ),
+                ),
               ],
             ),
             10.verticalSpace,
@@ -180,19 +189,6 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                 },
                 text: AppLocalizations.of(context).submit),
             25.verticalSpace,
-            GestureDetector(
-              onTap: () async {
-                final Uri uri = Uri.parse(
-                    "https://heidi.troisdorf.dksr.city/PrivacyPolicy");
-                if (await canLaunchUrl(uri)) {
-                  await launchUrl(uri);
-                }
-              },
-              child: textRegularMontserrat(
-                  text: AppLocalizations.of(context).privacy_policy,
-                  decoration: TextDecoration.underline),
-            ),
-            10.verticalSpace,
           ],
         ),
       ),

@@ -79,7 +79,6 @@ class _KuselTextFieldState extends ConsumerState<KuselTextField> {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       onFieldSubmitted: widget.onFieldSubmitted,
       inputFormatters: widget.inputFormatters,
-      onChanged: widget.onChanged,
       obscureText: widget.obscureText ?? false,
       maxLines: widget.maxLines,
       validator: widget.validator,
@@ -88,6 +87,7 @@ class _KuselTextFieldState extends ConsumerState<KuselTextField> {
       controller: widget.textEditingController,
       keyboardType: widget.keyboardType,
       focusNode: widget.focusNode,
+      textInputAction: TextInputAction.done,
       style: TextStyle(
         color: widget.textColor ??
             currentSelectedThemeData.textTheme.displayMedium!.color,

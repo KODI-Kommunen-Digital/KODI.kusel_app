@@ -1,3 +1,4 @@
+import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/usecase/listings/listings_usecase.dart';
@@ -10,12 +11,15 @@ import 'package:kusel/screens/tourism/tourism_screen_state.dart';
 final tourismScreenControllerProvider = StateNotifierProvider.autoDispose<
         TourismScreenController, TourismScreenState>(
     (ref) => TourismScreenController(
-        listingsUseCase: ref.read(listingsUseCaseProvider)));
+        listingsUseCase: ref.read(listingsUseCaseProvider),
+        signInStatusController: ref.read(signInStatusProvider.notifier)));
 
 class TourismScreenController extends StateNotifier<TourismScreenState> {
   ListingsUseCase listingsUseCase;
+  SignInStatusController signInStatusController;
 
-  TourismScreenController({required this.listingsUseCase})
+  TourismScreenController(
+      {required this.listingsUseCase, required this.signInStatusController})
       : super(TourismScreenState.empty());
 
   getAllEvents() async {
@@ -91,4 +95,43 @@ class TourismScreenController extends StateNotifier<TourismScreenState> {
       debugPrint(" getRecommendationListing exception:$error");
     }
   }
+
+  isUserLoggedIn() async {
+    final status = await signInStatusController.isUserLoggedIn();
+    state = state.copyWith(isUserLoggedIn: status);
+  }
+
+  updateNearByIsFav(bool isFav, int? eventId)
+  {
+    final list = state.nearByList;
+    for (var listing in list) {
+      if (listing.id == eventId) {
+        listing.isFavorite = isFav;
+      }
+    }
+    state = state.copyWith(nearByList: list);
+  }
+
+  updateRecommendationIsFav(bool isFav, int? eventId)
+  {
+    final list = state.recommendationList;
+    for (var listing in list) {
+      if (listing.id == eventId) {
+        listing.isFavorite = isFav;
+      }
+    }
+    state = state.copyWith(recommendationList: list);
+  }
+
+  updateEventIsFav(bool isFav, int? eventId)
+  {
+    final list = state.allEventList;
+    for (var listing in list) {
+      if (listing.id == eventId) {
+        listing.isFavorite = isFav;
+      }
+    }
+    state = state.copyWith(allEventList: list);
+  }
+
 }

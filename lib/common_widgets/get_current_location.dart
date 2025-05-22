@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 
 Future<Position> getLatLong() async {
@@ -24,4 +26,28 @@ Future<Position> getLatLong() async {
   return await Geolocator.getCurrentPosition(
     desiredAccuracy: LocationAccuracy.high,
   );
+}
+
+Future<String?> getCityFromPosition(Position position) async {
+  try {
+    List<Placemark> placeMarks = await placemarkFromCoordinates(
+      position.latitude,
+      position.longitude,
+    );
+
+    if (placeMarks.isNotEmpty) {
+      final Placemark place = placeMarks.first;
+      return place.locality ?? place.subAdministrativeArea ?? place.administrativeArea;
+    }
+  } catch (e) {
+    print('Error while getting city: $e');
+  }
+  return null;
+}
+
+Future<String?> fetchCity() async {
+  final position = await getLatLong();
+  final city = await getCityFromPosition(position);
+  debugPrint("Detected city: $city");
+  return city;
 }

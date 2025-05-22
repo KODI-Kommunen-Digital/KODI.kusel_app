@@ -183,10 +183,8 @@ class FavoritesListNotifier extends StateNotifier<List<Listing>> {
       {required void Function({required bool isFavorite}) success,
       required void Function({required String message}) error}) {
     if (item.isFavorite ?? false) {
-      print("is true ");
       removeFavorite(item.id ?? 0, success, error);
     } else {
-      print("is false ");
       addFavorite(item, success);
     }
   }

@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kusel/screens/all_city/all_city_screen.dart';
 import 'package:kusel/screens/all_event/all_event_screen.dart';
+import 'package:kusel/screens/all_event/all_event_screen_param.dart';
 import 'package:kusel/screens/all_municipality/all_municipality_provider.dart';
 import 'package:kusel/screens/all_municipality/all_municipality_screen.dart';
 import 'package:kusel/screens/auth/forgot_password/forgot_password_screen.dart';
@@ -12,10 +13,13 @@ import 'package:kusel/screens/event/event_detail_screen.dart';
 import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/events_listing/selected_event_list_screen.dart';
 import 'package:kusel/screens/events_listing/selected_event_list_screen_parameter.dart';
+import 'package:kusel/screens/explore/explore_screen.dart';
 import 'package:kusel/screens/favorite/favorites_list_screen.dart';
 import 'package:kusel/screens/feedback/feedback_screen.dart';
 import 'package:kusel/screens/fliter_screen/filter_screen.dart';
 import 'package:kusel/screens/highlight/highlight_screen.dart';
+import 'package:kusel/screens/home/home_screen.dart';
+import 'package:kusel/screens/location/location_screen.dart';
 import 'package:kusel/screens/mein_ort/mein_ort_screen.dart';
 import 'package:kusel/screens/mobility_screen/mobility_screen.dart';
 import 'package:kusel/screens/municipal_party_detail/municipal_detail_screen.dart';
@@ -27,20 +31,29 @@ import 'package:kusel/screens/ort_detail/ort_detail_screen.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen_params.dart';
 import 'package:kusel/screens/participate_screen/participate_screen.dart';
 import 'package:kusel/screens/profile/profile_screen.dart';
+import 'package:kusel/screens/search/search_screen.dart';
 import 'package:kusel/screens/search_result/search_result_screen.dart';
 import 'package:kusel/screens/search_result/search_result_screen_parameter.dart';
+import 'package:kusel/screens/settings/settings_screen.dart';
 import 'package:kusel/screens/splash/splash_screen.dart';
 import 'package:kusel/screens/sub_category/sub_category_screen.dart';
 import 'package:kusel/screens/sub_category/sub_category_screen_parameter.dart';
 import 'package:kusel/screens/tourism/tourism_screen.dart';
 import 'package:kusel/screens/virtual_town_hall/virtual_town_hall_screen.dart';
 
-final mobileRouterProvider = Provider((ref) => GoRouter(routes: goRouteList));
+// Top‑level GoRouter provider with root key and initial location
+final mobileRouterProvider = Provider<GoRouter>((ref) {
+  return GoRouter(
+    initialLocation: splashScreenPath,
+    debugLogDiagnostics: true,
+    routes: goRouteList,
+  );
+});
 
+// Path constants
 const splashScreenPath = "/";
 const signInScreenPath = "/signInScreen";
 const signUpScreenPath = "/signUpScreen";
-const dashboardScreenPath = "/dashboardScreenPath";
 const eventDetailScreenPath = "/eventScreenPath";
 const forgotPasswordPath = "/forgotPasswordPath";
 const highlightScreenPath = "/highlightScreenPath";
@@ -55,169 +68,171 @@ const profileScreenPath = "/profileScreenPath";
 const favoritesListScreenPath = "/favoritesListScreenPath";
 const feedbackScreenPath = "/feedbackScreenPath";
 const allEventScreenPath = "/allEventScreen";
-const virtualTownHallScreenPath = "/virtualTownHallScreenPath";
 const municipalDetailScreenPath = "/municipalDetailScreenPath";
-const mobilityScreenPath = "/mobilityScreenPath";
-const participateScreenPath = "/participateScreenPath";
 const allCityScreenPath = "/allCityScreenPath";
-const meinOrtScreenPath = "/meinOrtScreenPath";
 const allMunicipalityScreenPath = "/allMunicipalityScreenPath";
 const ortDetailScreenPath = "/ortDetailScreenPath";
-const tourismScreenPath = "/tourismScreenPath";
 
+// Bottom Nav & Explore sub‑routes paths
+const homeScreenPath = "/homeScreenPath";
+const exploreShellScreenPath = "/exploreShellScreenPath";
+const exploreScreenPath = "/exploreScreenPath";
+const searchScreenPath = "/searchScreenPath";
+const locationScreenPath = "/locationScreenPath";
+const settingScreenPath = "/settingScreenPath";
+
+// BECAUSE WE ARE USING STATEFUL SHELL ROUTING i.e; we are not putting forward slash
+const tourismScreenPath = "tourismScreenPath";
+const virtualTownHallScreenPath = "virtualTownHallScreenPath";
+const meinOrtScreenPath = "meinOrtScreenPath";
+const mobilityScreenPath = "mobilityScreenPath";
+const participateScreenPath = "participateScreenPath";
+
+final exploreSubScreenRoutes = [
+  tourismScreenPath,
+  virtualTownHallScreenPath,
+  meinOrtScreenPath,
+  mobilityScreenPath,
+  participateScreenPath
+];
+
+// Full route list
 List<RouteBase> goRouteList = [
-  GoRoute(
-      path: splashScreenPath,
-      builder: (context, state) {
-        return SplashScreen();
-      }),
-  GoRoute(
-      path: signInScreenPath,
-      builder: (context, state) {
-        return SignInScreen();
-      }),
-  GoRoute(
-      path: signUpScreenPath,
-      builder: (context, state) {
-        return SignupScreen();
-      }),
-  GoRoute(
-      path: dashboardScreenPath,
-      builder: (context, state) {
-        return DashboardScreen();
-      }),
+  // Auth & misc screens
+  GoRoute(path: splashScreenPath, builder: (_, __) => SplashScreen()),
+  GoRoute(path: signInScreenPath, builder: (_, __) => SignInScreen()),
+  GoRoute(path: signUpScreenPath, builder: (_, __) => SignupScreen()),
   GoRoute(
       path: eventDetailScreenPath,
-      builder: (context, state) {
-        return EventDetailScreen(
-            eventScreenParams: state.extra as EventDetailScreenParams);
-      }),
+      builder: (_, state) => EventDetailScreen(
+          eventScreenParams: state.extra as EventDetailScreenParams)),
   GoRoute(
       path: selectedEventListScreenPath,
-      builder: (context, state) {
-        return SelectedEventListScreen(
-            eventListScreenParameter:
-                state.extra as SelectedEventListScreenParameter);
-      }),
-  GoRoute(
-      path: forgotPasswordPath,
-      builder: (context, state) {
-        return ForgotPasswordScreen();
-      }),
+      builder: (_, state) => SelectedEventListScreen(
+          eventListScreenParameter:
+              state.extra as SelectedEventListScreenParameter)),
+  GoRoute(path: forgotPasswordPath, builder: (_, __) => ForgotPasswordScreen()),
   GoRoute(
       path: subCategoryScreenPath,
-      builder: (context, state) {
-        return SubCategoryScreen(
-            subCategoryScreenParameters:
-                state.extra as SubCategoryScreenParameters);
-      }),
-  GoRoute(
-      path: highlightScreenPath,
-      builder: (context, state) {
-        return HighlightScreen();
-      }),
-  GoRoute(
-      path: filterScreenPath,
-      builder: (context, state) {
-        return FilterScreen();
-      }),
+      builder: (_, state) => SubCategoryScreen(
+          subCategoryScreenParameters:
+              state.extra as SubCategoryScreenParameters)),
+  GoRoute(path: highlightScreenPath, builder: (_, __) => HighlightScreen()),
+  GoRoute(path: filterScreenPath, builder: (_, __) => FilterScreen()),
   GoRoute(
       path: searchResultScreenPath,
-      builder: (context, state) {
-        return SearchResultScreen(
-            searchResultScreenParameter:
-                state.extra as SearchResultScreenParameter);
-      }),
-  GoRoute(
-      path: onboardingScreenPath,
-      builder: (context, state) {
-        return OnboardingScreen();
-      }),
+      builder: (_, state) => SearchResultScreen(
+          searchResultScreenParameter:
+              state.extra as SearchResultScreenParameter)),
+  GoRoute(path: onboardingScreenPath, builder: (_, __) => OnboardingScreen()),
   GoRoute(
       path: onboardingLoadingPagePath,
-      builder: (context, state) {
-        return OnboardingLoadingPage();
-      }),
+      builder: (_, __) => OnboardingLoadingPage()),
   GoRoute(
       path: onboardingFinishPagePath,
-      builder: (context, state) {
-        return OnboardingFinishPage();
-      }),
+      builder: (_, __) => OnboardingFinishPage()),
+  GoRoute(path: profileScreenPath, builder: (_, __) => ProfileScreen()),
   GoRoute(
-      path: profileScreenPath,
-      builder: (context, state) {
-        return ProfileScreen();
-      }),
-  GoRoute(
-      path: favoritesListScreenPath,
-      builder: (context, state) {
-        return FavoritesListScreen();
-      }),
-  GoRoute(
-      path: feedbackScreenPath,
-      builder: (context, state) {
-        return FeedbackScreen();
-      }),
+      path: favoritesListScreenPath, builder: (_, __) => FavoritesListScreen()),
+  GoRoute(path: feedbackScreenPath, builder: (_, __) => FeedbackScreen()),
   GoRoute(
       path: allEventScreenPath,
-      builder: (context, state) {
-        return AllEventScreen();
-      }),
-  GoRoute(
-      path: virtualTownHallScreenPath,
-      builder: (context, state) {
-        return VirtualTownHallScreen();
-      }),
+      builder: (_, state) => AllEventScreen(
+            allEventScreenParam: state.extra as AllEventScreenParam,
+          )),
   GoRoute(
       path: municipalDetailScreenPath,
-      builder: (context, state) {
-        return MunicipalDetailScreen(
+      builder: (_, state) => MunicipalDetailScreen(
           municipalDetailScreenParams:
-              state.extra as MunicipalDetailScreenParams,
-        );
-      }),
-  GoRoute(
-      path: virtualTownHallScreenPath,
-      builder: (context, state) {
-        return VirtualTownHallScreen();
-      }),
-  GoRoute(
-      path: mobilityScreenPath,
-      builder: (context, state) {
-        return MobilityScreen();
-      }),
-  GoRoute(
-      path: participateScreenPath,
-      builder: (context, state) {
-        return ParticipateScreen();
-      }),
-  GoRoute(
-      path: allCityScreenPath,
-      builder: (context, state) {
-        return AllCityScreen();
-      }),
+              state.extra as MunicipalDetailScreenParams)),
+  GoRoute(path: allCityScreenPath, builder: (_, __) => AllCityScreen()),
   GoRoute(
       path: ortDetailScreenPath,
-      builder: (context, state) {
-        return OrtDetailScreen(
-            ortDetailScreenParams: state.extra as OrtDetailScreenParams);
-      }),
-  GoRoute(
-      path: meinOrtScreenPath,
-      builder: (context, state) {
-        return MeinOrtScreen();
-      }),
+      builder: (_, state) => OrtDetailScreen(
+          ortDetailScreenParams: state.extra as OrtDetailScreenParams)),
   GoRoute(
       path: allMunicipalityScreenPath,
-      builder: (context, state) {
-        return AllMunicipalityScreen(
-          municipalityScreenParams: state.extra as MunicipalityScreenParams,
-        );
-      }),
-  GoRoute(
-      path: tourismScreenPath,
-      builder: (context, state) {
-        return TourismScreen();
-      }),
+      builder: (_, state) => AllMunicipalityScreen(
+          municipalityScreenParams: state.extra as MunicipalityScreenParams)),
 
+  // Dashboard + tabs
+  dashboardRoutes,
 ];
+
+// Dashboard Route list
+final dashboardRoutes = StatefulShellRoute.indexedStack(
+  builder: (context, state, navigationShell) {
+    return DashboardScreen(
+      child: navigationShell,
+    );
+  },
+  branches: [
+    //  Home Tab
+    StatefulShellBranch(
+      routes: [
+        GoRoute(
+          path: homeScreenPath,
+          builder: (_, __) => HomeScreen(),
+        ),
+      ],
+    ),
+    //  Explore Tab + sub routes
+    StatefulShellBranch(
+      routes: [
+        GoRoute(
+          path: exploreScreenPath,
+          builder: (_, __) => const ExploreScreen(),
+          routes: [
+            GoRoute(
+              path: tourismScreenPath,
+              builder: (_, __) => const TourismScreen(),
+            ),
+            GoRoute(
+              path: virtualTownHallScreenPath,
+              builder: (_, __) => const VirtualTownHallScreen(),
+            ),
+            GoRoute(
+              path: mobilityScreenPath,
+              builder: (_, __) => const MobilityScreen(),
+            ),
+            GoRoute(
+              path: meinOrtScreenPath,
+              builder: (_, __) => const MeinOrtScreen(),
+            ),
+            GoRoute(
+              path: participateScreenPath,
+              builder: (_, __) => const ParticipateScreen(),
+            ),
+          ],
+        ),
+      ],
+    ),
+    // Search Tab
+    StatefulShellBranch(
+      routes: [
+        GoRoute(
+          path: searchScreenPath,
+          builder: (_, __) => const SearchScreen(),
+        ),
+      ],
+    ),
+    // Location Tab
+    StatefulShellBranch(
+      routes: [
+        GoRoute(
+          path: locationScreenPath,
+          builder: (_, __) => const LocationScreen(),
+        ),
+      ],
+    ),
+    //  Settings Tab
+    StatefulShellBranch(
+      routes: [
+        GoRoute(
+          path: settingScreenPath,
+          builder: (_, __) => const SettingsScreen(),
+        ),
+      ],
+    ),
+  ],
+);

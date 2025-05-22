@@ -1,20 +1,14 @@
-import 'dart:convert';
-
-import 'package:core/preference_manager/preference_constant.dart';
-import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/search_widget.dart';
 import 'package:kusel/screens/search/search_screen_provider.dart';
 import 'package:kusel/screens/search_result/search_result_screen_parameter.dart';
-import 'package:kusel/screens/search_result/search_result_screen_provider.dart';
 
 import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
@@ -30,7 +24,6 @@ class SearchScreen extends ConsumerStatefulWidget {
 }
 
 class _ExploreScreenState extends ConsumerState<SearchScreen> {
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -38,6 +31,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
     });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -95,8 +89,8 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                       ref.read(navigationProvider).navigateUsingPath(
                           path: searchResultScreenPath,
                           context: context,
-                          params:
-                          SearchResultScreenParameter(searchType: SearchType.nearBy));
+                          params: SearchResultScreenParameter(
+                              searchType: SearchType.nearBy));
                     },
                     text: AppLocalizations.of(context).near_me,
                     isOutLined: true,
@@ -111,8 +105,8 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                         ref.read(navigationProvider).navigateUsingPath(
                             path: searchResultScreenPath,
                             context: context,
-                            params:
-                            SearchResultScreenParameter(searchType: SearchType.recommendations));
+                            params: SearchResultScreenParameter(
+                                searchType: SearchType.recommendations));
                       },
                       text: AppLocalizations.of(context).recommendation,
                       isOutLined: true,
@@ -124,36 +118,38 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                   Divider(height: 1.h),
                   16.verticalSpace,
                   SearchWidget(
-                    onItemClick: (listing){
+                    onItemClick: (listing) {
                       ref.read(navigationProvider).navigateUsingPath(
                           context: context,
                           path: eventDetailScreenPath,
-                          params: EventDetailScreenParams(eventId: listing.id)
-                      );
-                      ref.read(searchScreenProvider.notifier).loadSavedListings();
+                          params: EventDetailScreenParams(eventId: listing.id));
+                      ref
+                          .read(searchScreenProvider.notifier)
+                          .loadSavedListings();
                     },
                     searchController: TextEditingController(),
                     hintText: AppLocalizations.of(context).enter_search_term,
-                      suggestionCallback: (search) async {
-                        List<Listing>? list;
-                        if (search.isEmpty) return [];
-                        try {
-                          list = await ref
-                              .read(searchScreenProvider.notifier)
-                              .searchList(
-                              searchText: search,
-                              success: () {},
-                              error: (err) {});
-                        } catch (e) {
-                          print("exception >>$e");
-                          return [];
-                        }
-                        return list;
-                      },
+                    suggestionCallback: (search) async {
+                      List<Listing>? list;
+                      if (search.isEmpty) return [];
+                      try {
+                        list = await ref
+                            .read(searchScreenProvider.notifier)
+                            .searchList(
+                                searchText: search,
+                                success: () {},
+                                error: (err) {});
+                      } catch (e) {
+                        print("exception >>$e");
+                        return [];
+                      }
+                      return list;
+                    },
                   ),
                   16.verticalSpace,
                   Visibility(
-                    visible: ref.watch(searchScreenProvider).searchedList.isNotEmpty,
+                    visible:
+                        ref.watch(searchScreenProvider).searchedList.isNotEmpty,
                     child: Align(
                       alignment: Alignment.bottomLeft,
                       child: textSemiBoldPoppins(
@@ -164,22 +160,31 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                   ListView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
-                    itemCount: ref.watch(searchScreenProvider).searchedList.length,
+                    itemCount:
+                        ref.watch(searchScreenProvider).searchedList.length,
                     itemBuilder: (context, index) {
-                      return  InkWell(
-                        onTap: (){
+                      return InkWell(
+                        onTap: () {
                           ref.read(navigationProvider).navigateUsingPath(
                               context: context,
                               path: eventDetailScreenPath,
-                              params: EventDetailScreenParams(eventId: ref.watch(searchScreenProvider).searchedList[index].id)
-                          );
+                              params: EventDetailScreenParams(
+                                  eventId: ref
+                                      .watch(searchScreenProvider)
+                                      .searchedList[index]
+                                      .id));
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: textRegularMontserrat(text: ref.watch(searchScreenProvider).searchedList[index].title ?? "",
-                              decoration: TextDecoration.underline),
+                            alignment: Alignment.centerLeft,
+                            child: textRegularMontserrat(
+                                text: ref
+                                        .watch(searchScreenProvider)
+                                        .searchedList[index]
+                                        .title ??
+                                    "",
+                                decoration: TextDecoration.underline),
                           ),
                         ),
                       );
@@ -195,4 +200,3 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
     );
   }
 }
-

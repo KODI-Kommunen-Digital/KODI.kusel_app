@@ -22,18 +22,11 @@ class _State extends ConsumerState<SplashScreen> {
     super.initState();
 
     Future.microtask(() {
-      ref.read(splashScreenProvider.notifier).startTimer((bool isOnBoardingDone) {
-        if (isOnBoardingDone) {
-          ref.read(navigationProvider).removeAllAndNavigate(
-            context: context,
-            path: dashboardScreenPath,
-          );
-        } else {
-          ref.read(navigationProvider).removeAllAndNavigate(
-            context: context,
-            path: onboardingScreenPath,
-          );
-        }
+      ref.read(splashScreenProvider.notifier).startTimer(() {
+        ref.read(navigationProvider).removeAllAndNavigate(
+          context: context,
+          path: homeScreenPath,
+        );
       });
     });
 
