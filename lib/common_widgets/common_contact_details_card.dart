@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/utility/url_launcher_utility.dart';
 
 class CommonContactDetailsCard extends ConsumerStatefulWidget {
   final String heading;
@@ -48,34 +49,40 @@ class _CommonContactDetailsCardState
                 color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
               15.verticalSpace,
-              Row(
-                children: [
-                  Icon(
-                    Icons.call_outlined,
-                    size: 14.h.w,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  20.horizontalSpace,
-                  textBoldMontserrat(
-                    text: widget.phoneNumber,
-                    color: Theme.of(context).textTheme.bodyLarge?.color,
-                  ),
-                ],
+              GestureDetector(
+                onTap: () =>
+                    UrlLauncherUtil.launchDialer(phoneNumber: widget.phoneNumber),                child: Row(
+                  children: [
+                    Icon(
+                      Icons.call_outlined,
+                      size: 14.h.w,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    20.horizontalSpace,
+                    textBoldMontserrat(
+                      text: widget.phoneNumber,
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
+                    ),
+                  ],
+                ),
               ),
               14.verticalSpace,
-              Row(
-                children: [
-                  Icon(
-                    Icons.email_outlined,
-                    size: 16.h.w,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  20.horizontalSpace,
-                  textBoldMontserrat(
-                    text: widget.email,
-                    color: Theme.of(context).textTheme.bodyLarge?.color,
-                  ),
-                ],
+              GestureDetector(
+                onTap: () =>
+                    UrlLauncherUtil.launchEmail(emailAddress: widget.email),                child: Row(
+                  children: [
+                    Icon(
+                      Icons.email_outlined,
+                      size: 16.h.w,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    20.horizontalSpace,
+                    textBoldMontserrat(
+                      text: widget.email,
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
