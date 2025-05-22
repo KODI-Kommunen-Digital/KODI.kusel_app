@@ -5,16 +5,29 @@ class SelectedEventListScreenState {
   String error;
   bool loading;
   List<Listing> eventsList;
+  bool isUserLoggedIn;
+  String heading;
 
-  SelectedEventListScreenState(this.address, this.error, this.loading, this.eventsList);
+  SelectedEventListScreenState(this.address, this.error, this.loading,
+      this.eventsList, this.isUserLoggedIn, this.heading);
 
   factory SelectedEventListScreenState.empty() {
-    return SelectedEventListScreenState('', '', false, []);
+    return SelectedEventListScreenState('', '', false, [], false, '');
   }
 
   SelectedEventListScreenState copyWith(
-      {String? address, String? error, bool? loading, List<Listing>? list}) {
-    return SelectedEventListScreenState(address ?? this.address, error ?? this.error,
-        loading ?? this.loading, list ?? this.eventsList);
+      {String? address,
+      String? error,
+      bool? loading,
+      List<Listing>? list,
+      bool? isUserLoggedIn,
+      String? heading}) {
+    return SelectedEventListScreenState(
+        address ?? this.address,
+        error ?? this.error,
+        loading ?? this.loading,
+        list ?? eventsList,
+        isUserLoggedIn ?? this.isUserLoggedIn,
+        heading ?? this.heading);
   }
 }

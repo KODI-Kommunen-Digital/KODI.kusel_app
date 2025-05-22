@@ -21,6 +21,14 @@ class LocationScreen extends ConsumerStatefulWidget {
 
 class _ExploreScreenState extends ConsumerState<LocationScreen> {
   @override
+  void initState() {
+    Future.microtask(() {
+      ref.read(locationScreenProvider.notifier).isUserLoggedIn();
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
@@ -50,11 +58,11 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
                 urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
               ),
               MarkerLayer(
-                markers:
-                ref
+                markers: ref
                     .watch(locationScreenProvider)
                     .allEventList
-                    .where((value) => value.latitude != null && value.longitude != null)
+                    .where((value) =>
+                        value.latitude != null && value.longitude != null)
                     .map((value) {
                   final lat = value.latitude!;
                   final long = value.longitude!;
@@ -67,14 +75,16 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
                     point: LatLng(lat, long),
                     child: InkWell(
                       onTap: () {
-                        ref.read(locationScreenProvider.notifier).setEventItem(value);
+                        ref
+                            .read(locationScreenProvider.notifier)
+                            .setEventItem(value);
                         ref
                             .read(locationScreenProvider.notifier)
                             .updateCategoryId(categoryId, categoryName);
                         ref
                             .read(locationScreenProvider.notifier)
                             .updateBottomSheetSelectedUIType(
-                            BottomSheetSelectedUIType.eventDetail);
+                                BottomSheetSelectedUIType.eventDetail);
                       },
                       child: Icon(
                         Icons.location_pin,
@@ -84,7 +94,6 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
                     ),
                   );
                 }).toList(),
-
               )
             ],
           ),
