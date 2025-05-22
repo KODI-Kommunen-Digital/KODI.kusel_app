@@ -30,92 +30,92 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: _buildBody(context),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      ),
+    return Scaffold(
+      body: _buildBody(context),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
     );
   }
 
   _buildBody(BuildContext context) {
-    return SlidingUpPanel(
-      minHeight: 200.h,
-      maxHeight: 550.h,
-      borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
-      controller: ref.read(locationScreenProvider).panelController,
-      body: Stack(
-        children: [
-          FlutterMap(
-            options: MapOptions(
-              onTap: (tapPosition, LatLng latLong) {},
-              initialCenter: LatLng(49.53838, 7.40647),
-              initialZoom: 14.0,
-              interactionOptions: InteractionOptions(),
-            ),
-            children: [
-              TileLayer(
-                urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    return SafeArea(
+      child: SlidingUpPanel(
+        minHeight: 200.h,
+        maxHeight: 550.h,
+        borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
+        controller: ref.read(locationScreenProvider).panelController,
+        body: Stack(
+          children: [
+            FlutterMap(
+              options: MapOptions(
+                onTap: (tapPosition, LatLng latLong) {},
+                initialCenter: LatLng(49.53838, 7.40647),
+                initialZoom: 14.0,
+                interactionOptions: InteractionOptions(),
               ),
-              MarkerLayer(
-                markers: ref
-                    .watch(locationScreenProvider)
-                    .allEventList
-                    .where((value) =>
-                        value.latitude != null && value.longitude != null)
-                    .map((value) {
-                  final lat = value.latitude!;
-                  final long = value.longitude!;
-                  final categoryId = value.categoryId;
-                  final categoryName = value.categoryName;
+              children: [
+                TileLayer(
+                  urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                ),
+                MarkerLayer(
+                  markers: ref
+                      .watch(locationScreenProvider)
+                      .allEventList
+                      .where((value) =>
+                          value.latitude != null && value.longitude != null)
+                      .map((value) {
+                    final lat = value.latitude!;
+                    final long = value.longitude!;
+                    final categoryId = value.categoryId;
+                    final categoryName = value.categoryName;
 
-                  return Marker(
-                    width: 35.w,
-                    height: 35.h,
-                    point: LatLng(lat, long),
-                    child: InkWell(
-                      onTap: () {
-                        ref
-                            .read(locationScreenProvider.notifier)
-                            .setEventItem(value);
-                        ref
-                            .read(locationScreenProvider.notifier)
-                            .updateCategoryId(categoryId, categoryName);
-                        ref
-                            .read(locationScreenProvider.notifier)
-                            .updateBottomSheetSelectedUIType(
-                                BottomSheetSelectedUIType.eventDetail);
-                      },
-                      child: Icon(
-                        Icons.location_pin,
-                        size: 40.w,
-                        color: Theme.of(context).colorScheme.onTertiaryFixed,
+                    return Marker(
+                      width: 35.w,
+                      height: 35.h,
+                      point: LatLng(lat, long),
+                      child: InkWell(
+                        onTap: () {
+                          ref
+                              .read(locationScreenProvider.notifier)
+                              .setEventItem(value);
+                          ref
+                              .read(locationScreenProvider.notifier)
+                              .updateCategoryId(categoryId, categoryName);
+                          ref
+                              .read(locationScreenProvider.notifier)
+                              .updateBottomSheetSelectedUIType(
+                                  BottomSheetSelectedUIType.eventDetail);
+                        },
+                        child: Icon(
+                          Icons.location_pin,
+                          size: 40.w,
+                          color: Theme.of(context).colorScheme.onTertiaryFixed,
+                        ),
                       ),
-                    ),
-                  );
-                }).toList(),
-              )
-            ],
-          ),
-        ],
+                    );
+                  }).toList(),
+                )
+              ],
+            ),
+          ],
+        ),
+        panelBuilder: (controller) {
+          return ClipRRect(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
+              child: Container(
+                color: Colors.transparent,
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 250),
+                  transitionBuilder: (child, animation) => FadeTransition(
+                    opacity: animation,
+                    child: child,
+                  ),
+                  child: getBottomSheetUI(
+                    ref.watch(locationScreenProvider).bottomSheetSelectedUIType,
+                  ),
+                ),
+              ));
+        },
       ),
-      panelBuilder: (controller) {
-        return ClipRRect(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
-            child: Container(
-              color: Colors.transparent,
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 250),
-                transitionBuilder: (child, animation) => FadeTransition(
-                  opacity: animation,
-                  child: child,
-                ),
-                child: getBottomSheetUI(
-                  ref.watch(locationScreenProvider).bottomSheetSelectedUIType,
-                ),
-              ),
-            ));
-      },
     );
   }
 
