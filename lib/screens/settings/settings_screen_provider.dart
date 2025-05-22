@@ -1,14 +1,15 @@
 import 'dart:ui';
 
 import 'package:core/preference_manager/preference_constant.dart';
+import 'package:core/preference_manager/shared_pref_helper.dart';
+import 'package:core/sign_in_status/sign_in_status_controller.dart';
+import 'package:domain/usecase/edit_user_detail/edit_user_detail_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/locale/locale_constant.dart';
 import 'package:kusel/locale/localization_manager.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/settings/settings_screen_state.dart';
-import 'package:core/preference_manager/shared_pref_helper.dart';
-import 'package:domain/usecase/edit_user_detail/edit_user_detail_usecase.dart';
 
 final settingsScreenProvider =
     StateNotifierProvider<SettingsScreenProvider, SettingsScreenState>((ref) =>
@@ -16,20 +17,22 @@ final settingsScreenProvider =
             localeManagerController: ref.read(localeManagerProvider.notifier),
             sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
             editUserDetailUseCase: ref.read(editUserDetailUseCaseProvider),
-            homeScreenProvider: ref.read(homeScreenProvider.notifier)));
+            homeScreenProvider: ref.read(homeScreenProvider.notifier),
+            signInStatusController: ref.read(signInStatusProvider.notifier)));
 
 class SettingsScreenProvider extends StateNotifier<SettingsScreenState> {
   LocaleManagerController localeManagerController;
   SharedPreferenceHelper sharedPreferenceHelper;
   EditUserDetailUseCase editUserDetailUseCase;
   HomeScreenProvider homeScreenProvider;
+  SignInStatusController signInStatusController;
 
   SettingsScreenProvider(
       {required this.localeManagerController,
       required this.sharedPreferenceHelper,
       required this.editUserDetailUseCase,
-      required this.homeScreenProvider
-      })
+      required this.homeScreenProvider,
+      required this.signInStatusController})
       : super(SettingsScreenState.empty());
 
   logoutUser(void Function() callBack) async {
@@ -68,8 +71,8 @@ class SettingsScreenProvider extends StateNotifier<SettingsScreenState> {
     localeManagerController.updateSelectedLocale(Locale(languageCode, region));
   }
 
-  void isLoggedIn() {
-    final token = sharedPreferenceHelper.getString(tokenKey);
-    state = state.copyWith(isLoggedIn: token != null);
+  Future<void> isLoggedIn() async{
+    final status = await signInStatusController.isUserLoggedIn();
+    state = state.copyWith(isLoggedIn: status);
   }
 }

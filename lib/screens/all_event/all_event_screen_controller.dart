@@ -1,3 +1,4 @@
+import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/usecase/listings/listings_usecase.dart';
@@ -9,12 +10,15 @@ import 'all_event_screen_state.dart';
 final allEventScreenProvider = StateNotifierProvider.autoDispose<
         AllEventScreenController, AllEventScreenState>(
     (ref) => AllEventScreenController(
-        listingsUseCase: ref.read(listingsUseCaseProvider)));
+        listingsUseCase: ref.read(listingsUseCaseProvider),
+        signInStatusController: ref.read(signInStatusProvider.notifier)));
 
 class AllEventScreenController extends StateNotifier<AllEventScreenState> {
   ListingsUseCase listingsUseCase;
+  SignInStatusController signInStatusController;
 
-  AllEventScreenController({required this.listingsUseCase})
+  AllEventScreenController(
+      {required this.listingsUseCase, required this.signInStatusController})
       : super(AllEventScreenState.empty());
 
   Future<void> getEventsList() async {
@@ -51,34 +55,45 @@ class AllEventScreenController extends StateNotifier<AllEventScreenState> {
         break;
       }
     }
-    state = state.copyWith(
-        listingList: state.listingList);
+    state = state.copyWith(listingList: state.listingList);
   }
 
-  Future<void> applyFilter({String? startAfterDate, String? endBeforeDate,
-    int? cityId, int? pageNumber, int? categoryId, int? filterCount}) async {
+  Future<void> applyFilter(
+      {String? startAfterDate,
+      String? endBeforeDate,
+      int? cityId,
+      int? pageNumber,
+      int? categoryId,
+      int? filterCount}) async {
     try {
       state = state.copyWith(isLoading: true);
 
-      GetAllListingsRequestModel getAllListingsRequestModel = GetAllListingsRequestModel();
-      if (startAfterDate != null) getAllListingsRequestModel.startAfterDate = startAfterDate;
-      if (endBeforeDate != null) getAllListingsRequestModel.endBeforeDate = endBeforeDate;
+      GetAllListingsRequestModel getAllListingsRequestModel =
+          GetAllListingsRequestModel();
+      if (startAfterDate != null)
+        getAllListingsRequestModel.startAfterDate = startAfterDate;
+      if (endBeforeDate != null)
+        getAllListingsRequestModel.endBeforeDate = endBeforeDate;
       if (cityId != null) getAllListingsRequestModel.cityId = cityId.toString();
       if (pageNumber != null) getAllListingsRequestModel.pageNo = pageNumber;
-      if (categoryId != null) getAllListingsRequestModel.categoryId = categoryId.toString();
+      if (categoryId != null)
+        getAllListingsRequestModel.categoryId = categoryId.toString();
       GetAllListingsResponseModel getAllListResponseModel =
-      GetAllListingsResponseModel();
+          GetAllListingsResponseModel();
 
       final result = await listingsUseCase.call(
           getAllListingsRequestModel, getAllListResponseModel);
       result.fold(
-            (l) {
+        (l) {
           debugPrint("get filter event fold exception : $l");
           state = state.copyWith(isLoading: false);
         },
-            (r) {
+        (r) {
           var eventsList = (r as GetAllListingsResponseModel).data;
-          state = state.copyWith(listingList: eventsList, isLoading: false, filterCount: filterCount);
+          state = state.copyWith(
+              listingList: eventsList,
+              isLoading: false,
+              filterCount: filterCount);
         },
       );
     } catch (error) {
@@ -90,4 +105,21 @@ class AllEventScreenController extends StateNotifier<AllEventScreenState> {
   void onResetFilter() {
     state = state.copyWith(filterCount: null);
   }
+
+  isUserLoggedIn()async{
+    final status = await signInStatusController.isUserLoggedIn();
+    state = state.copyWith(isUserLoggedIn: status);
+  }
+
+  updateIsFav(bool isFav, int? eventId)
+  {
+    final list = state.listingList;
+    for (var listing in list) {
+      if (listing.id == eventId) {
+        listing.isFavorite = isFav;
+      }
+    }
+    state = state.copyWith(listingList: list);
+  }
+
 }

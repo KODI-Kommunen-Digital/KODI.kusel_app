@@ -1,5 +1,6 @@
 import 'package:core/preference_manager/preference_constant.dart';
 import 'package:core/preference_manager/shared_pref_helper.dart';
+import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:data/service/location_service/location_service.dart';
 import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
 import 'package:domain/model/request_model/listings/search_request_model.dart';
@@ -28,6 +29,7 @@ final homeScreenProvider =
               sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
               userDetailUseCase: ref.read(userDetailUseCaseProvider),
               weatherUseCase: ref.read(weatherUseCaseProvider),
+              signInStatusController: ref.read(signInStatusProvider.notifier),
             ));
 
 class HomeScreenProvider extends StateNotifier<HomeScreenState> {
@@ -36,13 +38,15 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
   SharedPreferenceHelper sharedPreferenceHelper;
   UserDetailUseCase userDetailUseCase;
   WeatherUseCase weatherUseCase;
+  SignInStatusController signInStatusController;
 
   HomeScreenProvider(
       {required this.listingsUseCase,
       required this.searchUseCase,
       required this.sharedPreferenceHelper,
       required this.userDetailUseCase,
-      required this.weatherUseCase})
+      required this.weatherUseCase,
+      required this.signInStatusController})
       : super(HomeScreenState.empty());
 
   Future<void> getHighlights() async {
@@ -75,7 +79,8 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       state = state.copyWith(loading: true, error: "");
 
       GetAllListingsRequestModel getAllListingsRequestModel =
-          GetAllListingsRequestModel(categoryId: ListingCategoryId.event.eventId.toString());
+          GetAllListingsRequestModel(
+              categoryId: ListingCategoryId.event.eventId.toString());
 
       GetAllListingsResponseModel getAllListingsResponseModel =
           GetAllListingsResponseModel();
@@ -102,11 +107,10 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
 
       LatLong kuselLatLong = LatLong(49.53603477650214, 7.392734870386151);
       GetAllListingsRequestModel getAllListingsRequestModel =
-      GetAllListingsRequestModel(
-          radius: 1,
-          centerLongitude: kuselLatLong.latitude,
-          centerLatitude: kuselLatLong.longitude
-      );
+          GetAllListingsRequestModel(
+              radius: 1,
+              centerLongitude: kuselLatLong.latitude,
+              centerLatitude: kuselLatLong.longitude);
       GetAllListingsResponseModel getAllListingsResponseModel =
           GetAllListingsResponseModel();
       final result = await listingsUseCase.call(
@@ -164,33 +168,36 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
 
   Future<void> getUserDetails() async {
     try {
+
+
+
       final userId = sharedPreferenceHelper.getInt(userIdKey);
 
-      UserDetailRequestModel requestModel = UserDetailRequestModel(id: userId);
-      UserDetailResponseModel responseModel = UserDetailResponseModel();
-      final result = await userDetailUseCase.call(requestModel, responseModel);
+      if(userId!=null )
+        {
+          UserDetailRequestModel requestModel = UserDetailRequestModel(id: userId);
+          UserDetailResponseModel responseModel = UserDetailResponseModel();
+          final result = await userDetailUseCase.call(requestModel, responseModel);
 
-      result.fold((l) {
-        debugPrint('get user details fold exception : $l');
-      }, (r) async {
-        final response = r as UserDetailResponseModel;
-        await sharedPreferenceHelper.setString(
-            userNameKey, response.data?.username ?? "");
-        state = state.copyWith(
-            userName: response.data?.firstname ?? "");
-      });
+          result.fold((l) {
+            debugPrint('get user details fold exception : $l');
+          }, (r) async {
+            final response = r as UserDetailResponseModel;
+            await sharedPreferenceHelper.setString(
+                userNameKey, response.data?.username ?? "");
+            state = state.copyWith(userName: response.data?.firstname ?? "");
+          });
+        }
+
     } catch (error) {
       debugPrint('get user details exception : $error');
     }
   }
 
   Future<void> getLoginStatus() async {
-    final token = sharedPreferenceHelper.getString(tokenKey);
-    if (token == null) {
-      state = state.copyWith(isSignupButtonVisible: true);
-    } else {
-      state = state.copyWith(isSignupButtonVisible: false);
-    }
+    final status = await  signInStatusController.isUserLoggedIn();
+
+    state = state.copyWith(isSignInButtonVisible: !status);
   }
 
   Future<void> getLocation() async {
@@ -201,15 +208,13 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
     }
   }
 
-  void setIsFavorite(bool isFavorite, int? id) {
-
+  void setIsFavoriteNearBy(bool isFavorite, int? id) {
     for (var listing in state.highlightsList) {
       if (listing.id == id) {
         listing.isFavorite = isFavorite;
       }
     }
-    state = state.copyWith(
-        highlightsList: state.highlightsList);
+    state = state.copyWith(highlightsList: state.highlightsList);
   }
 
   void setIsFavoriteEvent(bool isFavorite, int? id) {
@@ -218,8 +223,7 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
         listing.isFavorite = isFavorite;
       }
     }
-    state = state.copyWith(
-        highlightsList: state.eventsList);
+    state = state.copyWith(highlightsList: state.eventsList);
   }
 
   void setIsFavoriteHighlight(bool isFavorite, int? id) {
@@ -228,8 +232,7 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
         listing.isFavorite = isFavorite;
       }
     }
-    state = state.copyWith(
-        highlightsList: state.highlightsList);
+    state = state.copyWith(highlightsList: state.highlightsList);
   }
 
   Future<void> getWeather() async {
@@ -243,14 +246,28 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       response.fold((l) {
         debugPrint('get weather fold exception = $l');
       }, (r) {
-
         final result = r as WeatherResponseModel;
 
         state = state.copyWith(weatherResponseModel: result);
-
       });
     } catch (error) {
       debugPrint('get weather exception = $error');
     }
+  }
+
+  Future<void> fetchHomeScreenInitMethod() async {
+      await Future.wait([
+        getLocation(),
+        getUserDetails(),
+        getHighlights(),
+        getEvents(),
+        getNearbyEvents(),
+        getLoginStatus(),
+        getWeather(),
+      ]);
+  }
+
+  Future<void> refresh() async {
+    fetchHomeScreenInitMethod();
   }
 }

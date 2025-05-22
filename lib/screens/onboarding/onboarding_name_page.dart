@@ -51,8 +51,10 @@ class _OnboardingStartPageState extends ConsumerState<OnBoardingNamePage> {
             KuselTextField(
               textEditingController: nameEditingController,
               validator: (value) {
-                return validateField(value, AppLocalizations.of(context).name);
+                return validateField(value,
+                    "${AppLocalizations.of(context).name} ${AppLocalizations.of(context).is_required}");
               },
+              maxLines: 1,
             )
           ],
         ),

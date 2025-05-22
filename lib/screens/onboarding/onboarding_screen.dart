@@ -26,6 +26,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   void initState() {
     ref.read(onboardingScreenProvider.notifier).initializerPageController();
+    ref.read(onboardingScreenProvider.notifier).updateCurrentCity();
     super.initState();
   }
 
@@ -44,12 +45,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       const OnBoardingPreferencesPage()
     ];
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        resizeToAvoidBottomInset: false,
-        body: _buildDashboardUi(pages, selectedPageIndex, pageController),
-      ),
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      resizeToAvoidBottomInset: false,
+      body: GestureDetector(
+      onTap: (){
+        FocusScope.of(context).unfocus(); // Dismiss the keyboard
+
+      },child: _buildDashboardUi(pages, selectedPageIndex, pageController)),
     );
   }
 
@@ -147,8 +150,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           selectedPageIndex == 0
               ? GestureDetector(
                   onTap: () {
+                    // ref.read(navigationProvider).removeAllAndNavigate(
+                    //     context: context, path: dashboardScreenPath);
+
                     ref.read(navigationProvider).removeAllAndNavigate(
-                        context: context, path: dashboardScreenPath);
+                        path: homeScreenPath, context: context);
                   },
                   child: textBoldPoppins(
                     color: Theme.of(context).textTheme.bodyLarge?.color,

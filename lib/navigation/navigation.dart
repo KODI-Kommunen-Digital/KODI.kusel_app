@@ -3,27 +3,33 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart' as nav;
 
+import '../app_router.dart';
+
 final navigationProvider = Provider((ref)=>(Navigator()));
 
 class Navigator {
 
   navigateUsingPath(
       {required String path, required BuildContext context, Object? params}) {
+    path = _createFullPathForExploreSubScreen(path: path);
     GoRouter.of(context).push(path, extra: params);
   }
 
   removeAllAndNavigate(
       {required BuildContext context, required String path, Object? params}) {
+    path = _createFullPathForExploreSubScreen(path: path);
     GoRouter.of(context).go(path,extra: params);
   }
 
   removeCurrentAndNavigate(
       {required BuildContext context, required String path, Object? params}) {
+    path = _createFullPathForExploreSubScreen(path: path);
     GoRouter.of(context).pushReplacement(path,extra: params);
   }
 
 
   removeTopPage({required BuildContext context}){
+
     GoRouter.of(context).pop();
   }
 
@@ -33,7 +39,18 @@ class Navigator {
 
   popUnTill({required BuildContext context,required String path})
   {
+    path = _createFullPathForExploreSubScreen(path: path);
     GoRouter.of(context).popUntil(path, context);
+  }
+
+
+  _createFullPathForExploreSubScreen({required String path})
+  {
+    if(!path.startsWith("/") && exploreSubScreenRoutes.contains(path))
+      {
+        return "$exploreScreenPath/$path";
+      }
+    return path;
   }
 
 }

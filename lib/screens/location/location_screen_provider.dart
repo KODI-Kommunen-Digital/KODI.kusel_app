@@ -1,3 +1,4 @@
+import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
 import 'package:domain/model/request_model/listings/search_request_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
@@ -16,14 +17,18 @@ final locationScreenProvider = StateNotifierProvider.autoDispose<
     (ref) => LocationScreenProvider(
           listingsUseCase: ref.read(listingsUseCaseProvider),
           searchUseCase: ref.read(searchUseCaseProvider),
+          signInStatusController: ref.read(signInStatusProvider.notifier),
         ));
 
 class LocationScreenProvider extends StateNotifier<LocationScreenState> {
   ListingsUseCase listingsUseCase;
   SearchUseCase searchUseCase;
+  SignInStatusController signInStatusController;
 
   LocationScreenProvider(
-      {required this.listingsUseCase, required this.searchUseCase})
+      {required this.listingsUseCase,
+      required this.searchUseCase,
+      required this.signInStatusController})
       : super(LocationScreenState.empty());
 
   Future<void> getAllEventList() async {
@@ -55,7 +60,6 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
               allEventList: response.data,
               distinctFilterCategoryList: filterCategoryList);
         }
-
       });
     } catch (error) {
       debugPrint("Get all event list  exception = $error");
@@ -64,7 +68,8 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
 
   Future<void> getAllEventListUsingCategoryId(String categoryId) async {
     try {
-      state = state.copyWith(isSelectedFilterScreenLoading: true,allEventList: []);
+      state =
+          state.copyWith(isSelectedFilterScreenLoading: true, allEventList: []);
       GetAllListingsRequestModel requestModel =
           GetAllListingsRequestModel(categoryId: categoryId);
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
@@ -76,7 +81,8 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
         debugPrint("Get all event list fold exception = $l");
       }, (r) {
         final response = r as GetAllListingsResponseModel;
-        state = state.copyWith(isSelectedFilterScreenLoading: false, allEventList: response.data);
+        state = state.copyWith(
+            isSelectedFilterScreenLoading: false, allEventList: response.data);
       });
     } catch (error) {
       state = state.copyWith(isSelectedFilterScreenLoading: false);
@@ -168,9 +174,26 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
   }
 
   updateCategoryId(int? categoryId, String? categoryName) {
-    if (categoryId != null && categoryName!=null) {
-      state = state.copyWith(selectedCategoryId: categoryId,
-      selectedCategoryName: categoryName);
+    if (categoryId != null && categoryName != null) {
+      state = state.copyWith(
+          selectedCategoryId: categoryId, selectedCategoryName: categoryName);
     }
+  }
+
+  isUserLoggedIn() async {
+    final status = await signInStatusController.isUserLoggedIn();
+
+    state = state.copyWith(isUserLoggedIn: status);
+  }
+
+  updateIsFav(bool isFav, int? eventId)
+  {
+    final list = state.allEventList;
+    for (var listing in list) {
+      if (listing.id == eventId) {
+        listing.isFavorite = isFav;
+      }
+    }
+    state = state.copyWith(allEventList: list);
   }
 }

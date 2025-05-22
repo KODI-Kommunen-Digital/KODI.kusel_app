@@ -9,6 +9,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../common_widgets/text_styles.dart';
 import '../../../images_path.dart';
+import '../../../utility/url_launcher_utility.dart';
 
 class CityDetailLocationWidget extends ConsumerStatefulWidget {
   String webUrl;
@@ -125,12 +126,7 @@ class _CityDetailLocationWidgetState
             padding:
                 EdgeInsets.only(top: 8.0, bottom: 12.0, left: 16, right: 16),
             child: GestureDetector(
-              onTap: () async {
-                final Uri uri = Uri.parse(widget.webUrl);
-                if (await canLaunchUrl(uri)) {
-                  await launchUrl(uri);
-                }
-              },
+              onTap: () => UrlLauncherUtil.launchWebUrl(url: widget.webUrl),
               child: Row(
                 children: [
                   5.horizontalSpace,

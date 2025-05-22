@@ -12,9 +12,9 @@ class GetAllListingsRequestModel extends BaseModel<GetAllListingsRequestModel> {
   final String? translate;
   String? startAfterDate;
   String? endBeforeDate;
-  final double? centerLatitude;
-  final double? centerLongitude;
-  final int? radius;
+   double? centerLatitude;
+   double? centerLongitude;
+   int? radius;
 
   GetAllListingsRequestModel({
     this.pageNo,

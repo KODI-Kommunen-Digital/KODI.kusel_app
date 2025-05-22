@@ -45,7 +45,8 @@ class _OnBoardingPreferencesPageState extends ConsumerState<OnBoardingPreference
                   textOverflow: TextOverflow.visible,
                   color: Theme.of(context).textTheme.bodyLarge?.color),
               20.verticalSpace,
-              categoryView(context)
+              categoryView(context),
+              120.verticalSpace
             ],
           ),
         ),
