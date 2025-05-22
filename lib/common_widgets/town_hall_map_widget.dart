@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../images_path.dart';
 import '../screens/event/event_detail_screen_controller.dart';
+import '../utility/url_launcher_utility.dart';
 import 'custom_shimmer_widget.dart';
 import 'image_utility.dart';
 
@@ -80,11 +81,8 @@ class _LocationCardWidgetState extends ConsumerState<TownHallMapWidget> {
             child: _customMapWidget(
                 latitude: widget.latitude,
                 longitude: widget.longitude,
-                onMapTap: () {
-                  ref
-                      .read(eventDetailScreenProvider.notifier)
-                      .openInMaps(widget.latitude, widget.longitude);
-                },
+                onMapTap: () => UrlLauncherUtil.launchMap(
+                    latitude: widget.latitude, longitude: widget.longitude),
                 context: context),
           ),
           Padding(
@@ -121,14 +119,7 @@ class _LocationCardWidgetState extends ConsumerState<TownHallMapWidget> {
                 ),
                 10.verticalSpace,
                 GestureDetector(
-                  onTap: () async {
-                    // final Uri phoneUri = Uri(scheme: 'tel', path: widget.phoneNumber);
-                    // if (await canLaunchUrl(phoneUri)) {
-                    //   await launchUrl(phoneUri);
-                    // } else {
-                    //   throw 'Could not launch $phoneUri';
-                    // }
-                  },
+                  onTap: () => UrlLauncherUtil.launchDialer(phoneNumber: widget.phoneNumber),
                   child: Row(
                     children: [
                       ImageUtil.loadSvgImage(
@@ -148,17 +139,7 @@ class _LocationCardWidgetState extends ConsumerState<TownHallMapWidget> {
                 ),
                 10.verticalSpace,
                 GestureDetector(
-                  onTap: () async {
-                    // final Uri emailUri = Uri(
-                    //   scheme: 'mailto',
-                    //   path: widget.email,
-                    // );
-                    // if (await canLaunchUrl(emailUri)) {
-                    //   await launchUrl(emailUri);
-                    // } else {
-                    //   throw 'Could not launch $emailUri';
-                    // }
-                  },
+                  onTap: () => UrlLauncherUtil.launchEmail(emailAddress: widget.email),
                   child: Row(
                     children: [
                       ImageUtil.loadSvgImage(
@@ -178,12 +159,7 @@ class _LocationCardWidgetState extends ConsumerState<TownHallMapWidget> {
                 ),
                 10.verticalSpace,
                 GestureDetector(
-                  onTap: () async {
-                    final Uri uri = Uri.parse(widget.websiteUrl);
-                    if (await canLaunchUrl(uri)) {
-                      await launchUrl(uri);
-                    }
-                  },
+                  onTap: () => UrlLauncherUtil.launchWebUrl(url: widget.websiteUrl),
                   child: Row(
                     children: [
                       ImageUtil.loadSvgImage(

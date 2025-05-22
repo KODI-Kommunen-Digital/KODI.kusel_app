@@ -15,6 +15,7 @@ import 'package:kusel/screens/all_event/all_event_screen_param.dart';
 import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/events_listing/selected_event_list_screen_parameter.dart';
 import 'package:kusel/screens/tourism/tourism_screen_controller.dart';
+import 'package:kusel/utility/url_launcher_utility.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -131,12 +132,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
               },
             ),
           LocalSvgImageTextServiceCard(
-            onTap: () async {
-              final Uri uri = Uri.parse("https://www.landkreis-kusel.de");
-              if (await canLaunchUrl(uri)) {
-                await launchUrl(uri);
-              }
-            },
+            onTap: () => UrlLauncherUtil.launchWebUrl(url: "https://www.landkreis-kusel.de"),
             imageUrl: 'tourism_service_image',
             text: AppLocalizations.of(context).hiking_trails,
             description: AppLocalizations.of(context).discover_kusel_on_foot,
