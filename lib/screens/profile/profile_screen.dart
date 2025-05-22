@@ -34,41 +34,41 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.read(profileScreenProvider);
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.onSecondary,
-        body: _buildProfileUi(state),
-      ).loaderDialog(context, ref.watch(profileScreenProvider).loading),
-    );
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.onSecondary,
+      body: _buildProfileUi(state),
+    ).loaderDialog(context, ref.watch(profileScreenProvider).loading);
   }
 
   Widget _buildProfileUi(ProfileScreenState state) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          _buildClipperBackground(),
-          10.verticalSpace,
-          _buildProfileDetailsList(state.userData),
-          25.verticalSpace,
-          Visibility(
-            visible: ref.watch(profileScreenProvider).editingEnabled,
-            child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 25.w),
-                child: CustomButton(
-                    onPressed: () {
-                      ref.read(profileScreenProvider.notifier).editUserDetails(
-                          onSuccess: () {
-                        showSuccessToast(
-                            message: AppLocalizations.of(context).field_updated_message,
-                            context: context);
-                      }, onError: (String msg) {
-                        showErrorToast(message: msg, context: context);
-                      });
-                    },
-                    text: AppLocalizations.of(context).save_changes)),
-          ),
-          40.verticalSpace,
-        ],
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            _buildClipperBackground(),
+            10.verticalSpace,
+            _buildProfileDetailsList(state.userData),
+            25.verticalSpace,
+            Visibility(
+              visible: ref.watch(profileScreenProvider).editingEnabled,
+              child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25.w),
+                  child: CustomButton(
+                      onPressed: () {
+                        ref.read(profileScreenProvider.notifier).editUserDetails(
+                            onSuccess: () {
+                          showSuccessToast(
+                              message: AppLocalizations.of(context).field_updated_message,
+                              context: context);
+                        }, onError: (String msg) {
+                          showErrorToast(message: msg, context: context);
+                        });
+                      },
+                      text: AppLocalizations.of(context).save_changes)),
+            ),
+            40.verticalSpace,
+          ],
+        ),
       ),
     );
   }

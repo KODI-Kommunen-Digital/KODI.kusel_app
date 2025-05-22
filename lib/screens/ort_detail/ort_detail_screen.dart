@@ -43,32 +43,32 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: _buildBody(context),
-      ).loaderDialog(
-          context, ref.watch(ortDetailScreenControllerProvider).isLoading),
-    );
+    return Scaffold(
+      body: _buildBody(context),
+    ).loaderDialog(
+        context, ref.watch(ortDetailScreenControllerProvider).isLoading);
   }
 
   _buildBody(BuildContext context) {
-    return SingleChildScrollView(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        _buildClipper(),
-        _buildTitle(context),
-        _buildDescription(context),
-        32.verticalSpace,
-        _buildButton(context),
-        32.verticalSpace,
-        FeedbackCardWidget(onTap: () {
-          ref.read(navigationProvider).navigateUsingPath(
-              path: feedbackScreenPath, context: context);
-        })
-      ],
-    ));
+    return SafeArea(
+      child: SingleChildScrollView(
+          child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          _buildClipper(),
+          _buildTitle(context),
+          _buildDescription(context),
+          32.verticalSpace,
+          _buildButton(context),
+          32.verticalSpace,
+          FeedbackCardWidget(onTap: () {
+            ref.read(navigationProvider).navigateUsingPath(
+                path: feedbackScreenPath, context: context);
+          })
+        ],
+      )),
+    );
   }
 
   _buildClipper() {

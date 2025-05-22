@@ -33,7 +33,7 @@ class _AllCityScreenState extends ConsumerState<AllCityScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: _buildBody(context),
+      body: SafeArea(child: _buildBody(context)),
     ).loaderDialog(context, ref.watch(allCityScreenProvider).isLoading);
   }
 
