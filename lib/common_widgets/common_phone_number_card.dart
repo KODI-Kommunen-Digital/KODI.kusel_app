@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/utility/url_launcher_utility.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CommonPhoneNumberCard extends ConsumerStatefulWidget {
@@ -26,7 +27,8 @@ class _CommonPhoneNumberCardState extends ConsumerState<CommonPhoneNumberCard> {
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: InkWell(
-        onTap: () =>_makePhoneCall(widget.phoneNumber),
+        onTap: () =>
+            UrlLauncherUtil.launchDialer(phoneNumber: widget.phoneNumber),
         child: Container(
           padding: EdgeInsets.only(
             left: 20.w,
@@ -56,27 +58,4 @@ class _CommonPhoneNumberCardState extends ConsumerState<CommonPhoneNumberCard> {
       ),
     );
   }
-
-Future<void> _makePhoneCall(String phoneNumber) async {
-  try {
-    // Remove all non-digit characters except '+' for international numbers
-    final sanitizedNumber = phoneNumber.replaceAll(RegExp(r'[^\d+]'), '');
-
-    if (sanitizedNumber.isEmpty) {
-      throw Exception('Invalid phone number');
-    }
-
-    final url = Uri.parse('tel:$sanitizedNumber');
-
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url);
-    } else {
-      throw Exception('Could not launch dialer');
-    }
-  } catch (e) {
-    debugPrint('Error launching phone dialer: $e');
-    // You might want to show a snackbar or toast here to inform the user
-    // ScaffoldMessenger.of(context).showSnackBar(...);
-  }
-}
 }

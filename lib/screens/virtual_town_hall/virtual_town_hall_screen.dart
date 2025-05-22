@@ -14,6 +14,7 @@ import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
 import 'package:kusel/screens/virtual_town_hall/virtual_town_hall_provider.dart';
 import 'package:kusel/screens/virtual_town_hall/virtual_town_hall_state.dart';
+import 'package:kusel/utility/url_launcher_utility.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/common_background_clipper_widget.dart';
@@ -271,13 +272,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
             itemBuilder: (context, index) {
               final item = onlineServicesList[index];
               return NetworkImageTextServiceCard(
-                  onTap: () async {
-                    final Uri uri = Uri.parse(
-                        item.linkUrl ?? "https://www.landkreis-kusel.de");
-                    if (await canLaunchUrl(uri)) {
-                      await launchUrl(uri);
-                    }
-                  },
+                  onTap: () => UrlLauncherUtil.launchWebUrl(url: "https://www.landkreis-kusel.de"),
                   imageUrl: item.iconUrl!,
                   text: item.title ?? '',
                   description: item.description ?? '');

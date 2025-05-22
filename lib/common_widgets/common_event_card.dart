@@ -6,6 +6,7 @@ import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/screens/utility/image_loader_utility.dart';
+import 'package:kusel/utility/kusel_date_utilils.dart';
 
 class CommonEventCard extends ConsumerStatefulWidget {
   final String imageUrl;
@@ -68,14 +69,22 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     textRegularMontserrat(
-                        text: formatDate(widget.date),
-                        color: Theme.of(context).textTheme.labelMedium?.color),
+                        text: KuselDateUtils.formatDate(widget.date),
+                        color: Theme
+                            .of(context)
+                            .textTheme
+                            .labelMedium
+                            ?.color),
                     const SizedBox(height: 4),
                     textSemiBoldMontserrat(text: widget.title),
                     const SizedBox(height: 2),
                     textRegularMontserrat(
                         text: widget.location,
-                        color: Theme.of(context).textTheme.labelMedium?.color),
+                        color: Theme
+                            .of(context)
+                            .textTheme
+                            .labelMedium
+                            ?.color),
                   ],
                 ),
               ),
@@ -97,17 +106,8 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
       ),
     );
   }
-
-  String formatDate(String inputDate) {
-    try {
-      final DateTime parsedDate = DateTime.parse(inputDate);
-      final DateFormat formatter = DateFormat('dd.MM.yyyy');
-      return formatter.format(parsedDate);
-    } catch (e) {
-      return inputDate;
-    }
-  }
 }
+
 
 Widget eventCartShimmerEffect() {
   return ListTile(

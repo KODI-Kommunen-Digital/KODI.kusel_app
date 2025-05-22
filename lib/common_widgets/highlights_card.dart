@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/utility/kusel_date_utilils.dart';
 
 class HighlightsCard extends ConsumerStatefulWidget {
   final String imageUrl;
@@ -120,8 +120,9 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
               children: [
                 (widget.date != null)
                     ? textSemiBoldMontserrat(
-                  color: Theme.of(context).textTheme.labelMedium?.color,
-                        text: formatDate(widget.date ?? ""), fontSize: 14)
+                        color: Theme.of(context).textTheme.labelMedium?.color,
+                        text: KuselDateUtils.formatDate(widget.date ?? ""),
+                        fontSize: 14)
                     : SizedBox.shrink(),
                 (widget.date != null) ? 4.verticalSpace : SizedBox.shrink(),
                 textSemiBoldMontserrat(
@@ -142,16 +143,6 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
         ),
       ),
     );
-  }
-
-  String formatDate(String inputDate) {
-    try {
-      final DateTime parsedDate = DateTime.parse(inputDate);
-      final DateFormat formatter = DateFormat('dd.MM.yyyy');
-      return formatter.format(parsedDate);
-    } catch (e) {
-      return inputDate;
-    }
   }
 }
 

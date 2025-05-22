@@ -20,6 +20,7 @@ import '../../common_widgets/event_list_section_widget.dart';
 import '../../common_widgets/feedback_card_widget.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
+import '../../utility/url_launcher_utility.dart';
 import 'municipal_detail_controller.dart';
 
 class MunicipalDetailScreen extends ConsumerStatefulWidget {
@@ -416,13 +417,9 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                     final item = state
                         .municipalPartyDetailDataModel!.onlineServices![index];
                     return _customTextIconCard(
-                        onTap: () async {
-                          final Uri uri = Uri.parse(
-                              item.linkUrl ?? "https://www.landkreis-kusel.de");
-                          if (await canLaunchUrl(uri)) {
-                            await launchUrl(uri);
-                          }
-                        },
+                        onTap: () => UrlLauncherUtil.launchWebUrl(
+                            url: item.linkUrl ??
+                                "https://www.landkreis-kusel.de"),
                         imageUrl: item.iconUrl!, //??item.iconUrl
                         text: item.title ?? '',
                         description: item.description ?? '');

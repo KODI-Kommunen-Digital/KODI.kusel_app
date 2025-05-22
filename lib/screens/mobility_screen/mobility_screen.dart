@@ -7,6 +7,7 @@ import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/screens/mobility_screen/mobility_screen_provider.dart';
+import 'package:kusel/utility/url_launcher_utility.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/arrow_back_widget.dart';
@@ -129,13 +130,8 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
                 itemBuilder: (context, index) {
                   final item = state.mobilityData?.servicesOffered?[index];
                   return NetworkImageTextServiceCard(
-                    onTap: () async {
-                      final Uri uri = Uri.parse(
-                          item?.linkUrl ?? 'https://www.landkreis-kusel.de');
-                      if (await canLaunchUrl(uri)) {
-                        await launchUrl(uri);
-                      }
-                    },
+                    onTap: () => UrlLauncherUtil.launchWebUrl(
+                        url: item?.linkUrl ?? 'https://www.landkreis-kusel.de'),
                     imageUrl: item?.iconUrl ?? '',
                     text: item?.title ?? '_',
                     description: item?.description,

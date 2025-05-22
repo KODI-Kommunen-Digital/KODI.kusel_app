@@ -8,6 +8,7 @@ import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/screens/feedback/feedback_screen_provider.dart';
 import 'package:kusel/screens/feedback/feedback_screen_state.dart';
+import 'package:kusel/utility/url_constants/url_constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/arrow_back_widget.dart';
@@ -16,6 +17,7 @@ import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/toast_message.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
+import '../../utility/url_launcher_utility.dart';
 import '../auth/validator/empty_field_validator.dart';
 
 class FeedbackScreen extends ConsumerStatefulWidget {
@@ -150,13 +152,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                     }),
                 Expanded(
                   child: GestureDetector(
-                    onTap: () async {
-                      final Uri uri = Uri.parse(
-                          "https://heidi.troisdorf.dksr.city/PrivacyPolicy");
-                      if (await canLaunchUrl(uri)) {
-                        await launchUrl(uri);
-                      }
-                    },
+                    onTap: () => UrlLauncherUtil.launchWebUrl(url: privacyPolicyUrl),
                     child: textRegularPoppins(
                         text: AppLocalizations.of(context).feedback_text,
                         textOverflow: TextOverflow.visible,
