@@ -54,89 +54,91 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         extendBody: true,
-        body: Stack(
-          children: [
-            Positioned.fill(child: widget.child),
-            Positioned(
-              left: 16.w,
-              right: 16.w,
-              bottom: 16.h,
-              child: DotNavigationBar(
-                backgroundColor: Theme.of(context).bottomAppBarTheme.color,
-                selectedItemColor: Theme.of(context).indicatorColor,
-                unselectedItemColor: Theme.of(context).colorScheme.onPrimary,
-                currentIndex: selectedIndex,
-                enableFloatingNavBar: true,
-                paddingR: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                marginR: const EdgeInsets.all(0),
-                onTap: (index) {
-                  ref
-                      .read(dashboardScreenProvider.notifier)
-                      .onIndexChanged(index);
-
-                  widget.child.goBranch(index);
-                },
-                dotIndicatorColor: Theme.of(context).indicatorColor,
-                itemPadding: const EdgeInsets.only(
-                    top: 8, bottom: 0, left: 16, right: 16),
-                items: [
-                  DotNavigationBarItem(
-                    icon: const Icon(Icons.home_filled),
-                    selectedColor: Theme.of(context).indicatorColor,
-                  ),
-                  DotNavigationBarItem(
-                    icon: Padding(
-                      padding: EdgeInsets.only(top: 3.h),
-                      child: SizedBox(
-                        height: 13.h,
-                        width: 20.w,
-                        child: Center(
+        body: SafeArea(
+          child: Stack(
+            children: [
+              Positioned.fill(child: widget.child),
+              Positioned(
+                left: 16.w,
+                right: 16.w,
+                bottom: 16.h,
+                child: DotNavigationBar(
+                  backgroundColor: Theme.of(context).bottomAppBarTheme.color,
+                  selectedItemColor: Theme.of(context).indicatorColor,
+                  unselectedItemColor: Theme.of(context).colorScheme.onPrimary,
+                  currentIndex: selectedIndex,
+                  enableFloatingNavBar: true,
+                  paddingR: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                  marginR: const EdgeInsets.all(0),
+                  onTap: (index) {
+                    ref
+                        .read(dashboardScreenProvider.notifier)
+                        .onIndexChanged(index);
+          
+                    widget.child.goBranch(index);
+                  },
+                  dotIndicatorColor: Theme.of(context).indicatorColor,
+                  itemPadding: const EdgeInsets.only(
+                      top: 8, bottom: 0, left: 16, right: 16),
+                  items: [
+                    DotNavigationBarItem(
+                      icon: const Icon(Icons.home_filled),
+                      selectedColor: Theme.of(context).indicatorColor,
+                    ),
+                    DotNavigationBarItem(
+                      icon: Padding(
+                        padding: EdgeInsets.only(top: 3.h),
+                        child: SizedBox(
+                          height: 13.h,
+                          width: 20.w,
+                          child: Center(
+                            child: ImageUtil.loadSvgImage(
+                              height: 13.h,
+                              width: 13.w,
+                              imageUrl: imagePath['discover_icon'] ?? "",
+                              context: context,
+                              color: selectedIndex == 1
+                                  ? Theme.of(context).indicatorColor
+                                  : Theme.of(context).colorScheme.onPrimary,
+                            ),
+                          ),
+                        ),
+                      ),
+                      selectedColor: Theme.of(context).indicatorColor,
+                    ),
+                    DotNavigationBarItem(
+                      icon: const Icon(Icons.search),
+                      selectedColor: Theme.of(context).indicatorColor,
+                    ),
+                    DotNavigationBarItem(
+                      icon: Padding(
+                        padding: EdgeInsets.only(top: 2.h),
+                        child: SizedBox(
+                          height: 14.h,
+                          width: 20.w,
                           child: ImageUtil.loadSvgImage(
-                            height: 13.h,
-                            width: 13.w,
-                            imageUrl: imagePath['discover_icon'] ?? "",
                             context: context,
-                            color: selectedIndex == 1
+                            height: 14.h,
+                            width: 15.w,
+                            fit: BoxFit.contain,
+                            imageUrl: imagePath['location_icon'] ?? "",
+                            color: selectedIndex == 3
                                 ? Theme.of(context).indicatorColor
                                 : Theme.of(context).colorScheme.onPrimary,
                           ),
                         ),
                       ),
+                      selectedColor: Theme.of(context).indicatorColor,
                     ),
-                    selectedColor: Theme.of(context).indicatorColor,
-                  ),
-                  DotNavigationBarItem(
-                    icon: const Icon(Icons.search),
-                    selectedColor: Theme.of(context).indicatorColor,
-                  ),
-                  DotNavigationBarItem(
-                    icon: Padding(
-                      padding: EdgeInsets.only(top: 2.h),
-                      child: SizedBox(
-                        height: 14.h,
-                        width: 20.w,
-                        child: ImageUtil.loadSvgImage(
-                          context: context,
-                          height: 14.h,
-                          width: 15.w,
-                          fit: BoxFit.contain,
-                          imageUrl: imagePath['location_icon'] ?? "",
-                          color: selectedIndex == 3
-                              ? Theme.of(context).indicatorColor
-                              : Theme.of(context).colorScheme.onPrimary,
-                        ),
-                      ),
+                    DotNavigationBarItem(
+                      icon: const Icon(Icons.menu),
+                      selectedColor: Theme.of(context).indicatorColor,
                     ),
-                    selectedColor: Theme.of(context).indicatorColor,
-                  ),
-                  DotNavigationBarItem(
-                    icon: const Icon(Icons.menu),
-                    selectedColor: Theme.of(context).indicatorColor,
-                  ),
-                ],
-              ),
-            )
-          ],
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

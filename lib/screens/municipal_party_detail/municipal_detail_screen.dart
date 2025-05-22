@@ -59,11 +59,11 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
     final isLoading = ref.watch(
         municipalDetailControllerProvider.select((state) => state.isLoading));
 
-    return SafeArea(
-      child: Scaffold(
-          body: Stack(
-        fit: StackFit.expand,
-        children: [
+    return Scaffold(
+        body: SafeArea(
+          child: Stack(
+                fit: StackFit.expand,
+                children: [
           Positioned.fill(child: _buildBody(context)),
           if (isLoading)
             Center(
@@ -78,9 +78,9 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                 child: CircularProgressIndicator(),
               ),
             )),
-        ],
-      )),
-    );
+                ],
+              ),
+        ));
   }
 
   _buildBody(BuildContext context) {

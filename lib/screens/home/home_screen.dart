@@ -45,11 +45,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await ref.read(homeScreenProvider.notifier).refresh();
-        },        child: SizedBox(
-            height: MediaQuery.of(context).size.height, child: buildUi()),
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await ref.read(homeScreenProvider.notifier).refresh();
+          },        child: SizedBox(
+              height: MediaQuery.of(context).size.height, child: buildUi()),
+        ),
       ),
     );
   }

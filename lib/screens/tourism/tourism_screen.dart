@@ -53,141 +53,141 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body:
-            (ref.watch(tourismScreenControllerProvider).isRecommendationLoading)
-                ? Center(
-                    child: CircularProgressIndicator(),
-                  )
-                : _buildBody(context),
-      ),
+    return Scaffold(
+      body:
+          (ref.watch(tourismScreenControllerProvider).isRecommendationLoading)
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : _buildBody(context),
     );
   }
 
   _buildBody(BuildContext context) {
     final state = ref.watch(tourismScreenControllerProvider);
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CommonBackgroundClipperWidget(
-              clipperType: UpstreamWaveClipper(),
-              imageUrl: imagePath['background_image'] ?? "",
-              headingText: AppLocalizations.of(context).tourism_and_leisure,
-              height: 150.h,
-              blurredBackground: true,
-              isBackArrowEnabled: true,
-              isStaticImage: true),
-          _buildRecommendation(context),
-          32.verticalSpace,
-          _buildLocationWidget(context),
-          16.verticalSpace,
-          if (state.nearByList.isNotEmpty)
-            EventsListSectionWidget(
-              context: context,
-              eventsList: state.nearByList,
-              heading: AppLocalizations.of(context).near_you,
-              maxListLimit: 5,
-              buttonText: AppLocalizations.of(context).near_you,
-              buttonIconPath: imagePath['map_icon'] ?? "",
-              isLoading: false,
-              onButtonTap: () {
-                final searchRadius = SearchRadius.radius.value;
-                ref.read(navigationProvider).navigateUsingPath(
-                    path: selectedEventListScreenPath,
-                    context: context,
-                    params: SelectedEventListScreenParameter(
-                        listHeading: AppLocalizations.of(context).near_you,
-                        centerLongitude: state.long,
-                        centerLatitude: state.lat,
-                        radius: searchRadius,
-                        onFavChange: () {
-                          ref
-                              .read(tourismScreenControllerProvider.notifier)
-                              .getNearByListing();
-                        }));
-              },
-              onHeadingTap: () {
-                final searchRadius = SearchRadius.radius.value;
-                ref.read(navigationProvider).navigateUsingPath(
-                    path: selectedEventListScreenPath,
-                    context: context,
-                    params: SelectedEventListScreenParameter(
-                        listHeading: AppLocalizations.of(context).near_you,
-                        centerLongitude: state.long,
-                        centerLatitude: state.lat,
-                        radius: searchRadius,
-                        onFavChange: () {
-                          ref
-                              .read(tourismScreenControllerProvider.notifier)
-                              .getNearByListing();
-                        }));
-              },
-              isFavVisible: state.isUserLoggedIn,
-              onSuccess: (bool isFav, int? id) {
-                ref
-                    .read(tourismScreenControllerProvider.notifier)
-                    .updateNearByIsFav(isFav, id);
-              },
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CommonBackgroundClipperWidget(
+                clipperType: UpstreamWaveClipper(),
+                imageUrl: imagePath['background_image'] ?? "",
+                headingText: AppLocalizations.of(context).tourism_and_leisure,
+                height: 150.h,
+                blurredBackground: true,
+                isBackArrowEnabled: true,
+                isStaticImage: true),
+            _buildRecommendation(context),
+            32.verticalSpace,
+            _buildLocationWidget(context),
+            16.verticalSpace,
+            if (state.nearByList.isNotEmpty)
+              EventsListSectionWidget(
+                context: context,
+                eventsList: state.nearByList,
+                heading: AppLocalizations.of(context).near_you,
+                maxListLimit: 5,
+                buttonText: AppLocalizations.of(context).near_you,
+                buttonIconPath: imagePath['map_icon'] ?? "",
+                isLoading: false,
+                onButtonTap: () {
+                  final searchRadius = SearchRadius.radius.value;
+                  ref.read(navigationProvider).navigateUsingPath(
+                      path: selectedEventListScreenPath,
+                      context: context,
+                      params: SelectedEventListScreenParameter(
+                          listHeading: AppLocalizations.of(context).near_you,
+                          centerLongitude: state.long,
+                          centerLatitude: state.lat,
+                          radius: searchRadius,
+                          onFavChange: () {
+                            ref
+                                .read(tourismScreenControllerProvider.notifier)
+                                .getNearByListing();
+                          }));
+                },
+                onHeadingTap: () {
+                  final searchRadius = SearchRadius.radius.value;
+                  ref.read(navigationProvider).navigateUsingPath(
+                      path: selectedEventListScreenPath,
+                      context: context,
+                      params: SelectedEventListScreenParameter(
+                          listHeading: AppLocalizations.of(context).near_you,
+                          centerLongitude: state.long,
+                          centerLatitude: state.lat,
+                          radius: searchRadius,
+                          onFavChange: () {
+                            ref
+                                .read(tourismScreenControllerProvider.notifier)
+                                .getNearByListing();
+                          }));
+                },
+                isFavVisible: state.isUserLoggedIn,
+                onSuccess: (bool isFav, int? id) {
+                  ref
+                      .read(tourismScreenControllerProvider.notifier)
+                      .updateNearByIsFav(isFav, id);
+                },
+              ),
+            LocalSvgImageTextServiceCard(
+              onTap: () => UrlLauncherUtil.launchWebUrl(url: "https://www.landkreis-kusel.de"),
+              imageUrl: 'tourism_service_image',
+              text: AppLocalizations.of(context).hiking_trails,
+              description: AppLocalizations.of(context).discover_kusel_on_foot,
             ),
-          LocalSvgImageTextServiceCard(
-            onTap: () => UrlLauncherUtil.launchWebUrl(url: "https://www.landkreis-kusel.de"),
-            imageUrl: 'tourism_service_image',
-            text: AppLocalizations.of(context).hiking_trails,
-            description: AppLocalizations.of(context).discover_kusel_on_foot,
-          ),
-          if (state.allEventList.isNotEmpty)
-            EventsListSectionWidget(
-              context: context,
-              eventsList: state.allEventList,
-              heading: AppLocalizations.of(context).all_events,
-              maxListLimit: 5,
-              buttonText: AppLocalizations.of(context).all_events,
-              buttonIconPath: imagePath['calendar'] ?? "",
-              isLoading: false,
-              onButtonTap: () {
-                ref.read(navigationProvider).navigateUsingPath(
-                    path: selectedEventListScreenPath,
-                    context: context,
-                    params: SelectedEventListScreenParameter(
-                        listHeading: AppLocalizations.of(context).all_events,
-                        categoryId: ListingCategoryId.event.eventId,
-                        onFavChange: () {
-                          ref
-                              .read(tourismScreenControllerProvider.notifier)
-                              .getAllEvents();
-                        }));
-              },
-              onHeadingTap: () {
-                ref.read(navigationProvider).navigateUsingPath(
-                    path: selectedEventListScreenPath,
-                    context: context,
-                    params: SelectedEventListScreenParameter(
-                        listHeading: AppLocalizations.of(context).all_events,
-                        categoryId: ListingCategoryId.event.eventId,
-                        onFavChange: () {
-                          ref
-                              .read(tourismScreenControllerProvider.notifier)
-                              .getAllEvents();
-                        }));
-              },
-              isFavVisible: state.isUserLoggedIn,
-              onSuccess: (bool isFav, int? id) {
-                ref
-                    .read(tourismScreenControllerProvider.notifier)
-                    .updateEventIsFav(isFav, id);
-              },
-            ),
-          32.verticalSpace,
-          FeedbackCardWidget(
-              height: 270.h,
-              onTap: () {
-            ref
-                .read(navigationProvider)
-                .navigateUsingPath(path: feedbackScreenPath, context: context);
-          })
-        ],
+            if (state.allEventList.isNotEmpty)
+              EventsListSectionWidget(
+                context: context,
+                eventsList: state.allEventList,
+                heading: AppLocalizations.of(context).all_events,
+                maxListLimit: 5,
+                buttonText: AppLocalizations.of(context).all_events,
+                buttonIconPath: imagePath['calendar'] ?? "",
+                isLoading: false,
+                onButtonTap: () {
+                  ref.read(navigationProvider).navigateUsingPath(
+                      path: selectedEventListScreenPath,
+                      context: context,
+                      params: SelectedEventListScreenParameter(
+                          listHeading: AppLocalizations.of(context).all_events,
+                          categoryId: ListingCategoryId.event.eventId,
+                          onFavChange: () {
+                            ref
+                                .read(tourismScreenControllerProvider.notifier)
+                                .getAllEvents();
+                          }));
+                },
+                onHeadingTap: () {
+                  ref.read(navigationProvider).navigateUsingPath(
+                      path: selectedEventListScreenPath,
+                      context: context,
+                      params: SelectedEventListScreenParameter(
+                          listHeading: AppLocalizations.of(context).all_events,
+                          categoryId: ListingCategoryId.event.eventId,
+                          onFavChange: () {
+                            ref
+                                .read(tourismScreenControllerProvider.notifier)
+                                .getAllEvents();
+                          }));
+                },
+                isFavVisible: state.isUserLoggedIn,
+                onSuccess: (bool isFav, int? id) {
+                  ref
+                      .read(tourismScreenControllerProvider.notifier)
+                      .updateEventIsFav(isFav, id);
+                },
+              ),
+            32.verticalSpace,
+            FeedbackCardWidget(
+                height: 270.h,
+                onTap: () {
+              ref
+                  .read(navigationProvider)
+                  .navigateUsingPath(path: feedbackScreenPath, context: context);
+            })
+          ],
+        ),
       ),
     );
   }

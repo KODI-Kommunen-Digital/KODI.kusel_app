@@ -43,13 +43,11 @@ class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
   Widget build(BuildContext context) {
     final SearchResultScreenState searchResultScreenState =
         ref.watch(searchResultScreenProvider);
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: searchResultScreenState.loading
-            ? const Center(child: CircularProgressIndicator())
-            : _buildBody(searchResultScreenState, context),
-      ),
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: searchResultScreenState.loading
+          ? const Center(child: CircularProgressIndicator())
+          : SafeArea(child: _buildBody(searchResultScreenState, context)),
     );
   }
 
