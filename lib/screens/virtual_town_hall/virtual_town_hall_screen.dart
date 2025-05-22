@@ -47,27 +47,28 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
     final isLoading =
         ref.watch(virtualTownHallProvider.select((state) => state.loading));
 
-    return SafeArea(
-        child: Scaffold(
-            backgroundColor: Theme.of(context).colorScheme.onSecondary,
-            body: Stack(
-              children: [
-                _buildBody(context),
-                if (isLoading)
-                  Center(
-                      child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                    height: 100.h,
-                    width: 100.w,
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  )),
-              ],
-            )));
+    return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.onSecondary,
+        body: SafeArea(
+          child: Stack(
+            children: [
+              _buildBody(context),
+              if (isLoading)
+                Center(
+                    child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                  height: 100.h,
+                  width: 100.w,
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                )),
+            ],
+          ),
+        ));
   }
 
   Widget _buildBody(BuildContext context) {

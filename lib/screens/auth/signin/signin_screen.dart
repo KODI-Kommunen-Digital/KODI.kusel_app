@@ -43,58 +43,58 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               .navigateUsingPath(path: homeScreenPath, context: context);
         }
       },
-      child: SafeArea(
-        child: Scaffold(
-          body: _buildBody(context),
-        ).loaderDialog(context, ref.watch(signInScreenProvider).showLoading),
-      ),
+      child: Scaffold(
+        body: _buildBody(context),
+      ).loaderDialog(context, ref.watch(signInScreenProvider).showLoading),
     );
   }
 
   _buildBody(BuildContext context) {
     final borderRadius = Radius.circular(50.r);
-    return SingleChildScrollView(
-      child: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            Positioned(
-                top: 0.h,
-                child: Container(
-                  height: MediaQuery.of(context).size.height * .3,
-                  width: MediaQuery.of(context).size.width,
-                  decoration: BoxDecoration(),
-                  child: Image.asset(
-                    imagePath['background_image'] ?? "",
-                    fit: BoxFit.cover,
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Positioned(
+                  top: 0.h,
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * .3,
+                    width: MediaQuery.of(context).size.width,
+                    decoration: BoxDecoration(),
+                    child: Image.asset(
+                      imagePath['background_image'] ?? "",
+                      fit: BoxFit.cover,
+                    ),
+                  )),
+              Positioned.fill(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
+                  child: Container(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSecondary
+                        .withValues(alpha: 0.6),
                   ),
-                )),
-            Positioned.fill(
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
-                child: Container(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSecondary
-                      .withValues(alpha: 0.6),
                 ),
               ),
-            ),
-            Positioned(
-              bottom: 0.h,
-              left: 0.w,
-              right: 0.w,
-              child: Container(
-                  height: MediaQuery.of(context).size.height * .8,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.onSecondary,
-                      borderRadius: BorderRadius.only(
-                          topRight: borderRadius, topLeft: borderRadius)),
-                  child: _buildLoginCard(context)),
-            ),
-          ],
+              Positioned(
+                bottom: 0.h,
+                left: 0.w,
+                right: 0.w,
+                child: Container(
+                    height: MediaQuery.of(context).size.height * .8,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.onSecondary,
+                        borderRadius: BorderRadius.only(
+                            topRight: borderRadius, topLeft: borderRadius)),
+                    child: _buildLoginCard(context)),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -39,12 +39,10 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: _buildBody(context),
-      ).loaderDialog(context, ref.watch(allEventScreenProvider).isLoading),
-    );
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: SafeArea(child: _buildBody(context)),
+    ).loaderDialog(context, ref.watch(allEventScreenProvider).isLoading);
   }
 
   Widget _buildBody(BuildContext context) {
