@@ -17,6 +17,7 @@ import '../../common_widgets/common_contact_details_card.dart';
 import '../../common_widgets/image_utility.dart';
 import '../../common_widgets/network_image_text_service_card.dart';
 import '../../navigation/navigation.dart';
+import '../../utility/url_launcher_utility.dart';
 
 class ParticipateScreen extends ConsumerStatefulWidget {
   const ParticipateScreen({super.key});
@@ -71,7 +72,9 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
                       description: item?.description ?? "_");
                 }),
           _buildContactDetailsList(),
-          FeedbackCardWidget(onTap: () {
+          FeedbackCardWidget(
+              height: 270.h,
+              onTap: () {
             ref
                 .read(navigationProvider)
                 .navigateUsingPath(path: feedbackScreenPath, context: context);
@@ -137,13 +140,8 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
                 itemBuilder: (context, index) {
                   final item = state.participateData?.servicesOffered?[index];
                   return NetworkImageTextServiceCard(
-                    onTap: () async {
-                      final Uri uri = Uri.parse(
-                          item?.linkUrl ?? 'https://www.landkreis-kusel.de');
-                      if (await canLaunchUrl(uri)) {
-                        await launchUrl(uri);
-                      }
-                    },
+                    onTap: () => UrlLauncherUtil.launchWebUrl(
+                        url: item?.linkUrl ?? 'https://www.landkreis-kusel.de'),
                     imageUrl: item?.iconUrl ?? '',
                     text: item?.title ?? '_',
                     description: item?.description,

@@ -75,19 +75,6 @@ class EventDetailScreenController
     return "No Address Found";
   }
 
-  void openInMaps(double latitude, double longitude) async {
-    final Uri geoUri = Uri.parse('geo:$latitude,$longitude');
-    final Uri webUri = Uri.parse(
-        'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude');
-    if (await canLaunchUrl(geoUri)) {
-      await launchUrl(geoUri, mode: LaunchMode.externalApplication);
-    } else if (await canLaunchUrl(webUri)) {
-      await launchUrl(webUri, mode: LaunchMode.externalApplication);
-    } else {
-      throw 'Could not launch any map app or browser.';
-    }
-  }
-
   Future<void> getRecommendedList() async {
     try {
       LatLong kuselLatLong = LatLong(49.53603477650214, 7.392734870386151);

@@ -4,16 +4,24 @@ class AllEventScreenState {
   List<Listing> listingList;
   bool isLoading;
   int? filterCount;
+  bool isUserLoggedIn;
 
-  AllEventScreenState(this.listingList, this.isLoading, this.filterCount);
+  AllEventScreenState(
+      this.listingList, this.isLoading, this.filterCount, this.isUserLoggedIn);
 
   factory AllEventScreenState.empty() {
-    return AllEventScreenState([], false, null);
+    return AllEventScreenState([], false, null, false);
   }
 
   AllEventScreenState copyWith(
-      {List<Listing>? listingList, bool? isLoading, int? filterCount}) {
-    return AllEventScreenState(listingList ?? this.listingList,
-        isLoading ?? this.isLoading, filterCount ?? this.filterCount);
+      {List<Listing>? listingList,
+      bool? isLoading,
+      int? filterCount,
+      bool? isUserLoggedIn}) {
+    return AllEventScreenState(
+        listingList ?? this.listingList,
+        isLoading ?? this.isLoading,
+        filterCount ?? this.filterCount,
+        isUserLoggedIn ?? this.isUserLoggedIn);
   }
 }

@@ -142,7 +142,7 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
                       centerLongitude: 7.40647,
                       categoryId: widget.subCategoryScreenParameters.id,
                       subCategoryId: exploreSubCategory.id,
-                      listHeading: exploreSubCategory.name ?? ""));
+                      listHeading: exploreSubCategory.name ?? "", onFavChange: () {  }));
             },
             child: CategoryGridCardView(
               imageUrl:

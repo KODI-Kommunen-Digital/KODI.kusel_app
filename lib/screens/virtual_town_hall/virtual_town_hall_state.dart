@@ -19,6 +19,7 @@ class VirtualTownHallState {
   final List<OnlineService>? onlineServiceList;
   final List<Municipality>? municipalitiesList;
   final bool loading;
+  final bool isUserLoggedIn;
 
   VirtualTownHallState(
       this.highlightCount,
@@ -37,67 +38,51 @@ class VirtualTownHallState {
       this.websiteUrl,
       this.openUntil,
       this.onlineServiceList,
-      this.municipalitiesList);
+      this.municipalitiesList,
+      this.isUserLoggedIn);
 
   factory VirtualTownHallState.empty() {
-    return VirtualTownHallState(
-      0,
-      null,
-      null,
-      false,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-      null,
-    );
+    return VirtualTownHallState(0, null, null, false, null, null, null, null,
+        null, null, null, null, null, null, null, null, null, false);
   }
 
-  VirtualTownHallState copyWith({
-    int? highlightCount,
-    List<Listing>? eventList,
-    List<Listing>? newsList,
-    String? cityName,
-    String? cityId,
-    String? imageUrl,
-    String? description,
-    String? address,
-    double? latitude,
-    double? longitude,
-    String? phoneNumber,
-    String? email,
-    String? openUntil,
-    String? websiteUrl,
-    List<OnlineService>? onlineServiceList,
-    List<Municipality>? municipalitiesList,
-    bool? loading,
-  }) {
+  VirtualTownHallState copyWith(
+      {int? highlightCount,
+      List<Listing>? eventList,
+      List<Listing>? newsList,
+      String? cityName,
+      String? cityId,
+      String? imageUrl,
+      String? description,
+      String? address,
+      double? latitude,
+      double? longitude,
+      String? phoneNumber,
+      String? email,
+      String? openUntil,
+      String? websiteUrl,
+      List<OnlineService>? onlineServiceList,
+      List<Municipality>? municipalitiesList,
+      bool? loading,
+      bool? isUserLoggedIn}) {
     return VirtualTownHallState(
-      highlightCount ?? this.highlightCount,
-      eventList ?? this.eventList,
-      newsList ?? this.newsList,
-      loading ?? this.loading,
-      cityName ?? this.cityName,
-      cityId ?? this.cityId,
-      imageUrl ?? this.imageUrl,
-      description ?? this.description,
-      address ?? this.address,
-      latitude ?? this.latitude,
-      longitude ?? this.longitude,
-      phoneNumber ?? this.phoneNumber,
-      email ?? this.email,
-      websiteUrl ?? this.websiteUrl,
-      openUntil ?? this.openUntil,
-      onlineServiceList ?? this.onlineServiceList,
-      municipalitiesList ?? this.municipalitiesList,
-    );
+        highlightCount ?? this.highlightCount,
+        eventList ?? this.eventList,
+        newsList ?? this.newsList,
+        loading ?? this.loading,
+        cityName ?? this.cityName,
+        cityId ?? this.cityId,
+        imageUrl ?? this.imageUrl,
+        description ?? this.description,
+        address ?? this.address,
+        latitude ?? this.latitude,
+        longitude ?? this.longitude,
+        phoneNumber ?? this.phoneNumber,
+        email ?? this.email,
+        websiteUrl ?? this.websiteUrl,
+        openUntil ?? this.openUntil,
+        onlineServiceList ?? this.onlineServiceList,
+        municipalitiesList ?? this.municipalitiesList,
+        isUserLoggedIn ?? this.isUserLoggedIn);
   }
 }

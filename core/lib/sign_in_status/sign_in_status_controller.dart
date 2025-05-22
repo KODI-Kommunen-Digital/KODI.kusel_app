@@ -1,29 +1,21 @@
-
 import 'package:core/preference_manager/preference_constant.dart';
 import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:core/sign_in_status/sign_in_status_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-
 final signInStatusProvider = StateNotifierProvider.autoDispose<
-    SignInStatusController, SignInStatusState>(
-        (ref) => SignInStatusController(
+        SignInStatusController, SignInStatusState>(
+    (ref) => SignInStatusController(
         sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider)));
 
 class SignInStatusController extends StateNotifier<SignInStatusState> {
   SharedPreferenceHelper sharedPreferenceHelper;
 
-  SignInStatusController(
-      { required this.sharedPreferenceHelper})
+  SignInStatusController({required this.sharedPreferenceHelper})
       : super(SignInStatusState.empty());
 
-  Future<void> getLoginStatus() async {
+  Future<bool> isUserLoggedIn() async {
     final token = sharedPreferenceHelper.getString(tokenKey);
-    if (token == null) {
-      state = state.copyWith(isSignupButtonVisible: true);
-    } else {
-      state = state.copyWith(isSignupButtonVisible: false);
-    }
+    return (token != null && token.isNotEmpty) ? true : false;
   }
-
 }

@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/images_path.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WeatherWidget extends ConsumerStatefulWidget {
   final WeatherResponseModel? weatherResponseModel;
@@ -70,21 +71,21 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           _DayWeather(
-                              day: getDayFromDate(widget.weatherResponseModel
+                              day: getDayFromDate(context, widget.weatherResponseModel
                                       ?.forecast?.forecastday?[0].date ??
                                   DateTime.now().toString()),
                               icon: Icons.wb_sunny_outlined,
                               temp:
                                   "${widget.weatherResponseModel?.forecast?.forecastday?[0].day?.maxtempC ?? ""}\u00B0"),
                           _DayWeather(
-                              day: getDayFromDate(widget.weatherResponseModel
+                              day: getDayFromDate(context, widget.weatherResponseModel
                                       ?.forecast?.forecastday?[1].date ??
                                   DateTime.now().toString()),
                               icon: Icons.wb_sunny_outlined,
                               temp:
                                   "${widget.weatherResponseModel?.forecast?.forecastday?[1].day?.maxtempC ?? ""}\u00B0"),
                           _DayWeather(
-                              day: getDayFromDate(widget.weatherResponseModel
+                              day: getDayFromDate(context, widget.weatherResponseModel
                                       ?.forecast?.forecastday?[2].date ??
                                   DateTime.now().toString()),
                               icon: Icons.wb_sunny_outlined,
@@ -117,12 +118,30 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
     );
   }
 
-  String getDayFromDate(String date) {
-    DateTime parsedDate = DateTime.parse(date); // Convert String to DateTime
-    String day = DateFormat('EEEE').format(parsedDate); // Format DateTime
+  String getDayFromDate(BuildContext context, String date) {
+    final DateTime parsedDate = DateTime.parse(date);
+    final AppLocalizations localizations = AppLocalizations.of(context);
 
-    return day.substring(0, 2);
+    switch (parsedDate.weekday) {
+      case DateTime.monday:
+        return localizations.monday_text;
+      case DateTime.tuesday:
+        return localizations.tuesday_text;
+      case DateTime.wednesday:
+        return localizations.wednesday_text;
+      case DateTime.thursday:
+        return localizations.thursday_text;
+      case DateTime.friday:
+        return localizations.friday_text;
+      case DateTime.saturday:
+        return localizations.saturday_text;
+      case DateTime.sunday:
+        return localizations.sunday_text;
+      default:
+        return localizations.monday_text;
+    }
   }
+
 
   String getWeatherImageAsset(int weatherCode) {
     if (weatherCode == 1000) {
