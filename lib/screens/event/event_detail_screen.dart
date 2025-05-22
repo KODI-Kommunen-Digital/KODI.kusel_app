@@ -17,6 +17,7 @@ import '../../common_widgets/common_event_card.dart';
 import '../../common_widgets/location_card_widget.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
+import '../../utility/url_launcher_utility.dart';
 import '../home/home_screen_provider.dart';
 
 class EventDetailScreen extends ConsumerStatefulWidget {
@@ -129,14 +130,11 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
           //     ? _publicTransportShimmerEffect()
           //     :
           _publicTransportCard(
-              heading: AppLocalizations.of(context).public_transport_offer,
-              description: AppLocalizations.of(context).find_out_how_to,
-              onTap: () async {
-                final Uri uri = Uri.parse("https://www.google.com/");
-                if (await canLaunchUrl(uri)) {
-                  await launchUrl(uri);
-                }
-              }),
+            heading: AppLocalizations.of(context).public_transport_offer,
+            description: AppLocalizations.of(context).find_out_how_to,
+            onTap: () =>
+                UrlLauncherUtil.launchWebUrl(url: "https://www.google.com/"),
+          ),
           16.verticalSpace,
           // state.loading
           //     ? _eventInfoShimmerEffect()

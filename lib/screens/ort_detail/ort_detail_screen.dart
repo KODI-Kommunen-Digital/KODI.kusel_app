@@ -18,6 +18,7 @@ import '../../common_widgets/downstream_wave_clipper.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
+import '../../utility/url_launcher_utility.dart';
 import 'ort_detail_screen_params.dart';
 
 class OrtDetailScreen extends ConsumerStatefulWidget {
@@ -164,12 +165,8 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: CustomButton(
-            onPressed: () async {
-              final Uri uri = Uri.parse(state.ortDetailDataModel!.websiteUrl!);
-              if (await canLaunchUrl(uri)) {
-                await launchUrl(uri);
-              }
-            },
+            onPressed: () => UrlLauncherUtil.launchWebUrl(
+                url: state.ortDetailDataModel!.websiteUrl!),
             text: AppLocalizations.of(context).view_ort),
       );
     });

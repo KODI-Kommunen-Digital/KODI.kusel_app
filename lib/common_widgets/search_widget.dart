@@ -11,6 +11,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/images_path.dart';
+import 'package:kusel/utility/kusel_date_utilils.dart';
 
 import 'image_utility.dart';
 
@@ -88,7 +89,7 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: textRegularPoppins(
-                              text: formatDate(event.startDate ?? ""),
+                              text: KuselDateUtils.formatDate(event.startDate ?? ""),
                               fontSize: 14,
                               color: Colors.grey[600],
                               textAlign: TextAlign.start, // Ensure text is left-aligned
@@ -115,16 +116,6 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
         ),
       ),
     );
-  }
-  String formatDate(String inputDate) {
-    try {
-      final DateTime parsedDate = DateTime.parse(inputDate);
-      final DateFormat formatter = DateFormat('dd.MM.yyyy');
-      return formatter.format(parsedDate);
-    }
-    catch(e){
-      return inputDate;
-    }
   }
 
   saveListingToPrefs(Listing newListing) {

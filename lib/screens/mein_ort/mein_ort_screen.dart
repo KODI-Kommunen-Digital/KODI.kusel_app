@@ -17,6 +17,7 @@ import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/common_event_card.dart';
 import '../../common_widgets/custom_button_widget.dart';
 import '../../common_widgets/custom_shimmer_widget.dart';
+import '../../common_widgets/event_list_section_widget.dart';
 import '../../common_widgets/highlights_card.dart';
 import '../../common_widgets/image_utility.dart';
 import '../../common_widgets/text_styles.dart';

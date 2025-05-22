@@ -10,6 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../images_path.dart';
 import '../screens/event/event_detail_screen_controller.dart';
+import '../utility/url_launcher_utility.dart';
 import 'custom_shimmer_widget.dart';
 
 class LocationCardWidget extends ConsumerStatefulWidget {
@@ -75,11 +76,8 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
             child: _customMapWidget(
                 latitude: widget.latitude,
                 longitude: widget.longitude,
-                onMapTap: () {
-                  ref
-                      .read(eventDetailScreenProvider.notifier)
-                      .openInMaps(widget.latitude, widget.longitude);
-                },
+                onMapTap: () => UrlLauncherUtil.launchMap(
+                    latitude: widget.latitude, longitude: widget.longitude),
                 context: context),
           ),
           Padding(
@@ -102,12 +100,7 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
             padding:
                 EdgeInsets.only(top: 8.0, bottom: 12.0, left: 16, right: 16),
             child: GestureDetector(
-              onTap: () async {
-                final Uri uri = Uri.parse(widget.websiteUrl);
-                if (await canLaunchUrl(uri)) {
-                  await launchUrl(uri);
-                }
-              },
+              onTap: () => UrlLauncherUtil.launchWebUrl(url: widget.websiteUrl),
               child: Row(
                 children: [
                   ImageUtil.loadSvgImage(
