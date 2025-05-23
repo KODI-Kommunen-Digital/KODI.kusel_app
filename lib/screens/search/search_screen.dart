@@ -49,6 +49,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
         FocusScope.of(context).unfocus();
       },
       child: SingleChildScrollView(
+        physics: ClampingScrollPhysics(),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [

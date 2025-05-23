@@ -39,6 +39,7 @@ class _AllCityScreenState extends ConsumerState<AllCityScreen> {
 
   Widget _buildBody(BuildContext context) {
     return SingleChildScrollView(
+      physics: ClampingScrollPhysics(),
       child: Column(
         children: [
           CommonBackgroundClipperWidget(

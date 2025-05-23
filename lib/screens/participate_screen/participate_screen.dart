@@ -48,6 +48,7 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
 
     return SafeArea(
       child: SingleChildScrollView(
+        physics: ClampingScrollPhysics(),
         child: Column(
           children: [
             CommonBackgroundClipperWidget(

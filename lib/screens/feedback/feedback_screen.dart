@@ -44,6 +44,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
+          physics: ClampingScrollPhysics(),
           child: _buildFeedbackUi(
               titleEditingController,
               descriptionEditingController,

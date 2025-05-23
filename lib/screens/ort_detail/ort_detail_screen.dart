@@ -52,6 +52,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
   _buildBody(BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
+        physics: ClampingScrollPhysics(),
           child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
