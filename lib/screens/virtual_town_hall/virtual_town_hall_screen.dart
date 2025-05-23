@@ -75,6 +75,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
     final state = ref.read(virtualTownHallProvider);
     final isLoading = ref.watch(virtualTownHallProvider).loading;
     return SingleChildScrollView(
+      physics: ClampingScrollPhysics(),
       child: Column(
         children: [
           _buildClipper(),

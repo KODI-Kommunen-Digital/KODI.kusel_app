@@ -40,6 +40,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     final borderRadius = Radius.circular(50.r);
     return SafeArea(
       child: SingleChildScrollView(
+        physics: ClampingScrollPhysics(),
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
           child: Stack(

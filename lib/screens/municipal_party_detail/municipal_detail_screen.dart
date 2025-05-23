@@ -86,6 +86,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
   _buildBody(BuildContext context) {
     final state = ref.watch(municipalDetailControllerProvider);
     return SingleChildScrollView(
+      physics: ClampingScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
