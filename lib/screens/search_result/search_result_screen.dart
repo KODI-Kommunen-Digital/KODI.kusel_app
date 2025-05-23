@@ -54,6 +54,7 @@ class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
   Widget _buildBody(
       SearchResultScreenState searchResultScreenState, BuildContext context) {
     return SingleChildScrollView(
+      physics: ClampingScrollPhysics(),
       child: Column(
         children: [
           CommonBackgroundClipperWidget(

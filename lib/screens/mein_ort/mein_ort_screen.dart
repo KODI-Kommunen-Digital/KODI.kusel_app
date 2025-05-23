@@ -73,6 +73,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
     final state = ref.read(meinOrtProvider);
     final isLoading = ref.watch(meinOrtProvider).isLoading;
     return SingleChildScrollView(
+      physics: ClampingScrollPhysics(),
       child: Column(
         children: [
           SizedBox(

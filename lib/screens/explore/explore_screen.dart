@@ -59,6 +59,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
   _buildBody(BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
+        physics: ClampingScrollPhysics(),
         child: Column(
           children: [
             CommonBackgroundClipperWidget(

@@ -50,6 +50,7 @@ class _ExploreScreenState extends ConsumerState<SelectedEventListScreen> {
   Widget _buildBody(
       SelectedEventListScreenState categoryScreenState, BuildContext context) {
     return SingleChildScrollView(
+      physics: ClampingScrollPhysics(),
       child: Column(
         children: [
           CommonBackgroundClipperWidget(
