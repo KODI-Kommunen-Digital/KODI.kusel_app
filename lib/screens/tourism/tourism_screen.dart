@@ -67,6 +67,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
     final state = ref.watch(tourismScreenControllerProvider);
     return SafeArea(
       child: SingleChildScrollView(
+        physics: ClampingScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

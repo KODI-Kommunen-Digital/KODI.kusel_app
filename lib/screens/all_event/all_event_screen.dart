@@ -50,6 +50,7 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
         ref.watch(allEventScreenProvider).filterCount != null &&
             ref.watch(allEventScreenProvider).filterCount! > 0;
     return SingleChildScrollView(
+      physics: ClampingScrollPhysics(),
       child: Column(
         children: [
           CommonBackgroundClipperWidget(

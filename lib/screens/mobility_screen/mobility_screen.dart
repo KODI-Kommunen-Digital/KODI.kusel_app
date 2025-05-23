@@ -47,6 +47,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
     final state = ref.watch(mobilityScreenProvider);
     return SafeArea(
       child: SingleChildScrollView(
+        physics: ClampingScrollPhysics(),
         child: Column(
           children: [
             CommonBackgroundClipperWidget(

@@ -43,6 +43,7 @@ class _ExploreScreenState extends ConsumerState<FavoritesListScreen> {
       FavoritesListScreenState favScreenState, BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
+        physics: ClampingScrollPhysics(),
         child: Column(
           children: [
             CommonBackgroundClipperWidget(
