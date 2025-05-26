@@ -15,6 +15,7 @@ class CustomFlutterMap extends ConsumerStatefulWidget {
   final double width;
   final double initialZoom;
   final Function() onMapTap;
+  final List<Marker> markersList;
 
   const CustomFlutterMap({
     super.key,
@@ -24,6 +25,7 @@ class CustomFlutterMap extends ConsumerStatefulWidget {
     required this.width,
     required this.initialZoom,
     required this.onMapTap,
+    required this.markersList
   });
 
   @override
@@ -32,11 +34,16 @@ class CustomFlutterMap extends ConsumerStatefulWidget {
 
 class _CustomFlutterMapState extends ConsumerState<CustomFlutterMap> {
   final MapController _mapController = MapController();
+  double _currentRotation = 0;
 
   @override
   void initState() {
     super.initState();
-    ref.read(customFlutterMapProvider.notifier).initializeRotation();
+    _mapController.mapEventStream.listen((event) {
+      setState(() {
+        _currentRotation = _mapController.camera.rotation;
+      });
+    });
   }
 
   @override
@@ -49,15 +56,15 @@ class _CustomFlutterMapState extends ConsumerState<CustomFlutterMap> {
         children: [
           _customMapWidget(),
           Positioned(
-            bottom: 10,
-            right: 10,
+            top: 50.h,
+            right: 8.w,
             child: Column(
               children: [
                 textBoldPoppins(text: "N", fontSize: 10, color: Theme.of(context).colorScheme.error),
                 GestureDetector(
                   onTap: () => _mapController.rotate(0),
                   child: Transform.rotate(
-                    angle: -state.currentRotation * math.pi / 180,
+                    angle: -_currentRotation * math.pi / 180,
                     child: Container(
                       width: 40.w,
                       height: 40.h,
@@ -76,8 +83,8 @@ class _CustomFlutterMapState extends ConsumerState<CustomFlutterMap> {
             ),
           ),
           Positioned(
-            top: 10,
-            right: 10,
+            top: 10.h,
+            right: 8.w,
             child: FloatingActionButton(
               mini: true,
               heroTag: "recenter",
@@ -111,17 +118,7 @@ class _CustomFlutterMapState extends ConsumerState<CustomFlutterMap> {
           urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
         ),
         MarkerLayer(
-          markers: [
-            Marker(
-              width: 35.w,
-              height: 35.h,
-              point: LatLng(widget.latitude, widget.longitude),
-              child: Icon(
-                Icons.location_pin,
-                color: Theme.of(context).colorScheme.onTertiaryFixed,
-              ),
-            ),
-          ],
+          markers: widget.markersList,
         ),
       ],
     );

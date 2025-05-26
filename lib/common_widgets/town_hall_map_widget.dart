@@ -82,6 +82,17 @@ class _LocationCardWidgetState extends ConsumerState<TownHallMapWidget> {
             initialZoom: 13,
             onMapTap: () => UrlLauncherUtil.launchMap(
                 latitude: widget.latitude, longitude: widget.longitude),
+            markersList: [
+              Marker(
+                width: 35.w,
+                height: 35.h,
+                point: LatLng(widget.latitude, widget.longitude),
+                child: Icon(
+                  Icons.location_pin,
+                  color: Theme.of(context).colorScheme.onTertiaryFixed,
+                ),
+              ),
+            ],
           ),
           Padding(
             padding: EdgeInsets.all(14.h),
@@ -183,42 +194,6 @@ class _LocationCardWidgetState extends ConsumerState<TownHallMapWidget> {
       ),
     );
   }
-}
-
-
-Widget _customMapWidget(
-    {required double latitude,
-      required double longitude,
-      required Function() onMapTap,
-      required BuildContext context}) {
-  return Consumer(builder: (context, ref, _) {
-    return FlutterMap(
-      options: MapOptions(
-        onTap: (tapPosition, LatLng latLong) {
-          onMapTap();
-        },
-        initialCenter: LatLng(latitude, longitude),
-        initialZoom: 13.0,
-        interactionOptions: InteractionOptions(),
-      ),
-      children: [
-        TileLayer(
-          urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-        ),
-        MarkerLayer(
-          markers: [
-            Marker(
-              width: 35.w,
-              height: 35.h,
-              point: LatLng(latitude, longitude),
-              child: Icon(Icons.location_pin,
-                  color: Theme.of(context).colorScheme.onTertiaryFixed),
-            ),
-          ],
-        )
-      ],
-    );
-  });
 }
 
 Widget locationCardShimmerEffect(BuildContext context) {

@@ -92,8 +92,9 @@ class ImageUtil {
       required BuildContext context,
       double? height,
       double? width,
+      Color? color,
       BoxFit? fit}) {
     return SvgPicture.asset(imagePath[imageUrl]!,
-        fit: fit ?? BoxFit.cover, height: height, width: width);
+        fit: fit ?? BoxFit.cover, height: height, width: width, color: color);
   }
 }
