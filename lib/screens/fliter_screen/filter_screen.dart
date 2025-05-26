@@ -31,7 +31,9 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: SingleChildScrollView(child: _buildFilterScreenUi(context)),
+      child: SingleChildScrollView(
+      physics: ClampingScrollPhysics()
+      ,child: _buildFilterScreenUi(context)),
     );
   }
 

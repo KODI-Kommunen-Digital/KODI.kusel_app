@@ -47,32 +47,34 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
     final isLoading =
         ref.watch(meinOrtProvider.select((state) => state.isLoading));
 
-    return SafeArea(
-        child: Scaffold(
-            body: Stack(
-      children: [
-        _buildBody(context),
-        if (isLoading)
-          Center(
-              child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10.r),
-            ),
-            height: 100.h,
-            width: 100.w,
-            child: const Center(
-              child: CircularProgressIndicator(),
-            ),
-          )),
-      ],
-    )));
+    return Scaffold(
+        body: SafeArea(
+          child: Stack(
+            children: [
+              _buildBody(context),
+              if (isLoading)
+                Center(
+            child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10.r),
+          ),
+          height: 100.h,
+          width: 100.w,
+          child: const Center(
+            child: CircularProgressIndicator(),
+          ),
+                )),
+            ],
+          ),
+        ));
   }
 
   Widget _buildBody(BuildContext context) {
     final state = ref.read(meinOrtProvider);
     final isLoading = ref.watch(meinOrtProvider).isLoading;
     return SingleChildScrollView(
+      physics: ClampingScrollPhysics(),
       child: Column(
         children: [
           SizedBox(

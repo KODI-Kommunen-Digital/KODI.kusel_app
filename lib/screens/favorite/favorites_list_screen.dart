@@ -41,44 +41,47 @@ class _ExploreScreenState extends ConsumerState<FavoritesListScreen> {
 
   Widget _buildBody(
       FavoritesListScreenState favScreenState, BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          CommonBackgroundClipperWidget(
-            clipperType: UpstreamWaveClipper(),
-            height: 130.h,
-            imageUrl: imagePath['home_screen_background'] ?? '',
-            isStaticImage: true,
-            isBackArrowEnabled: true,
-            headingText: AppLocalizations.of(context).favorites,
-          ),
+    return SafeArea(
+      child: SingleChildScrollView(
+        physics: ClampingScrollPhysics(),
+        child: Column(
+          children: [
+            CommonBackgroundClipperWidget(
+              clipperType: UpstreamWaveClipper(),
+              height: 130.h,
+              imageUrl: imagePath['home_screen_background'] ?? '',
+              isStaticImage: true,
+              isBackArrowEnabled: true,
+              headingText: AppLocalizations.of(context).favorites,
+            ),
 
-          // If no events exist, show a message using a SliverFillRemaining
-          if (!favScreenState.loading)
-            favScreenState.eventsList.isEmpty
-                ? Center(
-                  child: textHeadingMontserrat(
-                      text: AppLocalizations.of(context).no_data,
-                  fontSize: 18),
-                )
-                : EventsListSectionWidget(
-                    eventsList: favScreenState.eventsList,
-                    heading: null,
-                    maxListLimit: favScreenState.eventsList.length,
-                    buttonText: null,
-                    buttonIconPath: null,
-                    isLoading: false,
-                    onButtonTap: () {},
-                    context: context,
-                    isFavVisible: true,
-                    onHeadingTap: () {},
-                    onSuccess: (bool isFav, int? id) {
-                      ref
-                          .read(favoritesListScreenProvider.notifier)
-                          .removeFavorite(isFav,id);
-                    },
-                  ),
-        ],
+            // If no events exist, show a message using a SliverFillRemaining
+            if (!favScreenState.loading)
+              favScreenState.eventsList.isEmpty
+                  ? Center(
+                    child: textHeadingMontserrat(
+                        text: AppLocalizations.of(context).no_data,
+                    fontSize: 18),
+                  )
+                  : EventsListSectionWidget(
+                      eventsList: favScreenState.eventsList,
+                      heading: null,
+                      maxListLimit: favScreenState.eventsList.length,
+                      buttonText: null,
+                      buttonIconPath: null,
+                      isLoading: false,
+                      onButtonTap: () {},
+                      context: context,
+                      isFavVisible: true,
+                      onHeadingTap: () {},
+                      onSuccess: (bool isFav, int? id) {
+                        ref
+                            .read(favoritesListScreenProvider.notifier)
+                            .removeFavorite(isFav,id);
+                      },
+                    ),
+          ],
+        ),
       ),
     );
   }
