@@ -37,38 +37,39 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: _buildBody(),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      ).loaderDialog(context, ref.watch(mobilityScreenProvider).isLoading),
-    );
+    return Scaffold(
+      body: _buildBody(),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+    ).loaderDialog(context, ref.watch(mobilityScreenProvider).isLoading);
   }
 
   _buildBody() {
     final state = ref.watch(mobilityScreenProvider);
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          CommonBackgroundClipperWidget(
-              clipperType: DownstreamCurveClipper(),
-              imageUrl: state.mobilityData?.iconUrl ??
-                  'https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg',
-              isBackArrowEnabled: true,
-              isStaticImage: false),
-          _buildMobilityDescription(),
-          _buildReadMoreSection(),
-          _buildOffersList(),
-          _buildContactListUi(),
-          _buildContactDetailsList(),
-          FeedbackCardWidget(
-              height: 270.h,
-              onTap: () {
-            ref
-                .read(navigationProvider)
-                .navigateUsingPath(path: feedbackScreenPath, context: context);
-          })
-        ],
+    return SafeArea(
+      child: SingleChildScrollView(
+        physics: ClampingScrollPhysics(),
+        child: Column(
+          children: [
+            CommonBackgroundClipperWidget(
+                clipperType: DownstreamCurveClipper(),
+                imageUrl: state.mobilityData?.iconUrl ??
+                    'https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg',
+                isBackArrowEnabled: true,
+                isStaticImage: false),
+            _buildMobilityDescription(),
+            _buildReadMoreSection(),
+            _buildOffersList(),
+            _buildContactListUi(),
+            _buildContactDetailsList(),
+            FeedbackCardWidget(
+                height: 270.h,
+                onTap: () {
+              ref
+                  .read(navigationProvider)
+                  .navigateUsingPath(path: feedbackScreenPath, context: context);
+            })
+          ],
+        ),
       ),
     );
   }

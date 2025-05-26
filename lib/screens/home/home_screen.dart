@@ -75,6 +75,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         FocusScope.of(context).unfocus();
       },
       child: SingleChildScrollView(
+        physics: ClampingScrollPhysics(),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [

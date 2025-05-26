@@ -37,49 +37,50 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: _buildBody(),
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      ).loaderDialog(context, ref.watch(participateScreenProvider).isLoading),
-    );
+    return Scaffold(
+      body: _buildBody(),
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+    ).loaderDialog(context, ref.watch(participateScreenProvider).isLoading);
   }
 
   _buildBody() {
     final state = ref.watch(participateScreenProvider);
 
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          CommonBackgroundClipperWidget(
-              clipperType: DownstreamCurveClipper(),
-              imageUrl: state.participateData?.iconUrl ??
-                  'https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg',
-              isBackArrowEnabled: true,
-              isStaticImage: false),
-          _buildParticipateDescription(),
-          _buildParticipateList(),
-          if (state.participateData != null &&
-              state.participateData!.moreInformations!.isNotEmpty)
-            ListView.builder(
-                itemCount: state.participateData?.moreInformations?.length ?? 0,
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  final item = state.participateData?.moreInformations?[index];
-                  return _buildInfoMessage(
-                      heading: item?.title ?? '_',
-                      description: item?.description ?? "_");
-                }),
-          _buildContactDetailsList(),
-          FeedbackCardWidget(
-              height: 270.h,
-              onTap: () {
-            ref
-                .read(navigationProvider)
-                .navigateUsingPath(path: feedbackScreenPath, context: context);
-          })
-        ],
+    return SafeArea(
+      child: SingleChildScrollView(
+        physics: ClampingScrollPhysics(),
+        child: Column(
+          children: [
+            CommonBackgroundClipperWidget(
+                clipperType: DownstreamCurveClipper(),
+                imageUrl: state.participateData?.iconUrl ??
+                    'https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg',
+                isBackArrowEnabled: true,
+                isStaticImage: false),
+            _buildParticipateDescription(),
+            _buildParticipateList(),
+            if (state.participateData != null &&
+                state.participateData!.moreInformations!.isNotEmpty)
+              ListView.builder(
+                  itemCount: state.participateData?.moreInformations?.length ?? 0,
+                  physics: NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    final item = state.participateData?.moreInformations?[index];
+                    return _buildInfoMessage(
+                        heading: item?.title ?? '_',
+                        description: item?.description ?? "_");
+                  }),
+            _buildContactDetailsList(),
+            FeedbackCardWidget(
+                height: 270.h,
+                onTap: () {
+              ref
+                  .read(navigationProvider)
+                  .navigateUsingPath(path: feedbackScreenPath, context: context);
+            })
+          ],
+        ),
       ),
     );
   }

@@ -33,10 +33,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: _buildBody(context),
-      ),
+    return Scaffold(
+      body: SafeArea(child: _buildBody(context)),
     );
   }
 
