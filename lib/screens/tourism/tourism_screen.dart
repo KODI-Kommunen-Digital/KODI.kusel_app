@@ -259,7 +259,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                                         message: message, context: context);
                                   });
                             },
-                            isVisible: state.isUserLoggedIn),
+                            isFavouriteVisible: state.isUserLoggedIn),
                       );
                     }),
               )

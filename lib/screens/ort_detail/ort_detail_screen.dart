@@ -9,7 +9,7 @@ import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen_controller.dart';
-import 'package:kusel/screens/utility/image_loader_utility.dart';
+import 'package:kusel/utility/image_loader_utility.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../app_router.dart';
