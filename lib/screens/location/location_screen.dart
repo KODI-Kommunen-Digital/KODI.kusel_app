@@ -9,6 +9,8 @@ import 'package:latlong2/latlong.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import '../../common_widgets/category_icon.dart';
+import '../../common_widgets/custom_map_marker.dart';
+import '../../common_widgets/map_widget/custom_flutter_map.dart';
 import 'bottom_sheet_screens/all_filter_screen.dart';
 import 'bottom_sheet_screens/selected_event_screen.dart';
 import 'bottom_sheet_selected_ui_type.dart';
@@ -43,70 +45,53 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
       child: SlidingUpPanel(
         minHeight: 200.h,
         maxHeight: 550.h,
+        defaultPanelState: PanelState.CLOSED,
         borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
         controller: ref.read(locationScreenProvider).panelController,
         body: Stack(
           children: [
-            FlutterMap(
-              options: MapOptions(
-                onTap: (tapPosition, LatLng latLong) {},
-                initialCenter: LatLng(49.53838, 7.40647),
-                initialZoom: 14.0,
-                interactionOptions: InteractionOptions(),
-              ),
-              children: [
-                TileLayer(
-                  urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                ),
-                MarkerLayer(
-                  markers: ref
-                      .watch(locationScreenProvider)
-                      .allEventList
-                      .where((value) =>
-                          value.latitude != null && value.longitude != null)
-                      .map((value) {
-                    final lat = value.latitude!;
-                    final long = value.longitude!;
-                    final categoryId = value.categoryId;
-                    final categoryName = value.categoryName;
+            CustomFlutterMap(
+              latitude: 49.53838,
+              longitude: 7.40647,
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              initialZoom: 14.0,
+              onMapTap: (){},
+              markersList: ref
+                  .watch(locationScreenProvider)
+                  .allEventList
+                  .where((value) =>
+              value.latitude != null && value.longitude != null)
+                  .map((value) {
+                final lat = value.latitude!;
+                final long = value.longitude!;
+                final categoryId = value.categoryId;
+                final categoryName = value.categoryName;
+                return Marker(
+                  width: 35.w,
+                  height: 35.h,
+                  point: LatLng(lat, long),
+                  child: InkWell(
+                    onTap: () {
+                      ref
+                          .read(locationScreenProvider.notifier)
+                          .setEventItem(value);
+                      ref
+                          .read(locationScreenProvider.notifier)
+                          .updateCategoryId(categoryId, categoryName);
+                      ref
+                          .read(locationScreenProvider.notifier)
+                          .updateBottomSheetSelectedUIType(
+                          BottomSheetSelectedUIType.eventDetail);
+                    },
+                    child: CustomMapMarker(
+                      categoryId : categoryId
+                    ),
+                  ),
+                );
+              }).toList(),
 
-                    return Marker(
-                      width: 35.w,
-                      height: 35.h,
-                      point: LatLng(lat, long),
-                      child: InkWell(
-                        onTap: () {
-                          ref
-                              .read(locationScreenProvider.notifier)
-                              .setEventItem(value);
-                          ref
-                              .read(locationScreenProvider.notifier)
-                              .updateCategoryId(categoryId, categoryName);
-                          ref
-                              .read(locationScreenProvider.notifier)
-                              .updateBottomSheetSelectedUIType(
-                                  BottomSheetSelectedUIType.eventDetail);
-                        },
-                        child: Material(
-                          elevation: 6,
-                          shape: const CircleBorder(),
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onPrimary, // background color
-                          child: Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 7.w, vertical: 7.h),
-                              child: ImageUtil.loadLocalSvgImage(
-                                imageUrl: getCategoryIconPath(categoryId ?? 0),
-                                context: context,
-                              )),
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                )
-              ],
-            ),
+            )
           ],
         ),
         panelBuilder: (controller) {

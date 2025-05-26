@@ -165,7 +165,7 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
 
   void setSliderHeight(BottomSheetSelectedUIType type) {
     if (type == BottomSheetSelectedUIType.allEvent) {
-      setHeight(300);
+      setHeight(100.h);
     } else if (type == BottomSheetSelectedUIType.eventList) {
       setHeight(500);
     } else {
