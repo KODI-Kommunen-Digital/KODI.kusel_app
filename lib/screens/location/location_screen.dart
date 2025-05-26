@@ -50,7 +50,7 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
             options: MapOptions(
               onTap: (tapPosition, LatLng latLong) {},
               initialCenter: LatLng(49.53838, 7.40647),
-              initialZoom: 14.0,
+              initialZoom: 8.0,
               interactionOptions: InteractionOptions(),
             ),
             children: [

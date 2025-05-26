@@ -119,6 +119,23 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         const Divider(),
         Visibility(
           visible: ref.watch(settingsScreenProvider).isLoggedIn,
+          child: Column(children: [
+            ListTile(
+              leading: const Icon(Icons.favorite_border),
+              title: textBoldPoppins(
+                text: AppLocalizations.of(context).favourite_city,
+                textAlign: TextAlign.start,
+              ),
+              onTap: () async {
+                ref.read(navigationProvider).navigateUsingPath(
+                    context: context, path: favouriteCityScreenPath);
+              },
+            ),
+          ]),
+        ),
+        const Divider(),
+        Visibility(
+          visible: ref.watch(settingsScreenProvider).isLoggedIn,
           child: Column(
             children: [
               ListTile(

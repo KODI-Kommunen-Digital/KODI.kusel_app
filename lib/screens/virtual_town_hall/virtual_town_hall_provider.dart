@@ -85,7 +85,7 @@ class VirtualTownHallProvider extends StateNotifier<VirtualTownHallState> {
       EmptyRequest requestModel = EmptyRequest();
 
       VirtualTownHallResponseModel responseModel =
-          VirtualTownHallResponseModel();
+      VirtualTownHallResponseModel();
 
       final response =
           await virtualTownHallUseCase.call(requestModel, responseModel);
@@ -144,5 +144,19 @@ class VirtualTownHallProvider extends StateNotifier<VirtualTownHallState> {
       }
     }
     state = state.copyWith(eventList: list);
+  }
+
+  void setIsFavoriteCity(bool isFavorite, int? id) {
+    for (var municipality in state.municipalitiesList) {
+      if (municipality.id == id) {
+        municipality.isFavorite = isFavorite;
+      }
+      for(var city in municipality.topFiveCities ?? []) {
+        if (city.id == id) {
+          city.isFavorite = isFavorite;
+        }
+      }
+    }
+    state = state.copyWith(municipalitiesList: state.municipalitiesList);
   }
 }

@@ -12,14 +12,15 @@ import 'package:kusel/screens/events_listing/selected_event_list_screen_paramete
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_location_widget.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen_params.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../app_router.dart';
 import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/event_list_section_widget.dart';
 import '../../common_widgets/feedback_card_widget.dart';
+import '../../common_widgets/toast_message.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
+import '../../providers/favourite_cities_notifier.dart';
 import '../../utility/url_launcher_utility.dart';
 import 'municipal_detail_controller.dart';
 
@@ -381,6 +382,24 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                     imageUrl: item.image!,
                     text: item.name ?? '',
                     sourceId: 1,
+                    isFavourite: item.isFavorite,
+                    isFavouriteVisible: ref
+                        .read(favouriteCitiesNotifier.notifier)
+                        .showFavoriteIcon(),
+                    onFavoriteTap: () {
+                      ref
+                          .watch(favouriteCitiesNotifier.notifier)
+                          .toggleCityFavorite(
+                        item,
+                        success: ({required bool isFavorite}) {
+                          _updateList(isFavorite, item.id!);
+                        },
+                        error: ({required String message}) {
+                          showErrorToast(
+                              message: message, context: context);
+                        },
+                      );
+                    },
                   ),
                 );
               }),
@@ -496,5 +515,10 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
         ),
       ),
     );
+  }
+  _updateList(bool isFav, int cityId) {
+    ref
+        .read(municipalDetailControllerProvider.notifier)
+        .setIsFavoriteCity(isFav, cityId);
   }
 }
