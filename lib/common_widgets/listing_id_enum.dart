@@ -1,6 +1,7 @@
 enum ListingCategoryId {
   event(3),
-  news(1);
+  news(1),
+  highlights(41);
 
   final int eventId;
 

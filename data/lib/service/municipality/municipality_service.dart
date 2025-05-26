@@ -18,7 +18,7 @@ class MunicipalityService {
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
     final path =
-        "$virtualTownHallEndPoint$getPlacesInMunicipalitiesPath?municipalityId=${requestModel.toJson()['municipalityId']}";
+        "$ortDetailEndPoint?parentId=${requestModel.toJson()['municipalityId']}";
 
     final apiHelper = ref.read(apiHelperProvider);
 

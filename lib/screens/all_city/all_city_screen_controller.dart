@@ -50,4 +50,13 @@ class AllCityScreenController extends StateNotifier<AllCityScreenState> {
       debugPrint('get city details exception : $error');
     }
   }
+
+  void setIsFavoriteCity(bool isFavorite, int? id) {
+    for (var city in state.cityList) {
+      if (city.id == id) {
+        city.isFavorite = isFavorite;
+      }
+    }
+    state = state.copyWith(cityList: state.cityList);
+  }
 }

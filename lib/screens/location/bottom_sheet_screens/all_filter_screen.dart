@@ -4,8 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/screens/location/location_screen_provider.dart';
 
+import '../../../common_widgets/category_icon.dart';
 import '../../../common_widgets/image_utility.dart';
-import '../../../images_path.dart';
 import '../bottom_sheet_selected_ui_type.dart';
 
 class AllFilterScreen extends ConsumerStatefulWidget {
@@ -16,15 +16,17 @@ class AllFilterScreen extends ConsumerStatefulWidget {
 }
 
 class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
-
   @override
   void initState() {
     Future.microtask(() {
       ref.read(locationScreenProvider.notifier).getAllEventList();
-      ref.read(locationScreenProvider.notifier).setSliderHeight(BottomSheetSelectedUIType.allEvent);
+      ref
+          .read(locationScreenProvider.notifier)
+          .setSliderHeight(BottomSheetSelectedUIType.allEvent);
     });
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,8 +63,10 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
                     .read(locationScreenProvider)
                     .distinctFilterCategoryList[index];
 
-                return filterCard(
-                    "map_fav", listing.categoryId?.toString() ?? "", listing.categoryName?.toString() ?? "");
+                final path = getCategoryIconPath(listing.categoryId ?? 0);
+
+                return filterCard(path, listing.categoryId?.toString() ?? "",
+                    listing.categoryName?.toString() ?? "");
               }),
         )
       ],
@@ -72,8 +76,12 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
   filterCard(String image, String categoryID, String categoryName) {
     return GestureDetector(
       onTap: () {
-        ref.read(locationScreenProvider.notifier).updateSelectedCategory(int.parse(categoryID), categoryName);
-        ref.read(locationScreenProvider.notifier).updateBottomSheetSelectedUIType(
+        ref
+            .read(locationScreenProvider.notifier)
+            .updateSelectedCategory(int.parse(categoryID), categoryName);
+        ref
+            .read(locationScreenProvider.notifier)
+            .updateBottomSheetSelectedUIType(
                 BottomSheetSelectedUIType.eventList);
       },
       child: Column(
@@ -81,17 +89,15 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
           Material(
             elevation: 6,
             shape: const CircleBorder(),
-            color:
-                Theme.of(context).colorScheme.onPrimary, // background color
+            color: Theme.of(context).colorScheme.onPrimary, // background color
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
-              child: ImageUtil.loadSvgImage(
-                      imageUrl :imagePath['heart_icon'] ?? '',
-                      context: context,
-                    fit: BoxFit.contain,
-                  )
-              ),
-            ),
+                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+                child: ImageUtil.loadLocalSvgImage(
+                  imageUrl: image,
+                  context: context,
+                  fit: BoxFit.contain,
+                )),
+          ),
           5.verticalSpace,
           textRegularMontserrat(text: categoryName, fontSize: 13),
         ],

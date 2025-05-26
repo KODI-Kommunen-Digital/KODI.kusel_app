@@ -1,5 +1,5 @@
+import 'package:domain/model/response_model/explore_details/explore_details_response_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
-import 'package:domain/model/response_model/municipal_party_detail/municipal_party_detail_response_model.dart';
 
 class MunicipalDetailState {
   List<Listing> eventList;
@@ -7,7 +7,7 @@ class MunicipalDetailState {
   bool showEventLoading;
   bool showNewsLoading;
   bool isLoading;
-  List<MunicipalDetailCityModel> cityList;
+  List<City> cityList;
   MunicipalPartyDetailDataModel? municipalPartyDetailDataModel;
   bool isUserLoggedIn;
 
@@ -31,7 +31,7 @@ class MunicipalDetailState {
       bool? showEventLoading,
       bool? showNewsLoading,
       bool? isLoading,
-      List<MunicipalDetailCityModel>? cityList,
+      List<City>? cityList,
       MunicipalPartyDetailDataModel? municipalPartyDetailDataModel,
       bool? isUserLoggedIn}) {
     return MunicipalDetailState(
