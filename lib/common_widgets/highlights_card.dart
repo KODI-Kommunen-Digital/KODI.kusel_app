@@ -4,8 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
-import 'package:kusel/utility/kusel_date_utilils.dart';
-
+import 'package:kusel/utility/kusel_date_utils.dart';
 class HighlightsCard extends ConsumerStatefulWidget {
   final String imageUrl;
   final String? date;
@@ -14,7 +13,7 @@ class HighlightsCard extends ConsumerStatefulWidget {
   final bool isFavourite;
   final VoidCallback onPress;
   final VoidCallback onFavouriteIconClick;
-  final bool isVisible;
+  final bool isFavouriteVisible;
   final String? errorImagePath;
   final int sourceId;
   final double? imageWidth;
@@ -33,7 +32,7 @@ class HighlightsCard extends ConsumerStatefulWidget {
       required this.isFavourite,
       required this.onPress,
       required this.onFavouriteIconClick,
-      required this.isVisible,
+      required this.isFavouriteVisible,
       this.errorImagePath,
       this.imageFit,
       this.imageHeight,
@@ -87,7 +86,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                           context: context),
                     ),
                   ),
-                  if (widget.isVisible)
+                  if (widget.isFavouriteVisible)
                     Positioned(
                       top: 8.h,
                       right: 8.w,

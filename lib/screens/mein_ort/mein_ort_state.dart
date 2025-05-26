@@ -1,4 +1,4 @@
-import 'package:domain/model/response_model/mein_ort/mein_ort_response_model.dart';
+import 'package:domain/model/response_model/explore_details/explore_details_response_model.dart';
 
 class MeinOrtState {
   final bool isLoading;

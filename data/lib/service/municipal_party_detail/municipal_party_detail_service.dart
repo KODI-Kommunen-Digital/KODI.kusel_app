@@ -15,7 +15,7 @@ class MunicipalPartyDetailService {
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
     final path =
-        "$municipalPartyDetailEndPoint?municipalityId=${requestModel.toJson()["municipalId"]}";
+        "$ortDetailEndPoint/${requestModel.toJson()["municipalId"]}";
 
     final apiHelper = ref.read(apiHelperProvider);
 
