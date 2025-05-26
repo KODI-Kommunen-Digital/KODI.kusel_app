@@ -50,35 +50,36 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.onSecondary,
-        body: _buildBody(context),
-      ),
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.onSecondary,
+      body: _buildBody(context),
     );
   }
 
   _buildBody(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          CommonBackgroundClipperWidget(
-              clipperType: UpstreamWaveClipper(),
-              imageUrl: imagePath['background_image'] ?? "",
-              headingText: AppLocalizations.of(context).category_heading,
-              height: 100.h,
-              blurredBackground: true,
-              isStaticImage: true),
-          _buildExploreView(context),
-          32.verticalSpace,
-          FeedbackCardWidget(
-            height: 270.h,
-            onTap: () {
-              ref.read(navigationProvider).navigateUsingPath(
-                  path: feedbackScreenPath, context: context);
-            },
-          ),
-        ],
+    return SafeArea(
+      child: SingleChildScrollView(
+        physics: ClampingScrollPhysics(),
+        child: Column(
+          children: [
+            CommonBackgroundClipperWidget(
+                clipperType: UpstreamWaveClipper(),
+                imageUrl: imagePath['background_image'] ?? "",
+                headingText: AppLocalizations.of(context).category_heading,
+                height: 100.h,
+                blurredBackground: true,
+                isStaticImage: true),
+            _buildExploreView(context),
+            32.verticalSpace,
+            FeedbackCardWidget(
+              height: 270.h,
+              onTap: () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: feedbackScreenPath, context: context);
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
