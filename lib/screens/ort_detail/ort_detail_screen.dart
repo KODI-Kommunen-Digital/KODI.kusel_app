@@ -9,7 +9,7 @@ import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen_controller.dart';
-import 'package:kusel/screens/utility/image_loader_utility.dart';
+import 'package:kusel/utility/image_loader_utility.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../app_router.dart';
@@ -43,32 +43,33 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: _buildBody(context),
-      ).loaderDialog(
-          context, ref.watch(ortDetailScreenControllerProvider).isLoading),
-    );
+    return Scaffold(
+      body: _buildBody(context),
+    ).loaderDialog(
+        context, ref.watch(ortDetailScreenControllerProvider).isLoading);
   }
 
   _buildBody(BuildContext context) {
-    return SingleChildScrollView(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        _buildClipper(),
-        _buildTitle(context),
-        _buildDescription(context),
-        32.verticalSpace,
-        _buildButton(context),
-        32.verticalSpace,
-        FeedbackCardWidget(onTap: () {
-          ref.read(navigationProvider).navigateUsingPath(
-              path: feedbackScreenPath, context: context);
-        })
-      ],
-    ));
+    return SafeArea(
+      child: SingleChildScrollView(
+        physics: ClampingScrollPhysics(),
+          child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          _buildClipper(),
+          _buildTitle(context),
+          _buildDescription(context),
+          32.verticalSpace,
+          _buildButton(context),
+          32.verticalSpace,
+          FeedbackCardWidget(onTap: () {
+            ref.read(navigationProvider).navigateUsingPath(
+                path: feedbackScreenPath, context: context);
+          })
+        ],
+      )),
+    );
   }
 
   _buildClipper() {

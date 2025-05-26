@@ -39,19 +39,18 @@ class _ExploreScreenState extends ConsumerState<SelectedEventListScreen> {
   Widget build(BuildContext context) {
     final SelectedEventListScreenState categoryScreenState =
         ref.watch(selectedEventListScreenProvider);
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: categoryScreenState.loading
-            ? const Center(child: CircularProgressIndicator())
-            : _buildBody(categoryScreenState, context),
-      ),
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: categoryScreenState.loading
+          ? const Center(child: CircularProgressIndicator())
+          : SafeArea(child: _buildBody(categoryScreenState, context)),
     );
   }
 
   Widget _buildBody(
       SelectedEventListScreenState categoryScreenState, BuildContext context) {
     return SingleChildScrollView(
+      physics: ClampingScrollPhysics(),
       child: Column(
         children: [
           CommonBackgroundClipperWidget(

@@ -1,5 +1,5 @@
+import 'package:domain/model/response_model/explore_details/explore_details_response_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
-import 'package:domain/model/response_model/virtual_town_hall/virtual_town_hall_response_model.dart';
 
 class VirtualTownHallState {
   final int highlightCount;
@@ -17,7 +17,7 @@ class VirtualTownHallState {
   final String? openUntil;
   final String? websiteUrl;
   final List<OnlineService>? onlineServiceList;
-  final List<Municipality>? municipalitiesList;
+  final List<Municipality> municipalitiesList;
   final bool loading;
   final bool isUserLoggedIn;
 
@@ -43,7 +43,7 @@ class VirtualTownHallState {
 
   factory VirtualTownHallState.empty() {
     return VirtualTownHallState(0, null, null, false, null, null, null, null,
-        null, null, null, null, null, null, null, null, null, false);
+        null, null, null, null, null, null, null, null, [], false);
   }
 
   VirtualTownHallState copyWith(
