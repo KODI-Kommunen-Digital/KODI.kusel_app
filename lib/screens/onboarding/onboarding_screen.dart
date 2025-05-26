@@ -48,11 +48,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       resizeToAvoidBottomInset: false,
-      body: GestureDetector(
-      onTap: (){
-        FocusScope.of(context).unfocus(); // Dismiss the keyboard
-
-      },child: _buildDashboardUi(pages, selectedPageIndex, pageController)),
+      body: SafeArea(
+        child: GestureDetector(
+        onTap: (){
+          FocusScope.of(context).unfocus(); // Dismiss the keyboard
+        
+        },child: _buildDashboardUi(pages, selectedPageIndex, pageController)),
+      ),
     );
   }
 

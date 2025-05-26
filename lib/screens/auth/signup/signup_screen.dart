@@ -5,7 +5,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
@@ -19,8 +18,6 @@ import 'package:kusel/screens/auth/signup/signup_controller.dart';
 import 'package:kusel/screens/auth/validator/email_validator.dart';
 import 'package:kusel/screens/auth/validator/empty_field_validator.dart';
 import 'package:kusel/screens/auth/validator/password_validator.dart';
-
-import '../../dashboard/dashboard_screen_provider.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
@@ -81,12 +78,10 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        body: _buildBody(context),
-      ).loaderDialog(context, ref.watch(signUpScreenProvider).isLoading),
-    );
+    return Scaffold(
+      resizeToAvoidBottomInset: true,
+      body: SafeArea(child: _buildBody(context)),
+    ).loaderDialog(context, ref.watch(signUpScreenProvider).isLoading);
   }
 
   Widget _buildBody(BuildContext context) {
@@ -182,9 +177,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         child: Padding(
                           padding: EdgeInsets.only(right: 10.w),
                           child: ImageUtil.loadSvgImage(
-                            imageUrl :imagePath['eye_open']!,
-                            context: context
-                          ),
+                              imageUrl: imagePath['eye_open']!,
+                              context: context),
                         ),
                       )
                     : GestureDetector(
@@ -214,10 +208,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               22.verticalSpace,
               _buildLabel(context, AppLocalizations.of(context).firstName),
               KuselTextField(
-                textEditingController: firstNameTextEditingController,
-                focusNode: firstNameFocusNode,
-                validator: (value) => validateField(
-                    value,
+                  textEditingController: firstNameTextEditingController,
+                  focusNode: firstNameFocusNode,
+                  validator: (value) => validateField(value,
                       "${AppLocalizations.of(context).firstName} ${AppLocalizations.of(context).is_required}")),
               22.verticalSpace,
               _buildLabel(context, AppLocalizations.of(context).lastName),

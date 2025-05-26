@@ -108,6 +108,7 @@ flutter:
     - assets/jpg/
     - assets/svg/
     - assets/png/
+    - assets/svg/category_icon/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
