@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/screens/location/bottom_sheet_screens/selected_filter_screen.dart';
 import 'package:kusel/screens/location/location_screen_state.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
+import '../../common_widgets/category_icon.dart';
 import 'bottom_sheet_screens/all_filter_screen.dart';
 import 'bottom_sheet_screens/selected_event_screen.dart';
 import 'bottom_sheet_selected_ui_type.dart';
@@ -85,10 +87,19 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
                               .updateBottomSheetSelectedUIType(
                                   BottomSheetSelectedUIType.eventDetail);
                         },
-                        child: Icon(
-                          Icons.location_pin,
-                          size: 40.w,
-                          color: Theme.of(context).colorScheme.onTertiaryFixed,
+                        child: Material(
+                          elevation: 6,
+                          shape: const CircleBorder(),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onPrimary, // background color
+                          child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 7.w, vertical: 7.h),
+                              child: ImageUtil.loadLocalSvgImage(
+                                imageUrl: getCategoryIconPath(categoryId ?? 0),
+                                context: context,
+                              )),
                         ),
                       ),
                     );
