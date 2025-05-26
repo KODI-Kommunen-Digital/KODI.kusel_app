@@ -1,4 +1,4 @@
-import 'package:domain/model/response_model/city_details/get_city_details_response_model.dart';
+import 'package:domain/model/response_model/explore_details/explore_details_response_model.dart';
 
 class AllCityScreenState {
   List<City> cityList;

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:intl/intl.dart';
 import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
-import 'package:kusel/screens/utility/image_loader_utility.dart';
-import 'package:kusel/utility/kusel_date_utilils.dart';
+import 'package:kusel/utility/image_loader_utility.dart';
+import 'package:kusel/utility/kusel_date_utils.dart';
 
 class CommonEventCard extends ConsumerStatefulWidget {
   final String imageUrl;

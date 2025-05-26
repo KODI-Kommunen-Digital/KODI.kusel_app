@@ -1,17 +1,17 @@
 import 'package:core/base_model.dart';
 
-class MunicipalPartyDetailResponseModel implements BaseModel<MunicipalPartyDetailResponseModel> {
+class ExploreDetailsResponseModel implements BaseModel<ExploreDetailsResponseModel> {
   final String? status;
   final MunicipalPartyDetailDataModel? data;
 
-  MunicipalPartyDetailResponseModel({
+  ExploreDetailsResponseModel({
     this.status,
     this.data,
   });
 
   @override
-  MunicipalPartyDetailResponseModel fromJson(Map<String, dynamic> json) {
-    return MunicipalPartyDetailResponseModel(
+  ExploreDetailsResponseModel fromJson(Map<String, dynamic> json) {
+    return ExploreDetailsResponseModel(
       status: json['status'],
       data: json['data'] != null ? MunicipalPartyDetailDataModel.fromJson(json['data']) : null,
     );
@@ -34,6 +34,8 @@ class MunicipalPartyDetailDataModel {
   final bool? isAdminListings;
   final String? image;
   final String? description;
+  final String? subtitle;
+  final String? mapImage;
   final String? address;
   final String? latitude;
   final String? longitude;
@@ -44,12 +46,13 @@ class MunicipalPartyDetailDataModel {
   final int? isActive;
   final DateTime? createdAt;
   final DateTime? updatedAt;
-  final bool? inMunicipalDetailCityModelServer;
+  final bool? inCityServer;
   final bool? hasForum;
   final int? parentId;
+  final bool? isFavorite;
   final List<OnlineService>? onlineServices;
-  final List<MunicipalDetailCityModel>? topFiveCities;
-  final String? mapImage;
+  final List<City>? topFiveCities;
+  final List<Municipality>? municipalities; // Only present for district_admin type
 
   MunicipalPartyDetailDataModel({
     this.id,
@@ -59,6 +62,8 @@ class MunicipalPartyDetailDataModel {
     this.isAdminListings,
     this.image,
     this.description,
+    this.subtitle,
+    this.mapImage,
     this.address,
     this.latitude,
     this.longitude,
@@ -69,24 +74,26 @@ class MunicipalPartyDetailDataModel {
     this.isActive,
     this.createdAt,
     this.updatedAt,
-    this.inMunicipalDetailCityModelServer,
+    this.inCityServer,
     this.hasForum,
     this.parentId,
+    this.isFavorite,
     this.onlineServices,
     this.topFiveCities,
-    this.mapImage
+    this.municipalities,
   });
 
   factory MunicipalPartyDetailDataModel.fromJson(Map<String, dynamic> json) {
     return MunicipalPartyDetailDataModel(
       id: json['id'],
-      mapImage: json['mapImage'],
       name: json['name'],
       type: json['type'],
       connectionString: json['connectionString'],
       isAdminListings: json['isAdminListings'],
-      image: json['image'] ,
+      image: json['image'],
       description: json['description'],
+      subtitle: json['subtitle'],
+      mapImage: json['mapImage'],
       address: json['address'],
       latitude: json['latitude'],
       longitude: json['longitude'],
@@ -97,15 +104,19 @@ class MunicipalPartyDetailDataModel {
       isActive: json['isActive'],
       createdAt: json['createdAt'] != null ? DateTime.tryParse(json['createdAt']) : null,
       updatedAt: json['updatedAt'] != null ? DateTime.tryParse(json['updatedAt']) : null,
-      inMunicipalDetailCityModelServer: json['inMunicipalDetailCityModelServer'],
+      inCityServer: json['inCityServer'],
       hasForum: json['hasForum'],
       parentId: json['parentId'],
+      isFavorite: json['isFavorite'],
       onlineServices: json['onlineServices'] != null
           ? (json['onlineServices'] as List).map((e) => OnlineService.fromJson(e)).toList()
-          : [],
+          : null,
       topFiveCities: json['topFiveCities'] != null
-          ? (json['topFiveCities'] as List).map((e) => MunicipalDetailCityModel.fromJson(e)).toList()
-          : [],
+          ? (json['topFiveCities'] as List).map((e) => City.fromJson(e)).toList()
+          : null,
+      municipalities: json['municipalities'] != null
+          ? (json['municipalities'] as List).map((e) => Municipality.fromJson(e)).toList()
+          : null,
     );
   }
 
@@ -118,6 +129,8 @@ class MunicipalPartyDetailDataModel {
       'isAdminListings': isAdminListings,
       'image': image,
       'description': description,
+      'subtitle': subtitle,
+      'mapImage': mapImage,
       'address': address,
       'latitude': latitude,
       'longitude': longitude,
@@ -128,11 +141,119 @@ class MunicipalPartyDetailDataModel {
       'isActive': isActive,
       'createdAt': createdAt?.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
-      'inMunicipalDetailCityModelServer': inMunicipalDetailCityModelServer,
+      'inCityServer': inCityServer,
       'hasForum': hasForum,
       'parentId': parentId,
+      'isFavorite': isFavorite,
       'onlineServices': onlineServices?.map((e) => e.toJson()).toList(),
       'topFiveCities': topFiveCities?.map((e) => e.toJson()).toList(),
+      'municipalities': municipalities?.map((e) => e.toJson()).toList(),
+    };
+  }
+}
+
+class Municipality {
+  int? id;
+  String? name;
+  String? type;
+  String? image;
+  String? mapImage;
+  String? websiteUrl;
+  int? parentId;
+  bool? isFavorite;
+  List<City>? topFiveCities;
+
+  Municipality({
+    this.id,
+    this.name,
+    this.type,
+    this.image,
+    this.mapImage,
+    this.websiteUrl,
+    this.parentId,
+    this.isFavorite,
+    this.topFiveCities,
+  });
+
+  factory Municipality.fromJson(Map<String, dynamic> json) {
+    return Municipality(
+      id: json['id'],
+      name: json['name'],
+      type: json['type'],
+      image: json['image'],
+      mapImage: json['mapImage'],
+      websiteUrl: json['websiteUrl'],
+      parentId: json['parentId'],
+      isFavorite: json['isFavorite'],
+      topFiveCities: json['topFiveCities'] != null
+          ? (json['topFiveCities'] as List).map((e) => City.fromJson(e)).toList()
+          : null,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'type': type,
+      'image': image,
+      'mapImage': mapImage,
+      'websiteUrl': websiteUrl,
+      'parentId': parentId,
+      'isFavorite': isFavorite,
+      'topFiveCities': topFiveCities?.map((e) => e.toJson()).toList(),
+    };
+  }
+}
+
+class City {
+  int? id;
+  String? name;
+  String? type;
+  String? image;
+  String? mapImage;
+  String? subtitle;
+  String? websiteUrl;
+  int? parentId;
+  bool? isFavorite;
+
+  City({
+    this.id,
+    this.name,
+    this.type,
+    this.image,
+    this.mapImage,
+    this.subtitle,
+    this.websiteUrl,
+    this.parentId,
+    this.isFavorite,
+  });
+
+  factory City.fromJson(Map<String, dynamic> json) {
+    return City(
+      id: json['id'],
+      name: json['name'],
+      type: json['type'],
+      image: json['image'],
+      mapImage: json['mapImage'],
+      subtitle: json['subtitle'],
+      websiteUrl: json['websiteUrl'],
+      parentId: json['parentId'],
+      isFavorite: json['isFavorite'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+      'type': type,
+      'image': image,
+      'mapImage': mapImage,
+      'subtitle': subtitle,
+      'websiteUrl': websiteUrl,
+      'parentId': parentId,
+      'isFavorite': isFavorite,
     };
   }
 }
@@ -177,107 +298,6 @@ class OnlineService {
       'iconUrl': iconUrl,
       'displayOrder': displayOrder,
       'isActive': isActive,
-    };
-  }
-}
-
-class MunicipalDetailCityModel {
-  final int? id;
-  final String? name;
-  final String? type;
-  final String? connectionString;
-  final bool? isAdminListings;
-  final String? image;
-  final String? description;
-  final String? subtitle;
-  final String? address;
-  final String? latitude;
-  final String? longitude;
-  final String? phone;
-  final String? email;
-  final String? websiteUrl;
-  final String? openUntil;
-  final int? isActive;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
-  final bool? inMunicipalDetailCityModelServer;
-  final bool? hasForum;
-  final int? parentId;
-
-
-  MunicipalDetailCityModel({
-    this.id,
-    this.name,
-    this.type,
-    this.connectionString,
-    this.isAdminListings,
-    this.image,
-    this.description,
-    this.subtitle,
-    this.address,
-    this.latitude,
-    this.longitude,
-    this.phone,
-    this.email,
-    this.websiteUrl,
-    this.openUntil,
-    this.isActive,
-    this.createdAt,
-    this.updatedAt,
-    this.inMunicipalDetailCityModelServer,
-    this.hasForum,
-    this.parentId,
-  });
-
-  factory MunicipalDetailCityModel.fromJson(Map<String, dynamic> json) {
-    return MunicipalDetailCityModel(
-      id: json['id'],
-      name: json['name'],
-      type: json['type'],
-      connectionString: json['connectionString'],
-      isAdminListings: json['isAdminListings'],
-      image: json['image'] ,
-      description: json['description'],
-      subtitle: json['subtitle'],
-      address: json['address'],
-      latitude: json['latitude'],
-      longitude: json['longitude'],
-      phone: json['phone'],
-      email: json['email'],
-      websiteUrl: json['websiteUrl'],
-      openUntil: json['openUntil'],
-      isActive: json['isActive'],
-      createdAt: json['createdAt'] != null ? DateTime.tryParse(json['createdAt']) : null,
-      updatedAt: json['updatedAt'] != null ? DateTime.tryParse(json['updatedAt']) : null,
-      inMunicipalDetailCityModelServer: json['inMunicipalDetailCityModelServer'],
-      hasForum: json['hasForum'],
-      parentId: json['parentId'],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'type': type,
-      'connectionString': connectionString,
-      'isAdminListings': isAdminListings,
-      'image': image,
-      'description': description,
-      'subtitle': subtitle,
-      'address': address,
-      'latitude': latitude,
-      'longitude': longitude,
-      'phone': phone,
-      'email': email,
-      'websiteUrl': websiteUrl,
-      'openUntil': openUntil,
-      'isActive': isActive,
-      'createdAt': createdAt?.toIso8601String(),
-      'updatedAt': updatedAt?.toIso8601String(),
-      'inMunicipalDetailCityModelServer': inMunicipalDetailCityModelServer,
-      'hasForum': hasForum,
-      'parentId': parentId,
     };
   }
 }

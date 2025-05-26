@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kusel/images_path.dart';
-import 'package:kusel/screens/utility/image_loader_utility.dart';
+import 'package:kusel/utility/image_loader_utility.dart';
 
 class ImageUtil {
   static Widget loadNetworkImage(

@@ -11,8 +11,8 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/images_path.dart';
-import 'package:kusel/utility/kusel_date_utilils.dart';
 
+import '../utility/kusel_date_utils.dart';
 import 'image_utility.dart';
 
 class SearchWidget extends ConsumerStatefulWidget {

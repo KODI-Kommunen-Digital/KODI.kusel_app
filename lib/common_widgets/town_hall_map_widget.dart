@@ -4,13 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../images_path.dart';
-import '../screens/event/event_detail_screen_controller.dart';
 import '../utility/url_launcher_utility.dart';
 import 'custom_shimmer_widget.dart';
 import 'image_utility.dart';
+import 'map_widget/custom_flutter_map.dart';
 
 class TownHallMapWidget extends ConsumerStatefulWidget {
   final String address;
@@ -75,15 +74,14 @@ class _LocationCardWidgetState extends ConsumerState<TownHallMapWidget> {
               ],
             ),
           ),
-          SizedBox(
+          CustomFlutterMap(
+            latitude: widget.latitude,
+            longitude: widget.longitude,
+            height: 120.h,
             width: MediaQuery.of(context).size.width,
-            height: 106.h,
-            child: _customMapWidget(
-                latitude: widget.latitude,
-                longitude: widget.longitude,
-                onMapTap: () => UrlLauncherUtil.launchMap(
-                    latitude: widget.latitude, longitude: widget.longitude),
-                context: context),
+            initialZoom: 13,
+            onMapTap: () => UrlLauncherUtil.launchMap(
+                latitude: widget.latitude, longitude: widget.longitude),
           ),
           Padding(
             padding: EdgeInsets.all(14.h),

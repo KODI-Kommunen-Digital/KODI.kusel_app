@@ -1,4 +1,4 @@
-import 'package:domain/model/response_model/mein_ort/mein_ort_response_model.dart';
+import 'package:domain/model/response_model/explore_details/explore_details_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,12 +17,13 @@ import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/common_event_card.dart';
 import '../../common_widgets/custom_button_widget.dart';
 import '../../common_widgets/custom_shimmer_widget.dart';
-import '../../common_widgets/event_list_section_widget.dart';
 import '../../common_widgets/highlights_card.dart';
 import '../../common_widgets/image_utility.dart';
 import '../../common_widgets/text_styles.dart';
+import '../../common_widgets/toast_message.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
 import '../../images_path.dart';
+import '../../providers/favourite_cities_notifier.dart';
 
 class MeinOrtScreen extends ConsumerStatefulWidget {
   const MeinOrtScreen({super.key});
@@ -260,29 +261,41 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
               padEnds: false,
               itemCount: municipalityList.length,
               itemBuilder: (context, index) {
-                final municipalities = municipalityList[index];
+                final municipality = municipalityList[index];
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 6.h.w),
                   child: HighlightsCard(
                     imageUrl:
-                        municipalities.mapImage ?? "https://picsum.photos/200",
-                    date: municipalities.createdAt ?? "",
-                    heading: municipalities.name ?? "",
-                    description: municipalities.description ?? "",
-                    isFavourite: false,
+                        municipality.mapImage ?? "https://picsum.photos/200",
+                    heading: municipality.name ?? "",
                     errorImagePath: imagePath['kusel_map_image'],
                     onPress: () {
                       ref.read(navigationProvider).navigateUsingPath(
                             context: context,
                             path: municipalDetailScreenPath,
                             params: MunicipalDetailScreenParams(
-                                municipalId: municipalities.id!.toString()),
+                                municipalId: municipality.id.toString()),
                           );
                     },
-                    onFavouriteIconClick: () {},
-                    isVisible: state.isUserLoggedIn,
+                    isFavourite: municipality.isFavorite ?? false,
+                    onFavouriteIconClick: () {
+                      ref
+                          .watch(favouriteCitiesNotifier.notifier)
+                          .toggleMunicipalityFavorite(
+                        municipality,
+                        success: ({required bool isFavorite}) {
+                          _updateList(isFavorite, municipality.id ?? 0);
+                        },
+                        error: ({required String message}) {
+                          showErrorToast(
+                              message: message, context: context);
+                        },
+                      );
+                    },
+                    isFavouriteVisible: state.isUserLoggedIn,
                     sourceId: 1,
                     imageFit: BoxFit.contain,
+                    description: '',
                   ),
                 );
               },
@@ -383,6 +396,24 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                         params:
                             OrtDetailScreenParams(ortId: item.id!.toString()));
                   },
+                  isFavourite: item.isFavorite,
+                  isFavouriteVisible: ref
+                      .read(favouriteCitiesNotifier.notifier)
+                      .showFavoriteIcon(),
+                  onFavoriteTap: () {
+                    ref
+                        .watch(favouriteCitiesNotifier.notifier)
+                        .toggleCityFavorite(
+                      item,
+                      success: ({required bool isFavorite}) {
+                        _updateList(isFavorite, item.id!);
+                      },
+                      error: ({required String message}) {
+                        showErrorToast(
+                            message: message, context: context);
+                      },
+                    );
+                  },
                 ),
               );
             },
@@ -420,5 +451,11 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
         ],
       ),
     );
+  }
+
+  _updateList(bool isFav, int cityId) {
+    ref
+        .read(meinOrtProvider.notifier)
+        .setIsFavoriteCity(isFav, cityId);
   }
 }

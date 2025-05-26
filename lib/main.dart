@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/screens/no_network/network_status_screen.dart';
+import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
 import 'package:kusel/theme_manager/theme_manager_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -28,6 +30,7 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -42,18 +45,24 @@ class _MyAppState extends ConsumerState<MyApp> {
           supportedLocales: AppLocalizations.supportedLocales,
           title: 'Flutter Demo',
           routerConfig: ref.read(mobileRouterProvider),
-          theme: ref.watch(themeManagerProvider).currentSelectedTheme),
+          theme: ref.watch(themeManagerProvider).currentSelectedTheme,
+          builder: (context, child) {
+            final hasNetwork = ref.watch(networkStatusProvider).isNetworkAvailable;
+            return hasNetwork ?child! : NetworkStatusScreen();
+          }
+      ),
     );
   }
 
   @override
   void initState() {
-    Future.microtask(() {
+    Future.microtask(() async {
       {
         Locale deviceLocale = PlatformDispatcher.instance.locale;
         ref
             .read(localeManagerProvider.notifier)
             .fetchCurrentSelectedLocale(deviceLocale);
+        await ref.read(networkStatusProvider.notifier).checkNetworkStatus();
       }
     });
     super.initState();

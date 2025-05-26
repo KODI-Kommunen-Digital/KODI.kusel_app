@@ -1,6 +1,7 @@
 import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
 import 'package:domain/model/request_model/municipal_party_detail/municipal_party_detail_request_model.dart';
+import 'package:domain/model/response_model/explore_details/explore_details_response_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/model/response_model/municipal_party_detail/municipal_party_detail_response_model.dart';
 import 'package:domain/usecase/city_details/get_city_details_usecase.dart';
@@ -90,8 +91,8 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
       state = state.copyWith(isLoading: true);
       MunicipalPartyDetailRequestModel requestModel =
           MunicipalPartyDetailRequestModel(municipalId: id);
-      MunicipalPartyDetailResponseModel responseModel =
-          MunicipalPartyDetailResponseModel();
+      ExploreDetailsResponseModel responseModel =
+      ExploreDetailsResponseModel();
 
       final response =
           await municipalPartyDetailUseCase.call(requestModel, responseModel);
@@ -101,12 +102,14 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
         debugPrint(
             "getMunicipalPartyDetailUsingId exception = ${l.toString()}");
       }, (r) {
-        final result = r as MunicipalPartyDetailResponseModel;
+        final result = r as ExploreDetailsResponseModel;
 
-        state = state.copyWith(
-            isLoading: false,
-            municipalPartyDetailDataModel: result.data,
-            cityList: result.data?.topFiveCities ?? []);
+        if(result.data!=null){
+          state = state.copyWith(
+              isLoading: false,
+              municipalPartyDetailDataModel: result.data,
+              cityList: result.data?.topFiveCities ?? []);
+        }
       });
     } catch (e) {
       state = state.copyWith(isLoading: false);
@@ -143,5 +146,14 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
       }
     }
     state = state.copyWith(newsList: list);
+  }
+
+  void setIsFavoriteCity(bool isFavorite, int? id) {
+    for (var city in state.cityList) {
+      if (city.id == id) {
+        city.isFavorite = isFavorite;
+      }
+    }
+    state = state.copyWith(cityList: state.cityList);
   }
 }
