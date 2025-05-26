@@ -74,7 +74,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
 
   Widget _buildBody(BuildContext context, EventDetailScreenState state) {
     return SingleChildScrollView(
-
+      physics: ClampingScrollPhysics(),
       child: Column(
         children: [
           CommonBackgroundClipperWidget(
