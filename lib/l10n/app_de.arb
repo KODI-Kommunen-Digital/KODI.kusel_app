@@ -176,5 +176,7 @@
   "card_payment_possible": "Kartenzahlung möglich",
   "is_required": "ist erforderlich",
   "name_or_email": "Name oder E-Mail",
-  "kusel": "Kusel"
+  "kusel": "Kusel",
+  "district" : "Bezirk",
+  "favourite_city": "Lieblingsstädte"
 }

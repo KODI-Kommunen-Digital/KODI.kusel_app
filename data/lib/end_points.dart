@@ -43,3 +43,5 @@ const getPlacesInMunicipalitiesPath = "/getPlacesInMunicipalities";
 const mobilityPath = "/mobility";
 
 const participatePath = "/participate";
+
+const favouriteCitiesPath = "/favorites";

@@ -1,7 +1,7 @@
-import 'package:domain/model/response_model/municipality/municipality_response_model.dart';
+import 'package:domain/model/response_model/explore_details/explore_details_response_model.dart';
 
 class AllMunicipalityScreenState {
-  List<MunicipalityCities> cityList;
+  List<City> cityList;
   bool isLoading;
 
   AllMunicipalityScreenState(this.cityList, this.isLoading);
@@ -11,7 +11,7 @@ class AllMunicipalityScreenState {
   }
 
   AllMunicipalityScreenState copyWith(
-      {List<MunicipalityCities>? cityList, bool? isLoading}) {
+      {List<City>? cityList, bool? isLoading}) {
     return AllMunicipalityScreenState(
         cityList ?? this.cityList, isLoading ?? this.isLoading);
   }

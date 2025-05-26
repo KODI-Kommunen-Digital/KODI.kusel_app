@@ -47,10 +47,10 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
     final state = ref.watch(eventDetailScreenProvider);
     final isLoading =
         ref.watch(eventDetailScreenProvider.select((state) => state.loading));
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: Stack(
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: SafeArea(
+        child: Stack(
           children: [
             _buildBody(context, state),
             if (isLoading)
@@ -74,6 +74,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
 
   Widget _buildBody(BuildContext context, EventDetailScreenState state) {
     return SingleChildScrollView(
+      physics: ClampingScrollPhysics(),
       child: Column(
         children: [
           CommonBackgroundClipperWidget(

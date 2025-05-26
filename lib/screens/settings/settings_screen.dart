@@ -33,10 +33,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: _buildBody(context),
-      ),
+    return Scaffold(
+      body: SafeArea(child: _buildBody(context)),
     );
   }
 
@@ -112,6 +110,23 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               onTap: () async {
                 ref.read(navigationProvider).navigateUsingPath(
                     context: context, path: favoritesListScreenPath);
+              },
+            ),
+          ]),
+        ),
+        const Divider(),
+        Visibility(
+          visible: ref.watch(settingsScreenProvider).isLoggedIn,
+          child: Column(children: [
+            ListTile(
+              leading: const Icon(Icons.favorite_border),
+              title: textBoldPoppins(
+                text: AppLocalizations.of(context).favourite_city,
+                textAlign: TextAlign.start,
+              ),
+              onTap: () async {
+                ref.read(navigationProvider).navigateUsingPath(
+                    context: context, path: favouriteCityScreenPath);
               },
             ),
           ]),
