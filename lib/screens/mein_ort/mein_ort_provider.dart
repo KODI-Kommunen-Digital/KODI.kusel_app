@@ -58,4 +58,18 @@ class MeinOrtProvider extends StateNotifier<MeinOrtState> {
     final status = await signInStatusController.isUserLoggedIn();
     state = state.copyWith(isUserLoggedIn: status);
   }
+
+  void setIsFavoriteCity(bool isFavorite, int? id) {
+    for (var municipality in state.municipalityList) {
+      if (municipality.id == id) {
+        municipality.isFavorite = isFavorite;
+      }
+      for(var city in municipality.topFiveCities ?? []) {
+        if (city.id == id) {
+        city.isFavorite = isFavorite;
+      }
+      }
+    }
+    state = state.copyWith(municipalityList: state.municipalityList);
+  }
 }

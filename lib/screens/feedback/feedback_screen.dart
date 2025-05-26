@@ -40,10 +40,11 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
         stateNotifier.descriptionEditingController;
     final emailEditingController = stateNotifier.emailEditingController;
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: ClampingScrollPhysics(),
           child: _buildFeedbackUi(
               titleEditingController,
               descriptionEditingController,
@@ -51,8 +52,8 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
               stateWatch,
               stateNotifier),
         ),
-      ).loaderDialog(context, stateWatch.loading),
-    );
+      ),
+    ).loaderDialog(context, stateWatch.loading);
   }
 
   Widget _buildFeedbackUi(

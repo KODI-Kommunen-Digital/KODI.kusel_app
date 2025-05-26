@@ -4,11 +4,13 @@ import 'package:domain/model/request_model/listings/get_all_listings_request_mod
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/usecase/listings/listings_usecase.dart';
 import 'package:domain/usecase/search/search_usecase.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:kusel/screens/search_result/search_result_screen_parameter.dart';
 import 'package:kusel/screens/search_result/search_result_screen_state.dart';
 
+import '../../common_widgets/get_current_location.dart';
 import '../../common_widgets/listing_id_enum.dart';
 
 final searchResultScreenProvider = StateNotifierProvider.autoDispose<
@@ -31,12 +33,19 @@ class SearchResultScreenProvider
 
   Future<void> getNearbyList() async {
     try {
+      final position = await getLatLong();
+
+      debugPrint(
+          "user coordinates [ lat : ${position.latitude}, long: ${position.longitude} ");
+
+      final lat = position.latitude;
+      final long = position.longitude;
+      final radius = SearchRadius.radius.value;
+
       state = state.copyWith(loading: true, error: "");
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
-              radius: SearchRadius.radius.value,
-              centerLatitude: 49.53838,
-              centerLongitude: 7.40647);
+              radius: radius, centerLatitude: lat, centerLongitude: long);
       GetAllListingsResponseModel getAllListingsResponseModel =
           GetAllListingsResponseModel();
       final result = await listingsUseCase.call(
@@ -145,8 +154,7 @@ class SearchResultScreenProvider
     state = state.copyWith(isUserLoggedIn: status);
   }
 
-  updateIsFav(bool isFav, int? eventId)
-  {
+  updateIsFav(bool isFav, int? eventId) {
     final list = state.eventsList;
     for (var listing in list) {
       if (listing.id == eventId) {

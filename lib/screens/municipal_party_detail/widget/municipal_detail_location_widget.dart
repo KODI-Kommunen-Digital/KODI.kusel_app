@@ -7,6 +7,7 @@ import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../common_widgets/map_widget/custom_flutter_map.dart';
 import '../../../common_widgets/text_styles.dart';
 import '../../../images_path.dart';
 import '../../../utility/url_launcher_utility.dart';
@@ -15,8 +16,8 @@ class CityDetailLocationWidget extends ConsumerStatefulWidget {
   String webUrl;
   String phoneNumber;
   String address;
-  double lat;
-  double long;
+  double? lat;
+  double? long;
   String websiteText;
   String calendarText;
 
@@ -25,8 +26,8 @@ class CityDetailLocationWidget extends ConsumerStatefulWidget {
       required this.phoneNumber,
       required this.webUrl,
       required this.address,
-      required this.long,
-      required this.lat,
+      this.long,
+      this.lat,
       required this.websiteText,
       required this.calendarText});
 
@@ -74,13 +75,9 @@ class _CityDetailLocationWidgetState
               ],
             ),
           ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: 150.h,
-            child: CityDetailMapContainer(
-                lat:widget.lat,
-                 long:widget.long,
-               ),
+          CityDetailMapContainer(
+            lat: widget.lat ?? 49.53838,
+            long: widget.long ?? 7.40647,
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16),
@@ -146,43 +143,35 @@ class _CityDetailLocationWidgetState
       ),
     );
   }
-
 }
 
 class CityDetailMapContainer extends StatelessWidget {
   final double lat;
   final double long;
 
-  const CityDetailMapContainer({required this.lat, required this.long, super.key});
+  const CityDetailMapContainer(
+      {required this.lat, required this.long, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 150,
-      child: FlutterMap(
-        options: MapOptions(
-          initialCenter: LatLng(lat, long),
-          initialZoom: 13.0,
-          interactionOptions: const InteractionOptions(),
+    return CustomFlutterMap(
+      latitude: lat,
+      longitude: long,
+      height: 150.h,
+      width: MediaQuery.of(context).size.width,
+      initialZoom: 13,
+      markersList: [
+        Marker(
+          width: 35.w,
+          height: 35.h,
+          point: LatLng(long, lat),
+          child: Icon(
+            Icons.location_pin,
+            color: Theme.of(context).colorScheme.onTertiaryFixed,
+          ),
         ),
-        children: [
-          TileLayer(
-            urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-            userAgentPackageName: 'com.example.app',
-          ),
-          MarkerLayer(
-            markers: [
-              Marker(
-                width: 35,
-                height: 35,
-                point: LatLng(lat, long),
-                child: Icon(Icons.location_pin, color: Colors.red),
-              ),
-            ],
-          ),
-        ],
-      ),
+      ],
+      onMapTap: () => UrlLauncherUtil.launchMap(latitude: lat, longitude: long),
     );
   }
 }

@@ -15,6 +15,7 @@ import 'package:kusel/screens/events_listing/selected_event_list_screen.dart';
 import 'package:kusel/screens/events_listing/selected_event_list_screen_parameter.dart';
 import 'package:kusel/screens/explore/explore_screen.dart';
 import 'package:kusel/screens/favorite/favorites_list_screen.dart';
+import 'package:kusel/screens/favourite_city/favourite_city_screen.dart';
 import 'package:kusel/screens/feedback/feedback_screen.dart';
 import 'package:kusel/screens/fliter_screen/filter_screen.dart';
 import 'package:kusel/screens/highlight/highlight_screen.dart';
@@ -66,6 +67,7 @@ const onboardingLoadingPagePath = "/onboardingLoadingPagePath";
 const onboardingFinishPagePath = "/onboardingFinishPagePath";
 const profileScreenPath = "/profileScreenPath";
 const favoritesListScreenPath = "/favoritesListScreenPath";
+const favouriteCityScreenPath = "/favouriteCityScreenPath";
 const feedbackScreenPath = "/feedbackScreenPath";
 const allEventScreenPath = "/allEventScreen";
 const municipalDetailScreenPath = "/municipalDetailScreenPath";
@@ -134,6 +136,8 @@ List<RouteBase> goRouteList = [
   GoRoute(path: profileScreenPath, builder: (_, __) => ProfileScreen()),
   GoRoute(
       path: favoritesListScreenPath, builder: (_, __) => FavoritesListScreen()),
+  GoRoute(
+      path: favouriteCityScreenPath, builder: (_, __) => FavouriteCityScreen()),
   GoRoute(path: feedbackScreenPath, builder: (_, __) => FeedbackScreen()),
   GoRoute(
       path: allEventScreenPath,

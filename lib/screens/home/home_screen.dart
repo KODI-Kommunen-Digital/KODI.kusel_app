@@ -7,7 +7,6 @@ import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
 import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/event_list_section_widget.dart';
 import 'package:kusel/common_widgets/highlights_card.dart';
-import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/weather_widget.dart';
 import 'package:kusel/providers/favorites_list_notifier.dart';
@@ -15,10 +14,14 @@ import 'package:kusel/screens/all_event/all_event_screen_param.dart';
 import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/home/home_screen_state.dart';
+import 'package:kusel/screens/no_network/network_status_screen.dart';
+import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
 
 import '../../../images_path.dart';
 import '../../app_router.dart';
+import '../../common_widgets/common_text_arrow_widget.dart';
 import '../../common_widgets/feedback_card_widget.dart';
+import '../../common_widgets/listing_id_enum.dart';
 import '../../common_widgets/search_widget.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/toast_message.dart';
@@ -35,23 +38,33 @@ class HomeScreen extends ConsumerStatefulWidget {
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
-    Future.microtask(() {
-      ref.read(homeScreenProvider.notifier).fetchHomeScreenInitMethod();
+    Future.microtask(() async {
+      bool networkStatus = await ref.read(networkStatusProvider.notifier).checkNetworkStatus();
+      if(networkStatus) {
+        ref.read(homeScreenProvider.notifier).fetchHomeScreenInitMethod();
+      }
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await ref.read(homeScreenProvider.notifier).refresh();
-        },        child: SizedBox(
-            height: MediaQuery.of(context).size.height, child: buildUi()),
-      ),
-    );
+    final networkStatus = ref.watch(networkStatusProvider).isNetworkAvailable;
+    return networkStatus ? Scaffold(
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            body: SafeArea(
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  ref.read(networkStatusProvider.notifier).checkNetworkStatus();
+                  if(networkStatus) {
+                    await ref.read(homeScreenProvider.notifier).refresh();
+                  }
+                },
+                child: SizedBox(
+                    height: MediaQuery.of(context).size.height, child: buildUi()),
+              ),
+            ),
+          ) : NetworkStatusScreen();
   }
 
   Widget buildUi() {
@@ -64,6 +77,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         FocusScope.of(context).unfocus();
       },
       child: SingleChildScrollView(
+        physics: ClampingScrollPhysics(),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
@@ -328,22 +342,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 : Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          textRegularPoppins(
-                              text: AppLocalizations.of(context).highlights,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color:
-                                  Theme.of(context).textTheme.bodyLarge?.color),
-                          12.horizontalSpace,
-                          ImageUtil.loadSvgImage(
-                            imageUrl: imagePath['arrow_icon'] ?? "",
-                            context: context,
-                            height: 10.h,
-                            width: 16.w,
-                          )
-                        ],
+                      CommonTextArrowWidget(
+                        text: AppLocalizations.of(context).highlights,
+                        onTap: () {
+                          ref.read(navigationProvider).navigateUsingPath(
+                              path: selectedEventListScreenPath,
+                              context: context,
+                              params: SelectedEventListScreenParameter(
+                                categoryId: ListingCategoryId.highlights.eventId,
+                                listHeading: AppLocalizations.of(context).highlights,
+                                onFavChange: () {
+                                  ref
+                                      .read(homeScreenProvider.notifier)
+                                      .getHighlights();
+                                },
+                              ));
+                        },
                       ),
                       Align(
                         alignment: Alignment.centerRight,
@@ -427,7 +441,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   message: message, context: context);
                             });
                           },
-                          isVisible: !ref
+                          isFavouriteVisible: !ref
                               .watch(homeScreenProvider)
                               .isSignInButtonVisible,
                           sourceId: listing.sourceId!,
