@@ -52,15 +52,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final networkStatus = ref.watch(networkStatusProvider).isNetworkAvailable;
     return networkStatus ? Scaffold(
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            body: RefreshIndicator(
-              onRefresh: () async {
-                ref.read(networkStatusProvider.notifier).checkNetworkStatus();
-                if(networkStatus) {
-                  await ref.read(homeScreenProvider.notifier).refresh();
-                }
-              },
-              child: SizedBox(
-                  height: MediaQuery.of(context).size.height, child: buildUi()),
+            body: SafeArea(
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  ref.read(networkStatusProvider.notifier).checkNetworkStatus();
+                  if(networkStatus) {
+                    await ref.read(homeScreenProvider.notifier).refresh();
+                  }
+                },
+                child: SizedBox(
+                    height: MediaQuery.of(context).size.height, child: buildUi()),
+              ),
             ),
           ) : NetworkStatusScreen();
   }

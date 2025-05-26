@@ -3,7 +3,6 @@ import 'package:domain/model/request_model/listings/get_all_listings_request_mod
 import 'package:domain/model/request_model/municipal_party_detail/municipal_party_detail_request_model.dart';
 import 'package:domain/model/response_model/explore_details/explore_details_response_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
-import 'package:domain/model/response_model/municipal_party_detail/municipal_party_detail_response_model.dart';
 import 'package:domain/usecase/city_details/get_city_details_usecase.dart';
 import 'package:domain/usecase/listings/listings_usecase.dart';
 import 'package:domain/usecase/municipal_party_detail/municipal_party_detail_use_case.dart';

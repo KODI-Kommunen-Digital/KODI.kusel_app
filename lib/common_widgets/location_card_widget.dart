@@ -75,6 +75,17 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
               height: 120.h,
               width: MediaQuery.of(context).size.width,
               initialZoom: 13,
+              markersList: [
+                Marker(
+                  width: 35.w,
+                  height: 35.h,
+                  point: LatLng(widget.latitude, widget.longitude),
+                  child: Icon(
+                    Icons.location_pin,
+                    color: Theme.of(context).colorScheme.onTertiaryFixed,
+                  ),
+                ),
+              ],
               onMapTap: () => UrlLauncherUtil.launchMap(
                   latitude: widget.latitude, longitude: widget.longitude),
           ),
@@ -166,47 +177,6 @@ Widget iconTextWidget(String imageUrl, String text, BuildContext context) {
       ],
     ),
   );
-}
-
-Widget _customMapWidget(
-    {required double latitude,
-    required double longitude,
-    required Function() onMapTap,
-    required BuildContext context}) {
-  return Consumer(builder: (context, ref, _) {
-    return Stack(
-      children: [
-        FlutterMap(
-          options: MapOptions(
-            onTap: (tapPosition, LatLng latLong) {
-              onMapTap();
-            },
-            initialCenter: LatLng(latitude, longitude),
-            initialZoom: 13.0,
-            interactionOptions: InteractionOptions(),
-          ),
-          children: [
-            TileLayer(
-              urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-            ),
-            MarkerLayer(
-              markers: [
-                Marker(
-                  width: 35.w,
-                  height: 35.h,
-                  point: LatLng(latitude, longitude),
-                  child: Icon(Icons.location_pin,
-                      color: Theme.of(context).colorScheme.onTertiaryFixed),
-                ),
-              ],
-            )
-          ],
-        ),
-        // RotatingMapWidget(latitude: latitude, longitude: longitude, onMapTap: onMapTap),
-        // CompassWidget(), // Add the compass here
-      ],
-    );
-  });
 }
 
 Widget locationCardShimmerEffect(BuildContext context) {

@@ -22,6 +22,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/common_text_arrow_widget.dart';
 import '../../common_widgets/event_list_section_widget.dart';
+import '../../common_widgets/map_widget/custom_flutter_map.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/toast_message.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
@@ -317,48 +318,29 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                   ],
                 ),
               ),
-              SizedBox(
+              CustomFlutterMap(
+                latitude: 49.5384,
+                longitude: 7.4065,
                 height: 250.h,
-                width: double.infinity,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.only(
-                      bottomRight: Radius.circular(borderRadius),
-                      bottomLeft: Radius.circular(borderRadius)),
-                  child: FlutterMap(
-                    options: MapOptions(
-                      initialCenter: LatLng(49.5384, 7.4065),
-                      onTap: (tapPosition, LatLng latLong) {
-                        // onMapTap();
-                      },
-                      initialZoom: 13.0,
-                      interactionOptions: InteractionOptions(),
-                    ),
-                    children: [
-                      TileLayer(
-                        urlTemplate:
-                            "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-                      ),
-                      MarkerLayer(
-                        markers: (list.isNotEmpty)
-                            ? list
-                                .where((item) =>
-                                    item.latitude != null &&
-                                    item.longitude != null)
-                                .map((item) {
-                                return Marker(
-                                    point:
-                                        LatLng(item.latitude!, item.longitude!),
-                                    child: Icon(Icons.location_pin,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onTertiaryFixed));
-                              }).toList()
-                            : [],
-                      )
-                    ],
-                  ),
-                ),
-              ),
+                width: MediaQuery.of(context).size.width,
+                initialZoom: 13,
+                onMapTap: () {},
+                markersList: (list.isNotEmpty)
+                    ? list
+                    .where((item) =>
+                item.latitude != null &&
+                    item.longitude != null)
+                    .map((item) {
+                  return Marker(
+                      point:
+                      LatLng(item.latitude!, item.longitude!),
+                      child: Icon(Icons.location_pin,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onTertiaryFixed));
+                }).toList()
+                    : [],
+              )
             ],
           ),
         );
