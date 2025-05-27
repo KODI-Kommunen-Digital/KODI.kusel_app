@@ -4,13 +4,19 @@ import 'package:domain/model/request_model/refresh_token/refresh_token_request_m
 import 'package:domain/model/response_model/refresh_token/refresh_token_response_model.dart';
 import 'package:domain/usecase/refresh_token/refresh_token_usecase.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final refreshTokenProvider = Provider((ref) => RefreshTokenProvider(
+    sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
+    refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider)));
 
 class RefreshTokenProvider {
   SharedPreferenceHelper sharedPreferenceHelper;
 
-  RefreshTokenProvider(
-      {required this.sharedPreferenceHelper,
-      required this.refreshTokenUseCase});
+  RefreshTokenProvider({
+    required this.sharedPreferenceHelper,
+    required this.refreshTokenUseCase,
+  });
 
   RefreshTokenUseCase refreshTokenUseCase;
 
