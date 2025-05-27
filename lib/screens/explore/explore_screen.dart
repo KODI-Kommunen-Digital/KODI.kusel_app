@@ -92,6 +92,9 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
         itemCount: exploreList.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
+          crossAxisSpacing: 5.w,
+          mainAxisSpacing: 5.h,
+          childAspectRatio: 1.1,
         ),
         itemBuilder: (context, index) {
           return ExploreGridCardView(
