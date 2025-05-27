@@ -1,19 +1,16 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kusel/common_widgets/arrow_back_widget.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen_controller.dart';
-import 'package:kusel/utility/image_loader_utility.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../app_router.dart';
 import '../../common_widgets/common_background_clipper_widget.dart';
+import '../../common_widgets/common_bottom_nav_card_.dart';
 import '../../common_widgets/downstream_wave_clipper.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../images_path.dart';
@@ -37,6 +34,8 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
       ref
           .read(ortDetailScreenControllerProvider.notifier)
           .getOrtDetail(ortId: widget.ortDetailScreenParams.ortId);
+
+      ref.read(ortDetailScreenControllerProvider.notifier).isUserLoggedIn();
     });
     super.initState();
   }
@@ -51,25 +50,55 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
 
   _buildBody(BuildContext context) {
     return SafeArea(
-      child: SingleChildScrollView(
-        physics: ClampingScrollPhysics(),
-          child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
+      child: Stack(
         children: [
-          _buildClipper(),
-          _buildTitle(context),
-          _buildDescription(context),
-          32.verticalSpace,
-          _buildButton(context),
-          32.verticalSpace,
-          FeedbackCardWidget(onTap: () {
-            ref.read(navigationProvider).navigateUsingPath(
-                path: feedbackScreenPath, context: context);
-          })
+          Positioned.fill(
+            child: _buildScreen(context),
+          ),
+          Positioned(
+              bottom: 16.h,
+              left: 16.w,
+              right: 16.w,
+              child: CommonBottomNavCard(
+                onBackPress: () {
+                  ref.read(navigationProvider).removeTopPage(context: context);
+                },
+                isFavVisible:
+                    ref.watch(ortDetailScreenControllerProvider).isUserLoggedIn,
+                isFav: ref
+                        .watch(ortDetailScreenControllerProvider)
+                        .ortDetailDataModel
+                        ?.isFavorite ??
+                    false,
+                onFavChange: () {
+                  //ref.read(ortDetailScreenControllerProvider.notifier).updateOnFav(value);
+                },
+              ))
         ],
-      )),
+      ),
     );
+  }
+
+  _buildScreen(BuildContext context) {
+    return SingleChildScrollView(
+        physics: ClampingScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            _buildClipper(),
+            _buildTitle(context),
+            _buildDescription(context),
+            32.verticalSpace,
+            _buildButton(context),
+            32.verticalSpace,
+            FeedbackCardWidget(onTap: () {
+              ref.read(navigationProvider).navigateUsingPath(
+                  path: feedbackScreenPath, context: context);
+            }),
+            50.verticalSpace
+          ],
+        ));
   }
 
   _buildClipper() {
@@ -95,22 +124,22 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
             width: 70.w,
             padding: EdgeInsets.all(25.w),
             decoration:
-            BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                BoxDecoration(shape: BoxShape.circle, color: Colors.white),
             child: (state.ortDetailDataModel?.image != null)
                 ? ImageUtil.loadNetworkImage(
-              imageUrl: state.ortDetailDataModel!.image!,
-              sourceId: 1,
-              fit: BoxFit.contain,
-              svgErrorImagePath: imagePath['crest']!,
-              context: context,
-            )
+                    imageUrl: state.ortDetailDataModel!.image!,
+                    sourceId: 1,
+                    fit: BoxFit.contain,
+                    svgErrorImagePath: imagePath['crest']!,
+                    context: context,
+                  )
                 : Center(
-              child: Image.asset(
-                imagePath['crest']!,
-                height: 120.h,
-                width: 100.w,
-              ),
-            ),
+                    child: Image.asset(
+                      imagePath['crest']!,
+                      height: 120.h,
+                      width: 100.w,
+                    ),
+                  ),
           ),
         )
       ],

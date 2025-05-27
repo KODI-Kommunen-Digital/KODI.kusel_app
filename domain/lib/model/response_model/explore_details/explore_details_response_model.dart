@@ -49,7 +49,7 @@ class MunicipalPartyDetailDataModel {
   final bool? inCityServer;
   final bool? hasForum;
   final int? parentId;
-  final bool? isFavorite;
+  bool? isFavorite;
   final List<OnlineService>? onlineServices;
   final List<City>? topFiveCities;
   final List<Municipality>? municipalities; // Only present for district_admin type
