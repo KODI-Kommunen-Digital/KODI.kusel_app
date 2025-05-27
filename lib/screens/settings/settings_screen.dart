@@ -5,13 +5,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
-import 'package:kusel/utility/url_constants/url_constants.dart';
-import 'package:kusel/utility/url_launcher_utility.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/settings/settings_screen_provider.dart';
+import 'package:kusel/utility/url_constants/url_constants.dart';
+import 'package:kusel/utility/url_launcher_utility.dart';
 
 import '../../common_widgets/common_background_clipper_widget.dart';
+import '../../common_widgets/toast_message.dart';
 import '../dashboard/dashboard_screen_provider.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -40,6 +41,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   Widget _buildBody(BuildContext context) {
     return SingleChildScrollView(
+      physics: ClampingScrollPhysics(),
       child: Column(
         children: [
           CommonBackgroundClipperWidget(
@@ -96,7 +98,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             title: textBoldPoppins(
                 textAlign: TextAlign.start,
                 text: AppLocalizations.of(context).privacy_policy),
-              onTap: () => UrlLauncherUtil.launchWebUrl(url: privacyPolicyUrl),
+            onTap: () => UrlLauncherUtil.launchWebUrl(url: privacyPolicyUrl),
           ),
           Visibility(
             visible: ref.watch(settingsScreenProvider).isLoggedIn,
@@ -132,31 +134,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
             ]),
           ),
-          const Divider(),
           Visibility(
             visible: ref.watch(settingsScreenProvider).isLoggedIn,
             child: Column(
               children: [
-                ListTile(
-                  leading: const Icon(Icons.file_copy_outlined),
-                  title: textBoldPoppins(
-                    text: "Edit onboarding details",
-                    textAlign: TextAlign.start,
-                  ),
-                  onTap: () {
-                    ref.read(navigationProvider).navigateUsingPath(
-                        path: onboardingScreenPath, context: context);
-                  },
-                ),
                 const Divider(),
-              ],
-            ),
-          ),
-          const Divider(),
-          Visibility(
-            visible: ref.watch(settingsScreenProvider).isLoggedIn,
-            child: Column(
-              children: [
                 ListTile(
                   leading: const Icon(Icons.logout),
                   title: textBoldPoppins(
@@ -165,9 +147,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ),
                   onTap: () async {
                     ref.read(settingsScreenProvider.notifier).logoutUser(() {
-                      ref
-                          .read(dashboardScreenProvider.notifier)
-                          .onIndexChanged(0);
                     });
                   },
                 ),
@@ -188,6 +167,38 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               },
             ),
           ),
+          Visibility(
+            visible: ref.watch(settingsScreenProvider).isLoggedIn,
+            child: Column(
+              children: [
+                const Divider(),
+                ListTile(
+                  leading: Icon(
+                    Icons.delete,
+                    color: Theme.of(context).colorScheme.onTertiaryFixed,
+                  ),
+                  title: textBoldPoppins(
+                    text: AppLocalizations.of(context).delete_account,
+                    color: Theme.of(context).colorScheme.onTertiaryFixed,
+                    textAlign: TextAlign.start,
+                  ),
+                  onTap: () async {
+                    ref.read(settingsScreenProvider.notifier).deleteAccount(() {
+                      showSuccessToast(
+                          message: AppLocalizations.of(context)
+                              .success_delete_account_message,
+                          context: context,
+                      snackBarAlignment: Alignment.topCenter);
+                    }, (message) {
+                      showErrorToast(message: message, context: context,
+                          snackBarAlignment: Alignment.topCenter);
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+          70.verticalSpace
         ],
       ),
     );
