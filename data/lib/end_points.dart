@@ -17,7 +17,6 @@ const fetchUserOwnDataEndPoint = "/me";
 const onboardingUserTypeEndPoint = "/userType";
 const onboardingUserInterestsEndPoint = "/interests";
 const onboardingUserDemographicsEndPoint = "/demographics";
-const getCitiesEndPoint = "/cities";
 const onboardingCompleteEndpoint = "/onboardingComplete";
 const feedbackEndpoint = "/feedbacks";
 const municipalPartyDetailEndPoint = "/virtualTownhall/getMunicipalityById";
