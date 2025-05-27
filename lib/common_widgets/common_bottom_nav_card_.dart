@@ -46,7 +46,7 @@ class _CommonBottomNavCardState extends ConsumerState<CommonBottomNavCard> {
           Visibility(
             visible: widget.isFavVisible,
             child: GestureDetector(
-              onTap: () {},
+              onTap: widget.onFavChange,
               child: SizedBox(
                 height: 30.h,
                 width: 30.w,

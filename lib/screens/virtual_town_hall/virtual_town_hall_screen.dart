@@ -379,7 +379,8 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                       ref
                           .watch(favouriteCitiesNotifier.notifier)
                           .toggleMunicipalityFavorite(
-                        municipality,
+                        municipality.isFavorite,
+                        municipality.id,
                         success: ({required bool isFavorite}) {
                           _updateList(isFavorite, municipality.id ?? 0);
                         },
