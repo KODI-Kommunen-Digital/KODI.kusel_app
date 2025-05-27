@@ -18,6 +18,7 @@ const onboardingUserTypeEndPoint = "/userType";
 const onboardingUserInterestsEndPoint = "/interests";
 const onboardingUserDemographicsEndPoint = "/demographics";
 const onboardingCompleteEndpoint = "/onboardingComplete";
+const onboardingDetailEndPoint = "/onboardingDetail";
 const feedbackEndpoint = "/feedbacks";
 const municipalPartyDetailEndPoint = "/virtualTownhall/getMunicipalityById";
 

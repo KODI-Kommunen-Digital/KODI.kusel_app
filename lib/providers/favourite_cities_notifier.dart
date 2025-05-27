@@ -183,13 +183,13 @@ class CityFavoritesNotifier extends StateNotifier<List<City>> {
     }
   }
 
-  void toggleMunicipalityFavorite(Municipality item,
+  void toggleMunicipalityFavorite(bool? isFavourite, int? municipalityId,
       {required void Function({required bool isFavorite}) success,
       required void Function({required String message}) error}) {
-    if (item.isFavorite ?? false) {
-      removeFavorite(item.id ?? 0, success, error);
+    if (isFavourite ?? false) {
+      removeFavorite(municipalityId ?? 0, success, error);
     } else {
-      addFavorite(item.id ?? 0, success);
+      addFavorite(municipalityId ?? 0, success);
     }
   }
 
