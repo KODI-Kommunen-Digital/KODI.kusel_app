@@ -1,16 +1,11 @@
 class ExploreState {
-  List<String> exploreTypeList;
-  List<String> exploreTypeListImages;
-
-  ExploreState(this.exploreTypeList, this.exploreTypeListImages);
+  ExploreState();
 
   factory ExploreState.empty() {
-    return ExploreState([], []);
+    return ExploreState();
   }
 
-  ExploreState copyWith(
-      {List<String>? exploreTypeList, List<String>? exploreTypeListImages}) {
-    return ExploreState(exploreTypeList ?? this.exploreTypeList,
-        exploreTypeListImages ?? this.exploreTypeListImages);
+  ExploreState copyWith({List<String>? exploreTypeListImages}) {
+    return ExploreState();
   }
 }
