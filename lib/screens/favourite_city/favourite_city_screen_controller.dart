@@ -38,7 +38,6 @@ class FavouriteCityScreenController extends StateNotifier<FavouriteCityScreenSta
       state = state.copyWith(isLoading: true);
       final response = tokenStatus.isAccessTokenExpired();
 
-      debugPrint('Is token valid = $response');
       if (response) {
         final userId = sharedPreferenceHelper.getInt(userIdKey);
 

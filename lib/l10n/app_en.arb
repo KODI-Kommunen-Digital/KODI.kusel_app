@@ -175,5 +175,7 @@
   "name_or_email": "Name or Email",
   "kusel": "Kusel",
   "district": "District",
-  "favourite_city": "Favourite cities"
+  "favourite_city": "Favourite cities",
+  "delete_account": "Delete account",
+  "success_delete_account_message": "You account has been deleted successfully"
 }
