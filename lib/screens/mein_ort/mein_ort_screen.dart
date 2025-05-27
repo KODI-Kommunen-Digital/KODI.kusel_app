@@ -284,7 +284,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                       ref
                           .watch(favouriteCitiesNotifier.notifier)
                           .toggleMunicipalityFavorite(
-                        municipality,
+                        municipality.isFavorite, municipality.id,
                         success: ({required bool isFavorite}) {
                           _updateList(isFavorite, municipality.id ?? 0);
                         },

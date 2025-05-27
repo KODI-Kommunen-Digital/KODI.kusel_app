@@ -39,135 +39,157 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   Widget _buildBody(BuildContext context) {
-    return Column(
-      children: [
-        CommonBackgroundClipperWidget(
-            clipperType: UpstreamWaveClipper(),
-            imageUrl: imagePath['background_image'] ?? "",
-            height: 100.h,
-            blurredBackground: true,
-            isStaticImage: true),
-        Visibility(
-          visible: ref.watch(settingsScreenProvider).isLoggedIn,
-          child: Column(
-            children: [
-              ListTile(
-                leading: const Icon(Icons.account_circle_outlined),
-                title: textBoldPoppins(
-                  text: AppLocalizations.of(context).profile,
-                  textAlign: TextAlign.start,
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          CommonBackgroundClipperWidget(
+              clipperType: UpstreamWaveClipper(),
+              imageUrl: imagePath['background_image'] ?? "",
+              height: 100.h,
+              blurredBackground: true,
+              isStaticImage: true),
+          Visibility(
+            visible: ref.watch(settingsScreenProvider).isLoggedIn,
+            child: Column(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.account_circle_outlined),
+                  title: textBoldPoppins(
+                    text: AppLocalizations.of(context).profile,
+                    textAlign: TextAlign.start,
+                  ),
+                  onTap: () {
+                    ref.read(navigationProvider).navigateUsingPath(
+                        path: profileScreenPath, context: context);
+                  },
                 ),
-                onTap: () {
-                  ref.read(navigationProvider).navigateUsingPath(
-                      path: profileScreenPath, context: context);
-                },
-              ),
-              const Divider(),
-            ],
+                const Divider(),
+              ],
+            ),
           ),
-        ),
-        ListTile(
-          leading: const Icon(Icons.language),
-          title: textBoldPoppins(
-              textAlign: TextAlign.start,
-              text: AppLocalizations.of(context).change_language),
-          onTap: () => _showLanguageDialog(context),
-        ),
-        const Divider(),
-        ListTile(
-          leading: const Icon(Icons.link),
-          title: textBoldPoppins(
-              textAlign: TextAlign.start,
-              text: AppLocalizations.of(context).imprint_page),
-          onTap: () => UrlLauncherUtil.launchWebUrl(url: imprintPageUrl),
-        ),
-        const Divider(),
-        ListTile(
-          leading: const Icon(Icons.text_snippet_outlined),
-          title: textBoldPoppins(
-              textAlign: TextAlign.start,
-              text: AppLocalizations.of(context).terms_of_use),
-          onTap: () => UrlLauncherUtil.launchWebUrl(url: termsOfUseUrl),
-        ),
-        const Divider(),
-        ListTile(
-          leading: const Icon(Icons.privacy_tip_outlined),
-          title: textBoldPoppins(
-              textAlign: TextAlign.start,
-              text: AppLocalizations.of(context).privacy_policy),
-            onTap: () => UrlLauncherUtil.launchWebUrl(url: privacyPolicyUrl),
-        ),
-        Visibility(
-          visible: ref.watch(settingsScreenProvider).isLoggedIn,
-          child: Column(children: [
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.favorite_border),
-              title: textBoldPoppins(
-                text: AppLocalizations.of(context).favorites,
+          ListTile(
+            leading: const Icon(Icons.language),
+            title: textBoldPoppins(
                 textAlign: TextAlign.start,
-              ),
-              onTap: () async {
-                ref.read(navigationProvider).navigateUsingPath(
-                    context: context, path: favoritesListScreenPath);
-              },
-            ),
-          ]),
-        ),
-        const Divider(),
-        Visibility(
-          visible: ref.watch(settingsScreenProvider).isLoggedIn,
-          child: Column(children: [
-            ListTile(
-              leading: const Icon(Icons.favorite_border),
-              title: textBoldPoppins(
-                text: AppLocalizations.of(context).favourite_city,
+                text: AppLocalizations.of(context).change_language),
+            onTap: () => _showLanguageDialog(context),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.link),
+            title: textBoldPoppins(
                 textAlign: TextAlign.start,
-              ),
-              onTap: () async {
-                ref.read(navigationProvider).navigateUsingPath(
-                    context: context, path: favouriteCityScreenPath);
-              },
-            ),
-          ]),
-        ),
-        const Divider(),
-        Visibility(
-          visible: ref.watch(settingsScreenProvider).isLoggedIn,
-          child: Column(
-            children: [
+                text: AppLocalizations.of(context).imprint_page),
+            onTap: () => UrlLauncherUtil.launchWebUrl(url: imprintPageUrl),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.text_snippet_outlined),
+            title: textBoldPoppins(
+                textAlign: TextAlign.start,
+                text: AppLocalizations.of(context).terms_of_use),
+            onTap: () => UrlLauncherUtil.launchWebUrl(url: termsOfUseUrl),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.privacy_tip_outlined),
+            title: textBoldPoppins(
+                textAlign: TextAlign.start,
+                text: AppLocalizations.of(context).privacy_policy),
+              onTap: () => UrlLauncherUtil.launchWebUrl(url: privacyPolicyUrl),
+          ),
+          Visibility(
+            visible: ref.watch(settingsScreenProvider).isLoggedIn,
+            child: Column(children: [
+              const Divider(),
               ListTile(
-                leading: const Icon(Icons.logout),
+                leading: const Icon(Icons.favorite_border),
                 title: textBoldPoppins(
-                  text: AppLocalizations.of(context).logout,
+                  text: AppLocalizations.of(context).favorites,
                   textAlign: TextAlign.start,
                 ),
                 onTap: () async {
-                  ref.read(settingsScreenProvider.notifier).logoutUser(() {
-                    ref
-                        .read(dashboardScreenProvider.notifier)
-                        .onIndexChanged(0);
-                  });
+                  ref.read(navigationProvider).navigateUsingPath(
+                      context: context, path: favoritesListScreenPath);
                 },
               ),
-            ],
+            ]),
           ),
-        ),
-        Visibility(
-          visible: !ref.watch(settingsScreenProvider).isLoggedIn,
-          child: ListTile(
-            leading: const Icon(Icons.login),
-            title: textBoldPoppins(
-              text: AppLocalizations.of(context).log_in_sign_up,
-              textAlign: TextAlign.start,
+          const Divider(),
+          Visibility(
+            visible: ref.watch(settingsScreenProvider).isLoggedIn,
+            child: Column(children: [
+              ListTile(
+                leading: const Icon(Icons.favorite_border),
+                title: textBoldPoppins(
+                  text: AppLocalizations.of(context).favourite_city,
+                  textAlign: TextAlign.start,
+                ),
+                onTap: () async {
+                  ref.read(navigationProvider).navigateUsingPath(
+                      context: context, path: favouriteCityScreenPath);
+                },
+              ),
+            ]),
+          ),
+          const Divider(),
+          Visibility(
+            visible: ref.watch(settingsScreenProvider).isLoggedIn,
+            child: Column(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.file_copy_outlined),
+                  title: textBoldPoppins(
+                    text: "Edit onboarding details",
+                    textAlign: TextAlign.start,
+                  ),
+                  onTap: () {
+                    ref.read(navigationProvider).navigateUsingPath(
+                        path: onboardingScreenPath, context: context);
+                  },
+                ),
+                const Divider(),
+              ],
             ),
-            onTap: () async {
-              ref.read(navigationProvider).removeCurrentAndNavigate(
-                  context: context, path: signInScreenPath);
-            },
           ),
-        ),
-      ],
+          const Divider(),
+          Visibility(
+            visible: ref.watch(settingsScreenProvider).isLoggedIn,
+            child: Column(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.logout),
+                  title: textBoldPoppins(
+                    text: AppLocalizations.of(context).logout,
+                    textAlign: TextAlign.start,
+                  ),
+                  onTap: () async {
+                    ref.read(settingsScreenProvider.notifier).logoutUser(() {
+                      ref
+                          .read(dashboardScreenProvider.notifier)
+                          .onIndexChanged(0);
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+          Visibility(
+            visible: !ref.watch(settingsScreenProvider).isLoggedIn,
+            child: ListTile(
+              leading: const Icon(Icons.login),
+              title: textBoldPoppins(
+                text: AppLocalizations.of(context).log_in_sign_up,
+                textAlign: TextAlign.start,
+              ),
+              onTap: () async {
+                ref.read(navigationProvider).removeCurrentAndNavigate(
+                    context: context, path: signInScreenPath);
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 

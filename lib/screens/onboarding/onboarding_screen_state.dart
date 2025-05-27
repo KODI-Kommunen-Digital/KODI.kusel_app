@@ -1,4 +1,5 @@
 import 'package:domain/model/response_model/get_interests/get_interests_response_model.dart';
+import 'package:domain/model/response_model/onboarding_model/onboarding_details_response_model.dart';
 
 class OnboardingScreenState {
   int selectedPageIndex;
@@ -21,6 +22,7 @@ class OnboardingScreenState {
   bool loading;
   Map<int, bool> interestsMap;
   String? userCurrentCity;
+  OnboardingData? onboardingData;
 
   OnboardingScreenState(
       this.selectedPageIndex,
@@ -42,12 +44,32 @@ class OnboardingScreenState {
       this.interests,
       this.loading,
       this.interestsMap,
-      this.userCurrentCity
-      );
+      this.userCurrentCity,
+      this.onboardingData);
 
   factory OnboardingScreenState.empty() {
-    return OnboardingScreenState(0, '', [], null, '', false, false, false, 0,
-        false, false, false, false, false, false, {}, [], false, {}, null);
+    return OnboardingScreenState(
+        0,
+        '',
+        [],
+        null,
+        '',
+        false,
+        false,
+        false,
+        0,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        {},
+        [],
+        false,
+        {},
+        null,
+        null);
   }
 
   OnboardingScreenState copyWith(
@@ -70,8 +92,8 @@ class OnboardingScreenState {
       List<Interest>? interests,
       bool? loading,
       Map<int, bool>? interestsMap,
-      String? userCurrentCity
-      }) {
+      String? userCurrentCity,
+      OnboardingData? onboardingData}) {
     return OnboardingScreenState(
         selectedPageIndex ?? this.selectedPageIndex,
         onBoardingButtonText ?? this.onBoardingButtonText,
@@ -92,7 +114,7 @@ class OnboardingScreenState {
         interests ?? this.interests,
         loading ?? this.loading,
         interestsMap ?? this.interestsMap,
-        userCurrentCity ?? this.userCurrentCity
-    );
+        userCurrentCity ?? this.userCurrentCity,
+        onboardingData ?? this.onboardingData);
   }
 }

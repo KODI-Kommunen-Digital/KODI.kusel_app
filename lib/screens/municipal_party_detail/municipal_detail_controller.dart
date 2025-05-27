@@ -202,6 +202,13 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
     state = state.copyWith(cityList: state.cityList);
   }
 
+  void setIsFavoriteMunicipal(bool isFavorite) {
+    final municipalPartyDetailDataModel = state.municipalPartyDetailDataModel;
+    municipalPartyDetailDataModel?.isFavorite = isFavorite;
+    state = state.copyWith(
+        municipalPartyDetailDataModel: municipalPartyDetailDataModel);
+  }
+
   void updateOnFav(bool status) {
     final value = state.municipalPartyDetailDataModel;
     if (value != null && value.isFavorite != null) {
