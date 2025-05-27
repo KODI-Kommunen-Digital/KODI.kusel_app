@@ -3,7 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import "package:motion_toast/motion_toast.dart";
 
-showSuccessToast({required String message, required BuildContext context}) {
+showSuccessToast(
+    {required String message,
+    required BuildContext context,
+    Alignment? snackBarAlignment}) {
   MotionToast(
     primaryColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: .3),
     description: textRegularPoppins(
@@ -11,8 +14,7 @@ showSuccessToast({required String message, required BuildContext context}) {
         color: Theme.of(context).textTheme.labelSmall?.color,
         textAlign: TextAlign.start,
         maxLines: 2),
-    toastAlignment: Alignment.bottomCenter,
-    animationType: AnimationType.slideInFromBottom,
+    toastAlignment: snackBarAlignment ?? Alignment.bottomCenter,
     displayBorder: true,
     displaySideBar: false,
     icon: Icons.done,
@@ -25,7 +27,10 @@ showSuccessToast({required String message, required BuildContext context}) {
   ).show(context);
 }
 
-showErrorToast({required String message, required BuildContext context}) {
+showErrorToast(
+    {required String message,
+    required BuildContext context,
+    Alignment? snackBarAlignment}) {
   MotionToast(
     primaryColor: Theme.of(context).colorScheme.onError.withValues(alpha: .3),
     description: textRegularPoppins(
@@ -33,8 +38,7 @@ showErrorToast({required String message, required BuildContext context}) {
         color: Theme.of(context).textTheme.labelSmall?.color,
         maxLines: 2,
         textAlign: TextAlign.start),
-    toastAlignment: Alignment.bottomCenter,
-    animationType: AnimationType.slideInFromBottom,
+    toastAlignment: snackBarAlignment ?? Alignment.bottomCenter,
     displayBorder: true,
     displaySideBar: false,
     icon: Icons.error,
