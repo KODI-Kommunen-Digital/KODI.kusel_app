@@ -90,8 +90,7 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
       state = state.copyWith(isLoading: true);
       MunicipalPartyDetailRequestModel requestModel =
           MunicipalPartyDetailRequestModel(municipalId: id);
-      ExploreDetailsResponseModel responseModel =
-      ExploreDetailsResponseModel();
+      ExploreDetailsResponseModel responseModel = ExploreDetailsResponseModel();
 
       final response =
           await municipalPartyDetailUseCase.call(requestModel, responseModel);
@@ -103,7 +102,7 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
       }, (r) {
         final result = r as ExploreDetailsResponseModel;
 
-        if(result.data!=null){
+        if (result.data != null) {
           state = state.copyWith(
               isLoading: false,
               municipalPartyDetailDataModel: result.data,
@@ -117,15 +116,12 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
   }
 
   isUserLoggedIn() async {
-
     final status = await signInStatusController.isUserLoggedIn();
 
     state = state.copyWith(isUserLoggedIn: status);
-
   }
 
-  updateEventIsFav(bool isFav, int? eventId)
-  {
+  updateEventIsFav(bool isFav, int? eventId) {
     final list = state.eventList;
     for (var listing in list) {
       if (listing.id == eventId) {
@@ -135,9 +131,7 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
     state = state.copyWith(eventList: list);
   }
 
-
-  updateNewsIsFav(bool isFav, int? eventId)
-  {
+  updateNewsIsFav(bool isFav, int? eventId) {
     final list = state.newsList;
     for (var listing in list) {
       if (listing.id == eventId) {
@@ -154,5 +148,13 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
       }
     }
     state = state.copyWith(cityList: state.cityList);
+  }
+
+  void updateOnFav(bool status) {
+    final value = state.municipalPartyDetailDataModel;
+    if (value != null && value.isFavorite != null) {
+      value.isFavorite = status;
+      state = state.copyWith(municipalPartyDetailDataModel: value);
+    }
   }
 }
