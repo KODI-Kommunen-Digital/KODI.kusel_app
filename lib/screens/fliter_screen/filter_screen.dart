@@ -76,8 +76,16 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
                     color: Theme.of(context).textTheme.bodyLarge?.color),
                 GestureDetector(
                   onTap: () {
+                    final state = ref.read(filterScreenProvider);
                     ref.read(filterScreenProvider.notifier).onReset();
                     ref.read(allEventScreenProvider.notifier).onResetFilter();
+                    ref.read(allEventScreenProvider.notifier).applyFilter(
+                        startAfterDate: state.startAfterDate,
+                        endBeforeDate: state.endBeforeDate,
+                        cityId: state.cityId,
+                        filterCount: ref
+                            .read(filterScreenProvider.notifier)
+                            .appliedFilterCount());
                   },
                   child: Container(
                     padding:
