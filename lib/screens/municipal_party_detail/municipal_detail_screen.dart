@@ -10,6 +10,7 @@ import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/listing_id_enum.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/screens/events_listing/selected_event_list_screen_parameter.dart';
+import 'package:kusel/screens/mein_ort/mein_ort_provider.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_location_widget.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen_params.dart';
@@ -60,6 +61,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
   Widget build(BuildContext context) {
     final isLoading = ref.watch(
         municipalDetailControllerProvider.select((state) => state.isLoading));
+    final state = ref.read(municipalDetailControllerProvider);
 
     return Scaffold(
         body: SafeArea(
@@ -86,19 +88,25 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
               right: 16.w,
               child: CommonBottomNavCard(
                 onBackPress: () {
-                  ref
-                      .read(navigationProvider)
-                      .removeTopPage(context: context);
+                  ref.read(navigationProvider).removeTopPage(context: context);
                 },
                 isFavVisible:
                     ref.watch(municipalDetailControllerProvider).isUserLoggedIn,
-                isFav: ref
-                        .watch(municipalDetailControllerProvider)
-                        .municipalPartyDetailDataModel
-                        ?.isFavorite ??
-                    false,
-                onFavChange: (){
-                  // ref.read(municipalDetailControllerProvider.notifier).updateOnFav(value);
+                isFav: state.municipalPartyDetailDataModel?.isFavorite ?? false,
+                onFavChange: () {
+                  ref
+                      .watch(favouriteCitiesNotifier.notifier)
+                      .toggleMunicipalityFavorite(
+                    state.municipalPartyDetailDataModel?.isFavorite,
+                    state.municipalPartyDetailDataModel?.id,
+                    success: ({required bool isFavorite}) {
+                      _updateMunicipalFavStatus(
+                          isFavorite, state.municipalPartyDetailDataModel?.id ?? 0);
+                    },
+                    error: ({required String message}) {
+                      showErrorToast(message: message, context: context);
+                    },
+                  );
                 },
               ))
         ],
@@ -544,5 +552,11 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
     ref
         .read(municipalDetailControllerProvider.notifier)
         .setIsFavoriteCity(isFav, cityId);
+  }
+  _updateMunicipalFavStatus(bool isFav, int id) {
+    ref
+        .read(municipalDetailControllerProvider.notifier)
+        .setIsFavoriteMunicipal(isFav);
+    ref.read(meinOrtProvider.notifier).setIsFavoriteCity(isFav, id);
   }
 }
