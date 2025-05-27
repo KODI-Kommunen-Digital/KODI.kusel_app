@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/common_widgets/common_bottom_nav_card_.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/downstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/image_text_card_widget.dart';
@@ -62,9 +63,9 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
 
     return Scaffold(
         body: SafeArea(
-          child: Stack(
-                fit: StackFit.expand,
-                children: [
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
           Positioned.fill(child: _buildBody(context)),
           if (isLoading)
             Center(
@@ -79,9 +80,30 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                 child: CircularProgressIndicator(),
               ),
             )),
-                ],
-              ),
-        ));
+          Positioned(
+              bottom: 16.h,
+              left: 16.w,
+              right: 16.w,
+              child: CommonBottomNavCard(
+                onBackPress: () {
+                  ref
+                      .read(navigationProvider)
+                      .removeTopPage(context: context);
+                },
+                isFavVisible:
+                    ref.watch(municipalDetailControllerProvider).isUserLoggedIn,
+                isFav: ref
+                        .watch(municipalDetailControllerProvider)
+                        .municipalPartyDetailDataModel
+                        ?.isFavorite ??
+                    false,
+                onFavChange: (){
+                  // ref.read(municipalDetailControllerProvider.notifier).updateOnFav(value);
+                },
+              ))
+        ],
+      ),
+    ));
   }
 
   _buildBody(BuildContext context) {
@@ -211,6 +233,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                   path: feedbackScreenPath, context: context);
             },
           ),
+          50.verticalSpace
         ],
       ),
     );
@@ -396,8 +419,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                           _updateList(isFavorite, item.id!);
                         },
                         error: ({required String message}) {
-                          showErrorToast(
-                              message: message, context: context);
+                          showErrorToast(message: message, context: context);
                         },
                       );
                     },
@@ -517,6 +539,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
       ),
     );
   }
+
   _updateList(bool isFav, int cityId) {
     ref
         .read(municipalDetailControllerProvider.notifier)
