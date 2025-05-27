@@ -44,3 +44,5 @@ const mobilityPath = "/mobility";
 const participatePath = "/participate";
 
 const favouriteCitiesPath = "/favorites";
+
+const deleteAccountEndPoint = "/users";

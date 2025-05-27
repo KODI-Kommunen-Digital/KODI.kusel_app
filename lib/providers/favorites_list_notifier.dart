@@ -44,7 +44,6 @@ class FavoritesListNotifier extends StateNotifier<List<Listing>> {
     try {
       final response = tokenStatus.isAccessTokenExpired();
 
-      debugPrint('Is token valid = $response');
       if (response) {
         final userId = sharedPreferenceHelper.getInt(userIdKey);
 
