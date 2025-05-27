@@ -19,11 +19,17 @@ class VirtualTownHallService {
 
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
+
+    String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
+    final headers = {'Authorization': 'Bearer $token'};
     final path = virtualTownHallEndPoint;
     final apiHelper = ref.read(apiHelperProvider);
 
     final result =
-        await apiHelper.getRequest(path: path, create: () => responseModel);
+        await apiHelper.getRequest(
+            path: path,
+            headers: headers,
+            create: () => responseModel);
 
     return result.fold((l) {
       return Left(l);
