@@ -1,5 +1,6 @@
 import 'package:core/preference_manager/preference_constant.dart';
 import 'package:core/preference_manager/shared_pref_helper.dart';
+import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:core/token_status.dart';
 import 'package:domain/model/request_model/city_details/get_city_details_request_model.dart';
 import 'package:domain/model/request_model/refresh_token/refresh_token_request_model.dart';
@@ -18,6 +19,7 @@ final allCityScreenProvider = StateNotifierProvider.autoDispose<
       sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
       tokenStatus: ref.read(tokenStatusProvider),
       refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider),
+      signInStatusController: ref.read(signInStatusProvider.notifier)
     ));
 
 class AllCityScreenController extends StateNotifier<AllCityScreenState> {
@@ -25,12 +27,14 @@ class AllCityScreenController extends StateNotifier<AllCityScreenState> {
   SharedPreferenceHelper sharedPreferenceHelper;
   TokenStatus tokenStatus;
   RefreshTokenUseCase refreshTokenUseCase;
+  SignInStatusController signInStatusController;
 
   AllCityScreenController({
     required this.getCityDetailsUseCase,
     required this.sharedPreferenceHelper,
     required this.tokenStatus,
-    required this.refreshTokenUseCase
+    required this.refreshTokenUseCase,
+    required this.signInStatusController
   })
       : super(AllCityScreenState.empty());
 
@@ -39,8 +43,8 @@ class AllCityScreenController extends StateNotifier<AllCityScreenState> {
       state = state.copyWith(isLoading: true);
       final response = tokenStatus.isAccessTokenExpired();
       debugPrint(' = $response');
-
-      if (response) {
+      final status = await signInStatusController.isUserLoggedIn();
+      if (response&& status) {
         final userId = sharedPreferenceHelper.getInt(userIdKey);
         RefreshTokenRequestModel requestModel =
         RefreshTokenRequestModel(userId: userId?.toString() ?? "");
