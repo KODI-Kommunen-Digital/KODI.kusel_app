@@ -6,7 +6,7 @@ class OnboardingScreenState {
   String onBoardingButtonText;
   List<String> residenceList;
   String? resident;
-  String userName;
+  String? userFirstName;
   bool isLoading;
   bool isTourist;
   bool isResident;
@@ -29,7 +29,7 @@ class OnboardingScreenState {
       this.onBoardingButtonText,
       this.residenceList,
       this.resident,
-      this.userName,
+      this.userFirstName,
       this.isLoading,
       this.isTourist,
       this.isResident,
@@ -53,7 +53,7 @@ class OnboardingScreenState {
         '',
         [],
         null,
-        '',
+        null,
         false,
         false,
         false,
@@ -77,7 +77,7 @@ class OnboardingScreenState {
       String? onBoardingButtonText,
       List<String>? residenceList,
       String? resident,
-      String? userName,
+      String? userFirstName,
       bool? isLoading,
       bool? isTourist,
       bool? isResident,
@@ -99,7 +99,7 @@ class OnboardingScreenState {
         onBoardingButtonText ?? this.onBoardingButtonText,
         residenceList ?? this.residenceList,
         resident ?? this.resident,
-        userName ?? this.userName,
+        userFirstName ?? this.userFirstName,
         isLoading ?? this.isLoading,
         isTourist ?? this.isTourist,
         isResident ?? this.isResident,

@@ -112,7 +112,9 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
               textOverflow: TextOverflow.visible),
           8.verticalSpace,
           CustomButton(
-              onPressed: () {},
+              onPressed: () => UrlLauncherUtil.launchWebUrl(
+                  url: state.participateData?.links?[0].linkUrl ??
+                      'https://www.google.com/'),
               text: AppLocalizations.of(context).register_here)
         ],
       ),

@@ -146,15 +146,11 @@ class VirtualTownHallProvider extends StateNotifier<VirtualTownHallState> {
     state = state.copyWith(eventList: list);
   }
 
-  void setIsFavoriteCity(bool isFavorite, int? id) {
+  void setIsFavoriteMunicipality(bool isFavorite, int? municipalityId) {
     for (var municipality in state.municipalitiesList) {
-      if (municipality.id == id) {
+      if (municipality.id == municipalityId) {
         municipality.isFavorite = isFavorite;
-      }
-      for(var city in municipality.topFiveCities ?? []) {
-        if (city.id == id) {
-          city.isFavorite = isFavorite;
-        }
+        break;
       }
     }
     state = state.copyWith(municipalitiesList: state.municipalitiesList);

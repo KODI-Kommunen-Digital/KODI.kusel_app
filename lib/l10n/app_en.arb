@@ -177,5 +177,8 @@
   "district": "District",
   "favourite_city": "Favourite cities",
   "delete_account": "Delete account",
-  "success_delete_account_message": "You account has been deleted successfully"
+  "success_delete_account_message": "You account has been deleted successfully",
+  "edit_onboarding_details": "Edit onboarding details",
+  "ok": "Ok",
+  "delete_account_information": "Are you sure you want to delete your account?"
 }

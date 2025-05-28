@@ -56,26 +56,29 @@ class _CustomFlutterMapState extends ConsumerState<CustomFlutterMap> {
         children: [
           _customMapWidget(),
           Positioned(
-            top: 50.h,
+            top: 10.h,
             right: 8.w,
             child: Column(
               children: [
                 textBoldPoppins(text: "N", fontSize: 10, color: Theme.of(context).colorScheme.error),
-                GestureDetector(
+                InkWell(
                   onTap: () => _mapController.rotate(0),
                   child: Transform.rotate(
                     angle: -_currentRotation * math.pi / 180,
-                    child: Container(
-                      width: 40.w,
-                      height: 40.h,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white,
-                        boxShadow: [BoxShadow(blurRadius: 4, color: Colors.black26)],
+                    child: Card(
+                      elevation: 4,
+                      shape: const CircleBorder(),
+                      child: Container(
+                        padding: EdgeInsets.all(5.h.w),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.white,
+                          boxShadow: [BoxShadow(blurRadius: 4, color: Colors.black26)],
+                        ),
+                        child: Transform.rotate(
+                            angle: -10.25,
+                            child: Icon(Icons.explore, color: Theme.of(context).primaryColor, size: 20.h)),
                       ),
-                      child: Transform.rotate(
-                        angle: -10.25,
-                          child: Icon(Icons.explore, color: Theme.of(context).primaryColor, size: 20.h)),
                     ),
                   ),
                 ),
@@ -83,8 +86,8 @@ class _CustomFlutterMapState extends ConsumerState<CustomFlutterMap> {
             ),
           ),
           Positioned(
-            top: 10.h,
-            right: 8.w,
+            top: 70.h,
+            right: 7.w,
             child: FloatingActionButton(
               mini: true,
               heroTag: "recenter",
