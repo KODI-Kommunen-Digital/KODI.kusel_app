@@ -17,15 +17,23 @@ class OnBoardingNamePage extends ConsumerStatefulWidget {
 }
 
 class _OnboardingStartPageState extends ConsumerState<OnBoardingNamePage> {
+  TextEditingController nameEditingController = TextEditingController();
+
+
+  @override
+  void initState() {
+    Future.microtask((){
+      if(ref.watch(onboardingScreenProvider).userFirstName !=null){
+        nameEditingController.text = ref.watch(onboardingScreenProvider).userFirstName!;
+      }
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     final onboardingNameFormKey =
         ref.read(onboardingScreenProvider.notifier).onboardingNameFormKey;
-    final nameEditingController =
-        ref.read(onboardingScreenProvider.notifier).nameEditingController;
-    if(ref.read(onboardingScreenProvider).userFirstName !=null){
-      nameEditingController.text = ref.read(onboardingScreenProvider).userFirstName!;
-    }
+
     return Form(
       key: onboardingNameFormKey,
       child: Padding(
