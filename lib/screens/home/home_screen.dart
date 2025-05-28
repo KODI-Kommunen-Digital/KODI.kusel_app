@@ -94,7 +94,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   children: [
                     Visibility(
                         visible:
-                            ref.watch(homeScreenProvider).isSignInButtonVisible,
+                            !ref.watch(homeScreenProvider).isSignInButtonVisible,
                         child: isLoading
                             ? CustomShimmerWidget.rectangular(
                                 height: 20.h,
