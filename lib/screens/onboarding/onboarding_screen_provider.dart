@@ -73,12 +73,14 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   GlobalKey<FormState> onboardingNameFormKey = GlobalKey<FormState>();
 
   Future<void> initialCall() async {
+    state = state.copyWith(isLoading: true);
     initializerPageController();
     await Future.wait([
     updateCurrentCity(),
     fetchCities(),
     getInterests(),
     ]);
+    state = state.copyWith(isLoading: false);
   }
 
   void initializerPageController() {
@@ -524,8 +526,6 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
 
   Future<void> getInterests() async {
     try {
-      state = state.copyWith(loading: true);
-
       EmptyRequest requestModel = EmptyRequest();
       GetInterestsResponseModel responseModel = GetInterestsResponseModel();
       final result =
@@ -544,11 +544,10 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
           };
           state = state.copyWith(interestsMap: interestMap);
         }
-        state = state.copyWith(loading: false, interests: interests);
+        state = state.copyWith(interests: interests);
       });
     } catch (error) {
       debugPrint('get interests exception : $error');
-      state = state.copyWith(loading: false);
     }
   }
 
