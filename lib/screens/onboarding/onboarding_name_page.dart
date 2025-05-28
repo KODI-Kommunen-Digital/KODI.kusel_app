@@ -23,6 +23,9 @@ class _OnboardingStartPageState extends ConsumerState<OnBoardingNamePage> {
         ref.read(onboardingScreenProvider.notifier).onboardingNameFormKey;
     final nameEditingController =
         ref.read(onboardingScreenProvider.notifier).nameEditingController;
+    if(ref.read(onboardingScreenProvider).userFirstName !=null){
+      nameEditingController.text = ref.read(onboardingScreenProvider).userFirstName!;
+    }
     return Form(
       key: onboardingNameFormKey,
       child: Padding(

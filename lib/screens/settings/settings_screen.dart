@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -173,6 +174,25 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               children: [
                 const Divider(),
                 ListTile(
+                  leading: const Icon(Icons.file_copy_outlined),
+                  title: textBoldPoppins(
+                    text: "Edit onboarding details",
+                    textAlign: TextAlign.start,
+                  ),
+                  onTap: () {
+                    ref.read(navigationProvider).navigateUsingPath(
+                        path: onboardingScreenPath, context: context);
+                  },
+                ),
+              ],
+            ),
+          ),
+          Visibility(
+            visible: ref.watch(settingsScreenProvider).isLoggedIn,
+            child: Column(
+              children: [
+                const Divider(),
+                ListTile(
                   leading: Icon(
                     Icons.delete,
                     color: Theme.of(context).colorScheme.onTertiaryFixed,
@@ -182,23 +202,14 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     color: Theme.of(context).colorScheme.onTertiaryFixed,
                     textAlign: TextAlign.start,
                   ),
-                  onTap: () async {
-                    ref.read(settingsScreenProvider.notifier).deleteAccount(() {
-                      showSuccessToast(
-                          message: AppLocalizations.of(context)
-                              .success_delete_account_message,
-                          context: context,
-                      snackBarAlignment: Alignment.topCenter);
-                    }, (message) {
-                      showErrorToast(message: message, context: context,
-                          snackBarAlignment: Alignment.topCenter);
-                    });
+                  onTap: () {
+                    showDeleteAccountDialog(context);
                   },
                 ),
               ],
             ),
           ),
-          70.verticalSpace
+          100.verticalSpace
         ],
       ),
     );
@@ -259,6 +270,48 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               }).toList(),
             ),
           ),
+        );
+      },
+    );
+  }
+
+  void showDeleteAccountDialog(BuildContext context) {
+    showCupertinoDialog(
+      context: context,
+      builder: (context) {
+        return CupertinoAlertDialog(
+          title: Text(AppLocalizations.of(context).delete_account),
+          content:
+              Text(AppLocalizations.of(context).delete_account_information),
+          actions: <CupertinoDialogAction>[
+            CupertinoDialogAction(
+              isDefaultAction: true,
+              onPressed: () {
+                ref.read(navigationProvider).removeTopPage(context: context);
+              },
+              child: Text(AppLocalizations.of(context).cancel),
+            ),
+            CupertinoDialogAction(
+              isDestructiveAction: true,
+              onPressed: () async {
+                ref.read(settingsScreenProvider.notifier).deleteAccount(() {
+                  showSuccessToast(
+                      message: AppLocalizations.of(context)
+                          .success_delete_account_message,
+                      context: context,
+                      snackBarAlignment: Alignment.topCenter);
+                }, (message) {
+                  showErrorToast(
+                      message: message,
+                      context: context,
+                      snackBarAlignment: Alignment.topCenter);
+                }).then((value) {
+                  ref.read(navigationProvider).removeTopPage(context: context);
+                });
+              },
+              child: Text(AppLocalizations.of(context).ok),
+            ),
+          ],
         );
       },
     );

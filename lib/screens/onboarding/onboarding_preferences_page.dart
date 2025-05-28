@@ -19,16 +19,8 @@ class OnBoardingPreferencesPage extends ConsumerStatefulWidget {
 class _OnBoardingPreferencesPageState extends ConsumerState<OnBoardingPreferencesPage> {
 
   @override
-  void initState() {
-    Future.microtask(() {
-      ref.read(onboardingScreenProvider.notifier).getInterests();
-    });
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    String userName  = ref.read(onboardingScreenProvider).userName;
+    String? userName  = ref.read(onboardingScreenProvider).userFirstName;
     String displayMsg =
         "${AppLocalizations.of(context).complete}$userName${AppLocalizations.of(context).what_interest_you}";
     return Scaffold(
@@ -51,7 +43,7 @@ class _OnBoardingPreferencesPageState extends ConsumerState<OnBoardingPreference
           ),
         ),
       ),
-    ).loaderDialog(context, ref.watch(onboardingScreenProvider).loading);
+    );
   }
 
   categoryView(BuildContext context) {
