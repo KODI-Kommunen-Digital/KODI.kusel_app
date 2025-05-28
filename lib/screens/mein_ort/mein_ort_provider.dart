@@ -59,15 +59,25 @@ class MeinOrtProvider extends StateNotifier<MeinOrtState> {
     state = state.copyWith(isUserLoggedIn: status);
   }
 
-  void setIsFavoriteCity(bool isFavorite, int? id) {
+  void setIsFavoriteCity(bool isFavorite, int? cityId, int? municipalId) {
+    for (final municipality in state.municipalityList) {
+      if (municipality.id != municipalId) continue;
+      for (final city in municipality.topFiveCities ?? const []) {
+        if (city.id == cityId) {
+          city.isFavorite = isFavorite;
+          state = state.copyWith(municipalityList: state.municipalityList);
+          return;
+        }
+      }
+      break;
+    }
+  }
+
+  void setIsFavoriteMunicipality(bool isFavorite, int? municipalityId) {
     for (var municipality in state.municipalityList) {
-      if (municipality.id == id) {
+      if (municipality.id == municipalityId) {
         municipality.isFavorite = isFavorite;
-      }
-      for(var city in municipality.topFiveCities ?? []) {
-        if (city.id == id) {
-        city.isFavorite = isFavorite;
-      }
+        break;
       }
     }
     state = state.copyWith(municipalityList: state.municipalityList);

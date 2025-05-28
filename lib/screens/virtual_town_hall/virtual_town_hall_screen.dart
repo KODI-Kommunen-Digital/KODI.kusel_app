@@ -171,7 +171,9 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                     .updateEventIsFav(isFav, id);
               },
             ),
-          FeedbackCardWidget(onTap: () {
+          FeedbackCardWidget(
+              height: 270.h,
+              onTap: () {
             ref
                 .read(navigationProvider)
                 .navigateUsingPath(path: feedbackScreenPath, context: context);
@@ -228,6 +230,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
             child: ImageUtil.loadNetworkImage(
               imageUrl: imageUrl ?? '',
               sourceId: 1,
+              fit: BoxFit.contain,
               svgErrorImagePath: imagePath['virtual_town_hall_map_image']!,
               context: context,
             ),
@@ -251,12 +254,13 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
           TownHallMapWidget(
             address: state.address ?? "",
             websiteText: AppLocalizations.of(context).visit_website,
-            websiteUrl: state.websiteUrl ?? "www.google.com",
+            websiteUrl: state.websiteUrl ?? "https://www.google.com/",
             latitude: state.latitude ?? 49.53603477650214,
             longitude: state.longitude ?? 7.392734870386151,
             phoneNumber: state.phoneNumber ?? '',
             email: state.email ?? '',
-            calendarText: 'Geöffnet',
+            calendarText: AppLocalizations.of(context).open,
+            openUntil: state.openUntil ?? '',
           ),
         ],
       ),
@@ -371,16 +375,20 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                             context: context,
                             path: municipalDetailScreenPath,
                             params: MunicipalDetailScreenParams(
-                                municipalId: municipality.id!.toString()),
+                                municipalId: municipality.id!.toString(),
+                                onFavUpdate: (isFav, id, isMunicipal){
+                                  _updateList(isFav, id ?? 0);
+                                }
+                            ),
                           );
                     },
                     isFavourite: municipality.isFavorite ?? false,
                     onFavouriteIconClick: () {
                       ref
                           .watch(favouriteCitiesNotifier.notifier)
-                          .toggleMunicipalityFavorite(
-                        municipality.isFavorite,
-                        municipality.id,
+                          .toggleFavorite(
+                        isFavourite : municipality.isFavorite,
+                        id : municipality.id,
                         success: ({required bool isFavorite}) {
                           _updateList(isFavorite, municipality.id ?? 0);
                         },
@@ -411,6 +419,6 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
   _updateList(bool isFav, int cityId) {
     ref
         .read(virtualTownHallProvider.notifier)
-        .setIsFavoriteCity(isFav, cityId);
+        .setIsFavoriteMunicipality(isFav, cityId);
   }
 }

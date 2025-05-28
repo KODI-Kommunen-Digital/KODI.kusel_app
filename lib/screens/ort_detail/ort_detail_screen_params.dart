@@ -1,8 +1,7 @@
 class OrtDetailScreenParams{
 
   String ortId;
-  OrtDetailScreenParams({required this.ortId});
-
-
+  Function(bool? isFav, int? id) onFavSuccess;
+  OrtDetailScreenParams({required this.ortId, required this.onFavSuccess});
 
 }
