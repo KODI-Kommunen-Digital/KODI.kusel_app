@@ -279,6 +279,50 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       .setIsFavoriteNearBy(isFav, id);
                 },
               ),
+            if (state.newsList != null && state.newsList!.isNotEmpty)
+              EventsListSectionWidget(
+                context: context,
+                eventsList: state.newsList ?? [],
+                heading: AppLocalizations.of(context).news,
+                maxListLimit: 5,
+                buttonText: AppLocalizations.of(context).all_news,
+                buttonIconPath: imagePath['map_icon'] ?? "",
+                isLoading: false,
+                onButtonTap: () {
+                  ref.read(navigationProvider).navigateUsingPath(
+                      path: selectedEventListScreenPath,
+                      context: context,
+                      params: SelectedEventListScreenParameter(
+                          cityId: 1,
+                          listHeading: AppLocalizations.of(context).news,
+                          categoryId: ListingCategoryId.news.eventId,
+                          onFavChange: () {
+                            ref
+                                .read(homeScreenProvider.notifier)
+                                .getNews();
+                          }));
+                },
+                onHeadingTap: () {
+                  ref.read(navigationProvider).navigateUsingPath(
+                      path: selectedEventListScreenPath,
+                      context: context,
+                      params: SelectedEventListScreenParameter(
+                          cityId: 1,
+                          listHeading: AppLocalizations.of(context).news,
+                          categoryId: ListingCategoryId.news.eventId,
+                          onFavChange: () {
+                            ref
+                                .read(homeScreenProvider.notifier)
+                                .getNews();
+                          }));
+                },
+                isFavVisible: !state.isSignInButtonVisible,
+                onSuccess: (bool isFav, int? id) {
+                  ref
+                      .read(homeScreenProvider.notifier)
+                      .updateNewsIsFav(isFav, id);
+                },
+              ),
             if (ref.watch(homeScreenProvider).eventsList.isNotEmpty)
               EventsListSectionWidget(
                 context: context,
@@ -290,19 +334,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 isLoading: isLoading,
                 onButtonTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
-                      path: allEventScreenPath,
+                      path: selectedEventListScreenPath,
                       context: context,
-                      params: AllEventScreenParam(onFavChange: () {
+                      params: SelectedEventListScreenParameter(
+                        categoryId: ListingCategoryId.event.eventId,
+                          onFavChange: () {
                         ref.read(homeScreenProvider.notifier).getEvents();
-                      }));
+                      }, listHeading: AppLocalizations.of(context).events));
                 },
                 onHeadingTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
-                      path: allEventScreenPath,
+                      path: selectedEventListScreenPath,
                       context: context,
-                      params: AllEventScreenParam(onFavChange: () {
-                        ref.read(homeScreenProvider.notifier).getEvents();
-                      }));
+                      params: SelectedEventListScreenParameter(
+                          categoryId: ListingCategoryId.event.eventId,
+                          onFavChange: () {
+                            ref.read(homeScreenProvider.notifier).getEvents();
+                          }, listHeading: AppLocalizations.of(context).events));
                 },
                 onSuccess: (isFav, eventId) {
                   ref

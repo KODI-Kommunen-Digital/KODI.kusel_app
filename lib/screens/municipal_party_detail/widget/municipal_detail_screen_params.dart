@@ -1,4 +1,5 @@
 class MunicipalDetailScreenParams{
   String municipalId;
-  MunicipalDetailScreenParams({required this.municipalId});
+  Function(bool isFav, int? id, bool? isMunicipal) onFavUpdate;
+  MunicipalDetailScreenParams({required this.municipalId, required this.onFavUpdate});
 }

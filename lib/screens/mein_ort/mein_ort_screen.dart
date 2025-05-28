@@ -93,22 +93,29 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemBuilder: (context, index) {
-                final item = state.municipalityList[index];
-                return eventsView(
-                    item.topFiveCities ?? [],
-                    item.name ?? '',
+                final municipality = state.municipalityList[index];
+                return cityListWidget(
+                    municipality.topFiveCities ?? [],
+                    municipality.name ?? '',
                     5,
                     AppLocalizations.of(context).show_all_places,
                     imagePath['calendar'] ?? "",
                     isLoading,
                     0,
-                    0, () {
+                    0,
+                    municipality.id??0,
+                    () {
                   ref.read(navigationProvider).navigateUsingPath(
                       path: allMunicipalityScreenPath,
                       context: context,
                       params: MunicipalityScreenParams(
-                          municipalityId: item.id ?? 0));
-                });
+                          municipalityId: municipality.id ?? 0,
+                        onFavUpdate: (isFav, cityId){
+                            _updateCityList(isFav, cityId, municipality.id??0);
+                        }
+                      ));
+                },
+                );
               }),
           FeedbackCardWidget(
               height: 270.h,
@@ -222,14 +229,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                     children: List.generate(
                       municipalityList.length,
                       (index) => InkWell(
-                        onTap: () {
-                          // ref.read(navigationProvider).navigateUsingPath(
-                          //     context: context,
-                          //     path: eventScreenPath,
-                          //     params: EventDetailScreenParams(
-                          //         eventId:
-                          //         state.highlightsList[index].id));
-                        },
+                        onTap: () {},
                         child: Row(
                           children: [
                             Icon(
@@ -241,7 +241,6 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                                       .primaryColor
                                       .withAlpha(130),
                             ),
-                            // if (index != state.highlightsList.length - 1)
                             if (index != municipalityList.length - 1)
                               4.horizontalSpace
                           ],
@@ -276,18 +275,28 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                             context: context,
                             path: municipalDetailScreenPath,
                             params: MunicipalDetailScreenParams(
-                                municipalId: municipality.id.toString()),
+                                municipalId: municipality.id.toString(),
+                              onFavUpdate: (isFav, id, isMunicipal){
+                                  if(isMunicipal ?? false){
+                                    _updateMunicipalityList(isFav, id??0);
+                                  } else {
+                                    _updateCityList(isFav, id ?? 0,municipality.id??0);
+                                  }
+                              }
+                            ),
                           );
                     },
                     isFavourite: municipality.isFavorite ?? false,
                     onFavouriteIconClick: () {
                       ref
                           .watch(favouriteCitiesNotifier.notifier)
-                          .toggleMunicipalityFavorite(
-                        municipality,
-                        success: ({required bool isFavorite}) {
-                          _updateList(isFavorite, municipality.id ?? 0);
-                        },
+                          .toggleFavorite(
+                            isFavourite: municipality.isFavorite,
+                            id: municipality.id,
+                            success: ({required bool isFavorite}) {
+                              _updateMunicipalityList(
+                                  isFavorite, municipality.id ?? 0);
+                            },
                         error: ({required String message}) {
                           showErrorToast(
                               message: message, context: context);
@@ -311,7 +320,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
     );
   }
 
-  Widget eventsView(
+  Widget cityListWidget(
       List<City> eventsList,
       String heading,
       int maxListLimit,
@@ -320,6 +329,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
       bool isLoading,
       double? latitude,
       double? longitude,
+      int? municipalityId,
       void Function() onPress) {
     if (isLoading) {
       return Column(
@@ -346,17 +356,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
           Padding(
             padding: EdgeInsets.fromLTRB(8.w, 16.w, 0, 0),
             child: InkWell(
-              onTap: () {
-                // ref.read(navigationProvider).navigateUsingPath(
-                //     path: selectedEventListScreenPath,
-                //     context: context,
-                //     params: SelectedEventListScreenParameter(
-                //         radius: 1,
-                //         centerLatitude: latitude,
-                //         centerLongitude: longitude,
-                //         categoryId: 3,
-                //         listHeading: heading));
-              },
+              onTap: onPress,
               child: Row(
                 children: [
                   Padding(
@@ -385,31 +385,35 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                 ? maxListLimit
                 : eventsList.length,
             itemBuilder: (context, index) {
-              final item = eventsList[index];
+              final city = eventsList[index];
               return Padding(
                 padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 12.w),
                 child: ImageTextCardWidget(
-                  text: item.name,
-                  imageUrl: item.image,
+                  text: city.name,
+                  imageUrl: city.image,
                   onTap: () {
                     ref.read(navigationProvider).navigateUsingPath(
                         path: ortDetailScreenPath,
                         context: context,
                         params:
-                            OrtDetailScreenParams(ortId: item.id!.toString()));
+                            OrtDetailScreenParams(ortId: city.id!.toString(),
+                                onFavSuccess: (isFav,id){
+                                  _updateCityList(isFav??false, id??0, municipalityId??0);
+                                }));
                   },
-                  isFavourite: item.isFavorite,
+                  isFavourite: city.isFavorite,
                   isFavouriteVisible: ref
                       .read(favouriteCitiesNotifier.notifier)
                       .showFavoriteIcon(),
                   onFavoriteTap: () {
                     ref
                         .watch(favouriteCitiesNotifier.notifier)
-                        .toggleCityFavorite(
-                      item,
+                        .toggleFavorite(
+                      isFavourite : city.isFavorite, id : city.id,
                       success: ({required bool isFavorite}) {
-                        _updateList(isFavorite, item.id!);
-                      },
+                            _updateCityList(
+                                isFavorite, city.id!, municipalityId ?? 0);
+                          },
                       error: ({required String message}) {
                         showErrorToast(
                             message: message, context: context);
@@ -455,9 +459,15 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
     );
   }
 
-  _updateList(bool isFav, int cityId) {
+  _updateCityList(bool isFav, int cityId, int municipalityId) {
     ref
         .read(meinOrtProvider.notifier)
-        .setIsFavoriteCity(isFav, cityId);
+        .setIsFavoriteCity(isFav, cityId, municipalityId);
+  }
+
+  _updateMunicipalityList(bool isFav, int cityId) {
+    ref
+        .read(meinOrtProvider.notifier)
+        .setIsFavoriteMunicipality(isFav, cityId);
   }
 }

@@ -1,4 +1,5 @@
 import 'package:core/base_model.dart';
+import 'package:core/preference_manager/preference_constant.dart';
 import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:dartz/dartz.dart';
 import 'package:data/dio_helper_object.dart';
@@ -13,15 +14,18 @@ class GetCityDetailsService {
   Ref ref;
   SharedPreferenceHelper sharedPreferenceHelper;
 
-  GetCityDetailsService({required this.ref, required this.sharedPreferenceHelper});
+  GetCityDetailsService(
+      {required this.ref, required this.sharedPreferenceHelper});
 
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
-    final path = "$getCitiesEndPoint";
+    final path = "$ortDetailEndPoint";
     final apiHelper = ref.read(apiHelperProvider);
+    String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
+    final headers = {'Authorization': 'Bearer $token'};
 
-    final result =
-        await apiHelper.getRequest(path: path, create: () => responseModel);
+    final result = await apiHelper.getRequest(
+        path: path, create: () => responseModel, headers: headers);
 
     return result.fold((l) {
       return Left(l);
