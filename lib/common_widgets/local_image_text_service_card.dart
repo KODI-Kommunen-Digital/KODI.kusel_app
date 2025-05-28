@@ -9,6 +9,8 @@ class LocalSvgImageTextServiceCard extends StatefulWidget {
   final Function() onTap;
   final String imageUrl;
   final String text;
+  final double? imageHeight;
+  final double? imageWidth;
   final String? description;
 
   const LocalSvgImageTextServiceCard(
@@ -16,6 +18,8 @@ class LocalSvgImageTextServiceCard extends StatefulWidget {
       required this.onTap,
       required this.imageUrl,
       required this.text,
+        this.imageWidth,
+        this.imageHeight,
       this.description});
 
   @override
@@ -51,6 +55,8 @@ class _LocalSvgImageTextServiceCardState
                      height: 55.h,
                      width: 55.w,
                      child: ImageUtil.loadLocalSvgImage(
+                       height: widget.imageHeight,
+                         width: widget.imageWidth,
                          imageUrl: widget.imageUrl, context: context),
                    ),
                    10.horizontalSpace,
@@ -64,7 +70,8 @@ class _LocalSvgImageTextServiceCardState
                          textRegularMontserrat(
                              text: widget.description ?? '',
                              fontSize: 11,
-                             textOverflow: TextOverflow.visible,
+                             maxLines: 5,
+                             textOverflow: TextOverflow.ellipsis,
                              textAlign: TextAlign.start)
                      ],
                    ),
