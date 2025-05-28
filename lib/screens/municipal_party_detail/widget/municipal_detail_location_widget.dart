@@ -91,6 +91,7 @@ class _CityDetailLocationWidgetState
                   text:
                       "${AppLocalizations.of(context).open} \n${AppLocalizations.of(context).close} ${widget.calendarText}",
                   textAlign: TextAlign.start,
+                  maxLines: 3,
                   textOverflow: TextOverflow.ellipsis,
                   color: Theme.of(context).textTheme.labelMedium?.color,
                 ),
@@ -130,10 +131,14 @@ class _CityDetailLocationWidgetState
                   ImageUtil.loadSvgImage(
                       imageUrl: imagePath['link_icon'] ?? '', context: context),
                   15.horizontalSpace,
-                  textRegularPoppins(
-                    text: widget.websiteText,
-                    textOverflow: TextOverflow.ellipsis,
-                    color: Theme.of(context).textTheme.labelMedium?.color,
+                  Expanded(
+                    child: textRegularPoppins(
+                      text: widget.websiteText,
+                      textAlign: TextAlign.start,
+                      maxLines: 3,
+                      textOverflow: TextOverflow.ellipsis,
+                      color: Theme.of(context).textTheme.labelMedium?.color,
+                    ),
                   ),
                 ],
               ),
