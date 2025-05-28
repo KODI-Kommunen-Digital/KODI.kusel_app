@@ -237,14 +237,13 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                     .updateNewsIsFav(isFav, id);
               },
             ),
-          32.verticalSpace,
           FeedbackCardWidget(
+            height: 270.h,
             onTap: () {
               ref.read(navigationProvider).navigateUsingPath(
                   path: feedbackScreenPath, context: context);
             },
           ),
-          50.verticalSpace
         ],
       ),
     );
