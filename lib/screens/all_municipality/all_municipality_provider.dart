@@ -55,6 +55,8 @@ class AllMunicipalityScreenController
 
 class MunicipalityScreenParams {
   int municipalityId;
+  Function(bool isFav, int cityId) onFavUpdate;
 
-  MunicipalityScreenParams({required this.municipalityId});
+  MunicipalityScreenParams(
+      {required this.municipalityId, required this.onFavUpdate});
 }

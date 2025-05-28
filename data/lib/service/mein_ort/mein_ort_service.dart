@@ -1,4 +1,5 @@
 import 'package:core/base_model.dart';
+import 'package:core/preference_manager/preference_constant.dart';
 import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:dartz/dartz.dart';
 import 'package:data/dio_helper_object.dart';
@@ -20,8 +21,15 @@ class MeinOrtService {
     final path = "$meinOrtEndPoint";
     final apiHelper = ref.read(apiHelperProvider);
 
+    String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
+    final headers = {'Authorization': 'Bearer $token'};
+
     final result =
-    await apiHelper.getRequest(path: path, create: () => responseModel);
+    await apiHelper.getRequest(
+        path: path,
+        headers: headers,
+        create: () => responseModel
+    );
 
     return result.fold((l) {
       return Left(l);

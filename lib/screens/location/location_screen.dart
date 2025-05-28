@@ -55,7 +55,7 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
               longitude: 7.40647,
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
-              initialZoom: 14.0,
+              initialZoom: 12.0,
               onMapTap: (){},
               markersList: ref
                   .watch(locationScreenProvider)

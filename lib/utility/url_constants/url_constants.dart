@@ -1,3 +1,5 @@
-const imprintPageUrl = "http://deinkuselerland.de/impressum";
-const termsOfUseUrl = "http://deinkuselerland.de/terms";
-const privacyPolicyUrl = "http://deinkuselerland.de/privacy-policy";
+const imprintPageUrl = "http://116.202.186.81:3000/impressum";
+
+const termsOfUseUrl = "http://116.202.186.81:3000/terms";
+
+const privacyPolicyUrl = "http://116.202.186.81:3000/privacy-policy";

@@ -25,8 +25,14 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   void initState() {
-    ref.read(onboardingScreenProvider.notifier).initializerPageController();
-    ref.read(onboardingScreenProvider.notifier).updateCurrentCity();
+    Future.microtask((){
+      ref.read(onboardingScreenProvider.notifier).initialCall().then((value){
+        if (ref.read(onboardingScreenProvider.notifier).isOnboardingDone()) {
+          ref.read(onboardingScreenProvider.notifier).getOnboardingDetails();
+        }
+      });
+    });
+
     super.initState();
   }
 
@@ -118,7 +124,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   } else {
                     stateNotifier.updateErrorMsgStatus(false);
                     stateNotifier.submitUserType();
-                    stateNotifier.fetchCities();
                     stateNotifier.nextPage();
                   }
                   break;
