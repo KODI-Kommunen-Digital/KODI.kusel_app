@@ -176,7 +176,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 ListTile(
                   leading: const Icon(Icons.file_copy_outlined),
                   title: textBoldPoppins(
-                    text: "Edit onboarding details",
+                    text: AppLocalizations.of(context).edit_onboarding_details,
                     textAlign: TextAlign.start,
                   ),
                   onTap: () {
