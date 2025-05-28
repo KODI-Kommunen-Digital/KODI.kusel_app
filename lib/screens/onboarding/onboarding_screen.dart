@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
+import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/navigation/navigation.dart';
@@ -61,7 +62,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         
         },child: _buildDashboardUi(pages, selectedPageIndex, pageController)),
       ),
-    );
+    ).loaderDialog(context, ref.watch(onboardingScreenProvider).isLoading);
   }
 
   Widget _buildDashboardUi(List<Widget> pages, int selectedPageIndex,
