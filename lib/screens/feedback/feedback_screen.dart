@@ -148,6 +148,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
               children: [
                 Checkbox(
                     value: stateWatch.isChecked,
+                    activeColor: Theme.of(context).indicatorColor,
                     onChanged: (value) {
                       stateNotifier.updateCheckBox(value ?? false);
                     }),
