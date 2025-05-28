@@ -16,6 +16,7 @@ import 'package:kusel/images_path.dart';
 import 'package:kusel/navigator/navigator.dart';
 import 'package:kusel/screens/auth/signin/signin_controller.dart';
 
+import '../../../common_widgets/arrow_back_widget.dart';
 import '../../environment/environment_dialog.dart';
 import '../validator/empty_field_validator.dart';
 
@@ -40,7 +41,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
           //TODO: need to check this as for now we are using shell route
           ref
               .read(navigationProvider)
-              .navigateUsingPath(path: homeScreenPath, context: context);
+              .removeAllAndNavigate(path: homeScreenPath, context: context);
         }
       },
       child: Scaffold(
@@ -94,6 +95,18 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                             topRight: borderRadius, topLeft: borderRadius)),
                     child: _buildLoginCard(context)),
               ),
+              Positioned(
+                top: 10.h,
+                left: 16.w,
+                child: ArrowBackWidget(
+                  onTap: () {
+                    ref
+                        .read(navigationProvider)
+                        .removeAllAndNavigate(path: homeScreenPath, context: context);
+                  },
+                ),
+              ),
+
             ],
           ),
         ),
