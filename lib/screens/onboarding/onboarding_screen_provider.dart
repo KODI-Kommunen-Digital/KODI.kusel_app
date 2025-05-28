@@ -69,7 +69,6 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   RefreshTokenUseCase refreshTokenUseCase;
   SharedPreferenceHelper sharedPreferenceHelper;
   PageController pageController = PageController();
-  TextEditingController nameEditingController = TextEditingController();
   TextEditingController yourLocationEditingController = TextEditingController();
   GlobalKey<FormState> onboardingNameFormKey = GlobalKey<FormState>();
 
