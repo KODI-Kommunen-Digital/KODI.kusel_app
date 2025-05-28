@@ -1,6 +1,7 @@
 import 'package:core/preference_manager/preference_constant.dart';
 import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:core/sign_in_status/sign_in_status_controller.dart';
+import 'package:core/token_status.dart';
 import 'package:data/service/location_service/location_service.dart';
 import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
 import 'package:domain/model/request_model/listings/search_request_model.dart';
@@ -17,6 +18,7 @@ import 'package:domain/usecase/weather/weather_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/common_widgets/listing_id_enum.dart';
+import 'package:kusel/providers/refresh_token_provider.dart';
 
 import '../../common_widgets/get_current_location.dart';
 import 'home_screen_state.dart';
@@ -30,6 +32,8 @@ final homeScreenProvider =
               userDetailUseCase: ref.read(userDetailUseCaseProvider),
               weatherUseCase: ref.read(weatherUseCaseProvider),
               signInStatusController: ref.read(signInStatusProvider.notifier),
+              refreshTokenProvider: ref.read(refreshTokenProvider),
+              tokenStatus: ref.read(tokenStatusProvider),
             ));
 
 class HomeScreenProvider extends StateNotifier<HomeScreenState> {
@@ -39,6 +43,8 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
   UserDetailUseCase userDetailUseCase;
   WeatherUseCase weatherUseCase;
   SignInStatusController signInStatusController;
+  RefreshTokenProvider refreshTokenProvider;
+  TokenStatus tokenStatus;
 
   HomeScreenProvider(
       {required this.listingsUseCase,
@@ -46,7 +52,9 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       required this.sharedPreferenceHelper,
       required this.userDetailUseCase,
       required this.weatherUseCase,
-      required this.signInStatusController})
+      required this.signInStatusController,
+      required this.refreshTokenProvider,
+      required this.tokenStatus})
       : super(HomeScreenState.empty());
 
   Future<void> getHighlights() async {
@@ -110,7 +118,7 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       final lat = position.latitude;
       final long = position.longitude;
       final radius = SearchRadius.radius.value;
-      state = state.copyWith(loading: true, error: "");
+      state = state.copyWith(error: "");
 
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
@@ -124,16 +132,49 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
           getAllListingsRequestModel, getAllListingsResponseModel);
       result.fold(
         (l) {
-          state = state.copyWith(loading: false, error: l.toString());
+          state = state.copyWith(error: l.toString());
         },
         (r) {
           var listings = (r as GetAllListingsResponseModel).data;
-          state = state.copyWith(nearbyEventsList: listings, loading: false);
+          state = state.copyWith(nearbyEventsList: listings);
         },
       );
     } catch (error) {
-      state = state.copyWith(loading: false, error: error.toString());
+      state = state.copyWith(error: error.toString());
     }
+  }
+
+  Future<void> getNews() async {
+    try {
+      final categoryId = ListingCategoryId.news.eventId.toString();
+
+      GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(
+          pageSize: 5, sortByStartDate: true, categoryId: categoryId);
+
+      GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
+
+      final response = await listingsUseCase.call(requestModel, responseModel);
+
+      response.fold((l) {
+        debugPrint("getEventsUsingCityId fold exception = ${l.toString()}");
+      }, (r) {
+        final result = r as GetAllListingsResponseModel;
+
+        state = state.copyWith(newsList: result.data);
+      });
+    } catch (e) {
+      debugPrint("getEventsUsingCityId exception = $e");
+    }
+  }
+
+  updateNewsIsFav(bool isFav, int? eventId) {
+    final list = state.newsList ?? [];
+    for (var listing in list) {
+      if (listing.id == eventId) {
+        listing.isFavorite = isFav;
+      }
+    }
+    state = state.copyWith(newsList: list);
   }
 
   Future<List<Listing>> searchList({
@@ -178,23 +219,41 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       final userId = sharedPreferenceHelper.getInt(userIdKey);
 
       if (userId != null) {
-        UserDetailRequestModel requestModel =
-            UserDetailRequestModel(id: userId);
-        UserDetailResponseModel responseModel = UserDetailResponseModel();
-        final result =
-            await userDetailUseCase.call(requestModel, responseModel);
+        final status = tokenStatus.isAccessTokenExpired();
 
-        result.fold((l) {
-          debugPrint('get user details fold exception : $l');
-        }, (r) async {
-          final response = r as UserDetailResponseModel;
-          await sharedPreferenceHelper.setString(
-              userNameKey, response.data?.username ?? "");
-          state = state.copyWith(userName: response.data?.firstname ?? "");
-        });
+        if (status) {
+          await refreshTokenProvider.getNewToken(
+              onError: () {},
+              onSuccess: () async {
+                await _getDetails(userId);
+              });
+        } else {
+          _getDetails(userId);
+        }
       }
     } catch (error) {
       debugPrint('get user details exception : $error');
+    }
+  }
+
+  _getDetails(int? userId) async {
+    try {
+      UserDetailRequestModel requestModel = UserDetailRequestModel(id: userId);
+      UserDetailResponseModel responseModel = UserDetailResponseModel();
+      final result = await userDetailUseCase.call(requestModel, responseModel);
+
+      result.fold((l) {
+        debugPrint('get details fold exception : $l');
+      }, (r) async {
+        final response = r as UserDetailResponseModel;
+        await sharedPreferenceHelper.setString(
+            userNameKey, response.data?.username ?? "");
+        await sharedPreferenceHelper.setString(
+            userFirstNameKey, response.data?.firstname ?? "");
+        state = state.copyWith(userName: response.data?.firstname ?? "");
+      });
+    } catch (e) {
+      debugPrint('get details exception : $e');
     }
   }
 
@@ -266,6 +325,7 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       getHighlights(),
       getEvents(),
       getNearbyEvents(),
+      getNews(),
       getLoginStatus(),
       getWeather(),
     ]);

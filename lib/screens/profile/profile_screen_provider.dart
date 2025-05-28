@@ -101,6 +101,8 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
             final response = r as UserDetailResponseModel;
             await sharedPreferenceHelper.setString(
                 userNameKey, response.data?.username ?? "");
+            await sharedPreferenceHelper.setString(
+                userFirstNameKey, response.data?.firstname ?? "");
             state = state.copyWith(
                 loading: false, userData: response.data, editingEnabled: false);
             initializeTextEditController();
@@ -119,6 +121,8 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
           final response = r as UserDetailResponseModel;
           await sharedPreferenceHelper.setString(
               userNameKey, response.data?.username ?? "");
+          await sharedPreferenceHelper.setString(
+              userFirstNameKey, response.data?.firstname ?? "");
           state = state.copyWith(
               loading: false, userData: response.data, editingEnabled: false);
           initializeTextEditController();

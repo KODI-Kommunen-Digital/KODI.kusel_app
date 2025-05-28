@@ -40,58 +40,64 @@ class _FavouriteCityScreenState extends ConsumerState<FavouriteCityScreen> {
   }
 
   Widget _buildBody(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          CommonBackgroundClipperWidget(
-              clipperType: UpstreamWaveClipper(),
-              imageUrl: imagePath['background_image'] ?? "",
-              headingText: AppLocalizations.of(context).favourite_city,
-              height: 120.h,
-              blurredBackground: true,
-              isBackArrowEnabled: true,
-              isStaticImage: true
-          ),
-          ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: ref.read(favouriteCityScreenProvider).cityList.length,
-              itemBuilder: (context, index) {
-                final item = ref.read(favouriteCityScreenProvider).cityList[index];
-                return Padding(
-                  padding:
-                      EdgeInsets.symmetric(vertical: 5.h, horizontal: 12.w),
-                  child: ImageTextCardWidget(
-                    onTap: () {
-                      ref.read(navigationProvider).navigateUsingPath(
-                          path: ortDetailScreenPath,
-                          context: context,
-                          params: OrtDetailScreenParams(
-                              ortId: item.id.toString()));
-                    },
-                    imageUrl: item.image ??
-                        'https://images.unsplash.com/photo-1584713503693-bb386ec95cf2?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
-                    text: item.name ?? '',
-                    sourceId: 1,
-                    isFavourite: true,
-                    isFavouriteVisible: ref.read(favouriteCitiesNotifier.notifier).showFavoriteIcon(),
-                    onFavoriteTap: () {
-                      ref
-                          .watch(favouriteCitiesNotifier.notifier)
-                          .removeFavorite(
-                        item.id ?? 0,
-                        ({required bool isFavorite}) {
-                          ref.read(favouriteCityScreenProvider.notifier).fetchFavouriteCities();
-                        },
-                        ({required String message}) {
-                          showErrorToast(
-                              message: message, context: context);
-                        },
-                      );
-                    },                  ),
-                );
-              })
-        ],
+    return SafeArea(
+      child: SingleChildScrollView(
+        physics: ClampingScrollPhysics(),
+        child: Column(
+          children: [
+            CommonBackgroundClipperWidget(
+                clipperType: UpstreamWaveClipper(),
+                imageUrl: imagePath['background_image'] ?? "",
+                headingText: AppLocalizations.of(context).favourite_city,
+                height: 120.h,
+                blurredBackground: true,
+                isBackArrowEnabled: true,
+                isStaticImage: true
+            ),
+            ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: ref.read(favouriteCityScreenProvider).cityList.length,
+                itemBuilder: (context, index) {
+                  final item = ref.read(favouriteCityScreenProvider).cityList[index];
+                  return Padding(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 5.h, horizontal: 12.w),
+                    child: ImageTextCardWidget(
+                      onTap: () {
+                        ref.read(navigationProvider).navigateUsingPath(
+                            path: ortDetailScreenPath,
+                            context: context,
+                            params: OrtDetailScreenParams(
+                                ortId: item.id.toString(),
+                                onFavSuccess: (isFav,id){
+                                }
+                            ));
+                      },
+                      imageUrl: item.image ??
+                          'https://images.unsplash.com/photo-1584713503693-bb386ec95cf2?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                      text: item.name ?? '',
+                      sourceId: 1,
+                      isFavourite: true,
+                      isFavouriteVisible: ref.read(favouriteCitiesNotifier.notifier).showFavoriteIcon(),
+                      onFavoriteTap: () {
+                        ref
+                            .watch(favouriteCitiesNotifier.notifier)
+                            .removeFavorite(
+                          item.id ?? 0,
+                          ({required bool isFavorite}) {
+                            ref.read(favouriteCityScreenProvider.notifier).fetchFavouriteCities();
+                          },
+                          ({required String message}) {
+                            showErrorToast(
+                                message: message, context: context);
+                          },
+                        );
+                      },                  ),
+                  );
+                })
+          ],
+        ),
       ),
     );
   }

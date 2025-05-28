@@ -9,10 +9,8 @@ class OrtDetailResponseModel implements BaseModel<OrtDetailResponseModel> {
   @override
   OrtDetailResponseModel fromJson(Map<String, dynamic> json) {
     return OrtDetailResponseModel(
-      status: json['status'] as String?,
-      data: json['data'] != null
-          ? OrtDetailDataModel().fromJson(json['data'])
-          : null,
+      status: json['status'],
+      data: json['data'] != null ? OrtDetailDataModel().fromJson(json['data']) : null,
     );
   }
 
@@ -34,6 +32,7 @@ class OrtDetailDataModel implements BaseModel<OrtDetailDataModel> {
   String? image;
   String? description;
   String? subtitle;
+  String? mapImage;
   String? address;
   String? latitude;
   String? longitude;
@@ -47,35 +46,36 @@ class OrtDetailDataModel implements BaseModel<OrtDetailDataModel> {
   bool? inCityServer;
   bool? hasForum;
   int? parentId;
-  List<dynamic>? onlineServices;
-  List<dynamic>? topFiveCities;
+  bool? isFavorite;
+  List<OnlineServiceModel>? onlineServices;
 
   @override
   OrtDetailDataModel fromJson(Map<String, dynamic> json) {
     return OrtDetailDataModel()
-      ..id = json['id'] as int?
-      ..name = json['name'] as String?
-      ..type = json['type'] as String?
-      ..connectionString = json['connectionString'] as String?
-      ..isAdminListings = json['isAdminListings'] as bool?
+      ..id = json['id']
+      ..name = json['name']
+      ..type = json['type']
+      ..connectionString = json['connectionString']
+      ..isAdminListings = json['isAdminListings']
       ..image = json['image']
-      ..description = json['description'] as String?
-      ..subtitle = json['subtitle'] as String?
-      ..address = json['address'] as String?
-      ..latitude = json['latitude'] as String?
-      ..longitude = json['longitude'] as String?
-      ..phone = json['phone'] as String?
-      ..email = json['email'] as String?
-      ..websiteUrl = json['websiteUrl'] as String? ??"https://www.landkreis-kusel.de"
-      ..openUntil = json['openUntil'] as String?
-      ..isActive = json['isActive'] as int?
-      ..createdAt = json['createdAt'] as String?
-      ..updatedAt = json['updatedAt'] as String?
-      ..inCityServer = json['inCityServer'] as bool?
-      ..hasForum = json['hasForum'] as bool?
-      ..parentId = json['parentId'] as int?
-      ..onlineServices = json['onlineServices'] as List<dynamic>?
-      ..topFiveCities = json['topFiveCities'] as List<dynamic>?;
+      ..description = json['description']
+      ..subtitle = json['subtitle']
+      ..mapImage = json['mapImage']
+      ..address = json['address']
+      ..latitude = json['latitude']
+      ..longitude = json['longitude']
+      ..phone = json['phone']
+      ..email = json['email']
+      ..websiteUrl = json['websiteUrl'] ?? "https://www.landkreis-kusel.de"
+      ..openUntil = json['openUntil']
+      ..isActive = json['isActive']
+      ..createdAt = json['createdAt']
+      ..updatedAt = json['updatedAt']
+      ..inCityServer = json['inCityServer']
+      ..hasForum = json['hasForum']
+      ..parentId = json['parentId']
+      ..isFavorite = json['isFavorite']
+      ..onlineServices = (json['onlineServices'] as List?)?.map((e) => OnlineServiceModel().fromJson(e)).toList();
   }
 
   @override
@@ -89,6 +89,7 @@ class OrtDetailDataModel implements BaseModel<OrtDetailDataModel> {
       'image': image,
       'description': description,
       'subtitle': subtitle,
+      'mapImage': mapImage,
       'address': address,
       'latitude': latitude,
       'longitude': longitude,
@@ -102,8 +103,43 @@ class OrtDetailDataModel implements BaseModel<OrtDetailDataModel> {
       'inCityServer': inCityServer,
       'hasForum': hasForum,
       'parentId': parentId,
-      'onlineServices': onlineServices,
-      'topFiveCities': topFiveCities,
+      'isFavorite': isFavorite,
+      'onlineServices': onlineServices?.map((e) => e.toJson()).toList(),
+    };
+  }
+}
+
+class OnlineServiceModel implements BaseModel<OnlineServiceModel> {
+  int? id;
+  String? title;
+  String? description;
+  String? linkUrl;
+  String? iconUrl;
+  int? displayOrder;
+  int? isActive;
+
+  @override
+  OnlineServiceModel fromJson(Map<String, dynamic> json) {
+    return OnlineServiceModel()
+      ..id = json['id']
+      ..title = json['title']
+      ..description = json['description']
+      ..linkUrl = json['linkUrl']
+      ..iconUrl = json['iconUrl']
+      ..displayOrder = json['displayOrder']
+      ..isActive = json['isActive'];
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'linkUrl': linkUrl,
+      'iconUrl': iconUrl,
+      'displayOrder': displayOrder,
+      'isActive': isActive,
     };
   }
 }

@@ -44,7 +44,6 @@ class CityFavoritesNotifier extends StateNotifier<List<City>> {
     try {
       final response = tokenStatus.isAccessTokenExpired();
 
-      debugPrint('Is token valid = $response');
       if (response) {
         final userId = sharedPreferenceHelper.getInt(userIdKey);
 
@@ -173,23 +172,15 @@ class CityFavoritesNotifier extends StateNotifier<List<City>> {
     }
   }
 
-  void toggleCityFavorite(City item,
-      {required void Function({required bool isFavorite}) success,
+  void toggleFavorite(
+      {required bool? isFavourite,
+      required int? id,
+      required void Function({required bool isFavorite}) success,
       required void Function({required String message}) error}) {
-    if (item.isFavorite ?? false) {
-      removeFavorite(item.id ?? 0, success, error);
+    if (isFavourite ?? false) {
+      removeFavorite(id ?? 0, success, error);
     } else {
-      addFavorite(item.id ?? 0, success);
-    }
-  }
-
-  void toggleMunicipalityFavorite(Municipality item,
-      {required void Function({required bool isFavorite}) success,
-      required void Function({required String message}) error}) {
-    if (item.isFavorite ?? false) {
-      removeFavorite(item.id ?? 0, success, error);
-    } else {
-      addFavorite(item.id ?? 0, success);
+      addFavorite(id ?? 0, success);
     }
   }
 

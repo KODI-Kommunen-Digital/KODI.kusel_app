@@ -76,7 +76,12 @@ class _AllMunicipalityScreenState extends ConsumerState<AllMunicipalityScreen> {
                           path: ortDetailScreenPath,
                           context: context,
                           params: OrtDetailScreenParams(
-                              ortId: item.id!.toString()));
+                              ortId: item.id!.toString(),
+                              onFavSuccess: (isFav,id){
+                                _updateList(isFav??false, id??0);
+                              }
+                          ),
+                      );
                     },
                     imageUrl: item.image ??
                         'https://images.unsplash.com/photo-1584713503693-bb386ec95cf2?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
@@ -87,10 +92,12 @@ class _AllMunicipalityScreenState extends ConsumerState<AllMunicipalityScreen> {
                     onFavoriteTap: () {
                       ref
                           .watch(favouriteCitiesNotifier.notifier)
-                          .toggleCityFavorite(
-                        item,
+                          .toggleFavorite(
+                        isFavourite : item.isFavorite,
+                        id : item.id,
                         success: ({required bool isFavorite}) {
                           _updateList(isFavorite, item.id!);
+                          widget.municipalityScreenParams.onFavUpdate(isFavorite, item.id??0);
                         },
                         error: ({required String message}) {
                           showErrorToast(

@@ -250,6 +250,9 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
           FocusScope.of(context).unfocus();
         },
         fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
+          if(ref.read(onboardingScreenProvider).resident!=null){
+            controller.text = ref.read(onboardingScreenProvider).resident!;
+          }
           return TextField(
             textAlign: TextAlign.center,
             controller: controller,

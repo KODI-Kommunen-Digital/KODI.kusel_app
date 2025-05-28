@@ -86,7 +86,7 @@
   "thanks": "Danke",
   "name": "Name",
   "details" : "Details",
-  "profile" : "Profile",
+  "profile" : "Profil",
   "field_updated_message" : "Feld erfolgreich aktualisiert",
   "enter_name": "Name eingeben",
   "enter_username": "Benutzernamen eingeben",
@@ -178,5 +178,11 @@
   "name_or_email": "Name oder E-Mail",
   "kusel": "Kusel",
   "district" : "Bezirk",
-  "favourite_city": "Lieblingsstädte"
+  "favourite_city": "Lieblingsstädte",
+  "delete_account": "Konto löschen",
+  "success_delete_account_message": "Ihr Konto wurde erfolgreich gelöscht",
+  "edit_onboarding_details": "Onboardingdetails bearbeiten",
+  "ok": "Ok",
+  "delete_account_information": "Möchten Sie Ihr Konto wirklich löschen?"
+
 }

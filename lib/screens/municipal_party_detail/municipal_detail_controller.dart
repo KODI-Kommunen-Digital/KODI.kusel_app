@@ -1,11 +1,17 @@
+import 'package:core/preference_manager/preference_constant.dart';
+import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:core/sign_in_status/sign_in_status_controller.dart';
+import 'package:core/token_status.dart';
 import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
 import 'package:domain/model/request_model/municipal_party_detail/municipal_party_detail_request_model.dart';
+import 'package:domain/model/request_model/refresh_token/refresh_token_request_model.dart';
 import 'package:domain/model/response_model/explore_details/explore_details_response_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
+import 'package:domain/model/response_model/refresh_token/refresh_token_response_model.dart';
 import 'package:domain/usecase/city_details/get_city_details_usecase.dart';
 import 'package:domain/usecase/listings/listings_usecase.dart';
 import 'package:domain/usecase/municipal_party_detail/municipal_party_detail_use_case.dart';
+import 'package:domain/usecase/refresh_token/refresh_token_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/common_widgets/listing_id_enum.dart';
@@ -15,23 +21,33 @@ import 'municipal_detail_state.dart';
 final municipalDetailControllerProvider = StateNotifierProvider.autoDispose<
         MunicipalDetailController, MunicipalDetailState>(
     (ref) => MunicipalDetailController(
-        listingsUseCase: ref.read(listingsUseCaseProvider),
-        municipalPartyDetailUseCase:
-            ref.read(municipalPartyDetailUseCaseProvider),
-        getCityDetailsUseCase: ref.read(getCityDetailsUseCaseProvider),
-        signInStatusController: ref.read(signInStatusProvider.notifier)));
+          listingsUseCase: ref.read(listingsUseCaseProvider),
+          municipalPartyDetailUseCase:
+              ref.read(municipalPartyDetailUseCaseProvider),
+          getCityDetailsUseCase: ref.read(getCityDetailsUseCaseProvider),
+          signInStatusController: ref.read(signInStatusProvider.notifier),
+          sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
+          tokenStatus: ref.read(tokenStatusProvider),
+          refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider),
+        ));
 
 class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
   ListingsUseCase listingsUseCase;
   MunicipalPartyDetailUseCase municipalPartyDetailUseCase;
   GetCityDetailsUseCase getCityDetailsUseCase;
   SignInStatusController signInStatusController;
+  SharedPreferenceHelper sharedPreferenceHelper;
+  TokenStatus tokenStatus;
+  RefreshTokenUseCase refreshTokenUseCase;
 
   MunicipalDetailController(
       {required this.listingsUseCase,
       required this.municipalPartyDetailUseCase,
       required this.getCityDetailsUseCase,
-      required this.signInStatusController})
+      required this.signInStatusController,
+      required this.sharedPreferenceHelper,
+      required this.tokenStatus,
+      required this.refreshTokenUseCase})
       : super(MunicipalDetailState.empty());
 
   getEventsUsingCityId({required String municipalId}) async {
@@ -88,28 +104,62 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
   getMunicipalPartyDetailUsingId({required String id}) async {
     try {
       state = state.copyWith(isLoading: true);
-      MunicipalPartyDetailRequestModel requestModel =
-          MunicipalPartyDetailRequestModel(municipalId: id);
-      ExploreDetailsResponseModel responseModel =
-      ExploreDetailsResponseModel();
 
-      final response =
-          await municipalPartyDetailUseCase.call(requestModel, responseModel);
+      final response = tokenStatus.isAccessTokenExpired();
 
-      response.fold((l) {
-        state = state.copyWith(isLoading: false);
-        debugPrint(
-            "getMunicipalPartyDetailUsingId exception = ${l.toString()}");
-      }, (r) {
-        final result = r as ExploreDetailsResponseModel;
+      if (response) {
+        final userId = sharedPreferenceHelper.getInt(userIdKey);
+        RefreshTokenRequestModel requestModel =
+        RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+        RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
-        if(result.data!=null){
-          state = state.copyWith(
-              isLoading: false,
-              municipalPartyDetailDataModel: result.data,
-              cityList: result.data?.topFiveCities ?? []);
+        final refreshResponse =
+        await refreshTokenUseCase.call(requestModel, responseModel);
+
+        bool refreshSuccess = await refreshResponse.fold(
+              (left) {
+            debugPrint('refresh token add fav city fold exception : $left');
+            return false;
+          },
+              (right) async {
+            final res = right as RefreshTokenResponseModel;
+            sharedPreferenceHelper.setString(
+                tokenKey, res.data?.accessToken ?? "");
+            sharedPreferenceHelper.setString(
+                refreshTokenKey, res.data?.refreshToken ?? "");
+            return true;
+          },
+        );
+
+        if (!refreshSuccess) {
+          state = state.copyWith(isLoading: false);
+          return;
         }
-      });
+      }
+
+      // Common code for both cases
+      MunicipalPartyDetailRequestModel requestModel =
+      MunicipalPartyDetailRequestModel(municipalId: id);
+      ExploreDetailsResponseModel responseModel = ExploreDetailsResponseModel();
+
+      final detailResponse =
+      await municipalPartyDetailUseCase.call(requestModel, responseModel);
+
+      detailResponse.fold(
+            (l) {
+          state = state.copyWith(isLoading: false);
+          debugPrint("getMunicipalPartyDetailUsingId exception = ${l.toString()}");
+        },
+            (r) {
+          final result = r as ExploreDetailsResponseModel;
+          if (result.data != null) {
+            state = state.copyWith(
+                isLoading: false,
+                municipalPartyDetailDataModel: result.data,
+                cityList: result.data?.topFiveCities ?? []);
+          }
+        },
+      );
     } catch (e) {
       state = state.copyWith(isLoading: false);
       debugPrint("getMunicipalPartyDetailUsingId exception = $e");
@@ -117,15 +167,12 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
   }
 
   isUserLoggedIn() async {
-
     final status = await signInStatusController.isUserLoggedIn();
 
     state = state.copyWith(isUserLoggedIn: status);
-
   }
 
-  updateEventIsFav(bool isFav, int? eventId)
-  {
+  updateEventIsFav(bool isFav, int? eventId) {
     final list = state.eventList;
     for (var listing in list) {
       if (listing.id == eventId) {
@@ -135,9 +182,7 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
     state = state.copyWith(eventList: list);
   }
 
-
-  updateNewsIsFav(bool isFav, int? eventId)
-  {
+  updateNewsIsFav(bool isFav, int? eventId) {
     final list = state.newsList;
     for (var listing in list) {
       if (listing.id == eventId) {
@@ -154,5 +199,20 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
       }
     }
     state = state.copyWith(cityList: state.cityList);
+  }
+
+  void setIsFavoriteMunicipal(bool isFavorite) {
+    final municipalPartyDetailDataModel = state.municipalPartyDetailDataModel;
+    municipalPartyDetailDataModel?.isFavorite = isFavorite;
+    state = state.copyWith(
+        municipalPartyDetailDataModel: municipalPartyDetailDataModel);
+  }
+
+  void updateOnFav(bool status) {
+    final value = state.municipalPartyDetailDataModel;
+    if (value != null && value.isFavorite != null) {
+      value.isFavorite = status;
+      state = state.copyWith(municipalPartyDetailDataModel: value);
+    }
   }
 }
