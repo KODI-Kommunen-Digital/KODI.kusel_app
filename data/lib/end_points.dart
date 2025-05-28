@@ -17,8 +17,8 @@ const fetchUserOwnDataEndPoint = "/me";
 const onboardingUserTypeEndPoint = "/userType";
 const onboardingUserInterestsEndPoint = "/interests";
 const onboardingUserDemographicsEndPoint = "/demographics";
-const getCitiesEndPoint = "/cities";
 const onboardingCompleteEndpoint = "/onboardingComplete";
+const onboardingDetailEndPoint = "/onboardingDetail";
 const feedbackEndpoint = "/feedbacks";
 const municipalPartyDetailEndPoint = "/virtualTownhall/getMunicipalityById";
 
@@ -45,3 +45,5 @@ const mobilityPath = "/mobility";
 const participatePath = "/participate";
 
 const favouriteCitiesPath = "/favorites";
+
+const deleteAccountEndPoint = "/users";

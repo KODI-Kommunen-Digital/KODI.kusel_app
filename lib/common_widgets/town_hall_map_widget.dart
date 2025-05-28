@@ -20,6 +20,7 @@ class TownHallMapWidget extends ConsumerStatefulWidget {
   final String calendarText;
   final double latitude;
   final double longitude;
+  final String openUntil;
 
   const TownHallMapWidget(
       {super.key,
@@ -30,7 +31,9 @@ class TownHallMapWidget extends ConsumerStatefulWidget {
         required this.email,
         required this.latitude,
         required this.calendarText,
-        required this.longitude});
+        required this.longitude,
+        required this.openUntil
+      });
 
   @override
   ConsumerState<TownHallMapWidget> createState() => _LocationCardWidgetState();
@@ -118,7 +121,7 @@ class _LocationCardWidgetState extends ConsumerState<TownHallMapWidget> {
                           ),
                         ),
                         textRegularPoppins(
-                          text: "Schließt um 18:00 Uhr",
+                          text: "Schließt um ${widget.openUntil} Uhr",
                           textOverflow: TextOverflow.ellipsis,
                           color: Theme.of(context).textTheme.labelMedium?.color,
                         ),

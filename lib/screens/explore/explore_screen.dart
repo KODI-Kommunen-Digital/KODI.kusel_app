@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -7,8 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
 import 'package:kusel/screens/explore/explore_card_view.dart';
-import 'package:kusel/screens/explore/explore_controller.dart';
-import 'package:kusel/screens/ort_detail/ort_detail_screen_params.dart';
 
 import '../../app_router.dart';
 import '../../common_widgets/feedback_card_widget.dart';
@@ -16,7 +12,6 @@ import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
-import '../municipal_party_detail/widget/municipal_detail_screen_params.dart';
 
 class ExploreScreen extends ConsumerStatefulWidget {
   const ExploreScreen({super.key});
@@ -28,23 +23,6 @@ class ExploreScreen extends ConsumerStatefulWidget {
 class _ExploreScreenState extends ConsumerState<ExploreScreen> {
   @override
   void initState() {
-    Future.microtask(() {
-      ref
-          .read(exploreControllerProvider.notifier)
-          .initialCall(exploreTypeList: [
-        AppLocalizations.of(context).virtual_town_hall,
-        AppLocalizations.of(context).my_town,
-        AppLocalizations.of(context).tourism_and_leisure,
-        AppLocalizations.of(context).mobility,
-        AppLocalizations.of(context).get_involved
-      ], exploreTypeListImage: [
-        "virtual_town_hall",
-        "my_town",
-        "tourism_and_lesiure",
-        "mobility",
-        "get_involved"
-      ]);
-    });
     super.initState();
   }
 
@@ -86,28 +64,42 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
 
   _buildExploreView(BuildContext context) {
     return Consumer(builder: (context, ref, _) {
-      final controller = ref.read(exploreControllerProvider.notifier);
-      final state = ref.watch(exploreControllerProvider);
+      String virtualTownHall = AppLocalizations.of(context).virtual_town_hall;
+      String myDown = AppLocalizations.of(context).my_town;
+      String tourism = AppLocalizations.of(context).tourism_and_leisure;
+      String mobility = AppLocalizations.of(context).mobility;
+      String getInvolved = AppLocalizations.of(context).get_involved;
 
-      if (state.exploreTypeList.isEmpty) {
-        // Show a placeholder during initial load
-        return SizedBox(
-          height: 300.h, // reserve space to avoid layout shift
-          child: Center(child: CircularProgressIndicator()),
-        );
-      }
+      List<String> exploreList = [
+        virtualTownHall,
+        myDown,
+        tourism,
+        mobility,
+        getInvolved
+      ];
+
+      List<String> images = [
+        "virtual_town_hall",
+        "my_town",
+        "tourism_and_lesiure",
+        "mobility",
+        "get_involved"
+      ];
 
       return GridView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-        itemCount: state.exploreTypeList.length,
+        itemCount: exploreList.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
+          crossAxisSpacing: 5.w,
+          mainAxisSpacing: 5.h,
+          childAspectRatio: 1.1,
         ),
         itemBuilder: (context, index) {
           return ExploreGridCardView(
-            imageName: state.exploreTypeListImages[index],
-            title: state.exploreTypeList[index],
+            imageName: images[index],
+            title: exploreList[index],
             onTap: whereToNavigate(index),
           );
         },

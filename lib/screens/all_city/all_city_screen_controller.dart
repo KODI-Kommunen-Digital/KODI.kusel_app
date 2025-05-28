@@ -1,6 +1,12 @@
+import 'package:core/preference_manager/preference_constant.dart';
+import 'package:core/preference_manager/shared_pref_helper.dart';
+import 'package:core/token_status.dart';
 import 'package:domain/model/request_model/city_details/get_city_details_request_model.dart';
+import 'package:domain/model/request_model/refresh_token/refresh_token_request_model.dart';
 import 'package:domain/model/response_model/city_details/get_city_details_response_model.dart';
+import 'package:domain/model/response_model/refresh_token/refresh_token_response_model.dart';
 import 'package:domain/usecase/city_details/get_city_details_usecase.dart';
+import 'package:domain/usecase/refresh_token/refresh_token_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/screens/all_city/all_city_screen_state.dart';
@@ -8,19 +14,62 @@ import 'package:kusel/screens/all_city/all_city_screen_state.dart';
 final allCityScreenProvider = StateNotifierProvider.autoDispose<
         AllCityScreenController, AllCityScreenState>(
     (ref) => AllCityScreenController(
-        getCityDetailsUseCase: ref.read(getCityDetailsUseCaseProvider)));
+        getCityDetailsUseCase: ref.read(getCityDetailsUseCaseProvider),
+      sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
+      tokenStatus: ref.read(tokenStatusProvider),
+      refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider),
+    ));
 
 class AllCityScreenController extends StateNotifier<AllCityScreenState> {
   GetCityDetailsUseCase getCityDetailsUseCase;
+  SharedPreferenceHelper sharedPreferenceHelper;
+  TokenStatus tokenStatus;
+  RefreshTokenUseCase refreshTokenUseCase;
 
-  AllCityScreenController({required this.getCityDetailsUseCase})
+  AllCityScreenController({
+    required this.getCityDetailsUseCase,
+    required this.sharedPreferenceHelper,
+    required this.tokenStatus,
+    required this.refreshTokenUseCase
+  })
       : super(AllCityScreenState.empty());
 
   Future<void> fetchCities() async {
     try {
-      state = state.copyWith(
-        isLoading: true,
-      );
+      state = state.copyWith(isLoading: true);
+      final response = tokenStatus.isAccessTokenExpired();
+      debugPrint(' = $response');
+
+      if (response) {
+        final userId = sharedPreferenceHelper.getInt(userIdKey);
+        RefreshTokenRequestModel requestModel =
+        RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+        RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
+
+        final refreshResponse =
+        await refreshTokenUseCase.call(requestModel, responseModel);
+
+        bool refreshSuccess = await refreshResponse.fold(
+              (left) {
+            debugPrint('refresh token add fav city fold exception : $left');
+            return false;
+          },
+              (right) async {
+            final res = right as RefreshTokenResponseModel;
+            sharedPreferenceHelper.setString(
+                tokenKey, res.data?.accessToken ?? "");
+            sharedPreferenceHelper.setString(
+                refreshTokenKey, res.data?.refreshToken ?? "");
+            return true;
+          },
+        );
+
+        if (!refreshSuccess) {
+          state = state.copyWith(isLoading: false);
+          return;
+        }
+      }
+
       GetCityDetailsRequestModel requestModel =
       GetCityDetailsRequestModel(hasForum: false);
       GetCityDetailsResponseModel responseModel = GetCityDetailsResponseModel();
@@ -31,16 +80,6 @@ class AllCityScreenController extends StateNotifier<AllCityScreenState> {
         debugPrint('get city details fold exception : $l');
       }, (r) async {
         final response = r as GetCityDetailsResponseModel;
-
-        // final cityDetailsMap = <int, String>{};
-        //
-        // if (response.data != null) {
-        //   for (var city in response.data!) {
-        //     if (city.id != null && city.name != null) {
-        //       cityDetailsMap[city.id!] = city.name!;
-        //     }
-        //   }
-        // }
         state = state.copyWith(
           cityList: response.data,
           isLoading: false
@@ -59,4 +98,11 @@ class AllCityScreenController extends StateNotifier<AllCityScreenState> {
     }
     state = state.copyWith(cityList: state.cityList);
   }
+}
+
+class AllCityScreenParams {
+  Function(bool? isFav, int? id) onFavSuccess;
+
+  AllCityScreenParams({required this.onFavSuccess});
+
 }

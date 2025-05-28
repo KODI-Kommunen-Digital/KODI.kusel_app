@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/common_widgets/common_bottom_nav_card_.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/downstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/image_text_card_widget.dart';
@@ -22,6 +23,7 @@ import '../../images_path.dart';
 import '../../navigation/navigation.dart';
 import '../../providers/favourite_cities_notifier.dart';
 import '../../utility/url_launcher_utility.dart';
+import '../all_municipality/all_municipality_provider.dart';
 import 'municipal_detail_controller.dart';
 
 class MunicipalDetailScreen extends ConsumerStatefulWidget {
@@ -59,12 +61,13 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
   Widget build(BuildContext context) {
     final isLoading = ref.watch(
         municipalDetailControllerProvider.select((state) => state.isLoading));
+    final state = ref.read(municipalDetailControllerProvider);
 
     return Scaffold(
         body: SafeArea(
-          child: Stack(
-                fit: StackFit.expand,
-                children: [
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
           Positioned.fill(child: _buildBody(context)),
           if (isLoading)
             Center(
@@ -79,9 +82,38 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                 child: CircularProgressIndicator(),
               ),
             )),
-                ],
-              ),
-        ));
+          Positioned(
+              bottom: 16.h,
+              left: 16.w,
+              right: 16.w,
+              child: CommonBottomNavCard(
+                onBackPress: () {
+                  ref.read(navigationProvider).removeTopPage(context: context);
+                },
+                isFavVisible:
+                    ref.watch(municipalDetailControllerProvider).isUserLoggedIn,
+                isFav: state.municipalPartyDetailDataModel?.isFavorite ?? false,
+                onFavChange: () {
+                  ref.watch(favouriteCitiesNotifier.notifier).toggleFavorite(
+                        isFavourite:
+                            state.municipalPartyDetailDataModel?.isFavorite,
+                        id: state.municipalPartyDetailDataModel?.id,
+                        success: ({required bool isFavorite}) {
+                          _updateMunicipalFavStatus(isFavorite,
+                              state.municipalPartyDetailDataModel?.id ?? 0);
+                          widget.municipalDetailScreenParams.onFavUpdate(
+                              isFavorite,
+                              state.municipalPartyDetailDataModel?.id ?? 0, true);
+                        },
+                        error: ({required String message}) {
+                          showErrorToast(message: message, context: context);
+                        },
+                      );
+                },
+              ))
+        ],
+      ),
+    ));
   }
 
   _buildBody(BuildContext context) {
@@ -150,6 +182,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                 ref
                     .read(municipalDetailControllerProvider.notifier)
                     .updateEventIsFav(isFav, id);
+
               },
             ),
           32.verticalSpace,
@@ -211,6 +244,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                   path: feedbackScreenPath, context: context);
             },
           ),
+          50.verticalSpace
         ],
       ),
     );
@@ -314,7 +348,8 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
           lat: (state.municipalPartyDetailDataModel?.latitude != null)
               ? double.parse(state.municipalPartyDetailDataModel!.latitude!)
               : 49.5384,
-          websiteText: 'https://www.landkreis-kusel.de/',
+          websiteText: state.municipalPartyDetailDataModel?.websiteUrl ??
+              AppLocalizations.of(context).visit_website,
           calendarText:
               state.municipalPartyDetailDataModel?.openUntil ?? "16:00:00",
         ),
@@ -323,6 +358,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
   }
 
   _buildPlacesOfTheCommunity(BuildContext context) {
+    final municipalId = ref.read(municipalDetailControllerProvider).municipalPartyDetailDataModel?.id??0;
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 12.w),
       child: Column(
@@ -378,7 +414,12 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                           path: ortDetailScreenPath,
                           context: context,
                           params: OrtDetailScreenParams(
-                              ortId: item.id!.toString()));
+                              ortId: item.id!.toString(),
+                              onFavSuccess: (isFav,id){
+                                _updateCityList(isFav??false, id??0);
+                                widget.municipalDetailScreenParams.onFavUpdate(isFav??false, id??0, false);
+                              }
+                          ));
                     },
                     imageUrl: item.image!,
                     text: item.name ?? '',
@@ -390,14 +431,15 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                     onFavoriteTap: () {
                       ref
                           .watch(favouriteCitiesNotifier.notifier)
-                          .toggleCityFavorite(
-                        item,
+                          .toggleFavorite(
+                        isFavourite : item.isFavorite, id : item.id,
                         success: ({required bool isFavorite}) {
-                          _updateList(isFavorite, item.id!);
-                        },
+                          _updateCityList(isFavorite, item.id!);
+                              widget.municipalDetailScreenParams
+                                  .onFavUpdate(isFavorite, item.id, false);
+                            },
                         error: ({required String message}) {
-                          showErrorToast(
-                              message: message, context: context);
+                          showErrorToast(message: message, context: context);
                         },
                       );
                     },
@@ -408,7 +450,14 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
           CustomButton(
               onPressed: () {
                 ref.read(navigationProvider).navigateUsingPath(
-                    path: allCityScreenPath, context: context);
+                    path: allMunicipalityScreenPath,
+                    context: context,
+                    params: MunicipalityScreenParams(
+                        municipalityId: municipalId,
+                        onFavUpdate: (isFav, cityId){
+                          _updateCityList(isFav, cityId);
+                        }
+                    ));
               },
               text: AppLocalizations.of(context).show_all_locations)
         ],
@@ -517,9 +566,16 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
       ),
     );
   }
-  _updateList(bool isFav, int cityId) {
+
+  _updateCityList(bool isFav, int cityId) {
     ref
         .read(municipalDetailControllerProvider.notifier)
         .setIsFavoriteCity(isFav, cityId);
+  }
+  _updateMunicipalFavStatus(bool isFav, int id) {
+    ref
+        .read(municipalDetailControllerProvider.notifier)
+        .setIsFavoriteMunicipal(isFav);
+    // ref.read(meinOrtProvider.notifier).setIsFavoriteCity(isFav, id);
   }
 }
