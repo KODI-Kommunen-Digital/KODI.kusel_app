@@ -25,7 +25,7 @@ final ortDetailScreenControllerProvider = StateNotifierProvider.autoDispose<
       sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
       tokenStatus: ref.read(tokenStatusProvider),
       refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider),
-      listingsUseCase: ref.read(listingsUseCaseProvider)
+      listingsUseCase: ref.read(listingsUseCaseProvider),
     ));
 
 class OrtDetailScreenController extends StateNotifier<OrtDetailScreenState> {
@@ -43,7 +43,7 @@ class OrtDetailScreenController extends StateNotifier<OrtDetailScreenState> {
       required this.sharedPreferenceHelper,
       required this.tokenStatus,
       required this.refreshTokenUseCase,
-      required this.listingsUseCase
+      required this.listingsUseCase,
       })
       : super(OrtDetailScreenState.copyWith());
 
@@ -54,8 +54,9 @@ class OrtDetailScreenController extends StateNotifier<OrtDetailScreenState> {
       state = state.copyWith(isLoading: true);
 
       final response = tokenStatus.isAccessTokenExpired();
+      final status = await signInStatusController.isUserLoggedIn();
 
-      if (response) {
+      if (response && status) {
         final userId = sharedPreferenceHelper.getInt(userIdKey);
         RefreshTokenRequestModel requestModel =
         RefreshTokenRequestModel(userId: userId?.toString() ?? "");

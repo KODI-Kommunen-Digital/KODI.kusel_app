@@ -104,40 +104,37 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
   getMunicipalPartyDetailUsingId({required String id}) async {
     try {
       state = state.copyWith(isLoading: true);
-
+      final status = await signInStatusController.isUserLoggedIn();
       final response = tokenStatus.isAccessTokenExpired();
+        if (response && status) {
+          final userId = sharedPreferenceHelper.getInt(userIdKey);
+          RefreshTokenRequestModel requestModel =
+          RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+          RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
-      if (response) {
-        final userId = sharedPreferenceHelper.getInt(userIdKey);
-        RefreshTokenRequestModel requestModel =
-        RefreshTokenRequestModel(userId: userId?.toString() ?? "");
-        RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
+          final refreshResponse =
+          await refreshTokenUseCase.call(requestModel, responseModel);
 
-        final refreshResponse =
-        await refreshTokenUseCase.call(requestModel, responseModel);
+          bool refreshSuccess = await refreshResponse.fold(
+                (left) {
+              debugPrint('refresh token municipality detail fold exception : $left');
+              return false;
+            },
+                (right) async {
+              final res = right as RefreshTokenResponseModel;
+              sharedPreferenceHelper.setString(
+                  tokenKey, res.data?.accessToken ?? "");
+              sharedPreferenceHelper.setString(
+                  refreshTokenKey, res.data?.refreshToken ?? "");
+              return true;
+            },
+          );
 
-        bool refreshSuccess = await refreshResponse.fold(
-              (left) {
-            debugPrint('refresh token add fav city fold exception : $left');
-            return false;
-          },
-              (right) async {
-            final res = right as RefreshTokenResponseModel;
-            sharedPreferenceHelper.setString(
-                tokenKey, res.data?.accessToken ?? "");
-            sharedPreferenceHelper.setString(
-                refreshTokenKey, res.data?.refreshToken ?? "");
-            return true;
-          },
-        );
-
-        if (!refreshSuccess) {
-          state = state.copyWith(isLoading: false);
-          return;
+          if (!refreshSuccess) {
+            state = state.copyWith(isLoading: false);
+            return;
+          }
         }
-      }
-
-      // Common code for both cases
       MunicipalPartyDetailRequestModel requestModel =
       MunicipalPartyDetailRequestModel(municipalId: id);
       ExploreDetailsResponseModel responseModel = ExploreDetailsResponseModel();
