@@ -85,7 +85,6 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                       ref
                           .read(allEventScreenProvider.notifier)
                           .updateIsFav(isFav, id);
-
                       widget.allEventScreenParam.onFavChange();
                     },
                   )

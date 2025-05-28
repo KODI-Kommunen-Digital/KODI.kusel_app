@@ -7,15 +7,19 @@ import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen_controller.dart';
+import 'package:kusel/screens/virtual_town_hall/virtual_town_hall_provider.dart';
 
 import '../../app_router.dart';
 import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/common_bottom_nav_card_.dart';
 import '../../common_widgets/downstream_wave_clipper.dart';
 import '../../common_widgets/text_styles.dart';
+import '../../common_widgets/toast_message.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
+import '../../providers/favourite_cities_notifier.dart';
 import '../../utility/url_launcher_utility.dart';
+import '../mein_ort/mein_ort_provider.dart';
 import 'ort_detail_screen_params.dart';
 
 class OrtDetailScreen extends ConsumerStatefulWidget {
@@ -49,6 +53,9 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
   }
 
   _buildBody(BuildContext context) {
+    final state = ref
+        .watch(ortDetailScreenControllerProvider);
+    final ortDetailDataModel = state.ortDetailDataModel;
     return SafeArea(
       child: Stack(
         children: [
@@ -64,15 +71,25 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                   ref.read(navigationProvider).removeTopPage(context: context);
                 },
                 isFavVisible:
-                    ref.watch(ortDetailScreenControllerProvider).isUserLoggedIn,
-                isFav: ref
-                        .watch(ortDetailScreenControllerProvider)
-                        .ortDetailDataModel
-                        ?.isFavorite ??
+                state.isUserLoggedIn,
+                isFav: ortDetailDataModel?.isFavorite ??
                     false,
                 onFavChange: () {
-                  //ref.read(ortDetailScreenControllerProvider.notifier).updateOnFav(value);
-                },
+                  ref
+                      .watch(favouriteCitiesNotifier.notifier)
+                      .toggleFavorite(
+                    isFavourite : ortDetailDataModel?.isFavorite,
+                    id : ortDetailDataModel?.id,
+                    success: ({required bool isFavorite}) {
+                      _updateCityFavStatus(
+                          isFavorite, ortDetailDataModel?.id ?? 0);
+                          widget.ortDetailScreenParams.onFavSuccess(
+                              isFavorite, ortDetailDataModel?.id ?? 0);
+                        },
+                    error: ({required String message}) {
+                      showErrorToast(message: message, context: context);
+                    },
+                  );                },
               ))
         ],
       ),
@@ -92,10 +109,13 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
             32.verticalSpace,
             _buildButton(context),
             32.verticalSpace,
-            FeedbackCardWidget(onTap: () {
-              ref.read(navigationProvider).navigateUsingPath(
-                  path: feedbackScreenPath, context: context);
-            }),
+            FeedbackCardWidget(
+              onTap: () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: feedbackScreenPath, context: context);
+              },
+              height: 270.h,
+            ),
             50.verticalSpace
           ],
         ));
@@ -200,5 +220,13 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
             text: AppLocalizations.of(context).view_ort),
       );
     });
+  }
+
+  _updateCityFavStatus(bool isFav, int id) {
+    ref
+        .read(ortDetailScreenControllerProvider.notifier)
+        .setIsFavoriteCity(isFav);
+    // ref.read(meinOrtProvider.notifier).setIsFavoriteCity(isFav, id);
+    // ref.read(virtualTownHallProvider.notifier).setIsFavoriteMunicipality(isFav, id);
   }
 }

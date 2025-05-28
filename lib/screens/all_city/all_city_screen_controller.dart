@@ -99,3 +99,10 @@ class AllCityScreenController extends StateNotifier<AllCityScreenState> {
     state = state.copyWith(cityList: state.cityList);
   }
 }
+
+class AllCityScreenParams {
+  Function(bool? isFav, int? id) onFavSuccess;
+
+  AllCityScreenParams({required this.onFavSuccess});
+
+}

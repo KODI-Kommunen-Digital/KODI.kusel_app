@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kusel/screens/all_city/all_city_screen.dart';
+import 'package:kusel/screens/all_city/all_city_screen_controller.dart';
 import 'package:kusel/screens/all_event/all_event_screen.dart';
 import 'package:kusel/screens/all_event/all_event_screen_param.dart';
 import 'package:kusel/screens/all_municipality/all_municipality_provider.dart';
@@ -149,7 +150,10 @@ List<RouteBase> goRouteList = [
       builder: (_, state) => MunicipalDetailScreen(
           municipalDetailScreenParams:
               state.extra as MunicipalDetailScreenParams)),
-  GoRoute(path: allCityScreenPath, builder: (_, __) => AllCityScreen()),
+  GoRoute(path: allCityScreenPath,
+      builder: (_, state) => AllCityScreen(
+          allCityScreenParams : state.extra as AllCityScreenParams
+      )),
   GoRoute(
       path: ortDetailScreenPath,
       builder: (_, state) => OrtDetailScreen(

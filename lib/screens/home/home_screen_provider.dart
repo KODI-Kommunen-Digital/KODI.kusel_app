@@ -144,6 +144,39 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
     }
   }
 
+  Future<void> getNews() async {
+    try {
+      final categoryId = ListingCategoryId.news.eventId.toString();
+
+      GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(
+          pageSize: 5, sortByStartDate: true, categoryId: categoryId);
+
+      GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
+
+      final response = await listingsUseCase.call(requestModel, responseModel);
+
+      response.fold((l) {
+        debugPrint("getEventsUsingCityId fold exception = ${l.toString()}");
+      }, (r) {
+        final result = r as GetAllListingsResponseModel;
+
+        state = state.copyWith(newsList: result.data);
+      });
+    } catch (e) {
+      debugPrint("getEventsUsingCityId exception = $e");
+    }
+  }
+
+  updateNewsIsFav(bool isFav, int? eventId) {
+    final list = state.newsList ?? [];
+    for (var listing in list) {
+      if (listing.id == eventId) {
+        listing.isFavorite = isFav;
+      }
+    }
+    state = state.copyWith(newsList: list);
+  }
+
   Future<List<Listing>> searchList({
     required String searchText,
     required void Function() success,
@@ -215,6 +248,8 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
         final response = r as UserDetailResponseModel;
         await sharedPreferenceHelper.setString(
             userNameKey, response.data?.username ?? "");
+        await sharedPreferenceHelper.setString(
+            userFirstNameKey, response.data?.firstname ?? "");
         state = state.copyWith(userName: response.data?.firstname ?? "");
       });
     } catch (e) {
@@ -290,6 +325,7 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       getHighlights(),
       getEvents(),
       getNearbyEvents(),
+      getNews(),
       getLoginStatus(),
       getWeather(),
     ]);
