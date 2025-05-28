@@ -279,7 +279,8 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
             itemBuilder: (context, index) {
               final item = onlineServicesList[index];
               return NetworkImageTextServiceCard(
-                  onTap: () => UrlLauncherUtil.launchWebUrl(url: "https://www.landkreis-kusel.de"),
+                  onTap: () => UrlLauncherUtil.launchWebUrl(
+                      url: item.linkUrl ?? "https://www.landkreis-kusel.de"),
                   imageUrl: item.iconUrl!,
                   text: item.title ?? '',
                   description: item.description ?? '');
