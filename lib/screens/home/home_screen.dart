@@ -334,19 +334,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 isLoading: isLoading,
                 onButtonTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
-                      path: allEventScreenPath,
+                      path: selectedEventListScreenPath,
                       context: context,
-                      params: AllEventScreenParam(onFavChange: () {
+                      params: SelectedEventListScreenParameter(
+                        categoryId: ListingCategoryId.event.eventId,
+                          onFavChange: () {
                         ref.read(homeScreenProvider.notifier).getEvents();
-                      }));
+                      }, listHeading: AppLocalizations.of(context).events));
                 },
                 onHeadingTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
-                      path: allEventScreenPath,
+                      path: selectedEventListScreenPath,
                       context: context,
-                      params: AllEventScreenParam(onFavChange: () {
-                        ref.read(homeScreenProvider.notifier).getEvents();
-                      }));
+                      params: SelectedEventListScreenParameter(
+                          categoryId: ListingCategoryId.event.eventId,
+                          onFavChange: () {
+                            ref.read(homeScreenProvider.notifier).getEvents();
+                          }, listHeading: AppLocalizations.of(context).events));
                 },
                 onSuccess: (isFav, eventId) {
                   ref
