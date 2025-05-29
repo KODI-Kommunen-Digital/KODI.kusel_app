@@ -20,7 +20,7 @@ class _OnBoardingPreferencesPageState extends ConsumerState<OnBoardingPreference
 
   @override
   Widget build(BuildContext context) {
-    String? userName  = ref.read(onboardingScreenProvider).userFirstName;
+    String userName  = ref.read(onboardingScreenProvider).userFirstName ?? '';
     String displayMsg =
         "${AppLocalizations.of(context).complete}$userName${AppLocalizations.of(context).what_interest_you}";
     return Scaffold(
