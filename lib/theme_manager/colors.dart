@@ -26,3 +26,4 @@ const lightThemeDisplayLargeTextColor = Color.fromRGBO(0, 0, 0, 1);
 const lightThemeLabelSmallColor = Color(0xFFE2EBF7);
 const lightThemeLabelMediumColor = Color(0xFF6972A8);
 const lightThemeLabelLargeColor = Color(0xFF283583);
+const lightThemeCardDarkColor = Color(0xFFEAEBF3);

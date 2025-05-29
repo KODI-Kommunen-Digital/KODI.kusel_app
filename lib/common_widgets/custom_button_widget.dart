@@ -36,9 +36,8 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return SizedBox(
-        width: width ?? double.infinity,
+        width: width ?? MediaQuery.of(context).size.width,
         height: height ?? 36.h,
         child: isOutLined
             ? OutlinedButton(

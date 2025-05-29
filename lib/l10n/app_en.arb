@@ -180,5 +180,11 @@
   "success_delete_account_message": "You account has been deleted successfully",
   "edit_onboarding_details": "Edit onboarding details",
   "ok": "Ok",
-  "delete_account_information": "Are you sure you want to delete your account?"
+  "delete_account_information": "Are you sure you want to delete your account?",
+  "digifit_parcours": "Digifit Parcours",
+  "scan_exercise": "Scan exercise",
+  "points": "Points",
+  "trophies" : "Trophies",
+  "brain_teasers" : "Brain Teasers",
+  "points_and_trophy" : "Points & Trophies"
 }
