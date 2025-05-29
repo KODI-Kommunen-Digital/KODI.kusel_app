@@ -204,7 +204,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
             children: [
               32.verticalSpace,
               CommonTextArrowWidget(
-                text: AppLocalizations.of(context).recommendation,
+                text: AppLocalizations.of(context).recommendations,
                 onTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
                       path: allEventScreenPath,
