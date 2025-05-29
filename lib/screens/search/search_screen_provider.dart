@@ -6,6 +6,8 @@ import 'package:domain/model/request_model/listings/search_request_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/model/response_model/listings_model/search_listings_response_model.dart';
 import 'package:domain/usecase/search/search_usecase.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/screens/search/search_screen_state.dart';
 
