@@ -162,7 +162,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             } catch (e) {
                               return [];
                             }
-                            return list;
+                            final sortedList = ref
+                                .watch(homeScreenProvider.notifier)
+                                .sortSuggestionList(search, list);
+                            return sortedList;
                           },
                         )
                       ],

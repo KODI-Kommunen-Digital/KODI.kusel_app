@@ -214,7 +214,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             color: Theme.of(context).dividerColor,
           ),
           _customProfileDetailTile(
-            detailKey: AppLocalizations.of(context).name,
+            detailKey: AppLocalizations.of(context).email,
             detailValue: userdata?.email ?? '',
             icon: Icons.email,
             textEditingController: stateNotifier.emailEditingController,

@@ -91,7 +91,11 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
             } catch (e) {
               return [];
             }
-            return list;
+            final sortedList = ref
+                .watch(locationScreenProvider.notifier)
+                .sortSuggestionList(search, list);
+            return sortedList;
+            return sortedList;
           },
         ),
         Padding(

@@ -196,4 +196,20 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
     }
     state = state.copyWith(allEventList: list);
   }
+
+  List<Listing> sortSuggestionList(String search, List<Listing> list) {
+    search = search.toLowerCase();
+    list.sort((a, b) {
+      final aTitle = a.title?.toLowerCase() ?? '';
+      final bTitle = b.title?.toLowerCase() ?? '';
+
+      final aScore = aTitle.startsWith(search) ? 0 : (aTitle.contains(search) ? 1 : 2);
+      final bScore = bTitle.startsWith(search) ? 0 : (bTitle.contains(search) ? 1 : 2);
+
+      if (aScore != bScore) return aScore.compareTo(bScore);
+      return aTitle.compareTo(bTitle);
+    });
+
+    return list;
+  }
 }
