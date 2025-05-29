@@ -68,7 +68,8 @@ class FavouriteCityScreenController extends StateNotifier<FavouriteCityScreenSta
               requestModel, responseModel);
           result.fold(
                 (l) {
-              debugPrint('add fav city fold exception : $l');
+                  state = state.copyWith(isLoading: false);
+                  debugPrint('add fav city fold exception : $l');
             },
                 (r) {
                   final result = r as GetFavouriteCitiesResponseModel;
@@ -88,7 +89,8 @@ class FavouriteCityScreenController extends StateNotifier<FavouriteCityScreenSta
             requestModel, responseModel);
         result.fold(
               (l) {
-            debugPrint('add fav city fold exception : $l');
+                state = state.copyWith(isLoading: false);
+                debugPrint('add fav city fold exception : $l');
           },
               (r) {
             final result = r as GetFavouriteCitiesResponseModel;
@@ -97,6 +99,7 @@ class FavouriteCityScreenController extends StateNotifier<FavouriteCityScreenSta
         );
       }
     } catch (error) {
+      state = state.copyWith(isLoading: false);
       debugPrint("add fav city exception: $error");
     }
   }

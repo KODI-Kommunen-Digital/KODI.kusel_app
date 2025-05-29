@@ -36,6 +36,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: SizedBox(
             height: MediaQuery.of(context).size.height, child: buildUi()),
@@ -109,7 +110,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                             params: SearchResultScreenParameter(
                                 searchType: SearchType.recommendations));
                       },
-                      text: AppLocalizations.of(context).recommendation,
+                      text: AppLocalizations.of(context).recommendations,
                       isOutLined: true,
                       icon: imagePath['star'],
                       iconWidth: 20.w,
@@ -130,22 +131,25 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                     },
                     searchController: TextEditingController(),
                     hintText: AppLocalizations.of(context).enter_search_term,
-                    suggestionCallback: (search) async {
-                      List<Listing>? list;
-                      if (search.isEmpty) return [];
-                      try {
-                        list = await ref
-                            .read(searchScreenProvider.notifier)
-                            .searchList(
-                                searchText: search,
-                                success: () {},
-                                error: (err) {});
-                      } catch (e) {
-                        print("exception >>$e");
-                        return [];
+                      suggestionCallback: (search) async {
+                        List<Listing>? list;
+                        if (search.isEmpty) return [];
+                        try {
+                          list = await ref
+                              .read(searchScreenProvider.notifier)
+                              .searchList(
+                              searchText: search,
+                              success: () {},
+                              error: (err) {});
+                        } catch (e) {
+                          print("exception >>$e");
+                          return [];
+                        }
+                        final sortedList = ref
+                            .watch(searchScreenProvider.notifier)
+                            .sortSuggestionList(search, list);
+                        return sortedList;
                       }
-                      return list;
-                    },
                   ),
                   16.verticalSpace,
                   Visibility(

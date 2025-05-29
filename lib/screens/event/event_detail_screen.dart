@@ -414,7 +414,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
           Padding(
             padding: EdgeInsets.only(left: 16.w),
             child: textBoldPoppins(
-                text: AppLocalizations.of(context).recommendation,
+                text: AppLocalizations.of(context).recommendations,
                 fontSize: 16,
                 color: Theme.of(context).textTheme.bodyLarge?.color),
           ),
