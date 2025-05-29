@@ -1,5 +1,6 @@
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -24,8 +25,13 @@ class SearchScreen extends ConsumerStatefulWidget {
 }
 
 class _ExploreScreenState extends ConsumerState<SearchScreen> {
+  final searchTextEditingController = TextEditingController();
+  final searchFocusNode = FocusNode();
+
   @override
   void initState() {
+    searchFocusNode.addListener(() => _scrollToFocused(searchFocusNode));
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(searchScreenProvider.notifier).loadSavedListings();
     });
@@ -129,7 +135,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                           .read(searchScreenProvider.notifier)
                           .loadSavedListings();
                     },
-                    searchController: TextEditingController(),
+                    searchController: searchTextEditingController,
                     hintText: AppLocalizations.of(context).enter_search_term,
                       suggestionCallback: (search) async {
                         List<Listing>? list;
@@ -203,5 +209,15 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
         ),
       ),
     );
+  }
+
+  void _scrollToFocused(FocusNode focusNode) {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      final context = focusNode.context;
+      if (context != null && context.mounted) {
+        Scrollable.ensureVisible(context,
+            duration: const Duration(milliseconds: 300));
+      }
+    });
   }
 }
