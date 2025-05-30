@@ -207,7 +207,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             icon: Icons.legend_toggle,
             textEditingController: stateNotifier.userNameEditingController,
             hintText: AppLocalizations.of(context).enter_username,
-            fieldEnabled: state.editingEnabled ?? false,
+            fieldEnabled: false,
           ),
           Divider(
             height: 3.h,
@@ -217,6 +217,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             detailKey: AppLocalizations.of(context).email,
             detailValue: userdata?.email ?? '',
             icon: Icons.email,
+            maxLines: 2,
             textEditingController: stateNotifier.emailEditingController,
             hintText: AppLocalizations.of(context).email,
             fieldEnabled: false,
@@ -240,6 +241,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           _customProfileDetailTile(
             detailKey: AppLocalizations.of(context).description,
             detailValue: userdata?.description ?? '',
+            maxLines: 4,
             icon: Icons.textsms_outlined,
             textEditingController: stateNotifier.descriptionEditingController,
             hintText: AppLocalizations.of(context).enter_description,
@@ -269,6 +271,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     required TextEditingController textEditingController,
     required String hintText,
     required bool fieldEnabled,
+    int? maxLines,
   }) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
@@ -295,7 +298,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             width: 1.w,
                             color: Theme.of(context).colorScheme.surface)
                         : null),
-                height: 26.h,
+                // height: 26.h,
                 width: 250.w,
                 child: Center(
                   child: TextField(
@@ -304,14 +307,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         color: fieldEnabled
                             ? Theme.of(context).colorScheme.surface
                             : Theme.of(context).textTheme.labelMedium?.color),
+                    minLines: 1,
+                    maxLines: maxLines ?? 1,
                     enabled: fieldEnabled,
                     decoration: InputDecoration(
-                        contentPadding: EdgeInsets.only(
-                            left: 10.w, right: 10.w, bottom: 10.h),
+                        isCollapsed: true,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
                         hintText: hintText,
                         hintStyle: TextStyle(
-                            color:
-                                Theme.of(context).textTheme.labelMedium?.color),
+                            color: Theme.of(context).textTheme.labelMedium?.color),
                         border: InputBorder.none),
                   ),
                 ),
