@@ -186,5 +186,6 @@
   "points": "Points",
   "trophies" : "Trophies",
   "brain_teasers" : "Brain Teasers",
-  "points_and_trophy" : "Points & Trophies"
+  "points_and_trophy" : "Points & Trophies",
+  "show_course":"Show course"
 }
