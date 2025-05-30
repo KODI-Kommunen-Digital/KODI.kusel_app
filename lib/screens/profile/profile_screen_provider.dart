@@ -153,9 +153,6 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
       editUserDetailRequestModel.firstname = name['firstName'];
       editUserDetailRequestModel.lastname = name['lastName'];
     }
-    if (userNameEditingController.text != state.userData?.username) {
-      editUserDetailRequestModel.username = userNameEditingController.text;
-    }
     if (phoneNumberEditingController.text != state.userData?.phoneNumber) {
       editUserDetailRequestModel.phoneNumber =
           phoneNumberEditingController.text;
@@ -212,7 +209,6 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
   bool isAnyFieldEdited(EditUserDetailRequestModel model) {
     return model.firstname != null ||
         model.lastname != null ||
-        model.username != null ||
         model.phoneNumber != null ||
         model.description != null ||
         model.website != null;
