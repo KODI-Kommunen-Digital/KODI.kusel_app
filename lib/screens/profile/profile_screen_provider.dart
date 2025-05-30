@@ -142,6 +142,38 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
       {required void Function() onSuccess,
       required void Function(String msg) onError}) async {
     state = state.copyWith(loading: true);
+
+    final response = tokenStatus.isAccessTokenExpired();
+    if (response) {
+      final userId = sharedPreferenceHelper.getInt(userIdKey);
+      RefreshTokenRequestModel requestModel =
+      RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+      RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
+
+      final refreshResponse =
+      await refreshTokenUseCase.call(requestModel, responseModel);
+
+      bool refreshSuccess = await refreshResponse.fold(
+            (left) {
+          debugPrint('refresh token edit profile details fold exception : $left');
+          return false;
+        },
+            (right) async {
+          final res = right as RefreshTokenResponseModel;
+          sharedPreferenceHelper.setString(
+              tokenKey, res.data?.accessToken ?? "");
+          sharedPreferenceHelper.setString(
+              refreshTokenKey, res.data?.refreshToken ?? "");
+          return true;
+        },
+      );
+
+      if (!refreshSuccess) {
+        state = state.copyWith(loading: false);
+        return;
+      }
+    }
+
     EditUserDetailRequestModel editUserDetailRequestModel =
         EditUserDetailRequestModel();
     editUserDetailRequestModel.id = state.userData?.id ?? 0;
