@@ -37,7 +37,7 @@ class _DigifitStatusWidgetState extends ConsumerState<DigifitOptionsCard> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: double.infinity, // Makes container take full width of parent
+                  width: double.infinity, 
                   padding: EdgeInsets.symmetric(vertical: 25.h,horizontal: 15.w),
                   decoration: BoxDecoration(
                       color: Theme.of(context).cardTheme.color,
