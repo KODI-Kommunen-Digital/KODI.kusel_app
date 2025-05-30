@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/digifit/digifit_options_card.dart';
 import 'package:kusel/common_widgets/digifit/digifit_text_image_card.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../common_widgets/digifit/digifit_map_card.dart';
 import '../../../common_widgets/digifit/digifit_status_widget.dart';
@@ -16,15 +15,16 @@ import '../../../common_widgets/image_utility.dart';
 import '../../../common_widgets/text_styles.dart';
 import '../../../images_path.dart';
 import '../../../navigation/navigation.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-class DigifitStartScreen extends ConsumerStatefulWidget {
-  const DigifitStartScreen({super.key});
+class DigifitTrophiesScreen extends ConsumerStatefulWidget {
+  const DigifitTrophiesScreen({super.key});
 
   @override
-  ConsumerState<DigifitStartScreen> createState() => _DigifitStartScreenState();
+  ConsumerState<DigifitTrophiesScreen> createState() => _DigifitTrophiesScreenState();
 }
 
-class _DigifitStartScreenState extends ConsumerState<DigifitStartScreen> {
+class _DigifitTrophiesScreenState extends ConsumerState<DigifitTrophiesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +53,7 @@ class _DigifitStartScreenState extends ConsumerState<DigifitStartScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _buildDigifitOverviewScreenUi(),
+                    _buildDigifitTrophiesScreenUi(),
                     30.verticalSpace,
                     FeedbackCardWidget(
                       height: 270.h,
@@ -82,13 +82,13 @@ class _DigifitStartScreenState extends ConsumerState<DigifitStartScreen> {
         textBoldPoppins(
           color: Theme.of(context).textTheme.labelLarge?.color,
           fontSize: 20,
-          text: AppLocalizations.of(context).digifit_parcours,
+          text: AppLocalizations.of(context).points_and_trophy,
         ),
       ],
     );
   }
 
-  _buildDigifitOverviewScreenUi() {
+  _buildDigifitTrophiesScreenUi() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w),
       child: Column(
@@ -101,30 +101,7 @@ class _DigifitStartScreenState extends ConsumerState<DigifitStartScreen> {
             onButtonTap: () {},
           ),
           20.verticalSpace,
-          Row(
-            children: [
-              Expanded(
-                child: DigifitOptionsCard(
-                  cardText: AppLocalizations.of(context).brain_teasers,
-                  svgImageUrl: imagePath['brain_teaser_icon'] ?? '',
-                  onCardTap: () {},
-                ),
-              ),
-              8.horizontalSpace,
-              Expanded(
-                child: DigifitOptionsCard(
-                  cardText: AppLocalizations.of(context).points_and_trophy,
-                  svgImageUrl: imagePath['trophy_icon'] ?? '',
-                  onCardTap: () {
-                    ref.read(navigationProvider).navigateUsingPath(
-                        path: digifitTrophiesScreenPath, context: context);
-                  },
-                ),
-              ),
-            ],
-          ),
-          12.verticalSpace,
-          _buildCourseDetailSection(),
+          _buildCourseDetailSection(isButtonVisible: false),
           _buildCourseDetailSection(),
           _buildCourseDetailSection(),
         ],
@@ -150,14 +127,6 @@ class _DigifitStartScreenState extends ConsumerState<DigifitStartScreen> {
                 width: 16.w,
                 context: context)
           ],
-        ),
-        10.verticalSpace,
-        DigifitMapCard(
-          imagePath: imagePath['digifit_map_image'] ?? '',
-          onImageTap: () {
-            ref.read(navigationProvider).navigateUsingPath(
-                path: digifitOverViewScreenPath, context: context);
-          },
         ),
         10.verticalSpace,
         ListView.builder(
