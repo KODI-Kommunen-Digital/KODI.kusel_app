@@ -189,5 +189,6 @@
   "points": "Punkte",
   "trophies" : "Trophäen",
   "brain_teasers" : "Denksportaufgaben",
-  "points_and_trophy" : "Punkte & Trophäen"
+  "points_and_trophy" : "Punkte & Trophäen",
+  "show_course":"Parcours anzeigen"
 }
