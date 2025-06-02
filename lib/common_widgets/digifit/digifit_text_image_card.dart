@@ -1,0 +1,139 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/common_widgets/image_utility.dart';
+import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/images_path.dart';
+import 'package:kusel/utility/image_loader_utility.dart';
+
+class DigifitTextImageCard extends ConsumerStatefulWidget {
+  final String imageUrl;
+  final String heading;
+  final String title;
+  final String? description;
+  final bool isFavorite;
+  final bool isFavouriteVisible;
+  final VoidCallback? onCardTap;
+  final VoidCallback? onFavorite;
+  final int sourceId;
+  final bool isMarked;
+
+  const DigifitTextImageCard({
+    Key? key,
+    required this.imageUrl,
+    required this.heading,
+    required this.title,
+    this.description,
+    required this.isFavouriteVisible,
+    required this.isFavorite,
+    required this.sourceId,
+    this.onCardTap,
+    this.onFavorite,
+    required this.isMarked
+  }) : super(key: key);
+
+  @override
+  ConsumerState<DigifitTextImageCard> createState() => _CommonEventCardState();
+}
+
+class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(8),
+      onTap: widget.onCardTap,
+      child: Card(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+        elevation: 4,
+        child: Stack(
+          children: [
+            Positioned(
+              top: 0,
+              left: 0,
+              child: Visibility(
+                visible: widget.isMarked,
+                  child: Container(
+                    height: 32.h,
+                width: 40.w,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).indicatorColor,
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(10.r), bottomRight: Radius.circular(10.r))
+                ),
+                child: Center(
+                  child: SizedBox(
+                    child: ImageUtil.loadSvgImage(
+                      height: 18.h,
+                        width: 18.h,
+                        imageUrl: imagePath['digifit_trophy_icon'] ?? '',
+                        context: context),
+                  ),
+                ),
+              )),
+            ),
+            Padding(
+              padding: EdgeInsets.all(5.h.w),
+              child: Row(
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: ImageUtil.loadNetworkImage(
+                        height: 75.h,
+                        width: 80.w,
+                        imageUrl: imageLoaderUtility(
+                            image: widget.imageUrl, sourceId: widget.sourceId),
+                        context: context),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        textRegularMontserrat(
+                            text: widget.heading,
+                            fontSize: 9,
+                            color: Theme
+                                .of(context)
+                                .textTheme
+                                .labelMedium
+                                ?.color),
+                        4.verticalSpace,
+                        textSemiBoldMontserrat(text: widget.title,
+                            fontSize: 16),
+                        4.verticalSpace,
+                        Visibility(
+                          visible: (widget.description!=null),
+                          child: textRegularMontserrat(
+                              text: widget.description ??'',
+                              color: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .labelMedium
+                                  ?.color),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Visibility(
+                    visible: widget.isFavouriteVisible,
+                    child: InkWell(
+                      onTap: widget.onFavorite,
+                      child: Icon(
+                        widget.isFavorite
+                            ? Icons.favorite_sharp
+                            : Icons.favorite_border,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ),
+                  10.horizontalSpace,
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
