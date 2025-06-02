@@ -10,6 +10,9 @@ import 'package:kusel/screens/auth/forgot_password/forgot_password_screen.dart';
 import 'package:kusel/screens/auth/signin/signin_screen.dart';
 import 'package:kusel/screens/auth/signup/signup_screen.dart';
 import 'package:kusel/screens/dashboard/dashboard_screen.dart';
+import 'package:kusel/screens/digifit_screens/digifit_overview/digifit_overview_screen.dart';
+import 'package:kusel/screens/digifit_screens/digifit_start/digifit_start_screen.dart';
+import 'package:kusel/screens/digifit_screens/digifit_trophies/digifit_trophies_screen.dart';
 import 'package:kusel/screens/event/event_detail_screen.dart';
 import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/events_listing/selected_event_list_screen.dart';
@@ -91,6 +94,12 @@ const meinOrtScreenPath = "meinOrtScreenPath";
 const mobilityScreenPath = "mobilityScreenPath";
 const participateScreenPath = "participateScreenPath";
 
+// DigiFit screen path
+const digifitStartScreenPath = "/digifitStartScreenPath";
+const digifitTrophiesScreenPath = "/digifitTrophiesScreenPath";
+const digifitOverViewScreenPath = "/digifitOverViewScreenPath";
+
+
 final exploreSubScreenRoutes = [
   tourismScreenPath,
   virtualTownHallScreenPath,
@@ -162,6 +171,14 @@ List<RouteBase> goRouteList = [
       path: allMunicipalityScreenPath,
       builder: (_, state) => AllMunicipalityScreen(
           municipalityScreenParams: state.extra as MunicipalityScreenParams)),
+  GoRoute(
+      path: favouriteCityScreenPath, builder: (_, __) => FavouriteCityScreen()),
+  GoRoute(
+      path: digifitStartScreenPath, builder: (_, __) => DigifitStartScreen()),
+  GoRoute(
+      path: digifitTrophiesScreenPath, builder: (_, __) => DigifitTrophiesScreen()),
+  GoRoute(
+      path: digifitOverViewScreenPath, builder: (_, __) => DigifitOverviewScreen()),
 
   // Dashboard + tabs
   dashboardRoutes,
