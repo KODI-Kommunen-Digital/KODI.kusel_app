@@ -183,6 +183,12 @@
   "success_delete_account_message": "Ihr Konto wurde erfolgreich gelöscht",
   "edit_onboarding_details": "Onboardingdetails bearbeiten",
   "ok": "Ok",
-  "delete_account_information": "Möchten Sie Ihr Konto wirklich löschen?"
-
+  "delete_account_information": "Möchten Sie Ihr Konto wirklich löschen?",
+  "digifit_parcours": "Digifit Parcours",
+  "scan_exercise": "Übung scannen",
+  "points": "Punkte",
+  "trophies" : "Trophäen",
+  "brain_teasers" : "Denksportaufgaben",
+  "points_and_trophy" : "Punkte & Trophäen",
+  "show_course":"Parcours anzeigen"
 }
