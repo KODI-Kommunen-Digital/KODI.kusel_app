@@ -63,6 +63,10 @@ dependencies:
   cached_network_image: ^3.4.1
   latlong2: ^0.9.1
 
+# database
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
 
 dev_dependencies:
   flutter_test:
