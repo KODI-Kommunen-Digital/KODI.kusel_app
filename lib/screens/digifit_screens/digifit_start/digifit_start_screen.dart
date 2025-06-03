@@ -98,7 +98,14 @@ class _DigifitStartScreenState extends ConsumerState<DigifitStartScreen> {
             pointsText: AppLocalizations.of(context).points,
             trophiesValue: 2,
             trophiesText: AppLocalizations.of(context).trophies,
-            onButtonTap: () {},
+            onButtonTap: () async {
+              final barcode = await ref.read(navigationProvider).navigateUsingPath(
+                  path: digifitQRScannerScreenPath, context: context);
+              // Todo - replace with actual QR code login
+              if (barcode != null) {
+                print('Scanned barcode: $barcode');
+              }
+            },
           ),
           20.verticalSpace,
           Row(
