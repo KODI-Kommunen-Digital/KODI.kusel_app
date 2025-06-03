@@ -41,7 +41,7 @@ class _DigifitStatusWidgetState extends ConsumerState<DigifitOptionsCard> {
                   padding: EdgeInsets.symmetric(vertical: 25.h,horizontal: 15.w),
                   decoration: BoxDecoration(
                       color: Theme.of(context).cardTheme.color,
-                      borderRadius: BorderRadius.circular(12.r)),
+                      borderRadius: BorderRadius.circular(6.r)),
                   child: Center(
                     child: ImageUtil.loadSvgImage(imageUrl: widget.svgImageUrl, context: context, height: 40.h, width: 40.w),
                   ),
