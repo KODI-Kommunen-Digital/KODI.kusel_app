@@ -80,8 +80,8 @@ class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
                     child: ImageUtil.loadNetworkImage(
                         height: 75.h,
                         width: 80.w,
-                        imageUrl: imageLoaderUtility(
-                            image: widget.imageUrl, sourceId: widget.sourceId),
+                        imageUrl: widget.imageUrl,
+                        sourceId: widget.sourceId,
                         context: context),
                   ),
                   const SizedBox(width: 8),
