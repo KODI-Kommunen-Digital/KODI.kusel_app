@@ -42,7 +42,7 @@ Map<String, String> _svgImagePath = {
   "brain_teaser_icon": "assets/svg/brain_teaser_icon.svg",
   "trophy_icon" : "assets/svg/trophy_icon.svg",
   "digifit_trophy_icon": "assets/svg/digifit_trophy_icon.svg",
-  "dumble_icon": "assets/svg/dumble_icon"
+  "dumble_icon": "assets/svg/dumble_icon.svg"
 };
 
 Map<String, String> _pngImagePath = {
