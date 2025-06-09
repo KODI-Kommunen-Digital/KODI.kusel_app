@@ -9,6 +9,7 @@ import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../app_router.dart';
 import '../../../common_widgets/digifit/digifit_map_card.dart';
 import '../../../common_widgets/digifit/digifit_status_widget.dart';
 import '../../../common_widgets/image_utility.dart';
@@ -98,7 +99,14 @@ class _DigifitTrophiesScreenState extends ConsumerState<DigifitTrophiesScreen> {
             pointsText: AppLocalizations.of(context).points,
             trophiesValue: 2,
             trophiesText: AppLocalizations.of(context).trophies,
-            onButtonTap: () {},
+            onButtonTap: () async {
+              final barcode = await ref.read(navigationProvider).navigateUsingPath(
+                  path: digifitQRScannerScreenPath, context: context);
+              // Todo - replace with actual QR code login
+              if (barcode != null) {
+                print('Scanned barcode: $barcode');
+              }
+            },
           ),
           20.verticalSpace,
           _buildCourseDetailSection(isButtonVisible: false),

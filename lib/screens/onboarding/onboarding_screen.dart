@@ -124,7 +124,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     stateNotifier.updateErrorMsgStatus(true);
                   } else {
                     stateNotifier.updateErrorMsgStatus(false);
-                    stateNotifier.submitUserType();
+                    if (state.isLoggedIn) {
+                      stateNotifier.submitUserType();
+                    }
                     stateNotifier.nextPage();
                   }
                   break;
@@ -133,12 +135,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     stateNotifier.updateErrorMsgStatus(true);
                   } else {
                     stateNotifier.updateErrorMsgStatus(false);
-                    stateNotifier.submitUserDemographics();
+                    if (state.isLoggedIn) {
+                      stateNotifier.submitUserDemographics();
+                    }
                     stateNotifier.nextPage();
                   }
                   break;
                 case 4:
-                  stateNotifier.submitUserInterests();
+                  if (state.isLoggedIn) {
+                    stateNotifier.submitUserInterests();
+                  }
                   ref.read(navigationProvider).navigateUsingPath(
                         path: onboardingLoadingPagePath,
                         context: context,

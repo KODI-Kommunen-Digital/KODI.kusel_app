@@ -4,7 +4,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/images_path.dart';
-import 'package:kusel/utility/image_loader_utility.dart';
+
+import '../../app_router.dart';
+import '../../navigation/navigation.dart';
+import '../../screens/full_image/full_image_screen.dart';
 
 class DigifitTextImageCard extends ConsumerStatefulWidget {
   final String imageUrl;
@@ -78,10 +81,18 @@ class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: ImageUtil.loadNetworkImage(
+                        onImageTap: (){
+                          ref.read(navigationProvider).navigateUsingPath(
+                              path: fullImageScreenPath,
+                              params: FullImageScreenParams(
+                                imageUrL: widget.imageUrl,
+                              ),
+                              context: context);
+                        },
                         height: 75.h,
                         width: 80.w,
-                        imageUrl: imageLoaderUtility(
-                            image: widget.imageUrl, sourceId: widget.sourceId),
+                        imageUrl: widget.imageUrl,
+                        sourceId: widget.sourceId,
                         context: context),
                   ),
                   const SizedBox(width: 8),

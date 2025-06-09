@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/kusel_text_field.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
+import 'package:kusel/common_widgets/web_view_page.dart';
 import 'package:kusel/screens/feedback/feedback_screen_provider.dart';
 import 'package:kusel/screens/feedback/feedback_screen_state.dart';
 import 'package:kusel/utility/url_constants/url_constants.dart';
@@ -43,14 +45,29 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
-        child: SingleChildScrollView(
-          physics: ClampingScrollPhysics(),
-          child: _buildFeedbackUi(
-              titleEditingController,
-              descriptionEditingController,
-              emailEditingController,
-              stateWatch,
-              stateNotifier),
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              physics: ClampingScrollPhysics(),
+              child: _buildFeedbackUi(
+                  titleEditingController,
+                  descriptionEditingController,
+                  emailEditingController,
+                  stateWatch,
+                  stateNotifier),
+            ),
+            Positioned(
+              top: 30.h,
+              left: 16.w,
+              child: ArrowBackWidget(
+                onTap: () {
+                  ref
+                      .read(navigationProvider)
+                      .removeAllAndNavigate(path: homeScreenPath, context: context);
+                },
+              ),
+            ),
+          ],
         ),
       ),
     ).loaderDialog(context, stateWatch.loading);
@@ -70,7 +87,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
             headingText: AppLocalizations.of(context).feedback,
             height: 130.h,
             blurredBackground: true,
-            isBackArrowEnabled: true,
+            isBackArrowEnabled: false,
             isStaticImage: true),
         _buildForm(titleEditingController, descriptionEditingController,
             emailEditingController, stateWatch, stateNotifier)
@@ -154,7 +171,10 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                     }),
                 Expanded(
                   child: GestureDetector(
-                    onTap: () => UrlLauncherUtil.launchWebUrl(url: privacyPolicyUrl),
+                    onTap: () => ref.read(navigationProvider).navigateUsingPath(
+                        path: webViewPagePath,
+                        params: WebViewParams(url: privacyPolicyUrl),
+                        context: context),
                     child: textRegularPoppins(
                         text: AppLocalizations.of(context).feedback_text,
                         textOverflow: TextOverflow.visible,
@@ -165,10 +185,16 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                 ),
               ],
             ),
+            Visibility(
+                visible: stateWatch.onError,
+                child: textSemiBoldMontserrat(
+                    fontSize: 12,
+                    color: Theme.of(context).colorScheme.error,
+                    text: AppLocalizations.of(context).privacy_policy_error_msg)),
             10.verticalSpace,
             CustomButton(
                 onPressed: () {
-                  if (feedbackFormKey.currentState!.validate()) {
+                  if (feedbackFormKey.currentState!.validate() && stateWatch.isChecked) {
                     ref.read(feedbackScreenProvider.notifier).sendFeedback(
                         success: () {
                           showSuccessToast(

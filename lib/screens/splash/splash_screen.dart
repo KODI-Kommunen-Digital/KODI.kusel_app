@@ -20,16 +20,23 @@ class _State extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
     Future.microtask(() {
       ref.read(splashScreenProvider.notifier).startTimer(() {
+        bool isOnboardingCacheAvailable = ref
+            .read(splashScreenProvider.notifier)
+            .isOnboardingCacheAvailable();
+        String path;
+        if (isOnboardingCacheAvailable) {
+          path = homeScreenPath;
+        } else {
+          path = onboardingScreenPath;
+        }
         ref.read(navigationProvider).removeAllAndNavigate(
-          context: context,
-          path: homeScreenPath,
-        );
+              context: context,
+              path: path,
+            );
       });
     });
-
   }
 
   @override
