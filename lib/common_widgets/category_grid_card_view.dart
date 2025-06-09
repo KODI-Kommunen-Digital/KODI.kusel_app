@@ -5,6 +5,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 
+import '../app_router.dart';
+import '../navigation/navigation.dart';
+import '../screens/full_image/full_image_screen.dart';
+
 class CategoryGridCardView extends ConsumerStatefulWidget {
   final String title;
   final String imageUrl;
@@ -38,6 +42,14 @@ class _CommonEventCardState extends ConsumerState<CategoryGridCardView> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8.r),
               child: ImageUtil.loadNetworkImage(
+                  onImageTap: () {
+                    ref.read(navigationProvider).navigateUsingPath(
+                        path: fullImageScreenPath,
+                        params: FullImageScreenParams(
+                          imageUrL: widget.imageUrl,
+                        ),
+                        context: context);
+                  },
                   imageUrl: widget.imageUrl, context: context),
             ),
           ),

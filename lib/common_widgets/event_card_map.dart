@@ -9,6 +9,7 @@ import '../app_router.dart';
 import '../images_path.dart';
 import '../navigation/navigation.dart';
 import '../screens/event/event_detail_screen_controller.dart';
+import '../screens/full_image/full_image_screen.dart';
 import 'image_utility.dart';
 
 class EventCardMap extends ConsumerStatefulWidget {
@@ -70,6 +71,15 @@ class _LocationCardWidgetState extends ConsumerState<EventCardMap> {
                   height: 150.h,
                   width: double.infinity,
                   child: ImageUtil.loadNetworkImage(
+                      onImageTap: (){
+                        ref.read(navigationProvider).navigateUsingPath(
+                            path: fullImageScreenPath,
+                            params: FullImageScreenParams(
+                              imageUrL: widget.logo,
+                              sourceId: widget.sourceId
+                            ),
+                            context: context);
+                      },
                       height: 75.h,
                       width: 80.w,
                       imageUrl: imageLoaderUtility(
