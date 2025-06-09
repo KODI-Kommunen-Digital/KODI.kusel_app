@@ -3,9 +3,12 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/common_widgets/web_view_page.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../app_router.dart';
 import '../images_path.dart';
+import '../navigation/navigation.dart';
 import '../utility/url_launcher_utility.dart';
 import 'custom_shimmer_widget.dart';
 import 'image_utility.dart';
@@ -171,7 +174,10 @@ class _LocationCardWidgetState extends ConsumerState<TownHallMapWidget> {
                 ),
                 10.verticalSpace,
                 GestureDetector(
-                  onTap: () => UrlLauncherUtil.launchWebUrl(url: widget.websiteUrl),
+                  onTap: () => ref.read(navigationProvider).navigateUsingPath(
+                      path: webViewPagePath,
+                      params: WebViewParams(url: widget.websiteUrl),
+                      context: context),
                   child: Row(
                     children: [
                       ImageUtil.loadSvgImage(

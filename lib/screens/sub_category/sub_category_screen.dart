@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/category_grid_card_view.dart';
+import 'package:kusel/common_widgets/location_const.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/navigation/navigation.dart';
@@ -138,8 +139,8 @@ class _SubCategoryScreenState extends ConsumerState<SubCategoryScreen> {
                   // Need to be replaced with actual lat-long value
                   SelectedEventListScreenParameter(
                       radius: 1,
-                      centerLatitude: 49.53838,
-                      centerLongitude: 7.40647,
+                      centerLatitude: EventLatLong.kusel.latitude,
+                      centerLongitude: EventLatLong.kusel.longitude,
                       categoryId: widget.subCategoryScreenParameters.id,
                       subCategoryId: exploreSubCategory.id,
                       listHeading: exploreSubCategory.name ?? "", onFavChange: () {  }));

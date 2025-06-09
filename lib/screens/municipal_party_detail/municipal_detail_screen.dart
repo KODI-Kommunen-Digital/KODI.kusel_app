@@ -8,6 +8,7 @@ import 'package:kusel/common_widgets/downstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/image_text_card_widget.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/listing_id_enum.dart';
+import 'package:kusel/common_widgets/location_const.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/screens/events_listing/selected_event_list_screen_parameter.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_location_widget.dart';
@@ -15,15 +16,18 @@ import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_scr
 import 'package:kusel/screens/ort_detail/ort_detail_screen_params.dart';
 
 import '../../app_router.dart';
+import '../../common_widgets/arrow_back_widget.dart';
 import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/event_list_section_widget.dart';
 import '../../common_widgets/feedback_card_widget.dart';
 import '../../common_widgets/toast_message.dart';
+import '../../common_widgets/web_view_page.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
 import '../../providers/favourite_cities_notifier.dart';
 import '../../utility/url_launcher_utility.dart';
 import '../all_municipality/all_municipality_provider.dart';
+import '../full_image/full_image_screen.dart';
 import 'municipal_detail_controller.dart';
 
 class MunicipalDetailScreen extends ConsumerStatefulWidget {
@@ -103,14 +107,24 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                               state.municipalPartyDetailDataModel?.id ?? 0);
                           widget.municipalDetailScreenParams.onFavUpdate(
                               isFavorite,
-                              state.municipalPartyDetailDataModel?.id ?? 0, true);
+                              state.municipalPartyDetailDataModel?.id ?? 0,
+                              true);
                         },
                         error: ({required String message}) {
                           showErrorToast(message: message, context: context);
                         },
                       );
                 },
-              ))
+              )),
+          Positioned(
+            top: 30.h,
+            left: 12.h,
+            child: ArrowBackWidget(
+              onTap: () {
+                ref.read(navigationProvider).removeTopPage(context: context);
+              },
+            ),
+          ),
         ],
       ),
     ));
@@ -259,7 +273,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
             clipperType: DownstreamCurveClipper(),
             imageUrl: imagePath['city_background_image'] ?? "",
             height: 210.h,
-            isBackArrowEnabled: true,
+            isBackArrowEnabled: false,
             isStaticImage: true,
           ),
         ),
@@ -280,6 +294,15 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                     fit: BoxFit.contain,
                     svgErrorImagePath: imagePath['crest']!,
                     context: context,
+                    onImageTap: () {
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: fullImageScreenPath,
+                          params: FullImageScreenParams(
+                              imageUrL:
+                                  state.municipalPartyDetailDataModel!.image!,
+                              sourceId: 1),
+                          context: context);
+                    },
                   )
                 : Center(
                     child: Image.asset(
@@ -343,10 +366,10 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
               'Trierer Str. 49-51, 66869 Kusel',
           long: (state.municipalPartyDetailDataModel?.longitude != null)
               ? double.parse(state.municipalPartyDetailDataModel!.longitude!)
-              : 7.4065,
+              : EventLatLong.kusel.longitude,
           lat: (state.municipalPartyDetailDataModel?.latitude != null)
               ? double.parse(state.municipalPartyDetailDataModel!.latitude!)
-              : 49.5384,
+              : EventLatLong.kusel.latitude,
           websiteText: state.municipalPartyDetailDataModel?.websiteUrl ??
               AppLocalizations.of(context).visit_website,
           calendarText:
@@ -485,9 +508,14 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                     final item = state
                         .municipalPartyDetailDataModel!.onlineServices![index];
                     return _customTextIconCard(
-                        onTap: () => UrlLauncherUtil.launchWebUrl(
-                            url: item.linkUrl ??
-                                "https://www.landkreis-kusel.de"),
+                        onTap: () => ref
+                            .read(navigationProvider)
+                            .navigateUsingPath(
+                                path: webViewPagePath,
+                                params: WebViewParams(
+                                    url: item.linkUrl ??
+                                        "https://www.landkreis-kusel.de"),
+                                context: context),
                         imageUrl: item.iconUrl!, //??item.iconUrl
                         text: item.title ?? '',
                         description: item.description ?? '');
@@ -528,6 +556,15 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                 children: [
                   20.horizontalSpace,
                   ImageUtil.loadNetworkImage(
+                    onImageTap: (){
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: fullImageScreenPath,
+                          params: FullImageScreenParams(
+                            imageUrL: imageUrl,
+                            sourceId: 3
+                          ),
+                          context: context);
+                    },
                     height: 35.h,
                     width: 35.w,
                     imageUrl: imageUrl,

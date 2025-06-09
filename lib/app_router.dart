@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kusel/common_widgets/image_utility.dart';
+import 'package:kusel/common_widgets/web_view_page.dart';
 import 'package:kusel/screens/all_city/all_city_screen.dart';
 import 'package:kusel/screens/all_city/all_city_screen_controller.dart';
 import 'package:kusel/screens/all_event/all_event_screen.dart';
@@ -10,7 +12,9 @@ import 'package:kusel/screens/auth/forgot_password/forgot_password_screen.dart';
 import 'package:kusel/screens/auth/signin/signin_screen.dart';
 import 'package:kusel/screens/auth/signup/signup_screen.dart';
 import 'package:kusel/screens/dashboard/dashboard_screen.dart';
+import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/digifit_exercise_detail_screen.dart';
 import 'package:kusel/screens/digifit_screens/digifit_overview/digifit_overview_screen.dart';
+import 'package:kusel/screens/digifit_screens/digifit_qr_scanner/digifit_qr_scanner_screen.dart';
 import 'package:kusel/screens/digifit_screens/digifit_start/digifit_start_screen.dart';
 import 'package:kusel/screens/digifit_screens/digifit_trophies/digifit_trophies_screen.dart';
 import 'package:kusel/screens/event/event_detail_screen.dart';
@@ -22,6 +26,7 @@ import 'package:kusel/screens/favorite/favorites_list_screen.dart';
 import 'package:kusel/screens/favourite_city/favourite_city_screen.dart';
 import 'package:kusel/screens/feedback/feedback_screen.dart';
 import 'package:kusel/screens/fliter_screen/filter_screen.dart';
+import 'package:kusel/screens/full_image/full_image_screen.dart';
 import 'package:kusel/screens/highlight/highlight_screen.dart';
 import 'package:kusel/screens/home/home_screen.dart';
 import 'package:kusel/screens/location/location_screen.dart';
@@ -98,7 +103,11 @@ const participateScreenPath = "participateScreenPath";
 const digifitStartScreenPath = "/digifitStartScreenPath";
 const digifitTrophiesScreenPath = "/digifitTrophiesScreenPath";
 const digifitOverViewScreenPath = "/digifitOverViewScreenPath";
+const digifitQRScannerScreenPath = "/digifitQRScannerScreenPath";
+const digifitExerciseDetailScreenPath = "/digifitExerciseDetailScreenPath";
 
+const webViewPagePath = "/webViewPagePath";
+const fullImageScreenPath = '/fullImageScreenPath';
 
 final exploreSubScreenRoutes = [
   tourismScreenPath,
@@ -159,10 +168,10 @@ List<RouteBase> goRouteList = [
       builder: (_, state) => MunicipalDetailScreen(
           municipalDetailScreenParams:
               state.extra as MunicipalDetailScreenParams)),
-  GoRoute(path: allCityScreenPath,
+  GoRoute(
+      path: allCityScreenPath,
       builder: (_, state) => AllCityScreen(
-          allCityScreenParams : state.extra as AllCityScreenParams
-      )),
+          allCityScreenParams: state.extra as AllCityScreenParams)),
   GoRoute(
       path: ortDetailScreenPath,
       builder: (_, state) => OrtDetailScreen(
@@ -176,9 +185,25 @@ List<RouteBase> goRouteList = [
   GoRoute(
       path: digifitStartScreenPath, builder: (_, __) => DigifitStartScreen()),
   GoRoute(
-      path: digifitTrophiesScreenPath, builder: (_, __) => DigifitTrophiesScreen()),
+      path: digifitTrophiesScreenPath,
+      builder: (_, __) => DigifitTrophiesScreen()),
   GoRoute(
-      path: digifitOverViewScreenPath, builder: (_, __) => DigifitOverviewScreen()),
+      path: digifitOverViewScreenPath,
+      builder: (_, __) => DigifitOverviewScreen()),
+  GoRoute(
+      path: digifitQRScannerScreenPath,
+      builder: (_, __) => DigifitQRScannerScreen()),
+  GoRoute(
+      path: webViewPagePath,
+      builder: (_, state) =>
+          WebViewPage(webViewParams: state.extra as WebViewParams)),
+  GoRoute(
+      path: fullImageScreenPath,
+      builder: (_, state) => FullImageScreen(
+          fullImageScreenParams: state.extra as FullImageScreenParams)),
+  GoRoute(
+      path: digifitExerciseDetailScreenPath,
+      builder: (_, __) => DigifitExerciseDetailScreen()),
 
   // Dashboard + tabs
   dashboardRoutes,

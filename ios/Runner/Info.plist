@@ -53,5 +53,7 @@
 		<string>This app needs access to location when open.</string>
 		<key>UIStatusBarHidden</key>
 		<false/>
+		<key>NSCameraUsageDescription</key>
+        <string>We need camera access to scan barcodes</string>
 	</dict>
 </plist>
