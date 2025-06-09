@@ -41,6 +41,7 @@ final lightTheme = ThemeData(
   canvasColor: lightThemeCanvasColor,
   hintColor: lightThemeHintColor,
   dividerColor: lightThemeDividerColor,
+  shadowColor: lightThemeShadowColor,
   cardColor: lightThemeCardColor,
 );
 

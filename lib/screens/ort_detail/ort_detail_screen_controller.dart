@@ -156,11 +156,12 @@ class OrtDetailScreenController extends StateNotifier<OrtDetailScreenState> {
       state = state.copyWith(isLoading: false, error: error.toString());
     }
   }
-  Future<void> getNews() async {
+  Future<void> getNews(String cityId) async {
     try {
       final categoryId = ListingCategoryId.news.eventId.toString();
 
       GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(
+        cityId: cityId,
           pageSize: 5, sortByStartDate: true, categoryId: categoryId);
 
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
@@ -179,13 +180,13 @@ class OrtDetailScreenController extends StateNotifier<OrtDetailScreenState> {
     }
   }
 
-  // Todo - Add city id
-  Future<void> getEvents() async {
+  Future<void> getEvents(String? cityId) async {
     try {
       state = state.copyWith(isLoading: true, error: "");
 
       GetAllListingsRequestModel getAllListingsRequestModel =
       GetAllListingsRequestModel(
+        cityId: cityId,
           categoryId: ListingCategoryId.event.eventId.toString());
 
       GetAllListingsResponseModel getAllListingsResponseModel =

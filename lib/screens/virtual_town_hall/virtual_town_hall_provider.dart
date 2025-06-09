@@ -10,6 +10,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/common_widgets/listing_id_enum.dart';
 import 'package:kusel/screens/virtual_town_hall/virtual_town_hall_state.dart';
 
+import '../../common_widgets/location_const.dart';
+
 final virtualTownHallProvider =
     StateNotifierProvider<VirtualTownHallProvider, VirtualTownHallState>(
         (ref) => VirtualTownHallProvider(
@@ -101,8 +103,8 @@ class VirtualTownHallProvider extends StateNotifier<VirtualTownHallState> {
             imageUrl: result.data?.image,
             description: result.data?.description,
             address: result.data?.address,
-            latitude: double.parse(result.data?.latitude ?? ''),
-            longitude: double.parse(result.data?.longitude ?? ''),
+            latitude: double.parse(result.data?.latitude ?? EventLatLong.kusel.latitude.toString()),
+            longitude: double.parse(result.data?.longitude ?? EventLatLong.kusel.longitude.toString()),
             phoneNumber: result.data?.phone,
             email: result.data?.email,
             openUntil: result.data?.openUntil,

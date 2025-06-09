@@ -13,6 +13,7 @@ import 'package:kusel/screens/ort_detail/ort_detail_screen_state.dart';
 import 'package:kusel/screens/virtual_town_hall/virtual_town_hall_provider.dart';
 
 import '../../app_router.dart';
+import '../../common_widgets/arrow_back_widget.dart';
 import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/common_bottom_nav_card_.dart';
 import '../../common_widgets/common_text_arrow_widget.dart';
@@ -22,6 +23,7 @@ import '../../common_widgets/highlights_card.dart';
 import '../../common_widgets/listing_id_enum.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/toast_message.dart';
+import '../../common_widgets/web_view_page.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
 import '../../providers/favorites_list_notifier.dart';
@@ -30,6 +32,7 @@ import '../../utility/url_launcher_utility.dart';
 import '../all_event/all_event_screen_param.dart';
 import '../event/event_detail_screen_controller.dart';
 import '../events_listing/selected_event_list_screen_parameter.dart';
+import '../full_image/full_image_screen.dart';
 import '../mein_ort/mein_ort_provider.dart';
 import '../municipal_party_detail/widget/municipal_detail_location_widget.dart';
 import 'ort_detail_screen_params.dart';
@@ -51,8 +54,8 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
           .read(ortDetailScreenControllerProvider.notifier)
           .getOrtDetail(ortId: widget.ortDetailScreenParams.ortId);
       ref.read(ortDetailScreenControllerProvider.notifier).getHighlights();
-      ref.read(ortDetailScreenControllerProvider.notifier).getEvents();
-      ref.read(ortDetailScreenControllerProvider.notifier).getNews();
+      ref.read(ortDetailScreenControllerProvider.notifier).getEvents(widget.ortDetailScreenParams.ortId);
+      ref.read(ortDetailScreenControllerProvider.notifier).getNews(widget.ortDetailScreenParams.ortId);
 
       ref.read(ortDetailScreenControllerProvider.notifier).isUserLoggedIn();
     });
@@ -105,7 +108,16 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                       showErrorToast(message: message, context: context);
                     },
                   );                },
-              ))
+              )),
+          Positioned(
+            top: 30.h,
+            left: 12.h,
+            child: ArrowBackWidget(
+              onTap: () {
+                ref.read(navigationProvider).removeTopPage(context: context);
+              },
+            ),
+          ),
         ],
       ),
     );
@@ -141,7 +153,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                       path: allEventScreenPath,
                       context: context,
                       params: AllEventScreenParam(onFavChange: () {
-                        ref.read(ortDetailScreenControllerProvider.notifier).getEvents();
+                        ref.read(ortDetailScreenControllerProvider.notifier).getEvents(widget.ortDetailScreenParams.ortId);
                       }));
                 },
                 onHeadingTap: () {
@@ -149,7 +161,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                       path: allEventScreenPath,
                       context: context,
                       params: AllEventScreenParam(onFavChange: () {
-                        ref.read(ortDetailScreenControllerProvider.notifier).getEvents();
+                        ref.read(ortDetailScreenControllerProvider.notifier).getEvents(widget.ortDetailScreenParams.ortId);
                       }));
                 },
                 onSuccess: (isFav, eventId) {
@@ -179,7 +191,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                           onFavChange: () {
                             ref
                                 .read(ortDetailScreenControllerProvider.notifier)
-                                .getNews();
+                                .getNews(widget.ortDetailScreenParams.ortId);
                           }));
                 },
                 onHeadingTap: () {
@@ -193,7 +205,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                           onFavChange: () {
                             ref
                                 .read(ortDetailScreenControllerProvider.notifier)
-                                .getNews();
+                                .getNews(widget.ortDetailScreenParams.ortId);
                           }));
                 },
                 isFavVisible: state.isUserLoggedIn,
@@ -205,7 +217,10 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
               ),
             _buildMayorCard(),
             LocalSvgImageTextServiceCard(
-              onTap: () => UrlLauncherUtil.launchWebUrl(url: "https://www.landkreis-kusel.de"),
+              onTap: () => ref.read(navigationProvider).navigateUsingPath(
+                  path: webViewPagePath,
+                  params: WebViewParams(url: "https://www.landkreis-kusel.de"),
+                  context: context),
               imageUrl: 'tourism_service_image',
               text: AppLocalizations.of(context).hiking_trails,
               description: AppLocalizations.of(context).discover_kusel_on_foot,
@@ -298,7 +313,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
             clipperType: DownstreamCurveClipper(),
             imageUrl: imagePath['city_background_image'] ?? "",
             height: 210.h,
-            isBackArrowEnabled: true,
+            isBackArrowEnabled: false,
             isStaticImage: true,
           ),
         ),
@@ -317,6 +332,14 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                     imageUrl: state.ortDetailDataModel!.image!,
                     sourceId: 1,
                     fit: BoxFit.contain,
+                    onImageTap: (){
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: fullImageScreenPath,
+                          params: FullImageScreenParams(
+                            imageUrL: state.ortDetailDataModel!.image!,
+                          ),
+                          context: context);
+                    },
                     svgErrorImagePath: imagePath['crest']!,
                     context: context,
                   )
@@ -382,8 +405,11 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
       return Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         child: CustomButton(
-            onPressed: () => UrlLauncherUtil.launchWebUrl(
-                url: state.ortDetailDataModel!.websiteUrl!),
+            onPressed: () => ref.read(navigationProvider).navigateUsingPath(
+                path: webViewPagePath,
+                params:
+                    WebViewParams(url: state.ortDetailDataModel!.websiteUrl!),
+                context: context),
             text: AppLocalizations.of(context).view_ort),
       );
     });

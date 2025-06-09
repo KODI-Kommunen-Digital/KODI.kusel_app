@@ -17,6 +17,7 @@ import '../../common_widgets/common_more_info_card.dart';
 import '../../common_widgets/downstream_wave_clipper.dart';
 import '../../common_widgets/image_utility.dart';
 import '../../common_widgets/network_image_text_service_card.dart';
+import '../../common_widgets/web_view_page.dart';
 import '../../navigation/navigation.dart';
 
 class MobilityScreen extends ConsumerStatefulWidget {
@@ -46,30 +47,43 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
   _buildBody() {
     final state = ref.watch(mobilityScreenProvider);
     return SafeArea(
-      child: SingleChildScrollView(
-        physics: ClampingScrollPhysics(),
-        child: Column(
-          children: [
-            CommonBackgroundClipperWidget(
-                clipperType: DownstreamCurveClipper(),
-                imageUrl: state.mobilityData?.iconUrl ??
-                    'https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg',
-                isBackArrowEnabled: true,
-                isStaticImage: false),
-            _buildMobilityDescription(),
-            _buildReadMoreSection(),
-            _buildOffersList(),
-            _buildContactListUi(),
-            _buildContactDetailsList(),
-            FeedbackCardWidget(
-                height: 270.h,
-                onTap: () {
-              ref
-                  .read(navigationProvider)
-                  .navigateUsingPath(path: feedbackScreenPath, context: context);
-            })
-          ],
-        ),
+      child: Stack(
+        children: [
+          SingleChildScrollView(
+            physics: ClampingScrollPhysics(),
+            child: Column(
+              children: [
+                CommonBackgroundClipperWidget(
+                    clipperType: DownstreamCurveClipper(),
+                    imageUrl: state.mobilityData?.iconUrl ??
+                        'https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg',
+                    isBackArrowEnabled: false,
+                    isStaticImage: false),
+                _buildMobilityDescription(),
+                _buildReadMoreSection(),
+                _buildOffersList(),
+                _buildContactListUi(),
+                _buildContactDetailsList(),
+                FeedbackCardWidget(
+                    height: 270.h,
+                    onTap: () {
+                  ref
+                      .read(navigationProvider)
+                      .navigateUsingPath(path: feedbackScreenPath, context: context);
+                })
+              ],
+            ),
+          ),
+          Positioned(
+            top: 30.h,
+            left: 12.h,
+            child: ArrowBackWidget(
+              onTap: () {
+                ref.read(navigationProvider).removeTopPage(context: context);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -131,8 +145,10 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
                 itemBuilder: (context, index) {
                   final item = state.mobilityData?.servicesOffered?[index];
                   return NetworkImageTextServiceCard(
-                    onTap: () => UrlLauncherUtil.launchWebUrl(
-                        url: item?.linkUrl ?? 'https://www.landkreis-kusel.de'),
+                    onTap: () => ref.read(navigationProvider).navigateUsingPath(
+                        path: webViewPagePath,
+                        params: WebViewParams(url: item?.linkUrl ?? 'https://www.landkreis-kusel.de'),
+                        context: context),
                     imageUrl: item?.iconUrl ?? '',
                     text: item?.title ?? '_',
                     description: item?.description,

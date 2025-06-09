@@ -69,21 +69,24 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
       String tourism = AppLocalizations.of(context).tourism_and_leisure;
       String mobility = AppLocalizations.of(context).mobility;
       String getInvolved = AppLocalizations.of(context).get_involved;
+      String digifit = AppLocalizations.of(context).digifit;
 
       List<String> exploreList = [
         virtualTownHall,
         myDown,
         tourism,
         mobility,
-        getInvolved
-      ];
+        getInvolved,
+       ];
 
       List<String> images = [
         "virtual_town_hall",
         "my_town",
         "tourism_and_lesiure",
         "mobility",
-        "get_involved"
+        "get_involved",
+        // Todo - change to original digifit image
+        // "get_involved"
       ];
 
       return GridView.builder(
@@ -150,6 +153,15 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
               );
         };
         break;
+      // Todo : Enable when required
+      // case 5:
+      //   onTap = () {
+      //     ref.read(navigationProvider).navigateUsingPath(
+      //       path: digifitStartScreenPath,
+      //       context: context,
+      //     );
+      //   };
+      //   break;
       default:
         onTap = null;
     }
