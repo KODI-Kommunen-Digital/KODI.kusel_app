@@ -11,7 +11,6 @@ import '../../../app_router.dart';
 import '../../../common_widgets/arrow_back_widget.dart';
 import '../../../common_widgets/custom_button_widget.dart';
 import '../../../common_widgets/digifit/digifit_text_image_card.dart';
-import '../../../common_widgets/digifit/digifit_video_player/digifit_video_player_widget.dart';
 import '../../../common_widgets/image_utility.dart';
 import '../../../common_widgets/text_styles.dart';
 import '../../../navigation/navigation.dart';
@@ -117,9 +116,9 @@ class _DigifitExerciseDetailScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          DigifitVideoPlayerWidget(
-            videoUrl: 'assets/video/test_video_2.mp4',
-          ),
+          // DigifitVideoPlayerWidget(
+          //   videoUrl: 'assets/video/test_video_2.mp4',
+          // ),
           20.verticalSpace,
           textBoldPoppins(text: "Brustpresse", fontSize: 15),
           8.verticalSpace,
