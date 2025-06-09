@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/app_router.dart';
+import 'package:kusel/common_widgets/location_const.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
@@ -127,8 +128,8 @@ class _ExploreScreenState extends ConsumerState<CategoryScreen> {
                     // Need to be replaced with actual lat-long value
                     params: SelectedEventListScreenParameter(
                         radius: 1,
-                        centerLatitude: 49.53838,
-                        centerLongitude: 7.40647,
+                        centerLatitude: EventLatLong.kusel.latitude,
+                        centerLongitude: EventLatLong.kusel.longitude,
                         listHeading: exploreCategory.name ?? "" ?? '',
                         categoryId: exploreCategory.id,
                         onFavChange: () {}),

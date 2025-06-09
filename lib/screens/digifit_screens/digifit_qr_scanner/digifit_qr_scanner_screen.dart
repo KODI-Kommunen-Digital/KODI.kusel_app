@@ -81,7 +81,8 @@ class _DigifitQRScannerScreenState extends ConsumerState<DigifitQRScannerScreen>
                 color: Theme.of(context).textTheme.labelSmall?.color,
                 fontSize: 18,
                 textOverflow: TextOverflow.visible,
-                text: AppLocalizations.of(context).scan_the_qr_text)),
+                text: AppLocalizations.of(context).scan_the_qr_text)
+        ),
         Positioned(
             top: 50,
             left: 20,

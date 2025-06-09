@@ -23,6 +23,7 @@ class OnboardingScreenState {
   Map<int, bool> interestsMap;
   String? userCurrentCity;
   OnboardingData? onboardingData;
+  bool isLoggedIn;
 
   OnboardingScreenState(
       this.selectedPageIndex,
@@ -45,7 +46,9 @@ class OnboardingScreenState {
       this.loading,
       this.interestsMap,
       this.userCurrentCity,
-      this.onboardingData);
+      this.onboardingData,
+      this.isLoggedIn
+      );
 
   factory OnboardingScreenState.empty() {
     return OnboardingScreenState(
@@ -69,7 +72,8 @@ class OnboardingScreenState {
         false,
         {},
         null,
-        null);
+        null,
+        false);
   }
 
   OnboardingScreenState copyWith(
@@ -93,7 +97,9 @@ class OnboardingScreenState {
       bool? loading,
       Map<int, bool>? interestsMap,
       String? userCurrentCity,
-      OnboardingData? onboardingData}) {
+      OnboardingData? onboardingData,
+      bool? isLoggedIn
+      }) {
     return OnboardingScreenState(
         selectedPageIndex ?? this.selectedPageIndex,
         onBoardingButtonText ?? this.onBoardingButtonText,
@@ -115,6 +121,7 @@ class OnboardingScreenState {
         loading ?? this.loading,
         interestsMap ?? this.interestsMap,
         userCurrentCity ?? this.userCurrentCity,
-        onboardingData ?? this.onboardingData);
+        onboardingData ?? this.onboardingData,
+        isLoggedIn ?? this.isLoggedIn);
   }
 }

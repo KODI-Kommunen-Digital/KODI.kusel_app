@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 
+import '../app_router.dart';
+import '../navigation/navigation.dart';
+import '../screens/full_image/full_image_screen.dart';
 import '../utility/image_loader_utility.dart';
 import 'image_utility.dart';
 
@@ -66,9 +69,19 @@ class _ImageTextCardWidgetState extends ConsumerState<ImageTextCardWidget> {
                   height: 50.h,
                   width: 50.w,
                   child: ImageUtil.loadNetworkImage(
+                      onImageTap: () {
+                        ref.read(navigationProvider).navigateUsingPath(
+                            path: fullImageScreenPath,
+                            params: FullImageScreenParams(
+                              imageUrL: imageLoaderUtility(
+                                  image: imageUrl ?? '', sourceId: 1),
+                              sourceId: sourceId,
+                            ),
+                            context: context);
+                      },
                       fit: BoxFit.contain,
-                      imageUrl:
-                          imageLoaderUtility(image: imageUrl ?? '', sourceId: 1),
+                      imageUrl: imageLoaderUtility(
+                          image: imageUrl ?? '', sourceId: 1),
                       sourceId: sourceId,
                       context: context),
                 ),

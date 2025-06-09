@@ -22,7 +22,7 @@ class _ArrowBackWidgetState extends ConsumerState<ArrowBackWidget> {
       child: Container(
         padding: EdgeInsets.all(10.r),
         decoration: BoxDecoration(
-          color: Color(0xFF283583),
+          color: Theme.of(context).primaryColor,
           borderRadius: BorderRadius.circular(widget.circularRadius ?? 50.r),
         ),
         child: Center(
