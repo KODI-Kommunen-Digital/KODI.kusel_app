@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/listing_id_enum.dart';
+import 'package:kusel/common_widgets/location_const.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/events_listing/selected_event_list_screen_parameter.dart';
@@ -106,8 +107,8 @@ class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
                       listHeading: items.first.categoryName,
                       categoryId: categoryId,
                       radius: SearchRadius.radius.value,
-                      centerLatitude: 49.53838,
-                      centerLongitude: 7.40647,
+                      centerLatitude: EventLatLong.kusel.latitude,
+                      centerLongitude: EventLatLong.kusel.longitude,
                       onFavChange: () {
                         ref
                             .read(searchResultScreenProvider.notifier)

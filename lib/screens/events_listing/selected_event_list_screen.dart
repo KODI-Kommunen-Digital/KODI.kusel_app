@@ -7,9 +7,11 @@ import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/screens/events_listing/selected_event_list_screen_controller.dart';
 import 'package:kusel/screens/events_listing/selected_event_list_screen_parameter.dart';
 
+import '../../common_widgets/arrow_back_widget.dart';
 import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/event_list_section_widget.dart';
 import '../../images_path.dart';
+import '../../navigation/navigation.dart';
 import 'selected_event_list_screen_state.dart';
 
 class SelectedEventListScreen extends ConsumerStatefulWidget {
@@ -49,51 +51,64 @@ class _ExploreScreenState extends ConsumerState<SelectedEventListScreen> {
 
   Widget _buildBody(
       SelectedEventListScreenState categoryScreenState, BuildContext context) {
-    return SingleChildScrollView(
-      physics: ClampingScrollPhysics(),
-      child: Column(
-        children: [
-          CommonBackgroundClipperWidget(
-            clipperType: UpstreamWaveClipper(),
-            height: 130.h,
-            imageUrl: imagePath['home_screen_background'] ?? '',
-            isStaticImage: true,
-            isBackArrowEnabled: true,
-            headingText: categoryScreenState.heading,
-          ),
-          if (!ref.watch(selectedEventListScreenProvider).loading)
-            ref.watch(selectedEventListScreenProvider).eventsList.isEmpty
-                ? Center(
-                    child: textHeadingMontserrat(
-                        text: AppLocalizations.of(context).no_data),
-                  )
-                : EventsListSectionWidget(
-                    eventsList:
-                        ref.watch(selectedEventListScreenProvider).eventsList,
-                    heading: null,
-                    maxListLimit: ref
-                        .watch(selectedEventListScreenProvider)
-                        .eventsList
-                        .length,
-                    buttonText: null,
-                    buttonIconPath: null,
-                    isLoading: false,
-                    onButtonTap: () {},
-                    context: context,
-                    isFavVisible: ref
-                        .watch(selectedEventListScreenProvider)
-                        .isUserLoggedIn,
-                    onHeadingTap: () {},
-                    onSuccess: (bool isFav, int? id) {
-                      ref
-                          .read(selectedEventListScreenProvider.notifier)
-                          .updateIsFav(isFav, id);
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          physics: ClampingScrollPhysics(),
+          child: Column(
+            children: [
+              CommonBackgroundClipperWidget(
+                clipperType: UpstreamWaveClipper(),
+                height: 130.h,
+                imageUrl: imagePath['home_screen_background'] ?? '',
+                isStaticImage: true,
+                isBackArrowEnabled: false,
+                headingText: categoryScreenState.heading,
+              ),
+              if (!ref.watch(selectedEventListScreenProvider).loading)
+                ref.watch(selectedEventListScreenProvider).eventsList.isEmpty
+                    ? Center(
+                        child: textHeadingMontserrat(
+                            text: AppLocalizations.of(context).no_data),
+                      )
+                    : EventsListSectionWidget(
+                        eventsList:
+                            ref.watch(selectedEventListScreenProvider).eventsList,
+                        heading: null,
+                        maxListLimit: ref
+                            .watch(selectedEventListScreenProvider)
+                            .eventsList
+                            .length,
+                        buttonText: null,
+                        buttonIconPath: null,
+                        isLoading: false,
+                        onButtonTap: () {},
+                        context: context,
+                        isFavVisible: ref
+                            .watch(selectedEventListScreenProvider)
+                            .isUserLoggedIn,
+                        onHeadingTap: () {},
+                        onSuccess: (bool isFav, int? id) {
+                          ref
+                              .read(selectedEventListScreenProvider.notifier)
+                              .updateIsFav(isFav, id);
 
-                      widget.eventListScreenParameter.onFavChange();
-                    },
-                  )
-        ],
-      ),
+                          widget.eventListScreenParameter.onFavChange();
+                        },
+                      )
+            ],
+          ),
+        ),
+        Positioned(
+          top: 30.h,
+          left: 15.h,
+          child: ArrowBackWidget(
+            onTap: () {
+              ref.read(navigationProvider).removeTopPage(context: context);
+            },
+          ),
+        ),
+      ],
     );
   }
 }

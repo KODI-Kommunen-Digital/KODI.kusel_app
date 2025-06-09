@@ -14,6 +14,8 @@ import 'package:kusel/utility/url_launcher_utility.dart';
 
 import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/toast_message.dart';
+import '../../common_widgets/web_view_page.dart';
+import '../../utility/url_constants/url_constants.dart';
 import '../dashboard/dashboard_screen_provider.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
@@ -83,7 +85,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             title: textBoldPoppins(
                 textAlign: TextAlign.start,
                 text: AppLocalizations.of(context).imprint_page),
-            onTap: () => UrlLauncherUtil.launchWebUrl(url: imprintPageUrl),
+            onTap: () => ref.read(navigationProvider).navigateUsingPath(
+                path: webViewPagePath,
+                params: WebViewParams(url: imprintPageUrl),
+                context: context),
           ),
           const Divider(),
           ListTile(
@@ -91,7 +96,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             title: textBoldPoppins(
                 textAlign: TextAlign.start,
                 text: AppLocalizations.of(context).terms_of_use),
-            onTap: () => UrlLauncherUtil.launchWebUrl(url: termsOfUseUrl),
+            onTap: () => ref.read(navigationProvider).navigateUsingPath(
+                path: webViewPagePath,
+                params: WebViewParams(url: termsOfUseUrl),
+                context: context),
           ),
           const Divider(),
           ListTile(
@@ -99,7 +107,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             title: textBoldPoppins(
                 textAlign: TextAlign.start,
                 text: AppLocalizations.of(context).privacy_policy),
-            onTap: () => UrlLauncherUtil.launchWebUrl(url: privacyPolicyUrl),
+            onTap: () => ref.read(navigationProvider).navigateUsingPath(
+                path: webViewPagePath,
+                params: WebViewParams(url: privacyPolicyUrl),
+                context: context),
           ),
           Visibility(
             visible: ref.watch(settingsScreenProvider).isLoggedIn,

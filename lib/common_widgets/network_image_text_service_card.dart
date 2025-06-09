@@ -6,6 +6,10 @@ import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/images_path.dart';
 
+import '../app_router.dart';
+import '../navigation/navigation.dart';
+import '../screens/full_image/full_image_screen.dart';
+
 class NetworkImageTextServiceCard extends ConsumerStatefulWidget {
   final Function() onTap;
   final String imageUrl;
@@ -45,10 +49,19 @@ class _IconTextWidgetCardState extends ConsumerState<NetworkImageTextServiceCard
               Expanded(
                 flex: 3,
                 child: ImageUtil.loadNetworkImage(
-                  fit: BoxFit.contain,
-                  height: 30.h,
+                    onImageTap: () {
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: fullImageScreenPath,
+                          params: FullImageScreenParams(
+                            imageUrL: widget.imageUrl,
+                          ),
+                          context: context);
+                    },
+                    fit: BoxFit.contain,
+                    height: 30.h,
                     width: 30.w,
-                    imageUrl: widget.imageUrl, context: context),
+                    imageUrl: widget.imageUrl,
+                    context: context),
               ),
               Expanded(
                 flex: 6,

@@ -16,6 +16,7 @@ import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/common_contact_details_card.dart';
 import '../../common_widgets/image_utility.dart';
 import '../../common_widgets/network_image_text_service_card.dart';
+import '../../common_widgets/web_view_page.dart';
 import '../../navigation/navigation.dart';
 import '../../utility/url_launcher_utility.dart';
 
@@ -47,40 +48,53 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
     final state = ref.watch(participateScreenProvider);
 
     return SafeArea(
-      child: SingleChildScrollView(
-        physics: ClampingScrollPhysics(),
-        child: Column(
-          children: [
-            CommonBackgroundClipperWidget(
-                clipperType: DownstreamCurveClipper(),
-                imageUrl: state.participateData?.iconUrl ??
-                    'https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg',
-                isBackArrowEnabled: true,
-                isStaticImage: false),
-            _buildParticipateDescription(),
-            _buildParticipateList(),
-            if (state.participateData != null &&
-                state.participateData!.moreInformations!.isNotEmpty)
-              ListView.builder(
-                  itemCount: state.participateData?.moreInformations?.length ?? 0,
-                  physics: NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    final item = state.participateData?.moreInformations?[index];
-                    return _buildInfoMessage(
-                        heading: item?.title ?? '_',
-                        description: item?.description ?? "_");
-                  }),
-            _buildContactDetailsList(),
-            FeedbackCardWidget(
-                height: 270.h,
-                onTap: () {
-              ref
-                  .read(navigationProvider)
-                  .navigateUsingPath(path: feedbackScreenPath, context: context);
-            })
-          ],
-        ),
+      child: Stack(
+        children: [
+          SingleChildScrollView(
+            physics: ClampingScrollPhysics(),
+            child: Column(
+              children: [
+                CommonBackgroundClipperWidget(
+                    clipperType: DownstreamCurveClipper(),
+                    imageUrl: state.participateData?.iconUrl ??
+                        'https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg',
+                    isBackArrowEnabled: false,
+                    isStaticImage: false),
+                _buildParticipateDescription(),
+                _buildParticipateList(),
+                if (state.participateData != null &&
+                    state.participateData!.moreInformations!.isNotEmpty)
+                  ListView.builder(
+                      itemCount: state.participateData?.moreInformations?.length ?? 0,
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        final item = state.participateData?.moreInformations?[index];
+                        return _buildInfoMessage(
+                            heading: item?.title ?? '_',
+                            description: item?.description ?? "_");
+                      }),
+                _buildContactDetailsList(),
+                FeedbackCardWidget(
+                    height: 270.h,
+                    onTap: () {
+                  ref
+                      .read(navigationProvider)
+                      .navigateUsingPath(path: feedbackScreenPath, context: context);
+                })
+              ],
+            ),
+          ),
+          Positioned(
+            top: 30.h,
+            left: 12.h,
+            child: ArrowBackWidget(
+              onTap: () {
+                ref.read(navigationProvider).removeTopPage(context: context);
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -112,9 +126,12 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
               textOverflow: TextOverflow.visible),
           8.verticalSpace,
           CustomButton(
-              onPressed: () => UrlLauncherUtil.launchWebUrl(
-                  url: state.participateData?.links?[0].linkUrl ??
-                      'https://www.google.com/'),
+              onPressed: () => ref.read(navigationProvider).navigateUsingPath(
+                  path: webViewPagePath,
+                  params: WebViewParams(
+                      url: state.participateData?.links?[0].linkUrl ??
+                          'https://www.google.com/'),
+                  context: context),
               text: AppLocalizations.of(context).register_here)
         ],
       ),
@@ -143,8 +160,12 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
                 itemBuilder: (context, index) {
                   final item = state.participateData?.servicesOffered?[index];
                   return NetworkImageTextServiceCard(
-                    onTap: () => UrlLauncherUtil.launchWebUrl(
-                        url: item?.linkUrl ?? 'https://www.landkreis-kusel.de'),
+                    onTap: () => ref.read(navigationProvider).navigateUsingPath(
+                        path: webViewPagePath,
+                        params: WebViewParams(
+                            url: item?.linkUrl ??
+                                'https://www.landkreis-kusel.de'),
+                        context: context),
                     imageUrl: item?.iconUrl ?? '',
                     text: item?.title ?? '_',
                     description: item?.description,

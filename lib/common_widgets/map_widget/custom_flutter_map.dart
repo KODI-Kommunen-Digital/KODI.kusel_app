@@ -112,8 +112,12 @@ class _CustomFlutterMapState extends ConsumerState<CustomFlutterMap> {
         onTap: (tapPosition, latLong) => widget.onMapTap(),
         initialCenter: LatLng(widget.latitude, widget.longitude),
         initialZoom: widget.initialZoom,
-        interactionOptions: const InteractionOptions(
-          flags: InteractiveFlag.all,
+        interactionOptions: InteractionOptions(
+          flags: InteractiveFlag.pinchZoom |
+          InteractiveFlag.drag |
+          InteractiveFlag.flingAnimation |
+          InteractiveFlag.doubleTapZoom |
+          InteractiveFlag.scrollWheelZoom
         ),
       ),
       children: [
