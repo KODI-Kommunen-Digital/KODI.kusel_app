@@ -4,12 +4,16 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
+import 'package:kusel/common_widgets/location_const.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../app_router.dart';
 import '../../../common_widgets/map_widget/custom_flutter_map.dart';
 import '../../../common_widgets/text_styles.dart';
+import '../../../common_widgets/web_view_page.dart';
 import '../../../images_path.dart';
+import '../../../navigation/navigation.dart';
 import '../../../utility/url_launcher_utility.dart';
 
 class CityDetailLocationWidget extends ConsumerStatefulWidget {
@@ -76,8 +80,8 @@ class _CityDetailLocationWidgetState
             ),
           ),
           CityDetailMapContainer(
-            lat: widget.lat ?? 49.53838,
-            long: widget.long ?? 7.40647,
+            lat: widget.lat ?? EventLatLong.kusel.latitude,
+            long: widget.long ?? EventLatLong.kusel.longitude,
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16),
@@ -124,7 +128,10 @@ class _CityDetailLocationWidgetState
             padding:
                 EdgeInsets.only(top: 8.0, bottom: 12.0, left: 16, right: 16),
             child: GestureDetector(
-              onTap: () => UrlLauncherUtil.launchWebUrl(url: widget.webUrl),
+              onTap: () => ref.read(navigationProvider).navigateUsingPath(
+                  path: webViewPagePath,
+                  params: WebViewParams(url: widget.webUrl),
+                  context: context),
               child: Row(
                 children: [
                   5.horizontalSpace,

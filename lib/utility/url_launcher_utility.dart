@@ -4,7 +4,12 @@ class UrlLauncherUtil {
   /// Launches a web URL in the browser.
   static Future<void> launchWebUrl({required String url}) async {
     final Uri uri = Uri.parse(url);
-    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+    if (!await launchUrl(
+        uri,
+      mode: LaunchMode.inAppWebView,
+      webViewConfiguration: const WebViewConfiguration(
+        enableJavaScript: true,
+      ),    )) {
       throw 'Could not launch URL: $url';
     }
   }

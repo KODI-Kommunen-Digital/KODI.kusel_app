@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../base_model.dart';
 
 final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
   throw UnimplementedError(); // This will be overridden in main
@@ -27,6 +31,11 @@ class SharedPreferenceHelper {
 
   Future<bool> setInt(String key, int value) async {
     return await prefs.setInt(key, value);
+  }
+
+  Future<void> saveObject(String key, dynamic object) async {
+    String objectJson = jsonEncode(object.toJson());
+    await prefs.setString(key, objectJson);
   }
 
   Future<bool> remove(String key) async {

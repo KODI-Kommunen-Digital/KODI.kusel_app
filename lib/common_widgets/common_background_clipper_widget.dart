@@ -3,8 +3,10 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/screens/full_image/full_image_screen.dart';
 import '../images_path.dart';
 import '../navigation/navigation.dart';
 import 'arrow_back_widget.dart';
@@ -23,6 +25,7 @@ class CommonBackgroundClipperWidget extends ConsumerStatefulWidget {
   final Widget? customWidget2;
   final Widget? customWidget3;
   final Widget? filterWidget;
+  final BoxFit? imageFit;
 
   const CommonBackgroundClipperWidget({
     super.key,
@@ -38,7 +41,8 @@ class CommonBackgroundClipperWidget extends ConsumerStatefulWidget {
     this.headingText,
     this.height,
     this.isLoading,
-    this.filterWidget
+    this.filterWidget,
+    this.imageFit
   });
 
   @override
@@ -66,12 +70,21 @@ class _CommonBackgroundClipperWidgetState
                       child: widget.isStaticImage
                           ? Image.asset(
                               widget.imageUrl,
-                              fit: BoxFit.cover,
+                              fit: widget.imageFit ?? BoxFit.cover,
                             )
                           : ImageUtil.loadNetworkImage(
                               imageUrl: widget.imageUrl,
                               context: context,
                               sourceId: widget.sourceId,
+                              onImageTap: (){
+                                ref.read(navigationProvider).navigateUsingPath(
+                                    path: fullImageScreenPath,
+                                    params: FullImageScreenParams(
+                                        imageUrL: widget.imageUrl,
+                                      sourceId: widget.sourceId
+                                    ),
+                                    context: context);
+                              },
                               svgErrorImagePath:
                                   imagePath['home_screen_background'] ?? '',
                             ),

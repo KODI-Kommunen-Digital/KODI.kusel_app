@@ -10,10 +10,12 @@ import 'package:kusel/screens/all_event/all_event_screen_param.dart';
 import 'package:kusel/screens/fliter_screen/filter_screen.dart';
 import 'package:kusel/screens/fliter_screen/filter_screen_controller.dart';
 
+import '../../common_widgets/arrow_back_widget.dart';
 import '../../common_widgets/event_list_section_widget.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
 import '../../images_path.dart';
+import '../../navigation/navigation.dart';
 
 class AllEventScreen extends ConsumerStatefulWidget {
 
@@ -49,47 +51,60 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
     bool isFilterApplied =
         ref.watch(allEventScreenProvider).filterCount != null &&
             ref.watch(allEventScreenProvider).filterCount! > 0;
-    return SingleChildScrollView(
-      physics: ClampingScrollPhysics(),
-      child: Column(
-        children: [
-          CommonBackgroundClipperWidget(
-            clipperType: UpstreamWaveClipper(),
-            height: 130.h,
-            imageUrl: imagePath['home_screen_background'] ?? '',
-            isStaticImage: true,
-            isBackArrowEnabled: true,
-            headingText: AppLocalizations.of(context).events,
-            customWidget1: _buildFilterWidget(isFilterApplied),
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          physics: ClampingScrollPhysics(),
+          child: Column(
+            children: [
+              CommonBackgroundClipperWidget(
+                clipperType: UpstreamWaveClipper(),
+                height: 130.h,
+                imageUrl: imagePath['home_screen_background'] ?? '',
+                isStaticImage: true,
+                isBackArrowEnabled: false,
+                headingText: AppLocalizations.of(context).events,
+                customWidget1: _buildFilterWidget(isFilterApplied),
+              ),
+              if (!ref.watch(allEventScreenProvider).isLoading)
+                ref.watch(allEventScreenProvider).listingList.isEmpty
+                    ? Center(
+                        child: textHeadingMontserrat(
+                            text: AppLocalizations.of(context).no_data),
+                      )
+                    : EventsListSectionWidget(
+                        eventsList: ref.watch(allEventScreenProvider).listingList,
+                        heading: null,
+                        maxListLimit:
+                            ref.watch(allEventScreenProvider).listingList.length,
+                        buttonText: null,
+                        buttonIconPath: null,
+                        isLoading: false,
+                        onButtonTap: () {},
+                        context: context,
+                        isFavVisible:
+                            ref.watch(allEventScreenProvider).isUserLoggedIn,
+                        onHeadingTap: () {},
+                        onSuccess: (bool isFav, int? id) {
+                          ref
+                              .read(allEventScreenProvider.notifier)
+                              .updateIsFav(isFav, id);
+                          widget.allEventScreenParam.onFavChange();
+                        },
+                      )
+            ],
           ),
-          if (!ref.watch(allEventScreenProvider).isLoading)
-            ref.watch(allEventScreenProvider).listingList.isEmpty
-                ? Center(
-                    child: textHeadingMontserrat(
-                        text: AppLocalizations.of(context).no_data),
-                  )
-                : EventsListSectionWidget(
-                    eventsList: ref.watch(allEventScreenProvider).listingList,
-                    heading: null,
-                    maxListLimit:
-                        ref.watch(allEventScreenProvider).listingList.length,
-                    buttonText: null,
-                    buttonIconPath: null,
-                    isLoading: false,
-                    onButtonTap: () {},
-                    context: context,
-                    isFavVisible:
-                        ref.watch(allEventScreenProvider).isUserLoggedIn,
-                    onHeadingTap: () {},
-                    onSuccess: (bool isFav, int? id) {
-                      ref
-                          .read(allEventScreenProvider.notifier)
-                          .updateIsFav(isFav, id);
-                      widget.allEventScreenParam.onFavChange();
-                    },
-                  )
-        ],
-      ),
+        ),
+        Positioned(
+          top: 30.h,
+          left: 12.h,
+          child: ArrowBackWidget(
+            onTap: () {
+              ref.read(navigationProvider).removeTopPage(context: context);
+            },
+          ),
+        ),
+      ],
     );
   }
 

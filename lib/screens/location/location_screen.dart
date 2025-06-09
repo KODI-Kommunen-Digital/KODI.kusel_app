@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
+import 'package:kusel/common_widgets/location_const.dart';
 import 'package:kusel/screens/location/bottom_sheet_screens/selected_filter_screen.dart';
 import 'package:kusel/screens/location/location_screen_state.dart';
 import 'package:latlong2/latlong.dart';
@@ -51,8 +52,8 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
         body: Stack(
           children: [
             CustomFlutterMap(
-              latitude: 49.53838,
-              longitude: 7.40647,
+              latitude: EventLatLong.kusel.latitude,
+              longitude: EventLatLong.kusel.longitude,
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               initialZoom: 12.0,

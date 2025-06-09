@@ -61,7 +61,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   }
                 },
                 child: SizedBox(
-                    height: MediaQuery.of(context).size.height, child: buildUi()),
+                    height: MediaQuery.of(context).size.height,
+                    child: buildUi()
+                ),
               ),
             ),
           ) : NetworkStatusScreen();
@@ -300,9 +302,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           listHeading: AppLocalizations.of(context).news,
                           categoryId: ListingCategoryId.news.eventId,
                           onFavChange: () {
-                            ref
-                                .read(homeScreenProvider.notifier)
-                                .getNews();
+                            ref.read(homeScreenProvider.notifier).getNews();
                           }));
                 },
                 onHeadingTap: () {
@@ -314,9 +314,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           listHeading: AppLocalizations.of(context).news,
                           categoryId: ListingCategoryId.news.eventId,
                           onFavChange: () {
-                            ref
-                                .read(homeScreenProvider.notifier)
-                                .getNews();
+                            ref.read(homeScreenProvider.notifier).getNews();
                           }));
                 },
                 isFavVisible: !state.isSignInButtonVisible,
@@ -340,10 +338,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       path: selectedEventListScreenPath,
                       context: context,
                       params: SelectedEventListScreenParameter(
-                        categoryId: ListingCategoryId.event.eventId,
+                          categoryId: ListingCategoryId.event.eventId,
                           onFavChange: () {
-                        ref.read(homeScreenProvider.notifier).getEvents();
-                      }, listHeading: AppLocalizations.of(context).events));
+                            ref.read(homeScreenProvider.notifier).getEvents();
+                          },
+                          listHeading: AppLocalizations.of(context).events));
                 },
                 onHeadingTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
@@ -353,7 +352,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           categoryId: ListingCategoryId.event.eventId,
                           onFavChange: () {
                             ref.read(homeScreenProvider.notifier).getEvents();
-                          }, listHeading: AppLocalizations.of(context).events));
+                          },
+                          listHeading: AppLocalizations.of(context).events));
                 },
                 onSuccess: (isFav, eventId) {
                   ref

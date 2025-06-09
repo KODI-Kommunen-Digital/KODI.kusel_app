@@ -181,6 +181,11 @@ class _DigifitStartScreenState extends ConsumerState<DigifitStartScreen> {
                     isFavouriteVisible: true,
                     isFavorite: false,
                     sourceId: 1,
+                    onCardTap: (){
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: digifitExerciseDetailScreenPath,
+                          context: context);
+                    },
                     isMarked: true),
               );
             }),

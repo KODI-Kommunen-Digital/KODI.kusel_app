@@ -11,6 +11,8 @@ import 'package:kusel/screens/event/event_detail_screen_state.dart';
 import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../common_widgets/location_const.dart';
+
 final eventDetailScreenProvider =
     StateNotifierProvider.autoDispose<EventDetailScreenController, EventDetailScreenState>(
         (ref) => EventDetailScreenController(
@@ -28,7 +30,9 @@ class EventDetailScreenController
   ListingsUseCase listingsUseCase;
 
   Future<void> fetchAddress() async {
-    String result = await getAddressFromLatLng(28.7041, 77.1025);
+    String result = await getAddressFromLatLng(
+        state.eventDetails.latitude ?? EventLatLong.kusel.latitude,
+        state.eventDetails.longitude ?? EventLatLong.kusel.longitude);
     state = state.copyWith(address: result);
   }
 
@@ -72,16 +76,16 @@ class EventDetailScreenController
     } catch (e) {
       return "Error: $e";
     }
+
     return "No Address Found";
   }
 
   Future<void> getRecommendedList() async {
     try {
-      LatLong kuselLatLong = LatLong(49.53603477650214, 7.392734870386151);
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
-              centerLongitude: kuselLatLong.latitude,
-              centerLatitude: kuselLatLong.longitude,
+              centerLongitude: EventLatLong.kusel.longitude,
+              centerLatitude: EventLatLong.kusel.latitude,
               radius: 20);
       GetAllListingsResponseModel getAllListingsResponseModel =
           GetAllListingsResponseModel();
