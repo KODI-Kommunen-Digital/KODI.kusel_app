@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:core/preference_manager/preference_constant.dart';
 import 'package:core/preference_manager/shared_pref_helper.dart';
+import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:core/token_status.dart';
 import 'package:domain/model/empty_request.dart';
 import 'package:domain/model/request_model/onboarding_model/onboarding_user_Demographics_request_model.dart';
@@ -43,7 +44,8 @@ final onboardingScreenProvider = StateNotifierProvider.autoDispose<
         onboardingDetailsUseCase: ref.read(onboardingDetailsUseCaseProvider),
         tokenStatus: ref.read(tokenStatusProvider),
         refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider),
-        sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider)));
+        sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
+        signInStatusController: ref.read(signInStatusProvider.notifier)));
 
 class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   OnboardingScreenController(
@@ -56,7 +58,9 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
       required this.onboardingDetailsUseCase,
       required this.tokenStatus,
       required this.refreshTokenUseCase,
-      required this.sharedPreferenceHelper})
+      required this.sharedPreferenceHelper,
+      required this.signInStatusController
+      })
       : super(OnboardingScreenState.empty());
   OnboardingUserTypeUseCase onboardingUserTypeUseCase;
   OnboardingUserDemographicsUseCase onboardingUserDemographicsUseCase;
@@ -71,9 +75,11 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   PageController pageController = PageController();
   TextEditingController yourLocationEditingController = TextEditingController();
   GlobalKey<FormState> onboardingNameFormKey = GlobalKey<FormState>();
+  SignInStatusController signInStatusController;
 
   Future<void> initialCall() async {
     state = state.copyWith(isLoading: true);
+    isLoggedIn();
     initializerPageController();
     await Future.wait([
     updateCurrentCity(),
@@ -518,10 +524,49 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   }
 
   Future<void> startLoadingTimer(Function() callBack) async {
-    await updateOnboardingSuccess();
+    if(state.isLoggedIn){
+      await updateOnboardingSuccess();
+    } else {
+      saveCacheOnboardingData();
+    }
     Future.delayed(const Duration(seconds: 2), () {
       callBack();
     });
+  }
+
+  Future<void> saveCacheOnboardingData() async {
+    Map<int, bool> interestSMap = state.interestsMap;
+    List<int> interestIds = interestSMap.entries
+        .where((interest) => interest.value)
+        .map((interest) => interest.key)
+        .toList();
+
+    String? userType;
+    if (state.isTourist || state.isResident) {
+      userType = state.isResident ? "citizen" : "tourist";
+    }
+
+    String maritalStatus = state.isSingle
+        ? "alone"
+        : state.isForTwo
+        ? "married"
+        : "with_family";
+    final accommodationPreference = <String>[
+      if (state.isWithDog) "dog",
+      if (state.isBarrierearm) "low_barrier",
+    ];
+    String cityName = state.resident ?? '';
+    int cityId = getCityIdByName(state.cityDetailsMap, cityName) ?? 0;
+
+    OnboardingData onboardingData = OnboardingData(
+      userType: userType,
+      cityId: cityId,
+      maritalStatus: maritalStatus,
+      accommodationPreference: accommodationPreference,
+      interests: interestIds,
+      onBoarded: 1
+    );
+    sharedPreferenceHelper.saveObject(onboardingCacheKey, onboardingData);
   }
 
   Future<void> getInterests() async {
@@ -670,6 +715,11 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
         sharedPreferenceHelper.getString(onboardingKey) ?? "false";
     bool isOnBoarded = onBoardingStatus == 'true';
     return isOnBoarded;
+  }
+
+  Future<void> isLoggedIn() async {
+    final status = await signInStatusController.isUserLoggedIn();
+    state = state.copyWith(isLoggedIn: status);
   }
 }
 

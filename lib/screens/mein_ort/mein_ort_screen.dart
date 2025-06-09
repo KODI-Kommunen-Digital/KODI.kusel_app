@@ -49,25 +49,34 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
 
     return Scaffold(
         body: SafeArea(
-          child: Stack(
-            children: [
-              _buildBody(context),
-              if (isLoading)
-                Center(
-            child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10.r),
-          ),
-          height: 100.h,
-          width: 100.w,
-          child: const Center(
-            child: CircularProgressIndicator(),
-          ),
-                )),
-            ],
-          ),
-        ));
+      child: Stack(
+        children: [
+          _buildBody(context),
+          if (isLoading)
+            Center(
+                child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              height: 100.h,
+              width: 100.w,
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            )),
+          Positioned(
+            top: 13.h,
+            left: 5.w,
+            child: IconButton(
+                onPressed: () {
+                  ref.read(navigationProvider).removeTopPage(context: context);
+                },
+                icon: Icon(Icons.arrow_back)),
+          )
+        ],
+      ),
+    ));
   }
 
   Widget _buildBody(BuildContext context) {
@@ -141,17 +150,10 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
             blurredBackground: true,
             isStaticImage: true,
             customWidget1: Positioned(
-              left: 0.r,
-              top: 15.h,
+              left: 40.w,
+              top: 20.h,
               child: Row(
                 children: [
-                  IconButton(
-                      onPressed: () {
-                        ref
-                            .read(navigationProvider)
-                            .removeTopPage(context: context);
-                      },
-                      icon: Icon(Icons.arrow_back)),
                   16.horizontalSpace,
                   textBoldPoppins(
                       color: Theme.of(context).textTheme.labelLarge?.color,

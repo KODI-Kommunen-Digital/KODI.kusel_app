@@ -57,6 +57,7 @@ class FeedbackScreenProvider extends StateNotifier<FeedbackScreenState> {
   }
 
   void updateCheckBox(bool value) {
-    state = state.copyWith(isChecked: value);
+    bool onError =  !value;
+    state = state.copyWith(isChecked: value, onError: onError);
   }
 }

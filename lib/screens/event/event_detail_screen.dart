@@ -8,13 +8,16 @@ import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/downstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
+import 'package:kusel/common_widgets/location_const.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/event/event_detail_screen_state.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../common_widgets/arrow_back_widget.dart';
 import '../../common_widgets/common_event_card.dart';
 import '../../common_widgets/location_card_widget.dart';
+import '../../common_widgets/web_view_page.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
 import '../../utility/url_launcher_utility.dart';
@@ -33,10 +36,10 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
   @override
   void initState() {
     Future.microtask(() {
-      ref.read(eventDetailScreenProvider.notifier).fetchAddress();
       ref
           .read(eventDetailScreenProvider.notifier)
           .getEventDetails(widget.eventScreenParams.eventId);
+      ref.read(eventDetailScreenProvider.notifier).fetchAddress();
       ref.read(eventDetailScreenProvider.notifier).getRecommendedList();
     });
     super.initState();
@@ -66,6 +69,15 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                   child: CircularProgressIndicator(),
                 ),
               )),
+            Positioned(
+              top: 30,
+              left: 20,
+              child: ArrowBackWidget(
+                onTap: () {
+                  ref.read(navigationProvider).removeTopPage(context: context);
+                },
+              ),
+            ),
           ],
         ),
       ),
@@ -82,7 +94,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
               imageUrl: state.eventDetails.logo ??
                   'https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg',
               sourceId: state.eventDetails.sourceId,
-              isBackArrowEnabled: true,
+              isBackArrowEnabled: false,
               isStaticImage: false),
           _buildEventsUi(state),
           if (ref.watch(eventDetailScreenProvider).groupedEvents.isNotEmpty)
@@ -120,11 +132,13 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
           //     ? locationCardShimmerEffect(context)
           //     :
           LocationCardWidget(
-            address: state.eventDetails.address ?? "",
+            address: state.address,
             websiteText: AppLocalizations.of(context).visit_website,
             websiteUrl: state.eventDetails.website ?? "",
-            latitude: state.eventDetails.latitude ?? 49.53603477650214,
-            longitude: state.eventDetails.longitude ?? 7.392734870386151,
+            latitude:
+                state.eventDetails.latitude ?? EventLatLong.kusel.latitude,
+            longitude:
+                state.eventDetails.longitude ?? EventLatLong.kusel.longitude,
           ),
           12.verticalSpace,
           // state.loading
@@ -133,8 +147,10 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
           _publicTransportCard(
             heading: AppLocalizations.of(context).public_transport_offer,
             description: AppLocalizations.of(context).find_out_how_to,
-            onTap: () =>
-                UrlLauncherUtil.launchWebUrl(url: "https://www.google.com/"),
+            onTap: () => ref.read(navigationProvider).navigateUsingPath(
+                path: webViewPagePath,
+                params: WebViewParams(url: "https://www.google.com/"),
+                context: context),
           ),
           16.verticalSpace,
           // state.loading

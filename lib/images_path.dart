@@ -77,7 +77,8 @@ Map<String, String> _pngImagePath = {
   "participate_image": "assets/png/participate_image.png",
   "link_icon": "assets/png/link_icon.png",
   "scan_icon": "assets/png/scan_icon.png",
-  "digifit_map_image": "assets/png/digifit_map_image.png"
+  "digifit_map_image": "assets/png/digifit_map_image.png",
+  "exercise_background": "assets/png/exercise_background.png"
 };
 
 Map<String, String> _jpegImagePath = {

@@ -20,4 +20,9 @@ class SplashScreenProvider extends StateNotifier<SplashScreenState> {
   void startTimer(VoidCallback callBack) {
     Timer(const Duration(seconds: 2), callBack);
   }
+
+  bool isOnboardingCacheAvailable() {
+    bool value = sharedPreferenceHelper.getString(onboardingCacheKey)!=null;
+    return value;
+  }
 }
