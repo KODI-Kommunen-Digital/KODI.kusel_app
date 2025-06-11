@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -30,7 +28,6 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -47,10 +44,10 @@ class _MyAppState extends ConsumerState<MyApp> {
           routerConfig: ref.read(mobileRouterProvider),
           theme: ref.watch(themeManagerProvider).currentSelectedTheme,
           builder: (context, child) {
-            final hasNetwork = ref.watch(networkStatusProvider).isNetworkAvailable;
-            return hasNetwork ?child! : NetworkStatusScreen();
-          }
-      ),
+            final hasNetwork =
+                ref.watch(networkStatusProvider).isNetworkAvailable;
+            return hasNetwork ? child! : NetworkStatusScreen();
+          }),
     );
   }
 
@@ -58,11 +55,8 @@ class _MyAppState extends ConsumerState<MyApp> {
   void initState() {
     Future.microtask(() async {
       {
-        Locale deviceLocale = PlatformDispatcher.instance.locale;
-        ref
-            .read(localeManagerProvider.notifier)
-            .fetchCurrentSelectedLocale(deviceLocale);
-        await ref.read(networkStatusProvider.notifier).checkNetworkStatus();
+        ref.read(localeManagerProvider.notifier).initialLocaleSetUp();
+        ref.read(networkStatusProvider.notifier).checkNetworkStatus();
       }
     });
     super.initState();

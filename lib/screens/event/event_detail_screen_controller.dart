@@ -7,27 +7,30 @@ import 'package:domain/usecase/listings/listings_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:kusel/locale/localization_manager.dart';
 import 'package:kusel/screens/event/event_detail_screen_state.dart';
-import 'package:open_street_map_search_and_pick/open_street_map_search_and_pick.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/location_const.dart';
 
-final eventDetailScreenProvider =
-    StateNotifierProvider.autoDispose<EventDetailScreenController, EventDetailScreenState>(
-        (ref) => EventDetailScreenController(
-              eventDetailsUseCase: ref.read(eventDetailsUseCaseProvider),
-              listingsUseCase: ref.read(listingsUseCaseProvider),
-            ));
+final eventDetailScreenProvider = StateNotifierProvider.autoDispose<
+        EventDetailScreenController, EventDetailScreenState>(
+    (ref) => EventDetailScreenController(
+          eventDetailsUseCase: ref.read(eventDetailsUseCaseProvider),
+          listingsUseCase: ref.read(listingsUseCaseProvider),
+          localeManagerController: ref.read(localeManagerProvider.notifier),
+        ));
 
 class EventDetailScreenController
     extends StateNotifier<EventDetailScreenState> {
   EventDetailScreenController(
-      {required this.eventDetailsUseCase, required this.listingsUseCase})
+      {required this.eventDetailsUseCase,
+      required this.listingsUseCase,
+      required this.localeManagerController})
       : super(EventDetailScreenState.empty());
 
   EventDetailsUseCase eventDetailsUseCase;
   ListingsUseCase listingsUseCase;
+  LocaleManagerController localeManagerController;
 
   Future<void> fetchAddress() async {
     String result = await getAddressFromLatLng(
@@ -41,8 +44,13 @@ class EventDetailScreenController
       try {
         state = state.copyWith(loading: true, error: "");
 
+        Locale currentLocale = localeManagerController.getSelectedLocale();
+
+        //translate: "${currentLocale.languageCode}-${currentLocale.countryCode}"
         GetEventDetailsRequestModel getEventDetailsRequestModel =
-            GetEventDetailsRequestModel(id: eventId);
+            GetEventDetailsRequestModel(
+          id: eventId,
+        );
 
         GetEventDetailsResponseModel getEventDetailsResponseModel =
             GetEventDetailsResponseModel();
@@ -56,7 +64,7 @@ class EventDetailScreenController
           (r) {
             var eventData = (r as GetEventDetailsResponseModel).data;
             state = state.copyWith(eventDetails: eventData, loading: false);
-            print("Printing description - ${eventData?.description}");
+            debugPrint("Printing description - ${eventData?.description}");
           },
         );
       } catch (error) {
@@ -82,18 +90,22 @@ class EventDetailScreenController
 
   Future<void> getRecommendedList() async {
     try {
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
               centerLongitude: EventLatLong.kusel.longitude,
               centerLatitude: EventLatLong.kusel.latitude,
-              radius: 20);
+              radius: 20,
+              translate:
+                  "${currentLocale.languageCode}-${currentLocale.countryCode}");
       GetAllListingsResponseModel getAllListingsResponseModel =
           GetAllListingsResponseModel();
       final result = await listingsUseCase.call(
           getAllListingsRequestModel, getAllListingsResponseModel);
       result.fold(
         (l) {
-          state = state.copyWith( error: l.toString());
+          state = state.copyWith(error: l.toString());
         },
         (r) {
           var listings = getSortedTop10Listings(
@@ -116,7 +128,7 @@ class EventDetailScreenController
         },
       );
     } catch (error) {
-      state = state.copyWith( error: error.toString());
+      state = state.copyWith(error: error.toString());
     }
   }
 

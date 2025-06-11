@@ -10,13 +10,10 @@ import 'package:kusel/images_path.dart';
 import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/settings/settings_screen_provider.dart';
 import 'package:kusel/utility/url_constants/url_constants.dart';
-import 'package:kusel/utility/url_launcher_utility.dart';
 
 import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/toast_message.dart';
 import '../../common_widgets/web_view_page.dart';
-import '../../utility/url_constants/url_constants.dart';
-import '../dashboard/dashboard_screen_provider.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -158,8 +155,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     textAlign: TextAlign.start,
                   ),
                   onTap: () async {
-                    ref.read(settingsScreenProvider.notifier).logoutUser(() {
-                    });
+                    ref.read(settingsScreenProvider.notifier).logoutUser(() {});
                   },
                 ),
               ],
@@ -232,6 +228,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
       builder: (BuildContext context) {
         final selectedLanguage =
             ref.watch(settingsScreenProvider).selectedLanguage;
+
         final languageList = ref.read(settingsScreenProvider).languageList;
 
         return AlertDialog(

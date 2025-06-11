@@ -8,6 +8,7 @@ import 'package:domain/usecase/search/search_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/locale/localization_manager.dart';
 import 'package:kusel/screens/location/bottom_sheet_selected_ui_type.dart';
 
 import 'location_screen_state.dart';
@@ -18,22 +19,30 @@ final locationScreenProvider = StateNotifierProvider.autoDispose<
           listingsUseCase: ref.read(listingsUseCaseProvider),
           searchUseCase: ref.read(searchUseCaseProvider),
           signInStatusController: ref.read(signInStatusProvider.notifier),
+          localeManagerController: ref.read(localeManagerProvider.notifier),
         ));
 
 class LocationScreenProvider extends StateNotifier<LocationScreenState> {
   ListingsUseCase listingsUseCase;
   SearchUseCase searchUseCase;
   SignInStatusController signInStatusController;
+  LocaleManagerController localeManagerController;
 
   LocationScreenProvider(
       {required this.listingsUseCase,
       required this.searchUseCase,
-      required this.signInStatusController})
+      required this.signInStatusController,
+      required this.localeManagerController})
       : super(LocationScreenState.empty());
 
   Future<void> getAllEventList() async {
     try {
-      GetAllListingsRequestModel requestModel = GetAllListingsRequestModel();
+
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
+      GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(
+          translate: "${currentLocale.languageCode}-${currentLocale.countryCode}"
+      );
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
 
       state = state.copyWith(allEventList: []);
@@ -70,8 +79,12 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
     try {
       state =
           state.copyWith(isSelectedFilterScreenLoading: true, allEventList: []);
+
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
       GetAllListingsRequestModel requestModel =
-          GetAllListingsRequestModel(categoryId: categoryId);
+          GetAllListingsRequestModel(categoryId: categoryId,
+              translate: "${currentLocale.languageCode}-${currentLocale.countryCode}");
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
 
       final result = await listingsUseCase.call(requestModel, responseModel);
@@ -186,8 +199,7 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
     state = state.copyWith(isUserLoggedIn: status);
   }
 
-  updateIsFav(bool isFav, int? eventId)
-  {
+  updateIsFav(bool isFav, int? eventId) {
     final list = state.allEventList;
     for (var listing in list) {
       if (listing.id == eventId) {
@@ -203,8 +215,10 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
       final aTitle = a.title?.toLowerCase() ?? '';
       final bTitle = b.title?.toLowerCase() ?? '';
 
-      final aScore = aTitle.startsWith(search) ? 0 : (aTitle.contains(search) ? 1 : 2);
-      final bScore = bTitle.startsWith(search) ? 0 : (bTitle.contains(search) ? 1 : 2);
+      final aScore =
+          aTitle.startsWith(search) ? 0 : (aTitle.contains(search) ? 1 : 2);
+      final bScore =
+          bTitle.startsWith(search) ? 0 : (bTitle.contains(search) ? 1 : 2);
 
       if (aScore != bScore) return aScore.compareTo(bScore);
       return aTitle.compareTo(bTitle);

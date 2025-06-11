@@ -1,9 +1,12 @@
+import 'dart:ui';
+
 import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/usecase/listings/listings_usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/common_widgets/listing_id_enum.dart';
+import 'package:kusel/locale/localization_manager.dart';
 import 'package:kusel/screens/events_listing/selected_event_list_screen_parameter.dart';
 import 'package:kusel/screens/events_listing/selected_event_list_screen_state.dart';
 
@@ -11,15 +14,19 @@ final selectedEventListScreenProvider = StateNotifierProvider.autoDispose<
         SelectedEventListScreenController, SelectedEventListScreenState>(
     (ref) => SelectedEventListScreenController(
         listingsUseCase: ref.read(listingsUseCaseProvider),
-        signInStatusController: ref.read(signInStatusProvider.notifier)));
+        signInStatusController: ref.read(signInStatusProvider.notifier),
+        localeManagerController: ref.read(localeManagerProvider.notifier)));
 
 class SelectedEventListScreenController
     extends StateNotifier<SelectedEventListScreenState> {
   ListingsUseCase listingsUseCase;
   SignInStatusController signInStatusController;
+  LocaleManagerController localeManagerController;
 
   SelectedEventListScreenController(
-      {required this.listingsUseCase, required this.signInStatusController})
+      {required this.listingsUseCase,
+      required this.signInStatusController,
+      required this.localeManagerController})
       : super(SelectedEventListScreenState.empty());
 
   Future<void> getEventsList(
@@ -27,8 +34,12 @@ class SelectedEventListScreenController
     try {
       state = state.copyWith(loading: true, error: "");
 
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
       GetAllListingsRequestModel getAllListingsRequestModel =
-          GetAllListingsRequestModel();
+          GetAllListingsRequestModel(
+              translate: "${currentLocale.languageCode}-${currentLocale.countryCode}"
+          );
       if (eventListScreenParameter?.categoryId != null) {
         getAllListingsRequestModel.categoryId =
             eventListScreenParameter?.categoryId.toString();
