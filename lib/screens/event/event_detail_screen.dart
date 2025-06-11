@@ -12,6 +12,7 @@ import 'package:kusel/common_widgets/location_const.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/event/event_detail_screen_state.dart';
+import 'package:kusel/utility/kusel_date_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/arrow_back_widget.dart';
@@ -194,7 +195,13 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
               textOverflow: TextOverflow.visible,
               color: Theme.of(context).textTheme.bodyLarge?.color,
               textAlign: TextAlign.start),
-          Align(child: _buildExpandedTile())
+          Visibility(
+              visible:
+                  ref.read(eventDetailScreenProvider).eventDetails.startDate!=
+                      null && ref.read(eventDetailScreenProvider).eventDetails.endDate!=
+                      null,
+              child: Align(child: _buildExpandedTile())
+          )
         ],
       ),
     );
@@ -369,8 +376,10 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                   imageUrl: imagePath['calendar_icon'] ?? '', context: context),
               8.horizontalSpace,
               textRegularMontserrat(
-                text: "Samstag, 28.10.2024 \nvon 6:30 - 22:00 Uhr",
+                text:
+                    "${AppLocalizations.of(context).saturday}, ${KuselDateUtils.formatDate(ref.read(eventDetailScreenProvider).eventDetails.startDate??'')} \n${AppLocalizations.of(context).from} 6:30 - 22:00 ${AppLocalizations.of(context).clock}",
                 textOverflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.start,
                 color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
             ],
@@ -386,8 +395,10 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                   imageUrl: imagePath['calendar_icon'] ?? '', context: context),
               8.horizontalSpace,
               textRegularMontserrat(
-                text: "Samstag, 28.10.2024 \nvon 6:30 - 22:00 Uhr",
+                text:
+                    "${AppLocalizations.of(context).saturday}, ${KuselDateUtils.formatDate(ref.read(eventDetailScreenProvider).eventDetails.endDate??'')} \n${AppLocalizations.of(context).from} 6:30 - 22:00 ${AppLocalizations.of(context).clock}",
                 textOverflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.start,
                 color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
             ],
