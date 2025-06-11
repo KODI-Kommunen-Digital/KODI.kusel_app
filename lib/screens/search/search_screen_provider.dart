@@ -9,21 +9,24 @@ import 'package:domain/usecase/search/search_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kusel/locale/localization_manager.dart';
 import 'package:kusel/screens/search/search_screen_state.dart';
 
 final searchScreenProvider =
     StateNotifierProvider.autoDispose<SearchScreenProvider, SearchScreenState>(
         (ref) => SearchScreenProvider(
             searchUseCase: ref.read(searchUseCaseProvider),
-            sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider)));
+            sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
+            localeManagerController: ref.read(localeManagerProvider.notifier)));
 
 class SearchScreenProvider extends StateNotifier<SearchScreenState> {
   SearchScreenProvider(
-      {required this.searchUseCase, required this.sharedPreferenceHelper})
+      {required this.searchUseCase, required this.sharedPreferenceHelper, required this.localeManagerController})
       : super(SearchScreenState.empty());
 
   SearchUseCase searchUseCase;
   SharedPreferenceHelper sharedPreferenceHelper;
+  LocaleManagerController localeManagerController;
 
   Future<List<Listing>> searchList({
     required String searchText,
@@ -31,8 +34,11 @@ class SearchScreenProvider extends StateNotifier<SearchScreenState> {
     required void Function(String message) error,
   }) async {
     try {
-      SearchRequestModel searchRequestModel =
-          SearchRequestModel(searchQuery: searchText);
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+      SearchRequestModel searchRequestModel = SearchRequestModel(
+          searchQuery: searchText,
+          translate:
+              "${currentLocale.languageCode}-${currentLocale.countryCode}");
       SearchListingsResponseModel searchListingsResponseModel =
           SearchListingsResponseModel();
 

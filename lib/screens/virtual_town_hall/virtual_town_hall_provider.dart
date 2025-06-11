@@ -8,6 +8,7 @@ import 'package:domain/usecase/virtual_town_hall/virtual_town_hall_usecase.dart'
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/common_widgets/listing_id_enum.dart';
+import 'package:kusel/locale/localization_manager.dart';
 import 'package:kusel/screens/virtual_town_hall/virtual_town_hall_state.dart';
 
 import '../../common_widgets/location_const.dart';
@@ -17,17 +18,20 @@ final virtualTownHallProvider =
         (ref) => VirtualTownHallProvider(
             listingsUseCase: ref.read(listingsUseCaseProvider),
             virtualTownHallUseCase: ref.read(virtualTownHallUseCaseProvider),
-            signInStatusController: ref.read(signInStatusProvider.notifier)));
+            signInStatusController: ref.read(signInStatusProvider.notifier),
+            localeManagerController: ref.read(localeManagerProvider.notifier)));
 
 class VirtualTownHallProvider extends StateNotifier<VirtualTownHallState> {
   ListingsUseCase listingsUseCase;
   VirtualTownHallUseCase virtualTownHallUseCase;
   SignInStatusController signInStatusController;
+  LocaleManagerController localeManagerController;
 
   VirtualTownHallProvider(
       {required this.listingsUseCase,
       required this.virtualTownHallUseCase,
-      required this.signInStatusController})
+      required this.signInStatusController,
+      required this.localeManagerController})
       : super(VirtualTownHallState.empty());
 
   updateCardIndex(int index) {
@@ -36,9 +40,13 @@ class VirtualTownHallProvider extends StateNotifier<VirtualTownHallState> {
 
   Future<void> getEventsUsingCityId({required String cityId}) async {
     try {
+
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
       GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(
           categoryId: ListingCategoryId.event.eventId.toString(),
-          cityId: cityId);
+          cityId: cityId,
+          translate: "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
 
@@ -61,8 +69,11 @@ class VirtualTownHallProvider extends StateNotifier<VirtualTownHallState> {
       final id = cityId;
       final categoryId = ListingCategoryId.news.eventId.toString();
 
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
       GetAllListingsRequestModel requestModel =
-          GetAllListingsRequestModel(cityId: id, categoryId: categoryId);
+          GetAllListingsRequestModel(cityId: id, categoryId: categoryId,
+              translate: "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
 
@@ -87,7 +98,7 @@ class VirtualTownHallProvider extends StateNotifier<VirtualTownHallState> {
       EmptyRequest requestModel = EmptyRequest();
 
       VirtualTownHallResponseModel responseModel =
-      VirtualTownHallResponseModel();
+          VirtualTownHallResponseModel();
 
       final response =
           await virtualTownHallUseCase.call(requestModel, responseModel);
@@ -103,8 +114,10 @@ class VirtualTownHallProvider extends StateNotifier<VirtualTownHallState> {
             imageUrl: result.data?.image,
             description: result.data?.description,
             address: result.data?.address,
-            latitude: double.parse(result.data?.latitude ?? EventLatLong.kusel.latitude.toString()),
-            longitude: double.parse(result.data?.longitude ?? EventLatLong.kusel.longitude.toString()),
+            latitude: double.parse(result.data?.latitude ??
+                EventLatLong.kusel.latitude.toString()),
+            longitude: double.parse(result.data?.longitude ??
+                EventLatLong.kusel.longitude.toString()),
             phoneNumber: result.data?.phone,
             email: result.data?.email,
             openUntil: result.data?.openUntil,

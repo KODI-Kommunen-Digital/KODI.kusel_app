@@ -12,6 +12,7 @@ import 'package:domain/usecase/favorites/delete_favorite_usecase.dart';
 import 'package:domain/usecase/refresh_token/refresh_token_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kusel/locale/localization_manager.dart';
 
 final favoritesProvider =
     StateNotifierProvider<FavoritesListNotifier, List<Listing>>(
@@ -21,6 +22,7 @@ final favoritesProvider =
     sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
     tokenStatus: ref.read(tokenStatusProvider),
     refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider),
+      localeManagerController: ref.read(localeManagerProvider.notifier)
   ),
 );
 
@@ -30,13 +32,16 @@ class FavoritesListNotifier extends StateNotifier<List<Listing>> {
   DeleteFavoriteUsecase deleteFavoriteUsecase;
   TokenStatus tokenStatus;
   RefreshTokenUseCase refreshTokenUseCase;
+  LocaleManagerController localeManagerController;
 
   FavoritesListNotifier(
       {required this.addFavoriteUseCase,
       required this.deleteFavoriteUsecase,
       required this.sharedPreferenceHelper,
       required this.tokenStatus,
-      required this.refreshTokenUseCase})
+      required this.refreshTokenUseCase,
+      required this.localeManagerController
+      })
       : super([]);
 
   Future<void> addFavorite(
@@ -63,12 +68,17 @@ class FavoritesListNotifier extends StateNotifier<List<Listing>> {
           sharedPreferenceHelper.setString(
               refreshTokenKey, res.data?.refreshToken ?? "");
 
+          Locale currentLocale = localeManagerController.getSelectedLocale();
+
           AddFavoritesRequestModel getFavoritesRequestModel =
               AddFavoritesRequestModel(
                   cityId: item.cityId.toString(),
                   listingId: item.id.toString(),
                   userId: sharedPreferenceHelper.getInt(userIdKey).toString() ??
-                      "");
+                      "",
+                  translate:
+                  "${currentLocale.languageCode}-${currentLocale.countryCode}"
+              );
 
           GetFavoritesResponseModel getFavoritesResponseModel =
               GetFavoritesResponseModel();

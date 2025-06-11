@@ -7,6 +7,7 @@ import 'package:domain/usecase/search/search_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:kusel/locale/localization_manager.dart';
 import 'package:kusel/screens/search_result/search_result_screen_parameter.dart';
 import 'package:kusel/screens/search_result/search_result_screen_state.dart';
 
@@ -18,18 +19,21 @@ final searchResultScreenProvider = StateNotifierProvider.autoDispose<
     (ref) => SearchResultScreenProvider(
         listingsUseCase: ref.read(listingsUseCaseProvider),
         searchUseCase: ref.read(searchUseCaseProvider),
-        signInStatusController: ref.read(signInStatusProvider.notifier)));
+        signInStatusController: ref.read(signInStatusProvider.notifier),
+        localeManagerController: ref.read(localeManagerProvider.notifier)));
 
 class SearchResultScreenProvider
     extends StateNotifier<SearchResultScreenState> {
   SearchResultScreenProvider(
       {required this.listingsUseCase,
       required this.searchUseCase,
-      required this.signInStatusController})
+      required this.signInStatusController,
+      required this.localeManagerController})
       : super(SearchResultScreenState.empty());
   ListingsUseCase listingsUseCase;
   SearchUseCase searchUseCase;
   SignInStatusController signInStatusController;
+  LocaleManagerController localeManagerController;
 
   Future<void> getNearbyList() async {
     try {
@@ -42,10 +46,13 @@ class SearchResultScreenProvider
       final long = position.longitude;
       final radius = SearchRadius.radius.value;
 
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
       state = state.copyWith(loading: true, error: "");
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
-              radius: radius, centerLatitude: lat, centerLongitude: long);
+              radius: radius, centerLatitude: lat, centerLongitude: long,
+              translate: "${currentLocale.languageCode}-${currentLocale.countryCode}");
       GetAllListingsResponseModel getAllListingsResponseModel =
           GetAllListingsResponseModel();
       final result = await listingsUseCase.call(
@@ -93,8 +100,14 @@ class SearchResultScreenProvider
   Future<void> getRecommendedList() async {
     try {
       state = state.copyWith(loading: true, error: "");
+
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
+
       GetAllListingsRequestModel getAllListingsRequestModel =
-          GetAllListingsRequestModel();
+          GetAllListingsRequestModel(
+              translate: "${currentLocale.languageCode}-${currentLocale.countryCode}"
+          );
       GetAllListingsResponseModel getAllListingsResponseModel =
           GetAllListingsResponseModel();
       final result = await listingsUseCase.call(
