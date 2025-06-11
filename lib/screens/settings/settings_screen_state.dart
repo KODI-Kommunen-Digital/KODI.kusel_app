@@ -11,7 +11,7 @@ class SettingsScreenState {
   factory SettingsScreenState.empty() {
     return SettingsScreenState(
         [LocaleConstant.english.displayName, LocaleConstant.german.displayName],
-        LocaleConstant.english.displayName,
+        LocaleConstant.german.displayName,
         false);
   }
 
