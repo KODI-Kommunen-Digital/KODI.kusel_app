@@ -13,6 +13,7 @@ import 'package:domain/usecase/ort_detail/ort_detail_usecase.dart';
 import 'package:domain/usecase/refresh_token/refresh_token_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kusel/locale/localization_manager.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen_state.dart';
 
 import '../../common_widgets/listing_id_enum.dart';
@@ -20,13 +21,14 @@ import '../../common_widgets/listing_id_enum.dart';
 final ortDetailScreenControllerProvider = StateNotifierProvider.autoDispose<
         OrtDetailScreenController, OrtDetailScreenState>(
     (ref) => OrtDetailScreenController(
-        ortDetailUseCase: ref.read(ortDetailUseCaseProvider),
-        signInStatusController: ref.watch(signInStatusProvider.notifier),
-      sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
-      tokenStatus: ref.read(tokenStatusProvider),
-      refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider),
-      listingsUseCase: ref.read(listingsUseCaseProvider),
-    ));
+          ortDetailUseCase: ref.read(ortDetailUseCaseProvider),
+          signInStatusController: ref.watch(signInStatusProvider.notifier),
+          sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
+          tokenStatus: ref.read(tokenStatusProvider),
+          refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider),
+          listingsUseCase: ref.read(listingsUseCaseProvider),
+          localeManagerController: ref.read(localeManagerProvider.notifier),
+        ));
 
 class OrtDetailScreenController extends StateNotifier<OrtDetailScreenState> {
   OrtDetailUseCase ortDetailUseCase;
@@ -35,7 +37,7 @@ class OrtDetailScreenController extends StateNotifier<OrtDetailScreenState> {
   TokenStatus tokenStatus;
   RefreshTokenUseCase refreshTokenUseCase;
   ListingsUseCase listingsUseCase;
-
+  LocaleManagerController localeManagerController;
 
   OrtDetailScreenController(
       {required this.ortDetailUseCase,
@@ -44,7 +46,7 @@ class OrtDetailScreenController extends StateNotifier<OrtDetailScreenState> {
       required this.tokenStatus,
       required this.refreshTokenUseCase,
       required this.listingsUseCase,
-      })
+      required this.localeManagerController})
       : super(OrtDetailScreenState.copyWith());
 
   Future<void> getOrtDetail({required String ortId}) async {
@@ -59,18 +61,18 @@ class OrtDetailScreenController extends StateNotifier<OrtDetailScreenState> {
       if (response && status) {
         final userId = sharedPreferenceHelper.getInt(userIdKey);
         RefreshTokenRequestModel requestModel =
-        RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+            RefreshTokenRequestModel(userId: userId?.toString() ?? "");
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
         final refreshResponse =
-        await refreshTokenUseCase.call(requestModel, responseModel);
+            await refreshTokenUseCase.call(requestModel, responseModel);
 
         bool refreshSuccess = await refreshResponse.fold(
-              (left) {
+          (left) {
             debugPrint('refresh token add fav city fold exception : $left');
             return false;
           },
-              (right) async {
+          (right) async {
             final res = right as RefreshTokenResponseModel;
             sharedPreferenceHelper.setString(
                 tokenKey, res.data?.accessToken ?? "");
@@ -89,7 +91,8 @@ class OrtDetailScreenController extends StateNotifier<OrtDetailScreenState> {
       OrtDetailRequestModel requestModel = OrtDetailRequestModel(ortId: ortId);
       OrtDetailResponseModel responseModel = OrtDetailResponseModel();
 
-      final detailResponse = await ortDetailUseCase.call(requestModel, responseModel);
+      final detailResponse =
+          await ortDetailUseCase.call(requestModel, responseModel);
 
       detailResponse.fold((l) {
         debugPrint('get ort detail fold exception = ${l.toString()}');
@@ -136,18 +139,22 @@ class OrtDetailScreenController extends StateNotifier<OrtDetailScreenState> {
     try {
       state = state.copyWith(isLoading: true, error: "");
 
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
+
       GetAllListingsRequestModel getAllListingsRequestModel =
-      GetAllListingsRequestModel(categoryId: "41");
+          GetAllListingsRequestModel(categoryId: ListingCategoryId.highlights.eventId.toString(),
+              translate: "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
       GetAllListingsResponseModel getAllListingsResponseModel =
-      GetAllListingsResponseModel();
+          GetAllListingsResponseModel();
       final result = await listingsUseCase.call(
           getAllListingsRequestModel, getAllListingsResponseModel);
       result.fold(
-            (l) {
+        (l) {
           state = state.copyWith(isLoading: false, error: l.toString());
         },
-            (r) {
+        (r) {
           var listings = (r as GetAllListingsResponseModel).data;
           state = state.copyWith(highlightsList: listings, isLoading: false);
         },
@@ -156,13 +163,20 @@ class OrtDetailScreenController extends StateNotifier<OrtDetailScreenState> {
       state = state.copyWith(isLoading: false, error: error.toString());
     }
   }
+
   Future<void> getNews(String cityId) async {
     try {
       final categoryId = ListingCategoryId.news.eventId.toString();
 
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
+
       GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(
-        cityId: cityId,
-          pageSize: 5, sortByStartDate: true, categoryId: categoryId);
+          cityId: cityId,
+          pageSize: 5,
+          sortByStartDate: true,
+          categoryId: categoryId,
+          translate: "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
 
@@ -184,20 +198,23 @@ class OrtDetailScreenController extends StateNotifier<OrtDetailScreenState> {
     try {
       state = state.copyWith(isLoading: true, error: "");
 
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
       GetAllListingsRequestModel getAllListingsRequestModel =
-      GetAllListingsRequestModel(
-        cityId: cityId,
-          categoryId: ListingCategoryId.event.eventId.toString());
+          GetAllListingsRequestModel(
+              cityId: cityId,
+              categoryId: ListingCategoryId.event.eventId.toString(),
+              translate: "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
       GetAllListingsResponseModel getAllListingsResponseModel =
-      GetAllListingsResponseModel();
+          GetAllListingsResponseModel();
       final result = await listingsUseCase.call(
           getAllListingsRequestModel, getAllListingsResponseModel);
       result.fold(
-            (l) {
+        (l) {
           state = state.copyWith(isLoading: false, error: l.toString());
         },
-            (r) {
+        (r) {
           var listings = (r as GetAllListingsResponseModel).data;
           state = state.copyWith(eventsList: listings, isLoading: false);
         },
@@ -224,5 +241,4 @@ class OrtDetailScreenController extends StateNotifier<OrtDetailScreenState> {
     }
     state = state.copyWith(highlightsList: state.highlightsList);
   }
-
 }
