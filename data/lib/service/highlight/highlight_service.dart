@@ -13,7 +13,7 @@ class HighlightService {
 
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
-    final path = "$listingsEndPoint?${requestModel.toJson()["categoryId"]}";
+      final path = "$listingsEndPoint?${requestModel.toJson()["categoryId"]}";
 
     final apiHelper = ref.read(apiHelperProvider);
 
