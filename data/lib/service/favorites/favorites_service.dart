@@ -24,9 +24,11 @@ class FavoritesService {
     final userId = requestModel.toJson()["userId"];
     String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
     final headers = {'Authorization': 'Bearer $token'};
+    final path =
+        "${gatFavoritesListingEndpoint(userId)}?translate=${requestModel.toJson()["translate"]}";
 
     final result = await apiHelper.getRequest(
-        path: gatFavoritesListingEndpoint(userId), create: () => responseModel, headers: headers);
+        path: path, create: () => responseModel, headers: headers);
 
     return result.fold((l) => Left(l), (r) => Right(r));
   }

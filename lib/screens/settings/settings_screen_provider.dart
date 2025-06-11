@@ -56,6 +56,7 @@ class SettingsScreenProvider extends StateNotifier<SettingsScreenState> {
 
   void fetchCurrentLanguage() {
     final savedLanguageCode = sharedPreferenceHelper.getString(languageKey);
+
     if (savedLanguageCode != null) {
       if (savedLanguageCode == LocaleConstant.english.languageCode) {
         state = state.copyWith(
@@ -64,6 +65,18 @@ class SettingsScreenProvider extends StateNotifier<SettingsScreenState> {
         state =
             state.copyWith(selectedLanguage: LocaleConstant.german.displayName);
       }
+    } else {
+
+      final languageCode = localeManagerController.getSelectedLocale().languageCode;
+
+      if (languageCode == LocaleConstant.english.languageCode) {
+        state = state.copyWith(
+            selectedLanguage: LocaleConstant.english.displayName);
+      } else if (languageCode == LocaleConstant.german.languageCode) {
+        state =
+            state.copyWith(selectedLanguage: LocaleConstant.german.displayName);
+      }
+
     }
   }
 

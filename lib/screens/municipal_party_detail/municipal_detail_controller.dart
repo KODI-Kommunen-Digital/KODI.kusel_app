@@ -15,6 +15,7 @@ import 'package:domain/usecase/refresh_token/refresh_token_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/common_widgets/listing_id_enum.dart';
+import 'package:kusel/locale/localization_manager.dart';
 
 import 'municipal_detail_state.dart';
 
@@ -29,6 +30,7 @@ final municipalDetailControllerProvider = StateNotifierProvider.autoDispose<
           sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
           tokenStatus: ref.read(tokenStatusProvider),
           refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider),
+          localeManagerController: ref.read(localeManagerProvider.notifier),
         ));
 
 class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
@@ -39,6 +41,7 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
   SharedPreferenceHelper sharedPreferenceHelper;
   TokenStatus tokenStatus;
   RefreshTokenUseCase refreshTokenUseCase;
+  LocaleManagerController localeManagerController;
 
   MunicipalDetailController(
       {required this.listingsUseCase,
@@ -47,15 +50,22 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
       required this.signInStatusController,
       required this.sharedPreferenceHelper,
       required this.tokenStatus,
-      required this.refreshTokenUseCase})
+      required this.refreshTokenUseCase,
+      required this.localeManagerController})
       : super(MunicipalDetailState.empty());
 
   getEventsUsingCityId({required String municipalId}) async {
     try {
       state = state.copyWith(showEventLoading: true);
+
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
       final id = municipalId;
       GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(
-          cityId: id, categoryId: ListingCategoryId.event.eventId.toString());
+          cityId: id,
+          categoryId: ListingCategoryId.event.eventId.toString(),
+          translate:
+              "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
 
@@ -78,10 +88,15 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
   getNewsUsingCityId({required String municipalId}) async {
     try {
       state = state.copyWith(showNewsLoading: true);
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
       final id = municipalId;
       final categoryId = ListingCategoryId.news.eventId.toString();
-      GetAllListingsRequestModel requestModel =
-          GetAllListingsRequestModel(cityId: id, categoryId: categoryId);
+      GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(
+          cityId: id,
+          categoryId: categoryId,
+          translate:
+              "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
 
@@ -106,48 +121,50 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
       state = state.copyWith(isLoading: true);
       final status = await signInStatusController.isUserLoggedIn();
       final response = tokenStatus.isAccessTokenExpired();
-        if (response && status) {
-          final userId = sharedPreferenceHelper.getInt(userIdKey);
-          RefreshTokenRequestModel requestModel =
-          RefreshTokenRequestModel(userId: userId?.toString() ?? "");
-          RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
+      if (response && status) {
+        final userId = sharedPreferenceHelper.getInt(userIdKey);
+        RefreshTokenRequestModel requestModel =
+            RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+        RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
-          final refreshResponse =
-          await refreshTokenUseCase.call(requestModel, responseModel);
+        final refreshResponse =
+            await refreshTokenUseCase.call(requestModel, responseModel);
 
-          bool refreshSuccess = await refreshResponse.fold(
-                (left) {
-              debugPrint('refresh token municipality detail fold exception : $left');
-              return false;
-            },
-                (right) async {
-              final res = right as RefreshTokenResponseModel;
-              sharedPreferenceHelper.setString(
-                  tokenKey, res.data?.accessToken ?? "");
-              sharedPreferenceHelper.setString(
-                  refreshTokenKey, res.data?.refreshToken ?? "");
-              return true;
-            },
-          );
+        bool refreshSuccess = await refreshResponse.fold(
+          (left) {
+            debugPrint(
+                'refresh token municipality detail fold exception : $left');
+            return false;
+          },
+          (right) async {
+            final res = right as RefreshTokenResponseModel;
+            sharedPreferenceHelper.setString(
+                tokenKey, res.data?.accessToken ?? "");
+            sharedPreferenceHelper.setString(
+                refreshTokenKey, res.data?.refreshToken ?? "");
+            return true;
+          },
+        );
 
-          if (!refreshSuccess) {
-            state = state.copyWith(isLoading: false);
-            return;
-          }
+        if (!refreshSuccess) {
+          state = state.copyWith(isLoading: false);
+          return;
         }
+      }
       MunicipalPartyDetailRequestModel requestModel =
-      MunicipalPartyDetailRequestModel(municipalId: id);
+          MunicipalPartyDetailRequestModel(municipalId: id);
       ExploreDetailsResponseModel responseModel = ExploreDetailsResponseModel();
 
       final detailResponse =
-      await municipalPartyDetailUseCase.call(requestModel, responseModel);
+          await municipalPartyDetailUseCase.call(requestModel, responseModel);
 
       detailResponse.fold(
-            (l) {
+        (l) {
           state = state.copyWith(isLoading: false);
-          debugPrint("getMunicipalPartyDetailUsingId exception = ${l.toString()}");
+          debugPrint(
+              "getMunicipalPartyDetailUsingId exception = ${l.toString()}");
         },
-            (r) {
+        (r) {
           final result = r as ExploreDetailsResponseModel;
           if (result.data != null) {
             state = state.copyWith(

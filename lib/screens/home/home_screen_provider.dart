@@ -21,6 +21,7 @@ import 'package:kusel/common_widgets/listing_id_enum.dart';
 import 'package:kusel/providers/refresh_token_provider.dart';
 
 import '../../common_widgets/get_current_location.dart';
+import '../../locale/localization_manager.dart';
 import 'home_screen_state.dart';
 
 final homeScreenProvider =
@@ -34,6 +35,7 @@ final homeScreenProvider =
               signInStatusController: ref.read(signInStatusProvider.notifier),
               refreshTokenProvider: ref.read(refreshTokenProvider),
               tokenStatus: ref.read(tokenStatusProvider),
+              localeManagerController: ref.read(localeManagerProvider.notifier),
             ));
 
 class HomeScreenProvider extends StateNotifier<HomeScreenState> {
@@ -45,6 +47,7 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
   SignInStatusController signInStatusController;
   RefreshTokenProvider refreshTokenProvider;
   TokenStatus tokenStatus;
+  LocaleManagerController localeManagerController;
 
   HomeScreenProvider(
       {required this.listingsUseCase,
@@ -54,15 +57,18 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       required this.weatherUseCase,
       required this.signInStatusController,
       required this.refreshTokenProvider,
-      required this.tokenStatus})
+      required this.tokenStatus,
+      required this.localeManagerController})
       : super(HomeScreenState.empty());
 
   Future<void> getHighlights() async {
     try {
       state = state.copyWith(loading: true, error: "");
 
+      Locale currentLocale = localeManagerController.getSelectedLocale();
       GetAllListingsRequestModel getAllListingsRequestModel =
-          GetAllListingsRequestModel(categoryId: "41");
+          GetAllListingsRequestModel(categoryId:ListingCategoryId.highlights.eventId.toString() ,
+              translate: "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
       GetAllListingsResponseModel getAllListingsResponseModel =
           GetAllListingsResponseModel();
@@ -86,9 +92,13 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
     try {
       state = state.copyWith(loading: true, error: "");
 
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
-              categoryId: ListingCategoryId.event.eventId.toString());
+              categoryId: ListingCategoryId.event.eventId.toString(),
+              translate:
+                  "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
       GetAllListingsResponseModel getAllListingsResponseModel =
           GetAllListingsResponseModel();
@@ -120,12 +130,15 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       final radius = SearchRadius.radius.value;
       state = state.copyWith(error: "");
 
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
-        radius: radius,
-        centerLongitude: lat,
-        centerLatitude: long,
-      );
+              radius: radius,
+              centerLongitude: lat,
+              centerLatitude: long,
+              translate:
+                  "${currentLocale.languageCode}-${currentLocale.countryCode}");
       GetAllListingsResponseModel getAllListingsResponseModel =
           GetAllListingsResponseModel();
       final result = await listingsUseCase.call(
@@ -146,10 +159,15 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
 
   Future<void> getNews() async {
     try {
+      Locale currentLocale = localeManagerController.getSelectedLocale();
       final categoryId = ListingCategoryId.news.eventId.toString();
 
       GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(
-          pageSize: 5, sortByStartDate: true, categoryId: categoryId);
+          pageSize: 5,
+          sortByStartDate: true,
+          categoryId: categoryId,
+          translate:
+              "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
 
@@ -183,8 +201,11 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
     required void Function(String message) error,
   }) async {
     try {
-      SearchRequestModel searchRequestModel =
-          SearchRequestModel(searchQuery: searchText);
+
+      Locale currentLocale = localeManagerController.getSelectedLocale();SearchRequestModel searchRequestModel = SearchRequestModel(
+          searchQuery: searchText,
+          translate:
+              "${currentLocale.languageCode}-${currentLocale.countryCode}");
       SearchListingsResponseModel searchListingsResponseModel =
           SearchListingsResponseModel();
 
@@ -341,8 +362,10 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       final aTitle = a.title?.toLowerCase() ?? '';
       final bTitle = b.title?.toLowerCase() ?? '';
 
-      final aScore = aTitle.startsWith(search) ? 0 : (aTitle.contains(search) ? 1 : 2);
-      final bScore = bTitle.startsWith(search) ? 0 : (bTitle.contains(search) ? 1 : 2);
+      final aScore =
+          aTitle.startsWith(search) ? 0 : (aTitle.contains(search) ? 1 : 2);
+      final bScore =
+          bTitle.startsWith(search) ? 0 : (bTitle.contains(search) ? 1 : 2);
 
       if (aScore != bScore) return aScore.compareTo(bScore);
       return aTitle.compareTo(bTitle);
