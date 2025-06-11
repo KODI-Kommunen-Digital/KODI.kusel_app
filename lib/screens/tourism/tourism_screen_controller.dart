@@ -6,29 +6,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/common_widgets/get_current_location.dart';
 import 'package:kusel/common_widgets/listing_id_enum.dart';
+import 'package:kusel/locale/localization_manager.dart';
 import 'package:kusel/screens/tourism/tourism_screen_state.dart';
 
 final tourismScreenControllerProvider = StateNotifierProvider.autoDispose<
         TourismScreenController, TourismScreenState>(
     (ref) => TourismScreenController(
         listingsUseCase: ref.read(listingsUseCaseProvider),
-        signInStatusController: ref.read(signInStatusProvider.notifier)));
+        signInStatusController: ref.read(signInStatusProvider.notifier),
+        localeManagerController: ref.read(localeManagerProvider.notifier)));
 
 class TourismScreenController extends StateNotifier<TourismScreenState> {
   ListingsUseCase listingsUseCase;
   SignInStatusController signInStatusController;
+  LocaleManagerController localeManagerController;
 
   TourismScreenController(
-      {required this.listingsUseCase, required this.signInStatusController})
+      {required this.listingsUseCase,
+      required this.signInStatusController,
+      required this.localeManagerController})
       : super(TourismScreenState.empty());
 
   getAllEvents() async {
     try {
       final categoryId = ListingCategoryId.event.eventId;
 
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
-      GetAllListingsRequestModel requestModel =
-          GetAllListingsRequestModel(categoryId: categoryId.toString());
+      GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(
+          categoryId: categoryId.toString(),
+          translate:
+              "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
       final response = await listingsUseCase.call(requestModel, responseModel);
 
@@ -51,12 +60,15 @@ class TourismScreenController extends StateNotifier<TourismScreenState> {
       debugPrint(
           "user coordinates [ lat : ${position.latitude}, long: ${position.longitude} ");
 
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
       final lat = position.latitude;
       final long = position.longitude;
       final radius = SearchRadius.radius.value;
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
       GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(
-          centerLatitude: lat, centerLongitude: long, radius: radius);
+          centerLatitude: lat, centerLongitude: long, radius: radius,
+          translate: "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
       final response = await listingsUseCase.call(requestModel, responseModel);
 
@@ -75,8 +87,14 @@ class TourismScreenController extends StateNotifier<TourismScreenState> {
   getRecommendationListing() async {
     try {
       state = state.copyWith(isRecommendationLoading: true);
+
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
+
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
-      GetAllListingsRequestModel requestModel = GetAllListingsRequestModel();
+      GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(
+          translate: "${currentLocale.languageCode}-${currentLocale.countryCode}"
+      );
 
       final response = await listingsUseCase.call(requestModel, responseModel);
 
@@ -101,8 +119,7 @@ class TourismScreenController extends StateNotifier<TourismScreenState> {
     state = state.copyWith(isUserLoggedIn: status);
   }
 
-  updateNearByIsFav(bool isFav, int? eventId)
-  {
+  updateNearByIsFav(bool isFav, int? eventId) {
     final list = state.nearByList;
     for (var listing in list) {
       if (listing.id == eventId) {
@@ -112,8 +129,7 @@ class TourismScreenController extends StateNotifier<TourismScreenState> {
     state = state.copyWith(nearByList: list);
   }
 
-  updateRecommendationIsFav(bool isFav, int? eventId)
-  {
+  updateRecommendationIsFav(bool isFav, int? eventId) {
     final list = state.recommendationList;
     for (var listing in list) {
       if (listing.id == eventId) {
@@ -123,8 +139,7 @@ class TourismScreenController extends StateNotifier<TourismScreenState> {
     state = state.copyWith(recommendationList: list);
   }
 
-  updateEventIsFav(bool isFav, int? eventId)
-  {
+  updateEventIsFav(bool isFav, int? eventId) {
     final list = state.allEventList;
     for (var listing in list) {
       if (listing.id == eventId) {
@@ -133,5 +148,4 @@ class TourismScreenController extends StateNotifier<TourismScreenState> {
     }
     state = state.copyWith(allEventList: list);
   }
-
 }
