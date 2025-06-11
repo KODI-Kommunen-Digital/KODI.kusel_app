@@ -68,6 +68,7 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
     websiteEditingController.text = state.userData?.website ?? '_';
   }
 
+
   Future<void> getUserDetails() async {
     try {
       state = state.copyWith(loading: true);

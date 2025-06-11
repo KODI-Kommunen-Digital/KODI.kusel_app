@@ -21,10 +21,13 @@ class SearchService {
       'searchQuery': (requestModel.toJson()["searchQuery"] ?? "").toString(),
     });
 
+    final path =
+        "${endpoint.toString()}&translate=${requestModel.toJson()["translate"]}";
+
     final apiHelper = ref.read(apiHelperProvider);
 
     final result = await apiHelper.getRequest(
-        path: endpoint.toString(),
+        path: path,
         create: () => responseModel);
 
     return result.fold((l) => Left(l), (r) => Right(r));

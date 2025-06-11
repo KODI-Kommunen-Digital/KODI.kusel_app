@@ -4,6 +4,7 @@ import 'package:domain/model/response_model/listings_model/get_all_listings_resp
 import 'package:domain/usecase/listings/listings_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kusel/locale/localization_manager.dart';
 
 import 'all_event_screen_state.dart';
 
@@ -11,22 +12,30 @@ final allEventScreenProvider = StateNotifierProvider.autoDispose<
         AllEventScreenController, AllEventScreenState>(
     (ref) => AllEventScreenController(
         listingsUseCase: ref.read(listingsUseCaseProvider),
-        signInStatusController: ref.read(signInStatusProvider.notifier)));
+        signInStatusController: ref.read(signInStatusProvider.notifier),
+        localeManagerController: ref.read(localeManagerProvider.notifier)));
 
 class AllEventScreenController extends StateNotifier<AllEventScreenState> {
   ListingsUseCase listingsUseCase;
   SignInStatusController signInStatusController;
+  LocaleManagerController localeManagerController;
 
   AllEventScreenController(
-      {required this.listingsUseCase, required this.signInStatusController})
+      {required this.listingsUseCase,
+      required this.signInStatusController,
+      required this.localeManagerController})
       : super(AllEventScreenState.empty());
 
   Future<void> getEventsList() async {
     try {
       state = state.copyWith(isLoading: true);
 
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
       GetAllListingsRequestModel getAllListingsRequestModel =
-          GetAllListingsRequestModel();
+          GetAllListingsRequestModel(
+              translate: "${currentLocale.languageCode}-${currentLocale.countryCode}"
+          );
       GetAllListingsResponseModel getAllListResponseModel =
           GetAllListingsResponseModel();
 
@@ -68,16 +77,22 @@ class AllEventScreenController extends StateNotifier<AllEventScreenState> {
     try {
       state = state.copyWith(isLoading: true);
 
+      Locale currentLocale = localeManagerController.getSelectedLocale();
       GetAllListingsRequestModel getAllListingsRequestModel =
-          GetAllListingsRequestModel();
-      if (startAfterDate != null)
+          GetAllListingsRequestModel(
+              translate: "${currentLocale.languageCode}-${currentLocale.countryCode}"
+          );
+      if (startAfterDate != null) {
         getAllListingsRequestModel.startAfterDate = startAfterDate;
-      if (endBeforeDate != null)
+      }
+      if (endBeforeDate != null) {
         getAllListingsRequestModel.endBeforeDate = endBeforeDate;
+      }
       if (cityId != null) getAllListingsRequestModel.cityId = cityId.toString();
       if (pageNumber != null) getAllListingsRequestModel.pageNo = pageNumber;
-      if (categoryId != null)
+      if (categoryId != null) {
         getAllListingsRequestModel.categoryId = categoryId.toString();
+      }
       GetAllListingsResponseModel getAllListResponseModel =
           GetAllListingsResponseModel();
 
@@ -106,13 +121,12 @@ class AllEventScreenController extends StateNotifier<AllEventScreenState> {
     state = state.copyWith(filterCount: null);
   }
 
-  isUserLoggedIn()async{
+  isUserLoggedIn() async {
     final status = await signInStatusController.isUserLoggedIn();
     state = state.copyWith(isUserLoggedIn: status);
   }
 
-  updateIsFav(bool isFav, int? eventId)
-  {
+  updateIsFav(bool isFav, int? eventId) {
     final list = state.listingList;
     for (var listing in list) {
       if (listing.id == eventId) {
@@ -121,5 +135,4 @@ class AllEventScreenController extends StateNotifier<AllEventScreenState> {
     }
     state = state.copyWith(listingList: list);
   }
-
 }
