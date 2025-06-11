@@ -60,7 +60,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
                     isBackArrowEnabled: false,
                     isStaticImage: false),
                 _buildMobilityDescription(),
-                _buildReadMoreSection(),
+                // _buildReadMoreSection(),
                 _buildOffersList(),
                 _buildContactListUi(),
                 _buildContactDetailsList(),

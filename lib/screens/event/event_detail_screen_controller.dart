@@ -46,11 +46,12 @@ class EventDetailScreenController
 
         Locale currentLocale = localeManagerController.getSelectedLocale();
 
-        //translate: "${currentLocale.languageCode}-${currentLocale.countryCode}"
         GetEventDetailsRequestModel getEventDetailsRequestModel =
             GetEventDetailsRequestModel(
           id: eventId,
-        );
+                translate: "${currentLocale.languageCode}-${currentLocale.countryCode}"
+
+            );
 
         GetEventDetailsResponseModel getEventDetailsResponseModel =
             GetEventDetailsResponseModel();

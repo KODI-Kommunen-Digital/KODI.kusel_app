@@ -77,8 +77,11 @@ class AllEventScreenController extends StateNotifier<AllEventScreenState> {
     try {
       state = state.copyWith(isLoading: true);
 
+      Locale currentLocale = localeManagerController.getSelectedLocale();
       GetAllListingsRequestModel getAllListingsRequestModel =
-          GetAllListingsRequestModel();
+          GetAllListingsRequestModel(
+              translate: "${currentLocale.languageCode}-${currentLocale.countryCode}"
+          );
       if (startAfterDate != null) {
         getAllListingsRequestModel.startAfterDate = startAfterDate;
       }
