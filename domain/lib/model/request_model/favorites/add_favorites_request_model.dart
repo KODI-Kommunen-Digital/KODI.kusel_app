@@ -4,8 +4,9 @@ class AddFavoritesRequestModel implements BaseModel<AddFavoritesRequestModel> {
   String? cityId;
   String? listingId;
   String? userId;
+  String? translate;
 
-  AddFavoritesRequestModel({this.userId, this.cityId, this.listingId});
+  AddFavoritesRequestModel({this.userId, this.cityId, this.listingId, this.translate});
 
   @override
   AddFavoritesRequestModel fromJson(Map<String, dynamic> json) {
@@ -18,7 +19,8 @@ class AddFavoritesRequestModel implements BaseModel<AddFavoritesRequestModel> {
     return {
       "userId": userId,
       "cityId": cityId,
-      "listingId": listingId
+      "listingId": listingId,
+      'translate': translate,
     };
   }
 }

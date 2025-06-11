@@ -15,7 +15,7 @@ class EventDetailsService {
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
     final path =
-        "$listingsEndPoint/${requestModel.toJson()["id"]}";
+        "$listingsEndPoint/${requestModel.toJson()["id"]}?translate=${requestModel.toJson()["translate"]}";
     final apiHelper = ref.read(apiHelperProvider);
 
     final result = await apiHelper.getRequest(

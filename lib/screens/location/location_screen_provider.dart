@@ -138,8 +138,11 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
     required void Function(String message) error,
   }) async {
     try {
-      SearchRequestModel searchRequestModel =
-          SearchRequestModel(searchQuery: searchText);
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+      SearchRequestModel searchRequestModel = SearchRequestModel(
+          searchQuery: searchText,
+          translate:
+              "${currentLocale.languageCode}-${currentLocale.countryCode}");
       SearchListingsResponseModel searchListingsResponseModel =
           SearchListingsResponseModel();
 

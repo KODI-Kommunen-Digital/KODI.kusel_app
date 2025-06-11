@@ -2,8 +2,9 @@ import 'package:core/base_model.dart';
 
 class GetFavoritesRequestModel implements BaseModel<GetFavoritesRequestModel> {
   String? userId;
+  String? translate;
 
-  GetFavoritesRequestModel({this.userId});
+  GetFavoritesRequestModel({this.userId, this.translate});
 
   @override
   GetFavoritesRequestModel fromJson(Map<String, dynamic> json) {
@@ -13,6 +14,6 @@ class GetFavoritesRequestModel implements BaseModel<GetFavoritesRequestModel> {
 
   @override
   Map<String, dynamic> toJson() {
-    return {"userId": userId};
+    return {"userId": userId, "translate": translate};
   }
 }

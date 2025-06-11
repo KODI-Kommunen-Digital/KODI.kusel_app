@@ -13,6 +13,7 @@ import '../utility/url_launcher_utility.dart';
 import 'custom_shimmer_widget.dart';
 import 'image_utility.dart';
 import 'map_widget/custom_flutter_map.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class TownHallMapWidget extends ConsumerStatefulWidget {
   final String address;
@@ -124,7 +125,8 @@ class _LocationCardWidgetState extends ConsumerState<TownHallMapWidget> {
                           ),
                         ),
                         textRegularPoppins(
-                          text: "Schließt um ${widget.openUntil} Uhr",
+                          text:
+                              "${AppLocalizations.of(context).closes_at} ${widget.openUntil} ${AppLocalizations.of(context).clock}",
                           textOverflow: TextOverflow.ellipsis,
                           color: Theme.of(context).textTheme.labelMedium?.color,
                         ),

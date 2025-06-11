@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:core/preference_manager/preference_constant.dart';
 import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:core/token_status.dart';
@@ -8,6 +10,7 @@ import 'package:domain/model/response_model/refresh_token/refresh_token_response
 import 'package:domain/usecase/favorites/get_favorites_usecase.dart';
 import 'package:domain/usecase/refresh_token/refresh_token_usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kusel/locale/localization_manager.dart';
 
 import 'favorites_list_screen_state.dart';
 
@@ -17,7 +20,10 @@ final favoritesListScreenProvider = StateNotifierProvider.autoDispose<
         getFavoritesUseCaseProvider: ref.read(getFavoritesUseCaseProvider),
         sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
         tokenStatus: ref.read(tokenStatusProvider),
-        refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider)));
+        refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider,
+        ),
+        localeManagerController: ref.read(localeManagerProvider.notifier)
+    ));
 
 class FavoritesListScreenController
     extends StateNotifier<FavoritesListScreenState> {
@@ -25,12 +31,15 @@ class FavoritesListScreenController
       {required this.getFavoritesUseCaseProvider,
       required this.sharedPreferenceHelper,
       required this.tokenStatus,
-      required this.refreshTokenUseCase})
+      required this.refreshTokenUseCase,
+      required this.localeManagerController
+      })
       : super(FavoritesListScreenState.empty());
   GetFavoritesUseCase getFavoritesUseCaseProvider;
   SharedPreferenceHelper sharedPreferenceHelper;
   TokenStatus tokenStatus;
   RefreshTokenUseCase refreshTokenUseCase;
+  LocaleManagerController localeManagerController;
 
   Future<void> getFavoritesList() async {
     try {
@@ -57,9 +66,15 @@ class FavoritesListScreenController
           sharedPreferenceHelper.setString(
               refreshTokenKey, res.data?.refreshToken ?? "");
 
+          Locale currentLocale = localeManagerController.getSelectedLocale();
+
+
           GetFavoritesRequestModel getAllListingsRequestModel =
               GetFavoritesRequestModel(
-                  userId: sharedPreferenceHelper.getInt(userIdKey).toString());
+                  userId: sharedPreferenceHelper.getInt(userIdKey).toString(),
+                  translate:
+                  "${currentLocale.languageCode}-${currentLocale.countryCode}"
+              );
           GetAllListingsResponseModel getAllListResponseModel =
               GetAllListingsResponseModel();
 
@@ -76,9 +91,14 @@ class FavoritesListScreenController
           );
         });
       } else {
+        Locale currentLocale = localeManagerController.getSelectedLocale();
+
         GetFavoritesRequestModel getAllListingsRequestModel =
             GetFavoritesRequestModel(
-                userId: sharedPreferenceHelper.getInt(userIdKey).toString());
+                userId: sharedPreferenceHelper.getInt(userIdKey).toString(),
+                translate:
+                "${currentLocale.languageCode}-${currentLocale.countryCode}"
+            );
         GetAllListingsResponseModel getAllListResponseModel =
             GetAllListingsResponseModel();
 
