@@ -121,21 +121,21 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                     ? textSemiBoldMontserrat(
                         color: Theme.of(context).textTheme.labelMedium?.color,
                         text: KuselDateUtils.formatDate(widget.date ?? ""),
-                        fontSize: 14)
+                        fontSize: 12)
                     : SizedBox.shrink(),
                 (widget.date != null) ? 4.verticalSpace : SizedBox.shrink(),
                 textSemiBoldMontserrat(
                     text: widget.heading,
                     fontWeight: FontWeight.w500,
-                    fontSize: 12,
+                    fontSize: 11,
                     color: Theme.of(context).textTheme.bodyLarge?.color),
                 4.verticalSpace,
                 textSemiBoldMontserrat(
                     text: widget.description,
-                    fontSize: 12,
+                    fontSize: 11,
                     textAlign: TextAlign.start,
                     color: Theme.of(context).textTheme.labelMedium?.color,
-                    maxLines: 2),
+                    maxLines: 3),
               ],
             ),
           ],
