@@ -53,7 +53,8 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
       localization.as_a_couple,
       localization.with_children,
       localization.groups,
-      localization.seniors
+      localization.seniors,
+      localization.people_with_disabilities
     ];
 
     return Container(
@@ -172,7 +173,7 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
       children: [
         _buildLabel(context, AppLocalizations.of(context).period),
         CustomDropdown(
-          hintText: "Select ${AppLocalizations.of(context).period}",
+          hintText: "${AppLocalizations.of(context).select} ${AppLocalizations.of(context).period}",
           items: timeIntervalMap.values.toList(),
           selectedItem: state.periodValue ?? '',
           onSelected: (String? newValue) {
