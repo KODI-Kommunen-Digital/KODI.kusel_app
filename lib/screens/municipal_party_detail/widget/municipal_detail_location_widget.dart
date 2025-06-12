@@ -106,7 +106,9 @@ class _CityDetailLocationWidgetState
             padding:
                 EdgeInsets.only(top: 8.0, bottom: 12.0, left: 16, right: 16),
             child: GestureDetector(
-              onTap: () {},
+              onTap: () {
+                UrlLauncherUtil.launchDialer(phoneNumber: widget.phoneNumber);
+              },
               child: Row(
                 children: [
                   Image.asset(
