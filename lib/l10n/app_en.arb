@@ -37,7 +37,7 @@
   "reset": "Reset",
   "period": "Period",
   "target_group": "Target Group",
-  "ort": "Ort",
+  "ort": "Location",
   "perimeter": "Perimeter",
   "sort_by": "Sort by",
   "actuality": "Actuality",
@@ -126,7 +126,7 @@
   "please_select_start_and_end_date": "Please select start and end date",
   "today_its_going_to_be": "It’s going to be sunny today!",
   "virtual_town_hall": "Virtual Town Hall",
-  "my_town": "My Town",
+  "my_town": "Hometown",
   "tourism_and_leisure": "Tourism and Leisure",
   "mobility": "Mobility",
   "get_involved": "GET INVOLVED",
@@ -150,7 +150,7 @@
   "view_ort": "View Ort",
   "soon_service": "Soon service will be availbale",
   "cities": "Cities",
-  "my_place": "My Town",
+  "my_place": "Hometown",
   "show_all_places": "Show all places",
   "mein_ort_display_message": "Welcome to the overview page for your places in the Kuseler Land – your guide to the places in the region.",
   "hiking_trails": "Hiking trails app",
@@ -198,5 +198,7 @@
   "digifit": "Digifit",
   "closes_at": "Closes at",
   "clock": "Clock",
-  "saturday": "Saturday"
+  "saturday": "Saturday",
+  "people_with_disabilities": "People with disabilities",
+  "select": "Select"
 }
