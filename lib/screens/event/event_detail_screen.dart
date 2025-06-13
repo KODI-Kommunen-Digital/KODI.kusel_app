@@ -148,10 +148,9 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
           _publicTransportCard(
             heading: AppLocalizations.of(context).public_transport_offer,
             description: AppLocalizations.of(context).find_out_how_to,
-            onTap: () => ref.read(navigationProvider).navigateUsingPath(
-                path: webViewPagePath,
-                params: WebViewParams(url: "https://www.google.com/"),
-                context: context),
+            onTap: () => UrlLauncherUtil.launchMap(
+                latitude: EventLatLong.kusel.latitude,
+                longitude: EventLatLong.kusel.longitude),
           ),
           16.verticalSpace,
           // state.loading

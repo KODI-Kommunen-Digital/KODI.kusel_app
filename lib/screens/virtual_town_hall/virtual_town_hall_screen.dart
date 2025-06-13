@@ -147,13 +147,14 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                         context: context,
                         params: SelectedEventListScreenParameter(
                             cityId: 1,
-                            listHeading: AppLocalizations.of(context).news,
+                            listHeading: AppLocalizations.of(context).events,
                             categoryId: ListingCategoryId.event.eventId,
                             onFavChange: () {
                               ref
                                   .read(virtualTownHallProvider.notifier)
                                   .getEventsUsingCityId(cityId: "1");
-                            }));
+                            }
+                            ));
                   },
                   onHeadingTap: () {
                     ref.read(navigationProvider).navigateUsingPath(
@@ -259,7 +260,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           textBoldPoppins(
-              text: "${state.cityName} ${AppLocalizations.of(context).district}" ?? "",
+              text: "${AppLocalizations.of(context).district} ${state.cityName}" ?? "",
               color: Theme.of(context).textTheme.bodyLarge?.color,
               fontSize: 16),
           15.verticalSpace,
