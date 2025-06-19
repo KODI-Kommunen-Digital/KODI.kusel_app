@@ -10,7 +10,6 @@ import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/onboarding/onboarding_name_page.dart';
 import 'package:kusel/screens/onboarding/onboarding_preferences_page.dart';
 import 'package:kusel/screens/onboarding/onboarding_screen_provider.dart';
-import 'package:kusel/screens/onboarding/onboarding_screen_state.dart';
 import 'package:kusel/screens/onboarding/onboarding_start_page.dart';
 import 'package:kusel/screens/onboarding/onboarding_type_page.dart';
 import 'onboarding_option_page.dart';
@@ -24,12 +23,15 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 }
 
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
+
   @override
   void initState() {
     Future.microtask((){
       ref.read(onboardingScreenProvider.notifier).initialCall().then((value){
         if (ref.read(onboardingScreenProvider.notifier).isOnboardingDone()) {
           ref.read(onboardingScreenProvider.notifier).getOnboardingDetails();
+        } else if(ref.read(onboardingScreenProvider.notifier).isOfflineOnboardingDone()) {
+          ref.read(onboardingScreenProvider.notifier).getOnboardingOfflineData();
         }
       });
     });

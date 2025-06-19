@@ -19,15 +19,19 @@ class OnBoardingNamePage extends ConsumerStatefulWidget {
 class _OnboardingStartPageState extends ConsumerState<OnBoardingNamePage> {
   TextEditingController nameEditingController = TextEditingController();
 
-
   @override
   void initState() {
-    Future.microtask((){
-      if(ref.watch(onboardingScreenProvider).userFirstName !=null){
-        nameEditingController.text = ref.watch(onboardingScreenProvider).userFirstName!;
-      }
-    });
     super.initState();
+
+    final savedName = ref.read(onboardingScreenProvider).userFirstName;
+    if (savedName != null) {
+      nameEditingController.text = savedName;
+    }
+    nameEditingController.addListener(() {
+      ref
+          .read(onboardingScreenProvider.notifier)
+          .updateFirstName(nameEditingController.text);
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -62,8 +66,10 @@ class _OnboardingStartPageState extends ConsumerState<OnBoardingNamePage> {
             KuselTextField(
               textEditingController: nameEditingController,
               validator: (value) {
-                return validateField(value,
-                    "${AppLocalizations.of(context).name} ${AppLocalizations.of(context).is_required}");
+                return validateField(
+                  value,
+                  "${AppLocalizations.of(context).name} ${AppLocalizations.of(context).is_required}",
+                );
               },
               maxLines: 1,
             )
