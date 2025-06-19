@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:core/preference_manager/preference_constant.dart';
 import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:core/sign_in_status/sign_in_status_controller.dart';
@@ -148,39 +149,6 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
 
   Future<void> fetchCities() async {
     try {
-
-      final response = tokenStatus.isAccessTokenExpired();
-
-      if (response) {
-        final userId = sharedPreferenceHelper.getInt(userIdKey);
-        RefreshTokenRequestModel requestModel =
-        RefreshTokenRequestModel(userId: userId?.toString() ?? "");
-        RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
-
-        final refreshResponse =
-        await refreshTokenUseCase.call(requestModel, responseModel);
-
-        bool refreshSuccess = await refreshResponse.fold(
-              (left) {
-            debugPrint('refresh token add fav city fold exception : $left');
-            return false;
-          },
-              (right) async {
-            final res = right as RefreshTokenResponseModel;
-            sharedPreferenceHelper.setString(
-                tokenKey, res.data?.accessToken ?? "");
-            sharedPreferenceHelper.setString(
-                refreshTokenKey, res.data?.refreshToken ?? "");
-            return true;
-          },
-        );
-
-        if (!refreshSuccess) {
-          state = state.copyWith(isLoading: false);
-          return;
-        }
-      }
-
       GetCityDetailsRequestModel requestModel =
           GetCityDetailsRequestModel(hasForum: false);
       GetCityDetailsResponseModel responseModel = GetCityDetailsResponseModel();
@@ -649,7 +617,6 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
           );
           initializeOnboardingData();
         }
-
       });
     } catch (error) {
       debugPrint('get onboarding details exception : $error');
@@ -717,9 +684,35 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     return isOnBoarded;
   }
 
+  bool isOfflineOnboardingDone() {
+    bool onBoardingStatus =
+        sharedPreferenceHelper.getString(onboardingCacheKey)!=null;
+    return onBoardingStatus;
+  }
+
   Future<void> isLoggedIn() async {
     final status = await signInStatusController.isUserLoggedIn();
     state = state.copyWith(isLoggedIn: status);
+  }
+
+  void getOnboardingOfflineData() {
+    final jsonOnboardingDataString = sharedPreferenceHelper.getString(onboardingCacheKey); // gets raw JSON string
+    final Map<String, dynamic> jsonMap = jsonDecode(jsonOnboardingDataString!);
+    final onboardingData = OnboardingData.fromJson(jsonMap);
+    final userFistName = sharedPreferenceHelper.getString(userFirstNameKey);
+    state = state.copyWith(
+        onboardingData: onboardingData,
+        userFirstName: userFistName,
+        isLoading: false
+    );
+    initializeOnboardingData();
+  }
+
+  void updateFirstName(String value) {
+    sharedPreferenceHelper.setString(userFirstNameKey,value);
+    state = state.copyWith(
+        userFirstName: value
+    );
   }
 }
 
