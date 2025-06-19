@@ -237,7 +237,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
               ),
               16.verticalSpace,
               SizedBox(
-                height: 300.h,
+                height: 315.h,
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
                     shrinkWrap: true,
