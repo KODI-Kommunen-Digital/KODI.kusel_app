@@ -451,7 +451,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           isLoading
               ? highlightCardShimmerEffect()
               : SizedBox(
-                  height: 300.h,
+                  height: 315.h,
                   child: PageView.builder(
                     controller: PageController(
                         viewportFraction:
