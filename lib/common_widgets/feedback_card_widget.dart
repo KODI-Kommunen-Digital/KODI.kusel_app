@@ -5,7 +5,7 @@ import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/images_path.dart';
 
 import '../theme_manager/colors.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kusel/l10n/app_localizations.dart';
 
 class FeedbackCardWidget extends StatefulWidget {
   final Function() onTap;
