@@ -229,6 +229,13 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                               .read(signInScreenProvider.notifier)
                               .isOnboardingDone();
                           if (isOnboarded) {
+                            if (ref
+                                .read(signInScreenProvider.notifier)
+                                .isOnboardingCacheAvailable()) {
+                              ref
+                                  .read(signInScreenProvider.notifier)
+                                  .syncOnboardingDataWithNetwork();
+                            }
                             ref.read(navigationProvider).removeAllAndNavigate(
                                 context: context, path: homeScreenPath);
                           } else {
