@@ -120,6 +120,7 @@ class SignInController extends StateNotifier<SignInState> {
   }
 
   Future<void> syncOnboardingDataWithNetwork() async {
+    state = state.copyWith(showLoading: true);
     final jsonOnboardingDataString = sharedPreferenceHelper.getString(onboardingCacheKey); // gets raw JSON string
     if (jsonOnboardingDataString != null) {
       final Map<String, dynamic> jsonMap = jsonDecode(jsonOnboardingDataString);
@@ -160,6 +161,7 @@ class SignInController extends StateNotifier<SignInState> {
         updateOnboardingUserDemographics(onboardingData);
         updateOnboardingUserInterests(onboardingData);
         updateOnboardingSuccess();
+        state = state.copyWith(showLoading: false);
       } catch (error) {
         debugPrint('update onboarding user type exception : $error');
       }
