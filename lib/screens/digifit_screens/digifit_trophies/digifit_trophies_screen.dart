@@ -7,7 +7,7 @@ import 'package:kusel/common_widgets/digifit/digifit_options_card.dart';
 import 'package:kusel/common_widgets/digifit/digifit_text_image_card.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kusel/l10n/app_localizations.dart';
 
 import '../../../app_router.dart';
 import '../../../common_widgets/digifit/digifit_map_card.dart';
@@ -16,7 +16,7 @@ import '../../../common_widgets/image_utility.dart';
 import '../../../common_widgets/text_styles.dart';
 import '../../../images_path.dart';
 import '../../../navigation/navigation.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kusel/l10n/app_localizations.dart';
 
 class DigifitTrophiesScreen extends ConsumerStatefulWidget {
   const DigifitTrophiesScreen({super.key});
