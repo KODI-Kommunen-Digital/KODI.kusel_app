@@ -13,7 +13,7 @@ import 'package:kusel/screens/onboarding/onboarding_screen_provider.dart';
 import 'package:kusel/screens/onboarding/onboarding_start_page.dart';
 import 'package:kusel/screens/onboarding/onboarding_type_page.dart';
 import 'onboarding_option_page.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kusel/l10n/app_localizations.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
