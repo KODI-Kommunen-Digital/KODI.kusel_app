@@ -31,13 +31,16 @@ final signInScreenProvider =
         SignInController(
             signInUseCase: ref.read(signInUseCaseProvider),
             sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
-          tokenStatus: ref.read(tokenStatusProvider),
-          refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider),
-          onboardingUserTypeUseCase: ref.read(onboardingUserTypeUseCaseProvider),
-            onboardingUserDemographicsUseCase: ref.read(onboardingUserDemographicsUseCaseProvider),
-            onboardingUserInterestsUseCase: ref.read(onboardingUserInterestsUseCaseProvider),
-            onboardingCompleteUseCase: ref.read(onboardingCompleteUseCaseProvider)
-        ));
+            tokenStatus: ref.read(tokenStatusProvider),
+            refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider),
+            onboardingUserTypeUseCase:
+                ref.read(onboardingUserTypeUseCaseProvider),
+            onboardingUserDemographicsUseCase:
+                ref.read(onboardingUserDemographicsUseCaseProvider),
+            onboardingUserInterestsUseCase:
+                ref.read(onboardingUserInterestsUseCaseProvider),
+            onboardingCompleteUseCase:
+                ref.read(onboardingCompleteUseCaseProvider)));
 
 class SignInController extends StateNotifier<SignInState> {
   SignInUseCase signInUseCase;
@@ -57,8 +60,7 @@ class SignInController extends StateNotifier<SignInState> {
       required this.onboardingUserTypeUseCase,
       required this.onboardingUserDemographicsUseCase,
       required this.onboardingUserInterestsUseCase,
-      required this.onboardingCompleteUseCase
-      })
+      required this.onboardingCompleteUseCase})
       : super(SignInState.empty());
 
   updateShowPassword(bool value) {
@@ -97,8 +99,7 @@ class SignInController extends StateNotifier<SignInState> {
           sharedPreferenceHelper.setString(refreshTokenKey, refreshToken);
           sharedPreferenceHelper.setString(tokenKey, token);
           sharedPreferenceHelper.setInt(userIdKey, userId);
-          sharedPreferenceHelper.setString(
-              onboardingKey, isOnboardingComplete.toString());
+          sharedPreferenceHelper.setBool(onboardingKey, isOnboardingComplete);
           success();
         }
       });
@@ -109,11 +110,10 @@ class SignInController extends StateNotifier<SignInState> {
   }
 
   Future<bool> isOnboardingDone() async {
-    String onBoardingStatus =
-        sharedPreferenceHelper.getString(onboardingKey) ?? "false";
-    bool isOnBoarded = onBoardingStatus == 'true';
-    if(!isOnBoarded && isOnboardingCacheAvailable()){
-      await syncOnboardingDataWithNetwork();
+    bool onBoardingStatus =
+        sharedPreferenceHelper.getBool(onboardingKey) ?? false;
+    bool isOnBoarded = onBoardingStatus;
+    if (!isOnBoarded && isOnboardingCacheAvailable()) {
       isOnBoarded = true;
     }
     return isOnBoarded;
@@ -121,7 +121,8 @@ class SignInController extends StateNotifier<SignInState> {
 
   Future<void> syncOnboardingDataWithNetwork() async {
     state = state.copyWith(showLoading: true);
-    final jsonOnboardingDataString = sharedPreferenceHelper.getString(onboardingCacheKey); // gets raw JSON string
+    final jsonOnboardingDataString = sharedPreferenceHelper
+        .getString(onboardingCacheKey); // gets raw JSON string
     if (jsonOnboardingDataString != null) {
       final Map<String, dynamic> jsonMap = jsonDecode(jsonOnboardingDataString);
       final onboardingData = OnboardingData.fromJson(jsonMap);
@@ -131,18 +132,19 @@ class SignInController extends StateNotifier<SignInState> {
         if (response) {
           final userId = sharedPreferenceHelper.getInt(userIdKey);
           RefreshTokenRequestModel requestModel =
-          RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+              RefreshTokenRequestModel(userId: userId?.toString() ?? "");
           RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
           final refreshResponse =
-          await refreshTokenUseCase.call(requestModel, responseModel);
+              await refreshTokenUseCase.call(requestModel, responseModel);
 
           bool refreshSuccess = await refreshResponse.fold(
-                (left) {
-              debugPrint('refresh token municipality detail fold exception : $left');
+            (left) {
+              debugPrint(
+                  'refresh token municipality detail fold exception : $left');
               return false;
             },
-                (right) async {
+            (right) async {
               final res = right as RefreshTokenResponseModel;
               sharedPreferenceHelper.setString(
                   tokenKey, res.data?.accessToken ?? "");
@@ -157,26 +159,25 @@ class SignInController extends StateNotifier<SignInState> {
             return;
           }
         }
-        updateOnboardingUserType(onboardingData);
-        updateOnboardingUserDemographics(onboardingData);
-        updateOnboardingUserInterests(onboardingData);
-        updateOnboardingSuccess();
+        await updateOnboardingUserType(onboardingData);
+        await updateOnboardingUserDemographics(onboardingData);
+        await updateOnboardingUserInterests(onboardingData);
+        await updateOnboardingSuccess();
+        sharedPreferenceHelper.setString(onboardingCacheKey, "");
         state = state.copyWith(showLoading: false);
       } catch (error) {
         debugPrint('update onboarding user type exception : $error');
       }
-
     }
   }
 
   Future<void> updateOnboardingUserType(OnboardingData onboardingData) async {
     OnboardingUserTypeRequestModel onboardingUserTypeRequestModel =
-    OnboardingUserTypeRequestModel(userType: onboardingData.userType);
+        OnboardingUserTypeRequestModel(userType: onboardingData.userType);
     OnboardingUserTypeResponseModel onboardingUserTypeResponseModel =
-    OnboardingUserTypeResponseModel();
+        OnboardingUserTypeResponseModel();
     final r = await onboardingUserTypeUseCase.call(
-        onboardingUserTypeRequestModel,
-        onboardingUserTypeResponseModel);
+        onboardingUserTypeRequestModel, onboardingUserTypeResponseModel);
     r.fold((l) {
       debugPrint('update onboarding user type fold exception : $l');
     }, (r) async {
@@ -184,34 +185,34 @@ class SignInController extends StateNotifier<SignInState> {
     });
   }
 
-  Future<void> updateOnboardingUserDemographics(OnboardingData onboardingData) async {
+  Future<void> updateOnboardingUserDemographics(
+      OnboardingData onboardingData) async {
     OnboardingUserDemographicsRequestModel
-    onboardingUserDemographicsRequestModel =
-    OnboardingUserDemographicsRequestModel(
-        maritalStatus: onboardingData.maritalStatus,
-        accommodationPreference: onboardingData.accommodationPreference,
-        cityId: onboardingData.cityId);
+        onboardingUserDemographicsRequestModel =
+        OnboardingUserDemographicsRequestModel(
+            maritalStatus: onboardingData.maritalStatus,
+            accommodationPreference: onboardingData.accommodationPreference,
+            cityId: onboardingData.cityId);
     OnboardingUserDemographicsResponseModel
-    onboardingUserDemographicsResponseModel =
-    OnboardingUserDemographicsResponseModel();
+        onboardingUserDemographicsResponseModel =
+        OnboardingUserDemographicsResponseModel();
     final r = await onboardingUserDemographicsUseCase.call(
         onboardingUserDemographicsRequestModel,
         onboardingUserDemographicsResponseModel);
     r.fold((l) {
-      debugPrint(
-          'update onboarding user demographics fold exception : $l');
+      debugPrint('update onboarding user demographics fold exception : $l');
     }, (r) async {
       final result = r as OnboardingUserDemographicsResponseModel;
     });
   }
 
-  Future<void> updateOnboardingUserInterests(OnboardingData onboardingData) async {
-    OnboardingUserInterestsRequestModel
-    onboardingUserInterestsRequestModel =
-    OnboardingUserInterestsRequestModel(interestIds: onboardingData.interests);
-    OnboardingUserInterestsResponseModel
-    onboardingUserInterestsResponseModel =
-    OnboardingUserInterestsResponseModel();
+  Future<void> updateOnboardingUserInterests(
+      OnboardingData onboardingData) async {
+    OnboardingUserInterestsRequestModel onboardingUserInterestsRequestModel =
+        OnboardingUserInterestsRequestModel(
+            interestIds: onboardingData.interests);
+    OnboardingUserInterestsResponseModel onboardingUserInterestsResponseModel =
+        OnboardingUserInterestsResponseModel();
     final r = await onboardingUserInterestsUseCase.call(
         onboardingUserInterestsRequestModel,
         onboardingUserInterestsResponseModel);
@@ -223,16 +224,16 @@ class SignInController extends StateNotifier<SignInState> {
   }
 
   Future<void> updateOnboardingSuccess() async {
-    sharedPreferenceHelper.setString(onboardingKey, "true");
+    sharedPreferenceHelper.setBool(onboardingKey, true);
     try {
       final response = tokenStatus.isAccessTokenExpired();
       if (response) {
         final userId = sharedPreferenceHelper.getInt(userIdKey);
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
         RefreshTokenRequestModel requestModel =
-        RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+            RefreshTokenRequestModel(userId: userId?.toString() ?? "");
         final result =
-        await refreshTokenUseCase.call(requestModel, responseModel);
+            await refreshTokenUseCase.call(requestModel, responseModel);
         result.fold((l) {
           // state = state.copyWith(loading: false);
         }, (right) async {
@@ -243,9 +244,9 @@ class SignInController extends StateNotifier<SignInState> {
               refreshTokenKey, res.data?.refreshToken ?? "");
           EmptyRequest requestModel = EmptyRequest();
           OnboardingCompleteResponseModel responseModel =
-          OnboardingCompleteResponseModel();
+              OnboardingCompleteResponseModel();
           final r =
-          await onboardingCompleteUseCase.call(requestModel, responseModel);
+              await onboardingCompleteUseCase.call(requestModel, responseModel);
           r.fold((l) {
             debugPrint('onboarding complete fold exception : $l');
           }, (r) async {
@@ -255,9 +256,9 @@ class SignInController extends StateNotifier<SignInState> {
       } else {
         EmptyRequest requestModel = EmptyRequest();
         OnboardingCompleteResponseModel responseModel =
-        OnboardingCompleteResponseModel();
+            OnboardingCompleteResponseModel();
         final r =
-        await onboardingCompleteUseCase.call(requestModel, responseModel);
+            await onboardingCompleteUseCase.call(requestModel, responseModel);
         r.fold((l) {
           debugPrint('onboarding complete fold exception : $l');
         }, (r) async {
@@ -269,9 +270,8 @@ class SignInController extends StateNotifier<SignInState> {
     }
   }
 
-
   bool isOnboardingCacheAvailable() {
-    bool value = sharedPreferenceHelper.getString(onboardingCacheKey)!=null;
+    bool value = sharedPreferenceHelper.getString(onboardingCacheKey) != null;
     return value;
   }
 }

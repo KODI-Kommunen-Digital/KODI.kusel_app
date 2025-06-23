@@ -232,7 +232,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                             if (ref
                                 .read(signInScreenProvider.notifier)
                                 .isOnboardingCacheAvailable()) {
-                              ref
+                              await ref
                                   .read(signInScreenProvider.notifier)
                                   .syncOnboardingDataWithNetwork();
                             }
