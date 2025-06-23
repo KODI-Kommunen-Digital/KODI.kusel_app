@@ -1,34 +1,39 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:core/preference_manager/preference_constant.dart';
 import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:core/token_status.dart';
 import 'package:domain/model/empty_request.dart';
+import 'package:domain/model/request_model/city_details/get_city_details_request_model.dart';
+import 'package:domain/model/request_model/edit_user_detail/edit_user_detail_request_model.dart';
 import 'package:domain/model/request_model/onboarding_model/onboarding_user_Demographics_request_model.dart';
 import 'package:domain/model/request_model/onboarding_model/onboarding_user_Interests_request_model.dart';
 import 'package:domain/model/request_model/onboarding_model/onboarding_user_type_request_model.dart';
 import 'package:domain/model/request_model/refresh_token/refresh_token_request_model.dart';
+import 'package:domain/model/response_model/city_details/get_city_details_response_model.dart';
+import 'package:domain/model/response_model/edit_user_detail/edit_user_detail_response_model.dart';
 import 'package:domain/model/response_model/get_interests/get_interests_response_model.dart';
 import 'package:domain/model/response_model/onboarding_model/onboarding_complete_response_model.dart';
+import 'package:domain/model/response_model/onboarding_model/onboarding_details_response_model.dart';
 import 'package:domain/model/response_model/onboarding_model/onboarding_user_demographics_response_model.dart';
 import 'package:domain/model/response_model/onboarding_model/onboarding_user_interests_response_model.dart';
 import 'package:domain/model/response_model/onboarding_model/onboarding_user_type_response_model.dart';
 import 'package:domain/model/response_model/refresh_token/refresh_token_response_model.dart';
+import 'package:domain/usecase/city_details/get_city_details_usecase.dart';
+import 'package:domain/usecase/edit_user_detail/edit_user_detail_usecase.dart';
 import 'package:domain/usecase/get_interests/get_interests_usecase.dart';
+import 'package:domain/usecase/onboarding/onboarding_complete_usecase.dart';
+import 'package:domain/usecase/onboarding/onboarding_detail_usecase.dart';
+import 'package:domain/usecase/onboarding/onboarding_user_demographics_usecase.dart';
 import 'package:domain/usecase/onboarding/onboarding_user_interests_usecase.dart';
+import 'package:domain/usecase/onboarding/onboarding_user_type_usecase.dart';
 import 'package:domain/usecase/refresh_token/refresh_token_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/screens/onboarding/onboarding_screen_state.dart';
-import 'package:domain/usecase/onboarding/onboarding_user_type_usecase.dart';
-import 'package:domain/usecase/onboarding/onboarding_user_demographics_usecase.dart';
-import 'package:domain/model/request_model/city_details/get_city_details_request_model.dart';
-import 'package:domain/model/response_model/city_details/get_city_details_response_model.dart';
-import 'package:domain/usecase/city_details/get_city_details_usecase.dart';
-import 'package:domain/usecase/onboarding/onboarding_complete_usecase.dart';
-import 'package:domain/usecase/onboarding/onboarding_detail_usecase.dart';
-import 'package:domain/model/response_model/onboarding_model/onboarding_details_response_model.dart';
+
 import '../../common_widgets/get_current_location.dart';
 
 final onboardingScreenProvider = StateNotifierProvider.autoDispose<
@@ -46,7 +51,8 @@ final onboardingScreenProvider = StateNotifierProvider.autoDispose<
         tokenStatus: ref.read(tokenStatusProvider),
         refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider),
         sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
-        signInStatusController: ref.read(signInStatusProvider.notifier)));
+        signInStatusController: ref.read(signInStatusProvider.notifier),
+        editUserDetailUseCase: ref.read(editUserDetailUseCaseProvider)));
 
 class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   OnboardingScreenController(
@@ -60,8 +66,8 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
       required this.tokenStatus,
       required this.refreshTokenUseCase,
       required this.sharedPreferenceHelper,
-      required this.signInStatusController
-      })
+      required this.signInStatusController,
+      required this.editUserDetailUseCase})
       : super(OnboardingScreenState.empty());
   OnboardingUserTypeUseCase onboardingUserTypeUseCase;
   OnboardingUserDemographicsUseCase onboardingUserDemographicsUseCase;
@@ -77,15 +83,16 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   TextEditingController yourLocationEditingController = TextEditingController();
   GlobalKey<FormState> onboardingNameFormKey = GlobalKey<FormState>();
   SignInStatusController signInStatusController;
+  EditUserDetailUseCase editUserDetailUseCase;
 
   Future<void> initialCall() async {
     state = state.copyWith(isLoading: true);
     isLoggedIn();
     initializerPageController();
     await Future.wait([
-    updateCurrentCity(),
-    fetchCities(),
-    getInterests(),
+      updateCurrentCity(),
+      fetchCities(),
+      getInterests(),
     ]);
     state = state.copyWith(isLoading: false);
   }
@@ -170,8 +177,6 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
               residenceList: cityDetailsMap.values.toList(),
               cityDetailsMap: cityDetailsMap);
         }
-
-
       });
     } catch (error) {
       debugPrint('get city details exception : $error');
@@ -236,8 +241,8 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     String maritalStatus = state.isSingle
         ? "alone"
         : state.isForTwo
-        ? "married"
-        : "with_family";
+            ? "married"
+            : "with_family";
     final accommodationPreference = <String>[
       if (state.isWithDog) "dog",
       if (state.isBarrierearm) "low_barrier",
@@ -251,9 +256,9 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
         final userId = sharedPreferenceHelper.getInt(userIdKey);
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
         RefreshTokenRequestModel requestModel =
-        RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+            RefreshTokenRequestModel(userId: userId?.toString() ?? "");
         final result =
-        await refreshTokenUseCase.call(requestModel, responseModel);
+            await refreshTokenUseCase.call(requestModel, responseModel);
         result.fold((l) {
           state = state.copyWith(loading: false);
         }, (right) async {
@@ -263,14 +268,14 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
           sharedPreferenceHelper.setString(
               refreshTokenKey, res.data?.refreshToken ?? "");
           OnboardingUserDemographicsRequestModel
-          onboardingUserDemographicsRequestModel =
-          OnboardingUserDemographicsRequestModel(
-              maritalStatus: maritalStatus,
-              accommodationPreference: accommodationPreference,
-              cityId: cityId);
+              onboardingUserDemographicsRequestModel =
+              OnboardingUserDemographicsRequestModel(
+                  maritalStatus: maritalStatus,
+                  accommodationPreference: accommodationPreference,
+                  cityId: cityId);
           OnboardingUserDemographicsResponseModel
-          onboardingUserDemographicsResponseModel =
-          OnboardingUserDemographicsResponseModel();
+              onboardingUserDemographicsResponseModel =
+              OnboardingUserDemographicsResponseModel();
           final r = await onboardingUserDemographicsUseCase.call(
               onboardingUserDemographicsRequestModel,
               onboardingUserDemographicsResponseModel);
@@ -283,20 +288,19 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
         });
       } else {
         OnboardingUserDemographicsRequestModel
-        onboardingUserDemographicsRequestModel =
-        OnboardingUserDemographicsRequestModel(
-            maritalStatus: maritalStatus,
-            accommodationPreference: accommodationPreference,
-            cityId: cityId);
+            onboardingUserDemographicsRequestModel =
+            OnboardingUserDemographicsRequestModel(
+                maritalStatus: maritalStatus,
+                accommodationPreference: accommodationPreference,
+                cityId: cityId);
         OnboardingUserDemographicsResponseModel
-        onboardingUserDemographicsResponseModel =
-        OnboardingUserDemographicsResponseModel();
+            onboardingUserDemographicsResponseModel =
+            OnboardingUserDemographicsResponseModel();
         final r = await onboardingUserDemographicsUseCase.call(
             onboardingUserDemographicsRequestModel,
             onboardingUserDemographicsResponseModel);
         r.fold((l) {
-          debugPrint(
-              'update onboarding user demographics fold exception : $l');
+          debugPrint('update onboarding user demographics fold exception : $l');
         }, (r) async {
           final result = r as OnboardingUserDemographicsResponseModel;
         });
@@ -368,7 +372,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   }
 
   Future<void> updateOnboardingSuccess() async {
-    sharedPreferenceHelper.setString(onboardingKey, "true");
+    sharedPreferenceHelper.setBool(onboardingKey, true);
     try {
       final response = tokenStatus.isAccessTokenExpired();
       if (response) {
@@ -492,7 +496,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   }
 
   Future<void> startLoadingTimer(Function() callBack) async {
-    if(state.isLoggedIn){
+    if (state.isLoggedIn) {
       await updateOnboardingSuccess();
     } else {
       saveCacheOnboardingData();
@@ -517,8 +521,8 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     String maritalStatus = state.isSingle
         ? "alone"
         : state.isForTwo
-        ? "married"
-        : "with_family";
+            ? "married"
+            : "with_family";
     final accommodationPreference = <String>[
       if (state.isWithDog) "dog",
       if (state.isBarrierearm) "low_barrier",
@@ -527,13 +531,12 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     int cityId = getCityIdByName(state.cityDetailsMap, cityName) ?? 0;
 
     OnboardingData onboardingData = OnboardingData(
-      userType: userType,
-      cityId: cityId,
-      maritalStatus: maritalStatus,
-      accommodationPreference: accommodationPreference,
-      interests: interestIds,
-      onBoarded: 1
-    );
+        userType: userType,
+        cityId: cityId,
+        maritalStatus: maritalStatus,
+        accommodationPreference: accommodationPreference,
+        interests: interestIds,
+        onBoarded: 1);
     sharedPreferenceHelper.saveObject(onboardingCacheKey, onboardingData);
   }
 
@@ -573,18 +576,19 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
       if (response) {
         final userId = sharedPreferenceHelper.getInt(userIdKey);
         RefreshTokenRequestModel requestModel =
-        RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+            RefreshTokenRequestModel(userId: userId?.toString() ?? "");
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
         final refreshResponse =
-        await refreshTokenUseCase.call(requestModel, responseModel);
+            await refreshTokenUseCase.call(requestModel, responseModel);
 
         bool refreshSuccess = await refreshResponse.fold(
-              (left) {
-            debugPrint('refresh token onboarding details fold exception : $left');
+          (left) {
+            debugPrint(
+                'refresh token onboarding details fold exception : $left');
             return false;
           },
-              (right) async {
+          (right) async {
             final res = right as RefreshTokenResponseModel;
             sharedPreferenceHelper.setString(
                 tokenKey, res.data?.accessToken ?? "");
@@ -600,21 +604,19 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
         }
       }
 
-      EmptyRequest requestModel =
-      EmptyRequest();
-      OnboardingDetailsResponseModel responseModel = OnboardingDetailsResponseModel();
+      EmptyRequest requestModel = EmptyRequest();
+      OnboardingDetailsResponseModel responseModel =
+          OnboardingDetailsResponseModel();
       final result =
-      await onboardingDetailsUseCase.call(requestModel, responseModel);
+          await onboardingDetailsUseCase.call(requestModel, responseModel);
 
       result.fold((l) {
         debugPrint('get onboarding details fold exception : $l');
       }, (r) async {
         final response = r as OnboardingDetailsResponseModel;
-        if(response.data!=null){
-          state = state.copyWith(
-              onboardingData: response.data,
-              isLoading: false
-          );
+        if (response.data != null) {
+          state =
+              state.copyWith(onboardingData: response.data, isLoading: false);
           initializeOnboardingData();
         }
       });
@@ -624,7 +626,6 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   }
 
   void initializeOnboardingData() {
-
     // Update Name
     final userFistName = sharedPreferenceHelper.getString(userFirstNameKey);
     state = state.copyWith(userFirstName: userFistName);
@@ -659,7 +660,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     // Handle interests map
     final interestIdList = onboardingData.interests;
 
-    for(final id in interestIdList??[]){
+    for (final id in interestIdList ?? []) {
       updateInterestMap(id);
     }
   }
@@ -678,15 +679,15 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   }
 
   bool isOnboardingDone() {
-    String onBoardingStatus =
-        sharedPreferenceHelper.getString(onboardingKey) ?? "false";
-    bool isOnBoarded = onBoardingStatus == 'true';
+    bool onBoardingStatus =
+        sharedPreferenceHelper.getBool(onboardingKey) ?? false;
+    bool isOnBoarded = onBoardingStatus == true;
     return isOnBoarded;
   }
 
   bool isOfflineOnboardingDone() {
     bool onBoardingStatus =
-        sharedPreferenceHelper.getString(onboardingCacheKey)!=null;
+        sharedPreferenceHelper.getString(onboardingCacheKey) != null;
     return onBoardingStatus;
   }
 
@@ -696,23 +697,82 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   }
 
   void getOnboardingOfflineData() {
-    final jsonOnboardingDataString = sharedPreferenceHelper.getString(onboardingCacheKey); // gets raw JSON string
+    final jsonOnboardingDataString = sharedPreferenceHelper
+        .getString(onboardingCacheKey); // gets raw JSON string
     final Map<String, dynamic> jsonMap = jsonDecode(jsonOnboardingDataString!);
     final onboardingData = OnboardingData.fromJson(jsonMap);
     final userFistName = sharedPreferenceHelper.getString(userFirstNameKey);
     state = state.copyWith(
         onboardingData: onboardingData,
         userFirstName: userFistName,
-        isLoading: false
-    );
+        isLoading: false);
     initializeOnboardingData();
   }
 
   void updateFirstName(String value) {
-    sharedPreferenceHelper.setString(userFirstNameKey,value);
-    state = state.copyWith(
-        userFirstName: value
-    );
+    sharedPreferenceHelper.setString(userFirstNameKey, value);
+    state = state.copyWith(userFirstName: value);
+  }
+
+  Future<void> editUserName(
+      {required void Function() onSuccess,
+      required void Function(String msg) onError}) async {
+    final response = tokenStatus.isAccessTokenExpired();
+    if (response) {
+      final userId = sharedPreferenceHelper.getInt(userIdKey);
+      RefreshTokenRequestModel requestModel =
+          RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+      RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
+
+      final refreshResponse =
+          await refreshTokenUseCase.call(requestModel, responseModel);
+
+      bool refreshSuccess = await refreshResponse.fold(
+        (left) {
+          debugPrint(
+              'refresh token edit profile details fold exception : $left');
+          return false;
+        },
+        (right) async {
+          final res = right as RefreshTokenResponseModel;
+          sharedPreferenceHelper.setString(
+              tokenKey, res.data?.accessToken ?? "");
+          sharedPreferenceHelper.setString(
+              refreshTokenKey, res.data?.refreshToken ?? "");
+          return true;
+        },
+      );
+
+      if (!refreshSuccess) {
+        state = state.copyWith(loading: false);
+        return;
+      }
+    }
+
+    EditUserDetailRequestModel editUserDetailRequestModel =
+        EditUserDetailRequestModel();
+
+    editUserDetailRequestModel.firstname = state.userFirstName;
+
+    try {
+      EditUserDetailsResponseModel editUserDetailsResponseModel =
+          EditUserDetailsResponseModel();
+      final result = await editUserDetailUseCase.call(
+          editUserDetailRequestModel, editUserDetailsResponseModel);
+      result.fold((l) {
+        debugPrint(l.toString());
+        onError(l.toString());
+      }, (r) async {
+        var resData = (r as EditUserDetailsResponseModel).status;
+        debugPrint("Edit Api Result : $resData");
+
+        onSuccess();
+        debugPrint("Edit API Success");
+      });
+    } catch (error) {
+      debugPrint(error.toString());
+      onError("API Error - ${error.toString()}");
+    }
   }
 }
 
