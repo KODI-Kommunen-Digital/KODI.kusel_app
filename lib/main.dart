@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:kusel/screens/no_network/network_status_screen.dart';
 import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
 import 'package:kusel/theme_manager/theme_manager_controller.dart';
@@ -14,6 +16,9 @@ import 'locale/localization_manager.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Hive.initFlutter();
+
   final prefs = await SharedPreferences.getInstance();
   runApp(ProviderScope(overrides: [
     sharedPreferencesProvider.overrideWithValue(prefs),
