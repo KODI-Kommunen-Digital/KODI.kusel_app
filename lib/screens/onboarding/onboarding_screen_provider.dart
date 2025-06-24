@@ -12,6 +12,7 @@ import 'package:domain/model/request_model/onboarding_model/onboarding_user_Demo
 import 'package:domain/model/request_model/onboarding_model/onboarding_user_Interests_request_model.dart';
 import 'package:domain/model/request_model/onboarding_model/onboarding_user_type_request_model.dart';
 import 'package:domain/model/request_model/refresh_token/refresh_token_request_model.dart';
+import 'package:domain/model/request_model/user_detail/user_detail_request_model.dart';
 import 'package:domain/model/response_model/city_details/get_city_details_response_model.dart';
 import 'package:domain/model/response_model/edit_user_detail/edit_user_detail_response_model.dart';
 import 'package:domain/model/response_model/get_interests/get_interests_response_model.dart';
@@ -21,6 +22,7 @@ import 'package:domain/model/response_model/onboarding_model/onboarding_user_dem
 import 'package:domain/model/response_model/onboarding_model/onboarding_user_interests_response_model.dart';
 import 'package:domain/model/response_model/onboarding_model/onboarding_user_type_response_model.dart';
 import 'package:domain/model/response_model/refresh_token/refresh_token_response_model.dart';
+import 'package:domain/model/response_model/user_detail/user_detail_response_model.dart';
 import 'package:domain/usecase/city_details/get_city_details_usecase.dart';
 import 'package:domain/usecase/edit_user_detail/edit_user_detail_usecase.dart';
 import 'package:domain/usecase/get_interests/get_interests_usecase.dart';
@@ -30,6 +32,7 @@ import 'package:domain/usecase/onboarding/onboarding_user_demographics_usecase.d
 import 'package:domain/usecase/onboarding/onboarding_user_interests_usecase.dart';
 import 'package:domain/usecase/onboarding/onboarding_user_type_usecase.dart';
 import 'package:domain/usecase/refresh_token/refresh_token_usecase.dart';
+import 'package:domain/usecase/user_detail/user_detail_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/screens/onboarding/onboarding_screen_state.dart';
@@ -52,7 +55,8 @@ final onboardingScreenProvider = StateNotifierProvider.autoDispose<
         refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider),
         sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
         signInStatusController: ref.read(signInStatusProvider.notifier),
-        editUserDetailUseCase: ref.read(editUserDetailUseCaseProvider)));
+        editUserDetailUseCase: ref.read(editUserDetailUseCaseProvider),
+        userDetailUseCase: ref.read(userDetailUseCaseProvider)));
 
 class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   OnboardingScreenController(
@@ -67,7 +71,8 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
       required this.refreshTokenUseCase,
       required this.sharedPreferenceHelper,
       required this.signInStatusController,
-      required this.editUserDetailUseCase})
+      required this.editUserDetailUseCase,
+      required this.userDetailUseCase})
       : super(OnboardingScreenState.empty());
   OnboardingUserTypeUseCase onboardingUserTypeUseCase;
   OnboardingUserDemographicsUseCase onboardingUserDemographicsUseCase;
@@ -84,6 +89,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   GlobalKey<FormState> onboardingNameFormKey = GlobalKey<FormState>();
   SignInStatusController signInStatusController;
   EditUserDetailUseCase editUserDetailUseCase;
+  UserDetailUseCase userDetailUseCase;
 
   Future<void> initialCall() async {
     state = state.copyWith(isLoading: true);
@@ -751,7 +757,8 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
 
     EditUserDetailRequestModel editUserDetailRequestModel =
         EditUserDetailRequestModel();
-
+    final userId = sharedPreferenceHelper.getInt(userIdKey);
+    editUserDetailRequestModel.id = userId;
     editUserDetailRequestModel.firstname = state.userFirstName;
 
     try {
@@ -765,13 +772,72 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
       }, (r) async {
         var resData = (r as EditUserDetailsResponseModel).status;
         debugPrint("Edit Api Result : $resData");
-
         onSuccess();
         debugPrint("Edit API Success");
       });
     } catch (error) {
       debugPrint(error.toString());
       onError("API Error - ${error.toString()}");
+    }
+  }
+
+  Future<void> getUserDetails() async {
+    try {
+      state = state.copyWith(loading: true);
+      final response = tokenStatus.isAccessTokenExpired();
+
+      if (response) {
+        final userId = sharedPreferenceHelper.getInt(userIdKey);
+        RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
+        RefreshTokenRequestModel requestModel =
+        RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+        final result =
+        await refreshTokenUseCase.call(requestModel, responseModel);
+
+        result.fold((l) {
+          state = state.copyWith(loading: false);
+        }, (r) async {
+          final res = r as RefreshTokenResponseModel;
+          sharedPreferenceHelper.setString(
+              tokenKey, res.data?.accessToken ?? "");
+          sharedPreferenceHelper.setString(
+              refreshTokenKey, res.data?.refreshToken ?? "");
+
+          UserDetailRequestModel requestModel = UserDetailRequestModel(
+              id: sharedPreferenceHelper.getInt(userIdKey));
+          UserDetailResponseModel responseModel = UserDetailResponseModel();
+          final result =
+          await userDetailUseCase.call(requestModel, responseModel);
+          result.fold((l) {
+            debugPrint('get user details fold exception : $l');
+          }, (r) async {
+            final response = r as UserDetailResponseModel;
+            await sharedPreferenceHelper.setString(
+                userFirstNameKey, response.data?.firstname ?? "");
+            state = state.copyWith(
+                loading: false);
+          });
+        });
+      } else {
+        UserDetailRequestModel requestModel = UserDetailRequestModel(
+            id: sharedPreferenceHelper.getInt(userIdKey));
+        UserDetailResponseModel responseModel = UserDetailResponseModel();
+        final result =
+        await userDetailUseCase.call(requestModel, responseModel);
+
+        result.fold((l) {
+          debugPrint('get user details fold exception : $l');
+        }, (r) async {
+          final response = r as UserDetailResponseModel;
+          await sharedPreferenceHelper.setString(
+              userFirstNameKey, response.data?.firstname ?? "");
+          state = state.copyWith(
+              loading: false);
+        });
+      }
+    } catch (error) {
+      debugPrint('get user details exception : $error');
+      state = state.copyWith(loading: false);
     }
   }
 }
