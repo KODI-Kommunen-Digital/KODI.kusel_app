@@ -34,6 +34,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/screens/onboarding/onboarding_screen_state.dart';
 
+import '../../common_widgets/city_type_constant.dart';
 import '../../common_widgets/get_current_location.dart';
 
 final onboardingScreenProvider = StateNotifierProvider.autoDispose<
@@ -156,8 +157,8 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
 
   Future<void> fetchCities() async {
     try {
-      GetCityDetailsRequestModel requestModel =
-          GetCityDetailsRequestModel(hasForum: false);
+      GetCityDetailsRequestModel requestModel = GetCityDetailsRequestModel(
+          hasForum: false, type: CityTypeConstant.municipal.name);
       GetCityDetailsResponseModel responseModel = GetCityDetailsResponseModel();
       final result =
           await getCityDetailsUseCase.call(requestModel, responseModel);
@@ -250,6 +251,10 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     String cityName = state.resident ?? '';
     int cityId = getCityIdByName(state.cityDetailsMap, cityName) ?? 0;
 
+    if(cityId!=0)
+      {
+        sharedPreferenceHelper.setInt(selectedMunicipalIdKey, cityId);
+      }
     try {
       final response = tokenStatus.isAccessTokenExpired();
       if (response) {
@@ -444,10 +449,21 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     return null;
   }
 
-  void nextPage() {
+  void nextPage() async{
     if (pageController.hasClients) {
       final nextPage = state.selectedPageIndex + 1;
       if (nextPage < 5) {
+
+        if(nextPage == 4)
+          {
+            String cityName = state.resident ?? '';
+            int cityId = getCityIdByName(state.cityDetailsMap, cityName) ?? 0;
+            if(cityId!=0)
+            {
+              await sharedPreferenceHelper.setInt(selectedMunicipalIdKey, cityId);
+            }
+          }
+
         pageController.animateToPage(
           nextPage,
           duration: const Duration(milliseconds: 400),
