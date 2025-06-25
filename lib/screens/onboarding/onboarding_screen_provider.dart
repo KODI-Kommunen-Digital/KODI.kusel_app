@@ -126,8 +126,13 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   }
 
   Future<void> updateCurrentCity() async {
-    String? userCurrentCity = await fetchCity();
-    state = state.copyWith(userCurrentCity: userCurrentCity);
+    try {
+      String? userCurrentCity = await fetchCity();
+      state = state.copyWith(userCurrentCity: userCurrentCity);
+    }catch(error)
+    {
+      debugPrint('fetch city exception : $error');
+    }
   }
 
   void updateOnboardingFamilyType(OnBoardingFamilyType onBoardingFamilyType) {
@@ -455,12 +460,13 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     return null;
   }
 
-  void nextPage() async{
+  Future<void> nextPage() async{
     if (pageController.hasClients) {
       final nextPage = state.selectedPageIndex + 1;
+      debugPrint("current page == ${state.selectedPageIndex}");
       if (nextPage < 5) {
 
-        if(nextPage == 4)
+        if(nextPage == 3)
           {
             String cityName = state.resident ?? '';
             int cityId = getCityIdByName(state.cityDetailsMap, cityName) ?? 0;
@@ -500,7 +506,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
       onLastSkipPress();
     } else if (currentPage == 2) {
       pageController.animateToPage(
-        nextPage + 1,
+        nextPage,
         duration: const Duration(milliseconds: 400),
         curve: Curves.easeInOut,
       );
