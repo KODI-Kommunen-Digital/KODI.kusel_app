@@ -126,6 +126,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                   Divider(height: 1.h),
                   16.verticalSpace,
                   SearchWidget(
+                    verticalDirection: VerticalDirection.up,
                     onItemClick: (listing) {
                       ref.read(navigationProvider).navigateUsingPath(
                           context: context,
