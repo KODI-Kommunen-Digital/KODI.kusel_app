@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -237,7 +237,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
               ),
               16.verticalSpace,
               SizedBox(
-                height: 300.h,
+                height: 315.h,
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
                     shrinkWrap: true,

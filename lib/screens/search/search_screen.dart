@@ -1,7 +1,7 @@
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/app_router.dart';
@@ -126,6 +126,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                   Divider(height: 1.h),
                   16.verticalSpace,
                   SearchWidget(
+                    verticalDirection: VerticalDirection.up,
                     onItemClick: (listing) {
                       ref.read(navigationProvider).navigateUsingPath(
                           context: context,

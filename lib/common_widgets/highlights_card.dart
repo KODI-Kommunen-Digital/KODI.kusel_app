@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/common_widgets/common_html_widget.dart';
 import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
@@ -131,7 +132,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                     color: Theme.of(context).textTheme.bodyLarge?.color),
                 4.verticalSpace,
                 textSemiBoldMontserrat(
-                    text: widget.description,
+                    text: stripHtmlTags(widget.description),
                     fontSize: 11,
                     textAlign: TextAlign.start,
                     color: Theme.of(context).textTheme.labelMedium?.color,

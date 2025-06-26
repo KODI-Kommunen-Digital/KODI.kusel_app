@@ -1,10 +1,13 @@
+import 'package:core/preference_manager/preference_constant.dart';
+import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
+import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/screens/explore/explore_card_view.dart';
+import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
 
 import '../../app_router.dart';
 import '../../common_widgets/feedback_card_widget.dart';
@@ -77,7 +80,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
         tourism,
         mobility,
         getInvolved,
-       ];
+      ];
 
       List<String> images = [
         "virtual_town_hall",
@@ -121,13 +124,24 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
         break;
       case 1:
         onTap = () {
-          ref.read(navigationProvider).navigateUsingPath(
-                path: meinOrtScreenPath,
+          final municipalId = ref
+              .read(sharedPreferenceHelperProvider)
+              .getInt(selectedMunicipalIdKey);
+
+          if ((municipalId != null && municipalId != 0)) {
+            ref.read(navigationProvider).navigateUsingPath(
+                path: municipalDetailScreenPath,
                 context: context,
-              );
+                params: MunicipalDetailScreenParams(
+                    municipalId: municipalId.toString(), onFavUpdate: null));
+          } else {
+            ref.read(navigationProvider).navigateUsingPath(
+                  path: meinOrtScreenPath,
+                  context: context,
+                );
+          }
         };
         break;
-
       case 2:
         onTap = () {
           ref.read(navigationProvider).navigateUsingPath(
