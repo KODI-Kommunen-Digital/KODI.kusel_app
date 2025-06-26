@@ -13,7 +13,7 @@ import '../../common_widgets/downstream_wave_clipper.dart';
 import '../../common_widgets/toast_message.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kusel/l10n/app_localizations.dart';
 
 class ProfileScreen extends ConsumerStatefulWidget {
   const ProfileScreen({super.key});

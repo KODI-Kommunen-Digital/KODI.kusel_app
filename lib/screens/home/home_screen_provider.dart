@@ -3,15 +3,21 @@ import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:core/token_status.dart';
 import 'package:data/service/location_service/location_service.dart';
+import 'package:domain/model/empty_request.dart';
 import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
 import 'package:domain/model/request_model/listings/search_request_model.dart';
+import 'package:domain/model/request_model/refresh_token/refresh_token_request_model.dart';
 import 'package:domain/model/request_model/user_detail/user_detail_request_model.dart';
 import 'package:domain/model/request_model/weather/weather_request_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/model/response_model/listings_model/search_listings_response_model.dart';
+import 'package:domain/model/response_model/onboarding_model/onboarding_details_response_model.dart';
+import 'package:domain/model/response_model/refresh_token/refresh_token_response_model.dart';
 import 'package:domain/model/response_model/user_detail/user_detail_response_model.dart';
 import 'package:domain/model/response_model/weather/weather_response_model.dart';
 import 'package:domain/usecase/listings/listings_usecase.dart';
+import 'package:domain/usecase/onboarding/onboarding_detail_usecase.dart';
+import 'package:domain/usecase/refresh_token/refresh_token_usecase.dart';
 import 'package:domain/usecase/search/search_usecase.dart';
 import 'package:domain/usecase/user_detail/user_detail_usecase.dart';
 import 'package:domain/usecase/weather/weather_usecase.dart';
@@ -25,18 +31,20 @@ import '../../locale/localization_manager.dart';
 import 'home_screen_state.dart';
 
 final homeScreenProvider =
-    StateNotifierProvider<HomeScreenProvider, HomeScreenState>(
-        (ref) => HomeScreenProvider(
-              listingsUseCase: ref.read(listingsUseCaseProvider),
-              searchUseCase: ref.read(searchUseCaseProvider),
-              sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
-              userDetailUseCase: ref.read(userDetailUseCaseProvider),
-              weatherUseCase: ref.read(weatherUseCaseProvider),
-              signInStatusController: ref.read(signInStatusProvider.notifier),
-              refreshTokenProvider: ref.read(refreshTokenProvider),
-              tokenStatus: ref.read(tokenStatusProvider),
-              localeManagerController: ref.read(localeManagerProvider.notifier),
-            ));
+    StateNotifierProvider<HomeScreenProvider, HomeScreenState>((ref) =>
+        HomeScreenProvider(
+            listingsUseCase: ref.read(listingsUseCaseProvider),
+            searchUseCase: ref.read(searchUseCaseProvider),
+            sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
+            userDetailUseCase: ref.read(userDetailUseCaseProvider),
+            weatherUseCase: ref.read(weatherUseCaseProvider),
+            signInStatusController: ref.read(signInStatusProvider.notifier),
+            refreshTokenProvider: ref.read(refreshTokenProvider),
+            tokenStatus: ref.read(tokenStatusProvider),
+            localeManagerController: ref.read(localeManagerProvider.notifier),
+            onboardingDetailsUseCase:
+                ref.read(onboardingDetailsUseCaseProvider),
+            refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider)));
 
 class HomeScreenProvider extends StateNotifier<HomeScreenState> {
   ListingsUseCase listingsUseCase;
@@ -48,6 +56,8 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
   RefreshTokenProvider refreshTokenProvider;
   TokenStatus tokenStatus;
   LocaleManagerController localeManagerController;
+  RefreshTokenUseCase refreshTokenUseCase;
+  OnboardingDetailsUseCase onboardingDetailsUseCase;
 
   HomeScreenProvider(
       {required this.listingsUseCase,
@@ -58,7 +68,9 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       required this.signInStatusController,
       required this.refreshTokenProvider,
       required this.tokenStatus,
-      required this.localeManagerController})
+      required this.localeManagerController,
+      required this.onboardingDetailsUseCase,
+      required this.refreshTokenUseCase})
       : super(HomeScreenState.empty());
 
   Future<void> getHighlights() async {
@@ -67,8 +79,10 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
 
       Locale currentLocale = localeManagerController.getSelectedLocale();
       GetAllListingsRequestModel getAllListingsRequestModel =
-          GetAllListingsRequestModel(categoryId:ListingCategoryId.highlights.eventId.toString() ,
-              translate: "${currentLocale.languageCode}-${currentLocale.countryCode}");
+          GetAllListingsRequestModel(
+              categoryId: ListingCategoryId.highlights.eventId.toString(),
+              translate:
+                  "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
       GetAllListingsResponseModel getAllListingsResponseModel =
           GetAllListingsResponseModel();
@@ -201,8 +215,8 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
     required void Function(String message) error,
   }) async {
     try {
-
-      Locale currentLocale = localeManagerController.getSelectedLocale();SearchRequestModel searchRequestModel = SearchRequestModel(
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+      SearchRequestModel searchRequestModel = SearchRequestModel(
           searchQuery: searchText,
           translate:
               "${currentLocale.languageCode}-${currentLocale.countryCode}");
@@ -341,6 +355,7 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
 
   Future<void> fetchHomeScreenInitMethod() async {
     await Future.wait([
+      getOnboardingDetails(),
       getLocation(),
       getUserDetails(),
       getHighlights(),
@@ -372,5 +387,65 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
     });
 
     return list;
+  }
+
+  Future<void> getOnboardingDetails() async {
+    try {
+
+      final status = await signInStatusController.isUserLoggedIn();
+      if(status)
+        {
+          final response = tokenStatus.isAccessTokenExpired();
+          debugPrint('Is token valid = $response');
+
+          if (response) {
+            final userId = sharedPreferenceHelper.getInt(userIdKey);
+            RefreshTokenRequestModel requestModel =
+            RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+            RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
+
+            final refreshResponse =
+            await refreshTokenUseCase.call(requestModel, responseModel);
+
+            bool refreshSuccess = await refreshResponse.fold(
+                  (left) {
+                debugPrint(
+                    'refresh token onboarding details fold exception : $left');
+                return false;
+              },
+                  (right) async {
+                final res = right as RefreshTokenResponseModel;
+                sharedPreferenceHelper.setString(
+                    tokenKey, res.data?.accessToken ?? "");
+                sharedPreferenceHelper.setString(
+                    refreshTokenKey, res.data?.refreshToken ?? "");
+                return true;
+              },
+            );
+
+            if (!refreshSuccess) {
+              return;
+            }
+          }
+
+          EmptyRequest requestModel = EmptyRequest();
+          OnboardingDetailsResponseModel responseModel =
+          OnboardingDetailsResponseModel();
+          final result =
+          await onboardingDetailsUseCase.call(requestModel, responseModel);
+
+          result.fold((l) {
+            debugPrint('get onboarding details fold exception : $l');
+          }, (r) async {
+            final response = r as OnboardingDetailsResponseModel;
+            if (response.data != null && response.data?.cityId != null) {
+              sharedPreferenceHelper.setInt(
+                  selectedMunicipalIdKey, response.data!.cityId!);
+            }
+          });
+        }
+    } catch (error) {
+      debugPrint('get onboarding details exception : $error');
+    }
   }
 }
