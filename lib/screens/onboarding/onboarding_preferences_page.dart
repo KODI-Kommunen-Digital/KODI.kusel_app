@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/screens/onboarding/onboarding_screen_provider.dart';
 
 import '../../common_widgets/interests_grid_card_view.dart';
@@ -22,7 +22,7 @@ class _OnBoardingPreferencesPageState extends ConsumerState<OnBoardingPreference
   Widget build(BuildContext context) {
     String userName  = ref.read(onboardingScreenProvider).userFirstName ?? '';
     String displayMsg =
-        "${AppLocalizations.of(context).complete}$userName${AppLocalizations.of(context).what_interest_you}";
+        "${AppLocalizations.of(context).complete} $userName${AppLocalizations.of(context).what_interest_you}";
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SingleChildScrollView(
