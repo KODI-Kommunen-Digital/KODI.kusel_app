@@ -2,8 +2,12 @@ import 'package:core/base_model.dart';
 
 class OrtDetailRequestModel implements BaseModel<OrtDetailRequestModel> {
   String ortId;
+  String translate;
 
-  OrtDetailRequestModel({required this.ortId});
+  OrtDetailRequestModel({
+    required this.ortId,
+    required this.translate,
+  });
 
   @override
   OrtDetailRequestModel fromJson(Map<String, dynamic> json) {
@@ -13,6 +17,9 @@ class OrtDetailRequestModel implements BaseModel<OrtDetailRequestModel> {
 
   @override
   Map<String, dynamic> toJson() {
-    return {"ortId": ortId};
+    return {
+      "ortId": ortId,
+      "translate": translate,
+    };
   }
 }
