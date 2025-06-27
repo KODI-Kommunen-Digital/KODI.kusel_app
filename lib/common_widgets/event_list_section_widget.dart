@@ -29,6 +29,7 @@ class EventsListSectionWidget extends ConsumerStatefulWidget {
   final VoidCallback onHeadingTap;
   final bool isFavVisible;
   void Function(bool isFav, int? id) onSuccess;
+  void Function()? onFavClickCallback;
 
   bool? shrinkWrap; // by default it is true
 
@@ -46,7 +47,9 @@ class EventsListSectionWidget extends ConsumerStatefulWidget {
       required this.isFavVisible,
       required this.onHeadingTap,
       this.shrinkWrap,
-      required this.onSuccess});
+      required this.onSuccess,
+      this.onFavClickCallback
+      });
 
   @override
   ConsumerState<EventsListSectionWidget> createState() =>
@@ -182,7 +185,12 @@ class _EventsListSectionWidgetState
                                   context: context,
                                   path: eventDetailScreenPath,
                                   params:
-                                      EventDetailScreenParams(event: item),
+                                      EventDetailScreenParams(
+                                          event: item,
+                                    onFavClick: (){
+                                      widget.onFavClickCallback!();
+                                    },
+                                  ),
                                 );
                           },
                           isFavouriteVisible: widget.isFavVisible,

@@ -105,6 +105,9 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                           .read(homeScreenProvider.notifier)
                           .setIsFavoriteHighlight(
                               isFavorite, widget.eventScreenParams.event?.id);
+                      if(widget.eventScreenParams.onFavClick!=null){
+                        widget.eventScreenParams.onFavClick!();
+                      }
                     }, error: ({required String message}) {
                       showErrorToast(message: message, context: context);
                     });

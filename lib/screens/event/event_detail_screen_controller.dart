@@ -1,9 +1,16 @@
+import 'package:core/preference_manager/preference_constant.dart';
+import 'package:core/preference_manager/shared_pref_helper.dart';
+import 'package:core/sign_in_status/sign_in_status_controller.dart';
+import 'package:core/token_status.dart';
 import 'package:domain/model/request_model/event_details/event_details_request_model.dart';
 import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
+import 'package:domain/model/request_model/refresh_token/refresh_token_request_model.dart';
 import 'package:domain/model/response_model/event_details/event_details_response_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
+import 'package:domain/model/response_model/refresh_token/refresh_token_response_model.dart';
 import 'package:domain/usecase/event_details/event_details_usecase.dart';
 import 'package:domain/usecase/listings/listings_usecase.dart';
+import 'package:domain/usecase/refresh_token/refresh_token_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
@@ -18,6 +25,10 @@ final eventDetailScreenProvider = StateNotifierProvider.autoDispose<
           eventDetailsUseCase: ref.read(eventDetailsUseCaseProvider),
           listingsUseCase: ref.read(listingsUseCaseProvider),
           localeManagerController: ref.read(localeManagerProvider.notifier),
+      sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
+      signInStatusController: ref.read(signInStatusProvider.notifier),
+      tokenStatus: ref.read(tokenStatusProvider),
+      refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider)
         ));
 
 class EventDetailScreenController
@@ -25,12 +36,21 @@ class EventDetailScreenController
   EventDetailScreenController(
       {required this.eventDetailsUseCase,
       required this.listingsUseCase,
-      required this.localeManagerController})
+      required this.localeManagerController,
+        required this.sharedPreferenceHelper,
+        required this.signInStatusController,
+        required this.tokenStatus,
+        required this.refreshTokenUseCase
+      })
       : super(EventDetailScreenState.empty());
 
   EventDetailsUseCase eventDetailsUseCase;
   ListingsUseCase listingsUseCase;
   LocaleManagerController localeManagerController;
+  SharedPreferenceHelper sharedPreferenceHelper;
+  SignInStatusController signInStatusController;
+  TokenStatus tokenStatus;
+  RefreshTokenUseCase refreshTokenUseCase;
 
   Future<void> fetchAddress() async {
     String result = await getAddressFromLatLng(
@@ -40,6 +60,39 @@ class EventDetailScreenController
   }
 
   Future<void> getEventDetails(int? eventId) async {
+    state = state.copyWith(loading: true);
+    final status = await signInStatusController.isUserLoggedIn();
+    final response = tokenStatus.isAccessTokenExpired();
+    if (response && status) {
+      final userId = sharedPreferenceHelper.getInt(userIdKey);
+      RefreshTokenRequestModel requestModel =
+      RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+      RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
+
+      final refreshResponse =
+      await refreshTokenUseCase.call(requestModel, responseModel);
+
+      bool refreshSuccess = await refreshResponse.fold(
+            (left) {
+          debugPrint(
+              'refresh token municipality detail fold exception : $left');
+          return false;
+        },
+            (right) async {
+          final res = right as RefreshTokenResponseModel;
+          sharedPreferenceHelper.setString(
+              tokenKey, res.data?.accessToken ?? "");
+          sharedPreferenceHelper.setString(
+              refreshTokenKey, res.data?.refreshToken ?? "");
+          return true;
+        },
+      );
+
+      if (!refreshSuccess) {
+        state = state.copyWith(loading: false);
+        return;
+      }
+    }
     if (eventId != null) {
       try {
         state = state.copyWith(loading: true, error: "");
@@ -48,10 +101,9 @@ class EventDetailScreenController
 
         GetEventDetailsRequestModel getEventDetailsRequestModel =
             GetEventDetailsRequestModel(
-          id: eventId,
-                translate: "${currentLocale.languageCode}-${currentLocale.countryCode}"
-
-            );
+                id: eventId,
+                translate:
+                    "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
         GetEventDetailsResponseModel getEventDetailsResponseModel =
             GetEventDetailsResponseModel();
@@ -67,8 +119,8 @@ class EventDetailScreenController
             state = state.copyWith(
                 eventDetails: eventData,
                 loading: false,
-                isFavourite: eventData?.isFavorite ?? false);
-            debugPrint("Printing isFav - ${eventData?.isFavorite}  ---- ${state.isFavourite}");
+                  isFavourite: eventData?.isFavorite ?? false);
+            debugPrint("Printing isFav - ${eventData?.description}");
           },
         );
       } catch (error) {
@@ -174,5 +226,6 @@ class EventDetailScreenController
 
 class EventDetailScreenParams {
   Listing? event;
-  EventDetailScreenParams({required this.event});
+  Function()? onFavClick;
+  EventDetailScreenParams({required this.event, this.onFavClick});
 }
