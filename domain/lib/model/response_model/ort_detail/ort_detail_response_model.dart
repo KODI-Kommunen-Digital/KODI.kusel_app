@@ -48,6 +48,9 @@ class OrtDetailDataModel implements BaseModel<OrtDetailDataModel> {
   int? parentId;
   bool? isFavorite;
   List<OnlineServiceModel>? onlineServices;
+  String? mayorName;
+  String? mayorImage;
+  String? mayorDescription;
 
   @override
   OrtDetailDataModel fromJson(Map<String, dynamic> json) {
@@ -75,7 +78,10 @@ class OrtDetailDataModel implements BaseModel<OrtDetailDataModel> {
       ..hasForum = json['hasForum']
       ..parentId = json['parentId']
       ..isFavorite = json['isFavorite']
-      ..onlineServices = (json['onlineServices'] as List?)?.map((e) => OnlineServiceModel().fromJson(e)).toList();
+      ..onlineServices = (json['onlineServices'] as List?)?.map((e) => OnlineServiceModel().fromJson(e)).toList()
+      ..mayorName=json['mayor_name']
+    ..mapImage=json['mayor_image']
+    ..mayorDescription=json['mayor_description'];
   }
 
   @override
