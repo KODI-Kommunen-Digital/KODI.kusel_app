@@ -17,6 +17,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../common_widgets/arrow_back_widget.dart';
 import '../../common_widgets/common_bottom_nav_card_.dart';
 import '../../common_widgets/common_event_card.dart';
+import '../../common_widgets/common_html_widget.dart';
 import '../../common_widgets/location_card_widget.dart';
 import '../../common_widgets/toast_message.dart';
 import '../../common_widgets/web_view_page.dart';
@@ -222,12 +223,9 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
           //     color: Theme.of(context).textTheme.bodyLarge?.color,
           //     fontWeight: FontWeight.w600),
           //     12.verticalSpace,
-          textRegularPoppins(
-              text: description,
-              fontSize: 11,
-              textOverflow: TextOverflow.visible,
-              color: Theme.of(context).textTheme.bodyLarge?.color,
-              textAlign: TextAlign.start),
+          CommonHtmlWidget(
+            data: description,
+          ),
           Visibility(
               visible:
                   ref.read(eventDetailScreenProvider).eventDetails.startDate!=
