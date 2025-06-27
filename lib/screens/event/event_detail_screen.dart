@@ -16,11 +16,14 @@ import 'package:kusel/utility/kusel_date_utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/arrow_back_widget.dart';
+import '../../common_widgets/common_bottom_nav_card_.dart';
 import '../../common_widgets/common_event_card.dart';
 import '../../common_widgets/location_card_widget.dart';
+import '../../common_widgets/toast_message.dart';
 import '../../common_widgets/web_view_page.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
+import '../../providers/favorites_list_notifier.dart';
 import '../../utility/url_launcher_utility.dart';
 import '../home/home_screen_provider.dart';
 
@@ -39,7 +42,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
     Future.microtask(() {
       ref
           .read(eventDetailScreenProvider.notifier)
-          .getEventDetails(widget.eventScreenParams.eventId);
+          .getEventDetails(widget.eventScreenParams.event?.id);
       ref.read(eventDetailScreenProvider.notifier).fetchAddress();
       ref.read(eventDetailScreenProvider.notifier).getRecommendedList();
     });
@@ -79,6 +82,34 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                 },
               ),
             ),
+            Positioned(
+                bottom: 16.h,
+                left: 16.w,
+                right: 16.w,
+                child: CommonBottomNavCard(
+                  onBackPress: () {
+                    ref
+                        .read(navigationProvider)
+                        .removeTopPage(context: context);
+                  },
+                  isFavVisible:
+                      !ref.watch(homeScreenProvider).isSignInButtonVisible,
+                  isFav: state.isFavourite,
+                  onFavChange: () {
+                    ref
+                        .watch(favoritesProvider.notifier)
+                        .toggleFavorite(widget.eventScreenParams.event!,
+                            success: ({required bool isFavorite}) {
+                      ref.read(eventDetailScreenProvider.notifier).toggleFav();
+                      ref
+                          .read(homeScreenProvider.notifier)
+                          .setIsFavoriteHighlight(
+                              isFavorite, widget.eventScreenParams.event?.id);
+                    }, error: ({required String message}) {
+                      showErrorToast(message: message, context: context);
+                    });
+                  },
+                )),
           ],
         ),
       ),
@@ -469,7 +500,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                                   context: context,
                                   path: eventDetailScreenPath,
                                   params:
-                                      EventDetailScreenParams(eventId: item.id),
+                                      EventDetailScreenParams(event: item),
                                 );
                           },
                           isFavouriteVisible: !ref

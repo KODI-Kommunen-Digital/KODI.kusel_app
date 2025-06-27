@@ -263,7 +263,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                                   path: eventDetailScreenPath,
                                   context: context,
                                   params: EventDetailScreenParams(
-                                      eventId: item.id));
+                                      event: item));
                             },
                             onFavouriteIconClick: () {
                               ref
