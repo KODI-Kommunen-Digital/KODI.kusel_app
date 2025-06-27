@@ -259,6 +259,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                       );
                 },
+                onFavClickCallback: (){
+                  ref.read(homeScreenProvider.notifier).getNearbyEvents();
+                },
                 onHeadingTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
                         path: selectedEventListScreenPath,
@@ -305,6 +308,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ref.read(homeScreenProvider.notifier).getNews();
                           }));
                 },
+                onFavClickCallback: (){
+                  ref.read(homeScreenProvider.notifier).getNews();
+                },
                 onHeadingTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
                       path: selectedEventListScreenPath,
@@ -343,6 +349,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ref.read(homeScreenProvider.notifier).getEvents();
                           },
                           listHeading: AppLocalizations.of(context).events));
+                },
+                onFavClickCallback: (){
+                  ref.read(homeScreenProvider.notifier).getEvents();
                 },
                 onHeadingTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
@@ -475,7 +484,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   context: context,
                                   path: eventDetailScreenPath,
                                   params: EventDetailScreenParams(
-                                      event: listing,
+                                    event: listing,
+                                    onFavClick: () {
+                                      ref
+                                          .read(homeScreenProvider.notifier)
+                                          .getEvents();
+                                    },
                                   ),
                                 );
                           },
