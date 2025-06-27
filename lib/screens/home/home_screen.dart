@@ -146,7 +146,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 context: context,
                                 path: eventDetailScreenPath,
                                 params: EventDetailScreenParams(
-                                    eventId: listing.id));
+                                    event: listing));
                           },
                           searchController: TextEditingController(),
                           hintText:
@@ -422,8 +422,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     context: context,
                                     path: eventDetailScreenPath,
                                     params: EventDetailScreenParams(
-                                        eventId:
-                                            state.highlightsList[index].id));
+                                        event:
+                                            state.highlightsList[index]));
                               },
                               child: Row(
                                 children: [
@@ -475,7 +475,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   context: context,
                                   path: eventDetailScreenPath,
                                   params: EventDetailScreenParams(
-                                      eventId: listing.id),
+                                      event: listing,
+                                  ),
                                 );
                           },
                           onFavouriteIconClick: () {

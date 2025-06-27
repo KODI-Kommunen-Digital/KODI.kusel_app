@@ -182,7 +182,7 @@ class _EventsListSectionWidgetState
                                   context: context,
                                   path: eventDetailScreenPath,
                                   params:
-                                      EventDetailScreenParams(eventId: item.id),
+                                      EventDetailScreenParams(event: item),
                                 );
                           },
                           isFavouriteVisible: widget.isFavVisible,

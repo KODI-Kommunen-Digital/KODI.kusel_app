@@ -465,8 +465,8 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                               context: context,
                               path: eventDetailScreenPath,
                               params: EventDetailScreenParams(
-                                  eventId:
-                                  state.highlightsList[index].id));
+                                  event:
+                                  state.highlightsList[index]));
                         },
                         child: Row(
                           children: [
@@ -516,7 +516,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                         context: context,
                         path: eventDetailScreenPath,
                         params: EventDetailScreenParams(
-                            eventId: listing.id),
+                            event: listing),
                       );
                     },
                     onFavouriteIconClick: () {
