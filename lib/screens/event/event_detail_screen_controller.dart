@@ -68,7 +68,7 @@ class EventDetailScreenController
                 eventDetails: eventData,
                 loading: false,
                 isFavourite: eventData?.isFavorite ?? false);
-            debugPrint("Printing description - ${eventData?.description}");
+            debugPrint("Printing isFav - ${eventData?.isFavorite}  ---- ${state.isFavourite}");
           },
         );
       } catch (error) {
