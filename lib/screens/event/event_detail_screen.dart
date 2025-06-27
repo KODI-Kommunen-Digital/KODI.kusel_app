@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/app_router.dart';
@@ -22,6 +21,7 @@ import '../../common_widgets/location_card_widget.dart';
 import '../../common_widgets/toast_message.dart';
 import '../../common_widgets/web_view_page.dart';
 import '../../images_path.dart';
+import '../../l10n/app_localizations.dart';
 import '../../navigation/navigation.dart';
 import '../../providers/favorites_list_notifier.dart';
 import '../../utility/url_launcher_utility.dart';
