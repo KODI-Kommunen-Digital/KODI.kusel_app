@@ -131,7 +131,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                       ref.read(navigationProvider).navigateUsingPath(
                           context: context,
                           path: eventDetailScreenPath,
-                          params: EventDetailScreenParams(eventId: listing.id));
+                          params: EventDetailScreenParams(event: listing));
                       ref
                           .read(searchScreenProvider.notifier)
                           .loadSavedListings();
@@ -181,10 +181,9 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                               context: context,
                               path: eventDetailScreenPath,
                               params: EventDetailScreenParams(
-                                  eventId: ref
+                                  event: ref
                                       .watch(searchScreenProvider)
-                                      .searchedList[index]
-                                      .id));
+                                      .searchedList[index]));
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),
