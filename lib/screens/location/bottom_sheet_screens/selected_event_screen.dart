@@ -71,6 +71,7 @@ class _SelectedEventScreenState extends ConsumerState<SelectedEventScreen> {
           logo: state.selectedEvent?.logo ?? "",
           id: state.selectedEvent?.id ?? 0,
           sourceId: state.selectedEvent?.sourceId ?? 3,
+          event: state.selectedEvent!
         )
       ],
     );

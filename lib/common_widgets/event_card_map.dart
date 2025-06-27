@@ -1,3 +1,4 @@
+import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,6 +21,7 @@ class EventCardMap extends ConsumerStatefulWidget {
   final String logo;
   final int id;
   final int sourceId;
+  final Listing event;
 
   const EventCardMap(
       {super.key,
@@ -29,7 +31,9 @@ class EventCardMap extends ConsumerStatefulWidget {
       required this.startDate,
       required this.logo,
       required this.id,
-      required this.sourceId});
+      required this.sourceId,
+      required this.event
+      });
 
   @override
   ConsumerState<EventCardMap> createState() => _LocationCardWidgetState();
@@ -45,7 +49,7 @@ class _LocationCardWidgetState extends ConsumerState<EventCardMap> {
           ref.read(navigationProvider).navigateUsingPath(
               context: context,
               path: eventDetailScreenPath,
-              params: EventDetailScreenParams(eventId: widget.id));
+              params: EventDetailScreenParams(event: widget.event));
         },
         child: Container(
           decoration: BoxDecoration(
