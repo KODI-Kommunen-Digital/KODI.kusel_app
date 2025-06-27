@@ -94,7 +94,9 @@ class _ExploreScreenState extends ConsumerState<SelectedEventListScreen> {
                               .updateIsFav(isFav, id);
 
                           widget.eventListScreenParameter.onFavChange();
-                        },
+                          ref
+                              .read(selectedEventListScreenProvider.notifier)
+                              .getEventsList(widget.eventListScreenParameter);                        },
                       )
             ],
           ),
