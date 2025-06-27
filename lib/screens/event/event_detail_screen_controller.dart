@@ -64,7 +64,10 @@ class EventDetailScreenController
           },
           (r) {
             var eventData = (r as GetEventDetailsResponseModel).data;
-            state = state.copyWith(eventDetails: eventData, loading: false);
+            state = state.copyWith(
+                eventDetails: eventData,
+                loading: false,
+                isFavourite: eventData?.isFavorite ?? false);
             debugPrint("Printing description - ${eventData?.description}");
           },
         );
@@ -133,6 +136,11 @@ class EventDetailScreenController
     }
   }
 
+
+  assignIsFav(bool isFav){
+    state = state.copyWith(isFavourite: isFav);
+  }
+
   List<Listing> getSortedTop10Listings(List<Listing> listings) {
     final now = DateTime.now();
 
@@ -155,10 +163,16 @@ class EventDetailScreenController
   List<Listing> subList(List<Listing> list) {
     return list.length > 3 ? list.sublist(0, 3) : list;
   }
+
+  void toggleFav() {
+    bool isFav = state.isFavourite;
+    state = state.copyWith(
+      isFavourite: isFav ? false : true
+    );
+  }
 }
 
 class EventDetailScreenParams {
-  int? eventId;
-
-  EventDetailScreenParams({required this.eventId});
+  Listing? event;
+  EventDetailScreenParams({required this.event});
 }

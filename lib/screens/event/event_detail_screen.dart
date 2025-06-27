@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/app_router.dart';
@@ -9,17 +10,20 @@ import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/location_const.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
-import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/event/event_detail_screen_state.dart';
 import 'package:kusel/utility/kusel_date_utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/arrow_back_widget.dart';
+import '../../common_widgets/common_bottom_nav_card_.dart';
 import '../../common_widgets/common_event_card.dart';
-import '../../common_widgets/common_html_widget.dart';
 import '../../common_widgets/location_card_widget.dart';
+import '../../common_widgets/toast_message.dart';
+import '../../common_widgets/web_view_page.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
+import '../../providers/favorites_list_notifier.dart';
 import '../../utility/url_launcher_utility.dart';
 import '../home/home_screen_provider.dart';
 
@@ -38,7 +42,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
     Future.microtask(() {
       ref
           .read(eventDetailScreenProvider.notifier)
-          .getEventDetails(widget.eventScreenParams.eventId);
+          .getEventDetails(widget.eventScreenParams.event?.id);
       ref.read(eventDetailScreenProvider.notifier).fetchAddress();
       ref.read(eventDetailScreenProvider.notifier).getRecommendedList();
     });
@@ -78,6 +82,34 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                 },
               ),
             ),
+            Positioned(
+                bottom: 16.h,
+                left: 16.w,
+                right: 16.w,
+                child: CommonBottomNavCard(
+                  onBackPress: () {
+                    ref
+                        .read(navigationProvider)
+                        .removeTopPage(context: context);
+                  },
+                  isFavVisible:
+                      !ref.watch(homeScreenProvider).isSignInButtonVisible,
+                  isFav: state.isFavourite,
+                  onFavChange: () {
+                    ref
+                        .watch(favoritesProvider.notifier)
+                        .toggleFavorite(widget.eventScreenParams.event!,
+                            success: ({required bool isFavorite}) {
+                      ref.read(eventDetailScreenProvider.notifier).toggleFav();
+                      ref
+                          .read(homeScreenProvider.notifier)
+                          .setIsFavoriteHighlight(
+                              isFavorite, widget.eventScreenParams.event?.id);
+                    }, error: ({required String message}) {
+                      showErrorToast(message: message, context: context);
+                    });
+                  },
+                )),
           ],
         ),
       ),
@@ -187,19 +219,19 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
           //     color: Theme.of(context).textTheme.bodyLarge?.color,
           //     fontWeight: FontWeight.w600),
           //     12.verticalSpace,
-          CommonHtmlWidget(
-            data: description,
-          ),
-
+          textRegularPoppins(
+              text: description,
+              fontSize: 11,
+              textOverflow: TextOverflow.visible,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
+              textAlign: TextAlign.start),
           Visibility(
-              visible: ref
-                          .read(eventDetailScreenProvider)
-                          .eventDetails
-                          .startDate !=
-                      null &&
-                  ref.read(eventDetailScreenProvider).eventDetails.endDate !=
+              visible:
+                  ref.read(eventDetailScreenProvider).eventDetails.startDate!=
+                      null && ref.read(eventDetailScreenProvider).eventDetails.endDate!=
                       null,
-              child: Align(child: _buildExpandedTile()))
+              child: Align(child: _buildExpandedTile())
+          )
         ],
       ),
     );
@@ -375,7 +407,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
               8.horizontalSpace,
               textRegularMontserrat(
                 text:
-                    "${AppLocalizations.of(context).saturday}, ${KuselDateUtils.formatDate(ref.read(eventDetailScreenProvider).eventDetails.startDate ?? '')} \n${AppLocalizations.of(context).from} 6:30 - 22:00 ${AppLocalizations.of(context).clock}",
+                    "${AppLocalizations.of(context).saturday}, ${KuselDateUtils.formatDate(ref.read(eventDetailScreenProvider).eventDetails.startDate??'')} \n${AppLocalizations.of(context).from} 6:30 - 22:00 ${AppLocalizations.of(context).clock}",
                 textOverflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.start,
                 color: Theme.of(context).textTheme.bodyLarge?.color,
@@ -394,7 +426,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
               8.horizontalSpace,
               textRegularMontserrat(
                 text:
-                    "${AppLocalizations.of(context).saturday}, ${KuselDateUtils.formatDate(ref.read(eventDetailScreenProvider).eventDetails.endDate ?? '')} \n${AppLocalizations.of(context).from} 6:30 - 22:00 ${AppLocalizations.of(context).clock}",
+                    "${AppLocalizations.of(context).saturday}, ${KuselDateUtils.formatDate(ref.read(eventDetailScreenProvider).eventDetails.endDate??'')} \n${AppLocalizations.of(context).from} 6:30 - 22:00 ${AppLocalizations.of(context).clock}",
                 textOverflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.start,
                 color: Theme.of(context).textTheme.bodyLarge?.color,
@@ -468,7 +500,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                                   context: context,
                                   path: eventDetailScreenPath,
                                   params:
-                                      EventDetailScreenParams(eventId: item.id),
+                                      EventDetailScreenParams(event: item),
                                 );
                           },
                           isFavouriteVisible: !ref
