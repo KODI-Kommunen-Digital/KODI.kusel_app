@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/fliter_screen/filter_screen_controller.dart';
 import '../../common_widgets/custom_dropdown.dart';

@@ -5,7 +5,7 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common_widgets/arrow_back_widget.dart';
 import '../../../navigation/navigation.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kusel/l10n/app_localizations.dart';
 
 class DigifitQRScannerScreen extends ConsumerStatefulWidget {
   const DigifitQRScannerScreen({super.key});

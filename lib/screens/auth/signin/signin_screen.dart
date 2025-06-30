@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/app_router.dart';
@@ -229,6 +229,13 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                               .read(signInScreenProvider.notifier)
                               .isOnboardingDone();
                           if (isOnboarded) {
+                            if (ref
+                                .read(signInScreenProvider.notifier)
+                                .isOnboardingCacheAvailable()) {
+                              await ref
+                                  .read(signInScreenProvider.notifier)
+                                  .syncOnboardingDataWithNetwork();
+                            }
                             ref.read(navigationProvider).removeAllAndNavigate(
                                 context: context, path: homeScreenPath);
                           } else {
