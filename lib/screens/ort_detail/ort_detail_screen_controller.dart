@@ -230,7 +230,7 @@ class OrtDetailScreenController extends StateNotifier<OrtDetailScreenState> {
         listing.isFavorite = isFavorite;
       }
     }
-    state = state.copyWith(highlightsList: state.eventsList);
+    state = state.copyWith(eventsList: state.eventsList);
   }
 
   void setIsFavoriteHighlight(bool isFavorite, int? id) {

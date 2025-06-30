@@ -104,7 +104,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                       ref.read(eventDetailScreenProvider.notifier).toggleFav();
                       ref
                           .read(homeScreenProvider.notifier)
-                          .setIsFavoriteHighlight(
+                          .setIsFavoriteEvent(
                               isFavorite, widget.eventScreenParams.event?.id);
                       if(widget.eventScreenParams.onFavClick!=null){
                         widget.eventScreenParams.onFavClick!();
