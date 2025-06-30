@@ -306,7 +306,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get enter_description => 'Beschreibung eingeben';
 
   @override
-  String get website => 'Website';
+  String get website => 'Webseite';
 
   @override
   String get enter_website => 'Website eingeben';

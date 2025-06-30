@@ -110,10 +110,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       child: Column(
         children: [
           CustomButton(
-            onPressed: () {
+            onPressed: () async{
               switch (selectedPageIndex) {
                 case 0:
-                  stateNotifier.nextPage();
+                  await stateNotifier.nextPage();
                   break;
                 case 1:
                   if (stateNotifier.onboardingNameFormKey.currentState
@@ -126,7 +126,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         showErrorToast(message: msg, context: context);
                       });
                     }
-                    stateNotifier.nextPage();
+                    await stateNotifier.nextPage();
                   }
                   break;
                 case 2:
@@ -137,7 +137,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     if (state.isLoggedIn) {
                       stateNotifier.submitUserType();
                     }
-                    stateNotifier.nextPage();
+                    await stateNotifier.nextPage();
                   }
                   break;
                 case 3:
@@ -148,7 +148,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     if (state.isLoggedIn) {
                       stateNotifier.submitUserDemographics();
                     }
-                    stateNotifier.nextPage();
+                    await stateNotifier.nextPage();
                   }
                   break;
                 case 4:
