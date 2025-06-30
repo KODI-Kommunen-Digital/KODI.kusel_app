@@ -146,7 +146,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 context: context,
                                 path: eventDetailScreenPath,
                                 params: EventDetailScreenParams(
-                                    eventId: listing.id));
+                                    event: listing));
                           },
                           searchController: TextEditingController(),
                           hintText:
@@ -259,6 +259,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                       );
                 },
+                onFavClickCallback: (){
+                  ref.read(homeScreenProvider.notifier).getNearbyEvents();
+                },
                 onHeadingTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
                         path: selectedEventListScreenPath,
@@ -305,6 +308,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ref.read(homeScreenProvider.notifier).getNews();
                           }));
                 },
+                onFavClickCallback: (){
+                  ref.read(homeScreenProvider.notifier).getNews();
+                },
                 onHeadingTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
                       path: selectedEventListScreenPath,
@@ -343,6 +349,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ref.read(homeScreenProvider.notifier).getEvents();
                           },
                           listHeading: AppLocalizations.of(context).events));
+                },
+                onFavClickCallback: (){
+                  ref.read(homeScreenProvider.notifier).getEvents();
                 },
                 onHeadingTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
@@ -422,8 +431,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     context: context,
                                     path: eventDetailScreenPath,
                                     params: EventDetailScreenParams(
-                                        eventId:
-                                            state.highlightsList[index].id));
+                                        event:
+                                            state.highlightsList[index]));
                               },
                               child: Row(
                                 children: [
@@ -455,7 +464,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child: PageView.builder(
                     controller: PageController(
                         viewportFraction:
-                            317.w / MediaQuery.of(context).size.width),
+                            317.w / MediaQuery.of(context).size.width*.9),
                     scrollDirection: Axis.horizontal,
                     padEnds: false,
                     itemCount: state.highlightsList.length,
@@ -475,7 +484,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   context: context,
                                   path: eventDetailScreenPath,
                                   params: EventDetailScreenParams(
-                                      eventId: listing.id),
+                                    event: listing,
+                                    onFavClick: () {
+                                      ref
+                                          .read(homeScreenProvider.notifier)
+                                          .getEvents();
+                                    },
+                                  ),
                                 );
                           },
                           onFavouriteIconClick: () {
