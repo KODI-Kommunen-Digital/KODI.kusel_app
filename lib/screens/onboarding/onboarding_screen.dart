@@ -5,16 +5,16 @@ import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/common_widgets/toast_message.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/onboarding/onboarding_name_page.dart';
 import 'package:kusel/screens/onboarding/onboarding_preferences_page.dart';
 import 'package:kusel/screens/onboarding/onboarding_screen_provider.dart';
-import 'package:kusel/screens/onboarding/onboarding_screen_state.dart';
 import 'package:kusel/screens/onboarding/onboarding_start_page.dart';
 import 'package:kusel/screens/onboarding/onboarding_type_page.dart';
 import 'onboarding_option_page.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kusel/l10n/app_localizations.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({super.key});
@@ -24,12 +24,15 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 }
 
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
+
   @override
   void initState() {
     Future.microtask((){
       ref.read(onboardingScreenProvider.notifier).initialCall().then((value){
         if (ref.read(onboardingScreenProvider.notifier).isOnboardingDone()) {
           ref.read(onboardingScreenProvider.notifier).getOnboardingDetails();
+        } else if(ref.read(onboardingScreenProvider.notifier).isOfflineOnboardingDone()) {
+          ref.read(onboardingScreenProvider.notifier).getOnboardingOfflineData();
         }
       });
     });
@@ -116,6 +119,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   if (stateNotifier.onboardingNameFormKey.currentState
                           ?.validate() ??
                       false) {
+                    if(state.userFirstName!=null && state.isLoggedIn){
+                      stateNotifier.editUserName(onSuccess: () async {
+                        await stateNotifier.getUserDetails();
+                      }, onError: (msg){
+                        showErrorToast(message: msg, context: context);
+                      });
+                    }
                     stateNotifier.nextPage();
                   }
                   break;

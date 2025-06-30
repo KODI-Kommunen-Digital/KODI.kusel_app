@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/kusel_text_field.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/screens/onboarding/onboarding_screen_provider.dart';
 
 import '../auth/validator/empty_field_validator.dart';
@@ -19,15 +19,19 @@ class OnBoardingNamePage extends ConsumerStatefulWidget {
 class _OnboardingStartPageState extends ConsumerState<OnBoardingNamePage> {
   TextEditingController nameEditingController = TextEditingController();
 
-
   @override
   void initState() {
-    Future.microtask((){
-      if(ref.watch(onboardingScreenProvider).userFirstName !=null){
-        nameEditingController.text = ref.watch(onboardingScreenProvider).userFirstName!;
-      }
-    });
     super.initState();
+
+    final savedName = ref.read(onboardingScreenProvider).userFirstName;
+    if (savedName != null) {
+      nameEditingController.text = savedName;
+    }
+    nameEditingController.addListener(() {
+      ref
+          .read(onboardingScreenProvider.notifier)
+          .updateFirstName(nameEditingController.text);
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -62,8 +66,10 @@ class _OnboardingStartPageState extends ConsumerState<OnBoardingNamePage> {
             KuselTextField(
               textEditingController: nameEditingController,
               validator: (value) {
-                return validateField(value,
-                    "${AppLocalizations.of(context).name} ${AppLocalizations.of(context).is_required}");
+                return validateField(
+                  value,
+                  "${AppLocalizations.of(context).name} ${AppLocalizations.of(context).is_required}",
+                );
               },
               maxLines: 1,
             )
