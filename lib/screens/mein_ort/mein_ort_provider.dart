@@ -1,27 +1,31 @@
 import 'package:core/sign_in_status/sign_in_status_controller.dart';
-import 'package:domain/model/empty_request.dart';
+import 'package:domain/model/request_model/mein_ort/mein_ort_request_model.dart';
 import 'package:domain/model/response_model/mein_ort/mein_ort_response_model.dart';
 import 'package:domain/usecase/mein_ort/mein_ort_usecase.dart';
 import 'package:domain/usecase/municipality/municipality_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kusel/locale/localization_manager.dart';
 import 'package:kusel/screens/mein_ort/mein_ort_state.dart';
 
 final meinOrtProvider = StateNotifierProvider<MeinOrtProvider, MeinOrtState>(
-    (ref) => MeinOrtProvider(
-        meinOrtUseCase: ref.read(meinOrtUseCaseProvider),
-        municipalityUseCase: ref.read(municipalityUseCaseProvider),
-        signInStatusController: ref.read(signInStatusProvider.notifier)));
+        (ref) =>
+        MeinOrtProvider(
+            meinOrtUseCase: ref.read(meinOrtUseCaseProvider),
+            municipalityUseCase: ref.read(municipalityUseCaseProvider),
+            signInStatusController: ref.read(signInStatusProvider.notifier),
+            localeManagerController: ref.read(localeManagerProvider.notifier)));
 
 class MeinOrtProvider extends StateNotifier<MeinOrtState> {
   MeinOrtUseCase meinOrtUseCase;
   MunicipalityUseCase municipalityUseCase;
   SignInStatusController signInStatusController;
+  LocaleManagerController localeManagerController;
 
-  MeinOrtProvider(
-      {required this.meinOrtUseCase,
-      required this.municipalityUseCase,
-      required this.signInStatusController})
+  MeinOrtProvider({required this.meinOrtUseCase,
+    required this.municipalityUseCase,
+    required this.signInStatusController,
+    required this.localeManagerController})
       : super(MeinOrtState.empty());
 
   updateCardIndex(int index) {
@@ -32,9 +36,12 @@ class MeinOrtProvider extends StateNotifier<MeinOrtState> {
     try {
       state = state.copyWith(isLoading: true);
 
-      EmptyRequest requestModel = EmptyRequest();
 
       MeinOrtResponseModel responseModel = MeinOrtResponseModel();
+
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
+      MeinOrtRequestModel requestModel = MeinOrtRequestModel(translate: "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
       final response = await meinOrtUseCase.call(requestModel, responseModel);
 

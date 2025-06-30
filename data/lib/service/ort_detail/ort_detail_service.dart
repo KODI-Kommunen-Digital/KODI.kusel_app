@@ -21,6 +21,8 @@ class OrtDetailService {
       BaseModel requestModel, BaseModel responseModel) async {
     final path =
         "$ortDetailEndPoint/${requestModel.toJson()["ortId"]}";
+
+
     String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
     final headers = {'Authorization': 'Bearer $token'};
 
