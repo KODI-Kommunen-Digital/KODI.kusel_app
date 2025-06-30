@@ -73,9 +73,12 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                             .of(context)
                             .textTheme
                             .labelMedium
-                            ?.color),
+                            ?.color,
+                    textAlign: TextAlign.start),
                     const SizedBox(height: 4),
-                    textSemiBoldMontserrat(text: widget.title),
+                    textSemiBoldMontserrat(text: widget.title,
+                    textOverflow: TextOverflow.visible,
+                    textAlign: TextAlign.start),
                     const SizedBox(height: 2),
                     textRegularMontserrat(
                         text: widget.location,
@@ -83,7 +86,8 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                             .of(context)
                             .textTheme
                             .labelMedium
-                            ?.color),
+                            ?.color,
+                    textAlign: TextAlign.start),
                   ],
                 ),
               ),
