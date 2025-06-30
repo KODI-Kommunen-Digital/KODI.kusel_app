@@ -60,7 +60,7 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
               CommonBackgroundClipperWidget(
                 clipperType: UpstreamWaveClipper(),
                 height: 130.h,
-                headingTextLeftMargin: 10,
+                headingTextLeftMargin: 20,
                 imageUrl: imagePath['home_screen_background'] ?? '',
                 isStaticImage: true,
                 isBackArrowEnabled: false,

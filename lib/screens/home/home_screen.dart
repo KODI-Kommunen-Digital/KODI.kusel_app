@@ -413,8 +413,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               params: SelectedEventListScreenParameter(
                                 categoryId: ListingCategoryId.highlights.eventId,
                                 listHeading: AppLocalizations.of(context).highlights,
-                                onFavChange: () {
-                                  ref
+                                onFavChange: (){
+                                   ref
                                       .read(homeScreenProvider.notifier)
                                       .getHighlights();
                                 },
