@@ -22,11 +22,11 @@ class _State extends ConsumerState<SplashScreen> {
     super.initState();
     Future.microtask(() {
       ref.read(splashScreenProvider.notifier).startTimer(() {
-        bool isOnboardingCacheAvailable = ref
+        bool isOnboardingDone = ref
             .read(splashScreenProvider.notifier)
-            .isOnboardingCacheAvailable();
+            .isOnboardingDone();
         String path;
-        if (isOnboardingCacheAvailable) {
+        if (isOnboardingDone) {
           path = homeScreenPath;
         } else {
           path = onboardingScreenPath;
