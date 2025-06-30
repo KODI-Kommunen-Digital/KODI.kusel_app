@@ -5,20 +5,25 @@ import 'package:domain/model/response_model/signup_model/singup_response_model.d
 import 'package:domain/usecase/signup/signup_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kusel/common_widgets/translate_message.dart';
 import 'package:kusel/screens/auth/signup/signup_state.dart';
 
 final signUpScreenProvider =
     StateNotifierProvider.autoDispose<SignUpController, SignUpState>((ref) =>
         SignUpController(
             signUpUseCase: ref.read(signUpUseCaseProvider),
-            sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider)));
+            sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
+            translateErrorMessage: ref.read(translateErrorMessageProvider)));
 
 class SignUpController extends StateNotifier<SignUpState> {
   SignUpUseCase signUpUseCase;
   SharedPreferenceHelper sharedPreferenceHelper;
+  TranslateErrorMessage translateErrorMessage;
 
   SignUpController(
-      {required this.signUpUseCase, required this.sharedPreferenceHelper})
+      {required this.signUpUseCase,
+      required this.sharedPreferenceHelper,
+      required this.translateErrorMessage})
       : super(SignUpState.empty());
 
   updateShowPasswordStatus(bool status) {
@@ -47,11 +52,10 @@ class SignUpController extends StateNotifier<SignUpState> {
       final result =
           await signUpUseCase.call(signUpRequestModel, signUpResponseModel);
 
-      result.fold((l) {
+      result.fold((l) async{
+        final text = await translateErrorMessage.translateErrorMessage(l.toString());
         state = state.copyWith(isLoading: false);
-        onError(l.toString() ?? "");
-
-        onError(l.toString());
+        onError(text);
       }, (r) {
         debugPrint('sign up  fold exception');
         state = state.copyWith(isLoading: false);
