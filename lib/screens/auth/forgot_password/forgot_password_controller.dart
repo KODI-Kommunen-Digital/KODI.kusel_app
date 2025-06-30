@@ -3,17 +3,22 @@ import 'package:domain/model/response_model/forgot_password_response_model/forgo
 import 'package:domain/usecase/forgot_password/forgot_password_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kusel/common_widgets/translate_message.dart';
 import 'package:kusel/screens/auth/forgot_password/forgot_password_state.dart';
 
 final forgotPasswordProvider = StateNotifierProvider.autoDispose<
         ForgotPasswordController, ForgotPasswordState>(
     (ref) => ForgotPasswordController(
-        forgotPasswordUseCase: ref.read(forgotPasswordUseCaseProvider)));
+        forgotPasswordUseCase: ref.read(forgotPasswordUseCaseProvider),
+        translateErrorMessage: ref.read(translateErrorMessageProvider)));
 
 class ForgotPasswordController extends StateNotifier<ForgotPasswordState> {
   ForgotPasswordUseCase forgotPasswordUseCase;
+  TranslateErrorMessage translateErrorMessage;
 
-  ForgotPasswordController({required this.forgotPasswordUseCase})
+  ForgotPasswordController(
+      {required this.forgotPasswordUseCase,
+      required this.translateErrorMessage})
       : super(ForgotPasswordState.empty());
 
   sendForgotPasswordRequest({
@@ -31,9 +36,11 @@ class ForgotPasswordController extends StateNotifier<ForgotPasswordState> {
       final response =
           await forgotPasswordUseCase.call(requestModel, responseModel);
 
-      response.fold((l) {
+      response.fold((l) async {
+        final text =
+            await translateErrorMessage.translateErrorMessage(l.toString());
         state = state.copyWith(isLoading: false);
-        onError(l.toString());
+        onError(text);
         debugPrint('Forgot password fold exception = $l');
       }, (r) {
         state = state.copyWith(isLoading: false);
