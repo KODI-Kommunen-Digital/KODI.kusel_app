@@ -60,6 +60,7 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
               CommonBackgroundClipperWidget(
                 clipperType: UpstreamWaveClipper(),
                 height: 130.h,
+                headingTextLeftMargin: 10,
                 imageUrl: imagePath['home_screen_background'] ?? '',
                 isStaticImage: true,
                 isBackArrowEnabled: false,
@@ -97,7 +98,7 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
         ),
         Positioned(
           top: 30.h,
-          left: 12.h,
+          left: 5.h,
           child: ArrowBackWidget(
             onTap: () {
               ref.read(navigationProvider).removeTopPage(context: context);

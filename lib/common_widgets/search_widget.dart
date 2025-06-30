@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:intl/intl.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/images_path.dart';
 
@@ -20,9 +19,15 @@ class SearchWidget extends ConsumerStatefulWidget {
   TextEditingController searchController;
   FutureOr<List<Listing>?> Function(String) suggestionCallback;
   Function(Listing) onItemClick;
+  VerticalDirection? verticalDirection;
 
   SearchWidget(
-      {super.key, required this.hintText, required this.searchController, required this.suggestionCallback, required this.onItemClick});
+      {super.key,
+      required this.hintText,
+      required this.searchController,
+      required this.suggestionCallback,
+      required this.onItemClick,
+      this.verticalDirection});
 
   @override
   ConsumerState<SearchWidget> createState() => _SearchWidgetState();
@@ -43,16 +48,34 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
           padding: EdgeInsets.symmetric(horizontal: 14.0.w),
           child: Row(
             children: [
-              ImageUtil.loadSvgImage(imageUrl : imagePath['search_icon'] ?? '', context : context),
+              ImageUtil.loadSvgImage(
+                  imageUrl: imagePath['search_icon'] ?? '', context: context),
               8.horizontalSpace,
               Expanded(
                 child: TypeAheadField<Listing>(
                   hideOnEmpty: true,
                   hideOnUnfocus: true,
                   hideOnSelect: true,
+                  hideWithKeyboard: false,
+                  direction: widget.verticalDirection ?? VerticalDirection.down,
                   debounceDuration: Duration(milliseconds: 1000),
                   controller: widget.searchController,
                   suggestionsCallback: widget.suggestionCallback,
+                  decorationBuilder: (context,widget){
+                    return Container(
+                      padding: EdgeInsets.symmetric(vertical: 10.h,
+                      horizontal: 5.w),
+                      constraints: BoxConstraints(
+                        maxHeight: 250.h,
+                        maxWidth: double.infinity// Set max height here as per your UI
+                      ),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).scaffoldBackgroundColor,
+                        borderRadius: BorderRadius.circular(10.r)
+                      ),
+                      child: widget,
+                    );
+                  },
                   builder: (context, controller, focusNode) {
                     return TextField(
                       controller: controller,
@@ -81,7 +104,8 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                             text: event.title ?? "",
                             fontSize: 16,
                             color: Colors.black87,
-                            textAlign: TextAlign.start, // Ensure text is left-aligned
+                            textAlign:
+                                TextAlign.start, // Ensure text is left-aligned
                           ),
                         ),
                         subtitle: Padding(
@@ -89,10 +113,12 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: textRegularPoppins(
-                              text: KuselDateUtils.formatDate(event.startDate ?? ""),
+                              text: KuselDateUtils.formatDate(
+                                  event.startDate ?? ""),
                               fontSize: 14,
                               color: Colors.grey[600],
-                              textAlign: TextAlign.start, // Ensure text is left-aligned
+                              textAlign: TextAlign
+                                  .start, // Ensure text is left-aligned
                             ),
                           ),
                         ),
@@ -119,21 +145,24 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
   }
 
   saveListingToPrefs(Listing newListing) {
-    final existingJson = ref.read(sharedPreferenceHelperProvider).getString(searchListKey);
+    final existingJson =
+        ref.read(sharedPreferenceHelperProvider).getString(searchListKey);
 
     List<Listing> currentListings = [];
     if (existingJson != null && existingJson.isNotEmpty) {
       final List<dynamic> decoded = jsonDecode(existingJson);
       currentListings = decoded.map((e) => Listing.fromJson(e)).toList();
     }
-    
+
     currentListings.removeWhere((item) => item.id == newListing.id);
     currentListings.add(newListing);
     if (currentListings.length > 5) {
       currentListings.removeAt(0);
     }
-    final updatedJson = jsonEncode(currentListings.map((e) => e.toJson()).toList());
-    ref.read(sharedPreferenceHelperProvider).setString(searchListKey, updatedJson);
+    final updatedJson =
+        jsonEncode(currentListings.map((e) => e.toJson()).toList());
+    ref
+        .read(sharedPreferenceHelperProvider)
+        .setString(searchListKey, updatedJson);
   }
-
 }

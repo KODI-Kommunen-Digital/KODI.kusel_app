@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/local_image_text_service_card.dart';
-import 'package:kusel/common_widgets/network_image_text_service_card.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
+import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen_controller.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen_state.dart';
-import 'package:kusel/screens/virtual_town_hall/virtual_town_hall_provider.dart';
 
 import '../../app_router.dart';
 import '../../common_widgets/arrow_back_widget.dart';
@@ -28,12 +26,10 @@ import '../../images_path.dart';
 import '../../navigation/navigation.dart';
 import '../../providers/favorites_list_notifier.dart';
 import '../../providers/favourite_cities_notifier.dart';
-import '../../utility/url_launcher_utility.dart';
 import '../all_event/all_event_screen_param.dart';
 import '../event/event_detail_screen_controller.dart';
 import '../events_listing/selected_event_list_screen_parameter.dart';
 import '../full_image/full_image_screen.dart';
-import '../mein_ort/mein_ort_provider.dart';
 import '../municipal_party_detail/widget/municipal_detail_location_widget.dart';
 import 'ort_detail_screen_params.dart';
 
@@ -54,8 +50,12 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
           .read(ortDetailScreenControllerProvider.notifier)
           .getOrtDetail(ortId: widget.ortDetailScreenParams.ortId);
       ref.read(ortDetailScreenControllerProvider.notifier).getHighlights();
-      ref.read(ortDetailScreenControllerProvider.notifier).getEvents(widget.ortDetailScreenParams.ortId);
-      ref.read(ortDetailScreenControllerProvider.notifier).getNews(widget.ortDetailScreenParams.ortId);
+      ref
+          .read(ortDetailScreenControllerProvider.notifier)
+          .getEvents(widget.ortDetailScreenParams.ortId);
+      ref
+          .read(ortDetailScreenControllerProvider.notifier)
+          .getNews(widget.ortDetailScreenParams.ortId);
 
       ref.read(ortDetailScreenControllerProvider.notifier).isUserLoggedIn();
     });
@@ -71,8 +71,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
   }
 
   _buildBody(BuildContext context) {
-    final state = ref
-        .watch(ortDetailScreenControllerProvider);
+    final state = ref.watch(ortDetailScreenControllerProvider);
     final ortDetailDataModel = state.ortDetailDataModel;
     return SafeArea(
       child: Stack(
@@ -88,26 +87,23 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                 onBackPress: () {
                   ref.read(navigationProvider).removeTopPage(context: context);
                 },
-                isFavVisible:
-                state.isUserLoggedIn,
-                isFav: ortDetailDataModel?.isFavorite ??
-                    false,
+                isFavVisible: state.isUserLoggedIn,
+                isFav: ortDetailDataModel?.isFavorite ?? false,
                 onFavChange: () {
-                  ref
-                      .watch(favouriteCitiesNotifier.notifier)
-                      .toggleFavorite(
-                    isFavourite : ortDetailDataModel?.isFavorite,
-                    id : ortDetailDataModel?.id,
-                    success: ({required bool isFavorite}) {
-                      _updateCityFavStatus(
-                          isFavorite, ortDetailDataModel?.id ?? 0);
+                  ref.watch(favouriteCitiesNotifier.notifier).toggleFavorite(
+                        isFavourite: ortDetailDataModel?.isFavorite,
+                        id: ortDetailDataModel?.id,
+                        success: ({required bool isFavorite}) {
+                          _updateCityFavStatus(
+                              isFavorite, ortDetailDataModel?.id ?? 0);
                           widget.ortDetailScreenParams.onFavSuccess(
                               isFavorite, ortDetailDataModel?.id ?? 0);
                         },
-                    error: ({required String message}) {
-                      showErrorToast(message: message, context: context);
-                    },
-                  );                },
+                        error: ({required String message}) {
+                          showErrorToast(message: message, context: context);
+                        },
+                      );
+                },
               )),
           Positioned(
             top: 30.h,
@@ -139,7 +135,10 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
             8.verticalSpace,
             customPageViewer(),
             20.verticalSpace,
-            if (ref.watch(ortDetailScreenControllerProvider).eventsList.isNotEmpty)
+            if (ref
+                .watch(ortDetailScreenControllerProvider)
+                .eventsList
+                .isNotEmpty)
               EventsListSectionWidget(
                 context: context,
                 eventsList: state.eventsList,
@@ -153,7 +152,9 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                       path: allEventScreenPath,
                       context: context,
                       params: AllEventScreenParam(onFavChange: () {
-                        ref.read(ortDetailScreenControllerProvider.notifier).getEvents(widget.ortDetailScreenParams.ortId);
+                        ref
+                            .read(ortDetailScreenControllerProvider.notifier)
+                            .getEvents(widget.ortDetailScreenParams.ortId);
                       }));
                 },
                 onHeadingTap: () {
@@ -161,7 +162,9 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                       path: allEventScreenPath,
                       context: context,
                       params: AllEventScreenParam(onFavChange: () {
-                        ref.read(ortDetailScreenControllerProvider.notifier).getEvents(widget.ortDetailScreenParams.ortId);
+                        ref
+                            .read(ortDetailScreenControllerProvider.notifier)
+                            .getEvents(widget.ortDetailScreenParams.ortId);
                       }));
                 },
                 onSuccess: (isFav, eventId) {
@@ -190,7 +193,8 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                           categoryId: ListingCategoryId.news.eventId,
                           onFavChange: () {
                             ref
-                                .read(ortDetailScreenControllerProvider.notifier)
+                                .read(
+                                    ortDetailScreenControllerProvider.notifier)
                                 .getNews(widget.ortDetailScreenParams.ortId);
                           }));
                 },
@@ -204,7 +208,8 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                           categoryId: ListingCategoryId.news.eventId,
                           onFavChange: () {
                             ref
-                                .read(ortDetailScreenControllerProvider.notifier)
+                                .read(
+                                    ortDetailScreenControllerProvider.notifier)
                                 .getNews(widget.ortDetailScreenParams.ortId);
                           }));
                 },
@@ -229,8 +234,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 12.w),
               child: CityDetailLocationWidget(
-                phoneNumber:
-                '+49 6381 424-0',
+                phoneNumber: '+49 6381 424-0',
                 webUrl: 'https://google.com',
                 address: 'Trierer Str. 49-51, 66869 Kusel',
                 websiteText: AppLocalizations.of(context).visit_website,
@@ -248,12 +252,15 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
           ],
         ));
   }
+
   _buildMayorCard() {
+    final state = ref.watch(ortDetailScreenControllerProvider);
     return Padding(
       padding: EdgeInsets.all(12.h.w),
       child: Card(
         color: Theme.of(context).canvasColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
         elevation: 4,
         child: Column(
           children: [
@@ -261,11 +268,16 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
               padding: EdgeInsets.symmetric(vertical: 15.h, horizontal: 12.w),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.account_circle,
-                    size: 70.h.w,
-                    color: Theme.of(context).hintColor,
-                  ),
+                  (state.ortDetailDataModel?.mayorImage != null)
+                      ? ImageUtil.loadNetworkImage(
+                          imageUrl: state.ortDetailDataModel!.mayorImage!,
+                          context: context,
+                        )
+                      : Icon(
+                          Icons.account_circle,
+                          size: 70.h.w,
+                          color: Theme.of(context).hintColor,
+                        ),
                   20.horizontalSpace,
                   Expanded(
                     child: Column(
@@ -273,7 +285,8 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                       children: [
                         textBoldPoppins(
                           fontWeight: FontWeight.w600,
-                          text: "Maxime Musterfrau",
+                          text: state.ortDetailDataModel?.mayorName ??
+                              "Maxime Musterfrau",
                           fontSize: 13,
                           textOverflow: TextOverflow.visible,
                           textAlign: TextAlign.start,
@@ -284,7 +297,8 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                         Padding(
                           padding: EdgeInsets.only(right: 10.w),
                           child: textSemiBoldPoppins(
-                            text: "In diesem Abschnitt werden ein paar Worte über den bzw. die amtierende Bürger-meister:in gesagt.",
+                            text: state.ortDetailDataModel?.mayorDescription ??
+                                "In diesem Abschnitt werden ein paar Worte über den bzw. die amtierende Bürger-meister:in gesagt.",
                             fontSize: 12,
                             textAlign: TextAlign.start,
                             fontWeight: FontWeight.w200,
@@ -332,7 +346,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                     imageUrl: state.ortDetailDataModel!.image!,
                     sourceId: 1,
                     fit: BoxFit.contain,
-                    onImageTap: (){
+                    onImageTap: () {
                       ref.read(navigationProvider).navigateUsingPath(
                           path: fullImageScreenPath,
                           params: FullImageScreenParams(
@@ -447,7 +461,8 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                           listHeading: AppLocalizations.of(context).highlights,
                           onFavChange: () {
                             ref
-                                .read(ortDetailScreenControllerProvider.notifier)
+                                .read(
+                                    ortDetailScreenControllerProvider.notifier)
                                 .getHighlights();
                           },
                         ));
@@ -459,14 +474,13 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: List.generate(
                       state.highlightsList.length,
-                          (index) => InkWell(
+                      (index) => InkWell(
                         onTap: () {
                           ref.read(navigationProvider).navigateUsingPath(
                               context: context,
                               path: eventDetailScreenPath,
                               params: EventDetailScreenParams(
-                                  event:
-                                  state.highlightsList[index]));
+                                  event: state.highlightsList[index]));
                         },
                         child: Row(
                           children: [
@@ -476,8 +490,8 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                               color: currentIndex == index
                                   ? Theme.of(context).primaryColor
                                   : Theme.of(context)
-                                  .primaryColor
-                                  .withAlpha(130),
+                                      .primaryColor
+                                      .withAlpha(130),
                             ),
                             if (index != state.highlightsList.length - 1)
                               4.horizontalSpace
@@ -492,11 +506,10 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
           ),
           10.verticalSpace,
           SizedBox(
-            height: 300.h,
+            height: 310.h,
             child: PageView.builder(
               controller: PageController(
-                  viewportFraction:
-                  317.w / MediaQuery.of(context).size.width),
+                  viewportFraction: 317.w / MediaQuery.of(context).size.width),
               scrollDirection: Axis.horizontal,
               padEnds: false,
               itemCount: state.highlightsList.length,
@@ -513,25 +526,20 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                     isFavourite: listing.isFavorite ?? false,
                     onPress: () {
                       ref.read(navigationProvider).navigateUsingPath(
-                        context: context,
-                        path: eventDetailScreenPath,
-                        params: EventDetailScreenParams(
-                            event: listing),
-                      );
+                            context: context,
+                            path: eventDetailScreenPath,
+                            params: EventDetailScreenParams(event: listing),
+                          );
                     },
                     onFavouriteIconClick: () {
-                      ref
-                          .watch(favoritesProvider.notifier)
-                          .toggleFavorite(listing,
-                          success: ({required bool isFavorite}) {
-                            ref
-                                .read(ortDetailScreenControllerProvider.notifier)
-                                .setIsFavoriteHighlight(
-                                isFavorite, listing.id);
-                          }, error: ({required String message}) {
-                            showErrorToast(
-                                message: message, context: context);
-                          });
+                      ref.watch(favoritesProvider.notifier).toggleFavorite(
+                          listing, success: ({required bool isFavorite}) {
+                        ref
+                            .read(ortDetailScreenControllerProvider.notifier)
+                            .setIsFavoriteHighlight(isFavorite, listing.id);
+                      }, error: ({required String message}) {
+                        showErrorToast(message: message, context: context);
+                      });
                     },
                     isFavouriteVisible: state.isUserLoggedIn,
                     sourceId: listing.sourceId!,
@@ -549,5 +557,4 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
       ),
     );
   }
-
 }
