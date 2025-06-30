@@ -276,7 +276,7 @@ class SignInController extends StateNotifier<SignInState> {
   }
 
   bool isOnboardingCacheAvailable() {
-    bool value = sharedPreferenceHelper.getString(onboardingCacheKey) != null;
+    bool value = sharedPreferenceHelper.getString(onboardingCacheKey)!=null;
     return value;
   }
 
