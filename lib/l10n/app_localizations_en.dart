@@ -18,6 +18,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enter_email_id => 'Email or Username';
 
   @override
+  String get email_required => 'Email is required';
+
+  @override
+  String get password_required => 'password is required';
+
+  @override
   String get password => 'Password';
 
   @override
