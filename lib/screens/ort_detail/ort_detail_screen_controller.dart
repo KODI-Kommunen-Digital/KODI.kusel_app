@@ -88,7 +88,7 @@ class OrtDetailScreenController extends StateNotifier<OrtDetailScreenState> {
         }
       }
 
-      OrtDetailRequestModel requestModel = OrtDetailRequestModel(ortId: ortId);
+      OrtDetailRequestModel requestModel = OrtDetailRequestModel(ortId: ortId, translate: '');
       OrtDetailResponseModel responseModel = OrtDetailResponseModel();
 
       final detailResponse =

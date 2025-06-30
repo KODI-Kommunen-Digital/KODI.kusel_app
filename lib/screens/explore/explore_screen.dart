@@ -80,6 +80,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
         tourism,
         mobility,
         getInvolved,
+        digifit
       ];
 
       List<String> images = [
@@ -88,8 +89,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
         "tourism_and_lesiure",
         "mobility",
         "get_involved",
-        // Todo - change to original digifit image
-        // "get_involved"
+         "get_involved"
       ];
 
       return GridView.builder(
@@ -167,15 +167,14 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
               );
         };
         break;
-      // Todo : Enable when required
-      // case 5:
-      //   onTap = () {
-      //     ref.read(navigationProvider).navigateUsingPath(
-      //       path: digifitStartScreenPath,
-      //       context: context,
-      //     );
-      //   };
-      //   break;
+      case 5:
+        onTap = () {
+          ref.read(navigationProvider).navigateUsingPath(
+            path: digifitStartScreenPath,
+            context: context,
+          );
+        };
+        break;
       default:
         onTap = null;
     }
