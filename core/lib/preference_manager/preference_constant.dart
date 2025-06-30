@@ -11,3 +11,4 @@ const searchListKey= "searchList";
 const onboardingCacheKey = "onboardingCache";
 const onboardingKey = "onboarding";
 const userFirstNameKey = "userFirstName";
+const selectedMunicipalIdKey = "selectedMunicipalId";

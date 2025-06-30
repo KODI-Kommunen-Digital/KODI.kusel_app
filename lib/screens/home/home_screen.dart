@@ -464,7 +464,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child: PageView.builder(
                     controller: PageController(
                         viewportFraction:
-                            317.w / MediaQuery.of(context).size.width),
+                            317.w / MediaQuery.of(context).size.width*.9),
                     scrollDirection: Axis.horizontal,
                     padEnds: false,
                     itemCount: state.highlightsList.length,

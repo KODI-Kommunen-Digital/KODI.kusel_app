@@ -26,6 +26,7 @@ class CommonBackgroundClipperWidget extends ConsumerStatefulWidget {
   final Widget? customWidget3;
   final Widget? filterWidget;
   final BoxFit? imageFit;
+  final double? headingTextLeftMargin;
 
   const CommonBackgroundClipperWidget({
     super.key,
@@ -42,7 +43,8 @@ class CommonBackgroundClipperWidget extends ConsumerStatefulWidget {
     this.height,
     this.isLoading,
     this.filterWidget,
-    this.imageFit
+    this.imageFit,
+    this.headingTextLeftMargin
   });
 
   @override
@@ -108,6 +110,7 @@ class _CommonBackgroundClipperWidgetState
               ),
         Positioned(
           top: 30.h,
+          left: widget.headingTextLeftMargin?.w,
           child: SizedBox(
             width: MediaQuery.of(context).size.width,
             child: Padding(

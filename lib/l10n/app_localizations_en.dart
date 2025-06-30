@@ -243,7 +243,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get with_dog => 'With dog';
 
   @override
-  String get barrierearm => 'Barrierearm';
+  String get barrierearm => 'Low barrier';
 
   @override
   String get with_my_family => 'With my family';

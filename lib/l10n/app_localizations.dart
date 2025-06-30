@@ -566,7 +566,7 @@ abstract class AppLocalizations {
   /// No description provided for @barrierearm.
   ///
   /// In en, this message translates to:
-  /// **'Barrierearm'**
+  /// **'Low barrier'**
   String get barrierearm;
 
   /// No description provided for @with_my_family.
