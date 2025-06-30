@@ -17,7 +17,7 @@ class MobilityService {
 
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
-    final path = mobilityPath;
+    final path = "$mobilityPath?translate=${requestModel.toJson()["translate"]}";
 
     final apiHelper = ref.read(apiHelperProvider);
 
