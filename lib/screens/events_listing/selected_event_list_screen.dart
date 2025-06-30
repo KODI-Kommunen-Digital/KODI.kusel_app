@@ -40,17 +40,19 @@ class _ExploreScreenState extends ConsumerState<SelectedEventListScreen> {
   @override
   Widget build(BuildContext context) {
     final SelectedEventListScreenState categoryScreenState =
-        ref.watch(selectedEventListScreenProvider);
+    ref.watch(selectedEventListScreenProvider);
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Theme
+          .of(context)
+          .scaffoldBackgroundColor,
       body: categoryScreenState.loading
           ? const Center(child: CircularProgressIndicator())
           : SafeArea(child: _buildBody(categoryScreenState, context)),
     );
   }
 
-  Widget _buildBody(
-      SelectedEventListScreenState categoryScreenState, BuildContext context) {
+  Widget _buildBody(SelectedEventListScreenState categoryScreenState,
+      BuildContext context) {
     return Stack(
       children: [
         SingleChildScrollView(
@@ -65,37 +67,51 @@ class _ExploreScreenState extends ConsumerState<SelectedEventListScreen> {
                 isBackArrowEnabled: false,
                 headingText: categoryScreenState.heading,
               ),
-              if (!ref.watch(selectedEventListScreenProvider).loading)
-                ref.watch(selectedEventListScreenProvider).eventsList.isEmpty
+              if (!ref
+                  .watch(selectedEventListScreenProvider)
+                  .loading)
+                ref
+                    .watch(selectedEventListScreenProvider)
+                    .eventsList
+                    .isEmpty
                     ? Center(
-                        child: textHeadingMontserrat(
-                            text: AppLocalizations.of(context).no_data),
-                      )
+                  child: textHeadingMontserrat(
+                      text: AppLocalizations
+                          .of(context)
+                          .no_data),
+                )
                     : EventsListSectionWidget(
-                        eventsList:
-                            ref.watch(selectedEventListScreenProvider).eventsList,
-                        heading: null,
-                        maxListLimit: ref
-                            .watch(selectedEventListScreenProvider)
-                            .eventsList
-                            .length,
-                        buttonText: null,
-                        buttonIconPath: null,
-                        isLoading: false,
-                        onButtonTap: () {},
-                        context: context,
-                        isFavVisible: ref
-                            .watch(selectedEventListScreenProvider)
-                            .isUserLoggedIn,
-                        onHeadingTap: () {},
-                        onSuccess: (bool isFav, int? id) {
-                          ref
-                              .read(selectedEventListScreenProvider.notifier)
-                              .updateIsFav(isFav, id);
+                  eventsList:
+                  ref
+                      .watch(selectedEventListScreenProvider)
+                      .eventsList,
+                  heading: null,
+                  maxListLimit: ref
+                      .watch(selectedEventListScreenProvider)
+                      .eventsList
+                      .length,
+                  buttonText: null,
+                  buttonIconPath: null,
+                  isLoading: false,
+                  onButtonTap: () {},
+                  context: context,
+                  isFavVisible: ref
+                      .watch(selectedEventListScreenProvider)
+                      .isUserLoggedIn,
+                  onHeadingTap: () {},
+                  onFavClickCallback: () {
+                    ref
+                        .read(selectedEventListScreenProvider.notifier)
+                        .getEventsList(widget.eventListScreenParameter);
+                  },
+                  onSuccess: (bool isFav, int? id) {
+                    ref
+                        .read(selectedEventListScreenProvider.notifier)
+                        .updateIsFav(isFav, id);
 
-                          widget.eventListScreenParameter.onFavChange();
-                        },
-                      )
+                    widget.eventListScreenParameter.onFavChange();
+                  },
+                )
             ],
           ),
         ),
