@@ -307,12 +307,12 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
   }
 
   void setIsFavoriteNearBy(bool isFavorite, int? id) {
-    for (var listing in state.highlightsList) {
+    for (var listing in state.nearbyEventsList) {
       if (listing.id == id) {
         listing.isFavorite = isFavorite;
       }
     }
-    state = state.copyWith(highlightsList: state.highlightsList);
+    state = state.copyWith(nearbyEventsList: state.nearbyEventsList);
   }
 
   void setIsFavoriteEvent(bool isFavorite, int? id) {
@@ -321,7 +321,7 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
         listing.isFavorite = isFavorite;
       }
     }
-    state = state.copyWith(highlightsList: state.eventsList);
+    state = state.copyWith(eventsList: state.eventsList);
   }
 
   void setIsFavoriteHighlight(bool isFavorite, int? id) {

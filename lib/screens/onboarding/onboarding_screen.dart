@@ -8,6 +8,7 @@ import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/common_widgets/toast_message.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/navigation/navigation.dart';
+import 'package:kusel/screens/dashboard/dashboard_screen_provider.dart';
 import 'package:kusel/screens/onboarding/onboarding_name_page.dart';
 import 'package:kusel/screens/onboarding/onboarding_preferences_page.dart';
 import 'package:kusel/screens/onboarding/onboarding_screen_provider.dart';
@@ -174,11 +175,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           selectedPageIndex == 0
               ? GestureDetector(
                   onTap: () {
-                    // ref.read(navigationProvider).removeAllAndNavigate(
-                    //     context: context, path: dashboardScreenPath);
-
                     ref.read(navigationProvider).removeAllAndNavigate(
                         path: homeScreenPath, context: context);
+                    ref.read(dashboardScreenProvider.notifier).onIndexChanged(0);
                   },
                   child: textBoldPoppins(
                     color: Theme.of(context).textTheme.bodyLarge?.color,
