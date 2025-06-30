@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/app_router.dart';
@@ -175,24 +175,21 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               },
             ),
           ),
-          Visibility(
-            visible: ref.watch(settingsScreenProvider).isLoggedIn,
-            child: Column(
-              children: [
-                const Divider(),
-                ListTile(
-                  leading: const Icon(Icons.file_copy_outlined),
-                  title: textBoldPoppins(
-                    text: AppLocalizations.of(context).edit_onboarding_details,
-                    textAlign: TextAlign.start,
-                  ),
-                  onTap: () {
-                    ref.read(navigationProvider).navigateUsingPath(
-                        path: onboardingScreenPath, context: context);
-                  },
+          Column(
+            children: [
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.file_copy_outlined),
+                title: textBoldPoppins(
+                  text: AppLocalizations.of(context).edit_onboarding_details,
+                  textAlign: TextAlign.start,
                 ),
-              ],
-            ),
+                onTap: () {
+                  ref.read(navigationProvider).navigateUsingPath(
+                      path: onboardingScreenPath, context: context);
+                },
+              ),
+            ],
           ),
           Visibility(
             visible: ref.watch(settingsScreenProvider).isLoggedIn,

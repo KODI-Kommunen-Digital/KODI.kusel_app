@@ -15,7 +15,7 @@ import '../../app_router.dart';
 import '../../common_widgets/arrow_back_widget.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:kusel/l10n/app_localizations.dart';
 
 import '../../theme_manager/colors.dart';
 import '../events_listing/selected_event_list_screen_parameter.dart';
