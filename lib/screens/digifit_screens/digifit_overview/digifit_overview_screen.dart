@@ -4,7 +4,6 @@ import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
-import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/digifit/digifit_text_image_card.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/screens/digifit_screens/digifit_overview/params/digifit_overview_params.dart';
@@ -16,6 +15,7 @@ import '../../../common_widgets/image_utility.dart';
 import '../../../common_widgets/text_styles.dart';
 import '../../../images_path.dart';
 import '../../../navigation/navigation.dart';
+import '../../home/home_screen_provider.dart';
 import 'digifit_overview_controller.dart';
 
 class DigifitOverviewScreen extends ConsumerStatefulWidget {
@@ -145,23 +145,19 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
           20.verticalSpace,
           if (offeneUebungen.isNotEmpty)
             _buildCourseDetailSection(
-              title: AppLocalizations.of(context).digitfit_open_exercise,
-              stationList: offeneUebungen,
-              isButtonVisible: false,
-            ),
+                title: AppLocalizations.of(context).digifit_open_exercise,
+                stationList: offeneUebungen),
+          20.verticalSpace,
           if (abgeschlossen.isNotEmpty)
             _buildCourseDetailSection(
-              title: AppLocalizations.of(context).digitfit_completed_exercise,
-              stationList: abgeschlossen,
-              isButtonVisible: true,
-            ),
+                title: AppLocalizations.of(context).digifit_completed_exercise,
+                stationList: abgeschlossen),
         ],
       ),
     );
   }
 
   _buildCourseDetailSection({
-    bool? isButtonVisible,
     required String title,
     required List<DigifitOverviewStationModel> stationList,
   }) {
@@ -196,10 +192,11 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
                     imageUrl: station.machineImageUrl ?? '',
                     heading: station.muscleGroups ?? '',
                     title: station.name ?? '',
-                    isFavouriteVisible: true,
+                    isFavouriteVisible:
+                        !ref.read(homeScreenProvider).isSignInButtonVisible,
                     isFavorite: station.isFavorite ?? false,
                     sourceId: 1,
-                    isMarked: true),
+                    isCompleted: station.isCompleted),
               );
             }),
         10.verticalSpace,

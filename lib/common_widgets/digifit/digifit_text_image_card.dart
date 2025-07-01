@@ -19,8 +19,7 @@ class DigifitTextImageCard extends ConsumerStatefulWidget {
   final VoidCallback? onCardTap;
   final VoidCallback? onFavorite;
   final int sourceId;
-  final bool isMarked;
-  // final bool isCompleted;
+  final bool? isCompleted;
 
   const DigifitTextImageCard({
     Key? key,
@@ -33,8 +32,7 @@ class DigifitTextImageCard extends ConsumerStatefulWidget {
     required this.sourceId,
     this.onCardTap,
     this.onFavorite,
-    required this.isMarked,
-    // required this.isCompleted
+    this.isCompleted,
   }) : super(key: key);
 
   @override
@@ -57,7 +55,7 @@ class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
               top: 0,
               left: 0,
               child: Visibility(
-                visible: widget.isMarked,
+                visible: widget.isCompleted ?? false,
                   child: Container(
                     height: 32.h,
                 width: 40.w,
