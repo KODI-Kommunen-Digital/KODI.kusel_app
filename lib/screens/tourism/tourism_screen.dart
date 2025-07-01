@@ -136,6 +136,11 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                           .read(tourismScreenControllerProvider.notifier)
                           .updateNearByIsFav(isFav, id);
                     },
+                    onFavClickCallback: () {
+                      ref
+                          .read(tourismScreenControllerProvider.notifier)
+                          .getNearByListing();
+                    },
                   ),
                 LocalSvgImageTextServiceCard(
                   onTap: () => ref.read(navigationProvider).navigateUsingPath(
@@ -186,6 +191,11 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                       ref
                           .read(tourismScreenControllerProvider.notifier)
                           .updateEventIsFav(isFav, id);
+                    },
+                    onFavClickCallback: () {
+                      ref
+                          .read(tourismScreenControllerProvider.notifier)
+                          .getAllEvents();
                     },
                   ),
                 32.verticalSpace,
@@ -263,7 +273,14 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                                   path: eventDetailScreenPath,
                                   context: context,
                                   params: EventDetailScreenParams(
-                                      event: item));
+                                      event: item,
+                                      onFavClick: () {
+                                        ref
+                                            .read(
+                                                tourismScreenControllerProvider
+                                                    .notifier)
+                                            .getRecommendationListing();
+                                      }));
                             },
                             onFavouriteIconClick: () {
                               ref

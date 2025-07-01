@@ -134,6 +134,11 @@ class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
                   );
             }
           },
+          onFavClickCallback: () {
+            ref
+                .read(searchResultScreenProvider.notifier)
+                .getEventsList(widget.searchResultScreenParameter.searchType);
+          },
           onSuccess: (bool isFav, int? id) {
             ref
                 .read(searchResultScreenProvider.notifier)
