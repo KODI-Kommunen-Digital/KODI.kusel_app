@@ -11,6 +11,7 @@ import 'package:kusel/common_widgets/digifit/digifit_text_image_card.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/screens/digifit_screens/digifit_start/digifit_information_controller.dart';
+import 'package:kusel/screens/home/home_screen_provider.dart';
 
 import '../../../common_widgets/digifit/digifit_map_card.dart';
 import '../../../common_widgets/digifit/digifit_status_widget.dart';
@@ -155,16 +156,11 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
             ],
           ),
           12.verticalSpace,
-
           ...parsourList.map(
             (parcours) => _buildCourseDetailSection(
               parcoursModel: parcours,
             ),
           ),
-
-          // _buildCourseDetailSection(),
-          // _buildCourseDetailSection(),
-          // _buildCourseDetailSection(),
         ],
       ),
     );
@@ -216,7 +212,8 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                     imageUrl: station.machineImageUrl ?? '',
                     heading: station.muscleGroups ?? '',
                     title: station.name ?? '',
-                    isFavouriteVisible: false,
+                    isFavouriteVisible:
+                        !ref.read(homeScreenProvider).isSignInButtonVisible,
                     isFavorite: station.isFavorite ?? false,
                     sourceId: 1,
                     onCardTap: () {
@@ -224,7 +221,7 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                           path: digifitExerciseDetailScreenPath,
                           context: context);
                     },
-                    isMarked: false),
+                    isCompleted: station.isCompleted),
               );
             }),
         10.verticalSpace,

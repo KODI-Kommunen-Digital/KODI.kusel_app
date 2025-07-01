@@ -8,6 +8,7 @@ import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/params/digifit_exercise_details_params.dart';
+import 'package:kusel/screens/home/home_screen_provider.dart';
 
 import '../../../app_router.dart';
 import '../../../common_widgets/arrow_back_widget.dart';
@@ -235,10 +236,10 @@ class _DigifitExerciseDetailScreenState
                     imageUrl: '',
                     heading: equipment.muscleGroups,
                     title: equipment.name,
-                    isFavouriteVisible: true,
+                    isFavouriteVisible:
+                        !ref.watch(homeScreenProvider).isSignInButtonVisible,
                     isFavorite: equipment.isFavorite,
-                    sourceId: 1,
-                    isMarked: false),
+                    sourceId: 1),
               );
             }),
         10.verticalSpace,

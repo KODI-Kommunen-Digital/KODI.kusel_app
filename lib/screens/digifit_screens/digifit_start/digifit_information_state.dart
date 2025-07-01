@@ -1,25 +1,25 @@
 import 'package:domain/model/response_model/digifit/digifit_information_response_model.dart';
 
-class DigitfitState {
+class DigifitState {
   bool isLoading;
   final DigifitInformationDataModel? digifitInformationDataModel;
   final String errorMessage;
 
-  DigitfitState(
+  DigifitState(
       {required this.isLoading,
       required this.digifitInformationDataModel,
       this.errorMessage = ''});
 
-  factory DigitfitState.empty() {
-    return DigitfitState(
+  factory DigifitState.empty() {
+    return DigifitState(
         isLoading: false, digifitInformationDataModel: null, errorMessage: '');
   }
 
-  DigitfitState copyWith(
+  DigifitState copyWith(
       {bool? isLoading,
       DigifitInformationDataModel? digifitInformationDataModel,
       String? errorMessage}) {
-    return DigitfitState(
+    return DigifitState(
       isLoading: isLoading ?? this.isLoading,
       digifitInformationDataModel:
           digifitInformationDataModel ?? this.digifitInformationDataModel,
