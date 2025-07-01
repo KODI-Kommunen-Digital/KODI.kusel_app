@@ -157,7 +157,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               KuselTextField(
                 textEditingController: emailTextEditingController,
                 focusNode: emailFocusNode,
-                validator: validateEmail,
+                validator: (value){
+                  return validateEmail(value, context);
+                },
               ),
               22.verticalSpace,
               _buildLabel(context, AppLocalizations.of(context).password),
@@ -165,7 +167,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 maxLines: 1,
                 textEditingController: passwordTextEditingController,
                 focusNode: passwordFocusNode,
-                validator: validatePassword,
+                validator: (value){
+                  return validatePassword(value, context);
+                },
                 obscureText: !ref.watch(signUpScreenProvider).showPassword,
                 suffixIcon: ref.read(signUpScreenProvider).showPassword
                     ? GestureDetector(
