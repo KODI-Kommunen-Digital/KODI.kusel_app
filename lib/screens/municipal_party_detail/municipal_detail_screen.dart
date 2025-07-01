@@ -200,6 +200,12 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                     .read(municipalDetailControllerProvider.notifier)
                     .updateEventIsFav(isFav, id);
               },
+              onFavClickCallback: () {
+                final id = widget.municipalDetailScreenParams.municipalId;
+                ref
+                    .read(municipalDetailControllerProvider.notifier)
+                    .getEventsUsingCityId(municipalId: id);
+              },
             ),
           32.verticalSpace,
           if (ref.watch(municipalDetailControllerProvider).newsList.isNotEmpty)
@@ -251,6 +257,12 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                 ref
                     .read(municipalDetailControllerProvider.notifier)
                     .updateNewsIsFav(isFav, id);
+              },
+              onFavClickCallback: () {
+                final id = widget.municipalDetailScreenParams.municipalId;
+                ref
+                    .read(municipalDetailControllerProvider.notifier)
+                    .getNewsUsingCityId(municipalId: id);
               },
             ),
           FeedbackCardWidget(

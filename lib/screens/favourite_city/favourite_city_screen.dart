@@ -89,7 +89,12 @@ class _FavouriteCityScreenState extends ConsumerState<FavouriteCityScreen> {
                               context: context,
                               params: OrtDetailScreenParams(
                                   ortId: item.id.toString(),
-                                  onFavSuccess: (isFav, id) {}
+                                  onFavSuccess: (isFav, id) {
+                                    ref
+                                        .read(favouriteCityScreenProvider
+                                            .notifier)
+                                        .fetchFavouriteCities();
+                                  }
                               ));
                         },
                         imageUrl: item.image ??
