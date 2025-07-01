@@ -621,10 +621,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get select => 'Wähle';
 
   @override
-  String get digitfit_open_exercise => 'Offene Übungen';
+  String get digifit_open_exercise => 'Offene Übungen';
 
   @override
-  String get digitfit_completed_exercise => 'Abgeschlossen';
+  String get digifit_completed_exercise => 'Abgeschlossen';
 
   @override
   String get digifit_recommended_exercise => 'Empfohlen:';
