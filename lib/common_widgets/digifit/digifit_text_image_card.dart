@@ -20,6 +20,7 @@ class DigifitTextImageCard extends ConsumerStatefulWidget {
   final VoidCallback? onFavorite;
   final int sourceId;
   final bool isMarked;
+  // final bool isCompleted;
 
   const DigifitTextImageCard({
     Key? key,
@@ -32,7 +33,8 @@ class DigifitTextImageCard extends ConsumerStatefulWidget {
     required this.sourceId,
     this.onCardTap,
     this.onFavorite,
-    required this.isMarked
+    required this.isMarked,
+    // required this.isCompleted
   }) : super(key: key);
 
   @override

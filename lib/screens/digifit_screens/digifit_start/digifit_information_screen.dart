@@ -1,3 +1,4 @@
+import 'package:domain/model/response_model/digifit/digifit_information_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +10,7 @@ import 'package:kusel/common_widgets/digifit/digifit_options_card.dart';
 import 'package:kusel/common_widgets/digifit/digifit_text_image_card.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
+import 'package:kusel/screens/digifit_screens/digifit_start/digifit_information_controller.dart';
 
 import '../../../common_widgets/digifit/digifit_map_card.dart';
 import '../../../common_widgets/digifit/digifit_status_widget.dart';
@@ -16,16 +18,30 @@ import '../../../common_widgets/image_utility.dart';
 import '../../../common_widgets/text_styles.dart';
 import '../../../images_path.dart';
 import '../../../navigation/navigation.dart';
+import '../digifit_exercise_detail/digifit_exercise_detail_screen.dart';
+import '../digifit_exercise_detail/params/digifit_exercise_details_params.dart';
+import '../digifit_overview/params/digifit_overview_params.dart';
+import 'digifit_information_state.dart';
 
-class DigifitStartScreen extends ConsumerStatefulWidget {
-  const DigifitStartScreen({super.key});
+class DigifitInformationScreen extends ConsumerStatefulWidget {
+  const DigifitInformationScreen({super.key});
 
   @override
-  ConsumerState<DigifitStartScreen> createState() => _DigifitStartScreenState();
+  ConsumerState<DigifitInformationScreen> createState() =>
+      _DigifitStartScreenState();
 }
 
-class _DigifitStartScreenState extends ConsumerState<DigifitStartScreen> {
+class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(digifitInformationControllerProvider.notifier)
+          .fetchDigifitInformation();
+    });
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -89,18 +105,26 @@ class _DigifitStartScreenState extends ConsumerState<DigifitStartScreen> {
   }
 
   _buildDigifitOverviewScreenUi() {
+    var state = ref.watch(digifitInformationControllerProvider);
+
+    final parsourList = state.digifitInformationDataModel?.parcours ?? [];
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w),
       child: Column(
         children: [
           DigifitStatusWidget(
-            pointsValue: 60,
+            pointsValue:
+                state.digifitInformationDataModel?.userStats?.points ?? 0,
             pointsText: AppLocalizations.of(context).points,
-            trophiesValue: 2,
+            trophiesValue:
+                state.digifitInformationDataModel?.userStats?.trophies ?? 0,
             trophiesText: AppLocalizations.of(context).trophies,
             onButtonTap: () async {
-              final barcode = await ref.read(navigationProvider).navigateUsingPath(
-                  path: digifitQRScannerScreenPath, context: context);
+              final barcode = await ref
+                  .read(navigationProvider)
+                  .navigateUsingPath(
+                      path: digifitQRScannerScreenPath, context: context);
               // Todo - replace with actual QR code login
               if (barcode != null) {
                 print('Scanned barcode: $barcode');
@@ -131,22 +155,31 @@ class _DigifitStartScreenState extends ConsumerState<DigifitStartScreen> {
             ],
           ),
           12.verticalSpace,
-          _buildCourseDetailSection(),
-          _buildCourseDetailSection(),
-          _buildCourseDetailSection(),
+
+          ...parsourList.map(
+            (parcours) => _buildCourseDetailSection(
+              parcoursModel: parcours,
+            ),
+          ),
+
+          // _buildCourseDetailSection(),
+          // _buildCourseDetailSection(),
+          // _buildCourseDetailSection(),
         ],
       ),
     );
   }
 
-  _buildCourseDetailSection({bool? isButtonVisible}) {
+  _buildCourseDetailSection(
+      {bool? isButtonVisible,
+      required DigifitInformationParcoursModel parcoursModel}) {
     return Column(
       children: [
         20.verticalSpace,
         Row(
           children: [
             textRegularPoppins(
-                text: "Parcours Kusel",
+                text: parcoursModel.name ?? '',
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).textTheme.bodyLarge?.color),
@@ -160,40 +193,53 @@ class _DigifitStartScreenState extends ConsumerState<DigifitStartScreen> {
         ),
         10.verticalSpace,
         DigifitMapCard(
-          imagePath: imagePath['digifit_map_image'] ?? '',
+          imagePath: parcoursModel.mapImageUrl ?? '',
           onImageTap: () {
             ref.read(navigationProvider).navigateUsingPath(
-                path: digifitOverViewScreenPath, context: context);
+                path: digifitOverViewScreenPath,
+                context: context,
+                params: DigifitOverviewScreenParams(
+                  location: parcoursModel.name ?? '',
+                ));
           },
         ),
         10.verticalSpace,
         ListView.builder(
             physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: 5,
-            itemBuilder: (item, _) {
+            shrinkWrap: true, // need to check
+            itemCount: parcoursModel.stations?.length ?? 0,
+            itemBuilder: (context, index) {
+              final station = parcoursModel.stations![index];
               return Padding(
                 padding: EdgeInsets.only(bottom: 5.h),
                 child: DigifitTextImageCard(
-                    imageUrl: '',
-                    heading: "Muskelgruppen",
-                    title: "Beinpresse",
-                    isFavouriteVisible: true,
-                    isFavorite: false,
+                    imageUrl: station.machineImageUrl ?? '',
+                    heading: station.muscleGroups ?? '',
+                    title: station.name ?? '',
+                    isFavouriteVisible: false,
+                    isFavorite: station.isFavorite ?? false,
                     sourceId: 1,
-                    onCardTap: (){
+                    onCardTap: () {
                       ref.read(navigationProvider).navigateUsingPath(
                           path: digifitExerciseDetailScreenPath,
                           context: context);
                     },
-                    isMarked: true),
+                    isMarked: false),
               );
             }),
         10.verticalSpace,
         Visibility(
           visible: isButtonVisible ?? true,
           child: CustomButton(
-              onPressed: () {}, text: AppLocalizations.of(context).show_course),
+              onPressed: () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: digifitOverViewScreenPath,
+                    context: context,
+                    params: DigifitOverviewScreenParams(
+                      location: parcoursModel.name ?? '',
+                    ));
+              },
+              text: AppLocalizations.of(context).show_course),
         )
       ],
     );
