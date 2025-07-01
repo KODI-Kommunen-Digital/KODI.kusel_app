@@ -12,7 +12,6 @@ import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/event/event_detail_screen_state.dart';
 import 'package:kusel/utility/kusel_date_utils.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/arrow_back_widget.dart';
 import '../../common_widgets/common_bottom_nav_card_.dart';
@@ -20,7 +19,6 @@ import '../../common_widgets/common_event_card.dart';
 import '../../common_widgets/common_html_widget.dart';
 import '../../common_widgets/location_card_widget.dart';
 import '../../common_widgets/toast_message.dart';
-import '../../common_widgets/web_view_page.dart';
 import '../../images_path.dart';
 import '../../l10n/app_localizations.dart';
 import '../../navigation/navigation.dart';
@@ -106,7 +104,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                           .read(homeScreenProvider.notifier)
                           .setIsFavoriteHighlight(
                               isFavorite, widget.eventScreenParams.event?.id);
-                      if(widget.eventScreenParams.onFavClick!=null){
+                      if (widget.eventScreenParams.onFavClick != null) {
                         widget.eventScreenParams.onFavClick!();
                       }
                     }, error: ({required String message}) {
@@ -175,6 +173,9 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                 state.eventDetails.latitude ?? EventLatLong.kusel.latitude,
             longitude:
                 state.eventDetails.longitude ?? EventLatLong.kusel.longitude,
+            date: (state.eventDetails.startDate != null)
+                ? KuselDateUtils.formatDate(state.eventDetails.startDate!)
+                : '-',
           ),
           12.verticalSpace,
           // state.loading
@@ -227,12 +228,14 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
             data: description,
           ),
           Visibility(
-              visible:
-                  ref.read(eventDetailScreenProvider).eventDetails.startDate!=
-                      null && ref.read(eventDetailScreenProvider).eventDetails.endDate!=
+              visible: ref
+                          .read(eventDetailScreenProvider)
+                          .eventDetails
+                          .startDate !=
+                      null &&
+                  ref.read(eventDetailScreenProvider).eventDetails.endDate !=
                       null,
-              child: Align(child: _buildExpandedTile())
-          )
+              child: Align(child: _buildExpandedTile()))
         ],
       ),
     );
@@ -408,7 +411,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
               8.horizontalSpace,
               textRegularMontserrat(
                 text:
-                    "${AppLocalizations.of(context).saturday}, ${KuselDateUtils.formatDate(ref.read(eventDetailScreenProvider).eventDetails.startDate??'')} \n${AppLocalizations.of(context).from} 6:30 - 22:00 ${AppLocalizations.of(context).clock}",
+                    "${AppLocalizations.of(context).saturday}, ${KuselDateUtils.formatDate(ref.read(eventDetailScreenProvider).eventDetails.startDate ?? '')} \n${AppLocalizations.of(context).from} 6:30 - 22:00 ${AppLocalizations.of(context).clock}",
                 textOverflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.start,
                 color: Theme.of(context).textTheme.bodyLarge?.color,
@@ -427,7 +430,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
               8.horizontalSpace,
               textRegularMontserrat(
                 text:
-                    "${AppLocalizations.of(context).saturday}, ${KuselDateUtils.formatDate(ref.read(eventDetailScreenProvider).eventDetails.endDate??'')} \n${AppLocalizations.of(context).from} 6:30 - 22:00 ${AppLocalizations.of(context).clock}",
+                    "${AppLocalizations.of(context).saturday}, ${KuselDateUtils.formatDate(ref.read(eventDetailScreenProvider).eventDetails.endDate ?? '')} \n${AppLocalizations.of(context).from} 6:30 - 22:00 ${AppLocalizations.of(context).clock}",
                 textOverflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.start,
                 color: Theme.of(context).textTheme.bodyLarge?.color,
@@ -500,8 +503,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                             ref.read(navigationProvider).navigateUsingPath(
                                   context: context,
                                   path: eventDetailScreenPath,
-                                  params:
-                                      EventDetailScreenParams(event: item),
+                                  params: EventDetailScreenParams(event: item),
                                 );
                           },
                           isFavouriteVisible: !ref
