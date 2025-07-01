@@ -113,6 +113,18 @@ abstract class AppLocalizations {
   /// **'Email or Username'**
   String get enter_email_id;
 
+  /// No description provided for @email_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Email is required'**
+  String get email_required;
+
+  /// No description provided for @password_required.
+  ///
+  /// In en, this message translates to:
+  /// **'password is required'**
+  String get password_required;
+
   /// No description provided for @password.
   ///
   /// In en, this message translates to:

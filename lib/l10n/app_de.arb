@@ -2,6 +2,8 @@
   "hello": "Hello",
   "welcome": "Willkommen zur Flutter-Lokalisierung",
   "app_title": "Kusel",
+  "email_required": "E-Mail-Adresse erforderlich",
+  "password_required": "Passwort erforderlich",
   "enter_email_id": "E-Mail-Adresse eingeben",
   "password": "Passwort",
   "email": "E-Mail",
