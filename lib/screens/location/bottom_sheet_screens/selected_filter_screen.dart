@@ -128,6 +128,10 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
                       .read(locationScreenProvider.notifier)
                       .updateIsFav(isFav, id);
                 },
+                onFavClickCallback: () {
+                  ref.read(locationScreenProvider.notifier).getAllEventListUsingCategoryId(
+                      widget.selectedFilterScreenParams.categoryId.toString());
+                },
               ),
             ),
           ),
