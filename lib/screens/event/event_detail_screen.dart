@@ -52,9 +52,11 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(eventDetailScreenProvider);
     final isLoading =
-        ref.watch(eventDetailScreenProvider.select((state) => state.loading));
+    ref.watch(eventDetailScreenProvider.select((state) => state.loading));
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Theme
+          .of(context)
+          .scaffoldBackgroundColor,
       body: SafeArea(
         child: Stack(
           children: [
@@ -62,16 +64,16 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
             if (isLoading)
               Center(
                   child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
-                height: 100.h,
-                width: 100.w,
-                child: const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              )),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    height: 100.h,
+                    width: 100.w,
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )),
             Positioned(
               top: 30,
               left: 20,
@@ -92,25 +94,30 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                         .removeTopPage(context: context);
                   },
                   isFavVisible:
-                      !ref.watch(homeScreenProvider).isSignInButtonVisible,
+                  !ref
+                      .watch(homeScreenProvider)
+                      .isSignInButtonVisible,
                   isFav: state.isFavourite,
                   onFavChange: () {
                     ref
                         .watch(favoritesProvider.notifier)
                         .toggleFavorite(widget.eventScreenParams.event!,
-                            success: ({required bool isFavorite}) {
-                              widget.eventScreenParams.event?.isFavorite = isFavorite;
-                              ref.read(eventDetailScreenProvider.notifier).toggleFav();
-                      ref
-                          .read(homeScreenProvider.notifier)
-                          .setIsFavoriteHighlight(
+                        success: ({required bool isFavorite}) {
+                          widget.eventScreenParams.event?.isFavorite =
+                              isFavorite;
+                          ref
+                              .read(eventDetailScreenProvider.notifier)
+                              .toggleFav();
+                          ref
+                              .read(homeScreenProvider.notifier)
+                              .setIsFavoriteHighlight(
                               isFavorite, widget.eventScreenParams.event?.id);
-                      if (widget.eventScreenParams.onFavClick != null) {
-                        widget.eventScreenParams.onFavClick!();
-                      }
-                    }, error: ({required String message}) {
-                      showErrorToast(message: message, context: context);
-                    });
+                          if (widget.eventScreenParams.onFavClick != null) {
+                            widget.eventScreenParams.onFavClick!();
+                          }
+                        }, error: ({required String message}) {
+                          showErrorToast(message: message, context: context);
+                        });
                   },
                 )),
           ],
@@ -132,7 +139,10 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
               isBackArrowEnabled: false,
               isStaticImage: false),
           _buildEventsUi(state),
-          if (ref.watch(eventDetailScreenProvider).groupedEvents.isNotEmpty)
+          if (ref
+              .watch(eventDetailScreenProvider)
+              .groupedEvents
+              .isNotEmpty)
             _buildRecommendation(context),
           FeedbackCardWidget(
             onTap: () {
@@ -145,7 +155,11 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
     );
   }
 
+
   Widget _buildEventsUi(EventDetailScreenState state) {
+    final date = formatDateRange(
+        state.eventDetails.startDate, state.eventDetails.endDate);
+
     return Padding(
       padding: EdgeInsets.all(12.h.w),
       child: Column(
@@ -158,43 +172,60 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
           //             borderRadius: BorderRadius.circular(20.r)),
           //       )
           //     :
-          textBoldPoppins(
-              text: state.eventDetails.title ?? "",
-              color: Theme.of(context).textTheme.bodyLarge?.color,
-              fontSize: 16),
+          Padding(
+            padding: EdgeInsets.only(left: 8.w),
+            child: textBoldPoppins(
+                text: state.eventDetails.title ?? "",
+                color: Theme
+                    .of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.color,
+                textOverflow: TextOverflow.visible,
+                textAlign: TextAlign.start,
+                fontSize: 16),
+          ),
           15.verticalSpace,
           // state.loading
           //     ? locationCardShimmerEffect(context)
           //     :
           LocationCardWidget(
             address: state.address,
-            websiteText: AppLocalizations.of(context).visit_website,
+            websiteText: AppLocalizations
+                .of(context)
+                .visit_website,
             websiteUrl: state.eventDetails.website ?? "",
             latitude:
-                state.eventDetails.latitude ?? EventLatLong.kusel.latitude,
+            state.eventDetails.latitude ?? EventLatLong.kusel.latitude,
             longitude:
-                state.eventDetails.longitude ?? EventLatLong.kusel.longitude,
-            date: (state.eventDetails.startDate != null)
-                ? KuselDateUtils.formatDate(state.eventDetails.startDate!)
-                : '-',
+            state.eventDetails.longitude ?? EventLatLong.kusel.longitude,
+            date
+            :date,
           ),
           12.verticalSpace,
           // state.loading
           //     ? _publicTransportShimmerEffect()
           //     :
           _publicTransportCard(
-            heading: AppLocalizations.of(context).public_transport_offer,
-            description: AppLocalizations.of(context).find_out_how_to,
-            onTap: () => UrlLauncherUtil.launchMap(
-                latitude: EventLatLong.kusel.latitude,
-                longitude: EventLatLong.kusel.longitude),
+            heading: AppLocalizations
+                .of(context)
+                .public_transport_offer,
+            description: AppLocalizations
+                .of(context)
+                .find_out_how_to,
+            onTap: () =>
+                UrlLauncherUtil.launchMap(
+                    latitude: EventLatLong.kusel.latitude,
+                    longitude: EventLatLong.kusel.longitude),
           ),
           16.verticalSpace,
           // state.loading
           //     ? _eventInfoShimmerEffect()
           //     :
           _eventInfoWidget(
-            heading: AppLocalizations.of(context).description,
+            heading: AppLocalizations
+                .of(context)
+                .description,
             subHeading: '',
             description: state.eventDetails.description ?? "",
           )
@@ -203,10 +234,22 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
     );
   }
 
-  Widget _eventInfoWidget(
-      {required String heading,
-      required String subHeading,
-      required String description}) {
+  static String formatDateRange(String? startDate, String? endDate) {
+    final hasStart = startDate != null && startDate.isNotEmpty;
+    final hasEnd = endDate != null && endDate.isNotEmpty;
+
+    if (!hasStart && !hasEnd) return '-';
+    if (hasStart && !hasEnd) return KuselDateUtils.formatDateTime(startDate);
+    if (!hasStart && hasEnd) return KuselDateUtils.formatDateTime(endDate!);
+
+    // Both exist
+    return '${KuselDateUtils.formatDateTime(startDate!)} - ${KuselDateUtils
+        .formatDateTime(endDate!)}';
+  }
+
+  Widget _eventInfoWidget({required String heading,
+    required String subHeading,
+    required String description}) {
     return Padding(
       padding: EdgeInsets.all(12.h.w),
       child: Column(
@@ -215,7 +258,11 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
           textBoldPoppins(
               text: heading,
               fontSize: 15,
-              color: Theme.of(context).textTheme.bodyLarge?.color),
+              color: Theme
+                  .of(context)
+                  .textTheme
+                  .bodyLarge
+                  ?.color),
           8.verticalSpace,
           // textSemiBoldPoppins(
           //     text: subHeading,
@@ -230,11 +277,14 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
           ),
           Visibility(
               visible: ref
-                          .read(eventDetailScreenProvider)
-                          .eventDetails
-                          .startDate !=
-                      null &&
-                  ref.read(eventDetailScreenProvider).eventDetails.endDate !=
+                  .read(eventDetailScreenProvider)
+                  .eventDetails
+                  .startDate !=
+                  null &&
+                  ref
+                      .read(eventDetailScreenProvider)
+                      .eventDetails
+                      .endDate !=
                       null,
               child: Align(child: _buildExpandedTile()))
         ],
@@ -260,25 +310,25 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
         CustomShimmerWidget.rectangular(
           height: 15.h,
           shapeBorder:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
         ),
         8.verticalSpace,
         CustomShimmerWidget.rectangular(
           height: 15.h,
           shapeBorder:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
         ),
         20.verticalSpace,
         CustomShimmerWidget.rectangular(
           height: 15.h,
           shapeBorder:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
         ),
         8.verticalSpace,
         CustomShimmerWidget.rectangular(
           height: 15.h,
           shapeBorder:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
         ),
         8.verticalSpace,
         Align(
@@ -294,21 +344,29 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
     );
   }
 
-  Widget _publicTransportCard(
-      {required String heading,
-      required String description,
-      required Function() onTap}) {
+  Widget _publicTransportCard({required String heading,
+    required String description,
+    required Function() onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: MediaQuery.of(context).size.width,
+        width: MediaQuery
+            .of(context)
+            .size
+            .width,
         padding: EdgeInsets.all(12.h.w),
         decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.onPrimary,
+            color: Theme
+                .of(context)
+                .colorScheme
+                .onPrimary,
             borderRadius: BorderRadius.circular(20.r),
             boxShadow: [
               BoxShadow(
-                color: Theme.of(context).primaryColor.withValues(alpha: 0.46),
+                color: Theme
+                    .of(context)
+                    .primaryColor
+                    .withValues(alpha: 0.46),
                 offset: Offset(0, 4),
                 blurRadius: 8,
               ),
@@ -330,12 +388,20 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                     textBoldPoppins(
                         text: heading,
                         fontSize: 13,
-                        color: Theme.of(context).textTheme.bodyLarge?.color),
+                        color: Theme
+                            .of(context)
+                            .textTheme
+                            .bodyLarge
+                            ?.color),
                     textRegularPoppins(
                         textAlign: TextAlign.left,
                         text: description,
                         fontSize: 11,
-                        color: Theme.of(context).textTheme.labelMedium?.color,
+                        color: Theme
+                            .of(context)
+                            .textTheme
+                            .labelMedium
+                            ?.color,
                         textOverflow: TextOverflow.visible)
                   ],
                 ),
@@ -362,21 +428,30 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
           children: [
             CustomShimmerWidget.rectangular(
               height: 15.h,
-              width: MediaQuery.of(context).size.width - 110.w,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width - 110.w,
               shapeBorder: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.r)),
             ),
             5.verticalSpace,
             CustomShimmerWidget.rectangular(
               height: 15.h,
-              width: MediaQuery.of(context).size.width - 110.w,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width - 110.w,
               shapeBorder: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.r)),
             ),
             5.verticalSpace,
             CustomShimmerWidget.rectangular(
               height: 15.h,
-              width: MediaQuery.of(context).size.width - 110.w,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width - 110.w,
               shapeBorder: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20.r)),
             )
@@ -389,19 +464,33 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
   Widget _buildExpandedTile() {
     return ExpansionTile(
       tilePadding: EdgeInsets.zero,
-      iconColor: Theme.of(context).primaryColor,
+      iconColor: Theme
+          .of(context)
+          .primaryColor,
       visualDensity: VisualDensity.compact,
       expandedCrossAxisAlignment: CrossAxisAlignment.start,
       childrenPadding: EdgeInsets.zero,
       title: textRegularPoppins(
-          text: AppLocalizations.of(context).read_more,
-          color: Theme.of(context).textTheme.bodyLarge?.color,
+          text: AppLocalizations
+              .of(context)
+              .read_more,
+          color: Theme
+              .of(context)
+              .textTheme
+              .bodyLarge
+              ?.color,
           textAlign: TextAlign.start,
           decoration: TextDecoration.underline),
       children: [
         textBoldPoppins(
-            text: AppLocalizations.of(context).next_dates,
-            color: Theme.of(context).textTheme.bodyLarge?.color),
+            text: AppLocalizations
+                .of(context)
+                .next_dates,
+            color: Theme
+                .of(context)
+                .textTheme
+                .bodyLarge
+                ?.color),
         10.verticalSpace,
         Padding(
           padding: EdgeInsets.symmetric(vertical: 6.h),
@@ -412,10 +501,23 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
               8.horizontalSpace,
               textRegularMontserrat(
                 text:
-                    "${AppLocalizations.of(context).saturday}, ${KuselDateUtils.formatDate(ref.read(eventDetailScreenProvider).eventDetails.startDate ?? '')} \n${AppLocalizations.of(context).from} 6:30 - 22:00 ${AppLocalizations.of(context).clock}",
+                "${AppLocalizations
+                    .of(context)
+                    .saturday}, ${KuselDateUtils.formatDate(ref
+                    .read(eventDetailScreenProvider)
+                    .eventDetails
+                    .startDate ?? '')} \n${AppLocalizations
+                    .of(context)
+                    .from} 6:30 - 22:00 ${AppLocalizations
+                    .of(context)
+                    .clock}",
                 textOverflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.start,
-                color: Theme.of(context).textTheme.bodyLarge?.color,
+                color: Theme
+                    .of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.color,
               ),
             ],
           ),
@@ -431,10 +533,23 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
               8.horizontalSpace,
               textRegularMontserrat(
                 text:
-                    "${AppLocalizations.of(context).saturday}, ${KuselDateUtils.formatDate(ref.read(eventDetailScreenProvider).eventDetails.endDate ?? '')} \n${AppLocalizations.of(context).from} 6:30 - 22:00 ${AppLocalizations.of(context).clock}",
+                "${AppLocalizations
+                    .of(context)
+                    .saturday}, ${KuselDateUtils.formatDate(ref
+                    .read(eventDetailScreenProvider)
+                    .eventDetails
+                    .endDate ?? '')} \n${AppLocalizations
+                    .of(context)
+                    .from} 6:30 - 22:00 ${AppLocalizations
+                    .of(context)
+                    .clock}",
                 textOverflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.start,
-                color: Theme.of(context).textTheme.bodyLarge?.color,
+                color: Theme
+                    .of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.color,
               ),
             ],
           ),
@@ -467,7 +582,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
   _buildRecommendation(BuildContext context) {
     return Consumer(builder: (context, ref, _) {
       final eventDetailController =
-          ref.read(eventDetailScreenProvider.notifier);
+      ref.read(eventDetailScreenProvider.notifier);
       final state = ref.watch(eventDetailScreenProvider);
 
       return Column(
@@ -476,46 +591,54 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
           Padding(
             padding: EdgeInsets.only(left: 16.w),
             child: textBoldPoppins(
-                text: AppLocalizations.of(context).recommendations,
+                text: AppLocalizations
+                    .of(context)
+                    .recommendations,
                 fontSize: 16,
-                color: Theme.of(context).textTheme.bodyLarge?.color),
+                color: Theme
+                    .of(context)
+                    .textTheme
+                    .bodyLarge
+                    ?.color),
           ),
           state.groupedEvents.isEmpty
               ? Center(
-                  child: textHeadingMontserrat(
-                      text: AppLocalizations.of(context).no_data, fontSize: 14),
-                )
+            child: textHeadingMontserrat(
+                text: AppLocalizations
+                    .of(context)
+                    .no_data, fontSize: 14),
+          )
               : ListView(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  children: state.groupedEvents.entries.expand((entry) {
-                    final categoryId = entry.key;
-                    final items = eventDetailController.subList(entry.value);
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            children: state.groupedEvents.entries.expand((entry) {
+              final categoryId = entry.key;
+              final items = eventDetailController.subList(entry.value);
 
-                    return [
-                      ...items.map((item) {
-                        return CommonEventCard(
-                          isFavorite: item.isFavorite ?? false,
-                          imageUrl: item.logo ?? "",
-                          date: item.startDate ?? "",
-                          title: item.title ?? "",
-                          location: item.address ?? "",
-                          onCardTap: () {
-                            ref.read(navigationProvider).navigateUsingPath(
-                                  context: context,
-                                  path: eventDetailScreenPath,
-                                  params: EventDetailScreenParams(event: item),
-                                );
-                          },
-                          isFavouriteVisible: !ref
-                              .watch(homeScreenProvider)
-                              .isSignInButtonVisible,
-                          sourceId: item.sourceId!,
-                        );
-                      }),
-                    ];
-                  }).toList(),
-                ),
+              return [
+                ...items.map((item) {
+                  return CommonEventCard(
+                    isFavorite: item.isFavorite ?? false,
+                    imageUrl: item.logo ?? "",
+                    date: item.startDate ?? "",
+                    title: item.title ?? "",
+                    location: item.address ?? "",
+                    onCardTap: () {
+                      ref.read(navigationProvider).navigateUsingPath(
+                        context: context,
+                        path: eventDetailScreenPath,
+                        params: EventDetailScreenParams(event: item),
+                      );
+                    },
+                    isFavouriteVisible: !ref
+                        .watch(homeScreenProvider)
+                        .isSignInButtonVisible,
+                    sourceId: item.sourceId!,
+                  );
+                }),
+              ];
+            }).toList(),
+          ),
           16.verticalSpace
         ],
       );
