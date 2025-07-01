@@ -167,6 +167,11 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                             .getEvents(widget.ortDetailScreenParams.ortId);
                       }));
                 },
+                onFavClickCallback: () {
+                  ref
+                      .read(ortDetailScreenControllerProvider.notifier)
+                      .getEvents(widget.ortDetailScreenParams.ortId);
+                },
                 onSuccess: (isFav, eventId) {
                   ref
                       .read(ortDetailScreenControllerProvider.notifier)
@@ -214,6 +219,11 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                           }));
                 },
                 isFavVisible: state.isUserLoggedIn,
+                onFavClickCallback: () {
+                  ref
+                      .read(ortDetailScreenControllerProvider.notifier)
+                      .getEvents(widget.ortDetailScreenParams.ortId);
+                },
                 onSuccess: (bool isFav, int? id) {
                   ref
                       .read(ortDetailScreenControllerProvider.notifier)
