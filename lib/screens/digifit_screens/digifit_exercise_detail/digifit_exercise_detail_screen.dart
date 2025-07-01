@@ -1,3 +1,4 @@
+import 'package:domain/model/response_model/digifit/digifit_exercise_details_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,6 +7,7 @@ import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/l10n/app_localizations.dart';
+import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/params/digifit_exercise_details_params.dart';
 
 import '../../../app_router.dart';
 import '../../../common_widgets/arrow_back_widget.dart';
@@ -14,9 +16,13 @@ import '../../../common_widgets/digifit/digifit_text_image_card.dart';
 import '../../../common_widgets/image_utility.dart';
 import '../../../common_widgets/text_styles.dart';
 import '../../../navigation/navigation.dart';
+import 'digifit_exercise_details_controller.dart';
 
 class DigifitExerciseDetailScreen extends ConsumerStatefulWidget {
-  const DigifitExerciseDetailScreen({super.key});
+  final DigifitExerciseDetailsParams digifitExerciseDetailsParams;
+
+  const DigifitExerciseDetailScreen(
+      {super.key, required this.digifitExerciseDetailsParams});
 
   @override
   ConsumerState<DigifitExerciseDetailScreen> createState() =>
@@ -26,6 +32,17 @@ class DigifitExerciseDetailScreen extends ConsumerStatefulWidget {
 class _DigifitExerciseDetailScreenState
     extends ConsumerState<DigifitExerciseDetailScreen> {
   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(digifitExerciseDetailsControllerProvider.notifier)
+          .fetchDigifitExerciseDetails(
+              widget.digifitExerciseDetailsParams.equipmentId,
+              widget.digifitExerciseDetailsParams.location);
+    });
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -111,6 +128,8 @@ class _DigifitExerciseDetailScreenState
   }
 
   _buildBody() {
+    final digifitExerciseDetailsState =
+        ref.watch(digifitExerciseDetailsControllerProvider);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 13.w),
       child: Column(
@@ -120,22 +139,33 @@ class _DigifitExerciseDetailScreenState
           //   videoUrl: 'assets/video/test_video_2.mp4',
           // ),
           20.verticalSpace,
-          textBoldPoppins(text: "Brustpresse", fontSize: 15),
+          textBoldPoppins(
+              text: digifitExerciseDetailsState
+                      .digifitExerciseEquipmentModel?.name ??
+                  '',
+              fontSize: 15),
           8.verticalSpace,
           textRegularMontserrat(
-              text:
-                  "Die Brustpresse kräftigt die Brustmuskulatur, Trizeps und den vorderen Teil der Schulter.",
+              text: digifitExerciseDetailsState
+                      .digifitExerciseEquipmentModel?.description ??
+                  '',
               textOverflow: TextOverflow.visible,
               textAlign: TextAlign.start),
           12.verticalSpace,
-          textBoldPoppins(text: "Empfohlen:", fontSize: 13),
+          textBoldPoppins(
+              text: AppLocalizations.of(context).digifit_recommended_exercise,
+              fontSize: 13),
           8.verticalSpace,
           textRegularMontserrat(
-              text: "4 - 5 Sätze",
+              text: digifitExerciseDetailsState
+                      .digifitExerciseEquipmentModel?.recommendation.sets ??
+                  '',
               textOverflow: TextOverflow.visible,
               textAlign: TextAlign.start),
           textRegularMontserrat(
-              text: "8 - 12 wiederholungen",
+              text: digifitExerciseDetailsState.digifitExerciseEquipmentModel
+                      ?.recommendation.repetitions ??
+                  '',
               textOverflow: TextOverflow.visible,
               textAlign: TextAlign.start),
           30.verticalSpace,
@@ -155,20 +185,32 @@ class _DigifitExerciseDetailScreenState
               },
               text: AppLocalizations.of(context).scan_exercise),
           20.verticalSpace,
-          _buildCourseDetailSection(isButtonVisible: false)
+
+          if (digifitExerciseDetailsState
+              .digifitExerciseRelatedEquipmentsModel.isNotEmpty)
+            _buildCourseDetailSection(
+                isButtonVisible: false,
+                relatedEquipments: digifitExerciseDetailsState
+                    .digifitExerciseRelatedEquipmentsModel),
         ],
       ),
     );
   }
 
-  _buildCourseDetailSection({bool? isButtonVisible}) {
+  _buildCourseDetailSection(
+      {bool? isButtonVisible,
+      required List<DigifitExerciseRelatedEquipmentModel> relatedEquipments}) {
+    final equipments = ref
+        .watch(digifitExerciseDetailsControllerProvider)
+        .digifitExerciseEquipmentModel;
+
     return Column(
       children: [
         20.verticalSpace,
         Row(
           children: [
             textRegularPoppins(
-                text: "Parcours Kusel",
+                text: equipments?.name ?? '',
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).textTheme.bodyLarge?.color),
@@ -184,16 +226,17 @@ class _DigifitExerciseDetailScreenState
         ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: 5,
-            itemBuilder: (item, _) {
+            itemCount: relatedEquipments.length,
+            itemBuilder: (context, index) {
+              var equipment = relatedEquipments[index];
               return Padding(
                 padding: EdgeInsets.only(bottom: 5.h),
                 child: DigifitTextImageCard(
                     imageUrl: '',
-                    heading: "Muskelgruppen",
-                    title: "Beinpresse",
+                    heading: equipment.muscleGroups,
+                    title: equipment.name,
                     isFavouriteVisible: true,
-                    isFavorite: false,
+                    isFavorite: equipment.isFavorite,
                     sourceId: 1,
                     isMarked: false),
               );

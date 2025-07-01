@@ -1318,6 +1318,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select'**
   String get select;
+
+  /// No description provided for @digitfit_open_exercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Open exercise'**
+  String get digitfit_open_exercise;
+
+  /// No description provided for @digitfit_completed_exercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed exercise'**
+  String get digitfit_completed_exercise;
+
+  /// No description provided for @digifit_recommended_exercise.
+  ///
+  /// In en, this message translates to:
+  /// **' Recommended:'**
+  String get digifit_recommended_exercise;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

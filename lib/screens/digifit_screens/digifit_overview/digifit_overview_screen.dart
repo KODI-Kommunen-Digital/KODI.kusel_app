@@ -1,3 +1,4 @@
+import 'package:domain/model/response_model/digifit/digifit_overview_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +7,7 @@ import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/digifit/digifit_text_image_card.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
+import 'package:kusel/screens/digifit_screens/digifit_overview/params/digifit_overview_params.dart';
 
 import '../../../app_router.dart';
 import '../../../common_widgets/digifit/digifit_status_widget.dart';
@@ -14,9 +16,13 @@ import '../../../common_widgets/image_utility.dart';
 import '../../../common_widgets/text_styles.dart';
 import '../../../images_path.dart';
 import '../../../navigation/navigation.dart';
+import 'digifit_overview_controller.dart';
 
 class DigifitOverviewScreen extends ConsumerStatefulWidget {
-  const DigifitOverviewScreen({super.key});
+  final DigifitOverviewScreenParams digifitOverviewScreenParams;
+
+  const DigifitOverviewScreen(
+      {super.key, required this.digifitOverviewScreenParams});
 
   @override
   ConsumerState<DigifitOverviewScreen> createState() =>
@@ -25,6 +31,15 @@ class DigifitOverviewScreen extends ConsumerStatefulWidget {
 
 class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(digifitOverviewScreenControllerProvider.notifier)
+          .fetchDigifitOverview(widget.digifitOverviewScreenParams.location);
+    });
+    super.initState();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -91,6 +106,14 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
   }
 
   _buildDigifitTrophiesScreenUi() {
+    var digifitOverview = ref
+        .watch(digifitOverviewScreenControllerProvider)
+        .digifitOverviewDataModel;
+
+    var offeneUebungen = digifitOverview?.parcours?.offeneUebungen ?? [];
+
+    var abgeschlossen = digifitOverview?.parcours?.abgeschlossen ?? [];
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w),
       child: Column(
@@ -100,17 +123,19 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
             color: Theme.of(context).textTheme.labelLarge?.color,
             fontSize: 20,
             textAlign: TextAlign.left,
-            text: AppLocalizations.of(context).show_course,
+            text: digifitOverview?.parcours?.name ?? "",
           ),
           12.verticalSpace,
           DigifitStatusWidget(
-            pointsValue: 60,
+            pointsValue: digifitOverview?.userStats?.points ?? 0,
             pointsText: AppLocalizations.of(context).points,
-            trophiesValue: 2,
+            trophiesValue: digifitOverview?.userStats?.trophies ?? 0,
             trophiesText: AppLocalizations.of(context).trophies,
             onButtonTap: () async {
-              final barcode = await ref.read(navigationProvider).navigateUsingPath(
-                  path: digifitQRScannerScreenPath, context: context);
+              final barcode = await ref
+                  .read(navigationProvider)
+                  .navigateUsingPath(
+                      path: digifitQRScannerScreenPath, context: context);
               // Todo - replace with actual QR code login
               if (barcode != null) {
                 print('Scanned barcode: $barcode');
@@ -118,21 +143,35 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
             },
           ),
           20.verticalSpace,
-          _buildCourseDetailSection(isButtonVisible: false),
-          _buildCourseDetailSection(isButtonVisible: false),
+          if (offeneUebungen.isNotEmpty)
+            _buildCourseDetailSection(
+              title: AppLocalizations.of(context).digitfit_open_exercise,
+              stationList: offeneUebungen,
+              isButtonVisible: false,
+            ),
+          if (abgeschlossen.isNotEmpty)
+            _buildCourseDetailSection(
+              title: AppLocalizations.of(context).digitfit_completed_exercise,
+              stationList: abgeschlossen,
+              isButtonVisible: true,
+            ),
         ],
       ),
     );
   }
 
-  _buildCourseDetailSection({bool? isButtonVisible}) {
+  _buildCourseDetailSection({
+    bool? isButtonVisible,
+    required String title,
+    required List<DigifitOverviewStationModel> stationList,
+  }) {
     return Column(
       children: [
         20.verticalSpace,
         Row(
           children: [
             textRegularPoppins(
-                text: "Parcours Kusel",
+                text: title,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).textTheme.bodyLarge?.color),
@@ -148,26 +187,22 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
         ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: 5,
-            itemBuilder: (item, _) {
+            itemCount: stationList.length,
+            itemBuilder: (context, index) {
+              var station = stationList[index];
               return Padding(
                 padding: EdgeInsets.only(bottom: 5.h),
                 child: DigifitTextImageCard(
-                    imageUrl: '',
-                    heading: "Muskelgruppen",
-                    title: "Beinpresse",
+                    imageUrl: station.machineImageUrl ?? '',
+                    heading: station.muscleGroups ?? '',
+                    title: station.name ?? '',
                     isFavouriteVisible: true,
-                    isFavorite: false,
+                    isFavorite: station.isFavorite ?? false,
                     sourceId: 1,
                     isMarked: true),
               );
             }),
         10.verticalSpace,
-        Visibility(
-          visible: isButtonVisible ?? true,
-          child: CustomButton(
-              onPressed: () {}, text: AppLocalizations.of(context).show_course),
-        )
       ],
     );
   }
