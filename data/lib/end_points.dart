@@ -47,3 +47,10 @@ const participatePath = "/participate";
 const favouriteCitiesPath = "/favorites";
 
 const deleteAccountEndPoint = "/users";
+
+// DIGIFIT API
+const digifitInformationEndPoint = "/digifit/";
+
+const digifitOverviewEndPoint = "/user-equipment-stats/";
+
+const digifitExerciseDetailsEndPoint = "/digifit/exercise-details/";

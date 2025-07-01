@@ -202,5 +202,8 @@
   "clock": "Clock",
   "saturday": "Saturday",
   "people_with_disabilities": "People with disabilities",
-  "select": "Select"
+  "select": "Select",
+  "digitfit_open_exercise": "Open exercise",
+  "digitfit_completed_exercise": "Completed exercise",
+  "digifit_recommended_exercise":" Recommended:"
 }
