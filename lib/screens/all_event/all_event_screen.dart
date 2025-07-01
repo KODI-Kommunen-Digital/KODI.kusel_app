@@ -74,10 +74,13 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                             text: AppLocalizations.of(context).no_data),
                       )
                     : EventsListSectionWidget(
-                        eventsList: ref.watch(allEventScreenProvider).listingList,
+                        eventsList:
+                            ref.watch(allEventScreenProvider).listingList,
                         heading: null,
-                        maxListLimit:
-                            ref.watch(allEventScreenProvider).listingList.length,
+                        maxListLimit: ref
+                            .watch(allEventScreenProvider)
+                            .listingList
+                            .length,
                         buttonText: null,
                         buttonIconPath: null,
                         isLoading: false,
@@ -92,7 +95,11 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                               .updateIsFav(isFav, id);
                           widget.allEventScreenParam.onFavChange();
                         },
-                      )
+                        onFavClickCallback: () {
+                          ref
+                              .read(allEventScreenProvider.notifier)
+                              .getEventsList();
+                        })
             ],
           ),
         ),
