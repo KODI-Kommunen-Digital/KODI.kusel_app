@@ -151,7 +151,7 @@ class _DigifitTrophiesScreenState extends ConsumerState<DigifitTrophiesScreen> {
                     isFavouriteVisible: true,
                     isFavorite: false,
                     sourceId: 1,
-                    isMarked: true),
+                    isCompleted: true),
               );
             }),
         10.verticalSpace,

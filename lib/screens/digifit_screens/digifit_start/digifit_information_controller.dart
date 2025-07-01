@@ -5,16 +5,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'digifit_information_state.dart';
 
 final digifitInformationControllerProvider = StateNotifierProvider.autoDispose<
-    DigifitInformationController, DigitfitState>(
+    DigifitInformationController, DigifitState>(
   (ref) => DigifitInformationController(
       digifitInformationUsecase: ref.read(digifitInformationUseCaseProvider)),
 );
 
-class DigifitInformationController extends StateNotifier<DigitfitState> {
+class DigifitInformationController extends StateNotifier<DigifitState> {
   final DigifitInformationUseCase digifitInformationUsecase;
 
   DigifitInformationController({required this.digifitInformationUsecase})
-      : super(DigitfitState.empty());
+      : super(DigifitState.empty());
 
   Future<void> fetchDigifitInformation() async {
     try {
