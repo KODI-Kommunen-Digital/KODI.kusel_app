@@ -203,5 +203,8 @@
   "clock": "Uhr",
   "saturday": "Samstag",
   "people_with_disabilities": "Menschen mit Beeinträchtigung",
-  "select": "Wähle"
+  "select": "Wähle",
+  "digitfit_open_exercise": "Offene Übungen",
+  "digitfit_completed_exercise": "Abgeschlossen",
+  "digifit_recommended_exercise": "Empfohlen:"
 }
