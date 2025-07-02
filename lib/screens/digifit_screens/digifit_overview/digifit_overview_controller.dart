@@ -26,7 +26,7 @@ class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
       required this.refreshTokenProvider})
       : super(DigifitOverviewState.empty());
 
-  Future<void> fetchDigifitOverview(String location) async {
+  Future<void> fetchDigifitOverview(int locationId) async {
     try {
       state = state.copyWith(isLoading: true);
 
@@ -36,21 +36,21 @@ class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
         await refreshTokenProvider.getNewToken(
             onError: () {},
             onSuccess: () {
-              _fetchDigifitOverview(location);
+              _fetchDigifitOverview(locationId);
             });
       } else {
         // If the token is not expired, we can proceed with the request
-        _fetchDigifitOverview(location);
+        _fetchDigifitOverview(locationId);
       }
     } catch (e) {
       debugPrint('[DigifitOverviewController] Fetch Exception');
     }
   }
 
-  _fetchDigifitOverview(String location) async {
+  _fetchDigifitOverview(int locationId) async {
     try {
       DigifitOverviewRequestModel digifitOverviewRequestModel =
-          DigifitOverviewRequestModel(location: location);
+          DigifitOverviewRequestModel(locationId: locationId);
 
       DigifitOverviewResponseModel digifitOverviewResponseModel =
           DigifitOverviewResponseModel();

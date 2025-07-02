@@ -21,7 +21,7 @@ class DigifitOverviewService {
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
     final apiHelper = ref.read(apiHelperProvider);
-    final location = requestModel.toJson()['name'];
+    final location = requestModel.toJson()['locationId'];
     String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
     final headers = {'Authorization': 'Bearer $token'};
 
