@@ -1,9 +1,10 @@
 import 'package:core/token_status.dart';
-import 'package:domain/model/empty_request.dart';
+import 'package:domain/model/request_model/digifit/digifit_information_request_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_information_response_model.dart';
 import 'package:domain/usecase/digifit/digifit_information_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kusel/locale/localization_manager.dart';
 import '../../../providers/refresh_token_provider.dart';
 import 'digifit_information_state.dart';
 
@@ -12,18 +13,21 @@ final digifitInformationControllerProvider = StateNotifierProvider.autoDispose<
   (ref) => DigifitInformationController(
       digifitInformationUsecase: ref.read(digifitInformationUseCaseProvider),
       tokenStatus: ref.read(tokenStatusProvider),
-      refreshTokenProvider: ref.read(refreshTokenProvider)),
+      refreshTokenProvider: ref.read(refreshTokenProvider),
+      localeManagerController: ref.read(localeManagerProvider.notifier)),
 );
 
 class DigifitInformationController extends StateNotifier<DigifitState> {
   final DigifitInformationUseCase digifitInformationUsecase;
   final TokenStatus tokenStatus;
   final RefreshTokenProvider refreshTokenProvider;
+  final LocaleManagerController localeManagerController;
 
   DigifitInformationController(
       {required this.digifitInformationUsecase,
       required this.tokenStatus,
-      required this.refreshTokenProvider})
+      required this.refreshTokenProvider,
+      required this.localeManagerController})
       : super(DigifitState.empty());
 
   Future<void> fetchDigifitInformation() async {
@@ -49,13 +53,18 @@ class DigifitInformationController extends StateNotifier<DigifitState> {
 
   _fetchDigifitInformation() async {
     try {
-      EmptyRequest emptyRequest = EmptyRequest();
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
+      DigifitInformationRequestModel digifitInformationRequestModel =
+          DigifitInformationRequestModel(
+              translate:
+                  "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
       DigifitInformationResponseModel digifitInformationResponseModel =
           DigifitInformationResponseModel();
 
       final result = await digifitInformationUsecase.call(
-          emptyRequest, digifitInformationResponseModel);
+          digifitInformationRequestModel, digifitInformationResponseModel);
       result.fold(
         (l) {
           state = state.copyWith(

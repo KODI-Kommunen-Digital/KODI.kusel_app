@@ -20,7 +20,8 @@ class DigifitInformationService {
 
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
-    final path = digifitInformationEndPoint;
+    final params = requestModel.toJson();
+    final path = '$digifitInformationEndPoint?translate=${params["translate"]}';
 
     final apiHelper = ref.read(apiHelperProvider);
     String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
