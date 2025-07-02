@@ -1,10 +1,11 @@
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:flutter/material.dart';
-import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/utility/image_loader_utility.dart';
+import 'package:kusel/utility/kusel_date_utils.dart';
 
 import '../app_router.dart';
 import '../images_path.dart';
@@ -32,8 +33,7 @@ class EventCardMap extends ConsumerStatefulWidget {
       required this.logo,
       required this.id,
       required this.sourceId,
-      required this.event
-      });
+      required this.event});
 
   @override
   ConsumerState<EventCardMap> createState() => _LocationCardWidgetState();
@@ -75,13 +75,12 @@ class _LocationCardWidgetState extends ConsumerState<EventCardMap> {
                   height: 150.h,
                   width: double.infinity,
                   child: ImageUtil.loadNetworkImage(
-                      onImageTap: (){
+                      onImageTap: () {
                         ref.read(navigationProvider).navigateUsingPath(
                             path: fullImageScreenPath,
                             params: FullImageScreenParams(
-                              imageUrL: widget.logo,
-                              sourceId: widget.sourceId
-                            ),
+                                imageUrL: widget.logo,
+                                sourceId: widget.sourceId),
                             context: context);
                       },
                       height: 75.h,
@@ -121,7 +120,10 @@ class _LocationCardWidgetState extends ConsumerState<EventCardMap> {
                             imageUrl: imagePath['calendar_icon'] ?? '',
                             context: context),
                         SizedBox(width: 8.w),
-                        textRegularMontserrat(text: widget.startDate),
+                        textRegularMontserrat(
+                            text: (widget.startDate.isNotEmpty)
+                                ? KuselDateUtils.formatDate(widget.startDate)
+                                : widget.startDate),
                       ],
                     ),
                     SizedBox(height: 16.h),
@@ -158,7 +160,7 @@ Widget iconTextWidget(String imageUrl, String text, BuildContext context) {
       mainAxisSize: MainAxisSize.min,
       children: [
         ImageUtil.loadSvgImage(
-          imageUrl : imageUrl,
+          imageUrl: imageUrl,
           context: context,
           height: 18.h,
           width: 18.w,
