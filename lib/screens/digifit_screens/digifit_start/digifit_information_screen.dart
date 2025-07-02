@@ -1,5 +1,6 @@
 import 'package:domain/model/response_model/digifit/digifit_information_response_model.dart';
 import 'package:flutter/material.dart';
+import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -83,7 +84,8 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
           ),
         ),
       ),
-    );
+    ).loaderDialog(
+        context, ref.read(digifitInformationControllerProvider).isLoading);
   }
 
   _buildHeadingArrowSection() {
@@ -107,7 +109,6 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
 
   _buildDigifitOverviewScreenUi() {
     var state = ref.watch(digifitInformationControllerProvider);
-
     final parsourList = state.digifitInformationDataModel?.parcours ?? [];
 
     return Padding(
@@ -195,7 +196,7 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                 path: digifitOverViewScreenPath,
                 context: context,
                 params: DigifitOverviewScreenParams(
-                  location: parcoursModel.name ?? '',
+                  locationId: parcoursModel.locationId ?? 0,
                 ));
           },
         ),
@@ -219,7 +220,11 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                     onCardTap: () {
                       ref.read(navigationProvider).navigateUsingPath(
                           path: digifitExerciseDetailScreenPath,
-                          context: context);
+                          context: context,
+                          params: DigifitExerciseDetailsParams(
+                            location: station.name ?? '',
+                            equipmentId: station.id ?? 0,
+                          ));
                     },
                     isCompleted: station.isCompleted),
               );
@@ -233,7 +238,7 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                     path: digifitOverViewScreenPath,
                     context: context,
                     params: DigifitOverviewScreenParams(
-                      location: parcoursModel.name ?? '',
+                      locationId: parcoursModel.locationId ?? 0,
                     ));
               },
               text: AppLocalizations.of(context).show_course),

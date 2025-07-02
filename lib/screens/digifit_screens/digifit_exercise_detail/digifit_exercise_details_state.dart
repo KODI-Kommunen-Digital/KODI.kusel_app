@@ -3,7 +3,7 @@ import 'package:domain/model/response_model/digifit/digifit_exercise_details_res
 class DigifitExerciseDetailsState {
   bool isLoading;
   final String errorMessage;
-  final List<DigifitExerciseRelatedEquipmentModel> digifitExerciseRelatedEquipmentsModel;
+  final List<DigifitExerciseRelatedStationsModel> digifitExerciseRelatedEquipmentsModel;
   final DigifitExerciseEquipmentModel? digifitExerciseEquipmentModel;
 
   DigifitExerciseDetailsState({
@@ -25,7 +25,7 @@ class DigifitExerciseDetailsState {
   DigifitExerciseDetailsState copyWith({
     bool? isLoading,
     String? errorMessage,
-    List<DigifitExerciseRelatedEquipmentModel>?
+    List<DigifitExerciseRelatedStationsModel>?
         digifitExerciseRelatedEquipmentsModel,
     DigifitExerciseEquipmentModel? digifitExerciseEquipmentModel,
   }) {

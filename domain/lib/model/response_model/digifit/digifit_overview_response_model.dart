@@ -79,41 +79,41 @@ class DigifitOverviewUserStatsModel
 class DigifitOverviewParcoursModel
     extends BaseModel<DigifitOverviewParcoursModel> {
   String? name;
-  List<DigifitOverviewStationModel>? offeneUebungen;
-  List<DigifitOverviewStationModel>? abgeschlossen;
+  List<DigifitOverviewStationModel>? availableStation;
+  List<DigifitOverviewStationModel>? completedStation;
 
   DigifitOverviewParcoursModel(
-      {this.name, this.offeneUebungen, this.abgeschlossen});
+      {this.name, this.availableStation, this.completedStation});
 
   @override
   DigifitOverviewParcoursModel fromJson(Map<String, dynamic> json) {
-    List<DigifitOverviewStationModel> offeneList = [];
-    List<DigifitOverviewStationModel> abgeschlossenList = [];
+    List<DigifitOverviewStationModel> availableStationList = [];
+    List<DigifitOverviewStationModel> completedStationList = [];
 
-    if (json['Offene Übungen'] != null) {
-      for (var item in json['Offene Übungen']) {
-        offeneList.add(DigifitOverviewStationModel().fromJson(item));
+    if (json['availableStation'] != null) {
+      for (var item in json['availableStation']) {
+        availableStationList.add(DigifitOverviewStationModel().fromJson(item));
       }
     }
 
-    if (json['Abgeschlossen'] != null) {
-      for (var item in json['Abgeschlossen']) {
-        abgeschlossenList.add(DigifitOverviewStationModel().fromJson(item));
+    if (json['completedStation'] != null) {
+      for (var item in json['completedStation']) {
+        completedStationList.add(DigifitOverviewStationModel().fromJson(item));
       }
     }
 
     return DigifitOverviewParcoursModel(
       name: json['name'],
-      offeneUebungen: offeneList,
-      abgeschlossen: abgeschlossenList,
+      availableStation: availableStationList,
+      completedStation: completedStationList,
     );
   }
 
   @override
   Map<String, dynamic> toJson() => {
         'name': name,
-        'Offene Übungen': offeneUebungen?.map((e) => e.toJson()).toList(),
-        'Abgeschlossen': abgeschlossen?.map((e) => e.toJson()).toList(),
+        'availableStation': availableStation?.map((e) => e.toJson()).toList(),
+        'completedStation': completedStation?.map((e) => e.toJson()).toList(),
       };
 }
 
