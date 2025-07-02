@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
+import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/l10n/app_localizations.dart';
@@ -83,7 +84,8 @@ class _DigifitExerciseDetailScreenState
           ],
         ),
       )),
-    );
+    ).loaderDialog(
+        context, ref.read(digifitExerciseDetailsControllerProvider).isLoading);
   }
 
   _buildHeadingArrowSection() {
@@ -139,7 +141,7 @@ class _DigifitExerciseDetailScreenState
           // DigifitVideoPlayerWidget(
           //   videoUrl: 'assets/video/test_video_2.mp4',
           // ),
-          20.verticalSpace,
+          40.verticalSpace,
           textBoldPoppins(
               text: digifitExerciseDetailsState
                       .digifitExerciseEquipmentModel?.name ??
@@ -200,7 +202,7 @@ class _DigifitExerciseDetailScreenState
 
   _buildCourseDetailSection(
       {bool? isButtonVisible,
-      required List<DigifitExerciseRelatedEquipmentModel> relatedEquipments}) {
+      required List<DigifitExerciseRelatedStationsModel> relatedEquipments}) {
     final equipments = ref
         .watch(digifitExerciseDetailsControllerProvider)
         .digifitExerciseEquipmentModel;

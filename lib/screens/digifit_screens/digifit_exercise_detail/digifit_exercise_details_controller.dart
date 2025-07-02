@@ -71,7 +71,7 @@ class DigifitExerciseDetailsController
         var response = (r as DigifitExerciseDetailsResponseModel).data;
         state = state.copyWith(
             isLoading: false,
-            digifitExerciseRelatedEquipmentsModel: response.relatedEquipments,
+            digifitExerciseRelatedEquipmentsModel: response.relatedStations,
             digifitExerciseEquipmentModel: response.equipment);
       });
     } catch (error) {
