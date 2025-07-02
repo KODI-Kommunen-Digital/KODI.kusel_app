@@ -5,6 +5,7 @@ import 'package:domain/usecase/digifit/digifit_exercise_details_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../locale/localization_manager.dart';
 import '../../../providers/refresh_token_provider.dart';
 import 'digifit_exercise_details_state.dart';
 
@@ -14,18 +15,21 @@ final digifitExerciseDetailsControllerProvider = StateNotifierProvider
             digifitExerciseDetailsUseCase:
                 ref.read(digifitExerciseDetailsUseCaseProvider),
             tokenStatus: ref.read(tokenStatusProvider),
-            refreshTokenProvider: ref.read(refreshTokenProvider)));
+            refreshTokenProvider: ref.read(refreshTokenProvider),
+            localeManagerController: ref.read(localeManagerProvider.notifier)));
 
 class DigifitExerciseDetailsController
     extends StateNotifier<DigifitExerciseDetailsState> {
   final DigifitExerciseDetailsUseCase digifitExerciseDetailsUseCase;
   final TokenStatus tokenStatus;
   final RefreshTokenProvider refreshTokenProvider;
+  final LocaleManagerController localeManagerController;
 
   DigifitExerciseDetailsController(
       {required this.digifitExerciseDetailsUseCase,
       required this.tokenStatus,
-      required this.refreshTokenProvider})
+      required this.refreshTokenProvider,
+      required this.localeManagerController})
       : super(DigifitExerciseDetailsState.empty());
 
   Future<void> fetchDigifitExerciseDetails(
@@ -52,9 +56,14 @@ class DigifitExerciseDetailsController
     try {
       state = state.copyWith(isLoading: true);
 
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
       DigifitExerciseDetailsRequestModel digifitExerciseDetailsRequestModel =
           DigifitExerciseDetailsRequestModel(
-              equipmentId: equipmentId, location: location);
+              equipmentId: equipmentId,
+              location: location,
+              translate:
+                  "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
       DigifitExerciseDetailsResponseModel digifitExerciseDetailsResponseModel =
           DigifitExerciseDetailsResponseModel();
