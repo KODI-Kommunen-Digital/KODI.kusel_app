@@ -25,7 +25,9 @@ class DigifitOverviewService {
     String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
     final headers = {'Authorization': 'Bearer $token'};
 
-    final path = "$digifitOverviewEndPoint$location";
+    final params = requestModel.toJson();
+
+    final path = "$digifitOverviewEndPoint$location?translate=${params["translate"]}";
 
     final result = await apiHelper.getRequest(
         path: path, create: () => responseModel, headers: headers);
