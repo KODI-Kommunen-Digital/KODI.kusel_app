@@ -39,4 +39,14 @@ class KuselDateUtils {
       return inputDate;
     }
   }
+
+  static String formatDateTime(String inputDate) {
+    try {
+      final DateTime parsedDate = DateTime.parse(inputDate);
+      final DateFormat formatter = DateFormat('dd.MM.yyyy HH:mm');
+      return formatter.format(parsedDate);
+    } catch (e) {
+      return inputDate;
+    }
+  }
 }
