@@ -245,10 +245,10 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
               padding: EdgeInsets.symmetric(horizontal: 12.w),
               child: CityDetailLocationWidget(
                 phoneNumber: '+49 6381 424-0',
-                webUrl: 'https://google.com',
+                webUrl: state.ortDetailDataModel?.websiteUrl??"",
                 address: 'Trierer Str. 49-51, 66869 Kusel',
                 websiteText: AppLocalizations.of(context).visit_website,
-                calendarText: "16:00:00",
+                calendarText: state.ortDetailDataModel?.openUntil??"",
               ),
             ),
             20.verticalSpace,
