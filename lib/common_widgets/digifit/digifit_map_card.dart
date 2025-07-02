@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/common_widgets/image_utility.dart';
 
 class DigifitMapCard extends ConsumerStatefulWidget {
   String imagePath;
@@ -33,8 +34,9 @@ class _DigifitStatusWidgetState extends ConsumerState<DigifitMapCard> {
             padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.r),
-              child: Image.asset(
-                widget.imagePath,
+              child: ImageUtil.loadNetworkImage(
+                imageUrl: widget.imagePath,
+                context: context,
                 fit: BoxFit.contain,
               ),
             ),

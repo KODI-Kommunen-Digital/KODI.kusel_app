@@ -1,5 +1,5 @@
 class DigifitOverviewScreenParams {
-  String location;
+  int locationId;
 
-  DigifitOverviewScreenParams({required this.location});
+  DigifitOverviewScreenParams({required this.locationId});
 }
