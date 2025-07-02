@@ -100,9 +100,9 @@ const virtualTownHallScreenPath = "virtualTownHallScreenPath";
 const meinOrtScreenPath = "meinOrtScreenPath";
 const mobilityScreenPath = "mobilityScreenPath";
 const participateScreenPath = "participateScreenPath";
+const digifitStartScreenPath = "digifitStartScreenPath";
 
 // DigiFit screen path
-const digifitStartScreenPath = "/digifitStartScreenPath";
 const digifitTrophiesScreenPath = "/digifitTrophiesScreenPath";
 const digifitOverViewScreenPath = "/digifitOverViewScreenPath";
 const digifitQRScannerScreenPath = "/digifitQRScannerScreenPath";
@@ -116,7 +116,8 @@ final exploreSubScreenRoutes = [
   virtualTownHallScreenPath,
   meinOrtScreenPath,
   mobilityScreenPath,
-  participateScreenPath
+  participateScreenPath,
+  digifitStartScreenPath,
 ];
 
 // Full route list
@@ -185,8 +186,6 @@ List<RouteBase> goRouteList = [
   GoRoute(
       path: favouriteCityScreenPath, builder: (_, __) => FavouriteCityScreen()),
   GoRoute(
-      path: digifitStartScreenPath, builder: (_, __) => DigifitInformationScreen()),
-  GoRoute(
       path: digifitTrophiesScreenPath,
       builder: (_, __) => DigifitTrophiesScreen()),
   GoRoute(
@@ -213,7 +212,6 @@ List<RouteBase> goRouteList = [
       path: fullImageScreenPath,
       builder: (_, state) => FullImageScreen(
           fullImageScreenParams: state.extra as FullImageScreenParams)),
-
 
   // Dashboard + tabs
   dashboardRoutes,
@@ -258,6 +256,10 @@ final dashboardRoutes = StatefulShellRoute.indexedStack(
             GoRoute(
               path: meinOrtScreenPath,
               builder: (_, __) => const MeinOrtScreen(),
+            ),
+            GoRoute(
+              path: digifitStartScreenPath,
+              builder: (_, __) => const DigifitInformationScreen(),
             ),
             GoRoute(
               path: participateScreenPath,
