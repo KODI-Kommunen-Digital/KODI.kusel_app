@@ -21,6 +21,7 @@ class LocationCardWidget extends ConsumerStatefulWidget {
   final String websiteUrl;
   final double latitude;
   final double longitude;
+  final String date;
 
   const LocationCardWidget(
       {super.key,
@@ -28,7 +29,8 @@ class LocationCardWidget extends ConsumerStatefulWidget {
       required this.websiteText,
       required this.websiteUrl,
       required this.latitude,
-      required this.longitude});
+      required this.longitude,
+      required this.date});
 
   @override
   ConsumerState<LocationCardWidget> createState() => _LocationCardWidgetState();
@@ -101,7 +103,7 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
                     context: context),
                 8.horizontalSpace,
                 textRegularPoppins(
-                  text: "Samstag, 28.10.2024 \nvon 6:30 - 22:00 Uhr",
+                  text: widget.date,
                   textOverflow: TextOverflow.ellipsis,
                   color: Theme.of(context).textTheme.labelMedium?.color,
                 ),
