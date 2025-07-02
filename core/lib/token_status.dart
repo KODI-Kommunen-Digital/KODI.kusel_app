@@ -13,13 +13,13 @@ class TokenStatus {
 
   TokenStatus({required this.ref, required this.sharedPreferenceHelper});
 
-  // Gives false if token is expired
   bool isAccessTokenExpired() {
     try {
       final token = sharedPreferenceHelper.getString(tokenKey);
 
       if (token != null) {
-        final result = JwtDecoder.isExpired(token);
+        final result =
+            JwtDecoder.isExpired(token); // Gives true if token is expired
         return result;
       }
 
