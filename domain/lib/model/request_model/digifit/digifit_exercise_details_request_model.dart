@@ -13,16 +13,16 @@ class DigifitExerciseDetailsRequestModel
   @override
   DigifitExerciseDetailsRequestModel fromJson(Map<String, dynamic> json) {
     return DigifitExerciseDetailsRequestModel(
-      location: json['location'] ?? '',
-      equipmentId: json['equipmentId'] ?? 0,
+      location: json['name'] ?? '',
+      equipmentId: json['id'] ?? 0,
     );
   }
 
   @override
   Map<String, dynamic> toJson() {
     return {
-      'location': location,
-      'equipmentId': equipmentId,
+      'name': location,
+      'id': equipmentId,
     };
   }
 }

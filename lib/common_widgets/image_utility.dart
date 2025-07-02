@@ -35,6 +35,7 @@ class ImageUtil {
           );
         },
         errorWidget: (context, value, _) {
+          print('[Infomtation Image] as the 10 as $svgErrorImagePath');
           return (svgErrorImagePath != null)
               ? SvgPicture.asset(svgErrorImagePath)
               : Icon(Icons.broken_image);
