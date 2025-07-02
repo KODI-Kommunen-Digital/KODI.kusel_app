@@ -4,10 +4,12 @@ class DigifitExerciseDetailsRequestModel
     extends BaseModel<DigifitExerciseDetailsRequestModel> {
   final String location;
   final int equipmentId;
+  final String translate;
 
   DigifitExerciseDetailsRequestModel({
     required this.location,
     required this.equipmentId,
+    required this.translate,
   });
 
   @override
@@ -15,6 +17,7 @@ class DigifitExerciseDetailsRequestModel
     return DigifitExerciseDetailsRequestModel(
       location: json['name'] ?? '',
       equipmentId: json['id'] ?? 0,
+      translate: json['translate'] ?? '',
     );
   }
 
@@ -23,6 +26,7 @@ class DigifitExerciseDetailsRequestModel
     return {
       'name': location,
       'id': equipmentId,
+      'translate': translate,
     };
   }
 }
