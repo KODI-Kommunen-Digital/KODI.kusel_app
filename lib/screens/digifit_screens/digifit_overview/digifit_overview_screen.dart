@@ -1,5 +1,6 @@
 import 'package:domain/model/response_model/digifit/digifit_overview_response_model.dart';
 import 'package:flutter/material.dart';
+import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -35,7 +36,7 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref
           .read(digifitOverviewScreenControllerProvider.notifier)
-          .fetchDigifitOverview(widget.digifitOverviewScreenParams.location);
+          .fetchDigifitOverview(widget.digifitOverviewScreenParams.locationId);
     });
     super.initState();
   }
@@ -65,7 +66,8 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
           ),
         ),
       ),
-    );
+    ).loaderDialog(
+        context, ref.read(digifitOverviewScreenControllerProvider).isLoading);
   }
 
   Widget _buildClipper() {
@@ -110,9 +112,9 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
         .watch(digifitOverviewScreenControllerProvider)
         .digifitOverviewDataModel;
 
-    var offeneUebungen = digifitOverview?.parcours?.offeneUebungen ?? [];
+    var availableStation = digifitOverview?.parcours?.availableStation ?? [];
 
-    var abgeschlossen = digifitOverview?.parcours?.abgeschlossen ?? [];
+    var completedStation = digifitOverview?.parcours?.completedStation ?? [];
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w),
@@ -143,15 +145,15 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
             },
           ),
           20.verticalSpace,
-          if (offeneUebungen.isNotEmpty)
+          if (availableStation.isNotEmpty)
             _buildCourseDetailSection(
                 title: AppLocalizations.of(context).digifit_open_exercise,
-                stationList: offeneUebungen),
+                stationList: availableStation),
           20.verticalSpace,
-          if (abgeschlossen.isNotEmpty)
+          if (completedStation.isNotEmpty)
             _buildCourseDetailSection(
                 title: AppLocalizations.of(context).digifit_completed_exercise,
-                stationList: abgeschlossen),
+                stationList: completedStation),
         ],
       ),
     );

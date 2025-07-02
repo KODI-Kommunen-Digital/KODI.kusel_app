@@ -28,24 +28,24 @@ class DigifitExerciseDetailsResponseModel
 class DigifitExerciseDetailsDataModel
     extends BaseModel<DigifitExerciseDetailsDataModel> {
   final DigifitExerciseEquipmentModel equipment;
-  final List<DigifitExerciseRelatedEquipmentModel> relatedEquipments;
+  final List<DigifitExerciseRelatedStationsModel> relatedStations;
 
   DigifitExerciseDetailsDataModel({
     DigifitExerciseEquipmentModel? equipment,
-    List<DigifitExerciseRelatedEquipmentModel>? relatedEquipments,
+    List<DigifitExerciseRelatedStationsModel>? relatedStations,
   })  : equipment = equipment ?? DigifitExerciseEquipmentModel(),
-        relatedEquipments = relatedEquipments ?? [];
+        relatedStations = relatedStations ?? [];
 
   @override
   DigifitExerciseDetailsDataModel fromJson(Map<String, dynamic> json) {
-    final rawList = json['relatedEquipments'];
-    final List relatedList = rawList is List ? rawList : [];
+    final rawList = json['relatedStations'];
+    final List relatedStationsList = rawList is List ? rawList : [];
 
     return DigifitExerciseDetailsDataModel(
       equipment:
           DigifitExerciseEquipmentModel().fromJson(json['equipment'] ?? {}),
-      relatedEquipments: relatedList
-          .map((item) => DigifitExerciseRelatedEquipmentModel().fromJson(item))
+      relatedStations: relatedStationsList
+          .map((item) => DigifitExerciseRelatedStationsModel().fromJson(item))
           .toList(),
     );
   }
@@ -53,7 +53,7 @@ class DigifitExerciseDetailsDataModel
   @override
   Map<String, dynamic> toJson() => {
         'equipment': equipment.toJson(),
-        'relatedEquipments': relatedEquipments.map((e) => e.toJson()).toList(),
+        'relatedStations': relatedStations.map((e) => e.toJson()).toList(),
       };
 }
 
@@ -183,14 +183,14 @@ class DigifitExerciseActionsModel
       };
 }
 
-class DigifitExerciseRelatedEquipmentModel
-    extends BaseModel<DigifitExerciseRelatedEquipmentModel> {
+class DigifitExerciseRelatedStationsModel
+    extends BaseModel<DigifitExerciseRelatedStationsModel> {
   int id;
   String name;
   String muscleGroups;
   bool isFavorite;
 
-  DigifitExerciseRelatedEquipmentModel({
+  DigifitExerciseRelatedStationsModel({
     this.id = 0,
     this.name = '',
     this.muscleGroups = '',
@@ -198,8 +198,8 @@ class DigifitExerciseRelatedEquipmentModel
   });
 
   @override
-  DigifitExerciseRelatedEquipmentModel fromJson(Map<String, dynamic> json) {
-    return DigifitExerciseRelatedEquipmentModel(
+  DigifitExerciseRelatedStationsModel fromJson(Map<String, dynamic> json) {
+    return DigifitExerciseRelatedStationsModel(
       id: json['id'] ?? 0,
       name: json['name'] ?? '',
       muscleGroups: json['muscleGroups'] ?? '',

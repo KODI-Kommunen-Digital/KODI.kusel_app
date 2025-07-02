@@ -13,8 +13,9 @@ class DigifitInformationResponseModel
   @override
   DigifitInformationResponseModel fromJson(Map<String, dynamic> json) {
     return DigifitInformationResponseModel(
-      data: json['data'] != null ? DigifitInformationDataModel().fromJson(
-          json['data']) : null,
+      data: json['data'] != null
+          ? DigifitInformationDataModel().fromJson(json['data'])
+          : null,
       status: json['status'],
     );
   }
@@ -45,9 +46,8 @@ class DigifitInformationDataModel {
           ? DigifitInformationUserStatsModel().fromJson(json['userStats'])
           : null,
       parcours: json['parcours'] != null
-          ? List<DigifitInformationParcoursModel>.from(
-          json['parcours'].map((e) =>
-              DigifitInformationParcoursModel().fromJson(e)))
+          ? List<DigifitInformationParcoursModel>.from(json['parcours']
+              .map((e) => DigifitInformationParcoursModel().fromJson(e)))
           : null,
       actions: json['actions'] != null
           ? DigifitInformationActionsModel().fromJson(json['actions'])
@@ -90,12 +90,14 @@ class DigifitInformationUserStatsModel {
 
 class DigifitInformationParcoursModel {
   final String? name;
+  final int? locationId;
   final String? mapImageUrl;
   final String? showParcoursUrl;
   final List<DigifitInformationStationModel>? stations;
 
   DigifitInformationParcoursModel({
     this.name,
+    this.locationId,
     this.mapImageUrl,
     this.showParcoursUrl,
     this.stations,
@@ -104,12 +106,12 @@ class DigifitInformationParcoursModel {
   DigifitInformationParcoursModel fromJson(Map<String, dynamic> json) {
     return DigifitInformationParcoursModel(
       name: json['name'],
+      locationId: json['locationId'],
       mapImageUrl: json['mapImageUrl'],
       showParcoursUrl: json['showParcoursUrl'],
       stations: json['stations'] != null
-          ? List<DigifitInformationStationModel>.from(
-          json['stations'].map((e) =>
-              DigifitInformationStationModel().fromJson(e)))
+          ? List<DigifitInformationStationModel>.from(json['stations']
+              .map((e) => DigifitInformationStationModel().fromJson(e)))
           : null,
     );
   }
@@ -117,6 +119,7 @@ class DigifitInformationParcoursModel {
   Map<String, dynamic> toJson() {
     return {
       'name': name,
+      'locationId': locationId,
       'mapImageUrl': mapImageUrl,
       'showParcoursUrl': showParcoursUrl,
       'stations': stations?.map((e) => e.toJson()).toList(),
