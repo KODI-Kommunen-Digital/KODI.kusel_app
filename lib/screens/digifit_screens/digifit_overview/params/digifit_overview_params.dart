@@ -2,6 +2,9 @@ import 'package:domain/model/response_model/digifit/digifit_information_response
 
 class DigifitOverviewScreenParams {
   final DigifitInformationParcoursModel parcoursModel;
+  void Function()? onFavChange;
 
-  DigifitOverviewScreenParams({required this.parcoursModel});
+  DigifitOverviewScreenParams({required this.parcoursModel,
+  this.onFavChange
+  });
 }

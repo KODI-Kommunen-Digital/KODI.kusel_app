@@ -1,7 +1,5 @@
 import 'package:domain/model/response_model/digifit/digifit_information_response_model.dart';
 import 'package:flutter/material.dart';
-import 'package:kusel/common_widgets/progress_indicator.dart';
-import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/app_router.dart';
@@ -10,7 +8,10 @@ import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/digifit/digifit_options_card.dart';
 import 'package:kusel/common_widgets/digifit/digifit_text_image_card.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
+import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
+import 'package:kusel/l10n/app_localizations.dart';
+import 'package:kusel/providers/digifit_equipment_fav_provider.dart';
 import 'package:kusel/screens/digifit_screens/digifit_start/digifit_information_controller.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 
@@ -20,10 +21,8 @@ import '../../../common_widgets/image_utility.dart';
 import '../../../common_widgets/text_styles.dart';
 import '../../../images_path.dart';
 import '../../../navigation/navigation.dart';
-import '../digifit_exercise_detail/digifit_exercise_detail_screen.dart';
 import '../digifit_exercise_detail/params/digifit_exercise_details_params.dart';
 import '../digifit_overview/params/digifit_overview_params.dart';
-import 'digifit_information_state.dart';
 
 class DigifitInformationScreen extends ConsumerStatefulWidget {
   const DigifitInformationScreen({super.key});
@@ -195,8 +194,13 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
             ref.read(navigationProvider).navigateUsingPath(
                 path: digifitOverViewScreenPath,
                 context: context,
-                params:
-                    DigifitOverviewScreenParams(parcoursModel: parcoursModel));
+                params: DigifitOverviewScreenParams(
+                    parcoursModel: parcoursModel,
+                    onFavChange: () {
+                      ref
+                          .read(digifitInformationControllerProvider.notifier)
+                          .fetchDigifitInformation();
+                    }));
           },
         ),
         10.verticalSpace,
@@ -209,21 +213,35 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
               return Padding(
                 padding: EdgeInsets.only(bottom: 5.h),
                 child: DigifitTextImageCard(
-                    imageUrl: station.machineImageUrl ?? '',
-                    heading: station.muscleGroups ?? '',
-                    title: station.name ?? '',
-                    isFavouriteVisible:
-                        !ref.read(homeScreenProvider).isSignInButtonVisible,
-                    isFavorite: station.isFavorite ?? false,
-                    sourceId: 1,
-                    onCardTap: () {
-                      ref.read(navigationProvider).navigateUsingPath(
-                          path: digifitExerciseDetailScreenPath,
-                          context: context,
-                          params:
-                              DigifitExerciseDetailsParams(station: station));
-                    },
-                    isCompleted: station.isCompleted),
+                  imageUrl: station.machineImageUrl ?? '',
+                  heading: station.muscleGroups ?? '',
+                  title: station.name ?? '',
+                  isFavouriteVisible:
+                      !ref.read(homeScreenProvider).isSignInButtonVisible,
+                  isFavorite: station.isFavorite ?? false,
+                  sourceId: 1,
+                  onCardTap: () {
+                    ref.read(navigationProvider).navigateUsingPath(
+                        path: digifitExerciseDetailScreenPath,
+                        context: context,
+                        params: DigifitExerciseDetailsParams(station: station));
+                  },
+                  isCompleted: station.isCompleted,
+                  onFavorite: () {
+                    DigifitEquipmentFavParams digifitEquipmentFavParams =
+                        DigifitEquipmentFavParams(
+                            isFavorite: station.isFavorite != null
+                                ? !station.isFavorite!
+                                : false,
+                            equipmentId: station.id ?? 0,
+                            locationId: parcoursModel.locationId ?? 0);
+                    ref
+                        .read(digifitInformationControllerProvider.notifier)
+                        .onFavTap(
+                            digifitEquipmentFavParams:
+                                digifitEquipmentFavParams);
+                  },
+                ),
               );
             }),
         10.verticalSpace,
@@ -235,7 +253,13 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                     path: digifitOverViewScreenPath,
                     context: context,
                     params: DigifitOverviewScreenParams(
-                        parcoursModel: parcoursModel));
+                        parcoursModel: parcoursModel,
+                        onFavChange: () {
+                          ref
+                              .read(
+                                  digifitInformationControllerProvider.notifier)
+                              .fetchDigifitInformation();
+                        }));
               },
               text: AppLocalizations.of(context).show_course),
         )

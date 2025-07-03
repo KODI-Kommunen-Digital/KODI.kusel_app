@@ -1,6 +1,7 @@
 import 'package:core/token_status.dart';
 import 'package:domain/model/request_model/digifit/digifit_equipment_fav_request_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_equipment_fav_response_model.dart';
+import 'package:domain/model/response_model/digifit/digifit_overview_response_model.dart';
 import 'package:domain/usecase/digifit/digifit_equipment_fav_usecase.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,7 +23,8 @@ class DigifitEquipmentFav {
       required this.digifitEquipmentFavUseCase});
 
   Future<void> changeEquipmentFavStatus(
-      {required Future<void> Function(bool) onFavStatusChange,
+      {required Future<void> Function(bool, DigifitEquipmentFavParams)
+          onFavStatusChange,
       required DigifitEquipmentFavParams params}) async {
     try {
       final status = tokenStatus.isAccessTokenExpired();
@@ -44,7 +46,8 @@ class DigifitEquipmentFav {
 
   _changeFav(
       {required DigifitEquipmentFavParams params,
-      required Future<void> Function(bool) onFavStatusChange}) async {
+      required Future<void> Function(bool, DigifitEquipmentFavParams)
+          onFavStatusChange}) async {
     try {
       DigifitEquimentFavRequestModel requestModel =
           DigifitEquimentFavRequestModel(
@@ -60,12 +63,11 @@ class DigifitEquipmentFav {
 
       response.fold((l) {
         debugPrint('exception while marking fav = ${l.toString()}');
-      }, (r) async{
+      }, (r) async {
         final res = r as DigifitEquipmentFavResponseModel;
-        if(params.isFavorite) {
-          onFavStatusChange(false);
-        } else {
-          onFavStatusChange(true);
+
+        if (res.data?.isFavorite != null) {
+          onFavStatusChange(res.data!.isFavorite!, params);
         }
       });
     } catch (error) {
