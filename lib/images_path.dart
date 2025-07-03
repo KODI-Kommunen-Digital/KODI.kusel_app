@@ -68,6 +68,7 @@ Map<String, String> _pngImagePath = {
   "tourism_and_lesiure": "assets/png/tourism_and_lesiure.png",
   "mobility": "assets/png/mobility.png",
   "get_involved": "assets/png/get_involved.png",
+  "digifit": "assets/png/digifit.png",
   "city_background_image": "assets/png/city_background_image.png",
   "mail": "assets/png/mail.png",
   "phone": "assets/png/phone.png",
