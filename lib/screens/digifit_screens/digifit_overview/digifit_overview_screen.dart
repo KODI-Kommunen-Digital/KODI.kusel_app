@@ -1,12 +1,13 @@
 import 'package:domain/model/response_model/digifit/digifit_overview_response_model.dart';
 import 'package:flutter/material.dart';
-import 'package:kusel/common_widgets/progress_indicator.dart';
-import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
 import 'package:kusel/common_widgets/digifit/digifit_text_image_card.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
+import 'package:kusel/common_widgets/progress_indicator.dart';
+import 'package:kusel/l10n/app_localizations.dart';
+import 'package:kusel/providers/digifit_equipment_fav_provider.dart';
 import 'package:kusel/screens/digifit_screens/digifit_overview/params/digifit_overview_params.dart';
 
 import '../../../app_router.dart';
@@ -147,12 +148,13 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
           ),
           20.verticalSpace,
           if (availableStation.isNotEmpty)
-            _buildCourseDetailSection(
-                title: AppLocalizations.of(context).digifit_open_exercise,
-                stationList: availableStation),
+            _buildAvailableCourseDetailSection(
+              title: AppLocalizations.of(context).digifit_open_exercise,
+              stationList: availableStation,
+            ),
           20.verticalSpace,
           if (completedStation.isNotEmpty)
-            _buildCourseDetailSection(
+            _buildCompleteCourseDetailSection(
                 title: AppLocalizations.of(context).digifit_completed_exercise,
                 stationList: completedStation),
         ],
@@ -160,7 +162,7 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
     );
   }
 
-  _buildCourseDetailSection({
+  _buildAvailableCourseDetailSection({
     required String title,
     required List<DigifitOverviewStationModel> stationList,
   }) {
@@ -192,14 +194,98 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
               return Padding(
                 padding: EdgeInsets.only(bottom: 5.h),
                 child: DigifitTextImageCard(
-                    imageUrl: station.machineImageUrl ?? '',
-                    heading: station.muscleGroups ?? '',
-                    title: station.name ?? '',
-                    isFavouriteVisible:
-                        !ref.read(homeScreenProvider).isSignInButtonVisible,
-                    isFavorite: station.isFavorite ?? false,
-                    sourceId: 1,
-                    isCompleted: station.isCompleted),
+                  imageUrl: station.machineImageUrl ?? '',
+                  heading: station.muscleGroups ?? '',
+                  title: station.name ?? '',
+                  isFavouriteVisible:
+                      !ref.read(homeScreenProvider).isSignInButtonVisible,
+                  isFavorite: station.isFavorite ?? false,
+                  sourceId: 1,
+                  isCompleted: station.isCompleted,
+                  onFavorite: () async {
+                    DigifitEquipmentFavParams params =
+                        DigifitEquipmentFavParams(
+                            isFavorite: !station.isFavorite!,
+                            equipmentId: station.id ?? 0,
+                            locationId: widget.digifitOverviewScreenParams
+                                .parcoursModel.locationId!);
+
+                    await ref
+                        .read(digifitOverviewScreenControllerProvider.notifier)
+                        .availableStationOnFavTap(
+                            digifitEquipmentFavParams: params);
+                    if (widget.digifitOverviewScreenParams.onFavChange !=
+                        null) {
+                      widget.digifitOverviewScreenParams.onFavChange!();
+                    }
+                  },
+                ),
+              );
+            }),
+        10.verticalSpace,
+      ],
+    );
+  }
+
+  _buildCompleteCourseDetailSection({
+    required String title,
+    required List<DigifitOverviewStationModel> stationList,
+  }) {
+    return Column(
+      children: [
+        20.verticalSpace,
+        Row(
+          children: [
+            textRegularPoppins(
+                text: title,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).textTheme.bodyLarge?.color),
+            12.horizontalSpace,
+            ImageUtil.loadSvgImage(
+                imageUrl: imagePath['arrow_icon'] ?? "",
+                height: 10.h,
+                width: 16.w,
+                context: context)
+          ],
+        ),
+        10.verticalSpace,
+        ListView.builder(
+            physics: NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: stationList.length,
+            itemBuilder: (context, index) {
+              var station = stationList[index];
+              return Padding(
+                padding: EdgeInsets.only(bottom: 5.h),
+                child: DigifitTextImageCard(
+                  imageUrl: station.machineImageUrl ?? '',
+                  heading: station.muscleGroups ?? '',
+                  title: station.name ?? '',
+                  isFavouriteVisible:
+                      !ref.read(homeScreenProvider).isSignInButtonVisible,
+                  isFavorite: station.isFavorite ?? false,
+                  sourceId: 1,
+                  isCompleted: station.isCompleted,
+                  onFavorite: () async {
+                    DigifitEquipmentFavParams params =
+                        DigifitEquipmentFavParams(
+                            isFavorite: !station.isFavorite!,
+                            equipmentId: station.id ?? 0,
+                            locationId: widget.digifitOverviewScreenParams
+                                .parcoursModel.locationId!);
+
+                    await ref
+                        .read(digifitOverviewScreenControllerProvider.notifier)
+                        .completedStationOnFavTap(
+                            digifitEquipmentFavParams: params);
+
+                    if (widget.digifitOverviewScreenParams.onFavChange !=
+                        null) {
+                      widget.digifitOverviewScreenParams.onFavChange!();
+                    }
+                  },
+                ),
               );
             }),
         10.verticalSpace,
