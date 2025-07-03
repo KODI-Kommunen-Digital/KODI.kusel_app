@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../locale/localization_manager.dart';
+import '../../../providers/digifit_equipment_fav_provider.dart';
 import '../../../providers/refresh_token_provider.dart';
 import 'digifit_overview_state.dart';
 
@@ -15,19 +16,22 @@ final digifitOverviewScreenControllerProvider = StateNotifierProvider
             digifitOverviewUseCase: ref.read(digifitOverviewUseCaseProvider),
             tokenStatus: ref.read(tokenStatusProvider),
             refreshTokenProvider: ref.read(refreshTokenProvider),
-            localeManagerController: ref.read(localeManagerProvider.notifier)));
+            localeManagerController: ref.read(localeManagerProvider.notifier),
+            digifitEquipmentFav: ref.read(digitEquipmentFavProvider)));
 
 class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
   final DigifitOverviewUseCase digifitOverviewUseCase;
   final TokenStatus tokenStatus;
   final RefreshTokenProvider refreshTokenProvider;
   final LocaleManagerController localeManagerController;
+  final DigifitEquipmentFav digifitEquipmentFav;
 
   DigifitOverviewController(
       {required this.digifitOverviewUseCase,
       required this.tokenStatus,
       required this.refreshTokenProvider,
-      required this.localeManagerController})
+      required this.localeManagerController,
+      required this.digifitEquipmentFav})
       : super(DigifitOverviewState.empty());
 
   Future<void> fetchDigifitOverview(int locationId) async {
@@ -83,4 +87,79 @@ class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
       debugPrint('[DigifitOverviewController] Fetch fold Exception: $error');
     }
   }
+
+  availableStationOnFavTap({
+    required DigifitEquipmentFavParams digifitEquipmentFavParams,
+  }) async {
+    try {
+      await digifitEquipmentFav.changeEquipmentFavStatus(
+          onFavStatusChange: _availableStationOnFavStatusChange,
+          params: digifitEquipmentFavParams);
+    } catch (error) {
+      debugPrint('exception availableStationOnFavTap : $error');
+    }
+  }
+
+  Future<void> _availableStationOnFavStatusChange(
+    bool value,
+    DigifitEquipmentFavParams params,
+  ) async {
+    try {
+      List<DigifitOverviewStationModel> stationList =
+          state.digifitOverviewDataModel?.parcours?.availableStation ?? [];
+
+      for (DigifitOverviewStationModel digifitOverviewStationModel
+          in stationList) {
+        if (digifitOverviewStationModel.id != null &&
+            digifitOverviewStationModel.id == params.equipmentId) {
+          digifitOverviewStationModel.isFavorite = value;
+          break;
+        }
+      }
+
+      state.digifitOverviewDataModel!.parcours!.availableStation = stationList;
+      state = state.copyWith(
+          digifitOverviewDataModel: state.digifitOverviewDataModel);
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  completedStationOnFavTap({
+    required DigifitEquipmentFavParams digifitEquipmentFavParams,
+  }) async {
+    try {
+      await digifitEquipmentFav.changeEquipmentFavStatus(
+          onFavStatusChange: _completedStationOnFavStatusChange,
+          params: digifitEquipmentFavParams);
+    } catch (error) {
+      debugPrint('exception availableStationOnFavTap : $error');
+    }
+  }
+
+  Future<void> _completedStationOnFavStatusChange(
+      bool value,
+      DigifitEquipmentFavParams params,
+      ) async {
+    try {
+      List<DigifitOverviewStationModel> stationList =
+          state.digifitOverviewDataModel?.parcours?.availableStation ?? [];
+
+      for (DigifitOverviewStationModel digifitOverviewStationModel
+      in stationList) {
+        if (digifitOverviewStationModel.id != null &&
+            digifitOverviewStationModel.id == params.equipmentId) {
+          digifitOverviewStationModel.isFavorite = value;
+          break;
+        }
+      }
+
+      state.digifitOverviewDataModel!.parcours!.availableStation = stationList;
+      state = state.copyWith(
+          digifitOverviewDataModel: state.digifitOverviewDataModel);
+    } catch (error) {
+      rethrow;
+    }
+  }
+
 }

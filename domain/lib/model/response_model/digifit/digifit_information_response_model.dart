@@ -31,7 +31,7 @@ class DigifitInformationResponseModel
 
 class DigifitInformationDataModel {
   final DigifitInformationUserStatsModel? userStats;
-  final List<DigifitInformationParcoursModel>? parcours;
+   List<DigifitInformationParcoursModel>? parcours;
   final DigifitInformationActionsModel? actions;
 
   DigifitInformationDataModel({
@@ -93,7 +93,7 @@ class DigifitInformationParcoursModel {
   final int? locationId;
   final String? mapImageUrl;
   final String? showParcoursUrl;
-  final List<DigifitInformationStationModel>? stations;
+   List<DigifitInformationStationModel>? stations;
 
   DigifitInformationParcoursModel({
     this.name,
@@ -132,7 +132,7 @@ class DigifitInformationStationModel {
   final String? name;
   final String? muscleGroups;
   final String? machineImageUrl;
-  final bool? isFavorite;
+   bool? isFavorite;
   final bool? isCompleted;
 
   DigifitInformationStationModel({
