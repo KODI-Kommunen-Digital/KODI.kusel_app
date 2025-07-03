@@ -9,6 +9,7 @@ import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/params/digifit_exercise_details_params.dart';
+import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/videos/DigifitVideoPlayerWidget.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 
 import '../../../app_router.dart';
@@ -212,11 +213,14 @@ class _DigifitExerciseDetailScreenState
         20.verticalSpace,
         Row(
           children: [
-            textRegularPoppins(
-                text: equipments?.name ?? '',
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).textTheme.bodyLarge?.color),
+            Flexible(
+                child: textRegularPoppins(
+              text: equipments?.name ?? '',
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
+              maxLines: 1,
+            )),
             12.horizontalSpace,
             ImageUtil.loadSvgImage(
                 imageUrl: imagePath['arrow_icon'] ?? "",
