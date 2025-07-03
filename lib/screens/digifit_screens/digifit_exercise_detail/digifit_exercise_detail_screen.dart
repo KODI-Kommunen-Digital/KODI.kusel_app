@@ -39,8 +39,8 @@ class _DigifitExerciseDetailScreenState
       ref
           .read(digifitExerciseDetailsControllerProvider.notifier)
           .fetchDigifitExerciseDetails(
-              widget.digifitExerciseDetailsParams.equipmentId,
-              widget.digifitExerciseDetailsParams.location);
+              widget.digifitExerciseDetailsParams.station.id ?? 0,
+              widget.digifitExerciseDetailsParams.station.name ?? '');
     });
     super.initState();
   }
