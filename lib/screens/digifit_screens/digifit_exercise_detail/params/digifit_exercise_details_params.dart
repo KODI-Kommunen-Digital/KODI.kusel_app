@@ -1,9 +1,9 @@
+import 'package:domain/model/response_model/digifit/digifit_information_response_model.dart';
+
 class DigifitExerciseDetailsParams {
-  final String location;
-  final int equipmentId;
+  final DigifitInformationStationModel station;
 
   DigifitExerciseDetailsParams({
-    required this.location,
-    required this.equipmentId,
+    required this.station,
   });
 }
