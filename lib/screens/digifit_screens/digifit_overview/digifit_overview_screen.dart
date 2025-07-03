@@ -36,7 +36,8 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref
           .read(digifitOverviewScreenControllerProvider.notifier)
-          .fetchDigifitOverview(widget.digifitOverviewScreenParams.locationId);
+          .fetchDigifitOverview(
+              widget.digifitOverviewScreenParams.parcoursModel.locationId ?? 0);
     });
     super.initState();
   }

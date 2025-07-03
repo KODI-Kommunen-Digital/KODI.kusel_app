@@ -195,9 +195,8 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
             ref.read(navigationProvider).navigateUsingPath(
                 path: digifitOverViewScreenPath,
                 context: context,
-                params: DigifitOverviewScreenParams(
-                  locationId: parcoursModel.locationId ?? 0,
-                ));
+                params:
+                    DigifitOverviewScreenParams(parcoursModel: parcoursModel));
           },
         ),
         10.verticalSpace,
@@ -221,10 +220,8 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                       ref.read(navigationProvider).navigateUsingPath(
                           path: digifitExerciseDetailScreenPath,
                           context: context,
-                          params: DigifitExerciseDetailsParams(
-                            location: station.name ?? '',
-                            equipmentId: station.id ?? 0,
-                          ));
+                          params:
+                              DigifitExerciseDetailsParams(station: station));
                     },
                     isCompleted: station.isCompleted),
               );
@@ -238,8 +235,7 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                     path: digifitOverViewScreenPath,
                     context: context,
                     params: DigifitOverviewScreenParams(
-                      locationId: parcoursModel.locationId ?? 0,
-                    ));
+                        parcoursModel: parcoursModel));
               },
               text: AppLocalizations.of(context).show_course),
         )
