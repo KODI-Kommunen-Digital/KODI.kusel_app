@@ -9,7 +9,7 @@ import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/params/digifit_exercise_details_params.dart';
-import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/videos/DigifitVideoPlayerWidget.dart';
+import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/video_player/DigifitVideoPlayerWidget.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 
 import '../../../app_router.dart';
@@ -139,9 +139,9 @@ class _DigifitExerciseDetailScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // DigifitVideoPlayerWidget(
-          //   videoUrl: 'assets/video/test_video_2.mp4',
-          // ),
+          DigifitVideoPlayerWidget(
+            videoUrl: 'assets/video/Kusel_1.mp4',
+          ),
           40.verticalSpace,
           textBoldPoppins(
               text: digifitExerciseDetailsState
