@@ -79,11 +79,16 @@ class DigifitOverviewUserStatsModel
 class DigifitOverviewParcoursModel
     extends BaseModel<DigifitOverviewParcoursModel> {
   String? name;
+  int? locationId; // <-- New field added
   List<DigifitOverviewStationModel>? availableStation;
   List<DigifitOverviewStationModel>? completedStation;
 
-  DigifitOverviewParcoursModel(
-      {this.name, this.availableStation, this.completedStation});
+  DigifitOverviewParcoursModel({
+    this.name,
+    this.locationId,
+    this.availableStation,
+    this.completedStation,
+  });
 
   @override
   DigifitOverviewParcoursModel fromJson(Map<String, dynamic> json) {
@@ -104,6 +109,7 @@ class DigifitOverviewParcoursModel
 
     return DigifitOverviewParcoursModel(
       name: json['name'],
+      locationId: json['locationId'],
       availableStation: availableStationList,
       completedStation: completedStationList,
     );
@@ -112,6 +118,7 @@ class DigifitOverviewParcoursModel
   @override
   Map<String, dynamic> toJson() => {
         'name': name,
+        'locationId': locationId,
         'availableStation': availableStation?.map((e) => e.toJson()).toList(),
         'completedStation': completedStation?.map((e) => e.toJson()).toList(),
       };
