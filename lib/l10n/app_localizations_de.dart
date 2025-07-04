@@ -628,4 +628,10 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get digifit_recommended_exercise => 'Empfohlen:';
+
+  @override
+  String get digifit_exercise_set => 'Satz';
+
+  @override
+  String get digifit_exercise_reps => 'Wdh.';
 }
