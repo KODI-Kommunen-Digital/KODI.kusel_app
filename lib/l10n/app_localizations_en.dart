@@ -634,4 +634,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get digifit_exercise_reps => 'Reps.';
+
+  @override
+  String get error => 'error';
+
+  @override
+  String get validation_falied_message => 'Invalid scan. Unable to start session.';
 }

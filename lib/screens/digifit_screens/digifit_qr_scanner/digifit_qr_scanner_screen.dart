@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/digifit_exercise_details_controller.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../common_widgets/arrow_back_widget.dart';
 import '../../../navigation/navigation.dart';
-import 'package:kusel/l10n/app_localizations.dart';
-
-import 'digifit_qr_scanner_validation.dart';
+import 'digifit_qr_scanner_controller.dart';
 
 class DigifitQRScannerScreen extends ConsumerStatefulWidget {
   const DigifitQRScannerScreen({super.key});
@@ -52,34 +52,8 @@ class _DigifitQRScannerScreenState
                 _isScanComplete = true;
                 final String code = barcode.rawValue ?? '---';
 
-                final qrCodeIdentifier = ref
-                        .watch(digifitExerciseDetailsControllerProvider)
-                        .digifitExerciseEquipmentModel
-                        ?.qrCodeIdentifier ??
-                    '';
-
-                ref
-                    .read(digifitQrScannerControllerProvider.notifier)
-                    .validateQrScanner(code, qrCodeIdentifier);
-
-
-                final isCorrectEquipment = ref
-                        .read(digifitQrScannerControllerProvider)
-                        .isCorrectEquipment ??
-                    false;
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      isCorrectEquipment
-                          ? 'Correct equipment scanned!'
-                          : 'Wrong equipment scanned!',
-                    ),
-                    backgroundColor:
-                        isCorrectEquipment ? Colors.green : Colors.red,
-                  ),
-                );
-                ref.read(navigationProvider).removeTopPage(context: context);
+                ref.read(navigationProvider).removeTopPageAndReturnValue(
+                    context: context, result: code);
               }
             }),
         Positioned(

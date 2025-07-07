@@ -2,6 +2,7 @@ import 'package:core/token_status.dart';
 import 'package:domain/model/request_model/digifit/digifit_exercise_details_request_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_exercise_details_response_model.dart';
 import 'package:domain/usecase/digifit/digifit_exercise_details_usecase.dart';
+import 'package:domain/usecase/digifit/digifit_qr_scanner_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/providers/digifit_equipment_fav_provider.dart';
@@ -13,12 +14,15 @@ import 'digifit_exercise_details_state.dart';
 final digifitExerciseDetailsControllerProvider = StateNotifierProvider
     .autoDispose<DigifitExerciseDetailsController, DigifitExerciseDetailsState>(
         (ref) => DigifitExerciseDetailsController(
-            digifitExerciseDetailsUseCase:
-                ref.read(digifitExerciseDetailsUseCaseProvider),
-            tokenStatus: ref.read(tokenStatusProvider),
-            refreshTokenProvider: ref.read(refreshTokenProvider),
-            localeManagerController: ref.read(localeManagerProvider.notifier),
-            digifitEquipmentFav: ref.read(digifitEquipmentFavProvider)));
+              digifitExerciseDetailsUseCase:
+                  ref.read(digifitExerciseDetailsUseCaseProvider),
+              tokenStatus: ref.read(tokenStatusProvider),
+              refreshTokenProvider: ref.read(refreshTokenProvider),
+              localeManagerController: ref.read(localeManagerProvider.notifier),
+              digifitEquipmentFav: ref.read(digifitEquipmentFavProvider),
+              digifitQrScannerUseCase:
+                  ref.read(digifitQrScannerUseCaseProvider),
+            ));
 
 class DigifitExerciseDetailsController
     extends StateNotifier<DigifitExerciseDetailsState> {
@@ -27,13 +31,15 @@ class DigifitExerciseDetailsController
   final RefreshTokenProvider refreshTokenProvider;
   final LocaleManagerController localeManagerController;
   final DigifitEquipmentFav digifitEquipmentFav;
+  final DigifitQrScannerUseCase digifitQrScannerUseCase;
 
   DigifitExerciseDetailsController(
       {required this.digifitExerciseDetailsUseCase,
       required this.tokenStatus,
       required this.refreshTokenProvider,
       required this.localeManagerController,
-      required this.digifitEquipmentFav})
+      required this.digifitEquipmentFav,
+      required this.digifitQrScannerUseCase})
       : super(DigifitExerciseDetailsState.empty());
 
   Future<void> fetchDigifitExerciseDetails(
@@ -137,6 +143,26 @@ class DigifitExerciseDetailsController
       state = state.copyWith(digifitExerciseRelatedEquipmentsModel: list);
     } catch (error) {
       rethrow;
+    }
+  }
+
+  Future<bool> validateQrScanner(String shortUrl, String equipmentSlug) async {
+   try{
+     final result = await digifitQrScannerUseCase.call(shortUrl);
+
+    return result.fold((error) {
+       debugPrint("[Validate Url Expansion] URL expansion failed: $error");
+       return false;
+     }, (expandedUrl) {
+       final slugUrl = digifitQrScannerUseCase.getSlugFromUrl(expandedUrl);
+
+       return slugUrl == equipmentSlug;
+
+     });
+   }catch(error)
+    {
+
+      return false;
     }
   }
 }

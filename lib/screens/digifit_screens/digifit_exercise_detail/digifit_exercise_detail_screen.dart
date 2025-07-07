@@ -10,7 +10,6 @@ import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/providers/digifit_equipment_fav_provider.dart';
-import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/digifit_exercise_card/digifit_card_exercise_details_controller.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/params/digifit_exercise_details_params.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/video_player/digifit_video_player_widget.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
@@ -241,20 +240,26 @@ class _DigifitExerciseDetailScreenState
               iconWidth: 15.w,
               icon: imagePath['scan_icon'],
               onPressed: () async {
-                // ref
-                //     .read(digifitCardExerciseDetailsControllerProvider.notifier)
-                //     .updateIconBackgroundVisibility(true);
-
-                final barcode = await ref
+                final result = await ref
                     .read(navigationProvider)
                     .navigateUsingPath(
-                    path: digifitQRScannerScreenPath, context: context);
+                        path: digifitQRScannerScreenPath, context: context);
 
-                if (barcode != null) {
-                  final barcode = await ref
-                      .read(navigationProvider)
-                      .navigateUsingPath(
-                      path: digifitQRScannerScreenPath, context: context);
+                debugPrint('result ==== 1: $result');
+
+                final qrCodeIdentifier = ref
+                        .watch(digifitExerciseDetailsControllerProvider)
+                        .digifitExerciseEquipmentModel
+                        ?.qrCodeIdentifier ??
+                    '';
+
+                final res = await ref
+                    .read(digifitExerciseDetailsControllerProvider.notifier)
+                    .validateQrScanner(result, qrCodeIdentifier);
+
+                if (res) {
+                } else {
+                  showErrorDialog(context);
                 }
               },
               text: AppLocalizations.of(context).scan_exercise),
@@ -366,6 +371,24 @@ class _DigifitExerciseDetailScreenState
               onPressed: () {}, text: AppLocalizations.of(context).show_course),
         )
       ],
+    );
+  }
+
+  void showErrorDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(AppLocalizations.of(context).error),
+        content: Text(AppLocalizations.of(context).validation_falied_message),
+        actions: [
+          TextButton(
+            onPressed: () {
+              ref.read(navigationProvider).removeDialog(context: context);
+            },
+            child: Text(AppLocalizations.of(context).ok),
+          ),
+        ],
+      ),
     );
   }
 }
