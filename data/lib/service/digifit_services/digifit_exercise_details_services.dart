@@ -1,10 +1,10 @@
 import 'package:core/base_model.dart';
 import 'package:core/preference_manager/preference_constant.dart';
+import 'package:core/preference_manager/shared_pref_helper.dart';
+import 'package:dartz/dartz.dart';
 import 'package:data/dio_helper_object.dart';
 import 'package:data/end_points.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:dartz/dartz.dart';
-import 'package:core/preference_manager/shared_pref_helper.dart';
 
 final digifitExerciseDetailsServicesProvider = Provider(
   (ref) => DigifitExerciseDetailsServices(
@@ -29,13 +29,13 @@ class DigifitExerciseDetailsServices {
     String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
     final headers = {'Authorization': 'Bearer $token'};
 
-    final location = requestModel.toJson()['name'];
+    final locationId = requestModel.toJson()['locationId'];
     final equipmentId = requestModel.toJson()['id'];
 
     final params = requestModel.toJson();
 
     final path =
-        "$digifitExerciseDetailsEndPoint$location/$equipmentId?translate=${params["translate"]}";
+        "$digifitExerciseDetailsEndPoint$locationId/$equipmentId?translate=${params["translate"]}";
 
     final result = await apiHelper.getRequest(
         path: path, create: () => responseModel, headers: headers);

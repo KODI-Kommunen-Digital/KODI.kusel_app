@@ -3,6 +3,8 @@ import 'package:domain/model/response_model/digifit/digifit_information_response
 class DigifitExerciseDetailsParams {
   final DigifitInformationStationModel station;
   void Function()? onFavCallBack;
+  int locationId;
 
-  DigifitExerciseDetailsParams({required this.station, this.onFavCallBack});
+  DigifitExerciseDetailsParams({required this.station, this.onFavCallBack,
+  required this.locationId});
 }

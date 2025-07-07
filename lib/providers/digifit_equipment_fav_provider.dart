@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/providers/refresh_token_provider.dart';
 
-final digitEquipmentFavProvider = Provider((ref) => DigifitEquipmentFav(
+final digifitEquipmentFavProvider = Provider((ref) => DigifitEquipmentFav(
     refreshTokenProvider: ref.read(refreshTokenProvider),
     tokenStatus: ref.read(tokenStatusProvider),
     digifitEquipmentFavUseCase: ref.read(digifitEquipmentFavUseCaseProvider)));

@@ -17,7 +17,7 @@ final digifitOverviewScreenControllerProvider = StateNotifierProvider
             tokenStatus: ref.read(tokenStatusProvider),
             refreshTokenProvider: ref.read(refreshTokenProvider),
             localeManagerController: ref.read(localeManagerProvider.notifier),
-            digifitEquipmentFav: ref.read(digitEquipmentFavProvider)));
+            digifitEquipmentFav: ref.read(digifitEquipmentFavProvider)));
 
 class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
   final DigifitOverviewUseCase digifitOverviewUseCase;

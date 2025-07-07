@@ -66,12 +66,14 @@ class DigifitExerciseEquipmentModel
   DigifitExerciseRecommendationModel recommendation;
   DigifitExerciseUserProgressModel userProgress;
   DigifitExerciseActionsModel actions;
+  bool isFavorite;
 
   DigifitExerciseEquipmentModel({
     this.id = 0,
     this.name = '',
     this.machineVideoUrl = '',
     this.description = '',
+    this.isFavorite = false,
     DigifitExerciseRecommendationModel? recommendation,
     DigifitExerciseUserProgressModel? userProgress,
     DigifitExerciseActionsModel? actions,
@@ -91,20 +93,23 @@ class DigifitExerciseEquipmentModel
       userProgress: DigifitExerciseUserProgressModel()
           .fromJson(json['userProgress'] ?? {}),
       actions: DigifitExerciseActionsModel().fromJson(json['actions'] ?? {}),
+      isFavorite: json['isFavorite'] ?? false,
     );
   }
 
   @override
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'machineVideoUrl': machineVideoUrl,
-        'description': description,
-        'recommendation': recommendation.toJson(),
-        'userProgress': userProgress.toJson(),
-        'actions': actions.toJson(),
-      };
+    'id': id,
+    'name': name,
+    'machineVideoUrl': machineVideoUrl,
+    'description': description,
+    'recommendation': recommendation.toJson(),
+    'userProgress': userProgress.toJson(),
+    'actions': actions.toJson(),
+    'isFavorite': isFavorite,
+  };
 }
+
 
 class DigifitExerciseRecommendationModel
     extends BaseModel<DigifitExerciseRecommendationModel> {
@@ -134,12 +139,14 @@ class DigifitExerciseRecommendationModel
 class DigifitExerciseUserProgressModel
     extends BaseModel<DigifitExerciseUserProgressModel> {
   int currentSet;
+  int totalCompletedReps;
   int totalSets;
   int repetitionsPerSet;
   bool isCompleted;
 
   DigifitExerciseUserProgressModel({
     this.currentSet = 0,
+    this.totalCompletedReps = 0,
     this.totalSets = 0,
     this.repetitionsPerSet = 0,
     this.isCompleted = false,
@@ -149,6 +156,7 @@ class DigifitExerciseUserProgressModel
   DigifitExerciseUserProgressModel fromJson(Map<String, dynamic> json) {
     return DigifitExerciseUserProgressModel(
       currentSet: json['currentSet'] ?? 0,
+      totalCompletedReps: json['totalCompletedReps'] ?? 0,
       totalSets: json['totalSets'] ?? 0,
       repetitionsPerSet: json['repetitionsPerSet'] ?? 0,
       isCompleted: json['isCompleted'] ?? false,
@@ -157,12 +165,14 @@ class DigifitExerciseUserProgressModel
 
   @override
   Map<String, dynamic> toJson() => {
-        'currentSet': currentSet,
-        'totalSets': totalSets,
-        'repetitionsPerSet': repetitionsPerSet,
-        'isCompleted': isCompleted,
-      };
+    'currentSet': currentSet,
+    'totalCompletedReps': totalCompletedReps,
+    'totalSets': totalSets,
+    'repetitionsPerSet': repetitionsPerSet,
+    'isCompleted': isCompleted,
+  };
 }
+
 
 class DigifitExerciseActionsModel
     extends BaseModel<DigifitExerciseActionsModel> {
