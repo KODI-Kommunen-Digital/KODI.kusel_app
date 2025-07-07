@@ -1336,6 +1336,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **' Recommended:'**
   String get digifit_recommended_exercise;
+
+  /// No description provided for @digifit_exercise_set.
+  ///
+  /// In en, this message translates to:
+  /// **'Set'**
+  String get digifit_exercise_set;
+
+  /// No description provided for @digifit_exercise_reps.
+  ///
+  /// In en, this message translates to:
+  /// **'Reps.'**
+  String get digifit_exercise_reps;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
