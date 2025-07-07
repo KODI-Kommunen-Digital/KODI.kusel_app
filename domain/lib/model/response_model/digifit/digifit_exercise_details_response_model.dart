@@ -63,6 +63,7 @@ class DigifitExerciseEquipmentModel
   String name;
   String machineVideoUrl;
   String description;
+  String qrCodeIdentifier;
   DigifitExerciseRecommendationModel recommendation;
   DigifitExerciseUserProgressModel userProgress;
   DigifitExerciseActionsModel actions;
@@ -73,6 +74,7 @@ class DigifitExerciseEquipmentModel
     this.name = '',
     this.machineVideoUrl = '',
     this.description = '',
+    this.qrCodeIdentifier = '',
     this.isFavorite = false,
     DigifitExerciseRecommendationModel? recommendation,
     DigifitExerciseUserProgressModel? userProgress,
@@ -88,6 +90,7 @@ class DigifitExerciseEquipmentModel
       name: json['name'] ?? '',
       machineVideoUrl: json['machineVideoUrl'] ?? '',
       description: json['description'] ?? '',
+      qrCodeIdentifier: json['qrCodeIdentifier'] ?? '',
       recommendation: DigifitExerciseRecommendationModel()
           .fromJson(json['recommendation'] ?? {}),
       userProgress: DigifitExerciseUserProgressModel()
@@ -103,6 +106,7 @@ class DigifitExerciseEquipmentModel
     'name': name,
     'machineVideoUrl': machineVideoUrl,
     'description': description,
+    'qrCodeIdentifier': qrCodeIdentifier,
     'recommendation': recommendation.toJson(),
     'userProgress': userProgress.toJson(),
     'actions': actions.toJson(),
