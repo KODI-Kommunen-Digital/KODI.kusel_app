@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/digifit_exercise_details_controller.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common_widgets/arrow_back_widget.dart';
 import '../../../navigation/navigation.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 
+import 'digifit_qr_scanner_validation.dart';
+
 class DigifitQRScannerScreen extends ConsumerStatefulWidget {
   const DigifitQRScannerScreen({super.key});
 
   @override
-  ConsumerState<DigifitQRScannerScreen> createState() => _DigifitQRScannerScreenState();
+  ConsumerState<DigifitQRScannerScreen> createState() =>
+      _DigifitQRScannerScreenState();
 }
 
-class _DigifitQRScannerScreenState extends ConsumerState<DigifitQRScannerScreen> {
+class _DigifitQRScannerScreenState
+    extends ConsumerState<DigifitQRScannerScreen> {
   MobileScannerController cameraController = MobileScannerController(
     torchEnabled: false,
     formats: [BarcodeFormat.all],
@@ -34,32 +39,49 @@ class _DigifitQRScannerScreenState extends ConsumerState<DigifitQRScannerScreen>
       body: _buildScannerUi(),
     );
   }
+
   _buildScannerUi() {
     return Stack(
       children: [
         MobileScanner(
-          controller: cameraController,
-          onDetect: (capture) {
-            final List<Barcode> barcodes = capture.barcodes;
+            controller: cameraController,
+            onDetect: (capture) async {
+              final Barcode barcode = capture.barcodes.first;
 
-            if (!_isScanComplete) {
-              for (final barcode in barcodes) {
+              if (!_isScanComplete) {
                 _isScanComplete = true;
                 final String code = barcode.rawValue ?? '---';
 
-                debugPrint('barcode scan value = $code');
+                final qrCodeIdentifier = ref
+                        .watch(digifitExerciseDetailsControllerProvider)
+                        .digifitExerciseEquipmentModel
+                        ?.qrCodeIdentifier ??
+                    '';
+
+                ref
+                    .read(digifitQrScannerControllerProvider.notifier)
+                    .validateQrScanner(code, qrCodeIdentifier);
+
+
+                final isCorrectEquipment = ref
+                        .read(digifitQrScannerControllerProvider)
+                        .isCorrectEquipment ??
+                    false;
 
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('Barcode found: $code'),
-                    backgroundColor: Colors.green,
+                    content: Text(
+                      isCorrectEquipment
+                          ? 'Correct equipment scanned!'
+                          : 'Wrong equipment scanned!',
+                    ),
+                    backgroundColor:
+                        isCorrectEquipment ? Colors.green : Colors.red,
                   ),
                 );
                 ref.read(navigationProvider).removeTopPage(context: context);
               }
-            }
-          },
-        ),
+            }),
         Positioned(
           top: 0,
           bottom: 0,
@@ -72,7 +94,7 @@ class _DigifitQRScannerScreenState extends ConsumerState<DigifitQRScannerScreen>
               borderRadius: 12.r,
               cutOutSize: MediaQuery.of(context).size.width * 0.7,
               overlayColor:
-              Colors.black.withOpacity(0.5), // Adjust opacity here
+                  Colors.black.withOpacity(0.5), // Adjust opacity here
             ),
           ),
         ),
@@ -84,8 +106,7 @@ class _DigifitQRScannerScreenState extends ConsumerState<DigifitQRScannerScreen>
                 color: Theme.of(context).textTheme.labelSmall?.color,
                 fontSize: 18,
                 textOverflow: TextOverflow.visible,
-                text: AppLocalizations.of(context).scan_the_qr_text)
-        ),
+                text: AppLocalizations.of(context).scan_the_qr_text)),
         Positioned(
             top: 50,
             left: 20,
@@ -120,7 +141,6 @@ class _DigifitQRScannerScreenState extends ConsumerState<DigifitQRScannerScreen>
     );
   }
 }
-
 
 class ScannerOverlay extends CustomPainter {
   final Color borderColor;

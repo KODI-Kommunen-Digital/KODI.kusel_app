@@ -1,6 +1,6 @@
 import 'package:core/base_model.dart';
 import 'package:dartz/dartz.dart';
-import 'package:data/service/digifit_services/digit_quipment_fav_service.dart';
+import 'package:data/service/digifit_services/digit_equipment_fav_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final digifitEquipmentFavRepositoryProvider = Provider((ref) =>
