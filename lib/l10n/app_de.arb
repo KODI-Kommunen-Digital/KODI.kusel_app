@@ -208,5 +208,8 @@
   "digifit_completed_exercise": "Abgeschlossen",
   "digifit_recommended_exercise": "Empfohlen:",
   "digifit_exercise_set": "Satz",
-  "digifit_exercise_reps": "Wdh."
+  "digifit_exercise_reps": "Wdh.",
+  "error": "Fehler",
+  "validation_falied_message": "Ungültiger Scan. Sitzung kann nicht gestartet werden."
+
 }

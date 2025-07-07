@@ -634,4 +634,10 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get digifit_exercise_reps => 'Wdh.';
+
+  @override
+  String get error => 'Fehler';
+
+  @override
+  String get validation_falied_message => 'Ungültiger Scan. Sitzung kann nicht gestartet werden.';
 }

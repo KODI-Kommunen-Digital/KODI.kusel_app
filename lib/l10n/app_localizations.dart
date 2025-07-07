@@ -1348,6 +1348,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reps.'**
   String get digifit_exercise_reps;
+
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'error'**
+  String get error;
+
+  /// No description provided for @validation_falied_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid scan. Unable to start session.'**
+  String get validation_falied_message;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
