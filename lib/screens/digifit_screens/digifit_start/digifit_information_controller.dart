@@ -17,7 +17,7 @@ final digifitInformationControllerProvider = StateNotifierProvider.autoDispose<
       tokenStatus: ref.read(tokenStatusProvider),
       refreshTokenProvider: ref.read(refreshTokenProvider),
       localeManagerController: ref.read(localeManagerProvider.notifier),
-      digifitEquipmentFav: ref.read(digitEquipmentFavProvider)),
+      digifitEquipmentFav: ref.read(digifitEquipmentFavProvider)),
 );
 
 class DigifitInformationController extends StateNotifier<DigifitState> {
