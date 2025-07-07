@@ -55,4 +55,7 @@ const digifitOverviewEndPoint = "/digifit/user-equipment-stats/";
 
 const digifitExerciseDetailsEndPoint = "/digifit/exercise-details/";
 
+const digifitExerciseDetailsTrackingEndPoint = "/digifit/tracker";
+
 const digifitEquipmentFavEndPoint = "/digifit/toggle-favorite";
+
