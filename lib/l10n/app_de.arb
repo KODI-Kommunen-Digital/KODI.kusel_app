@@ -206,5 +206,7 @@
   "select": "Wähle",
   "digifit_open_exercise": "Offene Übungen",
   "digifit_completed_exercise": "Abgeschlossen",
-  "digifit_recommended_exercise": "Empfohlen:"
+  "digifit_recommended_exercise": "Empfohlen:",
+  "digifit_exercise_set": "Satz",
+  "digifit_exercise_reps": "Wdh."
 }

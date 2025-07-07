@@ -205,5 +205,7 @@
   "select": "Select",
   "digifit_open_exercise": "Open exercise",
   "digifit_completed_exercise": "Completed exercise",
-  "digifit_recommended_exercise":" Recommended:"
+  "digifit_recommended_exercise":" Recommended:",
+  "digifit_exercise_set": "Set",
+  "digifit_exercise_reps": "Reps."
 }
