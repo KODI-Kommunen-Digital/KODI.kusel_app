@@ -1,3 +1,4 @@
+import 'package:domain/model/response_model/digifit/digifit_information_response_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_overview_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,6 +19,7 @@ import '../../../common_widgets/text_styles.dart';
 import '../../../images_path.dart';
 import '../../../navigation/navigation.dart';
 import '../../home/home_screen_provider.dart';
+import '../digifit_exercise_detail/params/digifit_exercise_details_params.dart';
 import 'digifit_overview_controller.dart';
 
 class DigifitOverviewScreen extends ConsumerStatefulWidget {
@@ -194,6 +196,31 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
               return Padding(
                 padding: EdgeInsets.only(bottom: 5.h),
                 child: DigifitTextImageCard(
+                  onCardTap: () {
+                    ref.read(navigationProvider).navigateUsingPath(
+                        path: digifitExerciseDetailScreenPath,
+                        context: context,
+                        params: DigifitExerciseDetailsParams(
+                            station: DigifitInformationStationModel(
+                              id: station.id,
+                              name: station.name,
+                              isFavorite: station.isFavorite,
+                              muscleGroups: station.muscleGroups,
+                            ),
+                            locationId: widget.digifitOverviewScreenParams
+                                    .parcoursModel.locationId ??
+                                0,
+                            onFavCallBack: () {
+                              ref
+                                  .read(digifitOverviewScreenControllerProvider
+                                      .notifier)
+                                  .fetchDigifitOverview(widget
+                                          .digifitOverviewScreenParams
+                                          .parcoursModel
+                                          .locationId ??
+                                      0);
+                            }));
+                  },
                   imageUrl: station.machineImageUrl ?? '',
                   heading: station.muscleGroups ?? '',
                   title: station.name ?? '',

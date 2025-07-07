@@ -35,7 +35,7 @@ class DigifitInformationScreen extends ConsumerStatefulWidget {
 class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    Future.microtask((){
       ref
           .read(digifitInformationControllerProvider.notifier)
           .fetchDigifitInformation();
@@ -43,6 +43,7 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
     super.initState();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -224,7 +225,15 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                     ref.read(navigationProvider).navigateUsingPath(
                         path: digifitExerciseDetailScreenPath,
                         context: context,
-                        params: DigifitExerciseDetailsParams(station: station));
+                        params: DigifitExerciseDetailsParams(
+                            station: station,
+                            locationId: parcoursModel.locationId ?? 0,
+                            onFavCallBack: () {
+                              ref
+                                  .read(digifitInformationControllerProvider
+                                      .notifier)
+                                  .fetchDigifitInformation();
+                            }));
                   },
                   isCompleted: station.isCompleted,
                   onFavorite: () {

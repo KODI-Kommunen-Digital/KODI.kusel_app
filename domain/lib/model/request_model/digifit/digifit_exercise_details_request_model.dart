@@ -2,12 +2,12 @@ import 'package:core/base_model.dart';
 
 class DigifitExerciseDetailsRequestModel
     extends BaseModel<DigifitExerciseDetailsRequestModel> {
-  final String location;
+  final int locationId;
   final int equipmentId;
   final String translate;
 
   DigifitExerciseDetailsRequestModel({
-    required this.location,
+    required this.locationId,
     required this.equipmentId,
     required this.translate,
   });
@@ -15,7 +15,7 @@ class DigifitExerciseDetailsRequestModel
   @override
   DigifitExerciseDetailsRequestModel fromJson(Map<String, dynamic> json) {
     return DigifitExerciseDetailsRequestModel(
-      location: json['name'] ?? '',
+      locationId: json['locationId'] ?? '',
       equipmentId: json['id'] ?? 0,
       translate: json['translate'] ?? '',
     );
@@ -24,7 +24,7 @@ class DigifitExerciseDetailsRequestModel
   @override
   Map<String, dynamic> toJson() {
     return {
-      'name': location,
+      'locationId': locationId,
       'id': equipmentId,
       'translate': translate,
     };
