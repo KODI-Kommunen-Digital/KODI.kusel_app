@@ -148,20 +148,22 @@ class DigifitExerciseDetailsController
 
   Future<bool> validateQrScanner(String shortUrl, String equipmentSlug) async {
    try{
+     state = state.copyWith(isLoading: true);
      final result = await digifitQrScannerUseCase.call(shortUrl);
 
     return result.fold((error) {
        debugPrint("[Validate Url Expansion] URL expansion failed: $error");
+       state = state.copyWith(isLoading: false);
        return false;
      }, (expandedUrl) {
        final slugUrl = digifitQrScannerUseCase.getSlugFromUrl(expandedUrl);
-
+       state = state.copyWith(isLoading: false);
        return slugUrl == equipmentSlug;
 
      });
    }catch(error)
     {
-
+      state = state.copyWith(isLoading: false);
       return false;
     }
   }

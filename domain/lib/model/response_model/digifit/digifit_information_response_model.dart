@@ -151,7 +151,7 @@ class DigifitInformationStationModel {
       muscleGroups: json['muscleGroups'],
       machineImageUrl: json['machineImageUrl'],
       isFavorite: json['isFavorite'],
-      isCompleted: json['isCompleted'],
+      isCompleted: false??json['isCompleted'],
     );
   }
 
