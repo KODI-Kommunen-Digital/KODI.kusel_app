@@ -1,5 +1,6 @@
 import 'package:domain/model/response_model/digifit/digifit_exercise_details_response_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_information_response_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -135,11 +136,42 @@ class _DigifitExerciseDetailScreenState
                     }
                   }
                 },
-              ))
+              )),
+          if(ref.watch(digifitExerciseDetailsControllerProvider).isLoading)
+          Positioned(
+            top: 0.h,
+              left: 0.w,
+              right: 0.w,
+              bottom: 0.h,
+              child:GestureDetector(
+            onTap: () {
+              ref.read(navigationProvider).removeDialog(context: context);
+            },
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Container(
+                  color: Colors.black.withValues(alpha: 0.5),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                  height: 100.h,
+                  width: 100.w,
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+              ],
+            ),
+          ) )
         ],
       )),
-    ).loaderDialog(
-        context, ref.read(digifitExerciseDetailsControllerProvider).isLoading);
+
+
+    );
   }
 
   _buildHeadingArrowSection() {
@@ -375,17 +407,32 @@ class _DigifitExerciseDetailScreenState
   }
 
   void showErrorDialog(BuildContext context) {
-    showDialog(
+    showCupertinoDialog(
       context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(AppLocalizations.of(context).error),
-        content: Text(AppLocalizations.of(context).validation_falied_message),
+      builder: (ctx) => CupertinoAlertDialog(
+        title: textBoldPoppins(
+          text:AppLocalizations.of(context).error,
+          textAlign: TextAlign.center,
+          fontSize: 16
+        ),
+        content: Padding(
+          padding: EdgeInsets.only(top: 8.h),
+          child: textRegularPoppins(
+            text: AppLocalizations.of(context).validation_falied_message,
+            textAlign: TextAlign.center,
+            textOverflow: TextOverflow.visible,
+            fontSize: 12
+          ),
+        ),
         actions: [
-          TextButton(
+          CupertinoDialogAction(
             onPressed: () {
               ref.read(navigationProvider).removeDialog(context: context);
             },
-            child: Text(AppLocalizations.of(context).ok),
+            isDefaultAction: true,
+            child: textBoldPoppins(text: AppLocalizations.of(context).ok,
+            textOverflow: TextOverflow.visible,
+            fontSize: 14),
           ),
         ],
       ),

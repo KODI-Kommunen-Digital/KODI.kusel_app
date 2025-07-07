@@ -1352,7 +1352,7 @@ abstract class AppLocalizations {
   /// No description provided for @error.
   ///
   /// In en, this message translates to:
-  /// **'error'**
+  /// **'Error'**
   String get error;
 
   /// No description provided for @validation_falied_message.

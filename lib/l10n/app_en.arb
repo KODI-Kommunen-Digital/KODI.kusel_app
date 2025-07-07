@@ -208,7 +208,7 @@
   "digifit_recommended_exercise":" Recommended:",
   "digifit_exercise_set": "Set",
   "digifit_exercise_reps": "Reps.",
-  "error": "error",
+  "error": "Error",
   "validation_falied_message": "Invalid scan. Unable to start session."
 
 }
