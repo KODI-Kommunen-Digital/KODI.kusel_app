@@ -5,11 +5,13 @@ class DigifitExerciseDetailsRequestModel
   final int locationId;
   final int equipmentId;
   final String translate;
+  String? equipmentSlug;
 
   DigifitExerciseDetailsRequestModel({
     required this.locationId,
     required this.equipmentId,
     required this.translate,
+     this.equipmentSlug
   });
 
   @override
@@ -18,6 +20,7 @@ class DigifitExerciseDetailsRequestModel
       locationId: json['locationId'] ?? '',
       equipmentId: json['id'] ?? 0,
       translate: json['translate'] ?? '',
+      equipmentSlug:json['equipmentSlug'] ?? ''
     );
   }
 
@@ -27,6 +30,7 @@ class DigifitExerciseDetailsRequestModel
       'locationId': locationId,
       'id': equipmentId,
       'translate': translate,
+      'equipmentSlug':equipmentSlug
     };
   }
 }
