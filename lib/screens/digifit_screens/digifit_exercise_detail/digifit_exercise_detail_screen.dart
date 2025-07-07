@@ -248,14 +248,14 @@ class _DigifitExerciseDetailScreenState
                 final barcode = await ref
                     .read(navigationProvider)
                     .navigateUsingPath(
-                        path: digifitQRScannerScreenPath, context: context);
+                    path: digifitQRScannerScreenPath, context: context);
 
-                if(barcode!=null)
-                  {
-
-
-                  }
-
+                if (barcode != null) {
+                  final barcode = await ref
+                      .read(navigationProvider)
+                      .navigateUsingPath(
+                      path: digifitQRScannerScreenPath, context: context);
+                }
               },
               text: AppLocalizations.of(context).scan_exercise),
           20.verticalSpace,
