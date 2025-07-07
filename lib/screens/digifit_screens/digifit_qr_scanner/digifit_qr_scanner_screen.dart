@@ -46,6 +46,9 @@ class _DigifitQRScannerScreenState extends ConsumerState<DigifitQRScannerScreen>
               for (final barcode in barcodes) {
                 _isScanComplete = true;
                 final String code = barcode.rawValue ?? '---';
+
+                debugPrint('barcode scan value = $code');
+
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text('Barcode found: $code'),

@@ -31,11 +31,16 @@ class DigifitExerciseDetailsServices {
 
     final locationId = requestModel.toJson()['locationId'];
     final equipmentId = requestModel.toJson()['id'];
+    final equipmentSlug = requestModel.toJson()['equipmentSlug'];
 
     final params = requestModel.toJson();
 
-    final path =
+    String path =
         "$digifitExerciseDetailsEndPoint$locationId/$equipmentId?translate=${params["translate"]}";
+
+    if (equipmentSlug != null) {
+      path = "$path&equipmentSlug=$equipmentSlug";
+    }
 
     final result = await apiHelper.getRequest(
         path: path, create: () => responseModel, headers: headers);
