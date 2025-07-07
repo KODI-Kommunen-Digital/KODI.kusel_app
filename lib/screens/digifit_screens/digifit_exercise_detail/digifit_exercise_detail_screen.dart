@@ -1,6 +1,7 @@
 import 'package:domain/model/response_model/digifit/digifit_exercise_details_response_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_information_response_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
@@ -11,6 +12,8 @@ import 'package:kusel/images_path.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/providers/digifit_equipment_fav_provider.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/params/digifit_exercise_details_params.dart';
+import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/digifit_exercise_card/digifit_card_exercise_details_controller.dart';
+import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/video_player/digifit_video_player_widget.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 
 import '../../../app_router.dart';
@@ -211,10 +214,10 @@ class _DigifitExerciseDetailScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // DigifitVideoPlayerWidget(
-          //   videoUrl: 'assets/video/test_video_2.mp4',
-          // ),
-          40.verticalSpace,
+          DigifitVideoPlayerWidget(
+            videoUrl: 'assets/video/Kusel_1.mp4',
+          ),
+          20.verticalSpace,
           textBoldPoppins(
               text: digifitExerciseDetailsState
                   .digifitExerciseEquipmentModel?.name ??
@@ -254,20 +257,23 @@ class _DigifitExerciseDetailScreenState
               iconWidth: 15.w,
               icon: imagePath['scan_icon'],
               onPressed: () async {
-                final barcode = await ref
-                    .read(navigationProvider)
-                    .navigateUsingPath(
-                    path: digifitQRScannerScreenPath, context: context);
-                // Todo - replace with actual QR code login
-                if (barcode != null) {
-                  print('Scanned barcode: $barcode');
-                }
+                ref
+                    .read(digifitCardExerciseDetailsControllerProvider.notifier)
+                    .updateIconBackgroundVisibility(true);
+
+                // final barcode = await ref
+                //     .read(navigationProvider)
+                //     .navigateUsingPath(
+                //         path: digifitQRScannerScreenPath, context: context);
+                // // Todo - replace with actual QR code login
+                // if (barcode != null) {
+                //   print('Scanned barcode: $barcode');
+                // }
               },
               text: AppLocalizations
                   .of(context)
                   .scan_exercise),
           20.verticalSpace,
-
           if (digifitExerciseDetailsState
               .digifitExerciseRelatedEquipmentsModel.isNotEmpty)
             _buildCourseDetailSection(
