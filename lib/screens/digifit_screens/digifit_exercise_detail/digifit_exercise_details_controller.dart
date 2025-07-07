@@ -4,6 +4,7 @@ import 'package:domain/model/response_model/digifit/digifit_exercise_details_res
 import 'package:domain/usecase/digifit/digifit_exercise_details_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kusel/providers/digifit_equipment_fav_provider.dart';
 
 import '../../../locale/localization_manager.dart';
 import '../../../providers/refresh_token_provider.dart';
@@ -16,7 +17,8 @@ final digifitExerciseDetailsControllerProvider = StateNotifierProvider
                 ref.read(digifitExerciseDetailsUseCaseProvider),
             tokenStatus: ref.read(tokenStatusProvider),
             refreshTokenProvider: ref.read(refreshTokenProvider),
-            localeManagerController: ref.read(localeManagerProvider.notifier)));
+            localeManagerController: ref.read(localeManagerProvider.notifier),
+            digifitEquipmentFav: ref.read(digifitEquipmentFavProvider)));
 
 class DigifitExerciseDetailsController
     extends StateNotifier<DigifitExerciseDetailsState> {
@@ -24,16 +26,18 @@ class DigifitExerciseDetailsController
   final TokenStatus tokenStatus;
   final RefreshTokenProvider refreshTokenProvider;
   final LocaleManagerController localeManagerController;
+  final DigifitEquipmentFav digifitEquipmentFav;
 
   DigifitExerciseDetailsController(
       {required this.digifitExerciseDetailsUseCase,
       required this.tokenStatus,
       required this.refreshTokenProvider,
-      required this.localeManagerController})
+      required this.localeManagerController,
+      required this.digifitEquipmentFav})
       : super(DigifitExerciseDetailsState.empty());
 
   Future<void> fetchDigifitExerciseDetails(
-      int equipmentId, String location) async {
+      int equipmentId, int locationId) async {
     try {
       final isTokenExpired = tokenStatus.isAccessTokenExpired();
 
@@ -41,18 +45,18 @@ class DigifitExerciseDetailsController
         await refreshTokenProvider.getNewToken(
             onError: () {},
             onSuccess: () {
-              _fetchDigifitExerciseDetails(equipmentId, location);
+              _fetchDigifitExerciseDetails(equipmentId, locationId);
             });
       } else {
         // If the token is not expired, we can proceed with the request
-        _fetchDigifitExerciseDetails(equipmentId, location);
+        _fetchDigifitExerciseDetails(equipmentId, locationId);
       }
     } catch (e) {
       debugPrint('[DigifitExerciseDetailsController] Fetch Exception: $e');
     }
   }
 
-  _fetchDigifitExerciseDetails(int equipmentId, String location) async {
+  _fetchDigifitExerciseDetails(int equipmentId, int locationId) async {
     try {
       state = state.copyWith(isLoading: true);
 
@@ -61,7 +65,7 @@ class DigifitExerciseDetailsController
       DigifitExerciseDetailsRequestModel digifitExerciseDetailsRequestModel =
           DigifitExerciseDetailsRequestModel(
               equipmentId: equipmentId,
-              location: location,
+              locationId: locationId,
               translate:
                   "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
@@ -86,6 +90,53 @@ class DigifitExerciseDetailsController
     } catch (error) {
       debugPrint(
           '[DigifitExerciseDetailsController] Fetch fold Exception: $error');
+    }
+  }
+
+  onFavTap(
+      {required DigifitEquipmentFavParams digifitEquipmentFavParams,
+      required Future Function(bool, DigifitEquipmentFavParams)
+          onFavStatusChange}) async {
+    try {
+      await digifitEquipmentFav.changeEquipmentFavStatus(
+          onFavStatusChange: onFavStatusChange,
+          params: digifitEquipmentFavParams);
+    } catch (error) {
+      debugPrint('exception on fav tap : $error');
+    }
+  }
+
+  Future<void> detailPageOnFavStatusChange(
+      bool res, DigifitEquipmentFavParams params) async {
+    try {
+      DigifitExerciseEquipmentModel? model =
+          state.digifitExerciseEquipmentModel;
+
+      if (model != null) {
+        model.isFavorite = res;
+        state = state.copyWith(digifitExerciseEquipmentModel: model);
+      }
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  Future<void> recommendOnFavStatusChange(
+      bool res, DigifitEquipmentFavParams params) async {
+    try {
+      List<DigifitExerciseRelatedStationsModel> list =
+          state.digifitExerciseRelatedEquipmentsModel;
+
+      for (DigifitExerciseRelatedStationsModel item in list) {
+        if (params.equipmentId == item.id) {
+          item.isFavorite = res;
+          break;
+        }
+      }
+
+      state = state.copyWith(digifitExerciseRelatedEquipmentsModel: list);
+    } catch (error) {
+      rethrow;
     }
   }
 }
