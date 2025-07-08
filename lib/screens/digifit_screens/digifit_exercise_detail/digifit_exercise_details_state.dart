@@ -1,5 +1,4 @@
 import 'package:domain/model/response_model/digifit/digifit_exercise_details_response_model.dart';
-import 'package:domain/model/response_model/digifit/digifit_exercise_details_tracking_response_model.dart';
 
 class DigifitExerciseDetailsState {
   bool isLoading;
@@ -7,21 +6,22 @@ class DigifitExerciseDetailsState {
   final List<DigifitExerciseRelatedStationsModel>
       digifitExerciseRelatedEquipmentsModel;
   final DigifitExerciseEquipmentModel? digifitExerciseEquipmentModel;
-  final bool isCheckIconVisible;
-  final bool isIconBackgroundVisible;
+  final bool isReadyToSubmitSet;
   final int currentSetNumber;
   final int totalSetNumber;
-
+  final bool isScannerVisible;
+  final int locationId;
 
   DigifitExerciseDetailsState(
       {required this.isLoading,
       this.errorMessage = '',
       this.digifitExerciseRelatedEquipmentsModel = const [],
       this.digifitExerciseEquipmentModel,
-      required this.isCheckIconVisible,
-      required this.isIconBackgroundVisible,
+      required this.isReadyToSubmitSet,
       required this.currentSetNumber,
-      required this.totalSetNumber});
+      required this.totalSetNumber,
+      required this.isScannerVisible,
+      required this.locationId});
 
   factory DigifitExerciseDetailsState.empty() {
     return DigifitExerciseDetailsState(
@@ -29,10 +29,11 @@ class DigifitExerciseDetailsState {
         errorMessage: '',
         digifitExerciseRelatedEquipmentsModel: [],
         digifitExerciseEquipmentModel: null,
-        isCheckIconVisible: false,
-        isIconBackgroundVisible: false,
+        isReadyToSubmitSet: false,
         currentSetNumber: 0,
-        totalSetNumber: 0);
+        totalSetNumber: 0,
+        isScannerVisible: true,
+        locationId: 0);
   }
 
   DigifitExerciseDetailsState copyWith(
@@ -41,10 +42,11 @@ class DigifitExerciseDetailsState {
       List<DigifitExerciseRelatedStationsModel>?
           digifitExerciseRelatedEquipmentsModel,
       DigifitExerciseEquipmentModel? digifitExerciseEquipmentModel,
-      bool? isCheckIconVisible,
-      bool? isIconBackgroundVisible,
+      bool? isReadyToSubmitSet,
       int? currentSetNumber,
-      int? totalSetNumber}) {
+      int? totalSetNumber,
+      bool? isScannerVisible,
+      int? locationId}) {
     return DigifitExerciseDetailsState(
         isLoading: isLoading ?? this.isLoading,
         errorMessage: errorMessage ?? this.errorMessage,
@@ -53,10 +55,10 @@ class DigifitExerciseDetailsState {
                 this.digifitExerciseRelatedEquipmentsModel,
         digifitExerciseEquipmentModel:
             digifitExerciseEquipmentModel ?? this.digifitExerciseEquipmentModel,
-        isCheckIconVisible: isCheckIconVisible ?? this.isCheckIconVisible,
-        isIconBackgroundVisible:
-            isIconBackgroundVisible ?? this.isIconBackgroundVisible,
+        isReadyToSubmitSet: isReadyToSubmitSet ?? this.isReadyToSubmitSet,
         currentSetNumber: currentSetNumber ?? this.currentSetNumber,
-        totalSetNumber: totalSetNumber ?? this.totalSetNumber);
+        totalSetNumber: totalSetNumber ?? this.totalSetNumber,
+        isScannerVisible: isScannerVisible ?? this.isScannerVisible,
+        locationId: locationId ?? this.locationId);
   }
 }

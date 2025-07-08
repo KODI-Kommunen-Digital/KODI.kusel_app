@@ -102,7 +102,8 @@ class DigifitExerciseDetailsController
             digifitExerciseRelatedEquipmentsModel: response.relatedStations,
             digifitExerciseEquipmentModel: response.equipment,
             totalSetNumber: response.equipment.userProgress.totalSets,
-            currentSetNumber: response.equipment.userProgress.currentSet);
+            currentSetNumber: response.equipment.userProgress.currentSet,
+            locationId: locationId);
       });
     } catch (error) {
       debugPrint(
@@ -168,6 +169,7 @@ class DigifitExerciseDetailsController
         return false;
       }, (expandedUrl) {
         final slugUrl = digifitQrScannerUseCase.getSlugFromUrl(expandedUrl);
+        debugPrint('extracted slug : $slugUrl');
         state = state.copyWith(isLoading: false);
         return slugUrl == equipmentSlug;
       });
@@ -177,8 +179,13 @@ class DigifitExerciseDetailsController
     }
   }
 
-  Future<void> trackExerciseDetails(int equipmentId, int locationId, int sets,
-      int reps, ExerciseStageConstant stageConstant) async {
+  Future<void> trackExerciseDetails(
+      int equipmentId,
+      int locationId,
+      int sets,
+      int reps,
+      ExerciseStageConstant stageConstant,
+      VoidCallback onSuccess) async {
     try {
       final isTokenExpired = tokenStatus.isAccessTokenExpired();
 
@@ -187,12 +194,12 @@ class DigifitExerciseDetailsController
           onError: () {},
           onSuccess: () async {
             await _trackExerciseDetails(
-                equipmentId, locationId, sets, reps, stageConstant);
+                equipmentId, locationId, sets, reps, stageConstant, onSuccess);
           },
         );
       } else {
         await _trackExerciseDetails(
-            equipmentId, locationId, sets, reps, stageConstant);
+            equipmentId, locationId, sets, reps, stageConstant, onSuccess);
       }
     } catch (e) {
       debugPrint('[CardExerciseDetailsController] Track Exception: $e');
@@ -200,7 +207,7 @@ class DigifitExerciseDetailsController
   }
 
   _trackExerciseDetails(int equipmentId, int locationId, int sets, int reps,
-      ExerciseStageConstant stageConstant) async {
+      ExerciseStageConstant stageConstant, VoidCallback onSuccess) async {
     try {
       state = state.copyWith(isLoading: true);
 
@@ -228,33 +235,30 @@ class DigifitExerciseDetailsController
       }, (r) {
         var response = (r as DigifitExerciseDetailsTrackingResponseModel).data;
 
-
-        DigifitExerciseEquipmentModel? digifitExerciseEquipmentModel = state.digifitExerciseEquipmentModel;
+        DigifitExerciseEquipmentModel? digifitExerciseEquipmentModel =
+            state.digifitExerciseEquipmentModel;
         final isComplete = response.isCompleted;
 
-
-        if(digifitExerciseEquipmentModel?.userProgress.isCompleted !=null)
-          {
-            digifitExerciseEquipmentModel?.userProgress.isCompleted = isComplete;
-          }
+        if (digifitExerciseEquipmentModel?.userProgress.isCompleted != null) {
+          digifitExerciseEquipmentModel?.userProgress.isCompleted = isComplete;
+        }
 
         state = state.copyWith(
             isLoading: false,
-            currentSetNumber: response.setNumber,
-        digifitExerciseEquipmentModel: digifitExerciseEquipmentModel);
-
+            currentSetNumber: response.completedSets,
+            digifitExerciseEquipmentModel: digifitExerciseEquipmentModel);
+        onSuccess();
       });
     } catch (error) {
-      debugPrint(
-          '[CardExerciseDetailsController] Fetch  Exception: $error');
+      debugPrint('[CardExerciseDetailsController] Fetch  Exception: $error');
     }
   }
 
-  void updateCheckIconVisibility(bool isVisible) {
-    state = state.copyWith(isCheckIconVisible: isVisible);
+  void updateIsReadyToSubmitSetVisibility(bool value) {
+    state = state.copyWith(isReadyToSubmitSet: value);
   }
 
-  void updateIconBackgroundVisibility(bool iconBackgroundVisibility) {
-    state = state.copyWith(isIconBackgroundVisible: iconBackgroundVisibility);
+  void updateScannerButtonVisibility(bool value) {
+    state = state.copyWith(isScannerVisible: value);
   }
 }
