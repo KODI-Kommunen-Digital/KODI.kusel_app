@@ -649,4 +649,10 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get min => 'Min';
+
+  @override
+  String get play => 'Spielen';
+
+  @override
+  String get pause => 'Pause';
 }
