@@ -14,12 +14,6 @@ class PauseCardWidget extends ConsumerStatefulWidget {
 class _PauseCardWidgetState extends ConsumerState<PauseCardWidget> {
   @override
   Widget build(BuildContext context) {
-    final cardState = ref.watch(digifitExerciseDetailsControllerProvider);
-
-    if (!cardState.isCheckIconVisible) {
-      return SizedBox(height: 48.h);
-    }
-
     return Material(
       elevation: 2,
       borderRadius: BorderRadius.only(
