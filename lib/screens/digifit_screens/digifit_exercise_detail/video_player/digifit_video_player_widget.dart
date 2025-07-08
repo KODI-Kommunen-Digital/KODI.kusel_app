@@ -1,12 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/digifit_exercise_details_controller.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/video_player/video_player_controller.dart';
 import 'package:video_player/video_player.dart';
 
-import '../digifit_exercise_card/digifit_info_card_widget.dart';
 import '../digifit_exercise_card/digifit_exercise_timer_widget.dart';
+import '../digifit_exercise_card/digifit_info_card_widget.dart';
 
 class DigifitVideoPlayerWidget extends ConsumerStatefulWidget {
   final String videoUrl;
@@ -43,7 +43,15 @@ class _DigifitVideoPlayerWidgetState
           children: [
             _buildVideoPlayer(),
             SizedBox(height: 18.h),
-            PauseCardWidget()
+            Visibility(
+                visible: (ref
+                            .watch(digifitExerciseDetailsControllerProvider)
+                            .isScannerVisible ==
+                        false &&
+                    !ref
+                        .watch(digifitExerciseDetailsControllerProvider)
+                        .isReadyToSubmitSet),
+                child: PauseCardWidget())
           ],
         ),
         Positioned(

@@ -640,4 +640,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get validation_falied_message => 'Invalid scan. Unable to start session.';
+
+  @override
+  String get session_start => 'Session has been started';
+
+  @override
+  String get goal_achieved => 'Goal has already been achieved';
 }
