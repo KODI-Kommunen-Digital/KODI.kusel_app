@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:domain/model/response_model/digifit/digifit_exercise_details_response_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_information_response_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,6 +12,7 @@ import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/providers/digifit_equipment_fav_provider.dart';
+import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/enum/digifit_exercise_timer_state.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/params/digifit_exercise_details_params.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/video_player/digifit_video_player_widget.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
@@ -38,6 +41,8 @@ class DigifitExerciseDetailScreen extends ConsumerStatefulWidget {
 
 class _DigifitExerciseDetailScreenState
     extends ConsumerState<DigifitExerciseDetailScreen> {
+  Timer? timer;
+
   @override
   void initState() {
     Future.microtask(() {
@@ -234,14 +239,31 @@ class _DigifitExerciseDetailScreenState
             videoUrl: digifitExerciseDetailsState
                     .digifitExerciseEquipmentModel?.machineVideoUrl ??
                 '',
+            startTimer: () {
+              startTimer();
+            },
+            pauseTimer: () {
+              pauseTimer();
+            },
           ),
           ((ref
+                              .watch(digifitExerciseDetailsControllerProvider)
+                              .isScannerVisible ==
+                          false &&
+                      !ref
                           .watch(digifitExerciseDetailsControllerProvider)
-                          .isScannerVisible ==
-                      false &&
-                  !ref
-                      .watch(digifitExerciseDetailsControllerProvider)
-                      .isReadyToSubmitSet))
+                          .isReadyToSubmitSet) &&
+                  (ref
+                              .watch(digifitExerciseDetailsControllerProvider)
+                              .digifitExerciseEquipmentModel
+                              ?.userProgress
+                              .isCompleted !=
+                          null &&
+                      !ref
+                          .watch(digifitExerciseDetailsControllerProvider)
+                          .digifitExerciseEquipmentModel!
+                          .userProgress
+                          .isCompleted))
               ? 30.verticalSpace
               : 60.verticalSpace,
           textBoldPoppins(
@@ -300,8 +322,11 @@ class _DigifitExerciseDetailScreenState
         .watch(digifitExerciseDetailsControllerProvider)
         .digifitExerciseEquipmentModel;
 
-    final sourceId = ref.read(digifitExerciseDetailsControllerProvider).digifitExerciseEquipmentModel?.sourceId ?? 0;
-
+    final sourceId = ref
+            .read(digifitExerciseDetailsControllerProvider)
+            .digifitExerciseEquipmentModel
+            ?.sourceId ??
+        0;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -498,5 +523,39 @@ class _DigifitExerciseDetailScreenState
             text: AppLocalizations.of(context).scan_exercise)
       ],
     );
+  }
+
+  startTimer() {
+    ref
+        .read(digifitExerciseDetailsControllerProvider.notifier)
+        .updateTimerStatus(TimerState.start);
+    final state = ref.watch(digifitExerciseDetailsControllerProvider);
+    int secondsLeft = state.time;
+    if (state.remainingPauseSecond > 0) {
+      secondsLeft = state.remainingPauseSecond;
+    }
+
+    timer = Timer.periodic(Duration(seconds: 1), (time) {
+      if (secondsLeft == 0) {
+        pauseTimer();
+        ref
+            .read(digifitExerciseDetailsControllerProvider.notifier)
+            .updateIsReadyToSubmitSetVisibility(true);
+      } else {
+        secondsLeft--;
+        ref
+            .read(digifitExerciseDetailsControllerProvider.notifier)
+            .updateRemaningSeconds(secondsLeft);
+      }
+    });
+  }
+
+  pauseTimer() {
+    if (timer != null) {
+      timer!.cancel();
+      ref
+          .read(digifitExerciseDetailsControllerProvider.notifier)
+          .updateTimerStatus(TimerState.pause);
+    }
   }
 }
