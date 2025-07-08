@@ -655,4 +655,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pause => 'Pause';
+
+  @override
+  String get digifit_success_card_title => 'Great perseverance!';
+
+  @override
+  String get digifit_success_card_desp => 'Now complete the exercise to collect your points.';
 }
