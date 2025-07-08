@@ -89,61 +89,74 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
             padding: EdgeInsets.only(top: 18.h, bottom: 6.h, left: 40.h),
             child: GestureDetector(
               onTap: () {
-                int currentSet = ref
+
+                bool? isComplete = ref
                     .read(digifitExerciseDetailsControllerProvider)
-                    .currentSetNumber;
-                int totalSets = ref
-                    .read(digifitExerciseDetailsControllerProvider)
-                    .totalSetNumber;
+                    .digifitExerciseEquipmentModel
+                    ?.userProgress
+                    .isCompleted;
 
-                final digifitExerciseDetailsControllerState =
-                    ref.read(digifitExerciseDetailsControllerProvider);
+                if(isComplete!=null && !isComplete)
+                {
+                  int currentSet = ref
+                      .read(digifitExerciseDetailsControllerProvider)
+                      .currentSetNumber;
+                  int totalSets = ref
+                      .read(digifitExerciseDetailsControllerProvider)
+                      .totalSetNumber;
 
-                int locationId = ref
-                        .read(digifitOverviewScreenControllerProvider)
-                        .digifitOverviewDataModel
-                        ?.parcours
-                        ?.locationId ??
-                    0;
 
-                ExerciseStageConstant stage;
+                  final digifitExerciseDetailsControllerState =
+                  ref.read(digifitExerciseDetailsControllerProvider);
 
-                if (currentSet == totalSets - 1) {
-                  stage = ExerciseStageConstant.complete;
-                } else {
-                  stage = ExerciseStageConstant.progress;
+                  int locationId = ref
+                      .read(digifitOverviewScreenControllerProvider)
+                      .digifitOverviewDataModel
+                      ?.parcours
+                      ?.locationId ??
+                      0;
+
+                  ExerciseStageConstant stage;
+
+                  if (currentSet == totalSets - 1) {
+                    stage = ExerciseStageConstant.complete;
+                  } else {
+                    stage = ExerciseStageConstant.progress;
+                  }
+
+                  ref
+                      .read(digifitExerciseDetailsControllerProvider.notifier)
+                      .trackExerciseDetails(
+                      digifitExerciseDetailsControllerState
+                          .digifitExerciseEquipmentModel?.id ??
+                          0,
+                      locationId,
+                      currentSet,
+                      digifitExerciseDetailsControllerState
+                          .digifitExerciseEquipmentModel
+                          ?.userProgress
+                          .repetitionsPerSet ??
+                          0,
+                      stage);
+
+                  final isVisible = ref
+                      .read(digifitExerciseDetailsControllerProvider)
+                      .isCheckIconVisible;
+
+                  final iconBackgroundVisible = ref
+                      .read(digifitExerciseDetailsControllerProvider)
+                      .isIconBackgroundVisible;
+
+                  ref
+                      .read(digifitExerciseDetailsControllerProvider.notifier)
+                      .updateCheckIconVisibility(!isVisible);
+
+                  ref
+                      .read(digifitExerciseDetailsControllerProvider.notifier)
+                      .updateIconBackgroundVisibility(!iconBackgroundVisible);
+
                 }
 
-                ref
-                    .read(digifitExerciseDetailsControllerProvider.notifier)
-                    .trackExerciseDetails(
-                        digifitExerciseDetailsControllerState
-                                .digifitExerciseEquipmentModel?.id ??
-                            0,
-                        locationId,
-                        currentSet,
-                        digifitExerciseDetailsControllerState
-                                .digifitExerciseEquipmentModel
-                                ?.userProgress
-                                .repetitionsPerSet ??
-                            0,
-                        stage);
-
-                final isVisible = ref
-                    .read(digifitExerciseDetailsControllerProvider)
-                    .isCheckIconVisible;
-
-                final iconBackgroundVisible = ref
-                    .read(digifitExerciseDetailsControllerProvider)
-                    .isIconBackgroundVisible;
-
-                ref
-                    .read(digifitExerciseDetailsControllerProvider.notifier)
-                    .updateCheckIconVisibility(!isVisible);
-
-                ref
-                    .read(digifitExerciseDetailsControllerProvider.notifier)
-                    .updateIconBackgroundVisibility(!iconBackgroundVisible);
               },
               child: Container(
                 width: 52.w,

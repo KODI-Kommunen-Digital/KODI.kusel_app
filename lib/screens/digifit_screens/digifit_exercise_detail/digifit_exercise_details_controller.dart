@@ -186,30 +186,32 @@ class DigifitExerciseDetailsController
         await refreshTokenProvider.getNewToken(
           onError: () {},
           onSuccess: () async {
-            await _trackExerciseDetails(equipmentId, locationId, sets, reps);
+            await _trackExerciseDetails(
+                equipmentId, locationId, sets, reps, stageConstant);
           },
         );
       } else {
-        await _trackExerciseDetails(equipmentId, locationId, sets, reps);
+        await _trackExerciseDetails(
+            equipmentId, locationId, sets, reps, stageConstant);
       }
     } catch (e) {
       debugPrint('[CardExerciseDetailsController] Track Exception: $e');
     }
   }
 
-  _trackExerciseDetails(
-      int equipmentId, int locationId, int sets, int reps) async {
+  _trackExerciseDetails(int equipmentId, int locationId, int sets, int reps,
+      ExerciseStageConstant stageConstant) async {
     try {
       state = state.copyWith(isLoading: true);
 
       DigifitExerciseDetailsTrackingRequestModel
           digifitExerciseDetailsTrackingRequestModel =
           DigifitExerciseDetailsTrackingRequestModel(
-        equipmentId: equipmentId,
-        locationId: locationId,
-        setNumber: sets,
-        reps: reps,
-      );
+              equipmentId: equipmentId,
+              locationId: locationId,
+              setNumber: sets,
+              reps: reps,
+              activityStatus: stageConstant.name);
 
       DigifitExerciseDetailsTrackingResponseModel
           digifitExerciseDetailsTrackingResponseModel =
@@ -226,19 +228,25 @@ class DigifitExerciseDetailsController
       }, (r) {
         var response = (r as DigifitExerciseDetailsTrackingResponseModel).data;
 
-        debugPrint('reponse of the digifit is ${response}');
+
+        DigifitExerciseEquipmentModel? digifitExerciseEquipmentModel = state.digifitExerciseEquipmentModel;
+        final isComplete = response.isCompleted;
+
+
+        if(digifitExerciseEquipmentModel?.userProgress.isCompleted !=null)
+          {
+            digifitExerciseEquipmentModel?.userProgress.isCompleted = isComplete;
+          }
 
         state = state.copyWith(
             isLoading: false,
-            digifitExerciseDetailsTrackingDataModel: response,
-            currentSetNumber: response.setNumber + 1);
+            currentSetNumber: response.setNumber,
+        digifitExerciseEquipmentModel: digifitExerciseEquipmentModel);
 
-        debugPrint(
-            'reponse of the digifit is 2 ${digifitExerciseDetailsTrackingResponseModel.data.isCompleted} and ${digifitExerciseDetailsTrackingResponseModel.data.message}');
       });
     } catch (error) {
       debugPrint(
-          '[CardExerciseDetailsController] Fetch fold Exception: $error');
+          '[CardExerciseDetailsController] Fetch  Exception: $error');
     }
   }
 
