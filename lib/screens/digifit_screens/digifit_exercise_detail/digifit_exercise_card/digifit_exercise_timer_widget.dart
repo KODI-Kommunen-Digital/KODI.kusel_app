@@ -2,19 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/digifit_exercise_details_controller.dart';
+import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/enum/digifit_exercise_timer_state.dart';
 
 import '../../../../l10n/app_localizations.dart';
 
-
 class PauseCardWidget extends ConsumerStatefulWidget {
-  const PauseCardWidget({super.key});
+  final VoidCallback startTimer;
+  final VoidCallback pauseTimer;
+
+  const PauseCardWidget(
+      {super.key, required this.startTimer, required this.pauseTimer});
 
   @override
   ConsumerState<PauseCardWidget> createState() => _PauseCardWidgetState();
 }
 
 class _PauseCardWidgetState extends ConsumerState<PauseCardWidget> {
-
   @override
   void initState() {
     super.initState();
@@ -24,8 +27,8 @@ class _PauseCardWidgetState extends ConsumerState<PauseCardWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final digifitExerciseDetailsState = ref.watch(digifitExerciseDetailsControllerProvider);
-
+    final digifitExerciseDetailsState =
+        ref.watch(digifitExerciseDetailsControllerProvider);
 
     return Material(
       elevation: 2,
@@ -51,7 +54,12 @@ class _PauseCardWidgetState extends ConsumerState<PauseCardWidget> {
             Padding(
               padding: EdgeInsets.only(bottom: 16.h, left: 25.h),
               child: Text(
-                'Pause',
+                ((ref
+                            .watch(digifitExerciseDetailsControllerProvider)
+                            .timerState ==
+                        TimerState.start))
+                    ? AppLocalizations.of(context).play
+                    : AppLocalizations.of(context).pause,
                 style: TextStyle(
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w600,
@@ -74,13 +82,25 @@ class _PauseCardWidgetState extends ConsumerState<PauseCardWidget> {
               padding: EdgeInsets.only(top: 18.h, bottom: 6.h, left: 40.h),
               child: InkWell(
                 onTap: () {
-                  ref.read(digifitExerciseDetailsState)
+                  if (ref
+                          .read(digifitExerciseDetailsControllerProvider)
+                          .timerState ==
+                      TimerState.start) {
+                    widget.pauseTimer();
+                  } else {
+                    widget.startTimer();
+                  }
                 },
                 child: CircleAvatar(
                   radius: 24.r,
                   backgroundColor: const Color(0xFF233B8C),
                   child: Icon(
-                    Icons.skip_next_outlined,
+                    (ref
+                                .watch(digifitExerciseDetailsControllerProvider)
+                                .timerState ==
+                            TimerState.start)
+                        ? Icons.pause
+                        : Icons.skip_next_outlined,
                     color: Colors.white,
                     size: 20.sp,
                   ),

@@ -16,6 +16,7 @@ import '../../../locale/localization_manager.dart';
 import '../../../providers/refresh_token_provider.dart';
 import 'digifit_exercise_details_state.dart';
 import 'enum/digifit_exercise_session_status_enum.dart';
+import 'enum/digifit_exercise_timer_state.dart';
 
 final digifitExerciseDetailsControllerProvider = StateNotifierProvider
     .autoDispose<DigifitExerciseDetailsController, DigifitExerciseDetailsState>(
@@ -260,24 +261,16 @@ class DigifitExerciseDetailsController
     state = state.copyWith(isReadyToSubmitSet: value);
   }
 
-  void timer( {int totalSeconds = 120, required TimerState timerState}) {
-    int secondsLeft = totalSeconds;
-
-    Timer.periodic(Duration(seconds: 1), (timer) {
-      if (secondsLeft == 0) {
-        timer.cancel();
-        updateIsReadyToSubmitSetVisibility(true);
-      } else {
-        secondsLeft--;
-        state = state.copyWith(remainingPauseSecond: secondsLeft);
-      }
-    });
-
-    state = state.copyWith(remainingPauseSecond: totalSeconds);
-  }
-
 
   void updateScannerButtonVisibility(bool value) {
     state = state.copyWith(isScannerVisible: value);
+  }
+
+  void updateRemaningSeconds(int seconds) {
+    state = state.copyWith(remainingPauseSecond: seconds);
+  }
+
+  void updateTimerStatus(TimerState value) {
+    state = state.copyWith(timerState: value);
   }
 }

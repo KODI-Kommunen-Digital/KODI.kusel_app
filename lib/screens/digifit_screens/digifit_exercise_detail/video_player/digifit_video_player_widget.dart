@@ -10,11 +10,14 @@ import '../digifit_exercise_card/digifit_info_card_widget.dart';
 
 class DigifitVideoPlayerWidget extends ConsumerStatefulWidget {
   final String videoUrl;
+  final VoidCallback startTimer;
+  final VoidCallback pauseTimer;
 
-  const DigifitVideoPlayerWidget({
-    super.key,
-    required this.videoUrl,
-  });
+  const DigifitVideoPlayerWidget(
+      {super.key,
+      required this.videoUrl,
+      required this.startTimer,
+      required this.pauseTimer});
 
   @override
   ConsumerState<DigifitVideoPlayerWidget> createState() =>
@@ -50,8 +53,22 @@ class _DigifitVideoPlayerWidgetState
                         false &&
                     !ref
                         .watch(digifitExerciseDetailsControllerProvider)
-                        .isReadyToSubmitSet),
-                child: PauseCardWidget())
+                        .isReadyToSubmitSet &&
+                    (ref
+                                .watch(digifitExerciseDetailsControllerProvider)
+                                .digifitExerciseEquipmentModel
+                                ?.userProgress
+                                .isCompleted !=
+                            null &&
+                        !ref
+                            .watch(digifitExerciseDetailsControllerProvider)
+                            .digifitExerciseEquipmentModel!
+                            .userProgress
+                            .isCompleted)),
+                child: PauseCardWidget(
+                  startTimer: widget.startTimer,
+                  pauseTimer: widget.pauseTimer,
+                ))
           ],
         ),
         Positioned(
@@ -61,7 +78,9 @@ class _DigifitVideoPlayerWidgetState
           child: Material(
             elevation: 6,
             borderRadius: BorderRadius.circular(20.r),
-            child: InfoCardWidget(),
+            child: InfoCardWidget(
+              startTimer: widget.startTimer,
+            ),
           ),
         ),
       ],
