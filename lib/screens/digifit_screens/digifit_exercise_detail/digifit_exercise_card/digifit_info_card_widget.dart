@@ -4,8 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../common_widgets/text_styles.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../digifit_overview/digifit_overview_controller.dart';
 import '../digifit_exercise_details_controller.dart';
-import 'digifit_card_exercise_details_controller.dart';
+import '../enum/digifit_exercise_session_status_enum.dart';
 
 class InfoCardWidget extends ConsumerStatefulWidget {
   const InfoCardWidget({super.key});
@@ -22,8 +23,14 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
         .digifitExerciseEquipmentModel
         ?.userProgress;
 
+    int currentSet =
+        ref.watch(digifitExerciseDetailsControllerProvider).currentSetNumber;
+
+    int totalSet =
+        ref.watch(digifitExerciseDetailsControllerProvider).totalSetNumber;
+
     final iconBackgroundVisibility = ref
-        .watch(digifitCardExerciseDetailsControllerProvider)
+        .watch(digifitExerciseDetailsControllerProvider)
         .isIconBackgroundVisible;
 
     return Container(
@@ -55,8 +62,7 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
                     ),
                     SizedBox(height: 6.h),
                     textRegularMontserrat(
-                      text:
-                          '${digifitExerciseUserProgress?.currentSet} / ${digifitExerciseUserProgress?.totalSets}',
+                      text: '$currentSet / $totalSet',
                       color: Colors.black,
                     ),
                   ],
@@ -83,16 +89,61 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
             padding: EdgeInsets.only(top: 18.h, bottom: 6.h, left: 40.h),
             child: GestureDetector(
               onTap: () {
-                final isVisible = ref
-                    .read(digifitCardExerciseDetailsControllerProvider)
-                    .isCheckIconVisible;
+                int currentSet = ref
+                    .read(digifitExerciseDetailsControllerProvider)
+                    .currentSetNumber;
+                int totalSets = ref
+                    .read(digifitExerciseDetailsControllerProvider)
+                    .totalSetNumber;
+
+                final digifitExerciseDetailsControllerState =
+                    ref.read(digifitExerciseDetailsControllerProvider);
+
+                int locationId = ref
+                        .read(digifitOverviewScreenControllerProvider)
+                        .digifitOverviewDataModel
+                        ?.parcours
+                        ?.locationId ??
+                    0;
+
+                ExerciseStageConstant stage;
+
+                if (currentSet == totalSets - 1) {
+                  stage = ExerciseStageConstant.complete;
+                } else {
+                  stage = ExerciseStageConstant.progress;
+                }
+
                 ref
-                    .read(digifitCardExerciseDetailsControllerProvider.notifier)
+                    .read(digifitExerciseDetailsControllerProvider.notifier)
+                    .trackExerciseDetails(
+                        digifitExerciseDetailsControllerState
+                                .digifitExerciseEquipmentModel?.id ??
+                            0,
+                        locationId,
+                        currentSet,
+                        digifitExerciseDetailsControllerState
+                                .digifitExerciseEquipmentModel
+                                ?.userProgress
+                                .repetitionsPerSet ??
+                            0,
+                        stage);
+
+                final isVisible = ref
+                    .read(digifitExerciseDetailsControllerProvider)
+                    .isCheckIconVisible;
+
+                final iconBackgroundVisible = ref
+                    .read(digifitExerciseDetailsControllerProvider)
+                    .isIconBackgroundVisible;
+
+                ref
+                    .read(digifitExerciseDetailsControllerProvider.notifier)
                     .updateCheckIconVisibility(!isVisible);
 
                 ref
-                    .read(digifitCardExerciseDetailsControllerProvider.notifier)
-                    .updateIconBackgroundVisibility(false);
+                    .read(digifitExerciseDetailsControllerProvider.notifier)
+                    .updateIconBackgroundVisibility(!iconBackgroundVisible);
               },
               child: Container(
                 width: 52.w,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/digifit_exercise_details_controller.dart';
 
-import 'digifit_card_exercise_details_controller.dart';
 
 class PauseCardWidget extends ConsumerStatefulWidget {
   const PauseCardWidget({super.key});
@@ -14,7 +14,7 @@ class PauseCardWidget extends ConsumerStatefulWidget {
 class _PauseCardWidgetState extends ConsumerState<PauseCardWidget> {
   @override
   Widget build(BuildContext context) {
-    final cardState = ref.watch(digifitCardExerciseDetailsControllerProvider);
+    final cardState = ref.watch(digifitExerciseDetailsControllerProvider);
 
     if (!cardState.isCheckIconVisible) {
       return SizedBox(height: 48.h);
