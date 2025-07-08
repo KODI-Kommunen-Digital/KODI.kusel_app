@@ -21,7 +21,6 @@ import '../../../common_widgets/custom_button_widget.dart';
 import '../../../common_widgets/digifit/digifit_text_image_card.dart';
 import '../../../common_widgets/text_styles.dart';
 import '../../../navigation/navigation.dart';
-import 'digifit_exercise_card/digifit_session_completed_card.dart';
 import 'digifit_exercise_details_controller.dart';
 import 'enum/digifit_exercise_session_status_enum.dart';
 
@@ -276,19 +275,15 @@ class _DigifitExerciseDetailScreenState
                     .navigateUsingPath(
                         path: digifitQRScannerScreenPath, context: context);
 
-                debugPrint('result ==== 1: $result');
-
                 final qrCodeIdentifier = ref
                         .watch(digifitExerciseDetailsControllerProvider)
                         .digifitExerciseEquipmentModel
                         ?.qrCodeIdentifier ??
                     '';
 
-                // final res = await ref
-                //     .read(digifitExerciseDetailsControllerProvider.notifier)
-                //     .validateQrScanner(result, qrCodeIdentifier);
-
-                final res = true;
+                final res = await ref
+                    .read(digifitExerciseDetailsControllerProvider.notifier)
+                    .validateQrScanner(result, qrCodeIdentifier);
 
                 if (res) {
                   await ref
