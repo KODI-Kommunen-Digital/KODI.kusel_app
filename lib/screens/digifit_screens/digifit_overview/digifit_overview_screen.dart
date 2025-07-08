@@ -45,6 +45,7 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
     super.initState();
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -168,6 +169,8 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
     required String title,
     required List<DigifitOverviewStationModel> stationList,
   }) {
+    final sourceId = ref.read(digifitOverviewScreenControllerProvider).digifitOverviewDataModel?.sourceId ?? 0;
+
     return Column(
       children: [
         20.verticalSpace,
@@ -227,7 +230,7 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
                   isFavouriteVisible:
                       !ref.read(homeScreenProvider).isSignInButtonVisible,
                   isFavorite: station.isFavorite ?? false,
-                  sourceId: 1,
+                  sourceId: sourceId,
                   isCompleted: station.isCompleted,
                   onFavorite: () async {
                     DigifitEquipmentFavParams params =

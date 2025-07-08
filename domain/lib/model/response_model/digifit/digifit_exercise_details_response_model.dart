@@ -64,6 +64,7 @@ class DigifitExerciseEquipmentModel
   String machineVideoUrl;
   String description;
   String qrCodeIdentifier;
+  int? sourceId;
   DigifitExerciseRecommendationModel recommendation;
   DigifitExerciseUserProgressModel userProgress;
   DigifitExerciseActionsModel actions;
@@ -75,6 +76,7 @@ class DigifitExerciseEquipmentModel
     this.machineVideoUrl = '',
     this.description = '',
     this.qrCodeIdentifier = '',
+    this.sourceId = 0,
     this.isFavorite = false,
     DigifitExerciseRecommendationModel? recommendation,
     DigifitExerciseUserProgressModel? userProgress,
@@ -91,6 +93,7 @@ class DigifitExerciseEquipmentModel
       machineVideoUrl: json['machineVideoUrl'] ?? '',
       description: json['description'] ?? '',
       qrCodeIdentifier: json['qrCodeIdentifier'] ?? '',
+      sourceId: json['sourceId'] ?? 0,
       recommendation: DigifitExerciseRecommendationModel()
           .fromJson(json['recommendation'] ?? {}),
       userProgress: DigifitExerciseUserProgressModel()
@@ -102,16 +105,17 @@ class DigifitExerciseEquipmentModel
 
   @override
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'name': name,
-    'machineVideoUrl': machineVideoUrl,
-    'description': description,
-    'qrCodeIdentifier': qrCodeIdentifier,
-    'recommendation': recommendation.toJson(),
-    'userProgress': userProgress.toJson(),
-    'actions': actions.toJson(),
-    'isFavorite': isFavorite,
-  };
+        'id': id,
+        'name': name,
+        'machineVideoUrl': machineVideoUrl,
+        'description': description,
+        'qrCodeIdentifier': qrCodeIdentifier,
+        'sourceId': sourceId,
+        'recommendation': recommendation.toJson(),
+        'userProgress': userProgress.toJson(),
+        'actions': actions.toJson(),
+        'isFavorite': isFavorite,
+      };
 }
 
 
