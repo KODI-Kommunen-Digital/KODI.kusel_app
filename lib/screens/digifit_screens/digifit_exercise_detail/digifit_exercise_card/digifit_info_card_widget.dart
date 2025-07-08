@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../common_widgets/text_styles.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../digifit_overview/digifit_overview_controller.dart';
 import '../digifit_exercise_details_controller.dart';
 import '../enum/digifit_exercise_session_status_enum.dart';
 
@@ -29,9 +28,11 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
     int totalSet =
         ref.watch(digifitExerciseDetailsControllerProvider).totalSetNumber;
 
-    final iconBackgroundVisibility = ref
-        .watch(digifitExerciseDetailsControllerProvider)
-        .isIconBackgroundVisible;
+    final isReadyToSubmitSet =
+        ref.watch(digifitExerciseDetailsControllerProvider).isReadyToSubmitSet;
+
+    final isScanButtonVisible =
+        ref.watch(digifitExerciseDetailsControllerProvider).isScannerVisible;
 
     return Container(
       width: double.infinity,
@@ -88,76 +89,60 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
           Padding(
             padding: EdgeInsets.only(top: 18.h, bottom: 6.h, left: 40.h),
             child: GestureDetector(
-              onTap: () {
-
-                bool? isComplete = ref
-                    .read(digifitExerciseDetailsControllerProvider)
-                    .digifitExerciseEquipmentModel
-                    ?.userProgress
-                    .isCompleted;
-
-                if(isComplete!=null && !isComplete)
-                {
-                  int currentSet = ref
-                      .read(digifitExerciseDetailsControllerProvider)
-                      .currentSetNumber;
-                  int totalSets = ref
-                      .read(digifitExerciseDetailsControllerProvider)
-                      .totalSetNumber;
-
-
-                  final digifitExerciseDetailsControllerState =
-                  ref.read(digifitExerciseDetailsControllerProvider);
-
-                  int locationId = ref
-                      .read(digifitOverviewScreenControllerProvider)
-                      .digifitOverviewDataModel
-                      ?.parcours
-                      ?.locationId ??
-                      0;
-
-                  ExerciseStageConstant stage;
-
-                  if (currentSet == totalSets - 1) {
-                    stage = ExerciseStageConstant.complete;
-                  } else {
-                    stage = ExerciseStageConstant.progress;
-                  }
-
-                  ref
-                      .read(digifitExerciseDetailsControllerProvider.notifier)
-                      .trackExerciseDetails(
-                      digifitExerciseDetailsControllerState
-                          .digifitExerciseEquipmentModel?.id ??
-                          0,
-                      locationId,
-                      currentSet,
-                      digifitExerciseDetailsControllerState
+              onTap: (isScanButtonVisible || !isReadyToSubmitSet)
+                  ? null
+                  : () {
+                      bool? isComplete = ref
+                          .read(digifitExerciseDetailsControllerProvider)
                           .digifitExerciseEquipmentModel
                           ?.userProgress
-                          .repetitionsPerSet ??
-                          0,
-                      stage);
+                          .isCompleted;
 
-                  final isVisible = ref
-                      .read(digifitExerciseDetailsControllerProvider)
-                      .isCheckIconVisible;
+                      if (isComplete != null && !isComplete) {
+                        int currentSet = ref
+                            .read(digifitExerciseDetailsControllerProvider)
+                            .currentSetNumber;
+                        int totalSets = ref
+                            .read(digifitExerciseDetailsControllerProvider)
+                            .totalSetNumber;
 
-                  final iconBackgroundVisible = ref
-                      .read(digifitExerciseDetailsControllerProvider)
-                      .isIconBackgroundVisible;
+                        final digifitExerciseDetailsControllerState =
+                            ref.read(digifitExerciseDetailsControllerProvider);
 
-                  ref
-                      .read(digifitExerciseDetailsControllerProvider.notifier)
-                      .updateCheckIconVisibility(!isVisible);
+                        int locationId = ref
+                            .read(digifitExerciseDetailsControllerProvider)
+                            .locationId;
 
-                  ref
-                      .read(digifitExerciseDetailsControllerProvider.notifier)
-                      .updateIconBackgroundVisibility(!iconBackgroundVisible);
+                        ExerciseStageConstant stage;
 
-                }
+                        if (currentSet == totalSets - 1) {
+                          stage = ExerciseStageConstant.complete;
+                        } else {
+                          stage = ExerciseStageConstant.progress;
+                        }
 
-              },
+                        ref
+                            .read(digifitExerciseDetailsControllerProvider
+                                .notifier)
+                            .trackExerciseDetails(
+                                digifitExerciseDetailsControllerState
+                                        .digifitExerciseEquipmentModel?.id ??
+                                    0,
+                                locationId,
+                                currentSet,
+                                digifitExerciseDetailsControllerState
+                                        .digifitExerciseEquipmentModel
+                                        ?.userProgress
+                                        .repetitionsPerSet ??
+                                    0,
+                                stage, () {
+                          ref
+                              .read(digifitExerciseDetailsControllerProvider
+                                  .notifier)
+                              .updateIsReadyToSubmitSetVisibility(false);
+                        });
+                      }
+                    },
               child: Container(
                 width: 52.w,
                 height: 52.w,
@@ -170,12 +155,12 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
                 ),
                 child: CircleAvatar(
                   radius: 24.r,
-                  backgroundColor: iconBackgroundVisibility
+                  backgroundColor: (!isScanButtonVisible && isReadyToSubmitSet)
                       ? Theme.of(context).primaryColor
                       : Colors.transparent,
                   child: Icon(
                     Icons.check,
-                    color: iconBackgroundVisibility
+                    color: (!isScanButtonVisible && isReadyToSubmitSet)
                         ? Colors.white
                         : Theme.of(context).disabledColor,
                     size: 28.sp,

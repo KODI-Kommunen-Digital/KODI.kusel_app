@@ -1360,6 +1360,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Invalid scan. Unable to start session.'**
   String get validation_falied_message;
+
+  /// No description provided for @session_start.
+  ///
+  /// In en, this message translates to:
+  /// **'Session has been started'**
+  String get session_start;
+
+  /// No description provided for @goal_achieved.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal has already been achieved'**
+  String get goal_achieved;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

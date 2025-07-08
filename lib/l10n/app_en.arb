@@ -209,6 +209,8 @@
   "digifit_exercise_set": "Set",
   "digifit_exercise_reps": "Reps.",
   "error": "Error",
-  "validation_falied_message": "Invalid scan. Unable to start session."
+  "validation_falied_message": "Invalid scan. Unable to start session.",
+  "session_start": "Session has been started",
+  "goal_achieved": "Goal has already been achieved"
 
 }

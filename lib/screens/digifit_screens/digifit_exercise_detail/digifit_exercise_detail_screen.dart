@@ -20,6 +20,7 @@ import '../../../common_widgets/common_bottom_nav_card_.dart';
 import '../../../common_widgets/custom_button_widget.dart';
 import '../../../common_widgets/digifit/digifit_text_image_card.dart';
 import '../../../common_widgets/text_styles.dart';
+import '../../../common_widgets/toast_message.dart';
 import '../../../navigation/navigation.dart';
 import 'digifit_exercise_details_controller.dart';
 import 'enum/digifit_exercise_session_status_enum.dart';
@@ -232,7 +233,15 @@ class _DigifitExerciseDetailScreenState
           DigifitVideoPlayerWidget(
             videoUrl: 'assets/video/Kusel_1.mp4',
           ),
-          20.verticalSpace,
+          ((ref
+                          .watch(digifitExerciseDetailsControllerProvider)
+                          .isScannerVisible ==
+                      false &&
+                  !ref
+                      .watch(digifitExerciseDetailsControllerProvider)
+                      .isReadyToSubmitSet))
+              ? 30.verticalSpace
+              : 60.verticalSpace,
           textBoldPoppins(
               text: digifitExerciseDetailsState
                       .digifitExerciseEquipmentModel?.name ??
@@ -264,47 +273,12 @@ class _DigifitExerciseDetailScreenState
                   '',
               textOverflow: TextOverflow.visible,
               textAlign: TextAlign.start),
-          30.verticalSpace,
-          CustomButton(
-              iconHeight: 15.h,
-              iconWidth: 15.w,
-              icon: imagePath['scan_icon'],
-              onPressed: () async {
-                final result = await ref
-                    .read(navigationProvider)
-                    .navigateUsingPath(
-                        path: digifitQRScannerScreenPath, context: context);
-
-                final qrCodeIdentifier = ref
-                        .watch(digifitExerciseDetailsControllerProvider)
-                        .digifitExerciseEquipmentModel
-                        ?.qrCodeIdentifier ??
-                    '';
-
-                final res = await ref
-                    .read(digifitExerciseDetailsControllerProvider.notifier)
-                    .validateQrScanner(result, qrCodeIdentifier);
-
-                if (res) {
-                  await ref
-                      .read(digifitExerciseDetailsControllerProvider.notifier)
-                      .trackExerciseDetails(
-                          digifitExerciseDetailsState
-                                  .digifitExerciseEquipmentModel?.id ??
-                              0,
-                          widget.digifitExerciseDetailsParams.locationId,
-                          digifitExerciseDetailsState.currentSetNumber,
-                          digifitExerciseDetailsState
-                                  .digifitExerciseEquipmentModel
-                                  ?.userProgress
-                                  .repetitionsPerSet ??
-                              0,
-                          ExerciseStageConstant.start);
-                } else {
-                  showErrorDialog(context);
-                }
-              },
-              text: AppLocalizations.of(context).scan_exercise),
+          Visibility(
+            visible: ref
+                .watch(digifitExerciseDetailsControllerProvider)
+                .isScannerVisible,
+            child: _buildScanner(context),
+          ),
           20.verticalSpace,
           if (digifitExerciseDetailsState
               .digifitExerciseRelatedEquipmentsModel.isNotEmpty)
@@ -416,18 +390,16 @@ class _DigifitExerciseDetailScreenState
     );
   }
 
-  void showErrorDialog(BuildContext context) {
+  void showErrorDialog(BuildContext context, String title, String description) {
     showCupertinoDialog(
       context: context,
       builder: (ctx) => CupertinoAlertDialog(
         title: textBoldPoppins(
-            text: AppLocalizations.of(context).error,
-            textAlign: TextAlign.center,
-            fontSize: 16),
+            text: title, textAlign: TextAlign.center, fontSize: 16),
         content: Padding(
           padding: EdgeInsets.only(top: 8.h),
           child: textRegularPoppins(
-              text: AppLocalizations.of(context).validation_falied_message,
+              text: description,
               textAlign: TextAlign.center,
               textOverflow: TextOverflow.visible,
               fontSize: 12),
@@ -445,6 +417,81 @@ class _DigifitExerciseDetailScreenState
           ),
         ],
       ),
+    );
+  }
+
+  _buildScanner(BuildContext context) {
+    final digifitExerciseDetailsState =
+        ref.watch(digifitExerciseDetailsControllerProvider);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        30.verticalSpace,
+        CustomButton(
+            iconHeight: 15.h,
+            iconWidth: 15.w,
+            icon: imagePath['scan_icon'],
+            onPressed: () async {
+              final isComplete = ref
+                  .read(digifitExerciseDetailsControllerProvider)
+                  .digifitExerciseEquipmentModel
+                  ?.userProgress
+                  .isCompleted;
+
+              if (isComplete != null && !isComplete) {
+                final result = await ref
+                    .read(navigationProvider)
+                    .navigateUsingPath(
+                        path: digifitQRScannerScreenPath, context: context);
+
+                final qrCodeIdentifier = ref
+                        .watch(digifitExerciseDetailsControllerProvider)
+                        .digifitExerciseEquipmentModel
+                        ?.qrCodeIdentifier ??
+                    '';
+
+                final res = await ref
+                    .read(digifitExerciseDetailsControllerProvider.notifier)
+                    .validateQrScanner(result, qrCodeIdentifier);
+
+                if (res) {
+                  await ref
+                      .read(digifitExerciseDetailsControllerProvider.notifier)
+                      .trackExerciseDetails(
+                          digifitExerciseDetailsState
+                                  .digifitExerciseEquipmentModel?.id ??
+                              0,
+                          widget.digifitExerciseDetailsParams.locationId,
+                          digifitExerciseDetailsState.currentSetNumber,
+                          digifitExerciseDetailsState
+                                  .digifitExerciseEquipmentModel
+                                  ?.userProgress
+                                  .repetitionsPerSet ??
+                              0,
+                          ExerciseStageConstant.start, () {
+                    showSuccessToast(
+                        message: AppLocalizations.of(context).session_start,
+                        context: context);
+                    ref
+                        .read(digifitExerciseDetailsControllerProvider.notifier)
+                        .updateScannerButtonVisibility(false);
+
+                    ref
+                        .read(digifitExerciseDetailsControllerProvider.notifier)
+                        .updateIsReadyToSubmitSetVisibility(true);
+                  });
+                } else {
+                  showErrorDialog(context, AppLocalizations.of(context).error,
+                      AppLocalizations.of(context).validation_falied_message);
+                }
+              } else {
+                showErrorDialog(context, AppLocalizations.of(context).complete,
+                    AppLocalizations.of(context).goal_achieved);
+              }
+            },
+            text: AppLocalizations.of(context).scan_exercise)
+      ],
     );
   }
 }
