@@ -11,6 +11,8 @@ class DigifitExerciseDetailsState {
   final int totalSetNumber;
   final bool isScannerVisible;
   final int locationId;
+  final int remainingPauseSecond;
+
 
   DigifitExerciseDetailsState(
       {required this.isLoading,
@@ -18,7 +20,8 @@ class DigifitExerciseDetailsState {
       this.digifitExerciseRelatedEquipmentsModel = const [],
       this.digifitExerciseEquipmentModel,
       required this.isReadyToSubmitSet,
-      required this.currentSetNumber,
+        required this.remainingPauseSecond,
+        required this.currentSetNumber,
       required this.totalSetNumber,
       required this.isScannerVisible,
       required this.locationId});
@@ -32,6 +35,7 @@ class DigifitExerciseDetailsState {
         isReadyToSubmitSet: false,
         currentSetNumber: 0,
         totalSetNumber: 0,
+        remainingPauseSecond: 0,
         isScannerVisible: true,
         locationId: 0);
   }
@@ -46,7 +50,8 @@ class DigifitExerciseDetailsState {
       int? currentSetNumber,
       int? totalSetNumber,
       bool? isScannerVisible,
-      int? locationId}) {
+        int? remainingPauseSecond,
+        int? locationId}) {
     return DigifitExerciseDetailsState(
         isLoading: isLoading ?? this.isLoading,
         errorMessage: errorMessage ?? this.errorMessage,
@@ -59,6 +64,7 @@ class DigifitExerciseDetailsState {
         currentSetNumber: currentSetNumber ?? this.currentSetNumber,
         totalSetNumber: totalSetNumber ?? this.totalSetNumber,
         isScannerVisible: isScannerVisible ?? this.isScannerVisible,
+        remainingPauseSecond: remainingPauseSecond ?? this.remainingPauseSecond,
         locationId: locationId ?? this.locationId);
   }
 }

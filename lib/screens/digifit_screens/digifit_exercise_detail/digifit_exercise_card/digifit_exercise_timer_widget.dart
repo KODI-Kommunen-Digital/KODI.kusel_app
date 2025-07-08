@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/digifit_exercise_details_controller.dart';
 
+import '../../../../l10n/app_localizations.dart';
+
 
 class PauseCardWidget extends ConsumerStatefulWidget {
   const PauseCardWidget({super.key});
@@ -12,8 +14,19 @@ class PauseCardWidget extends ConsumerStatefulWidget {
 }
 
 class _PauseCardWidgetState extends ConsumerState<PauseCardWidget> {
+
+  @override
+  void initState() {
+    super.initState();
+
+    // ref.read(digifitExerciseDetailsControllerProvider.notifier).startPauseTimer(totalSeconds: 2);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final digifitExerciseDetailsState = ref.watch(digifitExerciseDetailsControllerProvider);
+
+
     return Material(
       elevation: 2,
       borderRadius: BorderRadius.only(
@@ -49,7 +62,7 @@ class _PauseCardWidgetState extends ConsumerState<PauseCardWidget> {
             Padding(
               padding: EdgeInsets.only(bottom: 16.h, left: 30.h),
               child: Text(
-                '00:00 Min',
+                '${formatTime(ref.watch(digifitExerciseDetailsControllerProvider).remainingPauseSecond)}${AppLocalizations.of(context).min}',
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
@@ -59,13 +72,18 @@ class _PauseCardWidgetState extends ConsumerState<PauseCardWidget> {
             ),
             Padding(
               padding: EdgeInsets.only(top: 18.h, bottom: 6.h, left: 40.h),
-              child: CircleAvatar(
-                radius: 24.r,
-                backgroundColor: const Color(0xFF233B8C),
-                child: Icon(
-                  Icons.skip_next_outlined,
-                  color: Colors.white,
-                  size: 20.sp,
+              child: InkWell(
+                onTap: () {
+                  ref.read(digifitExerciseDetailsState)
+                },
+                child: CircleAvatar(
+                  radius: 24.r,
+                  backgroundColor: const Color(0xFF233B8C),
+                  child: Icon(
+                    Icons.skip_next_outlined,
+                    color: Colors.white,
+                    size: 20.sp,
+                  ),
                 ),
               ),
             ),
@@ -73,5 +91,12 @@ class _PauseCardWidgetState extends ConsumerState<PauseCardWidget> {
         ),
       ),
     );
+  }
+
+  String formatTime(int totalSeconds) {
+    final duration = Duration(seconds: totalSeconds);
+    final minutes = (duration.inMinutes % 60).toString().padLeft(2, '0');
+    final seconds = (duration.inSeconds % 60).toString().padLeft(2, '0');
+    return "$minutes:$seconds";
   }
 }

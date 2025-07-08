@@ -1372,6 +1372,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Goal has already been achieved'**
   String get goal_achieved;
+
+  /// No description provided for @min.
+  ///
+  /// In en, this message translates to:
+  /// **'Min'**
+  String get min;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -140,6 +140,8 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
                               .read(digifitExerciseDetailsControllerProvider
                                   .notifier)
                               .updateIsReadyToSubmitSetVisibility(false);
+                          ref.read(digifitExerciseDetailsControllerProvider.notifier).timer(timerState: TimerState.start);
+
                         });
                       }
                     },
