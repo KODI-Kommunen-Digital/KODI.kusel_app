@@ -215,5 +215,7 @@
   "goal_achieved": "Ziel bereits erreicht",
   "min": "Min",
   "play": "Spielen",
-  "pause": "Pause"
+  "pause": "Pause",
+  "digifit_success_card_title": "Super durchgehalten!",
+  "digifit_success_card_desp": "Schließe die Übung nun ab, um deine Punkte abzuholen."
 }
