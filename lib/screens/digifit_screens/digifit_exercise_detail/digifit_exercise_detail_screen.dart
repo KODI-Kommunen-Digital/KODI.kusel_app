@@ -298,6 +298,9 @@ class _DigifitExerciseDetailScreenState
         .watch(digifitExerciseDetailsControllerProvider)
         .digifitExerciseEquipmentModel;
 
+    final sourceId = ref.read(digifitExerciseDetailsControllerProvider).digifitExerciseEquipmentModel?.sourceId ?? 0;
+
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -354,7 +357,7 @@ class _DigifitExerciseDetailScreenState
                   isFavouriteVisible:
                       !ref.watch(homeScreenProvider).isSignInButtonVisible,
                   isFavorite: equipment.isFavorite,
-                  sourceId: 1,
+                  sourceId: sourceId,
                   onFavorite: () async {
                     DigifitEquipmentFavParams params =
                         DigifitEquipmentFavParams(

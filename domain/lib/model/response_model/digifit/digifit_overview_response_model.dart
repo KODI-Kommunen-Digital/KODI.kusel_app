@@ -25,15 +25,18 @@ class DigifitOverviewResponseModel
 }
 
 class DigifitOverviewDataModel extends BaseModel<DigifitOverviewDataModel> {
+  final int? sourceId;
   DigifitOverviewUserStatsModel? userStats;
   DigifitOverviewParcoursModel? parcours;
   DigifitOverviewActionsModel? actions;
 
-  DigifitOverviewDataModel({this.userStats, this.parcours, this.actions});
+  DigifitOverviewDataModel(
+      {this.sourceId, this.userStats, this.parcours, this.actions});
 
   @override
   DigifitOverviewDataModel fromJson(Map<String, dynamic> json) {
     return DigifitOverviewDataModel(
+      sourceId: json['sourceId'],
       userStats: json['userStats'] != null
           ? DigifitOverviewUserStatsModel().fromJson(json['userStats'])
           : null,
@@ -48,6 +51,7 @@ class DigifitOverviewDataModel extends BaseModel<DigifitOverviewDataModel> {
 
   @override
   Map<String, dynamic> toJson() => {
+        'sourceId': sourceId,
         'userStats': userStats?.toJson(),
         'parcours': parcours?.toJson(),
         'actions': actions?.toJson(),

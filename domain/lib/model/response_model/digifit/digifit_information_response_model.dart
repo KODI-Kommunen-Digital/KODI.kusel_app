@@ -30,11 +30,13 @@ class DigifitInformationResponseModel
 }
 
 class DigifitInformationDataModel {
+  final int? sourceId;
   final DigifitInformationUserStatsModel? userStats;
    List<DigifitInformationParcoursModel>? parcours;
   final DigifitInformationActionsModel? actions;
 
   DigifitInformationDataModel({
+    this.sourceId,
     this.userStats,
     this.parcours,
     this.actions,
@@ -42,6 +44,7 @@ class DigifitInformationDataModel {
 
   DigifitInformationDataModel fromJson(Map<String, dynamic> json) {
     return DigifitInformationDataModel(
+      sourceId: json['sourceId'],
       userStats: json['userStats'] != null
           ? DigifitInformationUserStatsModel().fromJson(json['userStats'])
           : null,
@@ -57,6 +60,7 @@ class DigifitInformationDataModel {
 
   Map<String, dynamic> toJson() {
     return {
+      'sourceId': sourceId,
       'userStats': userStats?.toJson(),
       'parcours': parcours?.map((e) => e.toJson()).toList(),
       'actions': actions?.toJson(),
