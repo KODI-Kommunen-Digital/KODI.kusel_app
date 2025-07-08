@@ -11,8 +11,7 @@ class DigifitExerciseDetailsState {
   final bool isIconBackgroundVisible;
   final int currentSetNumber;
   final int totalSetNumber;
-  final DigifitExerciseDetailsTrackingDataModel?
-      digifitExerciseDetailsTrackingDataModel;
+
 
   DigifitExerciseDetailsState(
       {required this.isLoading,
@@ -22,8 +21,7 @@ class DigifitExerciseDetailsState {
       required this.isCheckIconVisible,
       required this.isIconBackgroundVisible,
       required this.currentSetNumber,
-      required this.totalSetNumber,
-      this.digifitExerciseDetailsTrackingDataModel});
+      required this.totalSetNumber});
 
   factory DigifitExerciseDetailsState.empty() {
     return DigifitExerciseDetailsState(
@@ -34,8 +32,7 @@ class DigifitExerciseDetailsState {
         isCheckIconVisible: false,
         isIconBackgroundVisible: false,
         currentSetNumber: 0,
-        totalSetNumber: 0,
-        digifitExerciseDetailsTrackingDataModel: null);
+        totalSetNumber: 0);
   }
 
   DigifitExerciseDetailsState copyWith(
@@ -47,9 +44,7 @@ class DigifitExerciseDetailsState {
       bool? isCheckIconVisible,
       bool? isIconBackgroundVisible,
       int? currentSetNumber,
-      int? totalSetNumber,
-      DigifitExerciseDetailsTrackingDataModel?
-          digifitExerciseDetailsTrackingDataModel}) {
+      int? totalSetNumber}) {
     return DigifitExerciseDetailsState(
         isLoading: isLoading ?? this.isLoading,
         errorMessage: errorMessage ?? this.errorMessage,
@@ -62,9 +57,6 @@ class DigifitExerciseDetailsState {
         isIconBackgroundVisible:
             isIconBackgroundVisible ?? this.isIconBackgroundVisible,
         currentSetNumber: currentSetNumber ?? this.currentSetNumber,
-        totalSetNumber: totalSetNumber ?? this.totalSetNumber,
-        digifitExerciseDetailsTrackingDataModel:
-            digifitExerciseDetailsTrackingDataModel ??
-                this.digifitExerciseDetailsTrackingDataModel);
+        totalSetNumber: totalSetNumber ?? this.totalSetNumber);
   }
 }
