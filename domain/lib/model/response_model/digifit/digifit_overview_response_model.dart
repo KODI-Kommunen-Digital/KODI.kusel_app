@@ -79,7 +79,7 @@ class DigifitOverviewUserStatsModel
 class DigifitOverviewParcoursModel
     extends BaseModel<DigifitOverviewParcoursModel> {
   String? name;
-  int? locationId; // <-- New field added
+  int? locationId;
   List<DigifitOverviewStationModel>? availableStation;
   List<DigifitOverviewStationModel>? completedStation;
 
