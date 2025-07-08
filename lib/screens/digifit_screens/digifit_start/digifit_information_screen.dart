@@ -170,6 +170,10 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
   _buildCourseDetailSection(
       {bool? isButtonVisible,
       required DigifitInformationParcoursModel parcoursModel}) {
+
+    final sourceId = ref.read(digifitInformationControllerProvider).digifitInformationDataModel?.sourceId ?? 0;
+
+
     return Column(
       children: [
         20.verticalSpace,
@@ -220,7 +224,7 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                   isFavouriteVisible:
                       !ref.read(homeScreenProvider).isSignInButtonVisible,
                   isFavorite: station.isFavorite ?? false,
-                  sourceId: 1,
+                  sourceId: sourceId,
                   onCardTap: () {
                     ref.read(navigationProvider).navigateUsingPath(
                         path: digifitExerciseDetailScreenPath,
