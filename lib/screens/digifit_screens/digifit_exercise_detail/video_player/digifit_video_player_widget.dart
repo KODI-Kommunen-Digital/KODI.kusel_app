@@ -7,17 +7,20 @@ import 'package:video_player/video_player.dart';
 
 import '../digifit_exercise_card/digifit_exercise_timer_widget.dart';
 import '../digifit_exercise_card/digifit_info_card_widget.dart';
+import '../digifit_exercise_card/digifit_success_card_widget.dart';
 
 class DigifitVideoPlayerWidget extends ConsumerStatefulWidget {
   final String videoUrl;
   final VoidCallback startTimer;
   final VoidCallback pauseTimer;
+  final int sourceId;
 
   const DigifitVideoPlayerWidget(
       {super.key,
       required this.videoUrl,
       required this.startTimer,
-      required this.pauseTimer});
+      required this.pauseTimer,
+      required this.sourceId});
 
   @override
   ConsumerState<DigifitVideoPlayerWidget> createState() =>
@@ -27,60 +30,85 @@ class DigifitVideoPlayerWidget extends ConsumerStatefulWidget {
 class _DigifitVideoPlayerWidgetState
     extends ConsumerState<DigifitVideoPlayerWidget> {
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+  void didUpdateWidget(covariant DigifitVideoPlayerWidget oldWidget) {
+    if ((oldWidget.videoUrl != widget.videoUrl && widget.videoUrl.isNotEmpty)) {
       ref
           .read(videoPlayerControllerProvider.notifier)
-          .initializeVideoController(widget.videoUrl);
-    });
+          .initializeVideoController(widget.videoUrl, widget.sourceId);
+    }
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      clipBehavior: Clip.none,
+    return Column(
       children: [
-        Column(
-          mainAxisSize: MainAxisSize.min,
+        Stack(
+          clipBehavior: Clip.none,
           children: [
-            _buildVideoPlayer(),
-            SizedBox(height: 18.h),
-            Visibility(
-                visible: (ref
-                            .watch(digifitExerciseDetailsControllerProvider)
-                            .isScannerVisible ==
-                        false &&
-                    !ref
-                        .watch(digifitExerciseDetailsControllerProvider)
-                        .isReadyToSubmitSet &&
-                    (ref
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _buildVideoPlayer(),
+                SizedBox(height: 18.h),
+                Visibility(
+                    visible: (ref
                                 .watch(digifitExerciseDetailsControllerProvider)
-                                .digifitExerciseEquipmentModel
-                                ?.userProgress
-                                .isCompleted !=
-                            null &&
+                                .isScannerVisible ==
+                            false &&
                         !ref
                             .watch(digifitExerciseDetailsControllerProvider)
-                            .digifitExerciseEquipmentModel!
-                            .userProgress
-                            .isCompleted)),
-                child: PauseCardWidget(
+                            .isReadyToSubmitSet &&
+                        (ref
+                                    .watch(digifitExerciseDetailsControllerProvider)
+                                    .digifitExerciseEquipmentModel
+                                    ?.userProgress
+                                    .isCompleted !=
+                                null &&
+                            !ref
+                                .watch(digifitExerciseDetailsControllerProvider)
+                                .digifitExerciseEquipmentModel!
+                                .userProgress
+                                .isCompleted)),
+                    child: PauseCardWidget(
+                      startTimer: widget.startTimer,
+                      pauseTimer: widget.pauseTimer,
+                    )),
+              ],
+            ),
+            Positioned(
+              top: 270.h,
+              left: 0.w,
+              right: 0.w,
+              child: Material(
+                elevation: 6,
+                borderRadius: BorderRadius.circular(20.r),
+                child: InfoCardWidget(
                   startTimer: widget.startTimer,
-                  pauseTimer: widget.pauseTimer,
-                ))
+                ),
+              ),
+            ),
           ],
         ),
-        Positioned(
-          top: 270.h,
-          left: 0.w,
-          right: 0.w,
-          child: Material(
-            elevation: 6,
-            borderRadius: BorderRadius.circular(20.r),
-            child: InfoCardWidget(
-              startTimer: widget.startTimer,
-            ),
+        Visibility(
+          visible: ref
+                      .watch(digifitExerciseDetailsControllerProvider)
+                      .isScannerVisible ==
+                  false &&
+              !ref
+                  .watch(digifitExerciseDetailsControllerProvider)
+                  .isReadyToSubmitSet &&
+              ref
+                      .watch(digifitExerciseDetailsControllerProvider)
+                      .digifitExerciseEquipmentModel
+                      ?.userProgress
+                      .isCompleted ==
+                  true,
+          child: Column(
+            children: [
+              SizedBox(height: 38.h),
+              const SuccessCardWidget(),
+            ],
           ),
         ),
       ],

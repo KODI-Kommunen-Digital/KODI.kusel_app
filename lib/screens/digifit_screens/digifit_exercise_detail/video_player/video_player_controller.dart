@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kusel/utility/video_player_utility.dart';
 import 'package:video_player/video_player.dart';
 
 final videoPlayerControllerProvider = StateNotifierProvider.autoDispose<
@@ -12,11 +14,13 @@ class VideoControllerNotifier
 
   VideoControllerNotifier() : super(const AsyncLoading());
 
-  Future<void> initializeVideoController(String videoUrl) async {
+  Future<void> initializeVideoController(String videoUrl, int sourceId) async {
     // Dispose previous controller if any
     _controller?.dispose();
 
-    final controller = VideoPlayerController.networkUrl(Uri.parse(videoUrl));
+
+    String url = videoPlayerUtility(videoUrl, sourceId);
+    final controller = VideoPlayerController.networkUrl(Uri.parse(url));
 
     try {
       await controller.initialize();

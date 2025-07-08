@@ -21,15 +21,10 @@ class _PauseCardWidgetState extends ConsumerState<PauseCardWidget> {
   @override
   void initState() {
     super.initState();
-
-    // ref.read(digifitExerciseDetailsControllerProvider.notifier).startPauseTimer(totalSeconds: 2);
   }
 
   @override
   Widget build(BuildContext context) {
-    final digifitExerciseDetailsState =
-        ref.watch(digifitExerciseDetailsControllerProvider);
-
     return Material(
       elevation: 2,
       borderRadius: BorderRadius.only(
