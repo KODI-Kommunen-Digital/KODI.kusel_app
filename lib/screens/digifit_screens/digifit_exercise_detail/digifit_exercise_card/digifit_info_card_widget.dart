@@ -8,7 +8,9 @@ import '../digifit_exercise_details_controller.dart';
 import '../enum/digifit_exercise_session_status_enum.dart';
 
 class InfoCardWidget extends ConsumerStatefulWidget {
-  const InfoCardWidget({super.key});
+  final VoidCallback startTimer;
+
+  const InfoCardWidget({super.key, required this.startTimer});
 
   @override
   ConsumerState<InfoCardWidget> createState() => _InfoCardWidgetState();
@@ -140,8 +142,8 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
                               .read(digifitExerciseDetailsControllerProvider
                                   .notifier)
                               .updateIsReadyToSubmitSetVisibility(false);
-                          ref.read(digifitExerciseDetailsControllerProvider.notifier).timer(timerState: TimerState.start);
 
+                          widget.startTimer();
                         });
                       }
                     },

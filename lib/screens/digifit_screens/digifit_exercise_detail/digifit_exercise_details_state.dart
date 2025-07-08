@@ -1,4 +1,5 @@
 import 'package:domain/model/response_model/digifit/digifit_exercise_details_response_model.dart';
+import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/enum/digifit_exercise_timer_state.dart';
 
 class DigifitExerciseDetailsState {
   bool isLoading;
@@ -12,7 +13,8 @@ class DigifitExerciseDetailsState {
   final bool isScannerVisible;
   final int locationId;
   final int remainingPauseSecond;
-
+  final TimerState timerState;
+  final int time;
 
   DigifitExerciseDetailsState(
       {required this.isLoading,
@@ -20,11 +22,13 @@ class DigifitExerciseDetailsState {
       this.digifitExerciseRelatedEquipmentsModel = const [],
       this.digifitExerciseEquipmentModel,
       required this.isReadyToSubmitSet,
-        required this.remainingPauseSecond,
-        required this.currentSetNumber,
+      required this.remainingPauseSecond,
+      required this.currentSetNumber,
       required this.totalSetNumber,
       required this.isScannerVisible,
-      required this.locationId});
+      required this.locationId,
+      required this.timerState,
+      required this.time});
 
   factory DigifitExerciseDetailsState.empty() {
     return DigifitExerciseDetailsState(
@@ -37,7 +41,9 @@ class DigifitExerciseDetailsState {
         totalSetNumber: 0,
         remainingPauseSecond: 0,
         isScannerVisible: true,
-        locationId: 0);
+        locationId: 0,
+        timerState: TimerState.start,
+        time: 60);
   }
 
   DigifitExerciseDetailsState copyWith(
@@ -50,8 +56,10 @@ class DigifitExerciseDetailsState {
       int? currentSetNumber,
       int? totalSetNumber,
       bool? isScannerVisible,
-        int? remainingPauseSecond,
-        int? locationId}) {
+      int? remainingPauseSecond,
+      int? locationId,
+      TimerState? timerState,
+      int? time}) {
     return DigifitExerciseDetailsState(
         isLoading: isLoading ?? this.isLoading,
         errorMessage: errorMessage ?? this.errorMessage,
@@ -65,6 +73,8 @@ class DigifitExerciseDetailsState {
         totalSetNumber: totalSetNumber ?? this.totalSetNumber,
         isScannerVisible: isScannerVisible ?? this.isScannerVisible,
         remainingPauseSecond: remainingPauseSecond ?? this.remainingPauseSecond,
-        locationId: locationId ?? this.locationId);
+        locationId: locationId ?? this.locationId,
+        timerState: timerState ?? this.timerState,
+        time: time ?? this.time);
   }
 }
