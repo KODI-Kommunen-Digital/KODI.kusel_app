@@ -1,6 +1,9 @@
 import 'package:core/token_status.dart';
 import 'package:domain/model/request_model/digifit/digifit_exercise_details_request_model.dart';
+import 'package:domain/model/request_model/digifit/digifit_exercise_details_tracking_request_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_exercise_details_response_model.dart';
+import 'package:domain/model/response_model/digifit/digifit_exercise_details_tracking_response_model.dart';
+import 'package:domain/usecase/digifit/digifit_exercise_details_tracking_usecase.dart';
 import 'package:domain/usecase/digifit/digifit_exercise_details_usecase.dart';
 import 'package:domain/usecase/digifit/digifit_qr_scanner_usecase.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,12 +13,15 @@ import 'package:kusel/providers/digifit_equipment_fav_provider.dart';
 import '../../../locale/localization_manager.dart';
 import '../../../providers/refresh_token_provider.dart';
 import 'digifit_exercise_details_state.dart';
+import 'enum/digifit_exercise_session_status_enum.dart';
 
 final digifitExerciseDetailsControllerProvider = StateNotifierProvider
     .autoDispose<DigifitExerciseDetailsController, DigifitExerciseDetailsState>(
         (ref) => DigifitExerciseDetailsController(
               digifitExerciseDetailsUseCase:
                   ref.read(digifitExerciseDetailsUseCaseProvider),
+              digifitExerciseDetailsTrackingUseCase:
+                  ref.read(digifitExerciseDetailsTrackingUseCaseProvider),
               tokenStatus: ref.read(tokenStatusProvider),
               refreshTokenProvider: ref.read(refreshTokenProvider),
               localeManagerController: ref.read(localeManagerProvider.notifier),
@@ -27,6 +33,8 @@ final digifitExerciseDetailsControllerProvider = StateNotifierProvider
 class DigifitExerciseDetailsController
     extends StateNotifier<DigifitExerciseDetailsState> {
   final DigifitExerciseDetailsUseCase digifitExerciseDetailsUseCase;
+  final DigifitExerciseDetailsTrackingUseCase
+      digifitExerciseDetailsTrackingUseCase;
   final TokenStatus tokenStatus;
   final RefreshTokenProvider refreshTokenProvider;
   final LocaleManagerController localeManagerController;
@@ -35,6 +43,7 @@ class DigifitExerciseDetailsController
 
   DigifitExerciseDetailsController(
       {required this.digifitExerciseDetailsUseCase,
+      required this.digifitExerciseDetailsTrackingUseCase,
       required this.tokenStatus,
       required this.refreshTokenProvider,
       required this.localeManagerController,
@@ -91,7 +100,9 @@ class DigifitExerciseDetailsController
         state = state.copyWith(
             isLoading: false,
             digifitExerciseRelatedEquipmentsModel: response.relatedStations,
-            digifitExerciseEquipmentModel: response.equipment);
+            digifitExerciseEquipmentModel: response.equipment,
+            totalSetNumber: response.equipment.userProgress.totalSets,
+            currentSetNumber: response.equipment.userProgress.currentSet);
       });
     } catch (error) {
       debugPrint(
@@ -147,24 +158,95 @@ class DigifitExerciseDetailsController
   }
 
   Future<bool> validateQrScanner(String shortUrl, String equipmentSlug) async {
-   try{
-     state = state.copyWith(isLoading: true);
-     final result = await digifitQrScannerUseCase.call(shortUrl);
+    try {
+      state = state.copyWith(isLoading: true);
+      final result = await digifitQrScannerUseCase.call(shortUrl);
 
-    return result.fold((error) {
-       debugPrint("[Validate Url Expansion] URL expansion failed: $error");
-       state = state.copyWith(isLoading: false);
-       return false;
-     }, (expandedUrl) {
-       final slugUrl = digifitQrScannerUseCase.getSlugFromUrl(expandedUrl);
-       state = state.copyWith(isLoading: false);
-       return slugUrl == equipmentSlug;
-
-     });
-   }catch(error)
-    {
+      return result.fold((error) {
+        debugPrint("[Validate Url Expansion] URL expansion failed: $error");
+        state = state.copyWith(isLoading: false);
+        return false;
+      }, (expandedUrl) {
+        final slugUrl = digifitQrScannerUseCase.getSlugFromUrl(expandedUrl);
+        state = state.copyWith(isLoading: false);
+        return slugUrl == equipmentSlug;
+      });
+    } catch (error) {
       state = state.copyWith(isLoading: false);
       return false;
     }
+  }
+
+  Future<void> trackExerciseDetails(int equipmentId, int locationId, int sets,
+      int reps, ExerciseStageConstant stageConstant) async {
+    try {
+      final isTokenExpired = tokenStatus.isAccessTokenExpired();
+
+      if (isTokenExpired) {
+        await refreshTokenProvider.getNewToken(
+          onError: () {},
+          onSuccess: () async {
+            await _trackExerciseDetails(equipmentId, locationId, sets, reps);
+          },
+        );
+      } else {
+        await _trackExerciseDetails(equipmentId, locationId, sets, reps);
+      }
+    } catch (e) {
+      debugPrint('[CardExerciseDetailsController] Track Exception: $e');
+    }
+  }
+
+  _trackExerciseDetails(
+      int equipmentId, int locationId, int sets, int reps) async {
+    try {
+      state = state.copyWith(isLoading: true);
+
+      DigifitExerciseDetailsTrackingRequestModel
+          digifitExerciseDetailsTrackingRequestModel =
+          DigifitExerciseDetailsTrackingRequestModel(
+        equipmentId: equipmentId,
+        locationId: locationId,
+        setNumber: sets,
+        reps: reps,
+      );
+
+      DigifitExerciseDetailsTrackingResponseModel
+          digifitExerciseDetailsTrackingResponseModel =
+          DigifitExerciseDetailsTrackingResponseModel();
+
+      final result = await digifitExerciseDetailsTrackingUseCase.call(
+          digifitExerciseDetailsTrackingRequestModel,
+          digifitExerciseDetailsTrackingResponseModel);
+
+      result.fold((l) {
+        state = state.copyWith(isLoading: false, errorMessage: l.toString());
+        debugPrint(
+            '[CardExerciseDetailsController] Fetch fold Error: ${l.toString()}');
+      }, (r) {
+        var response = (r as DigifitExerciseDetailsTrackingResponseModel).data;
+
+        debugPrint('reponse of the digifit is ${response}');
+
+        state = state.copyWith(
+            isLoading: false,
+            digifitExerciseDetailsTrackingDataModel: response,
+            currentSetNumber: response.setNumber + 1);
+
+        debugPrint(
+            'reponse of the digifit is 2 ${digifitExerciseDetailsTrackingResponseModel.data.isCompleted} and ${digifitExerciseDetailsTrackingResponseModel.data.message}');
+      });
+    } catch (error) {
+      debugPrint(
+          '[CardExerciseDetailsController] Fetch fold Exception: $error');
+    }
+  }
+
+  void updateCheckIconVisibility(bool isVisible) {
+    state = state.copyWith(isCheckIconVisible: isVisible);
+  }
+
+  void updateIconBackgroundVisibility(bool iconBackgroundVisibility) {
+    state = state.copyWith(isIconBackgroundVisible: iconBackgroundVisibility);
   }
 }

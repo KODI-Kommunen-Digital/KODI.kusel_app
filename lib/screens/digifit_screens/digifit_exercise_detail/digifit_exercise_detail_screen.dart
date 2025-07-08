@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
-import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/l10n/app_localizations.dart';
@@ -22,7 +21,9 @@ import '../../../common_widgets/custom_button_widget.dart';
 import '../../../common_widgets/digifit/digifit_text_image_card.dart';
 import '../../../common_widgets/text_styles.dart';
 import '../../../navigation/navigation.dart';
+import 'digifit_exercise_card/digifit_session_completed_card.dart';
 import 'digifit_exercise_details_controller.dart';
+import 'enum/digifit_exercise_session_status_enum.dart';
 
 class DigifitExerciseDetailScreen extends ConsumerStatefulWidget {
   final DigifitExerciseDetailsParams digifitExerciseDetailsParams;
@@ -137,40 +138,38 @@ class _DigifitExerciseDetailScreenState
                   }
                 },
               )),
-          if(ref.watch(digifitExerciseDetailsControllerProvider).isLoading)
-          Positioned(
-            top: 0.h,
-              left: 0.w,
-              right: 0.w,
-              bottom: 0.h,
-              child:GestureDetector(
-            onTap: () {
-              ref.read(navigationProvider).removeDialog(context: context);
-            },
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                Container(
-                  color: Colors.black.withValues(alpha: 0.5),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.r),
+          if (ref.watch(digifitExerciseDetailsControllerProvider).isLoading)
+            Positioned(
+                top: 0.h,
+                left: 0.w,
+                right: 0.w,
+                bottom: 0.h,
+                child: GestureDetector(
+                  onTap: () {
+                    ref.read(navigationProvider).removeDialog(context: context);
+                  },
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Container(
+                        color: Colors.black.withValues(alpha: 0.5),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
+                        height: 100.h,
+                        width: 100.w,
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                    ],
                   ),
-                  height: 100.h,
-                  width: 100.w,
-                  child: const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
-              ],
-            ),
-          ) )
+                ))
         ],
       )),
-
-
     );
   }
 
@@ -285,11 +284,27 @@ class _DigifitExerciseDetailScreenState
                         ?.qrCodeIdentifier ??
                     '';
 
-                final res = await ref
-                    .read(digifitExerciseDetailsControllerProvider.notifier)
-                    .validateQrScanner(result, qrCodeIdentifier);
+                // final res = await ref
+                //     .read(digifitExerciseDetailsControllerProvider.notifier)
+                //     .validateQrScanner(result, qrCodeIdentifier);
+
+                final res = true;
 
                 if (res) {
+                  await ref
+                      .read(digifitExerciseDetailsControllerProvider.notifier)
+                      .trackExerciseDetails(
+                          digifitExerciseDetailsState
+                                  .digifitExerciseEquipmentModel?.id ??
+                              0,
+                          widget.digifitExerciseDetailsParams.locationId,
+                          digifitExerciseDetailsState.currentSetNumber,
+                          digifitExerciseDetailsState
+                                  .digifitExerciseEquipmentModel
+                                  ?.userProgress
+                                  .repetitionsPerSet ??
+                              0,
+                          ExerciseStageConstant.start);
                 } else {
                   showErrorDialog(context);
                 }
@@ -411,18 +426,16 @@ class _DigifitExerciseDetailScreenState
       context: context,
       builder: (ctx) => CupertinoAlertDialog(
         title: textBoldPoppins(
-          text:AppLocalizations.of(context).error,
-          textAlign: TextAlign.center,
-          fontSize: 16
-        ),
+            text: AppLocalizations.of(context).error,
+            textAlign: TextAlign.center,
+            fontSize: 16),
         content: Padding(
           padding: EdgeInsets.only(top: 8.h),
           child: textRegularPoppins(
-            text: AppLocalizations.of(context).validation_falied_message,
-            textAlign: TextAlign.center,
-            textOverflow: TextOverflow.visible,
-            fontSize: 12
-          ),
+              text: AppLocalizations.of(context).validation_falied_message,
+              textAlign: TextAlign.center,
+              textOverflow: TextOverflow.visible,
+              fontSize: 12),
         ),
         actions: [
           CupertinoDialogAction(
@@ -430,9 +443,10 @@ class _DigifitExerciseDetailScreenState
               ref.read(navigationProvider).removeDialog(context: context);
             },
             isDefaultAction: true,
-            child: textBoldPoppins(text: AppLocalizations.of(context).ok,
-            textOverflow: TextOverflow.visible,
-            fontSize: 14),
+            child: textBoldPoppins(
+                text: AppLocalizations.of(context).ok,
+                textOverflow: TextOverflow.visible,
+                fontSize: 14),
           ),
         ],
       ),
