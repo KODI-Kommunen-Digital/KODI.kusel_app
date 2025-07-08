@@ -207,21 +207,24 @@ class DigifitExerciseRelatedStationsModel
   String name;
   String muscleGroups;
   bool isFavorite;
+  String machineImageUrl;
 
   DigifitExerciseRelatedStationsModel({
     this.id = 0,
     this.name = '',
     this.muscleGroups = '',
     this.isFavorite = false,
+    this.machineImageUrl = ''
   });
 
   @override
   DigifitExerciseRelatedStationsModel fromJson(Map<String, dynamic> json) {
     return DigifitExerciseRelatedStationsModel(
-      id: json['id'] ?? 0,
-      name: json['name'] ?? '',
-      muscleGroups: json['muscleGroups'] ?? '',
-      isFavorite: json['isFavorite'] ?? false,
+        id: json['id'] ?? 0,
+        name: json['name'] ?? '',
+        muscleGroups: json['muscleGroups'] ?? '',
+        isFavorite: json['isFavorite'] ?? false,
+        machineImageUrl: json['machineImageUrl'] ?? ''
     );
   }
 
@@ -231,5 +234,6 @@ class DigifitExerciseRelatedStationsModel
         'name': name,
         'muscleGroups': muscleGroups,
         'isFavorite': isFavorite,
+        'machineImageUrl': machineImageUrl
       };
 }

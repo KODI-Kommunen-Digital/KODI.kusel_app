@@ -212,5 +212,6 @@
   "error": "Fehler",
   "validation_falied_message": "Ungültiger Scan. Sitzung kann nicht gestartet werden.",
   "session_start": "Die Sitzung wurde gestartet",
-  "goal_achieved": "Ziel bereits erreicht"
+  "goal_achieved": "Ziel bereits erreicht",
+  "min": "Min"
 }

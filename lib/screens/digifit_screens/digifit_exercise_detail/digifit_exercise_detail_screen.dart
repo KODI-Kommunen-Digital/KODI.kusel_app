@@ -231,7 +231,9 @@ class _DigifitExerciseDetailScreenState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           DigifitVideoPlayerWidget(
-            videoUrl: 'assets/video/Kusel_1.mp4',
+            videoUrl: digifitExerciseDetailsState
+                    .digifitExerciseEquipmentModel?.machineVideoUrl ??
+                '',
           ),
           ((ref
                           .watch(digifitExerciseDetailsControllerProvider)

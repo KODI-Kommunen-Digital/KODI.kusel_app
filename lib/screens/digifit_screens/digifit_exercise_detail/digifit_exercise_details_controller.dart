@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:core/token_status.dart';
 import 'package:domain/model/request_model/digifit/digifit_exercise_details_request_model.dart';
 import 'package:domain/model/request_model/digifit/digifit_exercise_details_tracking_request_model.dart';
@@ -257,6 +259,23 @@ class DigifitExerciseDetailsController
   void updateIsReadyToSubmitSetVisibility(bool value) {
     state = state.copyWith(isReadyToSubmitSet: value);
   }
+
+  void timer( {int totalSeconds = 120, required TimerState timerState}) {
+    int secondsLeft = totalSeconds;
+
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      if (secondsLeft == 0) {
+        timer.cancel();
+        updateIsReadyToSubmitSetVisibility(true);
+      } else {
+        secondsLeft--;
+        state = state.copyWith(remainingPauseSecond: secondsLeft);
+      }
+    });
+
+    state = state.copyWith(remainingPauseSecond: totalSeconds);
+  }
+
 
   void updateScannerButtonVisibility(bool value) {
     state = state.copyWith(isScannerVisible: value);
