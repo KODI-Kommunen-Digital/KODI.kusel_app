@@ -646,4 +646,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get goal_achieved => 'Goal has already been achieved';
+
+  @override
+  String get min => 'Min';
 }

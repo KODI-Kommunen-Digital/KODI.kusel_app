@@ -16,7 +16,8 @@ class VideoControllerNotifier
     // Dispose previous controller if any
     _controller?.dispose();
 
-    final controller = VideoPlayerController.asset(videoUrl);
+    final controller = VideoPlayerController.networkUrl(Uri.parse(videoUrl));
+
     try {
       await controller.initialize();
       controller.setVolume(1.0);

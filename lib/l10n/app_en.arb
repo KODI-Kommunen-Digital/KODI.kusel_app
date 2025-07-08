@@ -211,6 +211,6 @@
   "error": "Error",
   "validation_falied_message": "Invalid scan. Unable to start session.",
   "session_start": "Session has been started",
-  "goal_achieved": "Goal has already been achieved"
-
+  "goal_achieved": "Goal has already been achieved",
+  "min": "Min"
 }
