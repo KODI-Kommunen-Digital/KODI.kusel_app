@@ -36,7 +36,17 @@ class DigifitExerciseDetailsServices {
     final params = requestModel.toJson();
 
     String path =
-        "$digifitExerciseDetailsEndPoint$locationId/$equipmentId?translate=${params["translate"]}";
+        "$digifitExerciseDetailsEndPoint?translate=${params["translate"]}";
+
+    if(locationId!=null && locationId!=0)
+      {
+        path = "$path&locationId=$locationId";
+      }
+
+    if(equipmentId!=null && equipmentId!=0)
+      {
+        path = "$path&equipmentId=$equipmentId";
+      }
 
     if (equipmentSlug != null) {
       path = "$path&equipmentSlug=$equipmentSlug";

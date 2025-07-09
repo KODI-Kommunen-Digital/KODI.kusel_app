@@ -2,8 +2,8 @@ import 'package:core/base_model.dart';
 
 class DigifitExerciseDetailsRequestModel
     extends BaseModel<DigifitExerciseDetailsRequestModel> {
-  final int locationId;
-  final int equipmentId;
+  final int? locationId;
+  final int? equipmentId;
   final String translate;
   String? equipmentSlug;
 
@@ -17,7 +17,7 @@ class DigifitExerciseDetailsRequestModel
   @override
   DigifitExerciseDetailsRequestModel fromJson(Map<String, dynamic> json) {
     return DigifitExerciseDetailsRequestModel(
-      locationId: json['locationId'] ?? '',
+      locationId: json['locationId'] ?? 0,
       equipmentId: json['id'] ?? 0,
       translate: json['translate'] ?? '',
       equipmentSlug:json['equipmentSlug'] ?? ''
