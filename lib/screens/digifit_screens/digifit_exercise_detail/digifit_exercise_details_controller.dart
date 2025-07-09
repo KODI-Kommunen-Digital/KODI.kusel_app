@@ -12,6 +12,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/providers/digifit_equipment_fav_provider.dart';
 
+import '../../../common_widgets/get_slug.dart';
 import '../../../locale/localization_manager.dart';
 import '../../../providers/refresh_token_provider.dart';
 import 'digifit_exercise_details_state.dart';
@@ -55,7 +56,7 @@ class DigifitExerciseDetailsController
       : super(DigifitExerciseDetailsState.empty());
 
   Future<void> fetchDigifitExerciseDetails(
-      int equipmentId, int locationId) async {
+      int? equipmentId, int? locationId,String? slug) async {
     try {
       final isTokenExpired = tokenStatus.isAccessTokenExpired();
 
@@ -63,18 +64,19 @@ class DigifitExerciseDetailsController
         await refreshTokenProvider.getNewToken(
             onError: () {},
             onSuccess: () {
-              _fetchDigifitExerciseDetails(equipmentId, locationId);
+              _fetchDigifitExerciseDetails(equipmentId, locationId,slug);
             });
       } else {
         // If the token is not expired, we can proceed with the request
-        _fetchDigifitExerciseDetails(equipmentId, locationId);
+        _fetchDigifitExerciseDetails(equipmentId, locationId,slug);
       }
     } catch (e) {
       debugPrint('[DigifitExerciseDetailsController] Fetch Exception: $e');
     }
   }
 
-  _fetchDigifitExerciseDetails(int equipmentId, int locationId) async {
+  _fetchDigifitExerciseDetails(int? equipmentId, int? locationId,
+      String? slug) async {
     try {
       state = state.copyWith(isLoading: true);
 
@@ -84,6 +86,7 @@ class DigifitExerciseDetailsController
           DigifitExerciseDetailsRequestModel(
               equipmentId: equipmentId,
               locationId: locationId,
+              equipmentSlug: slug,
               translate:
                   "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
@@ -171,7 +174,7 @@ class DigifitExerciseDetailsController
         state = state.copyWith(isLoading: false);
         return false;
       }, (expandedUrl) {
-        final slugUrl = digifitQrScannerUseCase.getSlugFromUrl(expandedUrl);
+        final slugUrl = getSlugFromUrl(expandedUrl);
         debugPrint('extracted slug : $slugUrl');
         state = state.copyWith(isLoading: false);
         return slugUrl == equipmentSlug;

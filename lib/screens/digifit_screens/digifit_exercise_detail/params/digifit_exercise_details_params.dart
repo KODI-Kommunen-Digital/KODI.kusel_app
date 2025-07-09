@@ -4,7 +4,9 @@ class DigifitExerciseDetailsParams {
   final DigifitInformationStationModel station;
   void Function()? onFavCallBack;
   int locationId;
+  String? slug;
 
   DigifitExerciseDetailsParams({required this.station, this.onFavCallBack,
-  required this.locationId});
+  required this.locationId,
+  this.slug});
 }
