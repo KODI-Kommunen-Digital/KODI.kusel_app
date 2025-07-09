@@ -663,8 +663,26 @@ class AppLocalizationsDe extends AppLocalizations {
   String get digifit_success_card_desp => 'Schließe die Übung nun ab, um deine Punkte abzuholen.';
 
   @override
+  String get digifit_abort => 'Abbrechen';
+
+  @override
   String get digifit_abort_exercise_title => 'Übung abbrechen?';
 
   @override
   String get digifit_abort_exercise_desp => 'Die aktuelle Übung ist noch nicht abgeschlossen. Möchtest du sie wirklich abbrechen und zur vorherigen Seite zurückkehren?';
+
+  @override
+  String get digifit_latest_trophies => 'Neuste Trophäen';
+
+  @override
+  String get digifit_all_trophies => 'Alle Trophäen';
+
+  @override
+  String get digifit_trophies_received => 'Erhaltene Trophäen';
+
+  @override
+  String get digifit_trophies_load_more => 'Mehr laden';
+
+  @override
+  String get digifit_trophies_open => 'offen';
 }

@@ -218,6 +218,12 @@
   "pause": "Pause",
   "digifit_success_card_title": "Super durchgehalten!",
   "digifit_success_card_desp": "Schließe die Übung nun ab, um deine Punkte abzuholen.",
-  "digifit_abort_exercise_title" : "Übung abbrechen?",
-  "digifit_abort_exercise_desp" : "Die aktuelle Übung ist noch nicht abgeschlossen. Möchtest du sie wirklich abbrechen und zur vorherigen Seite zurückkehren?"
+  "digifit_abort": "Abbrechen",
+  "digifit_abort_exercise_title": "Übung abbrechen?",
+  "digifit_abort_exercise_desp": "Die aktuelle Übung ist noch nicht abgeschlossen. Möchtest du sie wirklich abbrechen und zur vorherigen Seite zurückkehren?",
+  "digifit_latest_trophies": "Neuste Trophäen",
+  "digifit_all_trophies": "Alle Trophäen",
+  "digifit_trophies_received": "Erhaltene Trophäen",
+  "digifit_trophies_load_more": "Mehr laden",
+  "digifit_trophies_open": "offen"
 }
