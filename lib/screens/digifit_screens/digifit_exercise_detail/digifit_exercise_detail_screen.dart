@@ -50,7 +50,8 @@ class _DigifitExerciseDetailScreenState
           .read(digifitExerciseDetailsControllerProvider.notifier)
           .fetchDigifitExerciseDetails(
               widget.digifitExerciseDetailsParams.station.id ?? 0,
-              widget.digifitExerciseDetailsParams.locationId);
+              widget.digifitExerciseDetailsParams.locationId,
+              widget.digifitExerciseDetailsParams.slug);
     });
     super.initState();
   }
@@ -239,8 +240,9 @@ class _DigifitExerciseDetailScreenState
             videoUrl: digifitExerciseDetailsState
                     .digifitExerciseEquipmentModel?.machineVideoUrl ??
                 '',
-            sourceId: digifitExerciseDetailsState.digifitExerciseEquipmentModel?.sourceId ?? 0,
-
+            sourceId: digifitExerciseDetailsState
+                    .digifitExerciseEquipmentModel?.sourceId ??
+                0,
             startTimer: () {
               startTimer();
             },
@@ -384,7 +386,8 @@ class _DigifitExerciseDetailScreenState
                                               .station.id ??
                                           0,
                                       widget.digifitExerciseDetailsParams
-                                          .locationId);
+                                          .locationId,
+                                      widget.digifitExerciseDetailsParams.slug);
                             }));
                   },
                   imageUrl: '',

@@ -31,7 +31,7 @@ class DigifitExerciseDetailsServices {
 
     final locationId = requestModel.toJson()['locationId'];
     final equipmentId = requestModel.toJson()['id'];
-    final equipmentSlug = requestModel.toJson()['equipmentSlug'];
+    String? equipmentSlug = requestModel.toJson()['equipmentSlug'];
 
     final params = requestModel.toJson();
 
@@ -48,7 +48,7 @@ class DigifitExerciseDetailsServices {
         path = "$path&equipmentId=$equipmentId";
       }
 
-    if (equipmentSlug != null) {
+    if (equipmentSlug != null && equipmentSlug.isNotEmpty) {
       path = "$path&equipmentSlug=$equipmentSlug";
     }
 
