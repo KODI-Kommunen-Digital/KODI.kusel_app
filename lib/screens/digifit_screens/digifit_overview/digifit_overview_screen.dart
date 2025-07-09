@@ -7,6 +7,7 @@ import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
 import 'package:kusel/common_widgets/digifit/digifit_text_image_card.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
+import 'package:kusel/common_widgets/toast_message.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/providers/digifit_equipment_fav_provider.dart';
 import 'package:kusel/screens/digifit_screens/digifit_overview/params/digifit_overview_params.dart';
@@ -143,9 +144,35 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
                   .read(navigationProvider)
                   .navigateUsingPath(
                       path: digifitQRScannerScreenPath, context: context);
-              // Todo - replace with actual QR code login
+
               if (barcode != null) {
-                print('Scanned barcode: $barcode');
+                ref
+                    .read(digifitOverviewScreenControllerProvider.notifier)
+                    .getSlug(barcode, (String slugUrl) {
+                  ref.read(navigationProvider).navigateUsingPath(
+                      path: digifitExerciseDetailScreenPath,
+                      context: context,
+                      params: DigifitExerciseDetailsParams(
+                          station: DigifitInformationStationModel(id: null),
+                          locationId: widget.digifitOverviewScreenParams
+                                  .parcoursModel.locationId ??
+                              0,
+                          slug: slugUrl,
+                          onFavCallBack: () {
+                            ref
+                                .read(digifitOverviewScreenControllerProvider
+                                    .notifier)
+                                .fetchDigifitOverview(widget
+                                    .digifitOverviewScreenParams
+                                    .parcoursModel
+                                    .locationId!);
+                          }));
+                }, () {
+                  showErrorToast(
+                      message:
+                          AppLocalizations.of(context).something_went_wrong,
+                      context: context);
+                });
               }
             },
           ),
@@ -169,7 +196,11 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
     required String title,
     required List<DigifitOverviewStationModel> stationList,
   }) {
-    final sourceId = ref.read(digifitOverviewScreenControllerProvider).digifitOverviewDataModel?.sourceId ?? 0;
+    final sourceId = ref
+            .read(digifitOverviewScreenControllerProvider)
+            .digifitOverviewDataModel
+            ?.sourceId ??
+        0;
 
     return Column(
       children: [
