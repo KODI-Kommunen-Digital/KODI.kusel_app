@@ -290,6 +290,7 @@ class _DigifitExerciseDetailScreenState
                   '',
               fontSize: 15,
               textOverflow: TextOverflow.visible,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
               textAlign: TextAlign.start),
           8.verticalSpace,
           textRegularMontserrat(
@@ -297,10 +298,12 @@ class _DigifitExerciseDetailScreenState
                       .digifitExerciseEquipmentModel?.description ??
                   '',
               textOverflow: TextOverflow.visible,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
               textAlign: TextAlign.start),
           12.verticalSpace,
           textBoldPoppins(
               text: AppLocalizations.of(context).digifit_recommended_exercise,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
               fontSize: 13),
           8.verticalSpace,
           textRegularMontserrat(
@@ -308,11 +311,13 @@ class _DigifitExerciseDetailScreenState
                       .digifitExerciseEquipmentModel?.recommendation.sets ??
                   '',
               textOverflow: TextOverflow.visible,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
               textAlign: TextAlign.start),
           textRegularMontserrat(
               text: digifitExerciseDetailsState.digifitExerciseEquipmentModel
                       ?.recommendation.repetitions ??
                   '',
+              color: Theme.of(context).textTheme.bodyLarge?.color,
               textOverflow: TextOverflow.visible,
               textAlign: TextAlign.start),
           Visibility(
