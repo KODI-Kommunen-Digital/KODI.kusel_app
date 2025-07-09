@@ -661,4 +661,10 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get digifit_success_card_desp => 'Schließe die Übung nun ab, um deine Punkte abzuholen.';
+
+  @override
+  String get digifit_abort_exercise_title => 'Übung abbrechen?';
+
+  @override
+  String get digifit_abort_exercise_desp => 'Die aktuelle Übung ist noch nicht abgeschlossen. Möchtest du sie wirklich abbrechen und zur vorherigen Seite zurückkehren?';
 }
