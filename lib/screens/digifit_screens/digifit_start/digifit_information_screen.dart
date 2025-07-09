@@ -195,6 +195,7 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
         10.verticalSpace,
         DigifitMapCard(
           imagePath: parcoursModel.mapImageUrl ?? '',
+          sourceId: sourceId,
           onImageTap: () {
             ref.read(navigationProvider).navigateUsingPath(
                 path: digifitOverViewScreenPath,

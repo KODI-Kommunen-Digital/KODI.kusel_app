@@ -6,11 +6,13 @@ import 'package:kusel/common_widgets/image_utility.dart';
 class DigifitMapCard extends ConsumerStatefulWidget {
   String imagePath;
   Function() onImageTap;
+  int sourceId;
 
   DigifitMapCard(
       {super.key,
-        required this.imagePath,
-        required this.onImageTap});
+      required this.imagePath,
+      required this.onImageTap,
+      required this.sourceId});
 
   @override
   ConsumerState<DigifitMapCard> createState() =>
@@ -36,6 +38,7 @@ class _DigifitStatusWidgetState extends ConsumerState<DigifitMapCard> {
               borderRadius: BorderRadius.circular(12.r),
               child: ImageUtil.loadNetworkImage(
                 imageUrl: widget.imagePath,
+                sourceId: widget.sourceId,
                 context: context,
                 fit: BoxFit.contain,
               ),
