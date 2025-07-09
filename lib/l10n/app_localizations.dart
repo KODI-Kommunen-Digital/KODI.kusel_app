@@ -1403,6 +1403,12 @@ abstract class AppLocalizations {
   /// **'Now complete the exercise to collect your points.'**
   String get digifit_success_card_desp;
 
+  /// No description provided for @digifit_abort.
+  ///
+  /// In en, this message translates to:
+  /// **'Abort'**
+  String get digifit_abort;
+
   /// No description provided for @digifit_abort_exercise_title.
   ///
   /// In en, this message translates to:
@@ -1414,6 +1420,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The current exercise is not yet completed. Do you really want to abort and go back?'**
   String get digifit_abort_exercise_desp;
+
+  /// No description provided for @digifit_latest_trophies.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest trophies'**
+  String get digifit_latest_trophies;
+
+  /// No description provided for @digifit_all_trophies.
+  ///
+  /// In en, this message translates to:
+  /// **'All trophies'**
+  String get digifit_all_trophies;
+
+  /// No description provided for @digifit_trophies_received.
+  ///
+  /// In en, this message translates to:
+  /// **'Trophies received'**
+  String get digifit_trophies_received;
+
+  /// No description provided for @digifit_trophies_load_more.
+  ///
+  /// In en, this message translates to:
+  /// **'Load more'**
+  String get digifit_trophies_load_more;
+
+  /// No description provided for @digifit_trophies_open.
+  ///
+  /// In en, this message translates to:
+  /// **'open'**
+  String get digifit_trophies_open;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
