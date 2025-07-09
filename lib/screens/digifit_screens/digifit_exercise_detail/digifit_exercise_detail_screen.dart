@@ -58,124 +58,131 @@ class _DigifitExerciseDetailScreenState
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: SafeArea(
-          child: Stack(
-        children: [
-          Positioned.fill(
-            child: SingleChildScrollView(
-              physics: ClampingScrollPhysics(),
-              child: Stack(
-                children: [
-                  Positioned(
-                      child: CommonBackgroundClipperWidget(
-                    clipperType: UpstreamWaveClipper(),
-                    height: 130.h,
-                    imageUrl: imagePath['exercise_background'] ?? '',
-                    isStaticImage: true,
-                    imageFit: BoxFit.values.first,
-                  )),
-                  Positioned(
-                    top: 25.h,
-                    left: 15.w,
-                    right: 15.w,
-                    child: _buildHeadingArrowSection(),
-                  ),
-                  Padding(
-                      padding: EdgeInsets.only(top: 80.h),
-                      child: Column(
-                        children: [
-                          _buildBody(),
-                          20.verticalSpace,
-                          FeedbackCardWidget(
-                              height: 270.h,
-                              onTap: () {
-                                ref.read(navigationProvider).navigateUsingPath(
-                                    path: feedbackScreenPath, context: context);
-                              })
-                        ],
-                      )),
-                ],
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult:(didPop, _)  async{
+        handleAbortBackNavigation(context);
+      },
+
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: SafeArea(
+            child: Stack(
+          children: [
+            Positioned.fill(
+              child: SingleChildScrollView(
+                physics: ClampingScrollPhysics(),
+                child: Stack(
+                  children: [
+                    Positioned(
+                        child: CommonBackgroundClipperWidget(
+                      clipperType: UpstreamWaveClipper(),
+                      height: 130.h,
+                      imageUrl: imagePath['exercise_background'] ?? '',
+                      isStaticImage: true,
+                      imageFit: BoxFit.values.first,
+                    )),
+                    Positioned(
+                      top: 25.h,
+                      left: 15.w,
+                      right: 15.w,
+                      child: _buildHeadingArrowSection(),
+                    ),
+                    Padding(
+                        padding: EdgeInsets.only(top: 80.h),
+                        child: Column(
+                          children: [
+                            _buildBody(),
+                            20.verticalSpace,
+                            FeedbackCardWidget(
+                                height: 270.h,
+                                onTap: () {
+                                  ref.read(navigationProvider).navigateUsingPath(
+                                      path: feedbackScreenPath, context: context);
+                                })
+                          ],
+                        )),
+                  ],
+                ),
               ),
             ),
-          ),
-          Positioned(
-              bottom: 16.h,
-              left: 16.w,
-              right: 16.w,
-              child: CommonBottomNavCard(
-                onBackPress: () {
-                  ref.read(navigationProvider).removeTopPage(context: context);
-                },
-                isFavVisible:
-                    !ref.watch(homeScreenProvider).isSignInButtonVisible,
-                isFav: ref
-                        .watch(digifitExerciseDetailsControllerProvider)
-                        .digifitExerciseEquipmentModel
-                        ?.isFavorite ??
-                    false,
-                onFavChange: () async {
-                  final equipment = ref
-                      .read(digifitExerciseDetailsControllerProvider)
-                      .digifitExerciseEquipmentModel;
-
-                  if (equipment != null) {
-                    DigifitEquipmentFavParams params =
-                        DigifitEquipmentFavParams(
-                            isFavorite: !equipment.isFavorite,
-                            equipmentId: equipment.id,
-                            locationId:
-                                widget.digifitExerciseDetailsParams.locationId);
-
-                    await ref
-                        .read(digifitExerciseDetailsControllerProvider.notifier)
-                        .onFavTap(
-                            digifitEquipmentFavParams: params,
-                            onFavStatusChange: ref
-                                .read(digifitExerciseDetailsControllerProvider
-                                    .notifier)
-                                .detailPageOnFavStatusChange);
-
-                    if (widget.digifitExerciseDetailsParams.onFavCallBack !=
-                        null) {
-                      widget.digifitExerciseDetailsParams.onFavCallBack!();
-                    }
-                  }
-                },
-              )),
-          if (ref.watch(digifitExerciseDetailsControllerProvider).isLoading)
             Positioned(
-                top: 0.h,
-                left: 0.w,
-                right: 0.w,
-                bottom: 0.h,
-                child: GestureDetector(
-                  onTap: () {
-                    ref.read(navigationProvider).removeDialog(context: context);
+                bottom: 16.h,
+                left: 16.w,
+                right: 16.w,
+                child: CommonBottomNavCard(
+                  onBackPress: () {
+                    handleAbortBackNavigation(context);
                   },
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Container(
-                        color: Colors.black.withValues(alpha: 0.5),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10.r),
+                  isFavVisible:
+                      !ref.watch(homeScreenProvider).isSignInButtonVisible,
+                  isFav: ref
+                          .watch(digifitExerciseDetailsControllerProvider)
+                          .digifitExerciseEquipmentModel
+                          ?.isFavorite ??
+                      false,
+                  onFavChange: () async {
+                    final equipment = ref
+                        .read(digifitExerciseDetailsControllerProvider)
+                        .digifitExerciseEquipmentModel;
+
+                    if (equipment != null) {
+                      DigifitEquipmentFavParams params =
+                          DigifitEquipmentFavParams(
+                              isFavorite: !equipment.isFavorite,
+                              equipmentId: equipment.id,
+                              locationId:
+                                  widget.digifitExerciseDetailsParams.locationId);
+
+                      await ref
+                          .read(digifitExerciseDetailsControllerProvider.notifier)
+                          .onFavTap(
+                              digifitEquipmentFavParams: params,
+                              onFavStatusChange: ref
+                                  .read(digifitExerciseDetailsControllerProvider
+                                      .notifier)
+                                  .detailPageOnFavStatusChange);
+
+                      if (widget.digifitExerciseDetailsParams.onFavCallBack !=
+                          null) {
+                        widget.digifitExerciseDetailsParams.onFavCallBack!();
+                      }
+                    }
+                  },
+                )),
+            if (ref.watch(digifitExerciseDetailsControllerProvider).isLoading)
+              Positioned(
+                  top: 0.h,
+                  left: 0.w,
+                  right: 0.w,
+                  bottom: 0.h,
+                  child: GestureDetector(
+                    onTap: () {
+                      ref.read(navigationProvider).removeDialog(context: context);
+                    },
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
+                          color: Colors.black.withValues(alpha: 0.5),
                         ),
-                        height: 100.h,
-                        width: 100.w,
-                        child: const Center(
-                          child: CircularProgressIndicator(),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10.r),
+                          ),
+                          height: 100.h,
+                          width: 100.w,
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ))
-        ],
-      )),
+                      ],
+                    ),
+                  ))
+          ],
+        )),
+      ),
     );
   }
 
@@ -185,7 +192,7 @@ class _DigifitExerciseDetailScreenState
       children: [
         ArrowBackWidget(
           onTap: () {
-            ref.read(navigationProvider).removeTopPage(context: context);
+            handleAbortBackNavigation(context);
           },
         ),
         16.horizontalSpace,
@@ -462,6 +469,66 @@ class _DigifitExerciseDetailScreenState
     );
   }
 
+  void showAbortedDialog(
+      BuildContext context, String title, String description) {
+    showCupertinoDialog(
+      context: context,
+      builder: (ctx) => CupertinoAlertDialog(
+        title: textBoldPoppins(
+            text: title, textAlign: TextAlign.center, fontSize: 16),
+        content: Padding(
+          padding: EdgeInsets.only(top: 8.h),
+          child: textRegularPoppins(
+              text: description,
+              textAlign: TextAlign.center,
+              textOverflow: TextOverflow.visible,
+              fontSize: 12),
+        ),
+        actions: [
+          CupertinoDialogAction(
+            onPressed: () async {
+
+              ref.read(navigationProvider).removeDialog(context: context);
+
+              final digifitExerciseDetailsState =
+                  ref.watch(digifitExerciseDetailsControllerProvider);
+
+             await ref
+                  .read(digifitExerciseDetailsControllerProvider.notifier)
+                  .trackExerciseDetails(
+                      digifitExerciseDetailsState
+                              .digifitExerciseEquipmentModel?.id ??
+                          0,
+                      widget.digifitExerciseDetailsParams.locationId,
+                      digifitExerciseDetailsState.currentSetNumber,
+                      digifitExerciseDetailsState.digifitExerciseEquipmentModel
+                              ?.userProgress.repetitionsPerSet ??
+                          0,
+                      ExerciseStageConstant.abort, () {
+                ref.read(navigationProvider).removeTopPage(context: context);
+              });
+            },
+            isDefaultAction: true,
+            child: textBoldPoppins(
+                text: AppLocalizations.of(context).ok,
+                textOverflow: TextOverflow.visible,
+                fontSize: 14),
+          ),
+          CupertinoDialogAction(
+            onPressed: () {
+              ref.read(navigationProvider).removeDialog(context: context);
+            },
+            isDefaultAction: true,
+            child: textBoldPoppins(
+                text: AppLocalizations.of(context).cancel,
+                textOverflow: TextOverflow.visible,
+                fontSize: 14),
+          ),
+        ],
+      ),
+    );
+  }
+
   _buildScanner(BuildContext context) {
     final digifitExerciseDetailsState =
         ref.watch(digifitExerciseDetailsControllerProvider);
@@ -568,6 +635,24 @@ class _DigifitExerciseDetailScreenState
       ref
           .read(digifitExerciseDetailsControllerProvider.notifier)
           .updateTimerStatus(TimerState.pause);
+    }
+  }
+
+  Future<void> handleAbortBackNavigation(BuildContext context) async {
+    bool? isScanner =
+        ref.read(digifitExerciseDetailsControllerProvider).isScannerVisible;
+
+    bool? isCompleted = ref
+            .read(digifitExerciseDetailsControllerProvider)
+            .digifitExerciseEquipmentModel
+            ?.userProgress
+            .isCompleted ??
+        false;
+
+    if (!isScanner && !isCompleted) {
+      showAbortedDialog(context, AppLocalizations.of(context).digifit_abort_exercise_title, AppLocalizations.of(context).digifit_abort_exercise_desp);
+    } else {
+      ref.read(navigationProvider).removeTopPage(context: context);
     }
   }
 }
