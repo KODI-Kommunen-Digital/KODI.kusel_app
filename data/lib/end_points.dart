@@ -59,3 +59,5 @@ const digifitExerciseDetailsTrackingEndPoint = "/digifit/tracker";
 
 const digifitEquipmentFavEndPoint = "/digifit/toggle-favorite";
 
+const digifitUserTrophiesEndPoint = "/digifit/user-trophies";
+
