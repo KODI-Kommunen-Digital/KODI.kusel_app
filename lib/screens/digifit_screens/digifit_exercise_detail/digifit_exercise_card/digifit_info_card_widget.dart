@@ -143,7 +143,9 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
                                   .notifier)
                               .updateIsReadyToSubmitSetVisibility(false);
 
-                          widget.startTimer();
+                          if(stage != ExerciseStageConstant.complete) {
+                            widget.startTimer();
+                          }
                         });
                       }
                     },
