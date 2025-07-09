@@ -216,5 +216,7 @@
   "play": "Play",
   "pause": "Pause",
   "digifit_success_card_title": "Great perseverance!",
-  "digifit_success_card_desp": "Now complete the exercise to collect your points."
+  "digifit_success_card_desp": "Now complete the exercise to collect your points.",
+  "digifit_abort_exercise_title": "Abort Exercise?",
+  "digifit_abort_exercise_desp": "The current exercise is not yet completed. Do you really want to abort and go back?"
 }
