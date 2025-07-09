@@ -239,6 +239,8 @@ class _DigifitExerciseDetailScreenState
             videoUrl: digifitExerciseDetailsState
                     .digifitExerciseEquipmentModel?.machineVideoUrl ??
                 '',
+            sourceId: digifitExerciseDetailsState.digifitExerciseEquipmentModel?.sourceId ?? 0,
+
             startTimer: () {
               startTimer();
             },
@@ -253,17 +255,24 @@ class _DigifitExerciseDetailScreenState
                       !ref
                           .watch(digifitExerciseDetailsControllerProvider)
                           .isReadyToSubmitSet) &&
-                  (ref
+                  ((ref
+                                  .watch(
+                                      digifitExerciseDetailsControllerProvider)
+                                  .digifitExerciseEquipmentModel
+                                  ?.userProgress
+                                  .isCompleted !=
+                              null &&
+                          !ref
+                              .watch(digifitExerciseDetailsControllerProvider)
+                              .digifitExerciseEquipmentModel!
+                              .userProgress
+                              .isCompleted) ||
+                      ref
                               .watch(digifitExerciseDetailsControllerProvider)
                               .digifitExerciseEquipmentModel
                               ?.userProgress
-                              .isCompleted !=
-                          null &&
-                      !ref
-                          .watch(digifitExerciseDetailsControllerProvider)
-                          .digifitExerciseEquipmentModel!
-                          .userProgress
-                          .isCompleted))
+                              .isCompleted ==
+                          true))
               ? 30.verticalSpace
               : 60.verticalSpace,
           textBoldPoppins(
@@ -545,7 +554,7 @@ class _DigifitExerciseDetailScreenState
         secondsLeft--;
         ref
             .read(digifitExerciseDetailsControllerProvider.notifier)
-            .updateRemaningSeconds(secondsLeft);
+            .updateRemainingSeconds(secondsLeft);
       }
     });
   }

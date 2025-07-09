@@ -214,5 +214,7 @@
   "goal_achieved": "Goal has already been achieved",
   "min": "Min",
   "play": "Play",
-  "pause": "Pause"
+  "pause": "Pause",
+  "digifit_success_card_title": "Great perseverance!",
+  "digifit_success_card_desp": "Now complete the exercise to collect your points."
 }
