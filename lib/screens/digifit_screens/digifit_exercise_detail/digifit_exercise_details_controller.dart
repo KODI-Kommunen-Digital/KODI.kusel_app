@@ -266,7 +266,7 @@ class DigifitExerciseDetailsController
     state = state.copyWith(isScannerVisible: value);
   }
 
-  void updateRemaningSeconds(int seconds) {
+  void updateRemainingSeconds(int seconds) {
     state = state.copyWith(remainingPauseSecond: seconds);
   }
 

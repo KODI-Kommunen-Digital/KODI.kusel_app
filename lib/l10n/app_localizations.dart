@@ -1390,6 +1390,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Pause'**
   String get pause;
+
+  /// No description provided for @digifit_success_card_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Great perseverance!'**
+  String get digifit_success_card_title;
+
+  /// No description provided for @digifit_success_card_desp.
+  ///
+  /// In en, this message translates to:
+  /// **'Now complete the exercise to collect your points.'**
+  String get digifit_success_card_desp;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
