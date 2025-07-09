@@ -27,7 +27,7 @@ class DigifitOverviewService {
 
     final params = requestModel.toJson();
 
-    final path = "$digifitOverviewEndPoint$location?translate=${params["translate"]}";
+    final path = "$digifitOverviewEndPoint/$location?translate=${params["translate"]}";
 
     final result = await apiHelper.getRequest(
         path: path, create: () => responseModel, headers: headers);

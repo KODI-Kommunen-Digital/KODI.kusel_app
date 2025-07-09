@@ -49,11 +49,11 @@ const favouriteCitiesPath = "/favorites";
 const deleteAccountEndPoint = "/users";
 
 // DIGIFIT API
-const digifitInformationEndPoint = "/digifit/";
+const digifitInformationEndPoint = "/digifit";
 
-const digifitOverviewEndPoint = "/digifit/user-equipment-stats/";
+const digifitOverviewEndPoint = "/digifit/user-equipment-stats";
 
-const digifitExerciseDetailsEndPoint = "/digifit/exercise-details/";
+const digifitExerciseDetailsEndPoint = "/digifit/exercise-details";
 
 const digifitExerciseDetailsTrackingEndPoint = "/digifit/tracker";
 
