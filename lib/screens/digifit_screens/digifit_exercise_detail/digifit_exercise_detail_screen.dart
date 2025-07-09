@@ -486,8 +486,17 @@ class _DigifitExerciseDetailScreenState
         ),
         actions: [
           CupertinoDialogAction(
+            onPressed: () {
+              ref.read(navigationProvider).removeDialog(context: context);
+            },
+            isDefaultAction: true,
+            child: textBoldPoppins(
+                text: AppLocalizations.of(context).cancel,
+                textOverflow: TextOverflow.visible,
+                fontSize: 14),
+          ),
+          CupertinoDialogAction(
             onPressed: () async {
-
               ref.read(navigationProvider).removeDialog(context: context);
 
               final digifitExerciseDetailsState =
@@ -510,17 +519,7 @@ class _DigifitExerciseDetailScreenState
             },
             isDefaultAction: true,
             child: textBoldPoppins(
-                text: AppLocalizations.of(context).ok,
-                textOverflow: TextOverflow.visible,
-                fontSize: 14),
-          ),
-          CupertinoDialogAction(
-            onPressed: () {
-              ref.read(navigationProvider).removeDialog(context: context);
-            },
-            isDefaultAction: true,
-            child: textBoldPoppins(
-                text: AppLocalizations.of(context).cancel,
+                text: AppLocalizations.of(context).digifit_abort,
                 textOverflow: TextOverflow.visible,
                 fontSize: 14),
           ),

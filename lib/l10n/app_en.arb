@@ -217,6 +217,12 @@
   "pause": "Pause",
   "digifit_success_card_title": "Great perseverance!",
   "digifit_success_card_desp": "Now complete the exercise to collect your points.",
+  "digifit_abort": "Abort",
   "digifit_abort_exercise_title": "Abort Exercise?",
-  "digifit_abort_exercise_desp": "The current exercise is not yet completed. Do you really want to abort and go back?"
+  "digifit_abort_exercise_desp": "The current exercise is not yet completed. Do you really want to abort and go back?",
+  "digifit_latest_trophies": "Latest trophies",
+  "digifit_all_trophies": "All trophies",
+  "digifit_trophies_received": "Trophies received",
+  "digifit_trophies_load_more": "Load more",
+  "digifit_trophies_open": "open"
 }
