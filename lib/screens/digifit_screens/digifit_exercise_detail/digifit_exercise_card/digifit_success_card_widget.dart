@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../common_widgets/text_styles.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../theme_manager/colors.dart';
 
 class SuccessCardWidget extends ConsumerWidget {
   const SuccessCardWidget({super.key});
@@ -14,8 +15,8 @@ class SuccessCardWidget extends ConsumerWidget {
       width: double.infinity,
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 14.h),
       decoration: BoxDecoration(
-        color: const Color(0xFFB4DC2E),
-        border: Border.all(color: const Color(0xFF88AF33), width: 1),
+        color: lightThemeHighlightGreenColor,
+        border: Border.all(color: Theme.of(context).indicatorColor, width: 1),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(16.r),
           bottomRight: Radius.circular(16.r),

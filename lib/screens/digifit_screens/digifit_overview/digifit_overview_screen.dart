@@ -203,23 +203,14 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
         0;
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         20.verticalSpace,
-        Row(
-          children: [
             textRegularPoppins(
                 text: title,
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).textTheme.bodyLarge?.color),
-            12.horizontalSpace,
-            ImageUtil.loadSvgImage(
-                imageUrl: imagePath['arrow_icon'] ?? "",
-                height: 10.h,
-                width: 16.w,
-                context: context)
-          ],
-        ),
         10.verticalSpace,
         ListView.builder(
             physics: NeverScrollableScrollPhysics(),

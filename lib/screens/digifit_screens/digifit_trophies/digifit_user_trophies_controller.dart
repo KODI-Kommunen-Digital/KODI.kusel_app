@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/locale/localization_manager.dart';
 import 'package:kusel/screens/digifit_screens/digifit_trophies/digifit_user_trophies_state.dart';
 
-import '../../../providers/digifit_equipment_fav_provider.dart';
 import '../../../providers/refresh_token_provider.dart';
 
 final digifitUserTrophiesControllerProvider = StateNotifierProvider.autoDispose<
@@ -16,8 +15,7 @@ final digifitUserTrophiesControllerProvider = StateNotifierProvider.autoDispose<
       digifitUserTrophiesUseCase: ref.read(digifitUserTrophiesUseCaseProvider),
       tokenStatus: ref.read(tokenStatusProvider),
       refreshTokenProvider: ref.read(refreshTokenProvider),
-      localeManagerController: ref.read(localeManagerProvider.notifier),
-      digifitEquipmentFav: ref.read(digifitEquipmentFavProvider)),
+      localeManagerController: ref.read(localeManagerProvider.notifier)),
 );
 
 class DigifitUserTrophiesController
@@ -26,14 +24,12 @@ class DigifitUserTrophiesController
   final TokenStatus tokenStatus;
   final RefreshTokenProvider refreshTokenProvider;
   final LocaleManagerController localeManagerController;
-  final DigifitEquipmentFav digifitEquipmentFav;
 
   DigifitUserTrophiesController(
       {required this.digifitUserTrophiesUseCase,
       required this.tokenStatus,
       required this.refreshTokenProvider,
-      required this.localeManagerController,
-      required this.digifitEquipmentFav})
+      required this.localeManagerController})
       : super(DigifitUserTrophiesState.empty());
 
   Future<void> fetchDigifitUserTrophies() async {
