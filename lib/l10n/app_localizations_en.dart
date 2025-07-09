@@ -661,4 +661,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get digifit_success_card_desp => 'Now complete the exercise to collect your points.';
+
+  @override
+  String get digifit_abort_exercise_title => 'Abort Exercise?';
+
+  @override
+  String get digifit_abort_exercise_desp => 'The current exercise is not yet completed. Do you really want to abort and go back?';
 }

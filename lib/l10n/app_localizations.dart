@@ -1402,6 +1402,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Now complete the exercise to collect your points.'**
   String get digifit_success_card_desp;
+
+  /// No description provided for @digifit_abort_exercise_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Abort Exercise?'**
+  String get digifit_abort_exercise_title;
+
+  /// No description provided for @digifit_abort_exercise_desp.
+  ///
+  /// In en, this message translates to:
+  /// **'The current exercise is not yet completed. Do you really want to abort and go back?'**
+  String get digifit_abort_exercise_desp;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
