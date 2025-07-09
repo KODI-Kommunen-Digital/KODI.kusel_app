@@ -52,6 +52,7 @@ class _DigifitQRScannerScreenState
                 _isScanComplete = true;
                 final String code = barcode.rawValue ?? '---';
 
+                debugPrint('link received after scan : $code');
                 ref.read(navigationProvider).removeTopPageAndReturnValue(
                     context: context, result: code);
               }
