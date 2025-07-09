@@ -101,9 +101,10 @@ const meinOrtScreenPath = "meinOrtScreenPath";
 const mobilityScreenPath = "mobilityScreenPath";
 const participateScreenPath = "participateScreenPath";
 const digifitStartScreenPath = "digifitStartScreenPath";
+const digifitTrophiesScreenPath = "digifitTrophiesScreenPath";
+
 
 // DigiFit screen path
-const digifitTrophiesScreenPath = "/digifitTrophiesScreenPath";
 const digifitOverViewScreenPath = "/digifitOverViewScreenPath";
 const digifitQRScannerScreenPath = "/digifitQRScannerScreenPath";
 const digifitExerciseDetailScreenPath = "/digifitExerciseDetailScreenPath";
@@ -118,6 +119,7 @@ final exploreSubScreenRoutes = [
   mobilityScreenPath,
   participateScreenPath,
   digifitStartScreenPath,
+  digifitTrophiesScreenPath
 ];
 
 // Full route list
@@ -185,9 +187,6 @@ List<RouteBase> goRouteList = [
           municipalityScreenParams: state.extra as MunicipalityScreenParams)),
   GoRoute(
       path: favouriteCityScreenPath, builder: (_, __) => FavouriteCityScreen()),
-  GoRoute(
-      path: digifitTrophiesScreenPath,
-      builder: (_, __) => DigifitTrophiesScreen()),
   GoRoute(
       path: digifitOverViewScreenPath,
       builder: (_, state) => DigifitOverviewScreen(
@@ -261,6 +260,9 @@ final dashboardRoutes = StatefulShellRoute.indexedStack(
               path: digifitStartScreenPath,
               builder: (_, __) => const DigifitInformationScreen(),
             ),
+            GoRoute(
+                path: digifitTrophiesScreenPath,
+                builder: (_, __) => DigifitTrophiesScreen()),
             GoRoute(
               path: participateScreenPath,
               builder: (_, __) => const ParticipateScreen(),
