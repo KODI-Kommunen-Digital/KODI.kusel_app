@@ -684,5 +684,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get digifit_trophies_load_more => 'Mehr laden';
 
   @override
+  String get digifit_trophies_show_less => 'Weniger anzeigen';
+
+  @override
   String get digifit_trophies_open => 'offen';
 }

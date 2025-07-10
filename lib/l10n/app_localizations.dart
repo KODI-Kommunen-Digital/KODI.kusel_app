@@ -1445,6 +1445,12 @@ abstract class AppLocalizations {
   /// **'Load more'**
   String get digifit_trophies_load_more;
 
+  /// No description provided for @digifit_trophies_show_less.
+  ///
+  /// In en, this message translates to:
+  /// **'Show less'**
+  String get digifit_trophies_show_less;
+
   /// No description provided for @digifit_trophies_open.
   ///
   /// In en, this message translates to:
