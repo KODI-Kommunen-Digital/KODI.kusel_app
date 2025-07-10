@@ -1,3 +1,4 @@
+import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:core/token_status.dart';
 import 'package:domain/model/request_model/digifit/digifit_overview_request_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_overview_response_model.dart';
@@ -20,8 +21,8 @@ final digifitOverviewScreenControllerProvider = StateNotifierProvider
             refreshTokenProvider: ref.read(refreshTokenProvider),
             localeManagerController: ref.read(localeManagerProvider.notifier),
             digifitEquipmentFav: ref.read(digifitEquipmentFavProvider),
-            digifitQrScannerUseCase:
-                ref.read(digifitQrScannerUseCaseProvider)));
+            digifitQrScannerUseCase: ref.read(digifitQrScannerUseCaseProvider),
+            signInStatusController: ref.read(signInStatusProvider.notifier)));
 
 class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
   final DigifitOverviewUseCase digifitOverviewUseCase;
@@ -30,6 +31,7 @@ class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
   final LocaleManagerController localeManagerController;
   final DigifitEquipmentFav digifitEquipmentFav;
   final DigifitQrScannerUseCase digifitQrScannerUseCase;
+  final SignInStatusController signInStatusController;
 
   DigifitOverviewController(
       {required this.digifitOverviewUseCase,
@@ -37,17 +39,19 @@ class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
       required this.refreshTokenProvider,
       required this.localeManagerController,
       required this.digifitEquipmentFav,
-      required this.digifitQrScannerUseCase})
+      required this.digifitQrScannerUseCase,
+      required this.signInStatusController})
       : super(DigifitOverviewState.empty());
 
   Future<void> fetchDigifitOverview(int locationId) async {
     try {
       state = state.copyWith(isLoading: true);
 
-      final isTokenExpired = tokenStatus.isAccessTokenExpired();
+      final isTokenExpired = tokenStatus.isDigifitAccessTokenExpired();
+      final status = await signInStatusController.isUserLoggedIn();
 
-      if (isTokenExpired) {
-        await refreshTokenProvider.getNewToken(
+      if (isTokenExpired && status) {
+        await refreshTokenProvider.getDigifitNewToken(
             onError: () {},
             onSuccess: () {
               _fetchDigifitOverview(locationId);
@@ -168,9 +172,8 @@ class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
     }
   }
 
-  Future<void> getSlug(String shortUrl,
-      Function(String) onSuccess,
-      VoidCallback onError) async {
+  Future<void> getSlug(
+      String shortUrl, Function(String) onSuccess, VoidCallback onError) async {
     try {
       state = state.copyWith(isLoading: true);
       final result = await digifitQrScannerUseCase.call(shortUrl);
@@ -191,6 +194,4 @@ class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
       state = state.copyWith(isLoading: false);
     }
   }
-
-
 }

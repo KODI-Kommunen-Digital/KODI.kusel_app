@@ -24,6 +24,7 @@ import 'package:domain/usecase/weather/weather_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/common_widgets/listing_id_enum.dart';
+import 'package:kusel/providers/guest_user_login_provider.dart';
 import 'package:kusel/providers/refresh_token_provider.dart';
 
 import '../../common_widgets/get_current_location.dart';
@@ -44,7 +45,8 @@ final homeScreenProvider =
             localeManagerController: ref.read(localeManagerProvider.notifier),
             onboardingDetailsUseCase:
                 ref.read(onboardingDetailsUseCaseProvider),
-            refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider)));
+            refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider),
+            guestUserLogin: ref.read(guestUserLoginProvider)));
 
 class HomeScreenProvider extends StateNotifier<HomeScreenState> {
   ListingsUseCase listingsUseCase;
@@ -58,6 +60,7 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
   LocaleManagerController localeManagerController;
   RefreshTokenUseCase refreshTokenUseCase;
   OnboardingDetailsUseCase onboardingDetailsUseCase;
+  GuestUserLogin guestUserLogin;
 
   HomeScreenProvider(
       {required this.listingsUseCase,
@@ -70,8 +73,16 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       required this.tokenStatus,
       required this.localeManagerController,
       required this.onboardingDetailsUseCase,
-      required this.refreshTokenUseCase})
+      required this.refreshTokenUseCase,
+      required this.guestUserLogin})
       : super(HomeScreenState.empty());
+
+  initialCall() async {
+    final res = sharedPreferenceHelper.getString(digifitAccessTokenKey);
+    if (res == null) {
+     await guestUserLogin.getGuestUserToken();
+    }
+  }
 
   Future<void> getHighlights() async {
     try {
@@ -391,59 +402,56 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
 
   Future<void> getOnboardingDetails() async {
     try {
-
       final status = await signInStatusController.isUserLoggedIn();
-      if(status)
-        {
-          final response = tokenStatus.isAccessTokenExpired();
-          debugPrint('Is token valid = $response');
+      if (status) {
+        final response = tokenStatus.isAccessTokenExpired();
 
-          if (response) {
-            final userId = sharedPreferenceHelper.getInt(userIdKey);
-            RefreshTokenRequestModel requestModel =
-            RefreshTokenRequestModel(userId: userId?.toString() ?? "");
-            RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
+        if (response) {
+          final userId = sharedPreferenceHelper.getInt(userIdKey);
+          RefreshTokenRequestModel requestModel =
+              RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+          RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
-            final refreshResponse =
-            await refreshTokenUseCase.call(requestModel, responseModel);
+          final refreshResponse =
+              await refreshTokenUseCase.call(requestModel, responseModel);
 
-            bool refreshSuccess = await refreshResponse.fold(
-                  (left) {
-                debugPrint(
-                    'refresh token onboarding details fold exception : $left');
-                return false;
-              },
-                  (right) async {
-                final res = right as RefreshTokenResponseModel;
-                sharedPreferenceHelper.setString(
-                    tokenKey, res.data?.accessToken ?? "");
-                sharedPreferenceHelper.setString(
-                    refreshTokenKey, res.data?.refreshToken ?? "");
-                return true;
-              },
-            );
+          bool refreshSuccess = await refreshResponse.fold(
+            (left) {
+              debugPrint(
+                  'refresh token onboarding details fold exception : $left');
+              return false;
+            },
+            (right) async {
+              final res = right as RefreshTokenResponseModel;
+              sharedPreferenceHelper.setString(
+                  tokenKey, res.data?.accessToken ?? "");
+              sharedPreferenceHelper.setString(
+                  refreshTokenKey, res.data?.refreshToken ?? "");
+              return true;
+            },
+          );
 
-            if (!refreshSuccess) {
-              return;
-            }
+          if (!refreshSuccess) {
+            return;
           }
-
-          EmptyRequest requestModel = EmptyRequest();
-          OnboardingDetailsResponseModel responseModel =
-          OnboardingDetailsResponseModel();
-          final result =
-          await onboardingDetailsUseCase.call(requestModel, responseModel);
-
-          result.fold((l) {
-            debugPrint('get onboarding details fold exception : $l');
-          }, (r) async {
-            final response = r as OnboardingDetailsResponseModel;
-            if (response.data != null && response.data?.cityId != null) {
-              sharedPreferenceHelper.setInt(
-                  selectedMunicipalIdKey, response.data!.cityId!);
-            }
-          });
         }
+
+        EmptyRequest requestModel = EmptyRequest();
+        OnboardingDetailsResponseModel responseModel =
+            OnboardingDetailsResponseModel();
+        final result =
+            await onboardingDetailsUseCase.call(requestModel, responseModel);
+
+        result.fold((l) {
+          debugPrint('get onboarding details fold exception : $l');
+        }, (r) async {
+          final response = r as OnboardingDetailsResponseModel;
+          if (response.data != null && response.data?.cityId != null) {
+            sharedPreferenceHelper.setInt(
+                selectedMunicipalIdKey, response.data!.cityId!);
+          }
+        });
+      }
     } catch (error) {
       debugPrint('get onboarding details exception : $error');
     }

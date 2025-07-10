@@ -7,11 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'extract_deviceId_state.dart';
 
 final extractDeviceIdProvider =
-    StateNotifierProvider<ExtractDeviceIdProvider, ExtractDeviceIdState>(
-        (ref) => ExtractDeviceIdProvider());
+   Provider((ref)=>ExtractDeviceIdProvider());
 
-class ExtractDeviceIdProvider extends StateNotifier<ExtractDeviceIdState> {
-  ExtractDeviceIdProvider() : super(ExtractDeviceIdState.empty());
+class ExtractDeviceIdProvider  {
 
   Future<String?> extractDeviceId() async {
     try {
@@ -20,12 +18,10 @@ class ExtractDeviceIdProvider extends StateNotifier<ExtractDeviceIdState> {
       if (Platform.isAndroid) {
         final androidInfo = await deviceInfo.androidInfo;
         final androidId = androidInfo.id;
-        state = state.copyWith(deviceId: androidId);
         return androidId;
       } else if (Platform.isIOS) {
         final iosInfo = await deviceInfo.iosInfo;
         final iosId = iosInfo.identifierForVendor;
-        state = state.copyWith(deviceId: iosId);
         return iosId;
       }
     } catch (e) {
