@@ -42,6 +42,7 @@ dependencies:
   mobile_scanner: ^7.0.0
   webview_flutter: ^4.13.0
   video_player: ^2.10.0
+  device_info_plus: ^10.0.0
   core:
     path: core
 
