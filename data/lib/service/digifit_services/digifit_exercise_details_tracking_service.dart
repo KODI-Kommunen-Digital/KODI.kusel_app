@@ -26,7 +26,7 @@ class DigifitExerciseDetailsTrackingService {
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
     final apiHelper = ref.read(apiHelperProvider);
-    String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
+    String token = sharedPreferenceHelper.getString(digifitAccessTokenKey) ?? '';
     final headers = {'Authorization': 'Bearer $token'};
 
     final path = digifitExerciseDetailsTrackingEndPoint;
