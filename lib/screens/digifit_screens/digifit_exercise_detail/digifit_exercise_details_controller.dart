@@ -58,10 +58,10 @@ class DigifitExerciseDetailsController
   Future<void> fetchDigifitExerciseDetails(
       int? equipmentId, int? locationId,String? slug) async {
     try {
-      final isTokenExpired = tokenStatus.isAccessTokenExpired();
+      final isTokenExpired = tokenStatus.isDigifitAccessTokenExpired();
 
       if (isTokenExpired) {
-        await refreshTokenProvider.getNewToken(
+        await refreshTokenProvider.getDigifitNewToken(
             onError: () {},
             onSuccess: () {
               _fetchDigifitExerciseDetails(equipmentId, locationId,slug);
@@ -193,10 +193,10 @@ class DigifitExerciseDetailsController
       ExerciseStageConstant stageConstant,
       VoidCallback onSuccess) async {
     try {
-      final isTokenExpired = tokenStatus.isAccessTokenExpired();
+      final isTokenExpired = tokenStatus.isDigifitAccessTokenExpired();
 
       if (isTokenExpired) {
-        await refreshTokenProvider.getNewToken(
+        await refreshTokenProvider.getDigifitNewToken(
           onError: () {},
           onSuccess: () async {
             await _trackExerciseDetails(
