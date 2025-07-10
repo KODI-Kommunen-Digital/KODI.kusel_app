@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:kusel/providers/extract_deviceId/extract_deviceId_provider.dart';
 import 'package:kusel/screens/no_network/network_status_screen.dart';
 import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
 import 'package:kusel/theme_manager/theme_manager_controller.dart';
@@ -49,6 +50,11 @@ class _MyAppState extends ConsumerState<MyApp> {
           routerConfig: ref.read(mobileRouterProvider),
           theme: ref.watch(themeManagerProvider).currentSelectedTheme,
           builder: (context, child) {
+
+            final deviceId = ref.read(extractDeviceIdProvider).deviceId;
+
+            debugPrint('devide id is $deviceId');
+
             final hasNetwork =
                 ref.watch(networkStatusProvider).isNetworkAvailable;
             return hasNetwork ? child! : NetworkStatusScreen();
@@ -62,6 +68,7 @@ class _MyAppState extends ConsumerState<MyApp> {
       {
         ref.read(localeManagerProvider.notifier).initialLocaleSetUp();
         ref.read(networkStatusProvider.notifier).checkNetworkStatus();
+        ref.read(extractDeviceIdProvider.notifier).extractDeviceId();
       }
     });
     super.initState();
