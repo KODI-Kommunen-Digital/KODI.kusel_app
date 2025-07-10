@@ -40,4 +40,17 @@ class TokenStatus {
 
     return false;
   }
+
+
+  bool isDigifitAccessTokenExpired() {
+    final digifitAccessToken = sharedPreferenceHelper.getString(digifitAccessTokenKey);
+
+    if (digifitAccessToken != null) {
+      final result = JwtDecoder.isExpired(digifitAccessToken); // Gives true if token is expired
+      return result;
+    }
+
+    return false;
+  }
+
 }
