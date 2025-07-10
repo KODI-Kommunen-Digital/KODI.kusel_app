@@ -1,3 +1,4 @@
+import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:core/token_status.dart';
 import 'package:domain/model/request_model/digifit/digifit_information_request_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_information_response_model.dart';
@@ -17,7 +18,8 @@ final digifitInformationControllerProvider = StateNotifierProvider.autoDispose<
       tokenStatus: ref.read(tokenStatusProvider),
       refreshTokenProvider: ref.read(refreshTokenProvider),
       localeManagerController: ref.read(localeManagerProvider.notifier),
-      digifitEquipmentFav: ref.read(digifitEquipmentFavProvider)),
+      digifitEquipmentFav: ref.read(digifitEquipmentFavProvider),
+      signInStatusController: ref.read(signInStatusProvider.notifier)),
 );
 
 class DigifitInformationController extends StateNotifier<DigifitState> {
@@ -26,33 +28,37 @@ class DigifitInformationController extends StateNotifier<DigifitState> {
   final RefreshTokenProvider refreshTokenProvider;
   final LocaleManagerController localeManagerController;
   final DigifitEquipmentFav digifitEquipmentFav;
+  final SignInStatusController signInStatusController;
 
   DigifitInformationController(
       {required this.digifitInformationUsecase,
       required this.tokenStatus,
       required this.refreshTokenProvider,
       required this.localeManagerController,
-      required this.digifitEquipmentFav})
+      required this.digifitEquipmentFav,
+      required this.signInStatusController})
       : super(DigifitState.empty());
 
   Future<void> fetchDigifitInformation() async {
     try {
       state = state.copyWith(isLoading: true);
 
-      final isTokenExpired = tokenStatus.isAccessTokenExpired();
+      final isTokenExpired = tokenStatus.isDigifitAccessTokenExpired();
+      final status = await signInStatusController.isUserLoggedIn();
 
-      if (isTokenExpired) {
-        await refreshTokenProvider.getNewToken(
-            onError: () {},
-            onSuccess: () {
-              _fetchDigifitInformation();
-            });
+      if (isTokenExpired && status) {
+        await refreshTokenProvider.getDigifitNewToken(onError: () {
+          state = state.copyWith(isLoading: false);
+        }, onSuccess: () {
+          _fetchDigifitInformation();
+        });
       } else {
         // If the token is not expired, we can proceed with the request
         _fetchDigifitInformation();
       }
     } catch (e) {
       debugPrint('[DigifitInformationController] Fetch Exception: $e');
+      state = state.copyWith(isLoading: false);
     }
   }
 
@@ -77,7 +83,7 @@ class DigifitInformationController extends StateNotifier<DigifitState> {
             errorMessage: l.toString(),
           );
           debugPrint(
-              '[DigifitInformationController] Fetch Error: ${l.toString()}');
+              '[DigifitInformationController] Fetch fold Error: ${l.toString()}');
         },
         (r) {
           var response = (r as DigifitInformationResponseModel).data;
@@ -86,7 +92,7 @@ class DigifitInformationController extends StateNotifier<DigifitState> {
         },
       );
     } catch (error) {
-      debugPrint('[DigifitInformationController] Fetch fold Exception: $error');
+      rethrow;
     }
   }
 

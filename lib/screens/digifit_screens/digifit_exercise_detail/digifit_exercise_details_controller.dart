@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:core/token_status.dart';
 import 'package:domain/model/request_model/digifit/digifit_exercise_details_request_model.dart';
 import 'package:domain/model/request_model/digifit/digifit_exercise_details_tracking_request_model.dart';
@@ -32,6 +33,7 @@ final digifitExerciseDetailsControllerProvider = StateNotifierProvider
               digifitEquipmentFav: ref.read(digifitEquipmentFavProvider),
               digifitQrScannerUseCase:
                   ref.read(digifitQrScannerUseCaseProvider),
+              signInStatusController: ref.read(signInStatusProvider.notifier),
             ));
 
 class DigifitExerciseDetailsController
@@ -44,6 +46,7 @@ class DigifitExerciseDetailsController
   final LocaleManagerController localeManagerController;
   final DigifitEquipmentFav digifitEquipmentFav;
   final DigifitQrScannerUseCase digifitQrScannerUseCase;
+  final SignInStatusController signInStatusController;
 
   DigifitExerciseDetailsController(
       {required this.digifitExerciseDetailsUseCase,
@@ -52,31 +55,33 @@ class DigifitExerciseDetailsController
       required this.refreshTokenProvider,
       required this.localeManagerController,
       required this.digifitEquipmentFav,
-      required this.digifitQrScannerUseCase})
+      required this.digifitQrScannerUseCase,
+      required this.signInStatusController})
       : super(DigifitExerciseDetailsState.empty());
 
   Future<void> fetchDigifitExerciseDetails(
-      int? equipmentId, int? locationId,String? slug) async {
+      int? equipmentId, int? locationId, String? slug) async {
     try {
       final isTokenExpired = tokenStatus.isDigifitAccessTokenExpired();
+      final status = await signInStatusController.isUserLoggedIn();
 
-      if (isTokenExpired) {
+      if (isTokenExpired && status) {
         await refreshTokenProvider.getDigifitNewToken(
             onError: () {},
             onSuccess: () {
-              _fetchDigifitExerciseDetails(equipmentId, locationId,slug);
+              _fetchDigifitExerciseDetails(equipmentId, locationId, slug);
             });
       } else {
         // If the token is not expired, we can proceed with the request
-        _fetchDigifitExerciseDetails(equipmentId, locationId,slug);
+        _fetchDigifitExerciseDetails(equipmentId, locationId, slug);
       }
     } catch (e) {
       debugPrint('[DigifitExerciseDetailsController] Fetch Exception: $e');
     }
   }
 
-  _fetchDigifitExerciseDetails(int? equipmentId, int? locationId,
-      String? slug) async {
+  _fetchDigifitExerciseDetails(
+      int? equipmentId, int? locationId, String? slug) async {
     try {
       state = state.copyWith(isLoading: true);
 
@@ -194,8 +199,9 @@ class DigifitExerciseDetailsController
       VoidCallback onSuccess) async {
     try {
       final isTokenExpired = tokenStatus.isDigifitAccessTokenExpired();
+      final status = await signInStatusController.isUserLoggedIn();
 
-      if (isTokenExpired) {
+      if (isTokenExpired && status) {
         await refreshTokenProvider.getDigifitNewToken(
           onError: () {},
           onSuccess: () async {
@@ -263,7 +269,6 @@ class DigifitExerciseDetailsController
   void updateIsReadyToSubmitSetVisibility(bool value) {
     state = state.copyWith(isReadyToSubmitSet: value);
   }
-
 
   void updateScannerButtonVisibility(bool value) {
     state = state.copyWith(isScannerVisible: value);

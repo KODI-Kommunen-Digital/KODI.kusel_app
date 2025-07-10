@@ -1,5 +1,6 @@
 import 'package:core/preference_manager/preference_constant.dart';
 import 'package:core/preference_manager/shared_pref_helper.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
@@ -20,6 +21,7 @@ class TokenStatus {
       if (token != null) {
         final result =
             JwtDecoder.isExpired(token); // Gives true if token is expired
+
         return result;
       }
 
@@ -43,14 +45,20 @@ class TokenStatus {
 
 
   bool isDigifitAccessTokenExpired() {
-    final digifitAccessToken = sharedPreferenceHelper.getString(digifitAccessTokenKey);
+    try {
+      final token = sharedPreferenceHelper.getString(digifitAccessTokenKey);
+      if (token != null) {
 
-    if (digifitAccessToken != null) {
-      final result = JwtDecoder.isExpired(digifitAccessToken); // Gives true if token is expired
-      return result;
+        final result =
+        JwtDecoder.isExpired(token); // Gives true if token is expired
+
+
+        return result;
+      }
+
+      return true;
+    } catch (error) {
+      return true;
     }
 
-    return false;
-  }
-
-}
+}}

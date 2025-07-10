@@ -51,9 +51,6 @@ class _MyAppState extends ConsumerState<MyApp> {
           theme: ref.watch(themeManagerProvider).currentSelectedTheme,
           builder: (context, child) {
 
-            final deviceId = ref.read(extractDeviceIdProvider).deviceId;
-
-            debugPrint('devide id is $deviceId');
 
             final hasNetwork =
                 ref.watch(networkStatusProvider).isNetworkAvailable;
@@ -68,7 +65,6 @@ class _MyAppState extends ConsumerState<MyApp> {
       {
         ref.read(localeManagerProvider.notifier).initialLocaleSetUp();
         ref.read(networkStatusProvider.notifier).checkNetworkStatus();
-        ref.read(extractDeviceIdProvider.notifier).extractDeviceId();
       }
     });
     super.initState();
