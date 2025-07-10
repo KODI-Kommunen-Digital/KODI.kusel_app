@@ -3,14 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
-import 'package:kusel/common_widgets/digifit/digifit_options_card.dart';
 import 'package:kusel/common_widgets/digifit/digifit_text_image_card.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/l10n/app_localizations.dart';
+import 'package:kusel/screens/digifit_screens/digifit_trophies/digifit_user_trophies_controller.dart';
 
 import '../../../app_router.dart';
-import '../../../common_widgets/digifit/digifit_map_card.dart';
 import '../../../common_widgets/digifit/digifit_status_widget.dart';
 import '../../../common_widgets/image_utility.dart';
 import '../../../common_widgets/text_styles.dart';
@@ -22,49 +21,97 @@ class DigifitTrophiesScreen extends ConsumerStatefulWidget {
   const DigifitTrophiesScreen({super.key});
 
   @override
-  ConsumerState<DigifitTrophiesScreen> createState() => _DigifitTrophiesScreenState();
+  ConsumerState<DigifitTrophiesScreen> createState() =>
+      _DigifitTrophiesScreenState();
 }
 
 class _DigifitTrophiesScreenState extends ConsumerState<DigifitTrophiesScreen> {
   @override
+  void initState() {
+    Future.microtask(() {
+      ref
+          .read(digifitUserTrophiesControllerProvider.notifier)
+          .fetchDigifitUserTrophies();
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final isLoading =
+        ref.watch(digifitUserTrophiesControllerProvider).isLoading;
+
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const ClampingScrollPhysics(),
-          child: Stack(
-            children: [
-              // Background
-              CommonBackgroundClipperWidget(
-                height: 200.h,
-                clipperType: UpstreamWaveClipper(),
-                imageUrl: imagePath['home_screen_background'] ?? '',
-                isStaticImage: true,
-              ),
-
-              Positioned(
-                top: 30.h,
-                left: 10.r,
-                child: _buildHeadingArrowSection(),
-              ),
-
-              Padding(
-                padding: EdgeInsets.only(top: 100.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+        child: Stack(
+          children: [
+            // Main scroll content
+            Positioned.fill(
+              child: SingleChildScrollView(
+                physics: const ClampingScrollPhysics(),
+                child: Stack(
                   children: [
-                    _buildDigifitTrophiesScreenUi(),
-                    30.verticalSpace,
-                    FeedbackCardWidget(
-                      height: 270.h,
-                      onTap: () {},
+                    // Background
+                    CommonBackgroundClipperWidget(
+                      height: 200.h,
+                      clipperType: UpstreamWaveClipper(),
+                      imageUrl: imagePath['home_screen_background'] ?? '',
+                      isStaticImage: true,
+                    ),
+                    Positioned(
+                      top: 30.h,
+                      left: 10.r,
+                      child: _buildHeadingArrowSection(),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 100.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildDigifitTrophiesScreenUi(),
+                          30.verticalSpace,
+                          FeedbackCardWidget(
+                            height: 270.h,
+                            onTap: () {},
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+
+            // ✅ Loader - Moved outside of scroll stack
+            if (isLoading)
+              Positioned.fill(
+                child: GestureDetector(
+                  onTap: () {
+                    ref.read(navigationProvider).removeDialog(context: context);
+                  },
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Container(
+                        color: Colors.black.withOpacity(0.5), // ✅ FIXED opacity
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.r),
+                        ),
+                        height: 100.h,
+                        width: 100.w,
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+          ],
         ),
       ),
     );
@@ -100,8 +147,10 @@ class _DigifitTrophiesScreenState extends ConsumerState<DigifitTrophiesScreen> {
             trophiesValue: 2,
             trophiesText: AppLocalizations.of(context).trophies,
             onButtonTap: () async {
-              final barcode = await ref.read(navigationProvider).navigateUsingPath(
-                  path: digifitQRScannerScreenPath, context: context);
+              final barcode = await ref
+                  .read(navigationProvider)
+                  .navigateUsingPath(
+                      path: digifitQRScannerScreenPath, context: context);
               // Todo - replace with actual QR code login
               if (barcode != null) {
                 print('Scanned barcode: $barcode');
@@ -122,6 +171,7 @@ class _DigifitTrophiesScreenState extends ConsumerState<DigifitTrophiesScreen> {
       children: [
         20.verticalSpace,
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             textRegularPoppins(
                 text: "Parcours Kusel",
@@ -129,11 +179,7 @@ class _DigifitTrophiesScreenState extends ConsumerState<DigifitTrophiesScreen> {
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).textTheme.bodyLarge?.color),
             12.horizontalSpace,
-            ImageUtil.loadSvgImage(
-                imageUrl: imagePath['arrow_icon'] ?? "",
-                height: 10.h,
-                width: 16.w,
-                context: context)
+            textRegularMontserrat(text: "30/36 offen")
           ],
         ),
         10.verticalSpace,
@@ -148,17 +194,18 @@ class _DigifitTrophiesScreenState extends ConsumerState<DigifitTrophiesScreen> {
                     imageUrl: '',
                     heading: "Muskelgruppen",
                     title: "Beinpresse",
-                    isFavouriteVisible: true,
+                    isFavouriteVisible: false,
                     isFavorite: false,
                     sourceId: 1,
-                    isMarked: true),
+                    isCompleted: true),
               );
             }),
         10.verticalSpace,
         Visibility(
           visible: isButtonVisible ?? true,
           child: CustomButton(
-              onPressed: () {}, text: AppLocalizations.of(context).show_course),
+              onPressed: () {},
+              text: AppLocalizations.of(context).digifit_trophies_load_more),
         )
       ],
     );

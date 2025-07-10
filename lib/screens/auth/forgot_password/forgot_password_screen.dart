@@ -12,7 +12,8 @@ import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/common_widgets/toast_message.dart';
 import 'package:kusel/images_path.dart';
 
-import '../../../navigator/navigator.dart';
+
+import '../../../navigation/navigation.dart';
 import '../validator/empty_field_validator.dart';
 import 'forgot_password_controller.dart';
 

@@ -1318,6 +1318,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Select'**
   String get select;
+
+  /// No description provided for @digifit_open_exercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Open exercise'**
+  String get digifit_open_exercise;
+
+  /// No description provided for @digifit_completed_exercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed exercise'**
+  String get digifit_completed_exercise;
+
+  /// No description provided for @digifit_recommended_exercise.
+  ///
+  /// In en, this message translates to:
+  /// **' Recommended:'**
+  String get digifit_recommended_exercise;
+
+  /// No description provided for @digifit_exercise_set.
+  ///
+  /// In en, this message translates to:
+  /// **'Set'**
+  String get digifit_exercise_set;
+
+  /// No description provided for @digifit_exercise_reps.
+  ///
+  /// In en, this message translates to:
+  /// **'Reps.'**
+  String get digifit_exercise_reps;
+
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get error;
+
+  /// No description provided for @validation_falied_message.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid scan. Unable to start session.'**
+  String get validation_falied_message;
+
+  /// No description provided for @session_start.
+  ///
+  /// In en, this message translates to:
+  /// **'Session has been started'**
+  String get session_start;
+
+  /// No description provided for @goal_achieved.
+  ///
+  /// In en, this message translates to:
+  /// **'Goal has already been achieved'**
+  String get goal_achieved;
+
+  /// No description provided for @min.
+  ///
+  /// In en, this message translates to:
+  /// **'Min'**
+  String get min;
+
+  /// No description provided for @play.
+  ///
+  /// In en, this message translates to:
+  /// **'Play'**
+  String get play;
+
+  /// No description provided for @pause.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get pause;
+
+  /// No description provided for @digifit_success_card_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Great perseverance!'**
+  String get digifit_success_card_title;
+
+  /// No description provided for @digifit_success_card_desp.
+  ///
+  /// In en, this message translates to:
+  /// **'Now complete the exercise to collect your points.'**
+  String get digifit_success_card_desp;
+
+  /// No description provided for @digifit_abort.
+  ///
+  /// In en, this message translates to:
+  /// **'Abort'**
+  String get digifit_abort;
+
+  /// No description provided for @digifit_abort_exercise_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Abort Exercise?'**
+  String get digifit_abort_exercise_title;
+
+  /// No description provided for @digifit_abort_exercise_desp.
+  ///
+  /// In en, this message translates to:
+  /// **'The current exercise is not yet completed. Do you really want to abort and go back?'**
+  String get digifit_abort_exercise_desp;
+
+  /// No description provided for @digifit_latest_trophies.
+  ///
+  /// In en, this message translates to:
+  /// **'Latest trophies'**
+  String get digifit_latest_trophies;
+
+  /// No description provided for @digifit_all_trophies.
+  ///
+  /// In en, this message translates to:
+  /// **'All trophies'**
+  String get digifit_all_trophies;
+
+  /// No description provided for @digifit_trophies_received.
+  ///
+  /// In en, this message translates to:
+  /// **'Trophies received'**
+  String get digifit_trophies_received;
+
+  /// No description provided for @digifit_trophies_load_more.
+  ///
+  /// In en, this message translates to:
+  /// **'Load more'**
+  String get digifit_trophies_load_more;
+
+  /// No description provided for @digifit_trophies_open.
+  ///
+  /// In en, this message translates to:
+  /// **'open'**
+  String get digifit_trophies_open;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

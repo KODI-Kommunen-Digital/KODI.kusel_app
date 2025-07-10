@@ -13,11 +13,12 @@ import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/common_widgets/toast_message.dart';
 import 'package:kusel/images_path.dart';
-import 'package:kusel/navigator/navigator.dart';
 import 'package:kusel/screens/auth/signup/signup_controller.dart';
 import 'package:kusel/screens/auth/validator/email_validator.dart';
 import 'package:kusel/screens/auth/validator/empty_field_validator.dart';
 import 'package:kusel/screens/auth/validator/password_validator.dart';
+
+import '../../../navigation/navigation.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
