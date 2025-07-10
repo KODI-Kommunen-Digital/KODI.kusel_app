@@ -19,7 +19,7 @@ class DigifitTextImageCard extends ConsumerStatefulWidget {
   final VoidCallback? onCardTap;
   final VoidCallback? onFavorite;
   final int sourceId;
-  final bool isMarked;
+  final bool? isCompleted;
 
   const DigifitTextImageCard({
     Key? key,
@@ -32,7 +32,7 @@ class DigifitTextImageCard extends ConsumerStatefulWidget {
     required this.sourceId,
     this.onCardTap,
     this.onFavorite,
-    required this.isMarked
+    this.isCompleted,
   }) : super(key: key);
 
   @override
@@ -51,29 +51,6 @@ class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
         elevation: 4,
         child: Stack(
           children: [
-            Positioned(
-              top: 0,
-              left: 0,
-              child: Visibility(
-                visible: widget.isMarked,
-                  child: Container(
-                    height: 32.h,
-                width: 40.w,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).indicatorColor,
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(10.r), bottomRight: Radius.circular(10.r))
-                ),
-                child: Center(
-                  child: SizedBox(
-                    child: ImageUtil.loadSvgImage(
-                      height: 18.h,
-                        width: 18.h,
-                        imageUrl: imagePath['digifit_trophy_icon'] ?? '',
-                        context: context),
-                  ),
-                ),
-              )),
-            ),
             Padding(
               padding: EdgeInsets.all(5.h.w),
               child: Row(
@@ -140,6 +117,29 @@ class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
                   10.horizontalSpace,
                 ],
               ),
+            ),
+            Positioned(
+              top: 0,
+              left: 0,
+              child: Visibility(
+                  visible: widget.isCompleted ?? false,
+                  child: Container(
+                    height: 32.h,
+                    width: 40.w,
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).indicatorColor,
+                        borderRadius: BorderRadius.only(topLeft: Radius.circular(10.r), bottomRight: Radius.circular(10.r))
+                    ),
+                    child: Center(
+                      child: SizedBox(
+                        child: ImageUtil.loadSvgImage(
+                            height: 18.h,
+                            width: 18.h,
+                            imageUrl: imagePath['digifit_trophy_icon'] ?? '',
+                            context: context),
+                      ),
+                    ),
+                  )),
             )
           ],
         ),

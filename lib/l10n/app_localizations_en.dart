@@ -619,4 +619,70 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get select => 'Select';
+
+  @override
+  String get digifit_open_exercise => 'Open exercise';
+
+  @override
+  String get digifit_completed_exercise => 'Completed exercise';
+
+  @override
+  String get digifit_recommended_exercise => ' Recommended:';
+
+  @override
+  String get digifit_exercise_set => 'Set';
+
+  @override
+  String get digifit_exercise_reps => 'Reps.';
+
+  @override
+  String get error => 'Error';
+
+  @override
+  String get validation_falied_message => 'Invalid scan. Unable to start session.';
+
+  @override
+  String get session_start => 'Session has been started';
+
+  @override
+  String get goal_achieved => 'Goal has already been achieved';
+
+  @override
+  String get min => 'Min';
+
+  @override
+  String get play => 'Play';
+
+  @override
+  String get pause => 'Pause';
+
+  @override
+  String get digifit_success_card_title => 'Great perseverance!';
+
+  @override
+  String get digifit_success_card_desp => 'Now complete the exercise to collect your points.';
+
+  @override
+  String get digifit_abort => 'Abort';
+
+  @override
+  String get digifit_abort_exercise_title => 'Abort Exercise?';
+
+  @override
+  String get digifit_abort_exercise_desp => 'The current exercise is not yet completed. Do you really want to abort and go back?';
+
+  @override
+  String get digifit_latest_trophies => 'Latest trophies';
+
+  @override
+  String get digifit_all_trophies => 'All trophies';
+
+  @override
+  String get digifit_trophies_received => 'Trophies received';
+
+  @override
+  String get digifit_trophies_load_more => 'Load more';
+
+  @override
+  String get digifit_trophies_open => 'open';
 }
