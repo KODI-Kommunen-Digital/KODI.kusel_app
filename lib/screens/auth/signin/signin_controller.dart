@@ -91,7 +91,7 @@ class SignInController extends StateNotifier<SignInState> {
 
       result.fold((l) async {
         final text =
-        await translateErrorMessage.translateErrorMessage(l.toString());
+            await translateErrorMessage.translateErrorMessage(l.toString());
         state = state.copyWith(showLoading: false);
         error(text);
         debugPrint('sign in user fold Exception = $l');
@@ -107,6 +107,9 @@ class SignInController extends StateNotifier<SignInState> {
 
           sharedPreferenceHelper.setString(refreshTokenKey, refreshToken);
           sharedPreferenceHelper.setString(tokenKey, token);
+          sharedPreferenceHelper.setString(
+              digifitRefreshTokenKey, refreshToken);
+          sharedPreferenceHelper.setString(digifitAccessTokenKey, token);
           sharedPreferenceHelper.setInt(userIdKey, userId);
           sharedPreferenceHelper.setBool(onboardingKey, isOnboardingComplete);
           success();
