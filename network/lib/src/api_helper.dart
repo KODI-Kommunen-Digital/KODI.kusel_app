@@ -317,6 +317,28 @@ class ApiHelper<E extends BaseModel> {
       return Left(ApiError(error: fallbackErrorMessage));
     }
   }
+
+  Future<Either<Exception, String>> getRequestUrlHelper({
+    required String shortUrl,
+    int maxRedirects = 5,
+  }) async {
+    try {
+      var response = await _dio.get(
+        shortUrl,
+        options: Options(
+            followRedirects: true,
+            maxRedirects: maxRedirects,
+            validateStatus: (status) => status != null && status < 500),
+      );
+
+      return Right(response.realUri.toString());
+    } on DioException catch (e) {
+      final errorMessage = _extractErrorMessage(e.response?.data);
+      return Left(ApiError(error: errorMessage ?? fallbackErrorMessage));
+    } catch (e) {
+      return Left(ApiError(error: fallbackErrorMessage));
+    }
+  }
 }
 
 extension DioFetchExtension<E extends BaseModel> on ApiHelper<E> {

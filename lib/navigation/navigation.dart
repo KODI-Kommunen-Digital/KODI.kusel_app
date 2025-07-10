@@ -9,10 +9,10 @@ final navigationProvider = Provider((ref)=>(Navigator()));
 
 class Navigator {
 
-  navigateUsingPath(
+  Future<T?> navigateUsingPath<T>(
       {required String path, required BuildContext context, Object? params}) {
     path = _createFullPathForExploreSubScreen(path: path);
-    GoRouter.of(context).push(path, extra: params);
+    return GoRouter.of(context).push(path, extra: params);
   }
 
   removeAllAndNavigate(
@@ -51,6 +51,12 @@ class Navigator {
         return "$exploreScreenPath/$path";
       }
     return path;
+  }
+
+
+  removeTopPageAndReturnValue({required BuildContext context,dynamic result}){
+
+    GoRouter.of(context).pop(result);
   }
 
 }

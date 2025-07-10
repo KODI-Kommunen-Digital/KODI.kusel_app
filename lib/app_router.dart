@@ -13,9 +13,11 @@ import 'package:kusel/screens/auth/signin/signin_screen.dart';
 import 'package:kusel/screens/auth/signup/signup_screen.dart';
 import 'package:kusel/screens/dashboard/dashboard_screen.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/digifit_exercise_detail_screen.dart';
+import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/params/digifit_exercise_details_params.dart';
 import 'package:kusel/screens/digifit_screens/digifit_overview/digifit_overview_screen.dart';
+import 'package:kusel/screens/digifit_screens/digifit_overview/params/digifit_overview_params.dart';
 import 'package:kusel/screens/digifit_screens/digifit_qr_scanner/digifit_qr_scanner_screen.dart';
-import 'package:kusel/screens/digifit_screens/digifit_start/digifit_start_screen.dart';
+import 'package:kusel/screens/digifit_screens/digifit_start/digifit_information_screen.dart';
 import 'package:kusel/screens/digifit_screens/digifit_trophies/digifit_trophies_screen.dart';
 import 'package:kusel/screens/event/event_detail_screen.dart';
 import 'package:kusel/screens/event/event_detail_screen_controller.dart';
@@ -98,10 +100,11 @@ const virtualTownHallScreenPath = "virtualTownHallScreenPath";
 const meinOrtScreenPath = "meinOrtScreenPath";
 const mobilityScreenPath = "mobilityScreenPath";
 const participateScreenPath = "participateScreenPath";
+const digifitStartScreenPath = "digifitStartScreenPath";
+const digifitTrophiesScreenPath = "digifitTrophiesScreenPath";
+
 
 // DigiFit screen path
-const digifitStartScreenPath = "/digifitStartScreenPath";
-const digifitTrophiesScreenPath = "/digifitTrophiesScreenPath";
 const digifitOverViewScreenPath = "/digifitOverViewScreenPath";
 const digifitQRScannerScreenPath = "/digifitQRScannerScreenPath";
 const digifitExerciseDetailScreenPath = "/digifitExerciseDetailScreenPath";
@@ -114,7 +117,9 @@ final exploreSubScreenRoutes = [
   virtualTownHallScreenPath,
   meinOrtScreenPath,
   mobilityScreenPath,
-  participateScreenPath
+  participateScreenPath,
+  digifitStartScreenPath,
+  digifitTrophiesScreenPath
 ];
 
 // Full route list
@@ -183,16 +188,21 @@ List<RouteBase> goRouteList = [
   GoRoute(
       path: favouriteCityScreenPath, builder: (_, __) => FavouriteCityScreen()),
   GoRoute(
-      path: digifitStartScreenPath, builder: (_, __) => DigifitStartScreen()),
-  GoRoute(
-      path: digifitTrophiesScreenPath,
-      builder: (_, __) => DigifitTrophiesScreen()),
-  GoRoute(
       path: digifitOverViewScreenPath,
-      builder: (_, __) => DigifitOverviewScreen()),
+      builder: (_, state) => DigifitOverviewScreen(
+          digifitOverviewScreenParams:
+              state.extra as DigifitOverviewScreenParams)),
   GoRoute(
       path: digifitQRScannerScreenPath,
       builder: (_, __) => DigifitQRScannerScreen()),
+
+  GoRoute(
+      path: digifitExerciseDetailScreenPath,
+      builder: (_, state) => DigifitExerciseDetailScreen(
+            digifitExerciseDetailsParams:
+                state.extra as DigifitExerciseDetailsParams,
+          )),
+
   GoRoute(
       path: webViewPagePath,
       builder: (_, state) =>
@@ -201,9 +211,6 @@ List<RouteBase> goRouteList = [
       path: fullImageScreenPath,
       builder: (_, state) => FullImageScreen(
           fullImageScreenParams: state.extra as FullImageScreenParams)),
-  GoRoute(
-      path: digifitExerciseDetailScreenPath,
-      builder: (_, __) => DigifitExerciseDetailScreen()),
 
   // Dashboard + tabs
   dashboardRoutes,
@@ -249,6 +256,13 @@ final dashboardRoutes = StatefulShellRoute.indexedStack(
               path: meinOrtScreenPath,
               builder: (_, __) => const MeinOrtScreen(),
             ),
+            GoRoute(
+              path: digifitStartScreenPath,
+              builder: (_, __) => const DigifitInformationScreen(),
+            ),
+            GoRoute(
+                path: digifitTrophiesScreenPath,
+                builder: (_, __) => DigifitTrophiesScreen()),
             GoRoute(
               path: participateScreenPath,
               builder: (_, __) => const ParticipateScreen(),

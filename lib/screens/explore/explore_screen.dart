@@ -89,7 +89,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
         "tourism_and_lesiure",
         "mobility",
         "get_involved",
-         "get_involved"
+        "digifit"
       ];
 
       return GridView.builder(
