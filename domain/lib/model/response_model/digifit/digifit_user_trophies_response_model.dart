@@ -31,7 +31,7 @@ class DigifitUserTrophyDataModel extends BaseModel<DigifitUserTrophyDataModel> {
   final DigifitUserTrophyStatsModel? userStats;
   final List<DigifitUserTrophyItemModel>? latestTrophies;
   final DigifitUserTrophyAllModel? allTrophies;
-  final DigifitUserTrophyUnlockedModel? unlockedTrophies;
+  final DigifitUserTrophyUnlockedModel? trophiesReceived;
   final DigifitUserTrophyActionsModel? actions;
 
   DigifitUserTrophyDataModel({
@@ -39,7 +39,7 @@ class DigifitUserTrophyDataModel extends BaseModel<DigifitUserTrophyDataModel> {
     this.userStats,
     this.latestTrophies,
     this.allTrophies,
-    this.unlockedTrophies,
+    this.trophiesReceived,
     this.actions,
   });
 
@@ -54,7 +54,7 @@ class DigifitUserTrophyDataModel extends BaseModel<DigifitUserTrophyDataModel> {
               .toList()
           : null,
       allTrophies: DigifitUserTrophyAllModel().fromJson(json['allTrophies']),
-      unlockedTrophies:
+      trophiesReceived:
           DigifitUserTrophyUnlockedModel().fromJson(json['unlockedTrophies']),
       actions: DigifitUserTrophyActionsModel().fromJson(json['actions']),
     );
@@ -67,7 +67,7 @@ class DigifitUserTrophyDataModel extends BaseModel<DigifitUserTrophyDataModel> {
       'userStats': userStats?.toJson(),
       'latestTrophies': latestTrophies?.map((e) => e.toJson()).toList(),
       'allTrophies': allTrophies?.toJson(),
-      'unlockedTrophies': unlockedTrophies?.toJson(),
+      'unlockedTrophies': trophiesReceived?.toJson(),
       'actions': actions?.toJson(),
     };
   }
@@ -104,13 +104,15 @@ class DigifitUserTrophyItemModel extends BaseModel<DigifitUserTrophyItemModel> {
   final int? id;
   final String? name;
   final String? iconUrl;
-  final bool? isUnlocked;
+  final bool? isCompleted;
+  String? muscleGroups;
 
   DigifitUserTrophyItemModel({
     this.id,
     this.name,
     this.iconUrl,
-    this.isUnlocked,
+    this.isCompleted,
+    this.muscleGroups
   });
 
   @override
@@ -119,7 +121,8 @@ class DigifitUserTrophyItemModel extends BaseModel<DigifitUserTrophyItemModel> {
       id: json['id'],
       name: json['name'],
       iconUrl: json['iconUrl'],
-      isUnlocked: json['isUnlocked'],
+      isCompleted: json['isUnlocked'],
+      muscleGroups: json['muscleGroups'],
     );
   }
 
@@ -129,7 +132,8 @@ class DigifitUserTrophyItemModel extends BaseModel<DigifitUserTrophyItemModel> {
       'id': id,
       'name': name,
       'iconUrl': iconUrl,
-      'isUnlocked': isUnlocked,
+      'isUnlocked': isCompleted,
+      'muscleGroups': muscleGroups,
     };
   }
 }
