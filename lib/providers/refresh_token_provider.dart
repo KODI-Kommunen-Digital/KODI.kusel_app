@@ -34,6 +34,7 @@ class RefreshTokenProvider {
           await refreshTokenUseCase.call(requestModel, responseModel);
       response.fold((l) {
         debugPrint('refresh token fold exception = $l');
+        onError();
       }, (r) {
         final res = r as RefreshTokenResponseModel;
         sharedPreferenceHelper.setString(tokenKey, res.data?.accessToken ?? "");
@@ -44,6 +45,7 @@ class RefreshTokenProvider {
       });
     } catch (error) {
       debugPrint('refresh token exception : $error');
+      rethrow;
     }
   }
 
@@ -61,6 +63,7 @@ class RefreshTokenProvider {
           await refreshTokenUseCase.call(requestModel, responseModel);
       response.fold((l) {
         debugPrint('digifit refresh token fold exception = $l');
+        onError();
       }, (r) {
         final res = r as RefreshTokenResponseModel;
         sharedPreferenceHelper.setString(
@@ -72,6 +75,7 @@ class RefreshTokenProvider {
       });
     } catch (error) {
       debugPrint('digifit refresh token exception : $error');
+      rethrow;
     }
   }
 }
