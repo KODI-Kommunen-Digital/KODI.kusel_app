@@ -20,24 +20,24 @@ import 'digifit_exercise_details_state.dart';
 import 'enum/digifit_exercise_session_status_enum.dart';
 import 'enum/digifit_exercise_timer_state.dart';
 
-final digifitExerciseDetailsControllerProvider = StateNotifierProvider
-    .autoDispose<DigifitExerciseDetailsController, DigifitExerciseDetailsState>(
-        (ref) => DigifitExerciseDetailsController(
-              digifitExerciseDetailsUseCase:
-                  ref.read(digifitExerciseDetailsUseCaseProvider),
-              digifitExerciseDetailsTrackingUseCase:
-                  ref.read(digifitExerciseDetailsTrackingUseCaseProvider),
-              tokenStatus: ref.read(tokenStatusProvider),
-              refreshTokenProvider: ref.read(refreshTokenProvider),
-              localeManagerController: ref.read(localeManagerProvider.notifier),
-              digifitEquipmentFav: ref.read(digifitEquipmentFavProvider),
-              digifitQrScannerUseCase:
-                  ref.read(digifitQrScannerUseCaseProvider),
-              signInStatusController: ref.read(signInStatusProvider.notifier),
-            ));
+final digifitExerciseDetailsControllerProvider = StateNotifierProvider.autoDispose
+    .family<DigifitExerciseDetailsController, DigifitExerciseDetailsState, int>(
+      (ref, equipmentId) => DigifitExerciseDetailsController(
+    digifitExerciseDetailsUseCase: ref.read(digifitExerciseDetailsUseCaseProvider),
+    digifitExerciseDetailsTrackingUseCase: ref.read(digifitExerciseDetailsTrackingUseCaseProvider),
+    tokenStatus: ref.read(tokenStatusProvider),
+    refreshTokenProvider: ref.read(refreshTokenProvider),
+    localeManagerController: ref.read(localeManagerProvider.notifier),
+    digifitEquipmentFav: ref.read(digifitEquipmentFavProvider),
+    digifitQrScannerUseCase: ref.read(digifitQrScannerUseCaseProvider),
+    signInStatusController: ref.read(signInStatusProvider.notifier),
+    equipmentId: equipmentId, // Pass equipmentId to controller
+  ),
+);
 
 class DigifitExerciseDetailsController
     extends StateNotifier<DigifitExerciseDetailsState> {
+  int equipmentId;
   final DigifitExerciseDetailsUseCase digifitExerciseDetailsUseCase;
   final DigifitExerciseDetailsTrackingUseCase
       digifitExerciseDetailsTrackingUseCase;
@@ -56,7 +56,8 @@ class DigifitExerciseDetailsController
       required this.localeManagerController,
       required this.digifitEquipmentFav,
       required this.digifitQrScannerUseCase,
-      required this.signInStatusController})
+      required this.signInStatusController,
+      required this.equipmentId})
       : super(DigifitExerciseDetailsState.empty());
 
   Future<void> fetchDigifitExerciseDetails(

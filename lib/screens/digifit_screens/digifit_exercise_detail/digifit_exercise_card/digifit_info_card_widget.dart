@@ -10,8 +10,13 @@ import '../enum/digifit_exercise_session_status_enum.dart';
 
 class InfoCardWidget extends ConsumerStatefulWidget {
   final VoidCallback startTimer;
+  final int equipmentId;
 
-  const InfoCardWidget({super.key, required this.startTimer});
+  const InfoCardWidget({
+    super.key,
+    required this.startTimer,
+    required this.equipmentId,
+  });
 
   @override
   ConsumerState<InfoCardWidget> createState() => _InfoCardWidgetState();
@@ -20,22 +25,13 @@ class InfoCardWidget extends ConsumerStatefulWidget {
 class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
   @override
   Widget build(BuildContext context) {
-    final digifitExerciseUserProgress = ref
-        .watch(digifitExerciseDetailsControllerProvider)
-        .digifitExerciseEquipmentModel
-        ?.userProgress;
+    final controller = ref.watch(digifitExerciseDetailsControllerProvider(widget.equipmentId));
 
-    int currentSet =
-        ref.watch(digifitExerciseDetailsControllerProvider).currentSetNumber;
-
-    int totalSet =
-        ref.watch(digifitExerciseDetailsControllerProvider).totalSetNumber;
-
-    final isReadyToSubmitSet =
-        ref.watch(digifitExerciseDetailsControllerProvider).isReadyToSubmitSet;
-
-    final isScanButtonVisible =
-        ref.watch(digifitExerciseDetailsControllerProvider).isScannerVisible;
+    final digifitExerciseUserProgress = controller.digifitExerciseEquipmentModel?.userProgress;
+    final currentSet = controller.currentSetNumber;
+    final totalSet = controller.totalSetNumber;
+    final isReadyToSubmitSet = controller.isReadyToSubmitSet;
+    final isScanButtonVisible = controller.isScannerVisible;
 
     return Container(
       width: double.infinity,
@@ -81,7 +77,7 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
                     ),
                     SizedBox(height: 6.h),
                     textSemiBoldPoppins(
-                      text: '${digifitExerciseUserProgress?.repetitionsPerSet}',
+                      text: '${digifitExerciseUserProgress?.repetitionsPerSet ?? 0}',
                       color: Theme.of(context).textTheme.bodyLarge?.color,
                     ),
                   ],
@@ -95,68 +91,35 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
               onTap: (isScanButtonVisible || !isReadyToSubmitSet)
                   ? null
                   : () {
-                      bool? isComplete = ref
-                          .read(digifitExerciseDetailsControllerProvider)
-                          .digifitExerciseEquipmentModel
-                          ?.userProgress
-                          .isCompleted;
+                final isComplete = controller.digifitExerciseEquipmentModel?.userProgress.isCompleted ?? false;
+                if (!isComplete) {
+                  final locationId = controller.locationId;
+                  final exerciseModel = controller.digifitExerciseEquipmentModel;
+                  final reps = exerciseModel?.userProgress.repetitionsPerSet ?? 0;
+                  final id = exerciseModel?.id ?? 0;
 
-                      if (isComplete != null && !isComplete) {
-                        int currentSet = ref
-                            .read(digifitExerciseDetailsControllerProvider)
-                            .currentSetNumber;
-                        int totalSets = ref
-                            .read(digifitExerciseDetailsControllerProvider)
-                            .totalSetNumber;
+                  final stage = (currentSet == totalSet - 1)
+                      ? ExerciseStageConstant.complete
+                      : ExerciseStageConstant.progress;
 
-                        final digifitExerciseDetailsControllerState =
-                            ref.read(digifitExerciseDetailsControllerProvider);
+                  ref.read(digifitExerciseDetailsControllerProvider(widget.equipmentId).notifier).trackExerciseDetails(
+                    id,
+                    locationId,
+                    currentSet,
+                    reps,
+                    stage,
+                        () {
+                      ref.read(digifitExerciseDetailsControllerProvider(widget.equipmentId).notifier).updateIsReadyToSubmitSetVisibility(false);
 
-                        int locationId = ref
-                            .read(digifitExerciseDetailsControllerProvider)
-                            .locationId;
-
-                        ExerciseStageConstant stage;
-
-                        if (currentSet == totalSets - 1) {
-                          stage = ExerciseStageConstant.complete;
-                        } else {
-                          stage = ExerciseStageConstant.progress;
-                        }
-
-                        ref
-                            .read(digifitExerciseDetailsControllerProvider
-                                .notifier)
-                            .trackExerciseDetails(
-                                digifitExerciseDetailsControllerState
-                                        .digifitExerciseEquipmentModel?.id ??
-                                    0,
-                                locationId,
-                                currentSet,
-                                digifitExerciseDetailsControllerState
-                                        .digifitExerciseEquipmentModel
-                                        ?.userProgress
-                                        .repetitionsPerSet ??
-                                    0,
-                                stage, () {
-                          ref
-                              .read(digifitExerciseDetailsControllerProvider
-                                  .notifier)
-                              .updateIsReadyToSubmitSetVisibility(false);
-
-                          if(stage == ExerciseStageConstant.complete) {
-                            ref
-                                .read(
-                                digifitInformationControllerProvider.notifier)
-                                .fetchDigifitInformation();
-                          }
-
-                          if(stage != ExerciseStageConstant.complete) {
-                            widget.startTimer();
-                          }
-                        });
+                      if (stage == ExerciseStageConstant.complete) {
+                        ref.read(digifitInformationControllerProvider.notifier).fetchDigifitInformation();
+                      } else {
+                        widget.startTimer();
                       }
                     },
+                  );
+                }
+              },
               child: Container(
                 width: 52.w,
                 height: 52.w,
