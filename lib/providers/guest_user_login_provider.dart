@@ -40,7 +40,7 @@ class GuestUserLogin {
           final res = r as GuestUserLoginResponseModel;
 
           sharedPreferenceHelper.setString(
-              digifitAccessTokenKey, res.data?.accessToken ?? '');
+              tokenKey, res.data?.accessToken ?? '');
         });
       }
     } catch (error) {

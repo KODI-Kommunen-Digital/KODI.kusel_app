@@ -30,7 +30,7 @@ class DigifitEquipmentFav {
           onFavStatusChange,
       required DigifitEquipmentFavParams params}) async {
     try {
-      final status = tokenStatus.isDigifitAccessTokenExpired();
+      final status = tokenStatus.isAccessTokenExpired();
       final signInStatus = await signInStatusController.isUserLoggedIn();
 
       if (status && signInStatus) {
