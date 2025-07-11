@@ -47,11 +47,11 @@ class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
     try {
       state = state.copyWith(isLoading: true);
 
-      final isTokenExpired = tokenStatus.isDigifitAccessTokenExpired();
+      final isTokenExpired = tokenStatus.isAccessTokenExpired();
       final status = await signInStatusController.isUserLoggedIn();
 
       if (isTokenExpired && status) {
-        await refreshTokenProvider.getDigifitNewToken(
+        await refreshTokenProvider.getNewToken(
             onError: () {},
             onSuccess: () {
               _fetchDigifitOverview(locationId);
