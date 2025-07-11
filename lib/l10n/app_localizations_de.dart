@@ -144,7 +144,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get distance => 'Entfernung';
 
   @override
-  String get cancel => 'Abbrechen';
+  String get cancel => 'Stornieren';
 
   @override
   String get options => 'Optionen';
