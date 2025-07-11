@@ -78,9 +78,9 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       : super(HomeScreenState.empty());
 
   initialCall() async {
-    final res = sharedPreferenceHelper.getString(digifitAccessTokenKey);
+    final res = sharedPreferenceHelper.getString(tokenKey);
     if (res == null) {
-     await guestUserLogin.getGuestUserToken();
+      await guestUserLogin.getGuestUserToken();
     }
   }
 

@@ -26,7 +26,7 @@ class DigifitExerciseDetailsServices {
       BaseModel requestModel, BaseModel responseModel) async {
     final apiHelper = ref.read(apiHelperProvider);
 
-    String token = sharedPreferenceHelper.getString(digifitAccessTokenKey) ?? '';
+    String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
     final headers = {'Authorization': 'Bearer $token'};
 
     final locationId = requestModel.toJson()['locationId'];

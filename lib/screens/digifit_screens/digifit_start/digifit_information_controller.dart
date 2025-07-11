@@ -43,11 +43,11 @@ class DigifitInformationController extends StateNotifier<DigifitState> {
     try {
       state = state.copyWith(isLoading: true);
 
-      final isTokenExpired = tokenStatus.isDigifitAccessTokenExpired();
+      final isTokenExpired = tokenStatus.isAccessTokenExpired();
       final status = await signInStatusController.isUserLoggedIn();
 
       if (isTokenExpired && status) {
-        await refreshTokenProvider.getDigifitNewToken(onError: () {
+        await refreshTokenProvider.getNewToken(onError: () {
           state = state.copyWith(isLoading: false);
         }, onSuccess: () {
           _fetchDigifitInformation();
