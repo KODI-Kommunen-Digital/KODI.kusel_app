@@ -43,7 +43,7 @@ class DigifitExerciseDetailsState {
         isScannerVisible: true,
         locationId: 0,
         timerState: TimerState.start,
-        time: 60);
+        time: 3);
   }
 
   DigifitExerciseDetailsState copyWith(
