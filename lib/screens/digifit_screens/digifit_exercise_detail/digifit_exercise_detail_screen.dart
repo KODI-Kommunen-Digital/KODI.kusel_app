@@ -61,7 +61,7 @@ class _DigifitExerciseDetailScreenState
     return PopScope(
       canPop: false,
       onPopInvokedWithResult:(didPop, _)  async{
-        handleAbortBackNavigation(context);
+        await handleAbortBackNavigation(context);
       },
 
       child: Scaffold(
@@ -502,7 +502,7 @@ class _DigifitExerciseDetailScreenState
           ),
           CupertinoDialogAction(
             onPressed: () async {
-              ref.read(navigationProvider).removeDialog(context: context);
+              await ref.read(navigationProvider).removeDialog(context: context);
 
               final digifitExerciseDetailsState =
                   ref.watch(digifitExerciseDetailsControllerProvider);
