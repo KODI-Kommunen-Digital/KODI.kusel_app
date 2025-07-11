@@ -35,10 +35,10 @@ class RefreshTokenProvider {
       response.fold((l) {
         debugPrint('refresh token fold exception = $l');
         onError();
-      }, (r) {
+      }, (r) async{
         final res = r as RefreshTokenResponseModel;
-        sharedPreferenceHelper.setString(tokenKey, res.data?.accessToken ?? "");
-        sharedPreferenceHelper.setString(
+        await sharedPreferenceHelper.setString(tokenKey, res.data?.accessToken ?? "");
+        await sharedPreferenceHelper.setString(
             refreshTokenKey, res.data?.refreshToken ?? "");
 
         onSuccess();
@@ -49,33 +49,4 @@ class RefreshTokenProvider {
     }
   }
 
-  Future<void> getDigifitNewToken(
-      {required void Function() onError,
-      required void Function() onSuccess}) async {
-    try {
-      final userId = sharedPreferenceHelper.getInt(userIdKey);
-
-      RefreshTokenRequestModel requestModel =
-          RefreshTokenRequestModel(userId: userId?.toString() ?? "");
-      RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
-
-      final response =
-          await refreshTokenUseCase.call(requestModel, responseModel);
-      response.fold((l) {
-        debugPrint('digifit refresh token fold exception = $l');
-        onError();
-      }, (r) {
-        final res = r as RefreshTokenResponseModel;
-        sharedPreferenceHelper.setString(
-            digifitAccessTokenKey, res.data?.accessToken ?? "");
-        sharedPreferenceHelper.setString(
-            digifitRefreshTokenKey, res.data?.refreshToken ?? "");
-
-        onSuccess();
-      });
-    } catch (error) {
-      debugPrint('digifit refresh token exception : $error');
-      rethrow;
-    }
-  }
 }

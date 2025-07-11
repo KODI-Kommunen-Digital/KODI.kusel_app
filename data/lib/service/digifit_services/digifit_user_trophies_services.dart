@@ -27,7 +27,7 @@ class DigifitUserTrophiesService {
         '$digifitUserTrophiesEndPoint?translate=${params["translate"]}';
 
     final apiHelper = ref.read(apiHelperProvider);
-    String token = sharedPreferenceHelper.getString(digifitAccessTokenKey) ?? '';
+    String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
     final headers = {'Authorization': 'Bearer $token'};
     final result = await apiHelper.getRequest(
         create: () => responseModel, path: path, headers: headers);
