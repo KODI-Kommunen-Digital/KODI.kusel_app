@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/screens/digifit_screens/digifit_start/digifit_information_controller.dart';
 
 import '../../../../common_widgets/text_styles.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -142,6 +143,13 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
                               .read(digifitExerciseDetailsControllerProvider
                                   .notifier)
                               .updateIsReadyToSubmitSetVisibility(false);
+
+                          if(stage == ExerciseStageConstant.complete) {
+                            ref
+                                .read(
+                                digifitInformationControllerProvider.notifier)
+                                .fetchDigifitInformation();
+                          }
 
                           if(stage != ExerciseStageConstant.complete) {
                             widget.startTimer();
