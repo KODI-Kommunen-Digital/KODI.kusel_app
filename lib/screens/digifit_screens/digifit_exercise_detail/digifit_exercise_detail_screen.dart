@@ -61,7 +61,9 @@ class _DigifitExerciseDetailScreenState
     return PopScope(
       canPop: false,
       onPopInvokedWithResult:(didPop, _)  async{
-        await handleAbortBackNavigation(context);
+        if(didPop == false) {
+          await handleAbortBackNavigation(context);
+        }
       },
 
       child: Scaffold(
@@ -111,8 +113,8 @@ class _DigifitExerciseDetailScreenState
                 left: 16.w,
                 right: 16.w,
                 child: CommonBottomNavCard(
-                  onBackPress: () {
-                    handleAbortBackNavigation(context);
+                  onBackPress: () async {
+                    await handleAbortBackNavigation(context);
                   },
                   isFavVisible:
                       !ref.watch(homeScreenProvider).isSignInButtonVisible,
@@ -191,8 +193,8 @@ class _DigifitExerciseDetailScreenState
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         ArrowBackWidget(
-          onTap: () {
-            handleAbortBackNavigation(context);
+          onTap: () async {
+           await handleAbortBackNavigation(context);
           },
         ),
         16.horizontalSpace,
