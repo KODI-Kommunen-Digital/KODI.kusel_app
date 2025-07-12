@@ -62,3 +62,5 @@ const digifitEquipmentFavEndPoint = "/digifit/toggle-favorite";
 const digifitUserTrophiesEndPoint = "/digifit/user-trophies";
 
 const guestUserLoginEndPoint = "/users/guest/login";
+
+const localDigifitBulkTrackingEndPoint = "/digifit/bulk-trackers";
