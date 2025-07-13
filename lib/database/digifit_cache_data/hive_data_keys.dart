@@ -1,0 +1,1 @@
+const digifitCacheDataKey = "digifitCacheData";

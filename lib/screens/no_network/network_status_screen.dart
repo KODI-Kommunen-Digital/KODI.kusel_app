@@ -1,8 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
 
 class NetworkStatusScreen extends ConsumerStatefulWidget {
@@ -33,6 +35,13 @@ class _NetworkStatusScreenState extends ConsumerState<NetworkStatusScreen> {
                 onPressed: () =>
                     ref.read(networkStatusProvider.notifier).checkNetworkStatus(),
                 text: "Retry",
+                width: 200,
+              ),
+              20.verticalSpace,
+              CustomButton(
+                onPressed: () => ref.read(navigationProvider).navigateUsingPath(
+                    path: digifitStartScreenPath, context: context),
+                text: "Digifit",
                 width: 200,
               )
             ],
