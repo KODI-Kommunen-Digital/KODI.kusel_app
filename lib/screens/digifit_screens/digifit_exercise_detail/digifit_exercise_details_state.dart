@@ -15,6 +15,7 @@ class DigifitExerciseDetailsState {
   final int remainingPauseSecond;
   final TimerState timerState;
   final int time;
+  final bool isNetworkAvailable;
 
   DigifitExerciseDetailsState(
       {required this.isLoading,
@@ -28,7 +29,8 @@ class DigifitExerciseDetailsState {
       required this.isScannerVisible,
       required this.locationId,
       required this.timerState,
-      required this.time});
+      required this.time,
+      required this.isNetworkAvailable});
 
   factory DigifitExerciseDetailsState.empty() {
     return DigifitExerciseDetailsState(
@@ -43,23 +45,26 @@ class DigifitExerciseDetailsState {
         isScannerVisible: true,
         locationId: 0,
         timerState: TimerState.start,
-        time: 3);
+        time: 3,
+        isNetworkAvailable: true);
   }
 
-  DigifitExerciseDetailsState copyWith(
-      {bool? isLoading,
-      String? errorMessage,
-      List<DigifitExerciseRelatedStationsModel>?
-          digifitExerciseRelatedEquipmentsModel,
-      DigifitExerciseEquipmentModel? digifitExerciseEquipmentModel,
-      bool? isReadyToSubmitSet,
-      int? currentSetNumber,
-      int? totalSetNumber,
-      bool? isScannerVisible,
-      int? remainingPauseSecond,
-      int? locationId,
-      TimerState? timerState,
-      int? time}) {
+  DigifitExerciseDetailsState copyWith({
+    bool? isLoading,
+    String? errorMessage,
+    List<DigifitExerciseRelatedStationsModel>?
+        digifitExerciseRelatedEquipmentsModel,
+    DigifitExerciseEquipmentModel? digifitExerciseEquipmentModel,
+    bool? isReadyToSubmitSet,
+    int? currentSetNumber,
+    int? totalSetNumber,
+    bool? isScannerVisible,
+    int? remainingPauseSecond,
+    int? locationId,
+    TimerState? timerState,
+    int? time,
+    bool? isNetworkAvailable,
+  }) {
     return DigifitExerciseDetailsState(
         isLoading: isLoading ?? this.isLoading,
         errorMessage: errorMessage ?? this.errorMessage,
@@ -75,6 +80,7 @@ class DigifitExerciseDetailsState {
         remainingPauseSecond: remainingPauseSecond ?? this.remainingPauseSecond,
         locationId: locationId ?? this.locationId,
         timerState: timerState ?? this.timerState,
-        time: time ?? this.time);
+        time: time ?? this.time,
+        isNetworkAvailable: isNetworkAvailable ?? this.isNetworkAvailable);
   }
 }

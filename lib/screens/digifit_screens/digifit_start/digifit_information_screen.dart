@@ -10,6 +10,7 @@ import 'package:kusel/common_widgets/digifit/digifit_text_image_card.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
+import 'package:kusel/database/digifit_cache_data/digifit_cache_data_controller.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/providers/digifit_equipment_fav_provider.dart';
 import 'package:kusel/screens/digifit_screens/digifit_start/digifit_information_controller.dart';
@@ -223,7 +224,10 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                   heading: station.muscleGroups ?? '',
                   title: station.name ?? '',
                   isFavouriteVisible:
-                      !ref.read(homeScreenProvider).isSignInButtonVisible,
+                      !ref.read(homeScreenProvider).isSignInButtonVisible &&
+                          ref
+                              .read(digifitInformationControllerProvider)
+                              .isNetworkAvailable,
                   isFavorite: station.isFavorite ?? false,
                   sourceId: sourceId,
                   onCardTap: () {

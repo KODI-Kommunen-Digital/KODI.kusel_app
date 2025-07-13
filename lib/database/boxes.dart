@@ -1,7 +1,5 @@
 enum BoxesName{
-
-  exercise("");
-
+  digifitCacheData("digifitCacheData");
   final String boxName;
   const BoxesName(this.boxName);
 }

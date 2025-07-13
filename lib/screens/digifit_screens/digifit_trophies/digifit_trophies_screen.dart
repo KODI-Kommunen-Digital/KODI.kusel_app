@@ -9,6 +9,7 @@ import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/screens/digifit_screens/digifit_trophies/digifit_user_trophies_controller.dart';
+import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
 
 import '../../../app_router.dart';
 import '../../../common_widgets/digifit/digifit_status_widget.dart';
@@ -27,10 +28,14 @@ class DigifitTrophiesScreen extends ConsumerStatefulWidget {
 class _DigifitTrophiesScreenState extends ConsumerState<DigifitTrophiesScreen> {
   @override
   void initState() {
-    Future.microtask(() {
-      ref
-          .read(digifitUserTrophiesControllerProvider.notifier)
-          .fetchDigifitUserTrophies();
+    Future.microtask(() async {
+      bool networkStatus =
+          await ref.read(networkStatusProvider.notifier).checkNetworkStatus();
+      if (networkStatus) {
+        ref
+            .read(digifitUserTrophiesControllerProvider.notifier)
+            .fetchDigifitUserTrophies();
+      }
     });
     super.initState();
   }

@@ -61,4 +61,6 @@ const digifitEquipmentFavEndPoint = "/digifit/toggle-favorite";
 
 const digifitUserTrophiesEndPoint = "/digifit/user-trophies";
 
+const digifitCacheDataEndPoint = "/digifit/offline-fit-stats";
+
 const guestUserLoginEndPoint = "/users/guest/login";

@@ -328,7 +328,8 @@ class _DigifitExerciseDetailScreenState
           ),
           20.verticalSpace,
           if (digifitExerciseDetailsState
-              .digifitExerciseRelatedEquipmentsModel.isNotEmpty)
+              .digifitExerciseRelatedEquipmentsModel.isNotEmpty &&
+              digifitExerciseDetailsState.isNetworkAvailable)
             _buildCourseDetailSection(
                 isButtonVisible: false,
                 relatedEquipments: digifitExerciseDetailsState

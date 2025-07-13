@@ -1,26 +1,30 @@
 import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:core/token_status.dart';
 import 'package:domain/model/request_model/digifit/digifit_information_request_model.dart';
+import 'package:domain/model/response_model/digifit/digifit_cache_data_response_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_information_response_model.dart';
 import 'package:domain/usecase/digifit/digifit_information_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kusel/database/digifit_cache_data/digifit_cache_data_controller.dart';
 import 'package:kusel/locale/localization_manager.dart';
+import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
 
 import '../../../providers/digifit_equipment_fav_provider.dart';
 import '../../../providers/refresh_token_provider.dart';
 import 'digifit_information_state.dart';
 
 final digifitInformationControllerProvider = StateNotifierProvider.autoDispose<
-    DigifitInformationController, DigifitState>(
-  (ref) => DigifitInformationController(
-      digifitInformationUsecase: ref.read(digifitInformationUseCaseProvider),
-      tokenStatus: ref.read(tokenStatusProvider),
-      refreshTokenProvider: ref.read(refreshTokenProvider),
-      localeManagerController: ref.read(localeManagerProvider.notifier),
-      digifitEquipmentFav: ref.read(digifitEquipmentFavProvider),
-      signInStatusController: ref.read(signInStatusProvider.notifier)),
-);
+        DigifitInformationController, DigifitState>(
+    (ref) => DigifitInformationController(
+        digifitInformationUsecase: ref.read(digifitInformationUseCaseProvider),
+        tokenStatus: ref.read(tokenStatusProvider),
+        refreshTokenProvider: ref.read(refreshTokenProvider),
+        localeManagerController: ref.read(localeManagerProvider.notifier),
+        digifitEquipmentFav: ref.read(digifitEquipmentFavProvider),
+        digifitCacheDataController: ref.read(digifitCacheDataProvider.notifier),
+        networkStatusProvider: ref.read(networkStatusProvider.notifier),
+        signInStatusController: ref.read(signInStatusProvider.notifier)));
 
 class DigifitInformationController extends StateNotifier<DigifitState> {
   final DigifitInformationUseCase digifitInformationUsecase;
@@ -28,6 +32,8 @@ class DigifitInformationController extends StateNotifier<DigifitState> {
   final RefreshTokenProvider refreshTokenProvider;
   final LocaleManagerController localeManagerController;
   final DigifitEquipmentFav digifitEquipmentFav;
+  final DigifitCacheDataController digifitCacheDataController;
+  final NetworkStatusProvider networkStatusProvider;
   final SignInStatusController signInStatusController;
 
   DigifitInformationController(
@@ -36,29 +42,49 @@ class DigifitInformationController extends StateNotifier<DigifitState> {
       required this.refreshTokenProvider,
       required this.localeManagerController,
       required this.digifitEquipmentFav,
+      required this.digifitCacheDataController,
+      required this.networkStatusProvider,
       required this.signInStatusController})
       : super(DigifitState.empty());
 
   Future<void> fetchDigifitInformation() async {
-    try {
-      state = state.copyWith(isLoading: true);
+    state = state.copyWith(isLoading: true);
+    if (await isNetworkAvailable()) {
+      debugPrint('[DigifitInformationController] Data is coming from network');
+      try {
+        state = state.copyWith(isLoading: true);
 
-      final isTokenExpired = tokenStatus.isDigifitAccessTokenExpired();
-      final status = await signInStatusController.isUserLoggedIn();
+        final isTokenExpired = tokenStatus.isDigifitAccessTokenExpired();
+        final status = await signInStatusController.isUserLoggedIn();
 
-      if (isTokenExpired && status) {
-        await refreshTokenProvider.getDigifitNewToken(onError: () {
-          state = state.copyWith(isLoading: false);
-        }, onSuccess: () {
+        if (isTokenExpired && status) {
+          await refreshTokenProvider.getDigifitNewToken(onError: () {
+            state = state.copyWith(isLoading: false);
+          }, onSuccess: () {
+            _fetchDigifitInformation();
+          });
+        } else {
+          // If the token is not expired, we can proceed with the request
           _fetchDigifitInformation();
-        });
-      } else {
-        // If the token is not expired, we can proceed with the request
-        _fetchDigifitInformation();
+        }
+      } catch (e) {
+        debugPrint('[DigifitInformationController] Fetch Exception: $e');
       }
-    } catch (e) {
-      debugPrint('[DigifitInformationController] Fetch Exception: $e');
-      state = state.copyWith(isLoading: false);
+    } else {
+      bool isCacheDataAvailable =
+          await digifitCacheDataController.isDigifitCacheDataAvailable();
+      if (isCacheDataAvailable) {
+        DigifitCacheDataResponseModel? digifitCacheDataResponseModel =
+            await digifitCacheDataController.getCacheData();
+        if (digifitCacheDataResponseModel != null) {
+          state = state.copyWith(
+              isLoading: false,
+              digifitInformationDataModel: digifitCacheDataResponseModel.data);
+        }
+        debugPrint('[DigifitInformationController] Data is coming from cache');
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
     }
   }
 
@@ -155,5 +181,11 @@ class DigifitInformationController extends StateNotifier<DigifitState> {
     } catch (error) {
       rethrow;
     }
+  }
+
+  Future<bool> isNetworkAvailable() async {
+    bool networkAvailable = await networkStatusProvider.checkNetworkStatus();
+    state = state.copyWith(isNetworkAvailable : networkAvailable);
+    return networkAvailable;
   }
 }

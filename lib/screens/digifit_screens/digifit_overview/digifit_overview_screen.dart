@@ -250,7 +250,10 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
                   heading: station.muscleGroups ?? '',
                   title: station.name ?? '',
                   isFavouriteVisible:
-                      !ref.read(homeScreenProvider).isSignInButtonVisible,
+                      !ref.read(homeScreenProvider).isSignInButtonVisible &&
+                          ref
+                              .read(digifitOverviewScreenControllerProvider)
+                              .isNetworkAvailable,
                   isFavorite: station.isFavorite ?? false,
                   sourceId: sourceId,
                   isCompleted: station.isCompleted,
@@ -315,7 +318,10 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
                   heading: station.muscleGroups ?? '',
                   title: station.name ?? '',
                   isFavouriteVisible:
-                      !ref.read(homeScreenProvider).isSignInButtonVisible,
+                      !ref.read(homeScreenProvider).isSignInButtonVisible &&
+                          ref
+                              .read(digifitOverviewScreenControllerProvider)
+                              .isNetworkAvailable,
                   isFavorite: station.isFavorite ?? false,
                   sourceId: 1,
                   isCompleted: station.isCompleted,
