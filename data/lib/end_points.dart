@@ -64,3 +64,5 @@ const digifitUserTrophiesEndPoint = "/digifit/user-trophies";
 const digifitCacheDataEndPoint = "/digifit/offline-fit-stats";
 
 const guestUserLoginEndPoint = "/users/guest/login";
+
+const localDigifitBulkTrackingEndPoint = "/digifit/bulk-trackers";

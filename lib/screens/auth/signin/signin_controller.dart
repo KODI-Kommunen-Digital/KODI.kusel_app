@@ -102,7 +102,7 @@ class SignInController extends StateNotifier<SignInState> {
         state = state.copyWith(showLoading: false);
         error(text);
         debugPrint('sign in user fold Exception = $l');
-      }, (r) {
+      }, (r) async {
         state = state.copyWith(showLoading: false);
         final response = (r as SignInResponseModel);
 
@@ -112,13 +112,12 @@ class SignInController extends StateNotifier<SignInState> {
           final refreshToken = response.data?.refreshToken ?? "";
           final isOnboardingComplete = response.data?.isOnBoarded ?? false;
 
-          sharedPreferenceHelper.setString(refreshTokenKey, refreshToken);
-          sharedPreferenceHelper.setString(tokenKey, token);
-          sharedPreferenceHelper.setString(
-              digifitRefreshTokenKey, refreshToken);
-          sharedPreferenceHelper.setString(digifitAccessTokenKey, token);
-          sharedPreferenceHelper.setInt(userIdKey, userId);
-          sharedPreferenceHelper.setBool(onboardingKey, isOnboardingComplete);
+          await sharedPreferenceHelper.setString(refreshTokenKey, refreshToken);
+          await sharedPreferenceHelper.setString(tokenKey, token);
+          await sharedPreferenceHelper.setInt(userIdKey, userId);
+          await sharedPreferenceHelper.setBool(
+              onboardingKey, isOnboardingComplete);
+          await sharedPreferenceHelper.setBool(isUserSignedIn, true);
           success();
         }
       });
@@ -165,9 +164,9 @@ class SignInController extends StateNotifier<SignInState> {
             },
             (right) async {
               final res = right as RefreshTokenResponseModel;
-              sharedPreferenceHelper.setString(
+              await sharedPreferenceHelper.setString(
                   tokenKey, res.data?.accessToken ?? "");
-              sharedPreferenceHelper.setString(
+              await sharedPreferenceHelper.setString(
                   refreshTokenKey, res.data?.refreshToken ?? "");
               return true;
             },

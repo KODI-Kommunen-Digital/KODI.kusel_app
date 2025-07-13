@@ -16,6 +16,7 @@ class TokenStatus {
 
   bool isAccessTokenExpired() {
     try {
+
       final token = sharedPreferenceHelper.getString(tokenKey);
 
       if (token != null) {
@@ -42,23 +43,4 @@ class TokenStatus {
 
     return false;
   }
-
-
-  bool isDigifitAccessTokenExpired() {
-    try {
-      final token = sharedPreferenceHelper.getString(digifitAccessTokenKey);
-      if (token != null) {
-
-        final result =
-        JwtDecoder.isExpired(token); // Gives true if token is expired
-
-
-        return result;
-      }
-
-      return true;
-    } catch (error) {
-      return true;
-    }
-
-}}
+}
