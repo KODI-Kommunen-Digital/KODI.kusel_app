@@ -12,6 +12,4 @@ const onboardingKey = "onboarding";
 const userFirstNameKey = "userFirstName";
 const selectedMunicipalIdKey = "selectedMunicipalId";
 
-//digifit
-const digifitAccessTokenKey = "digifitAccessToken";
-const digifitRefreshTokenKey = "digifitRefreshToken";
+const isUserSignedIn = "isUserSignedIn";

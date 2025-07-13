@@ -3,16 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/utility/video_player_utility.dart';
 import 'package:video_player/video_player.dart';
 
-final videoPlayerControllerProvider = StateNotifierProvider.autoDispose<
-    VideoControllerNotifier, AsyncValue<VideoPlayerController>>(
-  (ref) => VideoControllerNotifier(),
+final videoPlayerControllerProvider = StateNotifierProvider.autoDispose.family<
+    VideoControllerNotifier, AsyncValue<VideoPlayerController>, int>(
+  (ref, equipmentId) => VideoControllerNotifier(equipmentId: equipmentId),
 );
 
-class VideoControllerNotifier
-    extends StateNotifier<AsyncValue<VideoPlayerController>> {
+class VideoControllerNotifier extends StateNotifier<AsyncValue<VideoPlayerController>> {
+  final int equipmentId;
   VideoPlayerController? _controller;
 
-  VideoControllerNotifier() : super(const AsyncLoading());
+  VideoControllerNotifier({required this.equipmentId}) : super(const AsyncLoading());
+
 
   Future<void> initializeVideoController(String videoUrl, int sourceId) async {
     // Dispose previous controller if any

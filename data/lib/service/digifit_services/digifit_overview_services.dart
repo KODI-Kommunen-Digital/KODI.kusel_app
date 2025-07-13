@@ -22,7 +22,7 @@ class DigifitOverviewService {
       BaseModel requestModel, BaseModel responseModel) async {
     final apiHelper = ref.read(apiHelperProvider);
     final location = requestModel.toJson()['locationId'];
-    String token = sharedPreferenceHelper.getString(digifitAccessTokenKey) ?? '';
+    String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
     final headers = {'Authorization': 'Bearer $token'};
 
     final params = requestModel.toJson();

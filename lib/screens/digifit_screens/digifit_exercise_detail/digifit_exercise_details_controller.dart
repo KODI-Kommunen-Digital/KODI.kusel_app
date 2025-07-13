@@ -41,9 +41,24 @@ final digifitExerciseDetailsControllerProvider = StateNotifierProvider
             networkStatusProvider: ref.read(networkStatusProvider.notifier),
             digifitCacheDataController: ref.read(digifitCacheDataProvider.notifier),
             ));
+final digifitExerciseDetailsControllerProvider = StateNotifierProvider.autoDispose
+    .family<DigifitExerciseDetailsController, DigifitExerciseDetailsState, int>(
+      (ref, equipmentId) => DigifitExerciseDetailsController(
+    digifitExerciseDetailsUseCase: ref.read(digifitExerciseDetailsUseCaseProvider),
+    digifitExerciseDetailsTrackingUseCase: ref.read(digifitExerciseDetailsTrackingUseCaseProvider),
+    tokenStatus: ref.read(tokenStatusProvider),
+    refreshTokenProvider: ref.read(refreshTokenProvider),
+    localeManagerController: ref.read(localeManagerProvider.notifier),
+    digifitEquipmentFav: ref.read(digifitEquipmentFavProvider),
+    digifitQrScannerUseCase: ref.read(digifitQrScannerUseCaseProvider),
+    signInStatusController: ref.read(signInStatusProvider.notifier),
+    equipmentId: equipmentId, // Pass equipmentId to controller
+  ),
+);
 
 class DigifitExerciseDetailsController
     extends StateNotifier<DigifitExerciseDetailsState> {
+  int equipmentId;
   final DigifitExerciseDetailsUseCase digifitExerciseDetailsUseCase;
   final DigifitExerciseDetailsTrackingUseCase
       digifitExerciseDetailsTrackingUseCase;
@@ -66,8 +81,9 @@ class DigifitExerciseDetailsController
       required this.digifitQrScannerUseCase,
       required this.signInStatusController,
       required this.networkStatusProvider,
-      required this.digifitCacheDataController
-      })
+      required this.digifitCacheDataController,
+      required this.signInStatusController,
+      required this.equipmentId})
       : super(DigifitExerciseDetailsState.empty());
 
   Future<void> fetchDigifitExerciseDetails(
@@ -75,11 +91,11 @@ class DigifitExerciseDetailsController
     state = state.copyWith(isLoading: true);
     if (await isNetworkAvailable()){
       try {
-        final isTokenExpired = tokenStatus.isDigifitAccessTokenExpired();
+        final isTokenExpired = tokenStatus.isAccessTokenExpired();
         final status = await signInStatusController.isUserLoggedIn();
 
         if (isTokenExpired && status) {
-          await refreshTokenProvider.getDigifitNewToken(
+          await refreshTokenProvider.getNewToken(
               onError: () {},
               onSuccess: () {
                 _fetchDigifitExerciseDetails(equipmentId, locationId, slug);
@@ -277,11 +293,11 @@ class DigifitExerciseDetailsController
       ExerciseStageConstant stageConstant,
       VoidCallback onSuccess) async {
     try {
-      final isTokenExpired = tokenStatus.isDigifitAccessTokenExpired();
+      final isTokenExpired = tokenStatus.isAccessTokenExpired();
       final status = await signInStatusController.isUserLoggedIn();
 
       if (isTokenExpired && status) {
-        await refreshTokenProvider.getDigifitNewToken(
+        await refreshTokenProvider.getNewToken(
           onError: () {},
           onSuccess: () async {
             await _trackExerciseDetails(

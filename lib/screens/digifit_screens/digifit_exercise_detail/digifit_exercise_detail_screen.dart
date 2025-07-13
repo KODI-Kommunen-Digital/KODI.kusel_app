@@ -46,8 +46,9 @@ class _DigifitExerciseDetailScreenState
   @override
   void initState() {
     Future.microtask(() {
+      final equipmentId = widget.digifitExerciseDetailsParams.station.id ?? 0;
       ref
-          .read(digifitExerciseDetailsControllerProvider.notifier)
+          .read(digifitExerciseDetailsControllerProvider(equipmentId).notifier)
           .fetchDigifitExerciseDetails(
               widget.digifitExerciseDetailsParams.station.id ?? 0,
               widget.digifitExerciseDetailsParams.locationId,
@@ -58,10 +59,14 @@ class _DigifitExerciseDetailScreenState
 
   @override
   Widget build(BuildContext context) {
+    final equipmentId = widget.digifitExerciseDetailsParams.station.id ?? 0;
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult:(didPop, _)  async{
-        handleAbortBackNavigation(context);
+        if(didPop == false) {
+          await handleAbortBackNavigation(context);
+        }
       },
 
       child: Scaffold(
@@ -111,19 +116,18 @@ class _DigifitExerciseDetailScreenState
                 left: 16.w,
                 right: 16.w,
                 child: CommonBottomNavCard(
-                  onBackPress: () {
-                    handleAbortBackNavigation(context);
+                  onBackPress: () async {
+                    await handleAbortBackNavigation(context);
                   },
                   isFavVisible:
                       !ref.watch(homeScreenProvider).isSignInButtonVisible,
                   isFav: ref
-                          .watch(digifitExerciseDetailsControllerProvider)
-                          .digifitExerciseEquipmentModel
-                          ?.isFavorite ??
-                      false,
+                      .watch(digifitExerciseDetailsControllerProvider(equipmentId))
+                      .digifitExerciseEquipmentModel
+                      ?.isFavorite ?? false,
                   onFavChange: () async {
                     final equipment = ref
-                        .read(digifitExerciseDetailsControllerProvider)
+                        .read(digifitExerciseDetailsControllerProvider(equipmentId))
                         .digifitExerciseEquipmentModel;
 
                     if (equipment != null) {
@@ -135,11 +139,11 @@ class _DigifitExerciseDetailScreenState
                                   widget.digifitExerciseDetailsParams.locationId);
 
                       await ref
-                          .read(digifitExerciseDetailsControllerProvider.notifier)
+                          .read(digifitExerciseDetailsControllerProvider(equipmentId).notifier)
                           .onFavTap(
                               digifitEquipmentFavParams: params,
                               onFavStatusChange: ref
-                                  .read(digifitExerciseDetailsControllerProvider
+                                  .read(digifitExerciseDetailsControllerProvider(equipmentId)
                                       .notifier)
                                   .detailPageOnFavStatusChange);
 
@@ -150,7 +154,7 @@ class _DigifitExerciseDetailScreenState
                     }
                   },
                 )),
-            if (ref.watch(digifitExerciseDetailsControllerProvider).isLoading)
+            if (ref.watch(digifitExerciseDetailsControllerProvider(equipmentId)).isLoading)
               Positioned(
                   top: 0.h,
                   left: 0.w,
@@ -187,18 +191,20 @@ class _DigifitExerciseDetailScreenState
   }
 
   _buildHeadingArrowSection() {
+    final equipmentId = widget.digifitExerciseDetailsParams.station.id ?? 0;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         ArrowBackWidget(
-          onTap: () {
-            handleAbortBackNavigation(context);
+          onTap: () async {
+           await handleAbortBackNavigation(context);
           },
         ),
         16.horizontalSpace,
         Visibility(
             visible: ref
-                    .read(digifitExerciseDetailsControllerProvider)
+                    .read(digifitExerciseDetailsControllerProvider(equipmentId))
                     .digifitExerciseEquipmentModel
                     ?.userProgress
                     .isCompleted ??
@@ -236,14 +242,17 @@ class _DigifitExerciseDetailScreenState
   }
 
   _buildBody() {
+    final equipmentId = widget.digifitExerciseDetailsParams.station.id ?? 0;
+
     final digifitExerciseDetailsState =
-        ref.watch(digifitExerciseDetailsControllerProvider);
+        ref.watch(digifitExerciseDetailsControllerProvider(equipmentId));
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 13.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           DigifitVideoPlayerWidget(
+            equipmentId: equipmentId,
             videoUrl: digifitExerciseDetailsState
                     .digifitExerciseEquipmentModel?.machineVideoUrl ??
                 '',
@@ -258,26 +267,26 @@ class _DigifitExerciseDetailScreenState
             },
           ),
           ((ref
-                              .watch(digifitExerciseDetailsControllerProvider)
+                              .watch(digifitExerciseDetailsControllerProvider(equipmentId))
                               .isScannerVisible ==
                           false &&
                       !ref
-                          .watch(digifitExerciseDetailsControllerProvider)
+                          .watch(digifitExerciseDetailsControllerProvider(equipmentId))
                           .isReadyToSubmitSet) &&
                   ((ref
                                   .watch(
-                                      digifitExerciseDetailsControllerProvider)
+                      digifitExerciseDetailsControllerProvider(equipmentId))
                                   .digifitExerciseEquipmentModel
                                   ?.userProgress
                                   .isCompleted !=
                               null &&
                           !ref
-                              .watch(digifitExerciseDetailsControllerProvider)
+                              .watch(digifitExerciseDetailsControllerProvider(equipmentId))
                               .digifitExerciseEquipmentModel!
                               .userProgress
                               .isCompleted) ||
                       ref
-                              .watch(digifitExerciseDetailsControllerProvider)
+                              .watch(digifitExerciseDetailsControllerProvider(equipmentId))
                               .digifitExerciseEquipmentModel
                               ?.userProgress
                               .isCompleted ==
@@ -322,7 +331,7 @@ class _DigifitExerciseDetailScreenState
               textAlign: TextAlign.start),
           Visibility(
             visible: ref
-                .watch(digifitExerciseDetailsControllerProvider)
+                .watch(digifitExerciseDetailsControllerProvider(equipmentId))
                 .isScannerVisible,
             child: _buildScanner(context),
           ),
@@ -342,12 +351,14 @@ class _DigifitExerciseDetailScreenState
   _buildCourseDetailSection(
       {bool? isButtonVisible,
       required List<DigifitExerciseRelatedStationsModel> relatedEquipments}) {
+    final equipmentId = widget.digifitExerciseDetailsParams.station.id ?? 0;
+
     final equipments = ref
-        .watch(digifitExerciseDetailsControllerProvider)
+        .watch(digifitExerciseDetailsControllerProvider(equipmentId))
         .digifitExerciseEquipmentModel;
 
     final sourceId = ref
-            .read(digifitExerciseDetailsControllerProvider)
+            .read(digifitExerciseDetailsControllerProvider(equipmentId))
             .digifitExerciseEquipmentModel
             ?.sourceId ??
         0;
@@ -392,7 +403,7 @@ class _DigifitExerciseDetailScreenState
                                 0,
                             onFavCallBack: () {
                               ref
-                                  .read(digifitExerciseDetailsControllerProvider
+                                  .read(digifitExerciseDetailsControllerProvider(equipmentId)
                                       .notifier)
                                   .fetchDigifitExerciseDetails(
                                       widget.digifitExerciseDetailsParams
@@ -419,11 +430,11 @@ class _DigifitExerciseDetailScreenState
                                 widget.digifitExerciseDetailsParams.locationId);
 
                     await ref
-                        .read(digifitExerciseDetailsControllerProvider.notifier)
+                        .read(digifitExerciseDetailsControllerProvider(equipmentId).notifier)
                         .onFavTap(
                             digifitEquipmentFavParams: params,
                             onFavStatusChange: ref
-                                .read(digifitExerciseDetailsControllerProvider
+                                .read(digifitExerciseDetailsControllerProvider(equipmentId)
                                     .notifier)
                                 .recommendOnFavStatusChange);
 
@@ -477,6 +488,9 @@ class _DigifitExerciseDetailScreenState
 
   void showAbortedDialog(
       BuildContext context, String title, String description) {
+
+    final equipmentId = widget.digifitExerciseDetailsParams.station.id ?? 0;
+
     showCupertinoDialog(
       context: context,
       builder: (ctx) => CupertinoAlertDialog(
@@ -503,13 +517,13 @@ class _DigifitExerciseDetailScreenState
           ),
           CupertinoDialogAction(
             onPressed: () async {
-              ref.read(navigationProvider).removeDialog(context: context);
+              await ref.read(navigationProvider).removeDialog(context: context);
 
               final digifitExerciseDetailsState =
-                  ref.watch(digifitExerciseDetailsControllerProvider);
+                  ref.watch(digifitExerciseDetailsControllerProvider(equipmentId));
 
              await ref
-                  .read(digifitExerciseDetailsControllerProvider.notifier)
+                  .read(digifitExerciseDetailsControllerProvider(equipmentId).notifier)
                   .trackExerciseDetails(
                       digifitExerciseDetailsState
                               .digifitExerciseEquipmentModel?.id ??
@@ -535,8 +549,11 @@ class _DigifitExerciseDetailScreenState
   }
 
   _buildScanner(BuildContext context) {
+
+    final equipmentId = widget.digifitExerciseDetailsParams.station.id ?? 0;
+
     final digifitExerciseDetailsState =
-        ref.watch(digifitExerciseDetailsControllerProvider);
+        ref.watch(digifitExerciseDetailsControllerProvider(equipmentId));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -548,7 +565,7 @@ class _DigifitExerciseDetailScreenState
             icon: imagePath['scan_icon'],
             onPressed: () async {
               final isComplete = ref
-                  .read(digifitExerciseDetailsControllerProvider)
+                  .read(digifitExerciseDetailsControllerProvider(equipmentId))
                   .digifitExerciseEquipmentModel
                   ?.userProgress
                   .isCompleted;
@@ -560,18 +577,18 @@ class _DigifitExerciseDetailScreenState
                         path: digifitQRScannerScreenPath, context: context);
 
                 final qrCodeIdentifier = ref
-                        .watch(digifitExerciseDetailsControllerProvider)
+                        .watch(digifitExerciseDetailsControllerProvider(equipmentId))
                         .digifitExerciseEquipmentModel
                         ?.qrCodeIdentifier ??
                     '';
 
                 final res = await ref
-                    .read(digifitExerciseDetailsControllerProvider.notifier)
+                    .read(digifitExerciseDetailsControllerProvider(equipmentId).notifier)
                     .validateQrScanner(result, qrCodeIdentifier);
 
                 if (res) {
                   await ref
-                      .read(digifitExerciseDetailsControllerProvider.notifier)
+                      .read(digifitExerciseDetailsControllerProvider(equipmentId).notifier)
                       .trackExerciseDetails(
                           digifitExerciseDetailsState
                                   .digifitExerciseEquipmentModel?.id ??
@@ -588,11 +605,11 @@ class _DigifitExerciseDetailScreenState
                         message: AppLocalizations.of(context).session_start,
                         context: context);
                     ref
-                        .read(digifitExerciseDetailsControllerProvider.notifier)
+                        .read(digifitExerciseDetailsControllerProvider(equipmentId).notifier)
                         .updateScannerButtonVisibility(false);
 
                     ref
-                        .read(digifitExerciseDetailsControllerProvider.notifier)
+                        .read(digifitExerciseDetailsControllerProvider(equipmentId).notifier)
                         .updateIsReadyToSubmitSetVisibility(true);
                   });
                 } else {
@@ -610,45 +627,54 @@ class _DigifitExerciseDetailScreenState
   }
 
   startTimer() {
+    final equipmentId = widget.digifitExerciseDetailsParams.station.id ?? 0;
+
     ref
-        .read(digifitExerciseDetailsControllerProvider.notifier)
+        .read(digifitExerciseDetailsControllerProvider(equipmentId).notifier)
         .updateTimerStatus(TimerState.start);
-    final state = ref.watch(digifitExerciseDetailsControllerProvider);
+    final state = ref.watch(digifitExerciseDetailsControllerProvider(equipmentId));
     int secondsLeft = state.time;
     if (state.remainingPauseSecond > 0) {
       secondsLeft = state.remainingPauseSecond;
     }
 
     timer = Timer.periodic(Duration(seconds: 1), (time) {
+
+      final equipmentId = widget.digifitExerciseDetailsParams.station.id ?? 0;
+
       if (secondsLeft == 0) {
         pauseTimer();
         ref
-            .read(digifitExerciseDetailsControllerProvider.notifier)
+            .read(digifitExerciseDetailsControllerProvider(equipmentId).notifier)
             .updateIsReadyToSubmitSetVisibility(true);
       } else {
         secondsLeft--;
         ref
-            .read(digifitExerciseDetailsControllerProvider.notifier)
+            .read(digifitExerciseDetailsControllerProvider(equipmentId).notifier)
             .updateRemainingSeconds(secondsLeft);
       }
     });
   }
 
   pauseTimer() {
+    final equipmentId = widget.digifitExerciseDetailsParams.station.id ?? 0;
+
     if (timer != null) {
       timer!.cancel();
       ref
-          .read(digifitExerciseDetailsControllerProvider.notifier)
+          .read(digifitExerciseDetailsControllerProvider(equipmentId).notifier)
           .updateTimerStatus(TimerState.pause);
     }
   }
 
   Future<void> handleAbortBackNavigation(BuildContext context) async {
+    final equipmentId = widget.digifitExerciseDetailsParams.station.id ?? 0;
+
     bool? isScanner =
-        ref.read(digifitExerciseDetailsControllerProvider).isScannerVisible;
+        ref.read(digifitExerciseDetailsControllerProvider(equipmentId)).isScannerVisible;
 
     bool? isCompleted = ref
-            .read(digifitExerciseDetailsControllerProvider)
+            .read(digifitExerciseDetailsControllerProvider(equipmentId))
             .digifitExerciseEquipmentModel
             ?.userProgress
             .isCompleted ??
