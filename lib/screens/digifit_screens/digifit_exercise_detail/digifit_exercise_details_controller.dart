@@ -4,14 +4,18 @@ import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:core/token_status.dart';
 import 'package:domain/model/request_model/digifit/digifit_exercise_details_request_model.dart';
 import 'package:domain/model/request_model/digifit/digifit_exercise_details_tracking_request_model.dart';
+import 'package:domain/model/response_model/digifit/digifit_cache_data_response_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_exercise_details_response_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_exercise_details_tracking_response_model.dart';
+import 'package:domain/model/response_model/digifit/digifit_information_response_model.dart';
 import 'package:domain/usecase/digifit/digifit_exercise_details_tracking_usecase.dart';
 import 'package:domain/usecase/digifit/digifit_exercise_details_usecase.dart';
 import 'package:domain/usecase/digifit/digifit_qr_scanner_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kusel/database/digifit_cache_data/digifit_cache_data_controller.dart';
 import 'package:kusel/providers/digifit_equipment_fav_provider.dart';
+import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
 
 import '../../../common_widgets/get_slug.dart';
 import '../../../locale/localization_manager.dart';
@@ -34,6 +38,8 @@ final digifitExerciseDetailsControllerProvider = StateNotifierProvider
               digifitQrScannerUseCase:
                   ref.read(digifitQrScannerUseCaseProvider),
               signInStatusController: ref.read(signInStatusProvider.notifier),
+            networkStatusProvider: ref.read(networkStatusProvider.notifier),
+            digifitCacheDataController: ref.read(digifitCacheDataProvider.notifier),
             ));
 
 class DigifitExerciseDetailsController
@@ -47,6 +53,8 @@ class DigifitExerciseDetailsController
   final DigifitEquipmentFav digifitEquipmentFav;
   final DigifitQrScannerUseCase digifitQrScannerUseCase;
   final SignInStatusController signInStatusController;
+  final NetworkStatusProvider networkStatusProvider;
+  final DigifitCacheDataController digifitCacheDataController;
 
   DigifitExerciseDetailsController(
       {required this.digifitExerciseDetailsUseCase,
@@ -56,70 +64,141 @@ class DigifitExerciseDetailsController
       required this.localeManagerController,
       required this.digifitEquipmentFav,
       required this.digifitQrScannerUseCase,
-      required this.signInStatusController})
+      required this.signInStatusController,
+      required this.networkStatusProvider,
+      required this.digifitCacheDataController
+      })
       : super(DigifitExerciseDetailsState.empty());
 
   Future<void> fetchDigifitExerciseDetails(
       int? equipmentId, int? locationId, String? slug) async {
-    try {
-      final isTokenExpired = tokenStatus.isDigifitAccessTokenExpired();
-      final status = await signInStatusController.isUserLoggedIn();
+    state = state.copyWith(isLoading: true);
+    if (await isNetworkAvailable()){
+      try {
+        final isTokenExpired = tokenStatus.isDigifitAccessTokenExpired();
+        final status = await signInStatusController.isUserLoggedIn();
 
-      if (isTokenExpired && status) {
-        await refreshTokenProvider.getDigifitNewToken(
-            onError: () {},
-            onSuccess: () {
-              _fetchDigifitExerciseDetails(equipmentId, locationId, slug);
-            });
-      } else {
-        // If the token is not expired, we can proceed with the request
-        _fetchDigifitExerciseDetails(equipmentId, locationId, slug);
+        if (isTokenExpired && status) {
+          await refreshTokenProvider.getDigifitNewToken(
+              onError: () {},
+              onSuccess: () {
+                _fetchDigifitExerciseDetails(equipmentId, locationId, slug);
+              });
+        } else {
+          // If the token is not expired, we can proceed with the request
+          _fetchDigifitExerciseDetails(equipmentId, locationId, slug);
+        }
+      } catch (e) {
+        debugPrint('[DigifitExerciseDetailsController] Fetch Exception: $e');
       }
-    } catch (e) {
-      debugPrint('[DigifitExerciseDetailsController] Fetch Exception: $e');
+    } else {
+      manageDataLocally(locationId, equipmentId);
     }
   }
 
   _fetchDigifitExerciseDetails(
       int? equipmentId, int? locationId, String? slug) async {
-    try {
-      state = state.copyWith(isLoading: true);
+      try {
+        Locale currentLocale = localeManagerController.getSelectedLocale();
+        DigifitExerciseDetailsRequestModel digifitExerciseDetailsRequestModel =
+        DigifitExerciseDetailsRequestModel(
+            equipmentId: equipmentId,
+            locationId: locationId,
+            equipmentSlug: slug,
+            translate:
+            "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
-      Locale currentLocale = localeManagerController.getSelectedLocale();
+        DigifitExerciseDetailsResponseModel digifitExerciseDetailsResponseModel =
+        DigifitExerciseDetailsResponseModel();
 
-      DigifitExerciseDetailsRequestModel digifitExerciseDetailsRequestModel =
-          DigifitExerciseDetailsRequestModel(
-              equipmentId: equipmentId,
-              locationId: locationId,
-              equipmentSlug: slug,
-              translate:
-                  "${currentLocale.languageCode}-${currentLocale.countryCode}");
+        final result = await digifitExerciseDetailsUseCase.call(
+            digifitExerciseDetailsRequestModel,
+            digifitExerciseDetailsResponseModel);
 
-      DigifitExerciseDetailsResponseModel digifitExerciseDetailsResponseModel =
-          DigifitExerciseDetailsResponseModel();
-
-      final result = await digifitExerciseDetailsUseCase.call(
-          digifitExerciseDetailsRequestModel,
-          digifitExerciseDetailsResponseModel);
-
-      result.fold((l) {
-        state = state.copyWith(isLoading: false, errorMessage: l.toString());
+        result.fold((l) {
+          state = state.copyWith(isLoading: false, errorMessage: l.toString());
+          debugPrint(
+              '[DigifitExerciseDetailsController] Fetch fold Error: ${l.toString()}');
+        }, (r) {
+          var response = (r as DigifitExerciseDetailsResponseModel).data;
+          state = state.copyWith(
+              isLoading: false,
+              digifitExerciseRelatedEquipmentsModel: response.relatedStations,
+              digifitExerciseEquipmentModel: response.equipment,
+              totalSetNumber: response.equipment.userProgress.totalSets,
+              currentSetNumber: response.equipment.userProgress.currentSet,
+              locationId: locationId);
+        });
+      } catch (error) {
         debugPrint(
-            '[DigifitExerciseDetailsController] Fetch fold Error: ${l.toString()}');
-      }, (r) {
-        var response = (r as DigifitExerciseDetailsResponseModel).data;
-        state = state.copyWith(
-            isLoading: false,
-            digifitExerciseRelatedEquipmentsModel: response.relatedStations,
-            digifitExerciseEquipmentModel: response.equipment,
-            totalSetNumber: response.equipment.userProgress.totalSets,
-            currentSetNumber: response.equipment.userProgress.currentSet,
-            locationId: locationId);
-      });
-    } catch (error) {
-      debugPrint(
-          '[DigifitExerciseDetailsController] Fetch fold Exception: $error');
+            '[DigifitExerciseDetailsController] Fetch fold Exception: $error');
+      }
+  }
+
+  Future<void> manageDataLocally(int? locationId, int? equipmentId) async {
+    bool isCacheDataAvailable =
+    await digifitCacheDataController.isDigifitCacheDataAvailable();
+    if (!isCacheDataAvailable) {
+      state = state.copyWith(isLoading: false);
+      return;
     }
+    DigifitCacheDataResponseModel? digifitCacheDataResponseModel =
+    await digifitCacheDataController.getCacheData();
+
+    if (digifitCacheDataResponseModel == null ||
+        digifitCacheDataResponseModel.data == null) {
+      state = state.copyWith(isLoading: false);
+      return;
+    }
+    extractDataFromDigifitCache(
+              locationId, equipmentId, digifitCacheDataResponseModel);
+    debugPrint('[DigifitExerciseDetailsController] Data is coming from cache');
+  }
+
+  void extractDataFromDigifitCache(int? locationId,
+      int? equipmentId,
+      DigifitCacheDataResponseModel digifitCacheDataResponseModel) {
+    // Extract parcoursModel by locationId
+    final parcoursList = digifitCacheDataResponseModel.data.parcours;
+    DigifitInformationParcoursModel? parcoursModel;
+
+    if (parcoursList != null) {
+      try {
+        parcoursModel = parcoursList.firstWhere(
+                (item) => item != null && item.locationId == locationId);
+      } catch (e) {
+        parcoursModel = null;
+      }
+    }
+    List<DigifitInformationStationModel>? digifitStationModelList = parcoursModel?.stations;
+    DigifitInformationStationModel? digifitStationModel = digifitStationModelList
+        ?.firstWhere(
+          (item) => item.id == equipmentId,
+      orElse: () => DigifitInformationStationModel(),
+    );
+
+    DigifitExerciseRecommendationModel recommendation =
+        DigifitExerciseRecommendationModel(
+            sets: digifitStationModel?.recommendedSets.toString() ?? '',
+          repetitions: digifitStationModel?.recommendedReps.toString() ?? ''
+        );
+
+    DigifitExerciseUserProgressModel userProgress = DigifitExerciseUserProgressModel(
+      isCompleted: digifitStationModel?.isCompleted ?? false
+    );
+    DigifitExerciseEquipmentModel digifitExerciseEquipmentModel = DigifitExerciseEquipmentModel(
+      id: digifitStationModel?.id ?? 0,
+      name: digifitStationModel?.name ?? '',
+      machineVideoUrl: digifitStationModel?.machineImageUrl ??'',
+      description: digifitStationModel?.description ?? '',
+      recommendation: recommendation,
+      userProgress: userProgress,
+      isFavorite: digifitStationModel?.isFavorite ?? false
+    );
+    state = state.copyWith(
+      isLoading: false,
+      digifitExerciseEquipmentModel: digifitExerciseEquipmentModel
+    );
   }
 
   onFavTap(
@@ -280,5 +359,11 @@ class DigifitExerciseDetailsController
 
   void updateTimerStatus(TimerState value) {
     state = state.copyWith(timerState: value);
+  }
+
+  Future<bool> isNetworkAvailable() async {
+    bool networkAvailable = await networkStatusProvider.checkNetworkStatus();
+    state = state.copyWith(isNetworkAvailable : networkAvailable);
+    return networkAvailable;
   }
 }

@@ -1,9 +1,11 @@
-import 'package:hive/hive.dart';
+import 'package:domain/model/response_model/digifit/digifit_information_response_model.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final hiveBoxFunctionProvider = Provider((ref) => HiveBoxFunction());
 
 class HiveBoxFunction {
+
   Future<void> openBox(String name) async {
     await Hive.openBox(name);
   }
@@ -57,6 +59,12 @@ class HiveBoxFunction {
   Future<Map<dynamic,dynamic>> getAllBoxData(Box box)
   async{
     return  box.toMap();
+  }
+
+  Future<void> registerHiveAdapters() async {
+    if (!Hive.isAdapterRegistered(0)) {
+      Hive.registerAdapter(DigifitInformationDataModelAdapter());
+    }
   }
 
 }
