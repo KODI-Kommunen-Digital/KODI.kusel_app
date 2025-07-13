@@ -66,7 +66,7 @@ class _PauseCardWidgetState extends ConsumerState<PauseCardWidget> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(bottom: 16.h, left: 30.h),
+              padding: EdgeInsets.only(bottom: 16.h, left: 20.h),
               child: Text(
                 '${formatTime(ref.watch(digifitExerciseDetailsControllerProvider(widget.equipmentId)).remainingPauseSecond)}${AppLocalizations.of(context).min}',
                 style: TextStyle(
@@ -77,7 +77,7 @@ class _PauseCardWidgetState extends ConsumerState<PauseCardWidget> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 18.h, bottom: 6.h, left: 40.h),
+              padding: EdgeInsets.only(top: 18.h, bottom: 6.h, left: 30.h),
               child: InkWell(
                 onTap: () {
                   if (ref
