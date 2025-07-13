@@ -24,6 +24,7 @@ import 'package:domain/usecase/weather/weather_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/common_widgets/listing_id_enum.dart';
+import 'package:kusel/database/digifit_cache_data/digifit_cache_data_controller.dart';
 import 'package:kusel/providers/guest_user_login_provider.dart';
 import 'package:kusel/providers/refresh_token_provider.dart';
 
@@ -32,21 +33,24 @@ import '../../locale/localization_manager.dart';
 import 'home_screen_state.dart';
 
 final homeScreenProvider =
-    StateNotifierProvider<HomeScreenProvider, HomeScreenState>((ref) =>
-        HomeScreenProvider(
-            listingsUseCase: ref.read(listingsUseCaseProvider),
-            searchUseCase: ref.read(searchUseCaseProvider),
-            sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
-            userDetailUseCase: ref.read(userDetailUseCaseProvider),
-            weatherUseCase: ref.read(weatherUseCaseProvider),
-            signInStatusController: ref.read(signInStatusProvider.notifier),
-            refreshTokenProvider: ref.read(refreshTokenProvider),
-            tokenStatus: ref.read(tokenStatusProvider),
-            localeManagerController: ref.read(localeManagerProvider.notifier),
-            onboardingDetailsUseCase:
-                ref.read(onboardingDetailsUseCaseProvider),
-            refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider),
-            guestUserLogin: ref.read(guestUserLoginProvider)));
+StateNotifierProvider<HomeScreenProvider, HomeScreenState>((ref) =>
+    HomeScreenProvider(
+        listingsUseCase: ref.read(listingsUseCaseProvider),
+        searchUseCase: ref.read(searchUseCaseProvider),
+        sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
+        userDetailUseCase: ref.read(userDetailUseCaseProvider),
+        weatherUseCase: ref.read(weatherUseCaseProvider),
+        signInStatusController: ref.read(signInStatusProvider.notifier),
+        refreshTokenProvider: ref.read(refreshTokenProvider),
+        tokenStatus: ref.read(tokenStatusProvider),
+        localeManagerController: ref.read(localeManagerProvider.notifier),
+        onboardingDetailsUseCase:
+        ref.read(onboardingDetailsUseCaseProvider),
+        refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider),
+        guestUserLogin: ref.read(guestUserLoginProvider),
+        digifitCacheDataController: ref.read(digifitCacheDataProvider.notifier)
+    ),
+);
 
 class HomeScreenProvider extends StateNotifier<HomeScreenState> {
   ListingsUseCase listingsUseCase;
@@ -61,6 +65,7 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
   RefreshTokenUseCase refreshTokenUseCase;
   OnboardingDetailsUseCase onboardingDetailsUseCase;
   GuestUserLogin guestUserLogin;
+  DigifitCacheDataController digifitCacheDataController;
 
   HomeScreenProvider(
       {required this.listingsUseCase,
@@ -74,7 +79,9 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       required this.localeManagerController,
       required this.onboardingDetailsUseCase,
       required this.refreshTokenUseCase,
-      required this.guestUserLogin})
+      required this.guestUserLogin,
+      required this.digifitCacheDataController
+      })
       : super(HomeScreenState.empty());
 
   initialCall() async {
@@ -375,6 +382,7 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       getNews(),
       getLoginStatus(),
       getWeather(),
+      digifitCacheDataController.fetchDigifitDataFromNetwork()
     ]);
   }
 
