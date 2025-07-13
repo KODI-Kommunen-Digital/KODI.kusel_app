@@ -44,9 +44,6 @@ class _DigifitVideoPlayerWidgetState
 
   @override
   Widget build(BuildContext context) {
-    final controller = ref.watch(digifitExerciseDetailsControllerProvider(widget.equipmentId));
-
-
     return Column(
       children: [
         Stack(
@@ -84,7 +81,7 @@ class _DigifitVideoPlayerWidgetState
               ],
             ),
             Positioned(
-              top: 270.h,
+              top: 285.h,
               left: 0.w,
               right: 0.w,
               child: Material(
