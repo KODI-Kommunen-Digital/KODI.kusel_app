@@ -2,22 +2,26 @@ import 'package:core/base_model.dart';
 import 'package:core/preference_manager/preference_constant.dart';
 import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:dartz/dartz.dart';
+import 'package:data/dio_helper_object.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../dio_helper_object.dart';
-import '../../end_points.dart';
+import '../../../end_points.dart';
 
-final digifitEquipmentFavServiceProvider = Provider((ref) =>
-    DigifitEquipmentFavService(
-        ref: ref,
-        sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider)));
+final localDigifitBulkTrackingServiceProvider = Provider(
+  (ref) => LocalDigifitBulkTrackingService(
+    ref: ref,
+    sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
+  ),
+);
 
-class DigifitEquipmentFavService {
+class LocalDigifitBulkTrackingService {
   final Ref ref;
   final SharedPreferenceHelper sharedPreferenceHelper;
 
-  DigifitEquipmentFavService(
-      {required this.ref, required this.sharedPreferenceHelper});
+  LocalDigifitBulkTrackingService({
+    required this.ref,
+    required this.sharedPreferenceHelper,
+  });
 
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
@@ -25,7 +29,7 @@ class DigifitEquipmentFavService {
     String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
     final headers = {'Authorization': 'Bearer $token'};
 
-    final path = digifitEquipmentFavEndPoint;
+    final path = localDigifitBulkTrackingEndPoint;
 
     final body = requestModel.toJson();
 
