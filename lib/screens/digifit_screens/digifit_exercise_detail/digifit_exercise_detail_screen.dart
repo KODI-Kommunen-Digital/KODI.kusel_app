@@ -234,6 +234,7 @@ class _DigifitExerciseDetailScreenState
             textBoldMontserrat(
                 text: AppLocalizations.of(context).complete,
                 color: Theme.of(context).primaryColor,
+                textOverflow: TextOverflow.visible,
                 fontSize: 13)
           ],
         ),
@@ -636,25 +637,32 @@ class _DigifitExerciseDetailScreenState
     ref
         .read(digifitExerciseDetailsControllerProvider(equipmentId).notifier)
         .updateTimerStatus(TimerState.start);
-    final state = ref.watch(digifitExerciseDetailsControllerProvider(equipmentId));
-    int secondsLeft = state.time;
-    if (state.remainingPauseSecond > 0) {
-      secondsLeft = state.remainingPauseSecond;
-    }
 
-    timer = Timer.periodic(Duration(seconds: 1), (time) {
+    final state =
+        ref.watch(digifitExerciseDetailsControllerProvider(equipmentId));
 
-      final equipmentId = widget.digifitExerciseDetailsParams.station.id ?? 0;
+    int secondsLeft = state.remainingPauseSecond > 0
+        ? state.remainingPauseSecond
+        : state.time;
 
+    ref
+        .read(digifitExerciseDetailsControllerProvider(equipmentId).notifier)
+        .updateRemainingSeconds(secondsLeft);
+
+    timer = Timer.periodic(const Duration(seconds: 1), (time) {
       if (secondsLeft == 0) {
         pauseTimer();
+
         ref
-            .read(digifitExerciseDetailsControllerProvider(equipmentId).notifier)
+            .read(
+                digifitExerciseDetailsControllerProvider(equipmentId).notifier)
             .updateIsReadyToSubmitSetVisibility(true);
       } else {
         secondsLeft--;
+
         ref
-            .read(digifitExerciseDetailsControllerProvider(equipmentId).notifier)
+            .read(
+                digifitExerciseDetailsControllerProvider(equipmentId).notifier)
             .updateRemainingSeconds(secondsLeft);
       }
     });

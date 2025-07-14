@@ -35,6 +35,7 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
 
     return Container(
       width: double.infinity,
+      height: 80.h,
       padding: EdgeInsets.only(
         top: 16.h,
         right: 24.w,
@@ -48,7 +49,8 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(
+          SizedBox(
+            width: MediaQuery.of(context).size.width*.5,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -85,8 +87,7 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
               ],
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(top: 18.h, bottom: 6.h, left: 40.h),
+          Expanded(
             child: GestureDetector(
               onTap: (isScanButtonVisible || !isReadyToSubmitSet)
                   ? null
@@ -101,6 +102,7 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
                   final stage = (currentSet == totalSet - 1)
                       ? ExerciseStageConstant.complete
                       : ExerciseStageConstant.progress;
+
                   ref.read(digifitExerciseDetailsControllerProvider(widget.equipmentId).notifier).trackExerciseDetails(
                     id,
                     locationId,
@@ -109,6 +111,7 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
                     stage,
                         () {
                       ref.read(digifitExerciseDetailsControllerProvider(widget.equipmentId).notifier).updateIsReadyToSubmitSetVisibility(false);
+
                       if (stage == ExerciseStageConstant.complete) {
                         ref.read(digifitInformationControllerProvider.notifier).fetchDigifitInformation();
                       } else {
