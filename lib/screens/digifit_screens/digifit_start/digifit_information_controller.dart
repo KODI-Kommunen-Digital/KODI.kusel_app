@@ -72,10 +72,10 @@ class DigifitInformationController extends StateNotifier<DigifitState> {
       }
     } else {
       bool isCacheDataAvailable =
-          await digifitCacheDataController.isDigifitCacheDataAvailable();
+          await digifitCacheDataController.isAllDigifitCacheDataAvailable();
       if (isCacheDataAvailable) {
         DigifitCacheDataResponseModel? digifitCacheDataResponseModel =
-            await digifitCacheDataController.getCacheData();
+            await digifitCacheDataController.getAllDigifitCacheData();
         if (digifitCacheDataResponseModel != null) {
           state = state.copyWith(
               isLoading: false,

@@ -6,32 +6,38 @@ part 'digifit_update_exercise_request_model.g.dart';
 class DigifitUpdateExerciseRequestModel
     extends BaseModel<DigifitUpdateExerciseRequestModel> {
   @HiveField(0)
-  final String exerciseId;
-  @HiveField(1)
-  final List<DigifitExerciseRecordModel> records;
+  final List<Map<String, List<DigifitExerciseRecordModel>>> data;
 
   DigifitUpdateExerciseRequestModel({
-    this.exerciseId = '',
-    List<DigifitExerciseRecordModel>? records,
-  }) : records = records ?? [];
+    List<Map<String, List<DigifitExerciseRecordModel>>>? data,
+  }) : data = data ?? [];
 
   @override
   DigifitUpdateExerciseRequestModel fromJson(Map<String, dynamic> json) {
-    final key = json.keys.first;
-    final value = json[key] as List;
-
     return DigifitUpdateExerciseRequestModel(
-      exerciseId: key,
-      records: value
-          .map((e) => DigifitExerciseRecordModel().fromJson(e))
-          .toList(),
+      data: (json['data'] as List?)
+          ?.map((map) => (map as Map).map((key, value) => MapEntry(
+        key.toString(),
+        (value as List)
+            .map((e) => DigifitExerciseRecordModel().fromJson(e))
+            .toList(),
+      )))
+          .toList() ??
+          [],
     );
   }
 
   @override
   Map<String, dynamic> toJson() {
     return {
-      exerciseId: records.map((e) => e.toJson()).toList(),
+      'data': data
+          .map((map) => map.map(
+            (key, value) => MapEntry(
+          key,
+          value.map((e) => e.toJson()).toList(),
+        ),
+      ))
+          .toList(),
     };
   }
 }

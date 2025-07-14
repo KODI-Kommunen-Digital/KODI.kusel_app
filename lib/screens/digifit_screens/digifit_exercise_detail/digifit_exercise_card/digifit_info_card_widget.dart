@@ -101,7 +101,6 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
                   final stage = (currentSet == totalSet - 1)
                       ? ExerciseStageConstant.complete
                       : ExerciseStageConstant.progress;
-
                   ref.read(digifitExerciseDetailsControllerProvider(widget.equipmentId).notifier).trackExerciseDetails(
                     id,
                     locationId,
@@ -110,7 +109,6 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
                     stage,
                         () {
                       ref.read(digifitExerciseDetailsControllerProvider(widget.equipmentId).notifier).updateIsReadyToSubmitSetVisibility(false);
-
                       if (stage == ExerciseStageConstant.complete) {
                         ref.read(digifitInformationControllerProvider.notifier).fetchDigifitInformation();
                       } else {
