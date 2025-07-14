@@ -17,10 +17,7 @@ class SuccessCardWidget extends ConsumerWidget {
       decoration: BoxDecoration(
         color: lightThemeHighlightGreenColor,
         border: Border.all(color: Theme.of(context).indicatorColor, width: 1),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(16.r),
-          bottomRight: Radius.circular(16.r),
-        ),
+        borderRadius: BorderRadius.all(Radius.circular(16.r)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,6 +40,8 @@ class SuccessCardWidget extends ConsumerWidget {
                 SizedBox(height: 8.h),
                 textRegularMontserrat(
                   text: AppLocalizations.of(context).digifit_success_card_desp,
+                  textAlign: TextAlign.start,
+                  textOverflow: TextOverflow.visible,
                   color: Colors.black,
                 ),
               ],
