@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
 
@@ -41,7 +42,7 @@ class _NetworkStatusScreenState extends ConsumerState<NetworkStatusScreen> {
               CustomButton(
                 onPressed: () => ref.read(navigationProvider).removeAllAndNavigate(
                     path: digifitStartScreenPath, context: context),
-                text: "Digifit",
+                text: AppLocalizations.of(context).digifit,
                 width: 200,
               )
             ],

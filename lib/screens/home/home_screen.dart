@@ -14,7 +14,6 @@ import 'package:kusel/screens/dashboard/dashboard_screen_provider.dart';
 import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/home/home_screen_state.dart';
-import 'package:kusel/screens/no_network/network_status_screen.dart';
 import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
 
 import '../../../images_path.dart';
@@ -52,25 +51,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final networkStatus = ref.watch(networkStatusProvider).isNetworkAvailable;
-    return networkStatus
-        ? Scaffold(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            body: SafeArea(
-              child: RefreshIndicator(
-                onRefresh: () async {
-                  ref.read(networkStatusProvider.notifier).checkNetworkStatus();
-                  if (networkStatus) {
-                    await ref.read(homeScreenProvider.notifier).refresh();
-                  }
-                },
-                child: SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    child: buildUi()),
-              ),
-            ),
-          )
-        : NetworkStatusScreen();
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: () async {
+            final networkStatus = await ref
+                .read(networkStatusProvider.notifier)
+                .checkNetworkStatus();
+            if (networkStatus) {
+              await ref.read(homeScreenProvider.notifier).refresh();
+            }
+          },
+          child: SizedBox(
+              height: MediaQuery.of(context).size.height, child: buildUi()),
+        ),
+      ),
+    );
   }
 
   Widget buildUi() {

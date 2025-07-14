@@ -1,16 +1,18 @@
+import 'dart:async';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:domain/model/request_model/digifit/digifit_update_exercise_request_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_cache_data_response_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_information_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:kusel/database/hive_box.dart';
-import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:kusel/screens/no_network/network_status_screen.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:kusel/l10n/app_localizations.dart';
+import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
 import 'package:kusel/theme_manager/theme_manager_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -47,6 +49,8 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
+  late StreamSubscription<ConnectivityResult> subscription;
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -56,23 +60,22 @@ class _MyAppState extends ConsumerState<MyApp> {
     return ScreenUtilInit(
       designSize: Size(360, 690),
       builder: (context, child) {
-        return Consumer(
-          builder: (context, ref, _) {
-            final hasNetwork =
-                ref.watch(networkStatusProvider).isNetworkAvailable;
+        return MaterialApp.router(
+          locale: ref.watch(localeManagerProvider).currentLocale,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          routerConfig: ref.read(mobileRouterProvider),
+          theme: ref.watch(themeManagerProvider).currentSelectedTheme,
+          builder: (context, child) {
 
-            return MaterialApp.router(
-              locale: ref.watch(localeManagerProvider).currentLocale,
-              localizationsDelegates: AppLocalizations.localizationsDelegates,
-              supportedLocales: AppLocalizations.supportedLocales,
-              title: 'Flutter Demo',
-              routerConfig: ref.read(mobileRouterProvider),
-              theme: ref.watch(themeManagerProvider).currentSelectedTheme,
-              builder: (context, child) {
-                return hasNetwork ? child! : const NetworkStatusScreen();
-                return child!;
-              },
-            );
+            // print("child == $child");
+            // subscription = Connectivity().onConnectivityChanged.listen((result) {
+            //   if (result == ConnectivityResult.none) {
+            //
+            //   }
+            // });
+
+            return child!;
           },
         );
       },
@@ -81,12 +84,19 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   @override
   void initState() {
-    Future.microtask(() async {
+    Future.microtask(() {
       {
         ref.read(localeManagerProvider.notifier).initialLocaleSetUp();
         ref.read(networkStatusProvider.notifier).checkNetworkStatus();
       }
     });
     super.initState();
+
+  }
+
+  @override
+  void dispose() {
+    subscription.cancel();
+    super.dispose();
   }
 }
