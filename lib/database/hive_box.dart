@@ -1,3 +1,5 @@
+import 'package:domain/model/request_model/digifit/digifit_update_exercise_request_model.dart';
+import 'package:domain/model/response_model/digifit/digifit_cache_data_response_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_information_response_model.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,6 +44,18 @@ class HiveBoxFunction {
     if(await containsKey(box, key)) {
       await box.delete(key);
     }
+  }
+
+  Future<void> registerAdapters() async {
+    Hive.registerAdapter(DigifitCacheDataResponseModelAdapter());
+    Hive.registerAdapter(DigifitInformationResponseModelAdapter());
+    Hive.registerAdapter(DigifitInformationDataModelAdapter());
+    Hive.registerAdapter(DigifitInformationUserStatsModelAdapter());
+    Hive.registerAdapter(DigifitInformationParcoursModelAdapter());
+    Hive.registerAdapter(DigifitInformationStationModelAdapter());
+    Hive.registerAdapter(DigifitInformationActionsModelAdapter());
+    Hive.registerAdapter(DigifitUpdateExerciseRequestModelAdapter());
+    Hive.registerAdapter(DigifitExerciseRecordModelAdapter());
   }
 
   Future<bool> containsKey<T>(Box box, dynamic key) async {

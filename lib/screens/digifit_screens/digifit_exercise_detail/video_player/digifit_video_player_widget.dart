@@ -46,7 +46,25 @@ class _DigifitVideoPlayerWidgetState
   Widget build(BuildContext context) {
     final controller = ref.watch(digifitExerciseDetailsControllerProvider(widget.equipmentId));
 
-
+    bool isPauseCardWidgetVisible = (ref
+        .watch(digifitExerciseDetailsControllerProvider(widget.equipmentId))
+        .isScannerVisible ==
+        false &&
+        !ref
+            .watch(digifitExerciseDetailsControllerProvider(widget.equipmentId))
+            .isReadyToSubmitSet &&
+        (ref
+            .watch(digifitExerciseDetailsControllerProvider(widget.equipmentId))
+            .digifitExerciseEquipmentModel
+            ?.userProgress
+            .isCompleted !=
+            null &&
+            !ref
+                .watch(digifitExerciseDetailsControllerProvider(widget.equipmentId))
+                .digifitExerciseEquipmentModel!
+                .userProgress
+                .isCompleted));
+    print("Card visibility - $isPauseCardWidgetVisible");
     return Column(
       children: [
         Stack(
@@ -58,24 +76,7 @@ class _DigifitVideoPlayerWidgetState
                 _buildVideoPlayer(),
                 SizedBox(height: 18.h),
                 Visibility(
-                    visible: (ref
-                                .watch(digifitExerciseDetailsControllerProvider(widget.equipmentId))
-                                .isScannerVisible ==
-                            false &&
-                        !ref
-                            .watch(digifitExerciseDetailsControllerProvider(widget.equipmentId))
-                            .isReadyToSubmitSet &&
-                        (ref
-                                    .watch(digifitExerciseDetailsControllerProvider(widget.equipmentId))
-                                    .digifitExerciseEquipmentModel
-                                    ?.userProgress
-                                    .isCompleted !=
-                                null &&
-                            !ref
-                                .watch(digifitExerciseDetailsControllerProvider(widget.equipmentId))
-                                .digifitExerciseEquipmentModel!
-                                .userProgress
-                                .isCompleted)),
+                    visible: isPauseCardWidgetVisible,
                     child: PauseCardWidget(
                       startTimer: widget.startTimer,
                       pauseTimer: widget.pauseTimer,

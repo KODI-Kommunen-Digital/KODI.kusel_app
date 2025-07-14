@@ -171,7 +171,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           .read(dashboardScreenProvider.notifier)
                           .onIndexChanged(0);
                       ref.read(navigationProvider).removeAllAndNavigate(
-                          context: context, path: homeScreenPath);
+                          context: context, path: signInScreenPath);
                     });
                   },
                 ),
