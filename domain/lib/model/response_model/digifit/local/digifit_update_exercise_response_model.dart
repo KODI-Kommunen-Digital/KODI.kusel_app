@@ -1,18 +1,18 @@
 import 'package:core/base_model.dart';
 
-class DigifitBulkTrackingResponseModel
-    extends BaseModel<DigifitBulkTrackingResponseModel> {
+class DigifitUpdateExerciseResponseModel
+    extends BaseModel<DigifitUpdateExerciseResponseModel> {
   final String status;
   final String message;
 
-  DigifitBulkTrackingResponseModel({
+  DigifitUpdateExerciseResponseModel({
     this.status = '',
     this.message = '',
   });
 
   @override
-  DigifitBulkTrackingResponseModel fromJson(Map<String, dynamic> json) {
-    return DigifitBulkTrackingResponseModel(
+  DigifitUpdateExerciseResponseModel fromJson(Map<String, dynamic> json) {
+    return DigifitUpdateExerciseResponseModel(
       status: json['status']?.toString() ?? '',
       message: json['data']?['message']?.toString() ?? '',
     );

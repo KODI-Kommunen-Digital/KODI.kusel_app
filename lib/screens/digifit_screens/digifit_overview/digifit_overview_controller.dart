@@ -81,13 +81,13 @@ class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
 
   Future<void> manageDataLocally(int locationId) async {
     bool isCacheDataAvailable =
-        await digifitCacheDataController.isDigifitCacheDataAvailable();
+        await digifitCacheDataController.isAllDigifitCacheDataAvailable();
     if (!isCacheDataAvailable) {
       state = state.copyWith(isLoading: false);
       return;
     }
     DigifitCacheDataResponseModel? digifitCacheDataResponseModel =
-        await digifitCacheDataController.getCacheData();
+        await digifitCacheDataController.getAllDigifitCacheData();
 
     if (digifitCacheDataResponseModel == null ||
         digifitCacheDataResponseModel.data == null) {
