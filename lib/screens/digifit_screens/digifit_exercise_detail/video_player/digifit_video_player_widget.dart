@@ -44,7 +44,6 @@ class _DigifitVideoPlayerWidgetState
 
   @override
   Widget build(BuildContext context) {
-    final controller = ref.watch(digifitExerciseDetailsControllerProvider(widget.equipmentId));
 
     bool isPauseCardWidgetVisible = (ref
         .watch(digifitExerciseDetailsControllerProvider(widget.equipmentId))
@@ -64,7 +63,6 @@ class _DigifitVideoPlayerWidgetState
                 .digifitExerciseEquipmentModel!
                 .userProgress
                 .isCompleted));
-    print("Card visibility - $isPauseCardWidgetVisible");
     return Column(
       children: [
         Stack(
@@ -74,9 +72,9 @@ class _DigifitVideoPlayerWidgetState
               mainAxisSize: MainAxisSize.min,
               children: [
                 _buildVideoPlayer(),
-                SizedBox(height: 18.h),
+                SizedBox(height: 28.h),
                 Visibility(
-                    visible: isPauseCardWidgetVisible,
+                    visible: isPauseCardWidgetVisible),
                     child: PauseCardWidget(
                       startTimer: widget.startTimer,
                       pauseTimer: widget.pauseTimer,
@@ -115,7 +113,7 @@ class _DigifitVideoPlayerWidgetState
                   true,
           child: Column(
             children: [
-              SizedBox(height: 38.h),
+              SizedBox(height: 22.h),
               const SuccessCardWidget(),
             ],
           ),
