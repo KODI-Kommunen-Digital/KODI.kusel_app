@@ -234,6 +234,7 @@ class _DigifitExerciseDetailScreenState
             textBoldMontserrat(
                 text: AppLocalizations.of(context).complete,
                 color: Theme.of(context).primaryColor,
+                textOverflow: TextOverflow.visible,
                 fontSize: 13)
           ],
         ),

@@ -53,7 +53,7 @@ class _DigifitVideoPlayerWidgetState
               mainAxisSize: MainAxisSize.min,
               children: [
                 _buildVideoPlayer(),
-                SizedBox(height: 18.h),
+                SizedBox(height: 28.h),
                 Visibility(
                     visible: (ref
                                 .watch(digifitExerciseDetailsControllerProvider(widget.equipmentId))
@@ -81,7 +81,7 @@ class _DigifitVideoPlayerWidgetState
               ],
             ),
             Positioned(
-              top: 285.h,
+              top: 270.h,
               left: 0.w,
               right: 0.w,
               child: Material(
@@ -111,7 +111,7 @@ class _DigifitVideoPlayerWidgetState
                   true,
           child: Column(
             children: [
-              SizedBox(height: 38.h),
+              SizedBox(height: 22.h),
               const SuccessCardWidget(),
             ],
           ),
