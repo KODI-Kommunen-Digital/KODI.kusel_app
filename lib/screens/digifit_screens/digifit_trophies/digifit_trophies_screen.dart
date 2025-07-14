@@ -183,7 +183,7 @@ class _DigifitTrophiesScreenState extends ConsumerState<DigifitTrophiesScreen> {
               _buildCourseDetailSection(
                 sectionTitle: AppLocalizations.of(context).digifit_all_trophies,
                 subtitle:
-                    "${allTrophies?.unlocked ?? 0} / ${allTrophies?.total ?? 0} ${AppLocalizations.of(context).digifit_trophies_open}",
+                    "${allTrophies?.locked ?? 0} / ${allTrophies?.total ?? 0} ${AppLocalizations.of(context).digifit_trophies_open}",
                 trophies: allTrophies!.trophies!,
                 isExpanded: state.isAllTrophiesExpanded,
                 onToggle: notifier.toggleAllTrophiesExpanded,
