@@ -26,7 +26,6 @@ class _PauseCardWidgetState extends ConsumerState<PauseCardWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = ref.watch(digifitExerciseDetailsControllerProvider(widget.equipmentId));
 
     return Material(
       elevation: 2,
@@ -36,8 +35,7 @@ class _PauseCardWidgetState extends ConsumerState<PauseCardWidget> {
       ),
       child: Container(
         width: double.infinity,
-        height: 102.h,
-        padding: EdgeInsets.symmetric(horizontal: 24.w),
+        padding: EdgeInsets.only(left: 2.w, right: 36.w, top: 16.h),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(

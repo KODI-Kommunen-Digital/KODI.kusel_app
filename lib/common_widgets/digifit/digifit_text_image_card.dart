@@ -86,8 +86,8 @@ class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
                                 .labelMedium
                                 ?.color),
                         4.verticalSpace,
-                        textSemiBoldMontserrat(text: widget.title,
-                            fontSize: 16),
+                        textSemiBoldMontserrat(text: widget.title,textAlign: TextAlign.start,
+                            fontSize: 16, textOverflow: TextOverflow.visible),
                         4.verticalSpace,
                         Visibility(
                           visible: (widget.description!=null),
