@@ -382,7 +382,8 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       getNews(),
       getLoginStatus(),
       getWeather(),
-      digifitCacheDataController.fetchDigifitDataFromNetwork()
+      digifitCacheDataController.fetchAllDigifitDataFromNetwork(),
+      digifitCacheDataController.postDigifitExerciseDataToNetwork()
     ]);
   }
 

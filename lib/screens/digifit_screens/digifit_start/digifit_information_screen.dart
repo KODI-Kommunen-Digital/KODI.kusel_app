@@ -36,7 +36,7 @@ class DigifitInformationScreen extends ConsumerStatefulWidget {
 class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
   @override
   void initState() {
-    Future.microtask((){
+    Future.microtask(() {
       ref
           .read(digifitInformationControllerProvider.notifier)
           .fetchDigifitInformation();

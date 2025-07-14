@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:domain/model/request_model/digifit/digifit_update_exercise_request_model.dart';
 
 import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:core/token_status.dart';
@@ -25,33 +26,21 @@ import 'enum/digifit_exercise_session_status_enum.dart';
 import 'enum/digifit_exercise_timer_state.dart';
 
 final digifitExerciseDetailsControllerProvider = StateNotifierProvider
-    .autoDispose<DigifitExerciseDetailsController, DigifitExerciseDetailsState>(
-        (ref) => DigifitExerciseDetailsController(
-              digifitExerciseDetailsUseCase:
-                  ref.read(digifitExerciseDetailsUseCaseProvider),
-              digifitExerciseDetailsTrackingUseCase:
-                  ref.read(digifitExerciseDetailsTrackingUseCaseProvider),
-              tokenStatus: ref.read(tokenStatusProvider),
-              refreshTokenProvider: ref.read(refreshTokenProvider),
-              localeManagerController: ref.read(localeManagerProvider.notifier),
-              digifitEquipmentFav: ref.read(digifitEquipmentFavProvider),
-              digifitQrScannerUseCase:
-                  ref.read(digifitQrScannerUseCaseProvider),
-              signInStatusController: ref.read(signInStatusProvider.notifier),
-            networkStatusProvider: ref.read(networkStatusProvider.notifier),
-            digifitCacheDataController: ref.read(digifitCacheDataProvider.notifier),
-            ));
-final digifitExerciseDetailsControllerProvider = StateNotifierProvider.autoDispose
+    .autoDispose
     .family<DigifitExerciseDetailsController, DigifitExerciseDetailsState, int>(
-      (ref, equipmentId) => DigifitExerciseDetailsController(
-    digifitExerciseDetailsUseCase: ref.read(digifitExerciseDetailsUseCaseProvider),
-    digifitExerciseDetailsTrackingUseCase: ref.read(digifitExerciseDetailsTrackingUseCaseProvider),
+  (ref, equipmentId) => DigifitExerciseDetailsController(
+    digifitExerciseDetailsUseCase:
+        ref.read(digifitExerciseDetailsUseCaseProvider),
+    digifitExerciseDetailsTrackingUseCase:
+        ref.read(digifitExerciseDetailsTrackingUseCaseProvider),
     tokenStatus: ref.read(tokenStatusProvider),
     refreshTokenProvider: ref.read(refreshTokenProvider),
     localeManagerController: ref.read(localeManagerProvider.notifier),
     digifitEquipmentFav: ref.read(digifitEquipmentFavProvider),
     digifitQrScannerUseCase: ref.read(digifitQrScannerUseCaseProvider),
     signInStatusController: ref.read(signInStatusProvider.notifier),
+    networkStatusProvider: ref.read(networkStatusProvider.notifier),
+    digifitCacheDataController: ref.read(digifitCacheDataProvider.notifier),
     equipmentId: equipmentId, // Pass equipmentId to controller
   ),
 );
@@ -82,7 +71,6 @@ class DigifitExerciseDetailsController
       required this.signInStatusController,
       required this.networkStatusProvider,
       required this.digifitCacheDataController,
-      required this.signInStatusController,
       required this.equipmentId})
       : super(DigifitExerciseDetailsState.empty());
 
@@ -153,13 +141,13 @@ class DigifitExerciseDetailsController
 
   Future<void> manageDataLocally(int? locationId, int? equipmentId) async {
     bool isCacheDataAvailable =
-    await digifitCacheDataController.isDigifitCacheDataAvailable();
+    await digifitCacheDataController.isAllDigifitCacheDataAvailable();
     if (!isCacheDataAvailable) {
       state = state.copyWith(isLoading: false);
       return;
     }
     DigifitCacheDataResponseModel? digifitCacheDataResponseModel =
-    await digifitCacheDataController.getCacheData();
+    await digifitCacheDataController.getAllDigifitCacheData();
 
     if (digifitCacheDataResponseModel == null ||
         digifitCacheDataResponseModel.data == null) {
@@ -200,7 +188,8 @@ class DigifitExerciseDetailsController
         );
 
     DigifitExerciseUserProgressModel userProgress = DigifitExerciseUserProgressModel(
-      isCompleted: digifitStationModel?.isCompleted ?? false
+      isCompleted: digifitStationModel?.isCompleted ?? false,
+      repetitionsPerSet: digifitStationModel?.recommendedReps ?? 0
     );
     DigifitExerciseEquipmentModel digifitExerciseEquipmentModel = DigifitExerciseEquipmentModel(
       id: digifitStationModel?.id ?? 0,
@@ -213,7 +202,8 @@ class DigifitExerciseDetailsController
     );
     state = state.copyWith(
       isLoading: false,
-      digifitExerciseEquipmentModel: digifitExerciseEquipmentModel
+      digifitExerciseEquipmentModel: digifitExerciseEquipmentModel,
+      totalSetNumber: digifitStationModel?.recommendedSets,
     );
   }
 
@@ -265,23 +255,27 @@ class DigifitExerciseDetailsController
   }
 
   Future<bool> validateQrScanner(String shortUrl, String equipmentSlug) async {
-    try {
-      state = state.copyWith(isLoading: true);
-      final result = await digifitQrScannerUseCase.call(shortUrl);
-
-      return result.fold((error) {
-        debugPrint("[Validate Url Expansion] URL expansion failed: $error");
+    bool isNetwork = await isNetworkAvailable();
+    if(isNetwork){
+      try {
+        state = state.copyWith(isLoading: true);
+        final result = await digifitQrScannerUseCase.call(shortUrl);
+        return result.fold((error) {
+          debugPrint("[Validate Url Expansion] URL expansion failed: $error");
+          state = state.copyWith(isLoading: false);
+          return false;
+        }, (expandedUrl) {
+          final slugUrl = getSlugFromUrl(expandedUrl);
+          debugPrint('extracted slug : $slugUrl');
+          state = state.copyWith(isLoading: false);
+          return slugUrl == equipmentSlug;
+        });
+      } catch (error) {
         state = state.copyWith(isLoading: false);
         return false;
-      }, (expandedUrl) {
-        final slugUrl = getSlugFromUrl(expandedUrl);
-        debugPrint('extracted slug : $slugUrl');
-        state = state.copyWith(isLoading: false);
-        return slugUrl == equipmentSlug;
-      });
-    } catch (error) {
-      state = state.copyWith(isLoading: false);
-      return false;
+      }
+    } else {
+      return true;
     }
   }
 
@@ -292,24 +286,60 @@ class DigifitExerciseDetailsController
       int reps,
       ExerciseStageConstant stageConstant,
       VoidCallback onSuccess) async {
-    try {
-      final isTokenExpired = tokenStatus.isAccessTokenExpired();
-      final status = await signInStatusController.isUserLoggedIn();
+    bool isNetwork = await isNetworkAvailable();
 
-      if (isTokenExpired && status) {
-        await refreshTokenProvider.getNewToken(
-          onError: () {},
-          onSuccess: () async {
-            await _trackExerciseDetails(
-                equipmentId, locationId, sets, reps, stageConstant, onSuccess);
-          },
-        );
-      } else {
-        await _trackExerciseDetails(
-            equipmentId, locationId, sets, reps, stageConstant, onSuccess);
+    if(isNetwork) {
+      try {
+        final isTokenExpired = tokenStatus.isAccessTokenExpired();
+        final status = await signInStatusController.isUserLoggedIn();
+
+        if (isTokenExpired && status) {
+          await refreshTokenProvider.getNewToken(
+            onError: () {},
+            onSuccess: () async {
+              await _trackExerciseDetails(
+                  equipmentId, locationId, sets, reps, stageConstant, onSuccess);
+            },
+          );
+        } else {
+          await _trackExerciseDetails(
+              equipmentId, locationId, sets, reps, stageConstant, onSuccess);
+        }
+      } catch (e) {
+        debugPrint('[CardExerciseDetailsController] Track Exception: $e');
       }
-    } catch (e) {
-      debugPrint('[CardExerciseDetailsController] Track Exception: $e');
+    } else {
+
+      bool isCompleted = false;
+      if (stageConstant == ExerciseStageConstant.start) {
+        createdAt();
+        onSuccess();
+      } else if (stageConstant == ExerciseStageConstant.progress) {
+        updatedAt();
+      } else if (stageConstant == ExerciseStageConstant.complete) {
+        updateSetComplete();
+        state = state.copyWith(
+          createdAt: '',
+          updatedAt: '',
+          setTimeList: [],
+        );
+        isCompleted = true;
+        saveExerciseCacheData(exerciseId: equipmentId.toString());
+      } else if (stageConstant == ExerciseStageConstant.abort) {
+        saveExerciseCacheData(exerciseId: equipmentId.toString());
+        state = state.copyWith(
+            setComplete: 0, createdAt: '', updatedAt: '', setTimeList: [], isCompletedOffline: false);
+      }
+
+      DigifitExerciseEquipmentModel? digifitExerciseEquipmentModel =
+          state.digifitExerciseEquipmentModel;
+      if (digifitExerciseEquipmentModel?.userProgress.isCompleted != null) {
+        digifitExerciseEquipmentModel?.userProgress.isCompleted = isCompleted;
+      }
+      state = state.copyWith(
+          currentSetNumber: state.setComplete,
+          digifitExerciseEquipmentModel: digifitExerciseEquipmentModel);
+      onSuccess();
     }
   }
 
@@ -381,5 +411,71 @@ class DigifitExerciseDetailsController
     bool networkAvailable = await networkStatusProvider.checkNetworkStatus();
     state = state.copyWith(isNetworkAvailable : networkAvailable);
     return networkAvailable;
+  }
+
+  void saveExerciseCacheData({required String exerciseId}) async {
+    debugPrint("DigifitCacheDataFlow - Saving Data at Hive");
+    DigifitExerciseRecordModel? digifitExerciseRecordModel =
+        DigifitExerciseRecordModel(
+            locationId: state.locationId,
+            createdAt: state.createdAt,
+            updatedAt: state.updatedAt,
+            setComplete: state.setComplete,
+            setTimeList: state.setTimeList);
+    DigifitUpdateExerciseRequestModel digifitUpdateExerciseRequestModel;
+    bool isExerciseCacheAvailable = await digifitCacheDataController.isExerciseCacheDataAvailable();
+    if(isExerciseCacheAvailable){
+      digifitUpdateExerciseRequestModel =
+      await digifitCacheDataController.getDigifitExerciseCacheData();
+      final existingMap = digifitUpdateExerciseRequestModel.data.firstWhere(
+            (map) => map.containsKey(equipmentId),
+        orElse: () => {},
+      );
+      if (digifitUpdateExerciseRequestModel.data.isNotEmpty) {
+        // If found, append to the existing list
+        existingMap[equipmentId]!.add(digifitExerciseRecordModel);
+      }
+    } else {
+      digifitUpdateExerciseRequestModel = DigifitUpdateExerciseRequestModel();
+      digifitUpdateExerciseRequestModel.data.add({equipmentId.toString(): [digifitExerciseRecordModel]});
+    }
+
+    await digifitCacheDataController
+        .saveDigifitExerciseCacheData(digifitUpdateExerciseRequestModel);
+
+    //Updating DigifitCacheDataState for DigifitUpdateExerciseRequestModel after updating data
+    digifitCacheDataController.updateDigifitUpdateExerciseRequestModel(digifitUpdateExerciseRequestModel);
+
+  }
+
+  void createdAt() {
+    String createdAt = getCurrentUTCTime();
+    state = state.copyWith(createdAt: createdAt);
+  }
+
+  void updatedAt() {
+    String updatedAt = getCurrentUTCTime();
+    state = state.copyWith(updatedAt: updatedAt);
+    updateSetComplete();
+    updateSetTimeList(updatedAt);
+  }
+
+  void updateSetComplete() {
+    int setComplete = state.setComplete;
+    setComplete++;
+    state = state.copyWith(setComplete: setComplete);
+  }
+
+  void updateSetTimeList(String updatedAt) {
+    final List<String> updatedList = [...(state.setTimeList ?? [])];
+    updatedList.add(updatedAt);
+    state = state.copyWith(
+      setTimeList: updatedList,
+    );
+  }
+
+  String getCurrentUTCTime() {
+    final now = DateTime.now().toUtc();
+    return now.toIso8601String();
   }
 }

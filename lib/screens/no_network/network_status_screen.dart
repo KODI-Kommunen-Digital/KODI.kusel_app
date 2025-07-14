@@ -39,7 +39,7 @@ class _NetworkStatusScreenState extends ConsumerState<NetworkStatusScreen> {
               ),
               20.verticalSpace,
               CustomButton(
-                onPressed: () => ref.read(navigationProvider).navigateUsingPath(
+                onPressed: () => ref.read(navigationProvider).removeAllAndNavigate(
                     path: digifitStartScreenPath, context: context),
                 text: "Digifit",
                 width: 200,

@@ -261,6 +261,10 @@ class _DigifitExerciseDetailScreenState
                 0,
             startTimer: () {
               startTimer();
+              // ref
+              //     .read(digifitExerciseDetailsControllerProvider(equipmentId)
+              //         .notifier)
+              //     .updatedAt();
             },
             pauseTimer: () {
               pauseTimer();
