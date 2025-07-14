@@ -74,7 +74,7 @@ class _DigifitVideoPlayerWidgetState
                 _buildVideoPlayer(),
                 SizedBox(height: 28.h),
                 Visibility(
-                    visible: isPauseCardWidgetVisible),
+                    visible: isPauseCardWidgetVisible,
                     child: PauseCardWidget(
                       startTimer: widget.startTimer,
                       pauseTimer: widget.pauseTimer,
