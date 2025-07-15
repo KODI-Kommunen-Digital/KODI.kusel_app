@@ -111,8 +111,6 @@ const digifitExerciseDetailScreenPath = "/digifitExerciseDetailScreenPath";
 const webViewPagePath = "/webViewPagePath";
 const fullImageScreenPath = '/fullImageScreenPath';
 
-const noNetworkScreenPath = "/noNetworkScreenPath";
-
 final exploreSubScreenRoutes = [
   tourismScreenPath,
   virtualTownHallScreenPath,
@@ -213,9 +211,6 @@ List<RouteBase> goRouteList = [
       builder: (_, state) => FullImageScreen(
           fullImageScreenParams: state.extra as FullImageScreenParams)),
 
-  GoRoute(
-      path: noNetworkScreenPath, builder: (_, state) => NetworkStatusScreen()),
-
   // Dashboard + tabs
   dashboardRoutes,
 ];
@@ -304,3 +299,7 @@ final dashboardRoutes = StatefulShellRoute.indexedStack(
     ),
   ],
 );
+
+
+
+
