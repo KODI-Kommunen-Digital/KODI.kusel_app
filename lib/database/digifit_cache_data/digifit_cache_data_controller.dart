@@ -1,3 +1,4 @@
+import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:core/token_status.dart';
 import 'package:domain/model/request_model/digifit/digifit_information_request_model.dart';
 import 'package:domain/model/request_model/digifit/digifit_update_exercise_request_model.dart';
@@ -24,7 +25,8 @@ final digifitCacheDataProvider =
             tokenStatus: ref.read(tokenStatusProvider),
             localeManagerController: ref.read(localeManagerProvider.notifier),
             localDigifitBulkTrackingUseCase:
-                ref.read(localDigifitBulkTrackingUseCaseProvider)));
+                ref.read(localDigifitBulkTrackingUseCaseProvider),
+            signInStatusController: ref.read(signInStatusProvider.notifier)));
 
 class DigifitCacheDataController extends StateNotifier<DigifitCacheDataState> {
   final HiveBoxFunction hiveBoxFunctionHelper;
@@ -33,6 +35,7 @@ class DigifitCacheDataController extends StateNotifier<DigifitCacheDataState> {
   final TokenStatus tokenStatus;
   final LocaleManagerController localeManagerController;
   final LocalDigifitBulkTrackingUseCase localDigifitBulkTrackingUseCase;
+  final SignInStatusController signInStatusController;
 
   DigifitCacheDataController(
       {required this.hiveBoxFunctionHelper,
@@ -40,7 +43,8 @@ class DigifitCacheDataController extends StateNotifier<DigifitCacheDataState> {
       required this.refreshTokenProvider,
       required this.tokenStatus,
       required this.localeManagerController,
-      required this.localDigifitBulkTrackingUseCase})
+      required this.localDigifitBulkTrackingUseCase,
+      required this.signInStatusController})
       : super(DigifitCacheDataState.empty());
 
   Future<void> fetchAllDigifitDataFromNetwork() async {
@@ -49,7 +53,9 @@ class DigifitCacheDataController extends StateNotifier<DigifitCacheDataState> {
 
       final isTokenExpired = tokenStatus.isAccessTokenExpired();
 
-      if (isTokenExpired) {
+      final status = await signInStatusController.isUserLoggedIn();
+
+      if (isTokenExpired && status) {
         await refreshTokenProvider.getNewToken(
             onError: () {},
             onSuccess: () async {
@@ -118,14 +124,16 @@ class DigifitCacheDataController extends StateNotifier<DigifitCacheDataState> {
 
   Future<bool> isExerciseCacheDataAvailable() async {
     bool isExerciseCacheDataAvailable = false;
-    if (!hiveBoxFunctionHelper.isBoxOpen(BoxesName.digifitExerciseCacheData.name)) {
-      await hiveBoxFunctionHelper.openBox(BoxesName.digifitExerciseCacheData.name);
+    if (!hiveBoxFunctionHelper
+        .isBoxOpen(BoxesName.digifitExerciseCacheData.name)) {
+      await hiveBoxFunctionHelper
+          .openBox(BoxesName.digifitExerciseCacheData.name);
     }
     Box? box = await hiveBoxFunctionHelper
         .getBoxReference(BoxesName.digifitExerciseCacheData.name);
     if (box != null) {
-      isExerciseCacheDataAvailable =
-      await hiveBoxFunctionHelper.containsKey(box, digifitExerciseCacheDataKey);
+      isExerciseCacheDataAvailable = await hiveBoxFunctionHelper.containsKey(
+          box, digifitExerciseCacheDataKey);
     }
     state = state.copyWith(isCacheDataAvailable: isExerciseCacheDataAvailable);
     return isExerciseCacheDataAvailable;
@@ -133,7 +141,8 @@ class DigifitCacheDataController extends StateNotifier<DigifitCacheDataState> {
 
   Future<void> saveAllDigifitCacheData(
       DigifitCacheDataResponseModel? digifitCacheDataResponseModel) async {
-    bool isBoxOpen = hiveBoxFunctionHelper.isBoxOpen(BoxesName.digifitCacheData.name);
+    bool isBoxOpen =
+        hiveBoxFunctionHelper.isBoxOpen(BoxesName.digifitCacheData.name);
     if (!isBoxOpen) {
       await hiveBoxFunctionHelper.openBox(BoxesName.digifitCacheData.name);
     }
@@ -162,22 +171,21 @@ class DigifitCacheDataController extends StateNotifier<DigifitCacheDataState> {
     }
   }
 
-  Future<void> postDigifitExerciseDataToNetwork(
-      ) async {
-
+  Future<void> postDigifitExerciseDataToNetwork() async {
     bool isExerciseCacheAvailable = await isExerciseCacheDataAvailable();
-    if(isExerciseCacheAvailable){
+    if (isExerciseCacheAvailable) {
       debugPrint("DigifitCacheDataFlow - Posting data at API");
 
       DigifitUpdateExerciseRequestModel digifitUpdateExerciseRequestModel =
-      await getDigifitExerciseCacheData();
+          await getDigifitExerciseCacheData();
 
       try {
         state = state.copyWith(isLoading: true);
 
         final isTokenExpired = tokenStatus.isAccessTokenExpired();
+        final status = await signInStatusController.isUserLoggedIn();
 
-        if (isTokenExpired) {
+        if (isTokenExpired && status) {
           await refreshTokenProvider.getNewToken(
               onError: () {},
               onSuccess: () {
@@ -193,13 +201,11 @@ class DigifitCacheDataController extends StateNotifier<DigifitCacheDataState> {
         debugPrint('[DigifitCacheDataController] Fetch Exception: $e');
       }
     }
-
   }
 
   Future<void> _postDigifitExerciseDataToNetwork(
       DigifitUpdateExerciseRequestModel
           digifitUpdateExerciseRequestModel) async {
-
     try {
       DigifitUpdateExerciseResponseModel digifitUpdateExerciseResponseModel =
           DigifitUpdateExerciseResponseModel();
@@ -214,17 +220,17 @@ class DigifitCacheDataController extends StateNotifier<DigifitCacheDataState> {
             errorMessage: l.toString(),
           );
           debugPrint(
-              '[DigifitCacheDataController] Post exercise Error: ${l.toString()}');
+              '[DigifitCacheDataController] Post exercise Exception: ${l.toString()}');
         },
         (r) async {
           var response = (r as DigifitUpdateExerciseResponseModel);
           debugPrint("DigifitCacheDataFlow - Posted data at API success");
-          state = state.copyWith(
-              isLoading: false);
+          state = state.copyWith(isLoading: false);
         },
       );
     } catch (error) {
-      debugPrint('[DigifitCacheDataController] Post exercise fold Exception: $error');
+      debugPrint(
+          '[DigifitCacheDataController] Post exercise fold Exception: $error');
     }
   }
 
@@ -267,6 +273,7 @@ class DigifitCacheDataController extends StateNotifier<DigifitCacheDataState> {
 
   void updateDigifitUpdateExerciseRequestModel(
       DigifitUpdateExerciseRequestModel digifitUpdateExerciseRequestModel) {
-    state = state.copyWith(digifitUpdateExerciseRequestModel: digifitUpdateExerciseRequestModel);
+    state = state.copyWith(
+        digifitUpdateExerciseRequestModel: digifitUpdateExerciseRequestModel);
   }
 }

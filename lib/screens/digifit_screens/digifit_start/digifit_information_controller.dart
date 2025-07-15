@@ -49,7 +49,7 @@ class DigifitInformationController extends StateNotifier<DigifitState> {
 
   Future<void> fetchDigifitInformation() async {
     state = state.copyWith(isLoading: true);
-    bool isNetwork = await isNetworkAvailable();
+    bool isNetwork =networkStatusProvider.state.isNetworkAvailable;
       try {
       if (isNetwork) {
         debugPrint(
