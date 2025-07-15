@@ -68,11 +68,13 @@ class DigifitInformationController extends StateNotifier<DigifitState> {
           _fetchDigifitInformation();
         }
       } else {
+        debugPrint('Master debugging session : Fetching info cache data');
         bool isCacheDataAvailable =
             await digifitCacheDataController.isAllDigifitCacheDataAvailable();
         if (isCacheDataAvailable) {
           DigifitCacheDataResponseModel? digifitCacheDataResponseModel =
               await digifitCacheDataController.getAllDigifitCacheData();
+          debugPrint('Master debugging session : Cache Available ${digifitCacheDataResponseModel?.toJson()}');
           if (digifitCacheDataResponseModel != null) {
             state = state.copyWith(
                 isLoading: false,
@@ -82,6 +84,7 @@ class DigifitInformationController extends StateNotifier<DigifitState> {
           debugPrint(
               '[DigifitInformationController] Data is coming from cache');
         } else {
+          debugPrint('Master debugging session : Cache Not Available');
           state = state.copyWith(isLoading: false);
         }
       }
