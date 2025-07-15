@@ -87,7 +87,13 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
   initialCall() async {
     final res = sharedPreferenceHelper.getString(tokenKey);
     if (res == null) {
-      await guestUserLogin.getGuestUserToken();
+      await guestUserLogin.getGuestUserToken(
+        onSuccess: ()async{
+          await fetchHomeScreenInitMethod();
+        }
+      );
+    }else{
+      await fetchHomeScreenInitMethod();
     }
   }
 
