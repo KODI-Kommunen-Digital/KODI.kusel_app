@@ -225,5 +225,6 @@
   "digifit_trophies_received": "Trophies received",
   "digifit_trophies_load_more": "Load more",
   "digifit_trophies_show_less": "Show less",
-  "digifit_trophies_open": "open"
+  "digifit_trophies_open": "open",
+  "digifit_exercise_details_open_station": "Open stations in the course"
 }
