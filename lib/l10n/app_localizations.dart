@@ -1456,6 +1456,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'open'**
   String get digifit_trophies_open;
+
+  /// No description provided for @digifit_exercise_details_open_station.
+  ///
+  /// In en, this message translates to:
+  /// **'Open stations in the course'**
+  String get digifit_exercise_details_open_station;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

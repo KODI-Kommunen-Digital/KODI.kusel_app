@@ -226,5 +226,6 @@
   "digifit_trophies_received": "Erhaltene Trophäen",
   "digifit_trophies_load_more": "Mehr laden",
   "digifit_trophies_show_less": "Weniger anzeigen",
-  "digifit_trophies_open": "offen"
+  "digifit_trophies_open": "offen",
+  "digifit_exercise_details_open_station": "Offene Stationen im Parcours"
 }
