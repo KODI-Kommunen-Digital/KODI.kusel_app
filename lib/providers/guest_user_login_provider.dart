@@ -23,7 +23,7 @@ class GuestUserLogin {
       required this.sharedPreferenceHelper,
       required this.extractDeviceIdProvider});
 
-  getGuestUserToken() async {
+  getGuestUserToken({Future<void> Function()? onSuccess}) async {
     try {
       String? deviceId = await extractDeviceIdProvider.extractDeviceId();
       if (deviceId != null) {
@@ -36,11 +36,17 @@ class GuestUserLogin {
 
         response.fold((l) {
           debugPrint('guest user token fold exception = ${l.toString()}');
-        }, (r) {
+        }, (r) async{
           final res = r as GuestUserLoginResponseModel;
 
           sharedPreferenceHelper.setString(
               tokenKey, res.data?.accessToken ?? '');
+
+          if(onSuccess!=null)
+            {
+              await onSuccess();
+            }
+
         });
       }
     } catch (error) {
