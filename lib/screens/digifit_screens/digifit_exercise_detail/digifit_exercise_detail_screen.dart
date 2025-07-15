@@ -11,11 +11,13 @@ import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/l10n/app_localizations.dart';
+import 'package:kusel/offline_router.dart';
 import 'package:kusel/providers/digifit_equipment_fav_provider.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/enum/digifit_exercise_timer_state.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/params/digifit_exercise_details_params.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/video_player/digifit_video_player_widget.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
+import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
 
 import '../../../app_router.dart';
 import '../../../common_widgets/arrow_back_widget.dart';
@@ -393,7 +395,11 @@ class _DigifitExerciseDetailScreenState
                 padding: EdgeInsets.only(bottom: 5.h),
                 child: DigifitTextImageCard(
                   onCardTap: () {
-                    ref.read(navigationProvider).navigateUsingPath(
+
+                    final value = ref.read(networkStatusProvider).isNetworkAvailable;
+
+                    if(value) {
+                      ref.read(navigationProvider).navigateUsingPath(
                         path: digifitExerciseDetailScreenPath,
                         context: context,
                         params: DigifitExerciseDetailsParams(
@@ -418,6 +424,27 @@ class _DigifitExerciseDetailScreenState
                                           .locationId,
                                       widget.digifitExerciseDetailsParams.slug);
                             }));
+                    }
+                    else{
+
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: offlineDigifitExerciseDetailScreenPath,
+                          context: context,
+                          params: DigifitExerciseDetailsParams(
+                              station: DigifitInformationStationModel(
+                                id: equipment.id,
+                                name: equipment.name,
+                                isFavorite: equipment.isFavorite,
+                                muscleGroups: equipment.muscleGroups,
+                              ),
+                              locationId: widget
+                                  .digifitExerciseDetailsParams.locationId ??
+                                  0,
+                              onFavCallBack: () {
+
+                              }));
+
+                    }
                   },
                   imageUrl: '',
                   heading: equipment.muscleGroups,
@@ -576,10 +603,18 @@ class _DigifitExerciseDetailScreenState
                   .isCompleted;
 
               if (isComplete != null && !isComplete) {
+
+                String path = digifitQRScannerScreenPath;
+
+                if(!ref.read(networkStatusProvider).isNetworkAvailable)
+                  {
+                    path = offlineDigifitQRScannerScreenPath;
+                  }
+
                 final result = await ref
                     .read(navigationProvider)
                     .navigateUsingPath(
-                        path: digifitQRScannerScreenPath, context: context);
+                        path: path, context: context);
 
                 final qrCodeIdentifier = ref
                         .watch(digifitExerciseDetailsControllerProvider(equipmentId))
@@ -593,6 +628,8 @@ class _DigifitExerciseDetailScreenState
 
                 if (res) {
                   await ref
+
+
                       .read(digifitExerciseDetailsControllerProvider(equipmentId).notifier)
                       .trackExerciseDetails(
                           digifitExerciseDetailsState
