@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/navigation/navigation.dart';
+import 'package:kusel/offline_router.dart';
 import 'package:kusel/screens/splash/splash_screen_provider.dart';
 
 import '../no_network/network_status_screen_provider.dart';
@@ -20,10 +21,10 @@ class _State extends ConsumerState<SplashScreen> {
   @override
   @override
   void initState() {
-    super.initState();
+    final hasNetwork = ref.read(networkStatusProvider).isNetworkAvailable;
+
     Future.microtask(() {
       ref.read(splashScreenProvider.notifier).startTimer(() {
-        final hasNetwork = ref.read(networkStatusProvider).isNetworkAvailable;
 
         if (hasNetwork) {
           bool isOnboardingDone =
@@ -44,6 +45,8 @@ class _State extends ConsumerState<SplashScreen> {
         }
       });
     });
+    super.initState();
+
   }
 
   @override

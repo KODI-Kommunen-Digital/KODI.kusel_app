@@ -12,13 +12,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:kusel/l10n/app_localizations.dart';
-import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
 import 'package:kusel/theme_manager/theme_manager_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_router.dart';
 import 'locale/localization_manager.dart';
+import 'offline_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -64,17 +64,11 @@ class _MyAppState extends ConsumerState<MyApp> {
           locale: ref.watch(localeManagerProvider).currentLocale,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
-          routerConfig: ref.read(mobileRouterProvider),
+          routerConfig: (ref.watch(networkStatusProvider).isNetworkAvailable)
+              ? ref.read(mobileRouterProvider)
+              : ref.read(noInternetRouterProvider),
           theme: ref.watch(themeManagerProvider).currentSelectedTheme,
           builder: (context, child) {
-
-            // print("child == $child");
-            // subscription = Connectivity().onConnectivityChanged.listen((result) {
-            //   if (result == ConnectivityResult.none) {
-            //
-            //   }
-            // });
-
             return child!;
           },
         );
@@ -92,6 +86,13 @@ class _MyAppState extends ConsumerState<MyApp> {
     });
     super.initState();
 
+    subscription = Connectivity().onConnectivityChanged.listen((result) {
+      if (result == ConnectivityResult.none) {
+        ref.read(networkStatusProvider.notifier).updateNetworkStatus(false);
+      } else {
+        ref.read(networkStatusProvider.notifier).updateNetworkStatus(true);
+      }
+    });
   }
 
   @override
