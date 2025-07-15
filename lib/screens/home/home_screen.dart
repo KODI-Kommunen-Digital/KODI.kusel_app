@@ -38,11 +38,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     Future.microtask(() async {
-      bool networkStatus =
-          await ref.read(networkStatusProvider.notifier).checkNetworkStatus();
-      if (networkStatus) {
-        ref.read(homeScreenProvider.notifier).fetchHomeScreenInitMethod();
-      }
+
       ref.read(dashboardScreenProvider.notifier).onIndexChanged(0);
       ref.read(homeScreenProvider.notifier).initialCall();
     });
