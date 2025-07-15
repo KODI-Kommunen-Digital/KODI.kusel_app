@@ -249,7 +249,7 @@ class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
   ) async {
     try {
       List<DigifitOverviewStationModel> stationList =
-          state.digifitOverviewDataModel?.parcours?.availableStation ?? [];
+          state.digifitOverviewDataModel?.parcours?.completedStation ?? [];
 
       for (DigifitOverviewStationModel digifitOverviewStationModel
           in stationList) {
@@ -260,7 +260,7 @@ class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
         }
       }
 
-      state.digifitOverviewDataModel!.parcours!.availableStation = stationList;
+      state.digifitOverviewDataModel!.parcours!.completedStation = stationList;
       state = state.copyWith(
           digifitOverviewDataModel: state.digifitOverviewDataModel);
     } catch (error) {

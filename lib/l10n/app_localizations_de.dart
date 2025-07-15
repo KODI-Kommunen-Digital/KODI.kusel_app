@@ -688,4 +688,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get digifit_trophies_open => 'offen';
+
+  @override
+  String get digifit_exercise_details_open_station => 'Offene Stationen im Parcours';
 }

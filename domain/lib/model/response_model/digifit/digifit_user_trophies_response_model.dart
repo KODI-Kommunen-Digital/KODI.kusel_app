@@ -1,18 +1,18 @@
 import 'package:core/base_model.dart';
 
-class DigifitUserTrophiesResponseModel extends BaseModel<DigifitUserTrophiesResponseModel> {
+class DigifitUserTrophiesResponseModel
+    extends BaseModel<DigifitUserTrophiesResponseModel> {
   final DigifitUserTrophyDataModel? data;
   final String? status;
 
-  DigifitUserTrophiesResponseModel({
-    this.data,
-    this.status,
-  });
+  DigifitUserTrophiesResponseModel({this.data, this.status});
 
   @override
   DigifitUserTrophiesResponseModel fromJson(Map<String, dynamic> json) {
     return DigifitUserTrophiesResponseModel(
-      data: DigifitUserTrophyDataModel().fromJson(json['data']),
+      data: json['data'] != null
+          ? DigifitUserTrophyDataModel().fromJson(json['data'])
+          : null,
       status: json['status'],
     );
   }
@@ -47,16 +47,24 @@ class DigifitUserTrophyDataModel extends BaseModel<DigifitUserTrophyDataModel> {
   DigifitUserTrophyDataModel fromJson(Map<String, dynamic> json) {
     return DigifitUserTrophyDataModel(
       sourceId: json['sourceId'],
-      userStats: DigifitUserTrophyStatsModel().fromJson(json['userStats']),
+      userStats: json['userStats'] != null
+          ? DigifitUserTrophyStatsModel().fromJson(json['userStats'])
+          : null,
       latestTrophies: json['latestTrophies'] != null
-          ? List<Map<String, dynamic>>.from(json['latestTrophies'])
+          ? List.from(json['latestTrophies'])
               .map((e) => DigifitUserTrophyItemModel().fromJson(e))
               .toList()
           : null,
-      allTrophies: DigifitUserAllTrophiesModel().fromJson(json['allTrophies']),
-      trophiesReceived:
-          DigifitUserReceivedTrophiesModel().fromJson(json['unlockedTrophies']),
-      actions: DigifitUserTrophyActionsModel().fromJson(json['actions']),
+      allTrophies: json['allTrophies'] != null
+          ? DigifitUserAllTrophiesModel().fromJson(json['allTrophies'])
+          : null,
+      trophiesReceived: json['trophiesReceived'] != null
+          ? DigifitUserReceivedTrophiesModel()
+              .fromJson(json['trophiesReceived'])
+          : null,
+      actions: json['actions'] != null
+          ? DigifitUserTrophyActionsModel().fromJson(json['actions'])
+          : null,
     );
   }
 
@@ -67,7 +75,7 @@ class DigifitUserTrophyDataModel extends BaseModel<DigifitUserTrophyDataModel> {
       'userStats': userStats?.toJson(),
       'latestTrophies': latestTrophies?.map((e) => e.toJson()).toList(),
       'allTrophies': allTrophies?.toJson(),
-      'unlockedTrophies': trophiesReceived?.toJson(),
+      'trophiesReceived': trophiesReceived?.toJson(),
       'actions': actions?.toJson(),
     };
   }
@@ -78,10 +86,7 @@ class DigifitUserTrophyStatsModel
   final int? points;
   final int? trophies;
 
-  DigifitUserTrophyStatsModel({
-    this.points,
-    this.trophies,
-  });
+  DigifitUserTrophyStatsModel({this.points, this.trophies});
 
   @override
   DigifitUserTrophyStatsModel fromJson(Map<String, dynamic> json) {
@@ -112,7 +117,7 @@ class DigifitUserTrophyItemModel extends BaseModel<DigifitUserTrophyItemModel> {
     this.name,
     this.iconUrl,
     this.isCompleted,
-    this.muscleGroups
+    this.muscleGroups,
   });
 
   @override
@@ -121,7 +126,7 @@ class DigifitUserTrophyItemModel extends BaseModel<DigifitUserTrophyItemModel> {
       id: json['id'],
       name: json['name'],
       iconUrl: json['iconUrl'],
-      isCompleted: json['isUnlocked'],
+      isCompleted: json['isCompleted'],
       muscleGroups: json['muscleGroups'],
     );
   }
@@ -132,22 +137,19 @@ class DigifitUserTrophyItemModel extends BaseModel<DigifitUserTrophyItemModel> {
       'id': id,
       'name': name,
       'iconUrl': iconUrl,
-      'isUnlocked': isCompleted,
+      'isCompleted': isCompleted,
       'muscleGroups': muscleGroups,
     };
   }
 }
 
-class DigifitUserAllTrophiesModel extends BaseModel<DigifitUserAllTrophiesModel> {
+class DigifitUserAllTrophiesModel
+    extends BaseModel<DigifitUserAllTrophiesModel> {
   final int? total;
   final int? locked;
   final List<DigifitUserTrophyItemModel>? trophies;
 
-  DigifitUserAllTrophiesModel({
-    this.total,
-    this.locked,
-    this.trophies,
-  });
+  DigifitUserAllTrophiesModel({this.total, this.locked, this.trophies});
 
   @override
   DigifitUserAllTrophiesModel fromJson(Map<String, dynamic> json) {
@@ -155,7 +157,7 @@ class DigifitUserAllTrophiesModel extends BaseModel<DigifitUserAllTrophiesModel>
       total: json['total'],
       locked: json['locked'],
       trophies: json['trophies'] != null
-          ? List<Map<String, dynamic>>.from(json['trophies'])
+          ? List.from(json['trophies'])
               .map((e) => DigifitUserTrophyItemModel().fromJson(e))
               .toList()
           : null,
@@ -178,11 +180,7 @@ class DigifitUserReceivedTrophiesModel
   final int? total;
   final List<DigifitUserTrophyItemModel>? trophies;
 
-  DigifitUserReceivedTrophiesModel({
-    this.unlocked,
-    this.total,
-    this.trophies,
-  });
+  DigifitUserReceivedTrophiesModel({this.unlocked, this.total, this.trophies});
 
   @override
   DigifitUserReceivedTrophiesModel fromJson(Map<String, dynamic> json) {
@@ -190,7 +188,7 @@ class DigifitUserReceivedTrophiesModel
       unlocked: json['unlocked'],
       total: json['total'],
       trophies: json['trophies'] != null
-          ? List<Map<String, dynamic>>.from(json['trophies'])
+          ? List.from(json['trophies'])
               .map((e) => DigifitUserTrophyItemModel().fromJson(e))
               .toList()
           : null,
@@ -212,10 +210,8 @@ class DigifitUserTrophyActionsModel
   final String? scanWorkoutUrl;
   final String? loadMoreTrophiesUrl;
 
-  DigifitUserTrophyActionsModel({
-    this.scanWorkoutUrl,
-    this.loadMoreTrophiesUrl,
-  });
+  DigifitUserTrophyActionsModel(
+      {this.scanWorkoutUrl, this.loadMoreTrophiesUrl});
 
   @override
   DigifitUserTrophyActionsModel fromJson(Map<String, dynamic> json) {
