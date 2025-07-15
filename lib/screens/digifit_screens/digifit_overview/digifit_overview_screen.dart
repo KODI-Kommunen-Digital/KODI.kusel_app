@@ -357,11 +357,6 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).textTheme.bodyLarge?.color),
             12.horizontalSpace,
-            ImageUtil.loadSvgImage(
-                imageUrl: imagePath['arrow_icon'] ?? "",
-                height: 10.h,
-                width: 16.w,
-                context: context)
           ],
         ),
         10.verticalSpace,
