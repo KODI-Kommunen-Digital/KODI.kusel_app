@@ -374,6 +374,33 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
               return Padding(
                 padding: EdgeInsets.only(bottom: 5.h),
                 child: DigifitTextImageCard(
+                  onCardTap: () {
+                    ref.read(navigationProvider).navigateUsingPath(
+                        path: digifitExerciseDetailScreenPath,
+                        context: context,
+                        params: DigifitExerciseDetailsParams(
+                            station: DigifitInformationStationModel(
+                              id: station.id,
+                              name: station.name,
+                              isFavorite: station.isFavorite,
+                              muscleGroups: station.muscleGroups,
+                            ),
+                            locationId: widget.digifitOverviewScreenParams
+                                .parcoursModel.locationId ??
+                                0,
+                            onFavCallBack: () {
+                              ref
+                                  .read(digifitOverviewScreenControllerProvider
+                                  .notifier)
+                                  .fetchDigifitOverview(widget
+                                  .digifitOverviewScreenParams
+                                  .parcoursModel
+                                  .locationId ??
+                                  0);
+
+                              widget.digifitOverviewScreenParams.onFavChange?.call();
+                            }));
+                  },
                   imageUrl: station.machineImageUrl ?? '',
                   heading: station.muscleGroups ?? '',
                   title: station.name ?? '',
