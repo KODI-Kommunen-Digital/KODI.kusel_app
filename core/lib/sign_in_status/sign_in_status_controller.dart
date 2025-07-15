@@ -17,8 +17,6 @@ class SignInStatusController extends StateNotifier<SignInStatusState> {
 
   Future<bool> isUserLoggedIn() async {
     final status = sharedPreferenceHelper.getBool(isUserSignedIn);
-
-    debugPrint('status === $status');
     return (status == null) ? false : status;
   }
 }

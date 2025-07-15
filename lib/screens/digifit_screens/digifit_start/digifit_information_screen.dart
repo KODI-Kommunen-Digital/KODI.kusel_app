@@ -10,11 +10,12 @@ import 'package:kusel/common_widgets/digifit/digifit_text_image_card.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
-import 'package:kusel/database/digifit_cache_data/digifit_cache_data_controller.dart';
 import 'package:kusel/l10n/app_localizations.dart';
+import 'package:kusel/offline_router.dart';
 import 'package:kusel/providers/digifit_equipment_fav_provider.dart';
 import 'package:kusel/screens/digifit_screens/digifit_start/digifit_information_controller.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
+import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
 
 import '../../../common_widgets/digifit/digifit_map_card.dart';
 import '../../../common_widgets/digifit/digifit_status_widget.dart';
@@ -124,14 +125,16 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                 state.digifitInformationDataModel?.userStats?.trophies ?? 0,
             trophiesText: AppLocalizations.of(context).trophies,
             onButtonTap: () async {
-              final res = await ref
-                  .read(navigationProvider)
-                  .navigateUsingPath(
-                      path: digifitQRScannerScreenPath, context: context);
-              // Todo - replace with actual QR code login
-              if (res != null) {
-                debugPrint('Scanned barcode data: $res');
-              }
+              final value = ref.read(networkStatusProvider).isNetworkAvailable;
+              if (value) {
+                final res = await ref
+                    .read(navigationProvider)
+                    .navigateUsingPath(
+                        path: digifitQRScannerScreenPath, context: context);
+                if (res != null) {
+                  debugPrint('Scanned barcode data: $res');
+                }
+              } else {}
             },
           ),
           20.verticalSpace,
@@ -150,8 +153,16 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                   cardText: AppLocalizations.of(context).points_and_trophy,
                   svgImageUrl: imagePath['trophy_icon'] ?? '',
                   onCardTap: () {
-                    ref.read(navigationProvider).navigateUsingPath(
-                        path: digifitTrophiesScreenPath, context: context);
+                    final value =
+                        ref.read(networkStatusProvider).isNetworkAvailable;
+                    if (value) {
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: digifitTrophiesScreenPath, context: context);
+                    } else {
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: offlineDigifitTrophiesScreenPath,
+                          context: context);
+                    }
                   },
                 ),
               ),
@@ -171,9 +182,11 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
   _buildCourseDetailSection(
       {bool? isButtonVisible,
       required DigifitInformationParcoursModel parcoursModel}) {
-
-    final sourceId = ref.read(digifitInformationControllerProvider).digifitInformationDataModel?.sourceId ?? 0;
-
+    final sourceId = ref
+            .read(digifitInformationControllerProvider)
+            .digifitInformationDataModel
+            ?.sourceId ??
+        0;
 
     return Column(
       children: [
@@ -198,16 +211,30 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
           imagePath: parcoursModel.mapImageUrl ?? '',
           sourceId: sourceId,
           onImageTap: () {
-            ref.read(navigationProvider).navigateUsingPath(
-                path: digifitOverViewScreenPath,
-                context: context,
-                params: DigifitOverviewScreenParams(
-                    parcoursModel: parcoursModel,
-                    onFavChange: () {
-                      ref
-                          .read(digifitInformationControllerProvider.notifier)
-                          .fetchDigifitInformation();
-                    }));
+            bool value = ref.read(networkStatusProvider).isNetworkAvailable;
+            if (value) {
+              ref.read(navigationProvider).navigateUsingPath(
+                  path: digifitOverViewScreenPath,
+                  context: context,
+                  params: DigifitOverviewScreenParams(
+                      parcoursModel: parcoursModel,
+                      onFavChange: () {
+                        ref
+                            .read(digifitInformationControllerProvider.notifier)
+                            .fetchDigifitInformation();
+                      }));
+            } else {
+              ref.read(navigationProvider).navigateUsingPath(
+                  path: offlineDigifitOverViewScreenPath,
+                  context: context,
+                  params: DigifitOverviewScreenParams(
+                      parcoursModel: parcoursModel,
+                      onFavChange: () {
+                        ref
+                            .read(digifitInformationControllerProvider.notifier)
+                            .fetchDigifitInformation();
+                      }));
+            }
           },
         ),
         10.verticalSpace,
@@ -231,18 +258,35 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                   isFavorite: station.isFavorite ?? false,
                   sourceId: sourceId,
                   onCardTap: () {
-                    ref.read(navigationProvider).navigateUsingPath(
-                        path: digifitExerciseDetailScreenPath,
-                        context: context,
-                        params: DigifitExerciseDetailsParams(
-                            station: station,
-                            locationId: parcoursModel.locationId ?? 0,
-                            onFavCallBack: () {
-                              ref
-                                  .read(digifitInformationControllerProvider
-                                      .notifier)
-                                  .fetchDigifitInformation();
-                            }));
+                    final value =
+                        ref.read(networkStatusProvider).isNetworkAvailable;
+                    if (value) {
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: digifitExerciseDetailScreenPath,
+                          context: context,
+                          params: DigifitExerciseDetailsParams(
+                              station: station,
+                              locationId: parcoursModel.locationId ?? 0,
+                              onFavCallBack: () {
+                                ref
+                                    .read(digifitInformationControllerProvider
+                                        .notifier)
+                                    .fetchDigifitInformation();
+                              }));
+                    } else {
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: offlineDigifitExerciseDetailScreenPath,
+                          context: context,
+                          params: DigifitExerciseDetailsParams(
+                              station: station,
+                              locationId: parcoursModel.locationId ?? 0,
+                              onFavCallBack: () {
+                                ref
+                                    .read(digifitInformationControllerProvider
+                                        .notifier)
+                                    .fetchDigifitInformation();
+                              }));
+                    }
                   },
                   isCompleted: station.isCompleted,
                   onFavorite: () {
@@ -267,17 +311,34 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
           visible: isButtonVisible ?? true,
           child: CustomButton(
               onPressed: () {
-                ref.read(navigationProvider).navigateUsingPath(
-                    path: digifitOverViewScreenPath,
-                    context: context,
-                    params: DigifitOverviewScreenParams(
-                        parcoursModel: parcoursModel,
-                        onFavChange: () {
-                          ref
-                              .read(
-                                  digifitInformationControllerProvider.notifier)
-                              .fetchDigifitInformation();
-                        }));
+                final value =
+                    ref.read(networkStatusProvider).isNetworkAvailable;
+
+                if (value) {
+                  ref.read(navigationProvider).navigateUsingPath(
+                      path: digifitOverViewScreenPath,
+                      context: context,
+                      params: DigifitOverviewScreenParams(
+                          parcoursModel: parcoursModel,
+                          onFavChange: () {
+                            ref
+                                .read(digifitInformationControllerProvider
+                                    .notifier)
+                                .fetchDigifitInformation();
+                          }));
+                } else {
+                  ref.read(navigationProvider).navigateUsingPath(
+                      path: offlineDigifitOverViewScreenPath,
+                      context: context,
+                      params: DigifitOverviewScreenParams(
+                          parcoursModel: parcoursModel,
+                          onFavChange: () {
+                            ref
+                                .read(digifitInformationControllerProvider
+                                    .notifier)
+                                .fetchDigifitInformation();
+                          }));
+                }
               },
               text: AppLocalizations.of(context).show_course),
         )
