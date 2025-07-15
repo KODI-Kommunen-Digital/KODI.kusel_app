@@ -26,7 +26,7 @@ import '../../../navigation/navigation.dart';
 import '../digifit_exercise_detail/params/digifit_exercise_details_params.dart';
 import '../digifit_overview/params/digifit_overview_params.dart';
 
-class DigifitInformationScreen extends ConsumerStatefulWidget {
+  class DigifitInformationScreen extends ConsumerStatefulWidget {
   const DigifitInformationScreen({super.key});
 
   @override

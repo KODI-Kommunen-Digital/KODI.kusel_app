@@ -181,29 +181,47 @@ class DigifitInformationStationModel {
   final int? recommendedSets;
   @HiveField(8)
   final String? description;
+  @HiveField(9)
+  final int? minReps;
+  @HiveField(10)
+  final int? minSets;
+  @HiveField(11)
+  final String? sets;
+  @HiveField(12)
+  final String? repetitions;
 
-  DigifitInformationStationModel(
-      {this.id,
-      this.name,
-      this.muscleGroups,
-      this.machineImageUrl,
-      this.isFavorite,
-      this.isCompleted,
-      this.recommendedReps,
-      this.recommendedSets,
-      this.description});
+  DigifitInformationStationModel({
+    this.id,
+    this.name,
+    this.muscleGroups,
+    this.machineImageUrl,
+    this.isFavorite,
+    this.isCompleted,
+    this.recommendedReps,
+    this.recommendedSets,
+    this.description,
+    this.minReps,
+    this.minSets,
+    this.sets,
+    this.repetitions,
+  });
 
   DigifitInformationStationModel fromJson(Map<String, dynamic> json) {
     return DigifitInformationStationModel(
-        id: json['id'],
-        name: json['name'],
-        muscleGroups: json['muscleGroups'],
-        machineImageUrl: json['machineImageUrl'],
-        isFavorite: json['isFavorite'],
-        isCompleted: json['isCompleted'],
-        recommendedReps: json['recommendedReps'],
-        recommendedSets: json['recommendedSets'],
-        description: json['description']);
+      id: json['id'],
+      name: json['name'],
+      muscleGroups: json['muscleGroups'],
+      machineImageUrl: json['machineImageUrl'],
+      isFavorite: json['isFavorite'],
+      isCompleted: json['isCompleted'],
+      recommendedReps: json['recommendedReps'],
+      recommendedSets: json['recommendedSets'],
+      description: json['description'],
+      minReps: json['minReps'],
+      minSets: json['minSets'],
+      sets: json['sets'],
+      repetitions: json['repetitions'],
+    );
   }
 
   Map<String, dynamic> toJson() {
@@ -216,7 +234,11 @@ class DigifitInformationStationModel {
       'isCompleted': isCompleted,
       'recommendedReps': recommendedReps,
       'recommendedSets': recommendedSets,
-      'description': description
+      'description': description,
+      'minReps': minReps,
+      'minSets': minSets,
+      'sets': sets,
+      'repetitions': repetitions,
     };
   }
 }

@@ -66,7 +66,6 @@ class DigifitCacheDataController extends StateNotifier<DigifitCacheDataState> {
         await _fetchAllDigifitDataFromNetwork();
       }
 
-      await _fetchAllDigifitDataFromNetwork();
     } catch (e) {
       debugPrint('[DigifitCacheDataController] Fetch Exception: $e');
     }
@@ -196,7 +195,7 @@ class DigifitCacheDataController extends StateNotifier<DigifitCacheDataState> {
           // If the token is not expired, we can proceed with the request
           _postDigifitExerciseDataToNetwork(digifitUpdateExerciseRequestModel);
         }
-        _postDigifitExerciseDataToNetwork(digifitUpdateExerciseRequestModel);
+        // _postDigifitExerciseDataToNetwork(digifitUpdateExerciseRequestModel);
       } catch (e) {
         debugPrint('[DigifitCacheDataController] Fetch Exception: $e');
       }
