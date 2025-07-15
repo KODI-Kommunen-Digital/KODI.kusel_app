@@ -22,6 +22,7 @@ import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
 import '../../../app_router.dart';
 import '../../../common_widgets/arrow_back_widget.dart';
 import '../../../common_widgets/common_bottom_nav_card_.dart';
+import '../../../common_widgets/common_html_widget.dart';
 import '../../../common_widgets/custom_button_widget.dart';
 import '../../../common_widgets/digifit/digifit_text_image_card.dart';
 import '../../../common_widgets/text_styles.dart';
@@ -249,6 +250,9 @@ class _DigifitExerciseDetailScreenState
 
     final digifitExerciseDetailsState =
         ref.watch(digifitExerciseDetailsControllerProvider(equipmentId));
+    
+    final description = digifitExerciseDetailsState.digifitExerciseEquipmentModel?.description ?? '';
+    
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 13.w),
       child: Column(
@@ -308,14 +312,9 @@ class _DigifitExerciseDetailScreenState
               textOverflow: TextOverflow.visible,
               color: Theme.of(context).textTheme.bodyLarge?.color,
               textAlign: TextAlign.start),
+
           8.verticalSpace,
-          textRegularMontserrat(
-              text: digifitExerciseDetailsState
-                      .digifitExerciseEquipmentModel?.description ??
-                  '',
-              textOverflow: TextOverflow.visible,
-              color: Theme.of(context).textTheme.bodyLarge?.color,
-              textAlign: TextAlign.start),
+          CommonHtmlWidget(data: description, fontSize: 16.sp),
           12.verticalSpace,
           textBoldPoppins(
               text: AppLocalizations.of(context).digifit_recommended_exercise,
@@ -360,10 +359,6 @@ class _DigifitExerciseDetailScreenState
       required List<DigifitExerciseRelatedStationsModel> relatedEquipments}) {
     final equipmentId = widget.digifitExerciseDetailsParams.station.id ?? 0;
 
-    final equipments = ref
-        .watch(digifitExerciseDetailsControllerProvider(equipmentId))
-        .digifitExerciseEquipmentModel;
-
     final sourceId = ref
             .read(digifitExerciseDetailsControllerProvider(equipmentId))
             .digifitExerciseEquipmentModel
@@ -375,7 +370,7 @@ class _DigifitExerciseDetailScreenState
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         textRegularPoppins(
-            text: equipments?.name ?? '',
+            text: AppLocalizations.of(context).digifit_exercise_details_open_station,
             fontSize: 16,
             fontWeight: FontWeight.w600,
             textOverflow: TextOverflow.visible,
@@ -446,7 +441,7 @@ class _DigifitExerciseDetailScreenState
 
                     }
                   },
-                  imageUrl: '',
+                  imageUrl: equipment.machineImageUrl,
                   heading: equipment.muscleGroups,
                   title: equipment.name,
                   isFavouriteVisible:

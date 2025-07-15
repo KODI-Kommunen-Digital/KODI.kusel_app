@@ -63,6 +63,7 @@ class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
                               path: fullImageScreenPath,
                               params: FullImageScreenParams(
                                 imageUrL: widget.imageUrl,
+                                sourceId: widget.sourceId
                               ),
                               context: context);
                         },

@@ -200,16 +200,17 @@ class _DigifitTrophiesScreenState extends ConsumerState<DigifitTrophiesScreen> {
         ));
   }
 
-  _buildCourseDetailSection({required String sectionTitle,
-    required List<DigifitUserTrophyItemModel> trophies,
-    String? subtitle,
-    bool showToggleButton = true,
-    bool isExpanded = false,
-    VoidCallback? onToggle}) {
+  _buildCourseDetailSection(
+      {required String sectionTitle,
+      required List<DigifitUserTrophyItemModel> trophies,
+      String? subtitle,
+      bool showToggleButton = true,
+      bool isExpanded = false,
+      VoidCallback? onToggle}) {
     final sourceId = ref
-        .read(digifitUserTrophiesControllerProvider)
-        .digifitUserTrophyDataModel
-        ?.sourceId ??
+            .read(digifitUserTrophiesControllerProvider)
+            .digifitUserTrophyDataModel
+            ?.sourceId ??
         0;
     final visibleTrophies = isExpanded ? trophies : trophies.take(5).toList();
 
@@ -219,15 +220,10 @@ class _DigifitTrophiesScreenState extends ConsumerState<DigifitTrophiesScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            textRegularPoppins(
+            textBoldMontserrat(
                 text: sectionTitle,
                 fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Theme
-                    .of(context)
-                    .textTheme
-                    .bodyLarge
-                    ?.color),
+                color: Theme.of(context).textTheme.bodyLarge?.color),
             12.horizontalSpace,
             if (subtitle != null) textRegularMontserrat(text: subtitle),
           ],
@@ -256,12 +252,8 @@ class _DigifitTrophiesScreenState extends ConsumerState<DigifitTrophiesScreen> {
           CustomButton(
               onPressed: onToggle,
               text: isExpanded
-                  ? AppLocalizations
-                  .of(context)
-                  .digifit_trophies_load_more
-                  : AppLocalizations
-                  .of(context)
-                  .digifit_trophies_show_less),
+                  ? AppLocalizations.of(context).digifit_trophies_show_less
+                  : AppLocalizations.of(context).digifit_trophies_load_more),
       ],
     );
   }
