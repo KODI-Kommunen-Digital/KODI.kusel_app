@@ -49,11 +49,11 @@ class DigifitInformationController extends StateNotifier<DigifitState> {
 
   Future<void> fetchDigifitInformation() async {
     state = state.copyWith(isLoading: true);
-    if (await isNetworkAvailable()) {
-      debugPrint('[DigifitInformationController] Data is coming from network');
+    bool isNetwork = await isNetworkAvailable();
       try {
-        state = state.copyWith(isLoading: true);
-
+      if (isNetwork) {
+        debugPrint(
+            '[DigifitInformationController] Data is coming from network');
         final isTokenExpired = tokenStatus.isAccessTokenExpired();
         final status = await signInStatusController.isUserLoggedIn();
 
@@ -67,25 +67,27 @@ class DigifitInformationController extends StateNotifier<DigifitState> {
           // If the token is not expired, we can proceed with the request
           _fetchDigifitInformation();
         }
-      } catch (e) {
+      } else {
+        bool isCacheDataAvailable =
+            await digifitCacheDataController.isAllDigifitCacheDataAvailable();
+        if (isCacheDataAvailable) {
+          DigifitCacheDataResponseModel? digifitCacheDataResponseModel =
+              await digifitCacheDataController.getAllDigifitCacheData();
+          if (digifitCacheDataResponseModel != null) {
+            state = state.copyWith(
+                isLoading: false,
+                digifitInformationDataModel:
+                    digifitCacheDataResponseModel.data);
+          }
+          debugPrint(
+              '[DigifitInformationController] Data is coming from cache');
+        } else {
+          state = state.copyWith(isLoading: false);
+        }
+      }
+    } catch (e) {
         debugPrint('[DigifitInformationController] Fetch Exception: $e');
       }
-    } else {
-      bool isCacheDataAvailable =
-          await digifitCacheDataController.isAllDigifitCacheDataAvailable();
-      if (isCacheDataAvailable) {
-        DigifitCacheDataResponseModel? digifitCacheDataResponseModel =
-            await digifitCacheDataController.getAllDigifitCacheData();
-        if (digifitCacheDataResponseModel != null) {
-          state = state.copyWith(
-              isLoading: false,
-              digifitInformationDataModel: digifitCacheDataResponseModel.data);
-        }
-        debugPrint('[DigifitInformationController] Data is coming from cache');
-      } else {
-        state = state.copyWith(isLoading: false);
-      }
-    }
   }
 
   _fetchDigifitInformation() async {
