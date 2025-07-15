@@ -12,6 +12,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:kusel/l10n/app_localizations.dart';
+import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
 import 'package:kusel/theme_manager/theme_manager_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -50,6 +51,7 @@ class MyApp extends ConsumerStatefulWidget {
 
 class _MyAppState extends ConsumerState<MyApp> {
   late StreamSubscription<ConnectivityResult> subscription;
+  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +63,7 @@ class _MyAppState extends ConsumerState<MyApp> {
       designSize: Size(360, 690),
       builder: (context, child) {
         return MaterialApp.router(
+          key: ValueKey(ref.watch(networkStatusProvider).isNetworkAvailable),
           locale: ref.watch(localeManagerProvider).currentLocale,
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
@@ -87,10 +90,19 @@ class _MyAppState extends ConsumerState<MyApp> {
     super.initState();
 
     subscription = Connectivity().onConnectivityChanged.listen((result) {
-      if (result == ConnectivityResult.none) {
-        ref.read(networkStatusProvider.notifier).updateNetworkStatus(false);
-      } else {
-        ref.read(networkStatusProvider.notifier).updateNetworkStatus(true);
+      final isConnected = result != ConnectivityResult.none;
+      final networkNotifier = ref.read(networkStatusProvider.notifier);
+      final currentStatus = ref.read(networkStatusProvider).isNetworkAvailable;
+
+      if (currentStatus != isConnected) {
+        networkNotifier.updateNetworkStatus(isConnected);
+
+        // Navigate to root using the router
+        final router = isConnected
+            ? ref.read(mobileRouterProvider)
+            : ref.read(noInternetRouterProvider);
+
+        router.go("/");
       }
     });
   }

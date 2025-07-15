@@ -9,8 +9,10 @@ import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/toast_message.dart';
 import 'package:kusel/l10n/app_localizations.dart';
+import 'package:kusel/offline_router.dart';
 import 'package:kusel/providers/digifit_equipment_fav_provider.dart';
 import 'package:kusel/screens/digifit_screens/digifit_overview/params/digifit_overview_params.dart';
+import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
 
 import '../../../app_router.dart';
 import '../../../common_widgets/digifit/digifit_status_widget.dart';
@@ -140,33 +142,61 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
             trophiesValue: digifitOverview?.userStats?.trophies ?? 0,
             trophiesText: AppLocalizations.of(context).trophies,
             onButtonTap: () async {
+              String path = digifitQRScannerScreenPath;
+
+              if (!ref.read(networkStatusProvider).isNetworkAvailable) {
+                path = offlineDigifitQRScannerScreenPath;
+              }
               final barcode = await ref
                   .read(navigationProvider)
-                  .navigateUsingPath(
-                      path: digifitQRScannerScreenPath, context: context);
+                  .navigateUsingPath(path: path, context: context);
 
               if (barcode != null) {
                 ref
                     .read(digifitOverviewScreenControllerProvider.notifier)
                     .getSlug(barcode, (String slugUrl) {
-                  ref.read(navigationProvider).navigateUsingPath(
-                      path: digifitExerciseDetailScreenPath,
-                      context: context,
-                      params: DigifitExerciseDetailsParams(
-                          station: DigifitInformationStationModel(id: null),
-                          locationId: widget.digifitOverviewScreenParams
-                                  .parcoursModel.locationId ??
-                              0,
-                          slug: slugUrl,
-                          onFavCallBack: () {
-                            ref
-                                .read(digifitOverviewScreenControllerProvider
-                                    .notifier)
-                                .fetchDigifitOverview(widget
-                                    .digifitOverviewScreenParams
-                                    .parcoursModel
-                                    .locationId!);
-                          }));
+                  final value =
+                      ref.read(networkStatusProvider).isNetworkAvailable;
+
+                  if (value) {
+                    ref.read(navigationProvider).navigateUsingPath(
+                        path: digifitExerciseDetailScreenPath,
+                        context: context,
+                        params: DigifitExerciseDetailsParams(
+                            station: DigifitInformationStationModel(id: null),
+                            locationId: widget.digifitOverviewScreenParams
+                                    .parcoursModel.locationId ??
+                                0,
+                            slug: slugUrl,
+                            onFavCallBack: () {
+                              ref
+                                  .read(digifitOverviewScreenControllerProvider
+                                      .notifier)
+                                  .fetchDigifitOverview(widget
+                                      .digifitOverviewScreenParams
+                                      .parcoursModel
+                                      .locationId!);
+                            }));
+                  } else {
+                    ref.read(navigationProvider).navigateUsingPath(
+                        path: offlineDigifitExerciseDetailScreenPath,
+                        context: context,
+                        params: DigifitExerciseDetailsParams(
+                            station: DigifitInformationStationModel(id: null),
+                            locationId: widget.digifitOverviewScreenParams
+                                    .parcoursModel.locationId ??
+                                0,
+                            slug: slugUrl,
+                            onFavCallBack: () {
+                              ref
+                                  .read(digifitOverviewScreenControllerProvider
+                                      .notifier)
+                                  .fetchDigifitOverview(widget
+                                      .digifitOverviewScreenParams
+                                      .parcoursModel
+                                      .locationId!);
+                            }));
+                  }
                 }, () {
                   showErrorToast(
                       message:
@@ -206,11 +236,11 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         20.verticalSpace,
-            textRegularPoppins(
-                text: title,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).textTheme.bodyLarge?.color),
+        textRegularPoppins(
+            text: title,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Theme.of(context).textTheme.bodyLarge?.color),
         10.verticalSpace,
         ListView.builder(
             physics: NeverScrollableScrollPhysics(),
@@ -222,29 +252,59 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
                 padding: EdgeInsets.only(bottom: 5.h),
                 child: DigifitTextImageCard(
                   onCardTap: () {
-                    ref.read(navigationProvider).navigateUsingPath(
-                        path: digifitExerciseDetailScreenPath,
-                        context: context,
-                        params: DigifitExerciseDetailsParams(
-                            station: DigifitInformationStationModel(
-                              id: station.id,
-                              name: station.name,
-                              isFavorite: station.isFavorite,
-                              muscleGroups: station.muscleGroups,
-                            ),
-                            locationId: widget.digifitOverviewScreenParams
-                                    .parcoursModel.locationId ??
-                                0,
-                            onFavCallBack: () {
-                              ref
-                                  .read(digifitOverviewScreenControllerProvider
-                                      .notifier)
-                                  .fetchDigifitOverview(widget
-                                          .digifitOverviewScreenParams
-                                          .parcoursModel
-                                          .locationId ??
-                                      0);
-                            }));
+                    final value =
+                        ref.read(networkStatusProvider).isNetworkAvailable;
+                    if (value) {
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: digifitExerciseDetailScreenPath,
+                          context: context,
+                          params: DigifitExerciseDetailsParams(
+                              station: DigifitInformationStationModel(
+                                id: station.id,
+                                name: station.name,
+                                isFavorite: station.isFavorite,
+                                muscleGroups: station.muscleGroups,
+                              ),
+                              locationId: widget.digifitOverviewScreenParams
+                                      .parcoursModel.locationId ??
+                                  0,
+                              onFavCallBack: () {
+                                ref
+                                    .read(
+                                        digifitOverviewScreenControllerProvider
+                                            .notifier)
+                                    .fetchDigifitOverview(widget
+                                            .digifitOverviewScreenParams
+                                            .parcoursModel
+                                            .locationId ??
+                                        0);
+                              }));
+                    } else {
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: offlineDigifitExerciseDetailScreenPath,
+                          context: context,
+                          params: DigifitExerciseDetailsParams(
+                              station: DigifitInformationStationModel(
+                                id: station.id,
+                                name: station.name,
+                                isFavorite: station.isFavorite,
+                                muscleGroups: station.muscleGroups,
+                              ),
+                              locationId: widget.digifitOverviewScreenParams
+                                      .parcoursModel.locationId ??
+                                  0,
+                              onFavCallBack: () {
+                                ref
+                                    .read(
+                                        digifitOverviewScreenControllerProvider
+                                            .notifier)
+                                    .fetchDigifitOverview(widget
+                                            .digifitOverviewScreenParams
+                                            .parcoursModel
+                                            .locationId ??
+                                        0);
+                              }));
+                    }
                   },
                   imageUrl: station.machineImageUrl ?? '',
                   heading: station.muscleGroups ?? '',
