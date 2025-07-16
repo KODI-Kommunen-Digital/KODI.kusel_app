@@ -1,10 +1,10 @@
 import 'dart:async';
-import 'package:domain/model/request_model/digifit/digifit_update_exercise_request_model.dart';
 
 import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:core/token_status.dart';
 import 'package:domain/model/request_model/digifit/digifit_exercise_details_request_model.dart';
 import 'package:domain/model/request_model/digifit/digifit_exercise_details_tracking_request_model.dart';
+import 'package:domain/model/request_model/digifit/digifit_update_exercise_request_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_cache_data_response_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_exercise_details_response_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_exercise_details_tracking_response_model.dart';
@@ -190,8 +190,6 @@ class DigifitExerciseDetailsController
           repetitions: digifitStationModel?.repetitions.toString() ?? ''
         );
 
-    print("Fetched sets - ${digifitStationModel?.sets} & ${digifitStationModel?.description}");
-
     DigifitExerciseUserProgressModel userProgress = DigifitExerciseUserProgressModel(
       isCompleted: digifitStationModel?.isCompleted ?? false,
       repetitionsPerSet: digifitStationModel?.recommendedReps ?? 0
@@ -337,7 +335,7 @@ class DigifitExerciseDetailsController
         digifitExerciseEquipmentModel?.userProgress.isCompleted = isCompleted;
       }
       state = state.copyWith(
-          currentSetNumber: state.setComplete,
+          currentSetNumber: state.currentSetNumber,
           digifitExerciseEquipmentModel: digifitExerciseEquipmentModel);
     }
   }
@@ -422,7 +420,7 @@ class DigifitExerciseDetailsController
       locationId: locationId,
       createdAt: state.createdAt,
       updatedAt: state.updatedAt,
-      setComplete: state.setComplete,
+      setComplete: state.currentSetNumber,
       setTimeList: state.setTimeList,
     );
 
@@ -474,9 +472,9 @@ class DigifitExerciseDetailsController
   }
 
   void updateSetComplete() {
-    int setComplete = state.setComplete;
-    setComplete++;
-    state = state.copyWith(setComplete: setComplete);
+    int currentSetNumber = state.currentSetNumber;
+    currentSetNumber++;
+    state = state.copyWith(currentSetNumber: currentSetNumber);
   }
 
   void updateSetTimeList(String updatedAt) {
