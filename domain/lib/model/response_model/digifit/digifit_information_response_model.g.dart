@@ -200,13 +200,17 @@ class DigifitInformationStationModelAdapter
       recommendedReps: fields[6] as int?,
       recommendedSets: fields[7] as int?,
       description: fields[8] as String?,
+      minReps: fields[9] as int?,
+      minSets: fields[10] as int?,
+      sets: fields[11] as String?,
+      repetitions: fields[12] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, DigifitInformationStationModel obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(13)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -224,7 +228,15 @@ class DigifitInformationStationModelAdapter
       ..writeByte(7)
       ..write(obj.recommendedSets)
       ..writeByte(8)
-      ..write(obj.description);
+      ..write(obj.description)
+      ..writeByte(9)
+      ..write(obj.minReps)
+      ..writeByte(10)
+      ..write(obj.minSets)
+      ..writeByte(11)
+      ..write(obj.sets)
+      ..writeByte(12)
+      ..write(obj.repetitions);
   }
 
   @override
