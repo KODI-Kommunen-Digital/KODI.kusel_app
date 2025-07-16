@@ -190,6 +190,8 @@ class DigifitExerciseDetailsController
           repetitions: digifitStationModel?.repetitions.toString() ?? ''
         );
 
+    print("Fetched sets - ${digifitStationModel?.sets} & ${digifitStationModel?.description}");
+
     DigifitExerciseUserProgressModel userProgress = DigifitExerciseUserProgressModel(
       isCompleted: digifitStationModel?.isCompleted ?? false,
       repetitionsPerSet: digifitStationModel?.recommendedReps ?? 0
