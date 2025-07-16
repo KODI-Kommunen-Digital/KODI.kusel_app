@@ -21,7 +21,6 @@ class DigifitExerciseDetailsState {
   final List<DigifitExerciseRecordModel>? digifitUpdateExerciseRecords;
   final String createdAt;
   final String updatedAt;
-  final int setComplete;
   final List<String>? setTimeList;
   final bool isCompletedOffline;
 
@@ -43,7 +42,6 @@ class DigifitExerciseDetailsState {
       required this.digifitUpdateExerciseRecords,
       required this.createdAt,
       required this.updatedAt,
-      required this.setComplete,
       required this.setTimeList,
       required this.isCompletedOffline});
 
@@ -66,7 +64,6 @@ class DigifitExerciseDetailsState {
         digifitUpdateExerciseRecords: null,
         createdAt: '',
         updatedAt: '',
-        setComplete: 0,
         setTimeList: [],
         isCompletedOffline: false);
   }
@@ -90,7 +87,6 @@ class DigifitExerciseDetailsState {
       List<DigifitExerciseRecordModel>? digifitUpdateExerciseRecords,
       String? createdAt,
       String? updatedAt,
-      int? setComplete,
       List<String>? setTimeList,
       bool? isCompletedOffline}) {
     return DigifitExerciseDetailsState(
@@ -116,7 +112,6 @@ class DigifitExerciseDetailsState {
             digifitUpdateExerciseRecords ?? this.digifitUpdateExerciseRecords,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
-        setComplete: setComplete ?? this.setComplete,
         setTimeList: setTimeList ?? this.setTimeList,
         isCompletedOffline: isCompletedOffline ?? this.isCompletedOffline);
   }
