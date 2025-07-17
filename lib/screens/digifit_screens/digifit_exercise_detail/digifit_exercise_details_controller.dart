@@ -11,7 +11,6 @@ import 'package:domain/model/response_model/digifit/digifit_exercise_details_tra
 import 'package:domain/model/response_model/digifit/digifit_information_response_model.dart';
 import 'package:domain/usecase/digifit/digifit_exercise_details_tracking_usecase.dart';
 import 'package:domain/usecase/digifit/digifit_exercise_details_usecase.dart';
-import 'package:domain/usecase/digifit/digifit_qr_scanner_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/database/digifit_cache_data/digifit_cache_data_controller.dart';
@@ -37,7 +36,6 @@ final digifitExerciseDetailsControllerProvider = StateNotifierProvider
     refreshTokenProvider: ref.read(refreshTokenProvider),
     localeManagerController: ref.read(localeManagerProvider.notifier),
     digifitEquipmentFav: ref.read(digifitEquipmentFavProvider),
-    digifitQrScannerUseCase: ref.read(digifitQrScannerUseCaseProvider),
     signInStatusController: ref.read(signInStatusProvider.notifier),
     networkStatusProvider: ref.read(networkStatusProvider.notifier),
     digifitCacheDataController: ref.read(digifitCacheDataProvider.notifier),
@@ -55,7 +53,6 @@ class DigifitExerciseDetailsController
   final RefreshTokenProvider refreshTokenProvider;
   final LocaleManagerController localeManagerController;
   final DigifitEquipmentFav digifitEquipmentFav;
-  final DigifitQrScannerUseCase digifitQrScannerUseCase;
   final SignInStatusController signInStatusController;
   final NetworkStatusProvider networkStatusProvider;
   final DigifitCacheDataController digifitCacheDataController;
@@ -67,7 +64,6 @@ class DigifitExerciseDetailsController
       required this.refreshTokenProvider,
       required this.localeManagerController,
       required this.digifitEquipmentFav,
-      required this.digifitQrScannerUseCase,
       required this.signInStatusController,
       required this.networkStatusProvider,
       required this.digifitCacheDataController,
@@ -259,28 +255,17 @@ class DigifitExerciseDetailsController
     }
   }
 
-  Future<bool> validateQrScanner(String shortUrl, String equipmentSlug) async {
-    bool isNetwork = await isNetworkAvailable();
-    if(isNetwork){
-      try {
-        state = state.copyWith(isLoading: true);
-        final result = await digifitQrScannerUseCase.call(shortUrl);
-        return result.fold((error) {
-          debugPrint("[Validate Url Expansion] URL expansion failed: $error");
-          state = state.copyWith(isLoading: false);
-          return false;
-        }, (expandedUrl) {
-          final slugUrl = getSlugFromUrl(expandedUrl);
-          debugPrint('extracted slug : $slugUrl');
-          state = state.copyWith(isLoading: false);
-          return slugUrl == equipmentSlug;
-        });
-      } catch (error) {
-        state = state.copyWith(isLoading: false);
-        return false;
-      }
-    } else {
-      return true;
+  Future<bool> validateQrScanner(
+      String shortHandUrl, String equipmentSlug) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final slug = getSlugFromUrl(shortHandUrl);
+      state = state.copyWith(isLoading: false);
+      return slug == equipmentSlug;
+    } catch (error) {
+      debugPrint("[Validate Url Expansion] URL expansion failed: $error");
+      state = state.copyWith(isLoading: false);
+      return false;
     }
   }
 

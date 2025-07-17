@@ -5,7 +5,6 @@ import 'package:domain/model/response_model/digifit/digifit_cache_data_response_
 import 'package:domain/model/response_model/digifit/digifit_information_response_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_overview_response_model.dart';
 import 'package:domain/usecase/digifit/digifit_overview_usecase.dart';
-import 'package:domain/usecase/digifit/digifit_qr_scanner_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/database/digifit_cache_data/digifit_cache_data_controller.dart';
@@ -25,7 +24,6 @@ final digifitOverviewScreenControllerProvider = StateNotifierProvider
             refreshTokenProvider: ref.read(refreshTokenProvider),
             localeManagerController: ref.read(localeManagerProvider.notifier),
             digifitEquipmentFav: ref.read(digifitEquipmentFavProvider),
-            digifitQrScannerUseCase: ref.read(digifitQrScannerUseCaseProvider),
             signInStatusController: ref.read(signInStatusProvider.notifier),
             networkStatusProvider: ref.read(networkStatusProvider.notifier),
             digifitCacheDataController:
@@ -37,7 +35,6 @@ class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
   final RefreshTokenProvider refreshTokenProvider;
   final LocaleManagerController localeManagerController;
   final DigifitEquipmentFav digifitEquipmentFav;
-  final DigifitQrScannerUseCase digifitQrScannerUseCase;
   final SignInStatusController signInStatusController;
   final NetworkStatusProvider networkStatusProvider;
   final DigifitCacheDataController digifitCacheDataController;
@@ -48,7 +45,6 @@ class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
       required this.refreshTokenProvider,
       required this.localeManagerController,
       required this.digifitEquipmentFav,
-      required this.digifitQrScannerUseCase,
       required this.signInStatusController,
       required this.networkStatusProvider,
       required this.digifitCacheDataController})
@@ -272,18 +268,9 @@ class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
       String shortUrl, Function(String) onSuccess, VoidCallback onError) async {
     try {
       state = state.copyWith(isLoading: true);
-      final result = await digifitQrScannerUseCase.call(shortUrl);
-
-      return result.fold((error) {
-        debugPrint("get slug fold exception: $error");
-        state = state.copyWith(isLoading: false);
-        onError();
-      }, (expandedUrl) {
-        final slugUrl = getSlugFromUrl(expandedUrl);
-        debugPrint('extracted slug : $slugUrl');
-        state = state.copyWith(isLoading: false);
-        onSuccess(slugUrl);
-      });
+      final slug = getSlugFromUrl(shortUrl);
+      state = state.copyWith(isLoading: false);
+      onSuccess(slug);
     } catch (error) {
       onError();
       debugPrint("get slug exception: $error");
