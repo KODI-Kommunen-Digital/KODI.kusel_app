@@ -49,7 +49,8 @@ class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
       onTap: widget.onCardTap,
       child: Card(
         color: Colors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
         elevation: 4,
         child: Stack(
           children: [
@@ -60,25 +61,24 @@ class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: ImageUtil.loadNetworkImage(
-                        onImageTap: (){
-                          bool value = ref.read(networkStatusProvider).isNetworkAvailable;
-                          if(value) {
+                        onImageTap: () {
+                          bool value = ref
+                              .read(networkStatusProvider)
+                              .isNetworkAvailable;
+                          if (value) {
                             ref.read(navigationProvider).navigateUsingPath(
                                 path: fullImageScreenPath,
                                 params: FullImageScreenParams(
                                     imageUrL: widget.imageUrl,
-                                    sourceId: widget.sourceId
-                                ),
+                                    sourceId: widget.sourceId),
                                 context: context);
                           } else {
                             ref.read(navigationProvider).navigateUsingPath(
                                 path: offlineFullImageScreenPath,
                                 params: FullImageScreenParams(
                                     imageUrL: widget.imageUrl,
-                                    sourceId: widget.sourceId
-                                ),
+                                    sourceId: widget.sourceId),
                                 context: context);
-
                           }
                         },
                         height: 75.h,
@@ -95,21 +95,20 @@ class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
                         textRegularMontserrat(
                             text: widget.heading,
                             fontSize: 9,
-                            color: Theme
-                                .of(context)
-                                .textTheme
-                                .labelMedium
-                                ?.color),
+                            color:
+                                Theme.of(context).textTheme.labelMedium?.color),
                         4.verticalSpace,
-                        textSemiBoldMontserrat(text: widget.title,textAlign: TextAlign.start,
-                            fontSize: 16, textOverflow: TextOverflow.visible),
+                        textSemiBoldMontserrat(
+                            text: widget.title,
+                            textAlign: TextAlign.start,
+                            fontSize: 16,
+                            textOverflow: TextOverflow.visible),
                         4.verticalSpace,
                         Visibility(
-                          visible: (widget.description!=null),
+                          visible: (widget.description != null),
                           child: textRegularMontserrat(
-                              text: widget.description ??'',
-                              color: Theme
-                                  .of(context)
+                              text: widget.description ?? '',
+                              color: Theme.of(context)
                                   .textTheme
                                   .labelMedium
                                   ?.color),
@@ -143,8 +142,9 @@ class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
                     width: 40.w,
                     decoration: BoxDecoration(
                         color: Theme.of(context).indicatorColor,
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(10.r), bottomRight: Radius.circular(10.r))
-                    ),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10.r),
+                            bottomRight: Radius.circular(10.r))),
                     child: Center(
                       child: SizedBox(
                         child: ImageUtil.loadSvgImage(
@@ -162,4 +162,3 @@ class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
     );
   }
 }
-
