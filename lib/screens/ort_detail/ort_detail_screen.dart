@@ -361,6 +361,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                           path: fullImageScreenPath,
                           params: FullImageScreenParams(
                             imageUrL: state.ortDetailDataModel!.image!,
+                            sourceId: 1
                           ),
                           context: context);
                     },
