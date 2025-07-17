@@ -194,23 +194,24 @@ class DigifitInformationStationModelAdapter
       id: fields[0] as int?,
       name: fields[1] as String?,
       muscleGroups: fields[2] as String?,
-      machineImageUrl: fields[3] as String?,
-      isFavorite: fields[4] as bool?,
-      isCompleted: fields[5] as bool?,
-      recommendedReps: fields[6] as int?,
-      recommendedSets: fields[7] as int?,
-      description: fields[8] as String?,
-      minReps: fields[9] as int?,
-      minSets: fields[10] as int?,
-      sets: fields[11] as String?,
-      repetitions: fields[12] as String?,
+      qrCodeIdentifier: fields[3] as String?,
+      machineImageUrl: fields[4] as String?,
+      isFavorite: fields[5] as bool?,
+      isCompleted: fields[6] as bool?,
+      recommendedReps: fields[7] as int?,
+      recommendedSets: fields[8] as int?,
+      description: fields[9] as String?,
+      minReps: fields[10] as int?,
+      minSets: fields[11] as int?,
+      sets: fields[12] as String?,
+      repetitions: fields[13] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, DigifitInformationStationModel obj) {
     writer
-      ..writeByte(13)
+      ..writeByte(14)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -218,24 +219,26 @@ class DigifitInformationStationModelAdapter
       ..writeByte(2)
       ..write(obj.muscleGroups)
       ..writeByte(3)
-      ..write(obj.machineImageUrl)
+      ..write(obj.qrCodeIdentifier)
       ..writeByte(4)
-      ..write(obj.isFavorite)
+      ..write(obj.machineImageUrl)
       ..writeByte(5)
-      ..write(obj.isCompleted)
+      ..write(obj.isFavorite)
       ..writeByte(6)
-      ..write(obj.recommendedReps)
+      ..write(obj.isCompleted)
       ..writeByte(7)
-      ..write(obj.recommendedSets)
+      ..write(obj.recommendedReps)
       ..writeByte(8)
-      ..write(obj.description)
+      ..write(obj.recommendedSets)
       ..writeByte(9)
-      ..write(obj.minReps)
+      ..write(obj.description)
       ..writeByte(10)
-      ..write(obj.minSets)
+      ..write(obj.minReps)
       ..writeByte(11)
-      ..write(obj.sets)
+      ..write(obj.minSets)
       ..writeByte(12)
+      ..write(obj.sets)
+      ..writeByte(13)
       ..write(obj.repetitions);
   }
 

@@ -198,6 +198,7 @@ class DigifitExerciseDetailsController
       id: digifitStationModel?.id ?? 0,
       name: digifitStationModel?.name ?? '',
       machineVideoUrl: digifitStationModel?.machineImageUrl ??'',
+      qrCodeIdentifier: digifitStationModel?.qrCodeIdentifier ?? '',
       description: digifitStationModel?.description ?? '',
       recommendation: recommendation,
       userProgress: userProgress,
