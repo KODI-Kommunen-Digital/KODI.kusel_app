@@ -219,6 +219,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get i_live_in_district => 'Ich lebe im Landkreis ...';
 
   @override
+  String get i_live_in_district_onborading_type_page => 'lebe hier im Landkreis';
+
+  @override
   String get welcome_text => 'Willkommen!';
 
   @override
