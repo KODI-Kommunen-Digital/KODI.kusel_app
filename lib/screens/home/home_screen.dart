@@ -278,7 +278,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                       );
                 },
-                isFavVisible: (state.isSignInButtonVisible) ? false : true,
+                isFavVisible: true,
                 onSuccess: (bool isFav, int? id) {
                   ref
                       .read(homeScreenProvider.notifier)
@@ -321,7 +321,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ref.read(homeScreenProvider.notifier).getNews();
                           }));
                 },
-                isFavVisible: !state.isSignInButtonVisible,
+                isFavVisible: true,
                 onSuccess: (bool isFav, int? id) {
                   ref
                       .read(homeScreenProvider.notifier)
@@ -367,7 +367,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       .read(homeScreenProvider.notifier)
                       .setIsFavoriteEvent(isFav, eventId);
                 },
-                isFavVisible: (state.isSignInButtonVisible) ? false : true,
+                isFavVisible: true,
               ),
             FeedbackCardWidget(
               height: 270.h,
@@ -506,9 +506,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   message: message, context: context);
                             });
                           },
-                          isFavouriteVisible: !ref
-                              .watch(homeScreenProvider)
-                              .isSignInButtonVisible,
+                          isFavouriteVisible: true,
                           sourceId: listing.sourceId!,
                         ),
                       );
