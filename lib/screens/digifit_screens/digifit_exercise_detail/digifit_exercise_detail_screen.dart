@@ -144,7 +144,7 @@ class _DigifitExerciseDetailScreenState
                               isFavorite: !equipment.isFavorite,
                               equipmentId: equipment.id,
                               locationId: widget
-                                  .digifitExerciseDetailsParams.locationId);
+                                  .digifitExerciseDetailsParams.locationId ?? 0);
 
                       await ref
                           .read(digifitExerciseDetailsControllerProvider(
@@ -471,7 +471,7 @@ class _DigifitExerciseDetailScreenState
                             isFavorite: !equipment.isFavorite,
                             equipmentId: equipment.id,
                             locationId:
-                                widget.digifitExerciseDetailsParams.locationId);
+                                widget.digifitExerciseDetailsParams.locationId ?? 0);
 
                     await ref
                         .read(digifitExerciseDetailsControllerProvider(
@@ -575,7 +575,7 @@ class _DigifitExerciseDetailScreenState
                       digifitExerciseDetailsState
                               .digifitExerciseEquipmentModel?.id ??
                           0,
-                      widget.digifitExerciseDetailsParams.locationId,
+                      widget.digifitExerciseDetailsParams.locationId ?? 0,
                       digifitExerciseDetailsState.currentSetNumber,
                       digifitExerciseDetailsState.digifitExerciseEquipmentModel
                               ?.userProgress.repetitionsPerSet ??
@@ -610,11 +610,6 @@ class _DigifitExerciseDetailScreenState
             iconWidth: 15.w,
             icon: imagePath['scan_icon'],
             onPressed: () async {
-              final isComplete = ref
-                  .read(digifitExerciseDetailsControllerProvider(equipmentId))
-                  .digifitExerciseEquipmentModel
-                  ?.userProgress
-                  .isCompleted;
 
               final currentSetNumber = ref
                   .read(digifitExerciseDetailsControllerProvider(equipmentId))
@@ -656,7 +651,7 @@ class _DigifitExerciseDetailScreenState
                           digifitExerciseDetailsState
                                   .digifitExerciseEquipmentModel?.id ??
                               0,
-                          widget.digifitExerciseDetailsParams.locationId,
+                          widget.digifitExerciseDetailsParams.locationId ?? 0,
                           digifitExerciseDetailsState.currentSetNumber,
                           digifitExerciseDetailsState
                                   .digifitExerciseEquipmentModel
