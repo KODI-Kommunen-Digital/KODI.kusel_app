@@ -299,9 +299,9 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                   heading: station.muscleGroups ?? '',
                   title: station.name ?? '',
                   isFavouriteVisible:
-                          ref
-                              .read(digifitInformationControllerProvider)
-                              .isNetworkAvailable,
+                  ref
+                      .read(networkStatusProvider)
+                      .isNetworkAvailable,
                   isFavorite: station.isFavorite ?? false,
                   sourceId: sourceId,
                   onCardTap: () {

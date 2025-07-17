@@ -125,7 +125,7 @@ class _DigifitExerciseDetailScreenState
                     await handleAbortBackNavigation(context);
                   },
                   isFavVisible:
-                      !ref.watch(homeScreenProvider).isSignInButtonVisible,
+                      ref.read(networkStatusProvider).isNetworkAvailable,
                   isFav: ref
                           .watch(digifitExerciseDetailsControllerProvider(
                               equipmentId))
