@@ -102,10 +102,7 @@ class _FavouriteCityScreenState extends ConsumerState<FavouriteCityScreen> {
                         text: item.name ?? '',
                         sourceId: 1,
                         isFavourite: true,
-                        isFavouriteVisible: ref
-                            .read(
-                            favouriteCitiesNotifier.notifier)
-                            .showFavoriteIcon(),
+                        isFavouriteVisible: true,
                         onFavoriteTap: () {
                           ref
                               .watch(favouriteCitiesNotifier.notifier)

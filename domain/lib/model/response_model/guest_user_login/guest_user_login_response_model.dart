@@ -29,18 +29,21 @@ class GuestUserLoginResponseModel
 
 class GuestUserLoginDataModel {
   String? accessToken;
+  int? userId;
 
-  GuestUserLoginDataModel({this.accessToken});
+  GuestUserLoginDataModel({this.accessToken, this.userId});
 
   factory GuestUserLoginDataModel.fromJson(Map<String, dynamic> json) {
     return GuestUserLoginDataModel(
       accessToken: json['accessToken'],
+      userId: json['userId']
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'accessToken': accessToken,
+      'userId':userId
     };
   }
 }

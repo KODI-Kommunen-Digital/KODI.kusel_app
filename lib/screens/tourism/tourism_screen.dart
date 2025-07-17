@@ -130,7 +130,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                                     .getNearByListing();
                               }));
                     },
-                    isFavVisible: state.isUserLoggedIn,
+                    isFavVisible: true,
                     onSuccess: (bool isFav, int? id) {
                       ref
                           .read(tourismScreenControllerProvider.notifier)
@@ -186,7 +186,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                                     .getAllEvents();
                               }));
                     },
-                    isFavVisible: state.isUserLoggedIn,
+                    isFavVisible: true,
                     onSuccess: (bool isFav, int? id) {
                       ref
                           .read(tourismScreenControllerProvider.notifier)
@@ -297,7 +297,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                                         message: message, context: context);
                                   });
                             },
-                            isFavouriteVisible: state.isUserLoggedIn),
+                            isFavouriteVisible: true),
                       );
                     }),
               )
