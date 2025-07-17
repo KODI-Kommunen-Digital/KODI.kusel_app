@@ -219,6 +219,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get i_live_in_district => 'I live in the district...';
 
   @override
+  String get i_live_in_district_onborading_type_page => 'live here in the district';
+
+  @override
   String get welcome_text => 'Welcome!';
 
   @override
