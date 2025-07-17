@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/locale/localization_manager.dart';
 import 'package:kusel/screens/digifit_screens/digifit_trophies/digifit_user_trophies_state.dart';
 
+import '../../../common_widgets/get_slug.dart';
 import '../../../providers/refresh_token_provider.dart';
 
 final digifitUserTrophiesControllerProvider = StateNotifierProvider.autoDispose<
@@ -92,6 +93,20 @@ class DigifitUserTrophiesController
       );
     } catch (error) {
       rethrow;
+    }
+  }
+
+  Future<void> getSlug(String shortUrl, Function(String) onSuccess,
+      VoidCallback onError) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final slug = getSlugFromUrl(shortUrl);
+      state = state.copyWith(isLoading: false);
+      onSuccess(slug);
+    } catch (error) {
+      onError();
+      debugPrint("get slug exception: $error");
+      state = state.copyWith(isLoading: false);
     }
   }
 

@@ -1,3 +1,4 @@
+import 'package:domain/model/response_model/digifit/digifit_information_response_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_user_trophies_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,14 +7,18 @@ import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/digifit/digifit_text_image_card.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
+import 'package:kusel/common_widgets/get_slug.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/l10n/app_localizations.dart';
+import 'package:kusel/offline_router.dart';
+import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/params/digifit_exercise_details_params.dart';
 import 'package:kusel/screens/digifit_screens/digifit_trophies/digifit_user_trophies_controller.dart';
 import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
 
 import '../../../app_router.dart';
 import '../../../common_widgets/digifit/digifit_status_widget.dart';
 import '../../../common_widgets/text_styles.dart';
+import '../../../common_widgets/toast_message.dart';
 import '../../../images_path.dart';
 import '../../../navigation/navigation.dart';
 
@@ -160,17 +165,48 @@ class _DigifitTrophiesScreenState extends ConsumerState<DigifitTrophiesScreen> {
               pointsText: AppLocalizations.of(context).points,
               trophiesValue: digifitUserTrophiesData?.userStats?.trophies ?? 0,
               trophiesText: AppLocalizations.of(context).trophies,
-              onButtonTap: () async {
-                final barcode = await ref
-                    .read(navigationProvider)
-                    .navigateUsingPath(
-                        path: digifitQRScannerScreenPath, context: context);
-                // Todo - replace with actual QR code login
-                if (barcode != null) {
-                  print('Scanned barcode: $barcode');
-                }
-              },
-            ),
+                onButtonTap: () async {
+                  String path = digifitQRScannerScreenPath;
+
+                  if (!ref.read(networkStatusProvider).isNetworkAvailable) {
+                    path = offlineDigifitQRScannerScreenPath;
+                  }
+
+                  final barcode = await ref
+                      .read(navigationProvider)
+                      .navigateUsingPath(path: path, context: context);
+                  if (barcode != null) {
+                    ref
+                        .read(digifitUserTrophiesControllerProvider.notifier)
+                        .getSlug(barcode, (String slugUrl) {
+                      final value =
+                          ref.read(networkStatusProvider).isNetworkAvailable;
+
+                      if (value) {
+                        ref.read(navigationProvider).navigateUsingPath(
+                            path: digifitExerciseDetailScreenPath,
+                            context: context,
+                            params: DigifitExerciseDetailsParams(
+                                station:
+                                    DigifitInformationStationModel(id: null),
+                                slug: slugUrl));
+                      } else {
+                        ref.read(navigationProvider).navigateUsingPath(
+                            path: offlineDigifitTrophiesScreenPath,
+                            context: context,
+                            params: DigifitExerciseDetailsParams(
+                                station:
+                                    DigifitInformationStationModel(id: null),
+                                slug: slugUrl));
+                      }
+                    }, () {
+                      showErrorToast(
+                          message:
+                              AppLocalizations.of(context).something_went_wrong,
+                          context: context);
+                    });
+                  }
+                }),
             20.verticalSpace,
             if (latestTrophies.isNotEmpty)
               _buildCourseDetailSection(
