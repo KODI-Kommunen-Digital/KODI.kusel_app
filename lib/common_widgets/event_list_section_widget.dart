@@ -30,8 +30,11 @@ class EventsListSectionWidget extends ConsumerStatefulWidget {
   final bool isFavVisible;
   void Function(bool isFav, int? id) onSuccess;
   void Function()? onFavClickCallback;
-
   bool? shrinkWrap; // by default it is true
+  final bool isMultiplePagesList;
+  void Function()? onLoadMoreTap;
+  final bool isMoreListLoading;
+  final int pageSize;
 
   EventsListSectionWidget(
       {super.key,
@@ -48,7 +51,11 @@ class EventsListSectionWidget extends ConsumerStatefulWidget {
       required this.onHeadingTap,
       this.shrinkWrap,
       required this.onSuccess,
-      this.onFavClickCallback
+      this.onFavClickCallback,
+      this.isMultiplePagesList = false,
+      this.onLoadMoreTap,
+      this.isMoreListLoading = false,
+      this.pageSize = 9
       });
 
   @override
@@ -198,6 +205,22 @@ class _EventsListSectionWidgetState
                         );
                       },
                     ),
+                    if (widget.isMultiplePagesList && widget.eventsList.length >= widget.pageSize)
+                      widget.isMoreListLoading
+                          ? Padding(
+                              padding: EdgeInsets.all(15.h.w),
+                              child: Center(child: CircularProgressIndicator()),
+                            )
+                          : Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(12.h.w),
+                              child: CustomButton(
+                                  onPressed: widget.onLoadMoreTap ?? () {},
+                                  text: AppLocalizations.of(context).digifit_trophies_load_more,
+                                width: 150.w,
+                                ),
+                            ),
+                          ),
                     if (widget.buttonText != null)
                       Padding(
                         padding: EdgeInsets.symmetric(
