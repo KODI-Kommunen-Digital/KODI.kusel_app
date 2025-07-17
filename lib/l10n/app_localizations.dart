@@ -515,6 +515,12 @@ abstract class AppLocalizations {
   /// **'I live in the district...'**
   String get i_live_in_district;
 
+  /// No description provided for @i_live_in_district_onborading_type_page.
+  ///
+  /// In en, this message translates to:
+  /// **'live here in the district'**
+  String get i_live_in_district_onborading_type_page;
+
   /// No description provided for @welcome_text.
   ///
   /// In en, this message translates to:
