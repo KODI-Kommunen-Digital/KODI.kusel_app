@@ -299,7 +299,6 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                   heading: station.muscleGroups ?? '',
                   title: station.name ?? '',
                   isFavouriteVisible:
-                      !ref.read(homeScreenProvider).isSignInButtonVisible &&
                           ref
                               .read(digifitInformationControllerProvider)
                               .isNetworkAvailable,
