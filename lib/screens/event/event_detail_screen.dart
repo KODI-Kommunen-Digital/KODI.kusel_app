@@ -104,7 +104,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                         .removeTopPage(context: context);
                   },
                   isFavVisible:
-                      !ref.watch(homeScreenProvider).isSignInButtonVisible,
+                      true,
                   isFav: state.isFavourite,
                   onFavChange: () {
                     ref

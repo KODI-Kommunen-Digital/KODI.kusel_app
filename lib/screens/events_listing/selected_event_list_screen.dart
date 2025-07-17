@@ -95,9 +95,7 @@ class _ExploreScreenState extends ConsumerState<SelectedEventListScreen> {
                   isLoading: false,
                   onButtonTap: () {},
                   context: context,
-                  isFavVisible: ref
-                      .watch(selectedEventListScreenProvider)
-                      .isUserLoggedIn,
+                  isFavVisible: true,
                   onHeadingTap: () {},
                   onFavClickCallback: () {
                     ref
