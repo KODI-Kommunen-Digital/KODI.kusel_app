@@ -7,7 +7,9 @@ import 'package:kusel/images_path.dart';
 
 import '../../app_router.dart';
 import '../../navigation/navigation.dart';
+import '../../offline_router.dart';
 import '../../screens/full_image/full_image_screen.dart';
+import '../../screens/no_network/network_status_screen_provider.dart';
 
 class DigifitTextImageCard extends ConsumerStatefulWidget {
   final String imageUrl;
@@ -59,13 +61,25 @@ class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
                     borderRadius: BorderRadius.circular(8),
                     child: ImageUtil.loadNetworkImage(
                         onImageTap: (){
-                          ref.read(navigationProvider).navigateUsingPath(
-                              path: fullImageScreenPath,
-                              params: FullImageScreenParams(
-                                imageUrL: widget.imageUrl,
-                                sourceId: widget.sourceId
-                              ),
-                              context: context);
+                          bool value = ref.read(networkStatusProvider).isNetworkAvailable;
+                          if(value) {
+                            ref.read(navigationProvider).navigateUsingPath(
+                                path: fullImageScreenPath,
+                                params: FullImageScreenParams(
+                                    imageUrL: widget.imageUrl,
+                                    sourceId: widget.sourceId
+                                ),
+                                context: context);
+                          } else {
+                            ref.read(navigationProvider).navigateUsingPath(
+                                path: offlineFullImageScreenPath,
+                                params: FullImageScreenParams(
+                                    imageUrL: widget.imageUrl,
+                                    sourceId: widget.sourceId
+                                ),
+                                context: context);
+
+                          }
                         },
                         height: 75.h,
                         width: 80.w,
