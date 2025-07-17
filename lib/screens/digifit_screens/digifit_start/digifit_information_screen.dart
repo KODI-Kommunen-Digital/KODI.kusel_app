@@ -21,6 +21,7 @@ import '../../../common_widgets/digifit/digifit_map_card.dart';
 import '../../../common_widgets/digifit/digifit_status_widget.dart';
 import '../../../common_widgets/image_utility.dart';
 import '../../../common_widgets/text_styles.dart';
+import '../../../common_widgets/toast_message.dart';
 import '../../../images_path.dart';
 import '../../../navigation/navigation.dart';
 import '../digifit_exercise_detail/params/digifit_exercise_details_params.dart';
@@ -125,16 +126,56 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                 state.digifitInformationDataModel?.userStats?.trophies ?? 0,
             trophiesText: AppLocalizations.of(context).trophies,
             onButtonTap: () async {
-              final value = ref.read(networkStatusProvider).isNetworkAvailable;
-              if (value) {
-                final res = await ref
-                    .read(navigationProvider)
-                    .navigateUsingPath(
-                        path: digifitQRScannerScreenPath, context: context);
-                if (res != null) {
-                  debugPrint('Scanned barcode data: $res');
-                }
-              } else {}
+              String path = digifitQRScannerScreenPath;
+
+              if (!ref.read(networkStatusProvider).isNetworkAvailable) {
+                path = offlineDigifitQRScannerScreenPath;
+              }
+
+              final barcode = await ref
+                  .read(navigationProvider)
+                  .navigateUsingPath(path: path, context: context);
+              if (barcode != null) {
+                ref
+                    .read(digifitInformationControllerProvider.notifier)
+                    .getSlug(barcode, (String slugUrl) {
+                  final value =
+                      ref.read(networkStatusProvider).isNetworkAvailable;
+
+                  if (value) {
+                    ref.read(navigationProvider).navigateUsingPath(
+                        path: digifitExerciseDetailScreenPath,
+                        context: context,
+                        params: DigifitExerciseDetailsParams(
+                            station: DigifitInformationStationModel(id: null),
+                            slug: slugUrl,
+                            onFavCallBack: () {
+                              ref
+                                  .read(digifitInformationControllerProvider
+                                      .notifier)
+                                  .fetchDigifitInformation();
+                            }));
+                  } else {
+                    ref.read(navigationProvider).navigateUsingPath(
+                        path: offlineDigifitExerciseDetailScreenPath,
+                        context: context,
+                        params: DigifitExerciseDetailsParams(
+                            station: DigifitInformationStationModel(id: null),
+                            slug: slugUrl,
+                            onFavCallBack: () {
+                              ref
+                                  .read(digifitInformationControllerProvider
+                                      .notifier)
+                                  .fetchDigifitInformation();
+                            }));
+                  }
+                }, () {
+                  showErrorToast(
+                      message:
+                          AppLocalizations.of(context).something_went_wrong,
+                      context: context);
+                });
+              }
             },
           ),
           20.verticalSpace,
