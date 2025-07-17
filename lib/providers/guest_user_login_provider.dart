@@ -42,6 +42,8 @@ class GuestUserLogin {
           sharedPreferenceHelper.setString(
               tokenKey, res.data?.accessToken ?? '');
 
+          sharedPreferenceHelper.setInt(
+              userIdKey, res.data?.userId ?? 0);
           if(onSuccess!=null)
             {
               await onSuccess();

@@ -130,7 +130,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                         .read(virtualTownHallProvider.notifier)
                         .getVirtualTownHallDetails();
                   },
-                  isFavVisible: state.isUserLoggedIn,
+                  isFavVisible: true,
                   onSuccess: (bool isFav, int? id) {
                     ref
                         .read(virtualTownHallProvider.notifier)
@@ -175,7 +175,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                                   .getEventsUsingCityId(cityId: "1");
                             }));
                   },
-                  isFavVisible: state.isUserLoggedIn,
+                  isFavVisible: true,
                   onSuccess: (bool isFav, int? id) {
                     ref
                         .read(virtualTownHallProvider.notifier)
@@ -426,7 +426,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                         },
                       );
                     },
-                    isFavouriteVisible: state.isUserLoggedIn,
+                    isFavouriteVisible: true,
                     sourceId: 1,
                     imageFit: BoxFit.contain,
                   ),

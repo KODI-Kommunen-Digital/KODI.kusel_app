@@ -121,7 +121,7 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
                 isLoading: false,
                 onButtonTap: () {},
                 context: context,
-                isFavVisible: state.isUserLoggedIn,
+                isFavVisible: true,
                 onHeadingTap: () {},
                 onSuccess: (bool isFav, int? id) {
                   ref
