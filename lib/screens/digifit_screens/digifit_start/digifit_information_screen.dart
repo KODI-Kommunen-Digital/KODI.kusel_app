@@ -51,39 +51,46 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const ClampingScrollPhysics(),
-          child: Stack(
-            children: [
-              // Background
-              CommonBackgroundClipperWidget(
-                height: 200.h,
-                clipperType: UpstreamWaveClipper(),
-                imageUrl: imagePath['home_screen_background'] ?? '',
-                isStaticImage: true,
-              ),
-
-              Positioned(
-                top: 30.h,
-                left: 10.r,
-                child: _buildHeadingArrowSection(),
-              ),
-
-              Padding(
-                padding: EdgeInsets.only(top: 100.h),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildDigifitOverviewScreenUi(),
-                    30.verticalSpace,
-                    FeedbackCardWidget(
-                      height: 270.h,
-                      onTap: () {},
-                    ),
-                  ],
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await ref
+                .read(digifitInformationControllerProvider.notifier)
+                .fetchDigifitInformation();
+          },
+          child: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
+            child: Stack(
+              children: [
+                // Background
+                CommonBackgroundClipperWidget(
+                  height: 200.h,
+                  clipperType: UpstreamWaveClipper(),
+                  imageUrl: imagePath['home_screen_background'] ?? '',
+                  isStaticImage: true,
                 ),
-              ),
-            ],
+
+                Positioned(
+                  top: 30.h,
+                  left: 10.r,
+                  child: _buildHeadingArrowSection(),
+                ),
+
+                Padding(
+                  padding: EdgeInsets.only(top: 100.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildDigifitOverviewScreenUi(),
+                      30.verticalSpace,
+                      FeedbackCardWidget(
+                        height: 270.h,
+                        onTap: () {},
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
