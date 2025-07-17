@@ -90,7 +90,7 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                         onButtonTap: () {},
                         context: context,
                         isFavVisible:
-                            ref.watch(allEventScreenProvider).isUserLoggedIn,
+                            true,
                         onHeadingTap: () {},
                         onSuccess: (bool isFav, int? id) {
                           ref

@@ -462,7 +462,7 @@ class _DigifitExerciseDetailScreenState
                   heading: equipment.muscleGroups,
                   title: equipment.name,
                   isFavouriteVisible:
-                      !ref.watch(homeScreenProvider).isSignInButtonVisible,
+                      ref.read(networkStatusProvider).isNetworkAvailable,
                   isFavorite: equipment.isFavorite,
                   sourceId: sourceId,
                   onFavorite: () async {
