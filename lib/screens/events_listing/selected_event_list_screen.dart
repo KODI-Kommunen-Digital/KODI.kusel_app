@@ -29,9 +29,11 @@ class _ExploreScreenState extends ConsumerState<SelectedEventListScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      final currentPageNumber =
+          ref.read(selectedEventListScreenProvider).currentPageNo;
       ref
           .read(selectedEventListScreenProvider.notifier)
-          .getEventsList(widget.eventListScreenParameter);
+          .getEventsList(widget.eventListScreenParameter, currentPageNumber);
 
       ref.read(selectedEventListScreenProvider.notifier).isUserLoggedIn();
     });
@@ -39,6 +41,8 @@ class _ExploreScreenState extends ConsumerState<SelectedEventListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final currentPageNumber =
+        ref.watch(selectedEventListScreenProvider).currentPageNo;
     final SelectedEventListScreenState categoryScreenState =
     ref.watch(selectedEventListScreenProvider);
     return Scaffold(
@@ -47,12 +51,12 @@ class _ExploreScreenState extends ConsumerState<SelectedEventListScreen> {
           .scaffoldBackgroundColor,
       body: categoryScreenState.loading
           ? const Center(child: CircularProgressIndicator())
-          : SafeArea(child: _buildBody(categoryScreenState, context)),
+          : SafeArea(child: _buildBody(categoryScreenState, context, currentPageNumber)),
     );
   }
 
   Widget _buildBody(SelectedEventListScreenState categoryScreenState,
-      BuildContext context) {
+      BuildContext context, int currentPageNumber) {
     return Stack(
       children: [
         SingleChildScrollView(
@@ -81,35 +85,46 @@ class _ExploreScreenState extends ConsumerState<SelectedEventListScreen> {
                           .no_data),
                 )
                     : EventsListSectionWidget(
-                  eventsList:
-                  ref
-                      .watch(selectedEventListScreenProvider)
-                      .eventsList,
-                  heading: null,
-                  maxListLimit: ref
-                      .watch(selectedEventListScreenProvider)
-                      .eventsList
-                      .length,
-                  buttonText: null,
-                  buttonIconPath: null,
-                  isLoading: false,
-                  onButtonTap: () {},
-                  context: context,
-                  isFavVisible: true,
-                  onHeadingTap: () {},
-                  onFavClickCallback: () {
-                    ref
-                        .read(selectedEventListScreenProvider.notifier)
-                        .getEventsList(widget.eventListScreenParameter);
-                  },
-                  onSuccess: (bool isFav, int? id) {
-                    ref
-                        .read(selectedEventListScreenProvider.notifier)
-                        .updateIsFav(isFav, id);
+                        eventsList: ref
+                            .watch(selectedEventListScreenProvider)
+                            .eventsList,
+                        heading: null,
+                        maxListLimit: ref
+                            .watch(selectedEventListScreenProvider)
+                            .eventsList
+                            .length,
+                        buttonText: null,
+                        buttonIconPath: null,
+                        isLoading: false,
+                        onButtonTap: () {},
+                        context: context,
+                        isFavVisible: ref
+                            .watch(selectedEventListScreenProvider)
+                            .isUserLoggedIn,
+                        onHeadingTap: () {},
+                        onFavClickCallback: () {
+                          ref
+                              .read(selectedEventListScreenProvider.notifier)
+                              .getEventsList(
+                                  widget.eventListScreenParameter, currentPageNumber);
+                        },
+                        onSuccess: (bool isFav, int? id) {
+                          ref
+                              .read(selectedEventListScreenProvider.notifier)
+                              .updateIsFav(isFav, id);
 
-                    widget.eventListScreenParameter.onFavChange();
-                  },
-                )
+                          widget.eventListScreenParameter.onFavChange();
+                        },
+                        isMultiplePagesList: true,
+                        onLoadMoreTap: () {
+                          ref
+                              .read(selectedEventListScreenProvider.notifier)
+                              .onLoadMoreList(widget.eventListScreenParameter);
+                        },
+                        isMoreListLoading: ref
+                            .watch(selectedEventListScreenProvider)
+                            .isMoreListLoading,
+                      )
             ],
           ),
         ),
