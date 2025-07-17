@@ -96,7 +96,7 @@ class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
           isLoading: false,
           onButtonTap: () {},
           context: context,
-          isFavVisible: searchResultScreenState.isUserLoggedIn,
+          isFavVisible: true,
           onHeadingTap: () {
             if (widget.searchResultScreenParameter.searchType ==
                 SearchType.nearBy) {

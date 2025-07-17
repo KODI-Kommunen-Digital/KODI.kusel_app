@@ -94,7 +94,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                   ref.read(navigationProvider).removeTopPage(context: context);
                 },
                 isFavVisible:
-                    ref.watch(municipalDetailControllerProvider).isUserLoggedIn,
+                    true,
                 isFav: state.municipalPartyDetailDataModel?.isFavorite ?? false,
                 onFavChange: () {
                   ref.watch(favouriteCitiesNotifier.notifier).toggleFavorite(
@@ -194,7 +194,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                                       .municipalDetailScreenParams.municipalId);
                         }));
               },
-              isFavVisible: state.isUserLoggedIn,
+              isFavVisible: true,
               onSuccess: (bool isFav, int? id) {
                 ref
                     .read(municipalDetailControllerProvider.notifier)
@@ -252,7 +252,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                                       .municipalDetailScreenParams.municipalId);
                         }));
               },
-              isFavVisible: state.isUserLoggedIn,
+              isFavVisible: true,
               onSuccess: (bool isFav, int? id) {
                 ref
                     .read(municipalDetailControllerProvider.notifier)
@@ -470,9 +470,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                     text: item.name ?? '',
                     sourceId: 1,
                     isFavourite: item.isFavorite,
-                    isFavouriteVisible: ref
-                        .read(favouriteCitiesNotifier.notifier)
-                        .showFavoriteIcon(),
+                    isFavouriteVisible: true,
                     onFavoriteTap: () {
                       ref
                           .watch(favouriteCitiesNotifier.notifier)
