@@ -18,16 +18,16 @@ import 'digifit_overview_state.dart';
 
 final digifitOverviewScreenControllerProvider = StateNotifierProvider
     .autoDispose<DigifitOverviewController, DigifitOverviewState>((ref) =>
-        DigifitOverviewController(
-            digifitOverviewUseCase: ref.read(digifitOverviewUseCaseProvider),
-            tokenStatus: ref.read(tokenStatusProvider),
-            refreshTokenProvider: ref.read(refreshTokenProvider),
-            localeManagerController: ref.read(localeManagerProvider.notifier),
-            digifitEquipmentFav: ref.read(digifitEquipmentFavProvider),
-            signInStatusController: ref.read(signInStatusProvider.notifier),
-            networkStatusProvider: ref.read(networkStatusProvider.notifier),
-            digifitCacheDataController:
-                ref.read(digifitCacheDataProvider.notifier)));
+    DigifitOverviewController(
+        digifitOverviewUseCase: ref.read(digifitOverviewUseCaseProvider),
+        tokenStatus: ref.read(tokenStatusProvider),
+        refreshTokenProvider: ref.read(refreshTokenProvider),
+        localeManagerController: ref.read(localeManagerProvider.notifier),
+        digifitEquipmentFav: ref.read(digifitEquipmentFavProvider),
+        signInStatusController: ref.read(signInStatusProvider.notifier),
+        networkStatusProvider: ref.read(networkStatusProvider.notifier),
+        digifitCacheDataController:
+        ref.read(digifitCacheDataProvider.notifier)));
 
 class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
   final DigifitOverviewUseCase digifitOverviewUseCase;
@@ -39,20 +39,22 @@ class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
   final NetworkStatusProvider networkStatusProvider;
   final DigifitCacheDataController digifitCacheDataController;
 
-  DigifitOverviewController(
-      {required this.digifitOverviewUseCase,
-      required this.tokenStatus,
-      required this.refreshTokenProvider,
-      required this.localeManagerController,
-      required this.digifitEquipmentFav,
-      required this.signInStatusController,
-      required this.networkStatusProvider,
-      required this.digifitCacheDataController})
+  DigifitOverviewController({required this.digifitOverviewUseCase,
+    required this.tokenStatus,
+    required this.refreshTokenProvider,
+    required this.localeManagerController,
+    required this.digifitEquipmentFav,
+    required this.signInStatusController,
+    required this.networkStatusProvider,
+    required this.digifitCacheDataController})
       : super(DigifitOverviewState.empty());
 
   Future<void> fetchDigifitOverview(int locationId) async {
     state = state.copyWith(isLoading: true);
-    if (await isNetworkAvailable()) {
+
+    final status = networkStatusProvider.state.isNetworkAvailable;
+
+    if (status) {
       try {
         final isTokenExpired = tokenStatus.isAccessTokenExpired();
         final status = await signInStatusController.isUserLoggedIn();
@@ -77,13 +79,13 @@ class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
 
   Future<void> manageDataLocally(int locationId) async {
     bool isCacheDataAvailable =
-        await digifitCacheDataController.isAllDigifitCacheDataAvailable();
+    await digifitCacheDataController.isAllDigifitCacheDataAvailable();
     if (!isCacheDataAvailable) {
       state = state.copyWith(isLoading: false);
       return;
     }
     DigifitCacheDataResponseModel? digifitCacheDataResponseModel =
-        await digifitCacheDataController.getAllDigifitCacheData();
+    await digifitCacheDataController.getAllDigifitCacheData();
 
     if (digifitCacheDataResponseModel == null ||
         digifitCacheDataResponseModel.data == null) {
@@ -107,7 +109,7 @@ class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
     if (parcoursList != null) {
       try {
         parcoursModel = parcoursList.firstWhere(
-            (item) => item != null && item.locationId == locationId);
+                (item) => item != null && item.locationId == locationId);
       } catch (e) {
         parcoursModel = null;
       }
@@ -115,16 +117,17 @@ class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
 
     // Convert stations
     List<DigifitOverviewStationModel>? availableStation =
-        parcoursModel?.stations
-            ?.map((station) => DigifitOverviewStationModel(
-                  id: station.id,
-                  name: station.name,
-                  muscleGroups: station.muscleGroups,
-                  machineImageUrl: station.machineImageUrl,
-                  isFavorite: station.isFavorite,
-                  isCompleted: station.isCompleted,
-                ))
-            .toList();
+    parcoursModel?.stations
+        ?.map((station) =>
+        DigifitOverviewStationModel(
+          id: station.id,
+          name: station.name,
+          muscleGroups: station.muscleGroups,
+          machineImageUrl: station.machineImageUrl,
+          isFavorite: station.isFavorite,
+          isCompleted: station.isCompleted,
+        ))
+        .toList();
 
     // Filter completed stations
     List<DigifitOverviewStationModel>? completedStation = availableStation
@@ -133,7 +136,7 @@ class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
 
     // User stats model
     DigifitOverviewUserStatsModel userStatsModel =
-        DigifitOverviewUserStatsModel(
+    DigifitOverviewUserStatsModel(
       points: parcoursModel?.points,
       trophies: parcoursModel?.trophies,
     );
@@ -148,7 +151,7 @@ class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
 
     // Final overview data model
     DigifitOverviewDataModel digifitOverviewDataModel =
-        DigifitOverviewDataModel(
+    DigifitOverviewDataModel(
       sourceId: digifitCacheDataResponseModel.data.sourceId,
       userStats: userStatsModel,
       parcours: parcours,
@@ -162,24 +165,24 @@ class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
       Locale currentLocale = localeManagerController.getSelectedLocale();
 
       DigifitOverviewRequestModel digifitOverviewRequestModel =
-          DigifitOverviewRequestModel(
-              locationId: locationId,
-              translate:
-                  "${currentLocale.languageCode}-${currentLocale.countryCode}");
+      DigifitOverviewRequestModel(
+          locationId: locationId,
+          translate:
+          "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
       DigifitOverviewResponseModel digifitOverviewResponseModel =
-          DigifitOverviewResponseModel();
+      DigifitOverviewResponseModel();
 
       final result = await digifitOverviewUseCase.call(
           digifitOverviewRequestModel, digifitOverviewResponseModel);
 
       result.fold(
-        (l) {
+            (l) {
           state = state.copyWith(isLoading: false, errorMessage: l.toString());
           debugPrint(
               '[DigifitOverviewController] Fetch fold Error: ${l.toString()}');
         },
-        (r) {
+            (r) {
           var response = (r as DigifitOverviewResponseModel).data;
           state = state.copyWith(
               isLoading: false, digifitOverviewDataModel: response);
@@ -202,16 +205,14 @@ class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
     }
   }
 
-  Future<void> _availableStationOnFavStatusChange(
-    bool value,
-    DigifitEquipmentFavParams params,
-  ) async {
+  Future<void> _availableStationOnFavStatusChange(bool value,
+      DigifitEquipmentFavParams params,) async {
     try {
       List<DigifitOverviewStationModel> stationList =
           state.digifitOverviewDataModel?.parcours?.availableStation ?? [];
 
       for (DigifitOverviewStationModel digifitOverviewStationModel
-          in stationList) {
+      in stationList) {
         if (digifitOverviewStationModel.id != null &&
             digifitOverviewStationModel.id == params.equipmentId) {
           digifitOverviewStationModel.isFavorite = value;
@@ -239,16 +240,14 @@ class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
     }
   }
 
-  Future<void> _completedStationOnFavStatusChange(
-    bool value,
-    DigifitEquipmentFavParams params,
-  ) async {
+  Future<void> _completedStationOnFavStatusChange(bool value,
+      DigifitEquipmentFavParams params,) async {
     try {
       List<DigifitOverviewStationModel> stationList =
           state.digifitOverviewDataModel?.parcours?.completedStation ?? [];
 
       for (DigifitOverviewStationModel digifitOverviewStationModel
-          in stationList) {
+      in stationList) {
         if (digifitOverviewStationModel.id != null &&
             digifitOverviewStationModel.id == params.equipmentId) {
           digifitOverviewStationModel.isFavorite = value;
@@ -264,8 +263,8 @@ class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
     }
   }
 
-  Future<void> getSlug(
-      String shortUrl, Function(String) onSuccess, VoidCallback onError) async {
+  Future<void> getSlug(String shortUrl, Function(String) onSuccess,
+      VoidCallback onError) async {
     try {
       state = state.copyWith(isLoading: true);
       final slug = getSlugFromUrl(shortUrl);
@@ -278,9 +277,4 @@ class DigifitOverviewController extends StateNotifier<DigifitOverviewState> {
     }
   }
 
-  Future<bool> isNetworkAvailable() async {
-    bool networkAvailable = await networkStatusProvider.checkNetworkStatus();
-    state = state.copyWith(isNetworkAvailable : networkAvailable);
-    return networkAvailable;
-  }
 }

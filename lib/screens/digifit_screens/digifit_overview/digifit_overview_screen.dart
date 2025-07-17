@@ -21,7 +21,6 @@ import '../../../common_widgets/image_utility.dart';
 import '../../../common_widgets/text_styles.dart';
 import '../../../images_path.dart';
 import '../../../navigation/navigation.dart';
-import '../../home/home_screen_provider.dart';
 import '../digifit_exercise_detail/params/digifit_exercise_details_params.dart';
 import 'digifit_overview_controller.dart';
 
@@ -310,9 +309,7 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
                   heading: station.muscleGroups ?? '',
                   title: station.name ?? '',
                   isFavouriteVisible:
-                          ref
-                              .read(digifitOverviewScreenControllerProvider)
-                              .isNetworkAvailable,
+                      ref.read(networkStatusProvider).isNetworkAvailable,
                   isFavorite: station.isFavorite ?? false,
                   sourceId: sourceId,
                   isCompleted: station.isCompleted,
@@ -380,28 +377,27 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
                               muscleGroups: station.muscleGroups,
                             ),
                             locationId: widget.digifitOverviewScreenParams
-                                .parcoursModel.locationId ??
+                                    .parcoursModel.locationId ??
                                 0,
                             onFavCallBack: () {
                               ref
                                   .read(digifitOverviewScreenControllerProvider
-                                  .notifier)
+                                      .notifier)
                                   .fetchDigifitOverview(widget
-                                  .digifitOverviewScreenParams
-                                  .parcoursModel
-                                  .locationId ??
-                                  0);
+                                          .digifitOverviewScreenParams
+                                          .parcoursModel
+                                          .locationId ??
+                                      0);
 
-                              widget.digifitOverviewScreenParams.onFavChange?.call();
+                              widget.digifitOverviewScreenParams.onFavChange
+                                  ?.call();
                             }));
                   },
                   imageUrl: station.machineImageUrl ?? '',
                   heading: station.muscleGroups ?? '',
                   title: station.name ?? '',
                   isFavouriteVisible:
-                          ref
-                              .read(digifitOverviewScreenControllerProvider)
-                              .isNetworkAvailable,
+                      ref.read(networkStatusProvider).isNetworkAvailable,
                   isFavorite: station.isFavorite ?? false,
                   sourceId: 1,
                   isCompleted: station.isCompleted,

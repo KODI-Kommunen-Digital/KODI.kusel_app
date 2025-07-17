@@ -90,7 +90,7 @@ class DigifitInformationController extends StateNotifier<DigifitState> {
         }
       }
     } catch (e) {
-        debugPrint('[DigifitInformationController] Fetch Exception: $e');
+        debugPrint('[DigifitInformationController] Exception: $e');
       }
   }
 
