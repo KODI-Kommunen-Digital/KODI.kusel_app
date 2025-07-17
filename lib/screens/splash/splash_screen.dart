@@ -21,9 +21,10 @@ class _State extends ConsumerState<SplashScreen> {
   @override
   @override
   void initState() {
-    final hasNetwork = ref.read(networkStatusProvider).isNetworkAvailable;
+
 
     Future.microtask(() {
+      final hasNetwork = ref.read(networkStatusProvider).isNetworkAvailable;
       ref.read(splashScreenProvider.notifier).startTimer(() {
 
         if (hasNetwork) {
