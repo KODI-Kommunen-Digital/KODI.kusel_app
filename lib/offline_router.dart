@@ -7,6 +7,7 @@ import 'package:kusel/screens/digifit_screens/digifit_overview/params/digifit_ov
 import 'package:kusel/screens/digifit_screens/digifit_qr_scanner/digifit_qr_scanner_screen.dart';
 import 'package:kusel/screens/digifit_screens/digifit_start/digifit_information_screen.dart';
 import 'package:kusel/screens/digifit_screens/digifit_trophies/digifit_trophies_screen.dart';
+import 'package:kusel/screens/full_image/full_image_screen.dart';
 import 'package:kusel/screens/no_network/network_status_screen.dart';
 import 'package:kusel/screens/splash/splash_screen.dart';
 
@@ -23,6 +24,8 @@ const offlineDigifitOverViewScreenPath = "/offlineDigifitOverViewScreenPath";
 const offlineDigifitQRScannerScreenPath = "/offlineDigifitQRScannerScreenPath";
 const offlineDigifitExerciseDetailScreenPath =
     "/offlineDigifitExerciseDetailScreenPath";
+
+const offlineFullImageScreenPath = '/fullImageScreenPath';
 
 final noInternetRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -56,4 +59,8 @@ List<RouteBase> routes = [
             digifitExerciseDetailsParams:
                 state.extra as DigifitExerciseDetailsParams,
           )),
+  GoRoute(
+      path: offlineFullImageScreenPath,
+      builder: (_, state) => FullImageScreen(
+          fullImageScreenParams: state.extra as FullImageScreenParams)),
 ];
