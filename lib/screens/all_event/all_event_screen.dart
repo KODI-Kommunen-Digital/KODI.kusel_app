@@ -18,10 +18,9 @@ import '../../images_path.dart';
 import '../../navigation/navigation.dart';
 
 class AllEventScreen extends ConsumerStatefulWidget {
-
   AllEventScreenParam allEventScreenParam;
 
-   AllEventScreen({super.key,required this.allEventScreenParam});
+  AllEventScreen({super.key, required this.allEventScreenParam});
 
   @override
   ConsumerState<AllEventScreen> createState() => _AllEventScreenState();
@@ -31,7 +30,10 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
   @override
   void initState() {
     Future.microtask(() {
-      ref.read(allEventScreenProvider.notifier).getEventsList();
+      final currentPageNumber = ref.read(allEventScreenProvider).currentPageNo;
+      ref
+          .read(allEventScreenProvider.notifier)
+          .getEventsList(currentPageNumber);
       ref.read(filterScreenProvider.notifier).onReset();
       ref.read(datePickerProvider.notifier).resetDates();
       ref.read(allEventScreenProvider.notifier).isUserLoggedIn();
@@ -41,13 +43,14 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final currentPageNumber = ref.read(allEventScreenProvider).currentPageNo;
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: SafeArea(child: _buildBody(context)),
+      body: SafeArea(child: _buildBody(context, currentPageNumber)),
     ).loaderDialog(context, ref.watch(allEventScreenProvider).isLoading);
   }
 
-  Widget _buildBody(BuildContext context) {
+  Widget _buildBody(BuildContext context, int currentPageNumber) {
     bool isFilterApplied =
         ref.watch(allEventScreenProvider).filterCount != null &&
             ref.watch(allEventScreenProvider).filterCount! > 0;
@@ -98,8 +101,17 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                         onFavClickCallback: () {
                           ref
                               .read(allEventScreenProvider.notifier)
-                              .getEventsList();
-                        })
+                              .getEventsList(currentPageNumber);
+                        },
+                        isMultiplePagesList: true,
+                        onLoadMoreTap: () {
+                          ref
+                              .read(allEventScreenProvider.notifier)
+                              .onLoadMoreList(currentPageNumber);
+                        },
+                        isMoreListLoading: ref
+                            .watch(allEventScreenProvider)
+                            .isMoreListLoading),
             ],
           ),
         ),

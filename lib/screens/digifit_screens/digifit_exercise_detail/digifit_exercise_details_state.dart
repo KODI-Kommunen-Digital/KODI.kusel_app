@@ -18,11 +18,9 @@ class DigifitExerciseDetailsState {
   final int time;
   final bool isNetworkAvailable;
   final DigifitUpdateExerciseRequestModel? digifitUpdateExerciseRequestModel;
-  final List<DigifitExerciseRecordModel>? digifitUpdateExerciseRecords;
   final String createdAt;
   final String updatedAt;
   final List<String>? setTimeList;
-  final bool isCompletedOffline;
 
   DigifitExerciseDetailsState(
       {required this.isLoading,
@@ -39,11 +37,10 @@ class DigifitExerciseDetailsState {
       required this.time,
       required this.isNetworkAvailable,
       required this.digifitUpdateExerciseRequestModel,
-      required this.digifitUpdateExerciseRecords,
       required this.createdAt,
       required this.updatedAt,
       required this.setTimeList,
-      required this.isCompletedOffline});
+      });
 
   factory DigifitExerciseDetailsState.empty() {
     return DigifitExerciseDetailsState(
@@ -61,11 +58,10 @@ class DigifitExerciseDetailsState {
         time: 60,
         isNetworkAvailable: true,
         digifitUpdateExerciseRequestModel: null,
-        digifitUpdateExerciseRecords: null,
         createdAt: '',
         updatedAt: '',
         setTimeList: [],
-        isCompletedOffline: false);
+    );
   }
 
   DigifitExerciseDetailsState copyWith(
@@ -84,11 +80,9 @@ class DigifitExerciseDetailsState {
       int? time,
       bool? isNetworkAvailable,
       DigifitUpdateExerciseRequestModel? digifitUpdateExerciseRequestModel,
-      List<DigifitExerciseRecordModel>? digifitUpdateExerciseRecords,
       String? createdAt,
       String? updatedAt,
-      List<String>? setTimeList,
-      bool? isCompletedOffline}) {
+      List<String>? setTimeList}) {
     return DigifitExerciseDetailsState(
         isLoading: isLoading ?? this.isLoading,
         errorMessage: errorMessage ?? this.errorMessage,
@@ -108,11 +102,8 @@ class DigifitExerciseDetailsState {
         isNetworkAvailable: isNetworkAvailable ?? this.isNetworkAvailable,
         digifitUpdateExerciseRequestModel: digifitUpdateExerciseRequestModel ??
             this.digifitUpdateExerciseRequestModel,
-        digifitUpdateExerciseRecords:
-            digifitUpdateExerciseRecords ?? this.digifitUpdateExerciseRecords,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
-        setTimeList: setTimeList ?? this.setTimeList,
-        isCompletedOffline: isCompletedOffline ?? this.isCompletedOffline);
+        setTimeList: setTimeList ?? this.setTimeList);
   }
 }
