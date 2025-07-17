@@ -170,30 +170,33 @@ class DigifitInformationStationModel {
   @HiveField(2)
   final String? muscleGroups;
   @HiveField(3)
-  final String? machineImageUrl;
+  final String? qrCodeIdentifier;
   @HiveField(4)
-  bool? isFavorite;
+  final String? machineImageUrl;
   @HiveField(5)
-  final bool? isCompleted;
+  bool? isFavorite;
   @HiveField(6)
-  final int? recommendedReps;
+  final bool? isCompleted;
   @HiveField(7)
-  final int? recommendedSets;
+  final int? recommendedReps;
   @HiveField(8)
-  final String? description;
+  final int? recommendedSets;
   @HiveField(9)
-  final int? minReps;
+  final String? description;
   @HiveField(10)
-  final int? minSets;
+  final int? minReps;
   @HiveField(11)
-  final String? sets;
+  final int? minSets;
   @HiveField(12)
+  final String? sets;
+  @HiveField(13)
   final String? repetitions;
 
   DigifitInformationStationModel({
     this.id,
     this.name,
     this.muscleGroups,
+    this.qrCodeIdentifier,
     this.machineImageUrl,
     this.isFavorite,
     this.isCompleted,
@@ -211,6 +214,7 @@ class DigifitInformationStationModel {
       id: json['id'],
       name: json['name'],
       muscleGroups: json['muscleGroups'],
+      qrCodeIdentifier: json['qrCodeIdentifier'],
       machineImageUrl: json['machineImageUrl'],
       isFavorite: json['isFavorite'],
       isCompleted: json['isCompleted'],
@@ -229,6 +233,7 @@ class DigifitInformationStationModel {
       'id': id,
       'name': name,
       'muscleGroups': muscleGroups,
+      'qrCodeIdentifier': qrCodeIdentifier,
       'machineImageUrl': machineImageUrl,
       'isFavorite': isFavorite,
       'isCompleted': isCompleted,
