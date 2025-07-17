@@ -112,70 +112,49 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 params: WebViewParams(url: privacyPolicyUrl),
                 context: context),
           ),
-          Visibility(
-            visible: ref.watch(settingsScreenProvider).isLoggedIn,
-            child: Column(children: [
-              const Divider(),
-              ListTile(
-                leading: const Icon(Icons.favorite_border),
-                title: textBoldPoppins(
-                  text: AppLocalizations.of(context).favorites,
-                  textAlign: TextAlign.start,
-                ),
-                onTap: () async {
-                  ref.read(navigationProvider).navigateUsingPath(
-                      context: context, path: favoritesListScreenPath);
-                },
-              ),
-            ]),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.favorite_border),
+            title: textBoldPoppins(
+              text: AppLocalizations.of(context).favorites,
+              textAlign: TextAlign.start,
+            ),
+            onTap: () async {
+              ref.read(navigationProvider).navigateUsingPath(
+                  context: context, path: favoritesListScreenPath);
+            },
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.favorite_border),
+            title: textBoldPoppins(
+              text: AppLocalizations.of(context).favourite_city,
+              textAlign: TextAlign.start,
+            ),
+            onTap: () async {
+              ref.read(navigationProvider).navigateUsingPath(
+                  context: context, path: favouriteCityScreenPath);
+            },
           ),
           const Divider(),
           Visibility(
             visible: ref.watch(settingsScreenProvider).isLoggedIn,
-            child: Column(children: [
-              ListTile(
-                leading: const Icon(Icons.favorite_border),
-                title: textBoldPoppins(
-                  text: AppLocalizations.of(context).favourite_city,
-                  textAlign: TextAlign.start,
-                ),
-                onTap: () async {
-                  ref.read(navigationProvider).navigateUsingPath(
-                      context: context, path: favouriteCityScreenPath);
-                },
+            child: ListTile(
+              leading: const Icon(Icons.logout),
+              title: textBoldPoppins(
+                text: AppLocalizations.of(context).logout,
+                textAlign: TextAlign.start,
               ),
-            ]),
-          ),
-          Visibility(
-            visible: ref.watch(settingsScreenProvider).isLoggedIn,
-            child: Column(
-              children: [
-                const Divider(),
-                ListTile(
-                  leading: const Icon(Icons.logout),
-                  title: textBoldPoppins(
-                    text: AppLocalizations.of(context).logout,
-                    textAlign: TextAlign.start,
-                  ),
-                  onTap: () async {
-                    ref.read(settingsScreenProvider.notifier).logoutUser(
-                        () async {
-                      await ref
-                          .read(settingsScreenProvider.notifier)
-                          .isLoggedIn();
-                      await ref
-                          .read(homeScreenProvider.notifier)
-                          .getLoginStatus();
-                    }, onSuccess: () {
-                      ref
-                          .read(dashboardScreenProvider.notifier)
-                          .onIndexChanged(0);
-                      ref.read(navigationProvider).removeAllAndNavigate(
-                          context: context, path: signInScreenPath);
-                    });
-                  },
-                ),
-              ],
+              onTap: () async {
+                ref.read(settingsScreenProvider.notifier).logoutUser(() async {
+                  await ref.read(settingsScreenProvider.notifier).isLoggedIn();
+                  await ref.read(homeScreenProvider.notifier).getLoginStatus();
+                }, onSuccess: () {
+                  ref.read(dashboardScreenProvider.notifier).onIndexChanged(0);
+                  ref.read(navigationProvider).removeAllAndNavigate(
+                      context: context, path: signInScreenPath);
+                });
+              },
             ),
           ),
           Visibility(

@@ -1,5 +1,4 @@
 import 'package:domain/model/response_model/digifit/digifit_information_response_model.dart';
-import 'package:flutter/cupertino.dart';
 
 class DigifitState {
   bool isLoading;
