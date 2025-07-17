@@ -10,6 +10,7 @@ import 'package:kusel/database/digifit_cache_data/digifit_cache_data_controller.
 import 'package:kusel/locale/localization_manager.dart';
 import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
 
+import '../../../common_widgets/get_slug.dart';
 import '../../../providers/digifit_equipment_fav_provider.dart';
 import '../../../providers/refresh_token_provider.dart';
 import 'digifit_information_state.dart';
@@ -185,6 +186,20 @@ class DigifitInformationController extends StateNotifier<DigifitState> {
       }
     } catch (error) {
       rethrow;
+    }
+  }
+
+  Future<void> getSlug(String shortUrl, Function(String) onSuccess,
+      VoidCallback onError) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final slug = getSlugFromUrl(shortUrl);
+      state = state.copyWith(isLoading: false);
+      onSuccess(slug);
+    } catch (error) {
+      onError();
+      debugPrint("get slug exception: $error");
+      state = state.copyWith(isLoading: false);
     }
   }
 

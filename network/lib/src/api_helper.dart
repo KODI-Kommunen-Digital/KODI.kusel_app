@@ -318,6 +318,7 @@ class ApiHelper<E extends BaseModel> {
     }
   }
 
+  // 'GET REQUEST' TO get whole url from the shortHand Url.
   Future<Either<Exception, String>> getRequestUrlHelper({
     required String shortUrl,
     int maxRedirects = 5,
