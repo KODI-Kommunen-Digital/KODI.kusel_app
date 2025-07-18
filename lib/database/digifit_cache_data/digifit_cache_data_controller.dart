@@ -230,6 +230,8 @@ class DigifitCacheDataController extends StateNotifier<DigifitCacheDataState> {
     } catch (error) {
       debugPrint(
           '[DigifitCacheDataController] Post exercise fold Exception: $error');
+    } finally {
+      removeDigifitExerciseCacheData();
     }
   }
 
