@@ -143,8 +143,9 @@ class _DigifitExerciseDetailScreenState
                           DigifitEquipmentFavParams(
                               isFavorite: !equipment.isFavorite,
                               equipmentId: equipment.id,
-                              locationId: widget
-                                  .digifitExerciseDetailsParams.locationId ?? 0);
+                              locationId: widget.digifitExerciseDetailsParams
+                                      .locationId ??
+                                  0);
 
                       await ref
                           .read(digifitExerciseDetailsControllerProvider(
@@ -470,8 +471,9 @@ class _DigifitExerciseDetailScreenState
                         DigifitEquipmentFavParams(
                             isFavorite: !equipment.isFavorite,
                             equipmentId: equipment.id,
-                            locationId:
-                                widget.digifitExerciseDetailsParams.locationId ?? 0);
+                            locationId: widget
+                                    .digifitExerciseDetailsParams.locationId ??
+                                0);
 
                     await ref
                         .read(digifitExerciseDetailsControllerProvider(
@@ -610,7 +612,6 @@ class _DigifitExerciseDetailScreenState
             iconWidth: 15.w,
             icon: imagePath['scan_icon'],
             onPressed: () async {
-
               final currentSetNumber = ref
                   .read(digifitExerciseDetailsControllerProvider(equipmentId))
                   .currentSetNumber;
@@ -636,47 +637,49 @@ class _DigifitExerciseDetailScreenState
                         .digifitExerciseEquipmentModel
                         ?.qrCodeIdentifier ??
                     '';
-
-                final res = await ref
-                    .read(digifitExerciseDetailsControllerProvider(equipmentId)
-                        .notifier)
-                    .validateQrScanner(result, qrCodeIdentifier);
-
-                if (res) {
-                  await ref
+                if (result != null) {
+                  final res = await ref
                       .read(
                           digifitExerciseDetailsControllerProvider(equipmentId)
                               .notifier)
-                      .trackExerciseDetails(
-                          digifitExerciseDetailsState
-                                  .digifitExerciseEquipmentModel?.id ??
-                              0,
-                          widget.digifitExerciseDetailsParams.locationId ?? 0,
-                          digifitExerciseDetailsState.currentSetNumber,
-                          digifitExerciseDetailsState
-                                  .digifitExerciseEquipmentModel
-                                  ?.userProgress
-                                  .repetitionsPerSet ??
-                              0,
-                          ExerciseStageConstant.start, () {
-                    showSuccessToast(
-                        message: AppLocalizations.of(context).session_start,
-                        context: context);
-                    ref
-                        .read(digifitExerciseDetailsControllerProvider(
-                                equipmentId)
-                            .notifier)
-                        .updateScannerButtonVisibility(false);
+                      .validateQrScanner(result, qrCodeIdentifier);
 
-                    ref
+                  if (res) {
+                    await ref
                         .read(digifitExerciseDetailsControllerProvider(
                                 equipmentId)
                             .notifier)
-                        .updateIsReadyToSubmitSetVisibility(true);
-                  });
-                } else {
-                  showErrorDialog(context, AppLocalizations.of(context).error,
-                      AppLocalizations.of(context).validation_falied_message);
+                        .trackExerciseDetails(
+                            digifitExerciseDetailsState
+                                    .digifitExerciseEquipmentModel?.id ??
+                                0,
+                            widget.digifitExerciseDetailsParams.locationId ?? 0,
+                            digifitExerciseDetailsState.currentSetNumber,
+                            digifitExerciseDetailsState
+                                    .digifitExerciseEquipmentModel
+                                    ?.userProgress
+                                    .repetitionsPerSet ??
+                                0,
+                            ExerciseStageConstant.start, () {
+                      showSuccessToast(
+                          message: AppLocalizations.of(context).session_start,
+                          context: context);
+                      ref
+                          .read(digifitExerciseDetailsControllerProvider(
+                                  equipmentId)
+                              .notifier)
+                          .updateScannerButtonVisibility(false);
+
+                      ref
+                          .read(digifitExerciseDetailsControllerProvider(
+                                  equipmentId)
+                              .notifier)
+                          .updateIsReadyToSubmitSetVisibility(true);
+                    });
+                  } else {
+                    showErrorDialog(context, AppLocalizations.of(context).error,
+                        AppLocalizations.of(context).validation_falied_message);
+                  }
                 }
               } else {
                 showErrorDialog(context, AppLocalizations.of(context).complete,
