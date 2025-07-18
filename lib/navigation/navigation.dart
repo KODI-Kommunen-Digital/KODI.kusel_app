@@ -33,7 +33,7 @@ class Navigator {
     GoRouter.of(context).pop();
   }
 
-   removeDialog({required BuildContext context}){
+   removeDialog({required BuildContext context})async{
     nav.Navigator.pop(context);
   }
 

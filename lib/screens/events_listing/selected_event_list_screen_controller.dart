@@ -30,14 +30,18 @@ class SelectedEventListScreenController
       : super(SelectedEventListScreenState.empty());
 
   Future<void> getEventsList(
-      SelectedEventListScreenParameter? eventListScreenParameter) async {
+      SelectedEventListScreenParameter? eventListScreenParameter, int pageNumber) async {
     try {
-      state = state.copyWith(loading: true, error: "");
-
+      if(pageNumber>1){
+        state = state.copyWith(isMoreListLoading: true, error: "");
+      } else {
+        state = state.copyWith(loading: true, error: "");
+      }
       Locale currentLocale = localeManagerController.getSelectedLocale();
 
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
+            pageNo: pageNumber,
               translate: "${currentLocale.languageCode}-${currentLocale.countryCode}"
           );
       if (eventListScreenParameter?.categoryId != null) {
@@ -73,10 +77,18 @@ class SelectedEventListScreenController
         },
         (r) {
           var eventsList = (r as GetAllListingsResponseModel).data;
+          List<Listing> existingEventList = state.eventsList;
+          if(eventsList!=null && eventsList.isNotEmpty){
+            existingEventList.addAll(eventsList);
+          } else {
+            pageNumber--;
+          }
           state = state.copyWith(
-              list: eventsList,
+              list: existingEventList,
               loading: false,
-              heading: eventListScreenParameter?.listHeading);
+              isMoreListLoading: false,
+              heading: eventListScreenParameter?.listHeading,
+              currentPageNo: pageNumber);
         },
       );
     } catch (error) {
@@ -106,5 +118,11 @@ class SelectedEventListScreenController
       }
     }
     state = state.copyWith(list: list);
+  }
+
+  void onLoadMoreList(SelectedEventListScreenParameter? eventListScreenParameter) async {
+    int currPageNo = state.currentPageNo;
+    currPageNo = currPageNo+1;
+    await getEventsList(eventListScreenParameter, currPageNo);
   }
 }

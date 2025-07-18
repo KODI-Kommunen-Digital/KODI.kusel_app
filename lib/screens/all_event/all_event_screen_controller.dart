@@ -26,16 +26,20 @@ class AllEventScreenController extends StateNotifier<AllEventScreenState> {
       required this.localeManagerController})
       : super(AllEventScreenState.empty());
 
-  Future<void> getEventsList() async {
+  Future<void> getEventsList(int pageNumber) async {
     try {
-      state = state.copyWith(isLoading: true);
-
+      if(pageNumber>1){
+        state = state.copyWith(isMoreListLoading: true);
+      } else {
+        state = state.copyWith(isLoading: true);
+      }
       Locale currentLocale = localeManagerController.getSelectedLocale();
 
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
-              translate: "${currentLocale.languageCode}-${currentLocale.countryCode}"
-          );
+              translate:
+                  "${currentLocale.languageCode}-${currentLocale.countryCode}",
+              pageNo: pageNumber);
       GetAllListingsResponseModel getAllListResponseModel =
           GetAllListingsResponseModel();
 
@@ -48,7 +52,18 @@ class AllEventScreenController extends StateNotifier<AllEventScreenState> {
         },
         (r) {
           var eventsList = (r as GetAllListingsResponseModel).data;
-          state = state.copyWith(listingList: eventsList, isLoading: false);
+
+          List<Listing> existingEventList = state.listingList;
+          if(eventsList!=null && eventsList.isNotEmpty){
+            existingEventList.addAll(eventsList);
+          } else {
+            pageNumber--;
+          }
+
+          state = state.copyWith(listingList: existingEventList,
+              isLoading: false,
+              isMoreListLoading: false,
+              currentPageNo: pageNumber);
         },
       );
     } catch (error) {
@@ -134,5 +149,10 @@ class AllEventScreenController extends StateNotifier<AllEventScreenState> {
       }
     }
     state = state.copyWith(listingList: list);
+  }
+  void onLoadMoreList(int currPageNo) async {
+    int currPageNo = state.currentPageNo;
+    currPageNo = currPageNo+1;
+    await getEventsList(currPageNo);
   }
 }

@@ -404,7 +404,7 @@ abstract class AppLocalizations {
   /// No description provided for @map_fav.
   ///
   /// In en, this message translates to:
-  /// **'Favoriten'**
+  /// **'Favorites'**
   String get map_fav;
 
   /// No description provided for @map_calendar.
@@ -514,6 +514,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'I live in the district...'**
   String get i_live_in_district;
+
+  /// No description provided for @i_live_in_district_onborading_type_page.
+  ///
+  /// In en, this message translates to:
+  /// **'live here in the district'**
+  String get i_live_in_district_onborading_type_page;
 
   /// No description provided for @welcome_text.
   ///
@@ -1445,11 +1451,107 @@ abstract class AppLocalizations {
   /// **'Load more'**
   String get digifit_trophies_load_more;
 
+  /// No description provided for @digifit_trophies_show_less.
+  ///
+  /// In en, this message translates to:
+  /// **'Show less'**
+  String get digifit_trophies_show_less;
+
   /// No description provided for @digifit_trophies_open.
   ///
   /// In en, this message translates to:
   /// **'open'**
   String get digifit_trophies_open;
+
+  /// No description provided for @digifit_exercise_details_open_station.
+  ///
+  /// In en, this message translates to:
+  /// **'Open stations in the course'**
+  String get digifit_exercise_details_open_station;
+
+  /// No description provided for @location_map_news.
+  ///
+  /// In en, this message translates to:
+  /// **'News'**
+  String get location_map_news;
+
+  /// No description provided for @location_map_events.
+  ///
+  /// In en, this message translates to:
+  /// **'Events'**
+  String get location_map_events;
+
+  /// No description provided for @location_map_clubs.
+  ///
+  /// In en, this message translates to:
+  /// **'Clubs'**
+  String get location_map_clubs;
+
+  /// No description provided for @location_map_regional_products.
+  ///
+  /// In en, this message translates to:
+  /// **'Regional Products'**
+  String get location_map_regional_products;
+
+  /// No description provided for @location_map_search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get location_map_search;
+
+  /// No description provided for @location_map_new_citizen.
+  ///
+  /// In en, this message translates to:
+  /// **'New citizen info'**
+  String get location_map_new_citizen;
+
+  /// No description provided for @location_map_lost_and_found.
+  ///
+  /// In en, this message translates to:
+  /// **'Lost and Found'**
+  String get location_map_lost_and_found;
+
+  /// No description provided for @location_map_company_portraits.
+  ///
+  /// In en, this message translates to:
+  /// **'Company portraits'**
+  String get location_map_company_portraits;
+
+  /// No description provided for @location_map_transport.
+  ///
+  /// In en, this message translates to:
+  /// **'Carpooling'**
+  String get location_map_transport;
+
+  /// No description provided for @location_map_offers.
+  ///
+  /// In en, this message translates to:
+  /// **'Offers'**
+  String get location_map_offers;
+
+  /// No description provided for @location_map_eat_drink.
+  ///
+  /// In en, this message translates to:
+  /// **'Eat or Drink'**
+  String get location_map_eat_drink;
+
+  /// No description provided for @location_map_free_time.
+  ///
+  /// In en, this message translates to:
+  /// **'Freetime and Tourism'**
+  String get location_map_free_time;
+
+  /// No description provided for @location_map_highlights.
+  ///
+  /// In en, this message translates to:
+  /// **'Highlights'**
+  String get location_map_highlights;
+
+  /// No description provided for @location_map_poi.
+  ///
+  /// In en, this message translates to:
+  /// **'POI'**
+  String get location_map_poi;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

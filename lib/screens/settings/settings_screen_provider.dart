@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/locale/locale_constant.dart';
 import 'package:kusel/locale/localization_manager.dart';
+import 'package:kusel/providers/guest_user_login_provider.dart';
 import 'package:kusel/providers/refresh_token_provider.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/settings/settings_screen_state.dart';
@@ -24,7 +25,8 @@ final settingsScreenProvider =
             signInStatusController: ref.read(signInStatusProvider.notifier),
             deleteAccountUseCase: ref.read(deleteAccountUseCaseProvider),
             refreshTokenProvider: ref.read(refreshTokenProvider),
-            tokenStatus: ref.read(tokenStatusProvider)));
+            tokenStatus: ref.read(tokenStatusProvider),
+            guestUserLogin: ref.read(guestUserLoginProvider)));
 
 class SettingsScreenProvider extends StateNotifier<SettingsScreenState> {
   LocaleManagerController localeManagerController;
@@ -35,6 +37,7 @@ class SettingsScreenProvider extends StateNotifier<SettingsScreenState> {
   DeleteAccountUseCase deleteAccountUseCase;
   RefreshTokenProvider refreshTokenProvider;
   TokenStatus tokenStatus;
+  GuestUserLogin guestUserLogin;
 
   SettingsScreenProvider(
       {required this.localeManagerController,
@@ -44,14 +47,22 @@ class SettingsScreenProvider extends StateNotifier<SettingsScreenState> {
       required this.signInStatusController,
       required this.deleteAccountUseCase,
       required this.refreshTokenProvider,
-      required this.tokenStatus})
+      required this.tokenStatus,
+      required this.guestUserLogin})
       : super(SettingsScreenState.empty());
 
-  logoutUser(void Function() callBack) async {
+  logoutUser(Future<void> Function() callBack,
+      {VoidCallback? onSuccess}) async {
+    state = state.copyWith(isLoading: true);
     await sharedPreferenceHelper.clear();
-    callBack();
-    isLoggedIn();
-    homeScreenProvider.getLoginStatus();
+    await callBack();
+
+    await guestUserLogin.getGuestUserToken();
+    state = state.copyWith(isLoading: false);
+
+    if (onSuccess != null) {
+      onSuccess();
+    }
   }
 
   void fetchCurrentLanguage() {
@@ -66,8 +77,8 @@ class SettingsScreenProvider extends StateNotifier<SettingsScreenState> {
             state.copyWith(selectedLanguage: LocaleConstant.german.displayName);
       }
     } else {
-
-      final languageCode = localeManagerController.getSelectedLocale().languageCode;
+      final languageCode =
+          localeManagerController.getSelectedLocale().languageCode;
 
       if (languageCode == LocaleConstant.english.languageCode) {
         state = state.copyWith(
@@ -76,7 +87,6 @@ class SettingsScreenProvider extends StateNotifier<SettingsScreenState> {
         state =
             state.copyWith(selectedLanguage: LocaleConstant.german.displayName);
       }
-
     }
   }
 
@@ -138,7 +148,10 @@ class SettingsScreenProvider extends StateNotifier<SettingsScreenState> {
       final res = right as DeleteAccountResponseModel;
 
       debugPrint("delete account response  = ${res.status}");
-      await logoutUser(() {});
+      await logoutUser(() async {
+        await isLoggedIn();
+        await homeScreenProvider.getLoginStatus();
+      });
       onSuccess();
     });
   }

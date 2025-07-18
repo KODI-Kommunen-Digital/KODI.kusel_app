@@ -1,5 +1,6 @@
 import 'package:core/preference_manager/preference_constant.dart';
 import 'package:core/preference_manager/shared_pref_helper.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
@@ -15,11 +16,13 @@ class TokenStatus {
 
   bool isAccessTokenExpired() {
     try {
+
       final token = sharedPreferenceHelper.getString(tokenKey);
 
       if (token != null) {
         final result =
             JwtDecoder.isExpired(token); // Gives true if token is expired
+
         return result;
       }
 

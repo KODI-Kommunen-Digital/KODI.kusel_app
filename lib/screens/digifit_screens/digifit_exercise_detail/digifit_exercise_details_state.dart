@@ -1,3 +1,4 @@
+import 'package:domain/model/request_model/digifit/digifit_update_exercise_request_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_exercise_details_response_model.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/enum/digifit_exercise_timer_state.dart';
 
@@ -15,6 +16,11 @@ class DigifitExerciseDetailsState {
   final int remainingPauseSecond;
   final TimerState timerState;
   final int time;
+  final bool isNetworkAvailable;
+  final DigifitUpdateExerciseRequestModel? digifitUpdateExerciseRequestModel;
+  final String createdAt;
+  final String updatedAt;
+  final List<String>? setTimeList;
 
   DigifitExerciseDetailsState(
       {required this.isLoading,
@@ -28,7 +34,13 @@ class DigifitExerciseDetailsState {
       required this.isScannerVisible,
       required this.locationId,
       required this.timerState,
-      required this.time});
+      required this.time,
+      required this.isNetworkAvailable,
+      required this.digifitUpdateExerciseRequestModel,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.setTimeList,
+      });
 
   factory DigifitExerciseDetailsState.empty() {
     return DigifitExerciseDetailsState(
@@ -43,7 +55,13 @@ class DigifitExerciseDetailsState {
         isScannerVisible: true,
         locationId: 0,
         timerState: TimerState.start,
-        time: 60);
+        time: 60,
+        isNetworkAvailable: true,
+        digifitUpdateExerciseRequestModel: null,
+        createdAt: '',
+        updatedAt: '',
+        setTimeList: [],
+    );
   }
 
   DigifitExerciseDetailsState copyWith(
@@ -59,7 +77,12 @@ class DigifitExerciseDetailsState {
       int? remainingPauseSecond,
       int? locationId,
       TimerState? timerState,
-      int? time}) {
+      int? time,
+      bool? isNetworkAvailable,
+      DigifitUpdateExerciseRequestModel? digifitUpdateExerciseRequestModel,
+      String? createdAt,
+      String? updatedAt,
+      List<String>? setTimeList}) {
     return DigifitExerciseDetailsState(
         isLoading: isLoading ?? this.isLoading,
         errorMessage: errorMessage ?? this.errorMessage,
@@ -75,6 +98,12 @@ class DigifitExerciseDetailsState {
         remainingPauseSecond: remainingPauseSecond ?? this.remainingPauseSecond,
         locationId: locationId ?? this.locationId,
         timerState: timerState ?? this.timerState,
-        time: time ?? this.time);
+        time: time ?? this.time,
+        isNetworkAvailable: isNetworkAvailable ?? this.isNetworkAvailable,
+        digifitUpdateExerciseRequestModel: digifitUpdateExerciseRequestModel ??
+            this.digifitUpdateExerciseRequestModel,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        setTimeList: setTimeList ?? this.setTimeList);
   }
 }

@@ -1,9 +1,13 @@
-import 'package:hive/hive.dart';
+import 'package:domain/model/request_model/digifit/digifit_update_exercise_request_model.dart';
+import 'package:domain/model/response_model/digifit/digifit_cache_data_response_model.dart';
+import 'package:domain/model/response_model/digifit/digifit_information_response_model.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final hiveBoxFunctionProvider = Provider((ref) => HiveBoxFunction());
 
 class HiveBoxFunction {
+
   Future<void> openBox(String name) async {
     await Hive.openBox(name);
   }
@@ -42,6 +46,18 @@ class HiveBoxFunction {
     }
   }
 
+  Future<void> registerAdapters() async {
+    Hive.registerAdapter(DigifitCacheDataResponseModelAdapter());
+    Hive.registerAdapter(DigifitInformationResponseModelAdapter());
+    Hive.registerAdapter(DigifitInformationDataModelAdapter());
+    Hive.registerAdapter(DigifitInformationUserStatsModelAdapter());
+    Hive.registerAdapter(DigifitInformationParcoursModelAdapter());
+    Hive.registerAdapter(DigifitInformationStationModelAdapter());
+    Hive.registerAdapter(DigifitInformationActionsModelAdapter());
+    Hive.registerAdapter(DigifitUpdateExerciseRequestModelAdapter());
+    Hive.registerAdapter(DigifitExerciseRecordModelAdapter());
+  }
+
   Future<bool> containsKey<T>(Box box, dynamic key) async {
     return box.containsKey(key) ;
   }
@@ -57,6 +73,12 @@ class HiveBoxFunction {
   Future<Map<dynamic,dynamic>> getAllBoxData(Box box)
   async{
     return  box.toMap();
+  }
+
+  Future<void> registerHiveAdapters() async {
+    if (!Hive.isAdapterRegistered(0)) {
+      Hive.registerAdapter(DigifitInformationDataModelAdapter());
+    }
   }
 
 }
