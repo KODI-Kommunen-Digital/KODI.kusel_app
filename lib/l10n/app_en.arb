@@ -231,7 +231,8 @@
   "location_map_news": "News",
   "location_map_events": "Events",
   "location_map_clubs": "Clubs",
-  "location_map_offer": "Offer",
+  "location_map_regional_products": "Regional Products",
+  "location_map_search": "Search",
   "location_map_new_citizen": "New citizen info",
   "location_map_lost_and_found": "Lost and Found",
   "location_map_company_portraits": "Company portraits",
@@ -240,7 +241,5 @@
   "location_map_eat_drink": "Eat or Drink",
   "location_map_free_time": "Freetime and Tourism",
   "location_map_highlights": "Highlights",
-  "location_map_poi": "POI",
-  "location_map_regional_products": "Regional Products",
-  "location_map_fitness": "Sports facilities"
+  "location_map_poi": "POI"
 }
