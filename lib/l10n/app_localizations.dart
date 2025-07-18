@@ -1487,11 +1487,17 @@ abstract class AppLocalizations {
   /// **'Clubs'**
   String get location_map_clubs;
 
-  /// No description provided for @location_map_offer.
+  /// No description provided for @location_map_regional_products.
   ///
   /// In en, this message translates to:
-  /// **'Offer'**
-  String get location_map_offer;
+  /// **'Regional Products'**
+  String get location_map_regional_products;
+
+  /// No description provided for @location_map_search.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get location_map_search;
 
   /// No description provided for @location_map_new_citizen.
   ///
@@ -1546,18 +1552,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'POI'**
   String get location_map_poi;
-
-  /// No description provided for @location_map_regional_products.
-  ///
-  /// In en, this message translates to:
-  /// **'Regional Products'**
-  String get location_map_regional_products;
-
-  /// No description provided for @location_map_fitness.
-  ///
-  /// In en, this message translates to:
-  /// **'Sports facilities'**
-  String get location_map_fitness;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

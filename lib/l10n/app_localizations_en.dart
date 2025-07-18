@@ -705,7 +705,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get location_map_clubs => 'Clubs';
 
   @override
-  String get location_map_offer => 'Offer';
+  String get location_map_regional_products => 'Regional Products';
+
+  @override
+  String get location_map_search => 'Search';
 
   @override
   String get location_map_new_citizen => 'New citizen info';
@@ -733,10 +736,4 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get location_map_poi => 'POI';
-
-  @override
-  String get location_map_regional_products => 'Regional Products';
-
-  @override
-  String get location_map_fitness => 'Sports facilities';
 }
