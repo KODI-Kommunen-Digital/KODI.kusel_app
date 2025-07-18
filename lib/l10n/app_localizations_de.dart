@@ -162,7 +162,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get to_map_view => 'Zur Kartenansicht';
 
   @override
-  String get map_fav => 'Favorites';
+  String get map_fav => 'Favoriten';
 
   @override
   String get map_calendar => 'Veranstal';
@@ -694,4 +694,49 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get digifit_exercise_details_open_station => 'Offene Stationen im Parcours';
+
+  @override
+  String get location_map_news => 'Nachricht';
+
+  @override
+  String get location_map_events => 'Veranstaltungen';
+
+  @override
+  String get location_map_clubs => 'Vereine';
+
+  @override
+  String get location_map_offer => 'Angebot';
+
+  @override
+  String get location_map_new_citizen => 'Neue Bürgerinfo';
+
+  @override
+  String get location_map_lost_and_found => 'Verloren und gefunden';
+
+  @override
+  String get location_map_company_portraits => 'Firmenporträts';
+
+  @override
+  String get location_map_transport => 'Fahrgemeinschaften';
+
+  @override
+  String get location_map_offers => 'Angebote';
+
+  @override
+  String get location_map_eat_drink => 'Essen oder trinken';
+
+  @override
+  String get location_map_free_time => 'Freizeit und Tourismus';
+
+  @override
+  String get location_map_highlights => 'Höhepunkte';
+
+  @override
+  String get location_map_poi => 'POI';
+
+  @override
+  String get location_map_regional_products => 'Regionale Produkte';
+
+  @override
+  String get location_map_fitness => 'Sportstätten';
 }

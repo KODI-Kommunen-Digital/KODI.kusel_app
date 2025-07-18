@@ -19,38 +19,44 @@ String getCategoryIconPath(int categoryId) {
 
   switch (categoryId) {
     case 1:
-      path = 'placeholder_category_icon';
+      path = 'fav_category_icon';
       break;
-    case 3:
+    case 2:
       path = 'event_category_icon';
       break;
+    case 3:
+      path = 'groups';
+      break;
     case 4:
-      path = 'placeholder_category_icon';
+      path = 'shopping_category_icon';
       break;
     case 5:
-      path = 'placeholder_category_icon';
+      path = 'glass_icon';
       break;
     case 6:
-      path = 'placeholder_category_icon';
+      path = 'cap_icon';
       break;
     case 7:
-      path = 'placeholder_category_icon';
+      path = 'paw_icon';
+      break;
+    case 8:
+      path = 'facilities_category_icon';
       break;
     case 9:
-      path = 'placeholder_category_icon';
+      path = 'transport_icon';
       break;
     case 10:
-      path = 'placeholder_category_icon';
+      path = 'fav_category_icon';
       break;
     case 11:
-      path = 'placeholder_category_icon';
-      break;
-    case 12:
-      path = 'placeholder_category_icon';
-      break;
-    case 13:
       path = 'gastro_category_icon';
       break;
+    case 12:
+      path = 'tourism_service_image';
+    case 13:
+      path = 'tourism_service_image';
+    case 14:
+      path = 'place_holder_icon';
     case 41:
       path = 'placeholder_category_icon';
       break;
