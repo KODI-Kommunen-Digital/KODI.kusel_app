@@ -15,6 +15,7 @@ class LocationScreenState {
   PanelController panelController;
   bool isSelectedFilterScreenLoading;
   bool isUserLoggedIn;
+  bool isSlidingUpPanelDragAllowed;
 
   LocationScreenState(
       this.allEventList,
@@ -26,11 +27,12 @@ class LocationScreenState {
       this.selectedEvent,
       this.panelController,
       this.isSelectedFilterScreenLoading,
-      this.isUserLoggedIn);
+      this.isUserLoggedIn,
+      this.isSlidingUpPanelDragAllowed);
 
   factory LocationScreenState.empty() {
     return LocationScreenState([], BottomSheetSelectedUIType.allEvent, null,
-        null, null, [], null, PanelController(), false, false);
+        null, null, [], null, PanelController(), false, false,true);
   }
 
   LocationScreenState copyWith(
@@ -46,7 +48,9 @@ class LocationScreenState {
       double? openPosition,
       PanelController? panelController,
       bool? isSelectedFilterScreenLoading,
-      bool? isUserLoggedIn}) {
+      bool? isUserLoggedIn,
+        bool? isSlidingUpPanelDragAllowed
+      }) {
     return LocationScreenState(
         allEventList ?? this.allEventList,
         bottomSheetSelectedUIType ?? this.bottomSheetSelectedUIType,
@@ -57,6 +61,7 @@ class LocationScreenState {
         selectedEvent ?? this.selectedEvent,
         panelController ?? this.panelController,
         isSelectedFilterScreenLoading ?? this.isSelectedFilterScreenLoading,
-        isUserLoggedIn ?? this.isUserLoggedIn);
+        isUserLoggedIn ?? this.isUserLoggedIn,
+    isSlidingUpPanelDragAllowed??this.isSlidingUpPanelDragAllowed);
   }
 }
