@@ -55,7 +55,7 @@ class DigifitExerciseDetailsState {
         isScannerVisible: true,
         locationId: 0,
         timerState: TimerState.start,
-        time: 10,
+        time: 60,
         isNetworkAvailable: true,
         digifitUpdateExerciseRequestModel: null,
         createdAt: '',
