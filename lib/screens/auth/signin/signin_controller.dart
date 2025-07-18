@@ -28,6 +28,7 @@ import 'package:domain/usecase/sigin/sigin_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/common_widgets/translate_message.dart';
+import 'package:kusel/providers/extract_deviceId/extract_deviceId_provider.dart';
 import 'package:kusel/screens/auth/signin/signin_state.dart';
 
 final signInScreenProvider = StateNotifierProvider
@@ -43,7 +44,8 @@ final signInScreenProvider = StateNotifierProvider
             ref.read(onboardingUserInterestsUseCaseProvider),
         onboardingCompleteUseCase: ref.read(onboardingCompleteUseCaseProvider),
         editUserDetailUseCase: ref.read(editUserDetailUseCaseProvider),
-        translateErrorMessage: ref.watch(translateErrorMessageProvider)));
+        translateErrorMessage: ref.watch(translateErrorMessageProvider),
+        extractDeviceIdProvider: ref.read(extractDeviceIdProvider)));
 
 class SignInController extends StateNotifier<SignInState> {
   SignInUseCase signInUseCase;
@@ -56,6 +58,7 @@ class SignInController extends StateNotifier<SignInState> {
   OnboardingCompleteUseCase onboardingCompleteUseCase;
   EditUserDetailUseCase editUserDetailUseCase;
   TranslateErrorMessage translateErrorMessage;
+  ExtractDeviceIdProvider extractDeviceIdProvider;
 
   SignInController(
       {required this.signInUseCase,
@@ -67,7 +70,8 @@ class SignInController extends StateNotifier<SignInState> {
       required this.onboardingUserInterestsUseCase,
       required this.onboardingCompleteUseCase,
       required this.editUserDetailUseCase,
-      required this.translateErrorMessage})
+      required this.translateErrorMessage,
+      required this.extractDeviceIdProvider})
       : super(SignInState.empty());
 
   updateShowPassword(bool value) {
@@ -81,8 +85,11 @@ class SignInController extends StateNotifier<SignInState> {
       required void Function(String message) error}) async {
     try {
       state = state.copyWith(showLoading: true);
-      SignInRequestModel sigInRequestModel =
-          SignInRequestModel(username: userName, password: password);
+
+      final deviceId = await extractDeviceIdProvider.extractDeviceId();
+
+      SignInRequestModel sigInRequestModel = SignInRequestModel(
+          username: userName, password: password, deviceId: deviceId);
 
       SignInResponseModel signInResponseModel = SignInResponseModel();
 
@@ -91,11 +98,11 @@ class SignInController extends StateNotifier<SignInState> {
 
       result.fold((l) async {
         final text =
-        await translateErrorMessage.translateErrorMessage(l.toString());
+            await translateErrorMessage.translateErrorMessage(l.toString());
         state = state.copyWith(showLoading: false);
         error(text);
         debugPrint('sign in user fold Exception = $l');
-      }, (r) {
+      }, (r) async {
         state = state.copyWith(showLoading: false);
         final response = (r as SignInResponseModel);
 
@@ -105,10 +112,12 @@ class SignInController extends StateNotifier<SignInState> {
           final refreshToken = response.data?.refreshToken ?? "";
           final isOnboardingComplete = response.data?.isOnBoarded ?? false;
 
-          sharedPreferenceHelper.setString(refreshTokenKey, refreshToken);
-          sharedPreferenceHelper.setString(tokenKey, token);
-          sharedPreferenceHelper.setInt(userIdKey, userId);
-          sharedPreferenceHelper.setBool(onboardingKey, isOnboardingComplete);
+          await sharedPreferenceHelper.setString(refreshTokenKey, refreshToken);
+          await sharedPreferenceHelper.setString(tokenKey, token);
+          await sharedPreferenceHelper.setInt(userIdKey, userId);
+          await sharedPreferenceHelper.setBool(
+              onboardingKey, isOnboardingComplete);
+          await sharedPreferenceHelper.setBool(isUserSignedIn, true);
           success();
         }
       });
@@ -155,9 +164,9 @@ class SignInController extends StateNotifier<SignInState> {
             },
             (right) async {
               final res = right as RefreshTokenResponseModel;
-              sharedPreferenceHelper.setString(
+              await sharedPreferenceHelper.setString(
                   tokenKey, res.data?.accessToken ?? "");
-              sharedPreferenceHelper.setString(
+              await sharedPreferenceHelper.setString(
                   refreshTokenKey, res.data?.refreshToken ?? "");
               return true;
             },

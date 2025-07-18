@@ -87,7 +87,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                 onBackPress: () {
                   ref.read(navigationProvider).removeTopPage(context: context);
                 },
-                isFavVisible: state.isUserLoggedIn,
+                isFavVisible: true,
                 isFav: ortDetailDataModel?.isFavorite ?? false,
                 onFavChange: () {
                   ref.watch(favouriteCitiesNotifier.notifier).toggleFavorite(
@@ -177,7 +177,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                       .read(ortDetailScreenControllerProvider.notifier)
                       .setIsFavoriteEvent(isFav, eventId);
                 },
-                isFavVisible: (state.isUserLoggedIn) ? false : true,
+                isFavVisible: true,
               ),
             if (state.newsList != null && state.newsList!.isNotEmpty)
               EventsListSectionWidget(
@@ -218,7 +218,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                                 .getNews(widget.ortDetailScreenParams.ortId);
                           }));
                 },
-                isFavVisible: state.isUserLoggedIn,
+                isFavVisible: true,
                 onFavClickCallback: () {
                   ref
                       .read(ortDetailScreenControllerProvider.notifier)
@@ -245,10 +245,10 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
               padding: EdgeInsets.symmetric(horizontal: 12.w),
               child: CityDetailLocationWidget(
                 phoneNumber: '+49 6381 424-0',
-                webUrl: state.ortDetailDataModel?.websiteUrl??"",
+                webUrl: state.ortDetailDataModel?.websiteUrl ?? "",
                 address: 'Trierer Str. 49-51, 66869 Kusel',
                 websiteText: AppLocalizations.of(context).visit_website,
-                calendarText: state.ortDetailDataModel?.openUntil??"",
+                calendarText: state.ortDetailDataModel?.openUntil ?? "",
               ),
             ),
             20.verticalSpace,
@@ -361,6 +361,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                           path: fullImageScreenPath,
                           params: FullImageScreenParams(
                             imageUrL: state.ortDetailDataModel!.image!,
+                            sourceId: 1
                           ),
                           context: context);
                     },
@@ -551,7 +552,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                         showErrorToast(message: message, context: context);
                       });
                     },
-                    isFavouriteVisible: state.isUserLoggedIn,
+                    isFavouriteVisible: true,
                     sourceId: listing.sourceId!,
                   ),
                 );

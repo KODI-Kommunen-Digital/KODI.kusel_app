@@ -7,9 +7,11 @@ import 'package:kusel/screens/location/location_screen_provider.dart';
 import '../../../common_widgets/category_icon.dart';
 import '../../../common_widgets/image_utility.dart';
 import '../bottom_sheet_selected_ui_type.dart';
+import '../filter_category.dart';
 
 class AllFilterScreen extends ConsumerStatefulWidget {
-  const AllFilterScreen({super.key});
+  ScrollController scrollController;
+   AllFilterScreen({super.key,required this.scrollController});
 
   @override
   ConsumerState<AllFilterScreen> createState() => _AllFilterScreenState();
@@ -36,39 +38,39 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
   }
 
   _buildBody(BuildContext context) {
-    return Column(
+    return ListView(
+      controller: widget.scrollController,
       children: [
-        16.verticalSpace,
-        Container(
-          height: 5.h,
-          width: 100.w,
-          decoration: BoxDecoration(
+        Column(children: [
+          16.verticalSpace,
+          Container(
+            height: 5.h,
+            width: 100.w,
+            padding: EdgeInsets.only(left: 8.w, right: 18.w, bottom: 40.h),
+            decoration: BoxDecoration(
               color: Theme.of(context).textTheme.labelMedium!.color,
-              borderRadius: BorderRadius.circular(10.r)),
-        ),
-        32.verticalSpace,
-        Expanded(
-          child: GridView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: ref
-                  .watch(locationScreenProvider)
-                  .distinctFilterCategoryList
-                  .length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
-                  mainAxisExtent: 70.h,
-                  mainAxisSpacing: 16.h),
-              itemBuilder: (context, index) {
-                final listing = ref
-                    .read(locationScreenProvider)
-                    .distinctFilterCategoryList[index];
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+          ),
+          10.verticalSpace,
+          GridView.builder(
+            shrinkWrap: true,
+            itemCount: staticFilterCategoryList(context).length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              mainAxisExtent: 90.h,
+              crossAxisSpacing: 20.h,
+              mainAxisSpacing: 16.h,
+            ),
+            itemBuilder: (context, index) {
+              final listing = staticFilterCategoryList(context)[index];
+              final imagePath = getCategoryIconPath(listing.categoryId);
 
-                final path = getCategoryIconPath(listing.categoryId ?? 0);
-
-                return filterCard(path, listing.categoryId?.toString() ?? "",
-                    listing.categoryName?.toString() ?? "");
-              }),
-        )
+              return filterCard(
+                  imagePath, listing.categoryId.toString(), listing.categoryName);
+            },
+          ),
+        ])
       ],
     );
   }
@@ -82,7 +84,8 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
         ref
             .read(locationScreenProvider.notifier)
             .updateBottomSheetSelectedUIType(
-                BottomSheetSelectedUIType.eventList);
+            BottomSheetSelectedUIType.eventList);
+
       },
       child: Column(
         children: [
@@ -91,15 +94,20 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
             shape: const CircleBorder(),
             color: Theme.of(context).colorScheme.onPrimary, // background color
             child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 14.h),
+              padding:  EdgeInsets.symmetric(vertical: 8.h, horizontal: 8.w),
+              child: SizedBox(
+                height: 20.h,
+                width: 20.w,
                 child: ImageUtil.loadLocalSvgImage(
                   imageUrl: image,
                   context: context,
                   fit: BoxFit.contain,
-                )),
+                ),
+              ),
+            ),
           ),
           5.verticalSpace,
-          textRegularMontserrat(text: categoryName, fontSize: 13),
+          textRegularMontserrat(text: categoryName, fontSize: 13, textAlign: TextAlign.center, textOverflow: TextOverflow.visible),
         ],
       ),
     );

@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
+import 'package:kusel/database/digifit_cache_data/digifit_cache_data_controller.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/screens/explore/explore_card_view.dart';
+import 'package:kusel/screens/explore/explore_controller.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
 
 import '../../app_router.dart';
@@ -168,7 +170,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
         };
         break;
       case 5:
-        onTap = () {
+        onTap = () async {
           ref.read(navigationProvider).navigateUsingPath(
             path: digifitStartScreenPath,
             context: context,

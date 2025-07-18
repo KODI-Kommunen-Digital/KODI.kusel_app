@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/web_view_page.dart';
 import 'package:kusel/screens/all_city/all_city_screen.dart';
 import 'package:kusel/screens/all_city/all_city_screen_controller.dart';
@@ -36,6 +35,7 @@ import 'package:kusel/screens/mein_ort/mein_ort_screen.dart';
 import 'package:kusel/screens/mobility_screen/mobility_screen.dart';
 import 'package:kusel/screens/municipal_party_detail/municipal_detail_screen.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
+import 'package:kusel/screens/no_network/network_status_screen.dart';
 import 'package:kusel/screens/onboarding/onboarding_finish_page.dart';
 import 'package:kusel/screens/onboarding/onboarding_loading_page.dart';
 import 'package:kusel/screens/onboarding/onboarding_screen.dart';
@@ -102,7 +102,6 @@ const mobilityScreenPath = "mobilityScreenPath";
 const participateScreenPath = "participateScreenPath";
 const digifitStartScreenPath = "digifitStartScreenPath";
 const digifitTrophiesScreenPath = "digifitTrophiesScreenPath";
-
 
 // DigiFit screen path
 const digifitOverViewScreenPath = "/digifitOverViewScreenPath";
@@ -300,3 +299,7 @@ final dashboardRoutes = StatefulShellRoute.indexedStack(
     ),
   ],
 );
+
+
+
+
