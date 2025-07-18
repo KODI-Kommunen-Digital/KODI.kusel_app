@@ -162,7 +162,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get to_map_view => 'To map view';
 
   @override
-  String get map_fav => 'Favoriten';
+  String get map_fav => 'Favorites';
 
   @override
   String get map_calendar => 'Event';
@@ -694,4 +694,49 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get digifit_exercise_details_open_station => 'Open stations in the course';
+
+  @override
+  String get location_map_news => 'News';
+
+  @override
+  String get location_map_events => 'Events';
+
+  @override
+  String get location_map_clubs => 'Clubs';
+
+  @override
+  String get location_map_offer => 'Offer';
+
+  @override
+  String get location_map_new_citizen => 'New citizen info';
+
+  @override
+  String get location_map_lost_and_found => 'Lost and Found';
+
+  @override
+  String get location_map_company_portraits => 'Company portraits';
+
+  @override
+  String get location_map_transport => 'Carpooling';
+
+  @override
+  String get location_map_offers => 'Offers';
+
+  @override
+  String get location_map_eat_drink => 'Eat or Drink';
+
+  @override
+  String get location_map_free_time => 'Freetime and Tourism';
+
+  @override
+  String get location_map_highlights => 'Highlights';
+
+  @override
+  String get location_map_poi => 'POI';
+
+  @override
+  String get location_map_regional_products => 'Regional Products';
+
+  @override
+  String get location_map_fitness => 'Sports facilities';
 }
