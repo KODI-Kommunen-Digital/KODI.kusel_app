@@ -35,6 +35,7 @@ class EventsListSectionWidget extends ConsumerStatefulWidget {
   void Function()? onLoadMoreTap;
   final bool isMoreListLoading;
   final int pageSize;
+  ScrollController? scrollController;
 
   EventsListSectionWidget(
       {super.key,
@@ -55,7 +56,8 @@ class EventsListSectionWidget extends ConsumerStatefulWidget {
       this.isMultiplePagesList = false,
       this.onLoadMoreTap,
       this.isMoreListLoading = false,
-      this.pageSize = 9
+      this.pageSize = 9,
+        this.scrollController
       });
 
   @override
@@ -86,6 +88,7 @@ class _EventsListSectionWidgetState
           ),
           ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
+            controller: widget.scrollController,
             shrinkWrap: widget.shrinkWrap ?? true,
             itemCount: 4,
             itemBuilder: (_, index) => eventCartShimmerEffect(),

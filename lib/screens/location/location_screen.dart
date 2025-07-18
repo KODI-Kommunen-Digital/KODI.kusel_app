@@ -25,12 +25,28 @@ class LocationScreen extends ConsumerStatefulWidget {
 }
 
 class _ExploreScreenState extends ConsumerState<LocationScreen> {
+  final ScrollController _innerScrollController = ScrollController();
+
   @override
   void initState() {
+    _innerScrollController.addListener(_handleScroll);
     Future.microtask(() {
       ref.read(locationScreenProvider.notifier).isUserLoggedIn();
     });
     super.initState();
+  }
+
+  void _handleScroll() {
+    if (_innerScrollController.hasClients) {
+      final isAtTop = _innerScrollController.offset <=
+          _innerScrollController.position.minScrollExtent + 10;
+      if (ref.read(locationScreenProvider).isSlidingUpPanelDragAllowed !=
+          isAtTop) {
+        ref
+            .read(locationScreenProvider.notifier)
+            .updateSlidingUpPanelIsDragStatus(isAtTop);
+      }
+    }
   }
 
   @override
@@ -44,6 +60,8 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
   _buildBody(BuildContext context) {
     return SafeArea(
       child: SlidingUpPanel(
+        isDraggable:
+            ref.watch(locationScreenProvider).isSlidingUpPanelDragAllowed,
         minHeight: 200.h,
         maxHeight: 550.h,
         defaultPanelState: PanelState.CLOSED,
@@ -57,12 +75,12 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               initialZoom: 12.0,
-              onMapTap: (){},
+              onMapTap: () {},
               markersList: ref
                   .watch(locationScreenProvider)
                   .allEventList
                   .where((value) =>
-              value.latitude != null && value.longitude != null)
+                      value.latitude != null && value.longitude != null)
                   .map((value) {
                 final lat = value.latitude!;
                 final long = value.longitude!;
@@ -83,15 +101,12 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
                       ref
                           .read(locationScreenProvider.notifier)
                           .updateBottomSheetSelectedUIType(
-                          BottomSheetSelectedUIType.eventDetail);
+                              BottomSheetSelectedUIType.eventDetail);
                     },
-                    child: CustomMapMarker(
-                      categoryId : categoryId
-                    ),
+                    child: CustomMapMarker(categoryId: categoryId),
                   ),
                 );
               }).toList(),
-
             )
           ],
         ),
@@ -125,14 +140,16 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
       case BottomSheetSelectedUIType.eventList:
         widget = SelectedFilterScreen(
           selectedFilterScreenParams: SelectedFilterScreenParams(
-              categoryId: locationScreenState.selectedCategoryId ?? 0),
+              categoryId: locationScreenState.selectedCategoryId ?? 0), scrollController: _innerScrollController,
         );
         break;
       case BottomSheetSelectedUIType.eventDetail:
         widget = SelectedEventScreen();
         break;
       default:
-        widget = AllFilterScreen();
+        widget = AllFilterScreen(
+          scrollController: _innerScrollController,
+        );
         break;
     }
     return widget;
