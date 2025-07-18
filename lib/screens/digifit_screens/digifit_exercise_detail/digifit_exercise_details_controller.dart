@@ -91,7 +91,7 @@ class DigifitExerciseDetailsController
         }
 
       } else {
-      manageDataLocally(locationId, equipmentId);
+      manageDataLocally(locationId, equipmentId, slug);
     }
       } catch (e) {
         debugPrint('[DigifitExerciseDetailsController] Fetch Exception: $e');
@@ -137,7 +137,7 @@ class DigifitExerciseDetailsController
       }
   }
 
-  Future<void> manageDataLocally(int? locationId, int? equipmentId) async {
+  Future<void> manageDataLocally(int? locationId, int? equipmentId, String? slug) async {
     bool isCacheDataAvailable =
     await digifitCacheDataController.isAllDigifitCacheDataAvailable();
     if (!isCacheDataAvailable) {
@@ -153,58 +153,78 @@ class DigifitExerciseDetailsController
       return;
     }
     extractDataFromDigifitCache(
-              locationId, equipmentId, digifitCacheDataResponseModel);
+              locationId, equipmentId, digifitCacheDataResponseModel, slug);
     debugPrint('[DigifitExerciseDetailsController] Data is coming from cache');
   }
 
-  void extractDataFromDigifitCache(int? locationId,
-      int? equipmentId,
-      DigifitCacheDataResponseModel digifitCacheDataResponseModel) {
 
-    // Extract parcoursModel by locationId
+  void extractDataFromDigifitCache(
+      int? locationId,
+      int? equipmentId,
+      DigifitCacheDataResponseModel digifitCacheDataResponseModel,
+      String? slug,
+      ) {
     final parcoursList = digifitCacheDataResponseModel.data.parcours;
     DigifitInformationParcoursModel? parcoursModel;
+    List<DigifitInformationStationModel>? digifitStationModelList;
+    DigifitInformationStationModel? digifitStationModel;
 
-    if (parcoursList != null) {
-      try {
-        parcoursModel = parcoursList.firstWhere(
-                (item) => item != null && item.locationId == locationId);
-      } catch (e) {
-        parcoursModel = null;
+    if (locationId != null) {
+      if (parcoursList != null) {
+        try {
+          parcoursModel = parcoursList.firstWhere(
+                (item) => item.locationId == locationId,
+            orElse: () => DigifitInformationParcoursModel(),
+          );
+        } catch (e) {
+          parcoursModel = null;
+        }
+      }
+      digifitStationModelList = parcoursModel?.stations;
+      digifitStationModel = digifitStationModelList?.firstWhere(
+            (item) => item.id == equipmentId,
+        orElse: () => DigifitInformationStationModel(),
+      );
+    } else {
+      if (parcoursList != null && slug != null) {
+        for (final parcours in parcoursList) {
+          for (final station in parcours.stations ?? []) {
+            if (station.qrCodeIdentifier == slug) {
+              digifitStationModel = station;
+              break;
+            }
+          }
+          if (digifitStationModel != null) break;
+        }
       }
     }
-    List<DigifitInformationStationModel>? digifitStationModelList = parcoursModel?.stations;
-    DigifitInformationStationModel? digifitStationModel = digifitStationModelList
-        ?.firstWhere(
-          (item) => item.id == equipmentId,
-      orElse: () => DigifitInformationStationModel(),
-    );
 
     DigifitExerciseRecommendationModel recommendation =
-        DigifitExerciseRecommendationModel(
-            sets: digifitStationModel?.sets.toString() ?? '',
-          repetitions: digifitStationModel?.repetitions.toString() ?? ''
-        );
+    DigifitExerciseRecommendationModel(
+      sets: digifitStationModel?.sets ?? '',
+      repetitions: digifitStationModel?.repetitions ?? '',
+    );
 
     DigifitExerciseUserProgressModel userProgress = DigifitExerciseUserProgressModel(
       isCompleted: digifitStationModel?.isCompleted ?? false,
-      repetitionsPerSet: digifitStationModel?.recommendedReps ?? 0
+      repetitionsPerSet: digifitStationModel?.recommendedReps ?? 0,
     );
-    DigifitExerciseEquipmentModel digifitExerciseEquipmentModel = DigifitExerciseEquipmentModel(
+    DigifitExerciseEquipmentModel digifitExerciseEquipmentModel =
+    DigifitExerciseEquipmentModel(
       id: digifitStationModel?.id ?? 0,
       name: digifitStationModel?.name ?? '',
-      machineVideoUrl: digifitStationModel?.machineImageUrl ??'',
+      machineVideoUrl: digifitStationModel?.machineImageUrl ?? '',
       qrCodeIdentifier: digifitStationModel?.qrCodeIdentifier ?? '',
       description: digifitStationModel?.description ?? '',
       recommendation: recommendation,
       userProgress: userProgress,
-      isFavorite: digifitStationModel?.isFavorite ?? false
+      isFavorite: digifitStationModel?.isFavorite ?? false,
     );
     state = state.copyWith(
       isLoading: false,
       digifitExerciseEquipmentModel: digifitExerciseEquipmentModel,
       totalSetNumber: digifitStationModel?.recommendedSets,
-      locationId: locationId
+      locationId: locationId,
     );
   }
 
