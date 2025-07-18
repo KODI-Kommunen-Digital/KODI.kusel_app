@@ -19,47 +19,44 @@ String getCategoryIconPath(int categoryId) {
 
   switch (categoryId) {
     case 1:
-      path = 'fav_category_icon';
-      break;
-    case 2:
-      path = 'event_category_icon';
-      break;
-    case 3:
-      path = 'groups';
-      break;
-    case 4:
-      path = 'shopping_category_icon';
-      break;
-    case 5:
-      path = 'glass_icon';
-      break;
-    case 6:
-      path = 'cap_icon';
-      break;
-    case 7:
-      path = 'paw_icon';
-      break;
-    case 8:
-      path = 'facilities_category_icon';
-      break;
-    case 9:
-      path = 'transport_icon';
-      break;
-    case 10:
-      path = 'fav_category_icon';
-      break;
-    case 11:
-      path = 'gastro_category_icon';
-      break;
-    case 12:
-      path = 'tourism_service_image';
-    case 13:
-      path = 'tourism_service_image';
-    case 14:
-      path = 'place_holder_icon';
-    case 41:
       path = 'placeholder_category_icon';
       break;
+    case 3:
+      path = 'event_category_icon';
+      break;
+    case 4:
+      path = 'placeholder_category_icon';
+      break;
+    case 5:
+      path = 'placeholder_category_icon';
+      break;
+    case 6:
+      path = 'search_icon';
+      break;
+    case 7:
+      path = 'placeholder_category_icon';
+      break;
+    case 9:
+      path = 'paw_icon';
+      break;
+    case 10:
+      path = 'facilities_category_icon';
+      break;
+    case 11:
+      path = 'transport_icon';
+      break;
+    case 12:
+      path = 'placeholder_category_icon';
+      break;
+    case 13:
+      path = 'gastro_category_icon';
+      break;
+    case 17:
+      path = 'tourism_service_image';
+    case 41:
+      path = 'placeholder_category_icon';
+    case 48:
+      path = 'place_holder_icon';
     default:
       path = 'placeholder_category_icon'; // Fallback icon
       break;
