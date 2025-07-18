@@ -108,7 +108,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get send_feedback => 'Feedback senden';
 
   @override
-  String get no_data => 'No data';
+  String get no_data => 'Keine Daten';
 
   @override
   String get events => 'Aktuelle Veranstaltungen';
