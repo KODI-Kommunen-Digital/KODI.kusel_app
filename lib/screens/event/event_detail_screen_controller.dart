@@ -54,12 +54,7 @@ class EventDetailScreenController
   TokenStatus tokenStatus;
   RefreshTokenUseCase refreshTokenUseCase;
 
-  Future<void> fetchAddress() async {
-    String result = await getAddressFromLatLng(
-        state.eventDetails.latitude ?? EventLatLong.kusel.latitude,
-        state.eventDetails.longitude ?? EventLatLong.kusel.longitude);
-    state = state.copyWith(address: result);
-  }
+
 
   Future<void> getEventDetails(int? eventId) async {
     state = state.copyWith(loading: true);

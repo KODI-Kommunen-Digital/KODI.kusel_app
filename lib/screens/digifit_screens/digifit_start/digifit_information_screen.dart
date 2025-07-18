@@ -14,7 +14,6 @@ import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/offline_router.dart';
 import 'package:kusel/providers/digifit_equipment_fav_provider.dart';
 import 'package:kusel/screens/digifit_screens/digifit_start/digifit_information_controller.dart';
-import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
 
 import '../../../common_widgets/digifit/digifit_map_card.dart';

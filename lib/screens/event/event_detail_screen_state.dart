@@ -2,7 +2,6 @@ import 'package:domain/model/response_model/event_details/event_details_response
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 
 class EventDetailScreenState {
-  String address;
   String error;
   bool loading;
   EventData eventDetails;
@@ -10,15 +9,15 @@ class EventDetailScreenState {
   Map<int, List<Listing>> groupedEvents;
   bool isFavourite;
 
-  EventDetailScreenState(this.address, this.error, this.loading,
+  EventDetailScreenState( this.error, this.loading,
       this.eventDetails, this.eventsList, this.groupedEvents, this.isFavourite);
 
   factory EventDetailScreenState.empty() {
-    return EventDetailScreenState('', '', false, EventData(), [], {}, false);
+    return EventDetailScreenState( '', false, EventData(), [], {}, false);
   }
 
   EventDetailScreenState copyWith(
-      {String? address,
+      {
       String? error,
       bool? loading,
       EventData? eventDetails,
@@ -27,7 +26,6 @@ class EventDetailScreenState {
       bool? isFavourite
       }) {
     return EventDetailScreenState(
-        address ?? this.address,
         error ?? this.error,
         loading ?? this.loading,
         eventDetails ?? this.eventDetails,
