@@ -10,7 +10,8 @@ import '../bottom_sheet_selected_ui_type.dart';
 import '../filter_category.dart';
 
 class AllFilterScreen extends ConsumerStatefulWidget {
-  const AllFilterScreen({super.key});
+  ScrollController scrollController;
+   AllFilterScreen({super.key,required this.scrollController});
 
   @override
   ConsumerState<AllFilterScreen> createState() => _AllFilterScreenState();
@@ -37,39 +38,40 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
   }
 
   _buildBody(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(children: [
-        16.verticalSpace,
-        Container(
-          height: 5.h,
-          width: 100.w,
-          padding: EdgeInsets.only(left: 8.w, right: 18.w, bottom: 40.h),
-          decoration: BoxDecoration(
-            color: Theme.of(context).textTheme.labelMedium!.color,
-            borderRadius: BorderRadius.circular(10.r),
+    return ListView(
+      controller: widget.scrollController,
+      children: [
+        Column(children: [
+          16.verticalSpace,
+          Container(
+            height: 5.h,
+            width: 100.w,
+            padding: EdgeInsets.only(left: 8.w, right: 18.w, bottom: 40.h),
+            decoration: BoxDecoration(
+              color: Theme.of(context).textTheme.labelMedium!.color,
+              borderRadius: BorderRadius.circular(10.r),
+            ),
           ),
-        ),
-        32.verticalSpace,
-        GridView.builder(
-          physics: NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: staticFilterCategoryList(context).length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            mainAxisExtent: 90.h,
-            crossAxisSpacing: 20.h,
-            mainAxisSpacing: 16.h,
-          ),
-          itemBuilder: (context, index) {
-            final listing = staticFilterCategoryList(context)[index];
-            final imagePath = getCategoryIconPath(listing.categoryId);
+          10.verticalSpace,
+          GridView.builder(
+            shrinkWrap: true,
+            itemCount: staticFilterCategoryList(context).length,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              mainAxisExtent: 90.h,
+              crossAxisSpacing: 20.h,
+              mainAxisSpacing: 16.h,
+            ),
+            itemBuilder: (context, index) {
+              final listing = staticFilterCategoryList(context)[index];
+              final imagePath = getCategoryIconPath(listing.categoryId);
 
-            return filterCard(
-                imagePath, listing.categoryId.toString(), listing.categoryName);
-          },
-        ),
-        50.verticalSpace,
-      ]),
+              return filterCard(
+                  imagePath, listing.categoryId.toString(), listing.categoryName);
+            },
+          ),
+        ])
+      ],
     );
   }
 
