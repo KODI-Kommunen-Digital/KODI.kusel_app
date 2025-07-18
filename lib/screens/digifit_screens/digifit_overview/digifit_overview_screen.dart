@@ -52,24 +52,33 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const ClampingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildClipper(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildDigifitTrophiesScreenUi(),
-                  30.verticalSpace,
-                  FeedbackCardWidget(
-                    height: 270.h,
-                    onTap: () {},
-                  ),
-                ],
-              ),
-            ],
+        child: RefreshIndicator(
+          onRefresh: () async {
+            await ref
+                .read(digifitOverviewScreenControllerProvider.notifier)
+                .fetchDigifitOverview(widget
+                        .digifitOverviewScreenParams.parcoursModel.locationId ??
+                    0);
+          },
+          child: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildClipper(),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildDigifitTrophiesScreenUi(),
+                    30.verticalSpace,
+                    FeedbackCardWidget(
+                      height: 270.h,
+                      onTap: () {},
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

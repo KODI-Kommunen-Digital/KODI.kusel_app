@@ -229,4 +229,9 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
 
     return list;
   }
+
+  updateSlidingUpPanelIsDragStatus(bool value)
+  {
+    state = state.copyWith(isSlidingUpPanelDragAllowed: value);
+  }
 }

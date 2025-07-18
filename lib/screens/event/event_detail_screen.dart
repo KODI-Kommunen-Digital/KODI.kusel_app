@@ -48,11 +48,6 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
           .read(
               eventDetailScreenProvider(widget.eventScreenParams.event?.id ?? 0)
                   .notifier)
-          .fetchAddress();
-      ref
-          .read(
-              eventDetailScreenProvider(widget.eventScreenParams.event?.id ?? 0)
-                  .notifier)
           .getRecommendedList();
     });
     super.initState();
@@ -191,11 +186,9 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                 fontSize: 16),
           ),
           15.verticalSpace,
-          // state.loading
-          //     ? locationCardShimmerEffect(context)
-          //     :
+
           LocationCardWidget(
-            address: state.address,
+            address: state.eventDetails.address??"-",
             websiteText: AppLocalizations.of(context).visit_website,
             websiteUrl: state.eventDetails.website ?? "",
             latitude:
