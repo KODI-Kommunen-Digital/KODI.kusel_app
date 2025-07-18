@@ -1,7 +1,7 @@
+import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:core/token_status.dart';
 import 'package:domain/model/request_model/digifit/digifit_equipment_fav_request_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_equipment_fav_response_model.dart';
-import 'package:domain/model/response_model/digifit/digifit_overview_response_model.dart';
 import 'package:domain/usecase/digifit/digifit_equipment_fav_usecase.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,17 +10,20 @@ import 'package:kusel/providers/refresh_token_provider.dart';
 final digifitEquipmentFavProvider = Provider((ref) => DigifitEquipmentFav(
     refreshTokenProvider: ref.read(refreshTokenProvider),
     tokenStatus: ref.read(tokenStatusProvider),
-    digifitEquipmentFavUseCase: ref.read(digifitEquipmentFavUseCaseProvider)));
+    digifitEquipmentFavUseCase: ref.read(digifitEquipmentFavUseCaseProvider),
+    signInStatusController: ref.read(signInStatusProvider.notifier)));
 
 class DigifitEquipmentFav {
   RefreshTokenProvider refreshTokenProvider;
   TokenStatus tokenStatus;
   DigifitEquipmentFavUseCase digifitEquipmentFavUseCase;
+  SignInStatusController signInStatusController;
 
   DigifitEquipmentFav(
       {required this.refreshTokenProvider,
       required this.tokenStatus,
-      required this.digifitEquipmentFavUseCase});
+      required this.digifitEquipmentFavUseCase,
+      required this.signInStatusController});
 
   Future<void> changeEquipmentFavStatus(
       {required Future<void> Function(bool, DigifitEquipmentFavParams)
@@ -28,8 +31,9 @@ class DigifitEquipmentFav {
       required DigifitEquipmentFavParams params}) async {
     try {
       final status = tokenStatus.isAccessTokenExpired();
+      final signInStatus = await signInStatusController.isUserLoggedIn();
 
-      if (status) {
+      if (status && signInStatus) {
         refreshTokenProvider.getNewToken(
             onError: () {},
             onSuccess: () async {

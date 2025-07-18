@@ -1,6 +1,7 @@
 import 'package:core/preference_manager/preference_constant.dart';
 import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:core/sign_in_status/sign_in_status_state.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final signInStatusProvider = StateNotifierProvider.autoDispose<
@@ -15,7 +16,7 @@ class SignInStatusController extends StateNotifier<SignInStatusState> {
       : super(SignInStatusState.empty());
 
   Future<bool> isUserLoggedIn() async {
-    final token = sharedPreferenceHelper.getString(tokenKey);
-    return (token != null && token.isNotEmpty) ? true : false;
+    final status = sharedPreferenceHelper.getBool(isUserSignedIn);
+    return (status == null) ? false : status;
   }
 }

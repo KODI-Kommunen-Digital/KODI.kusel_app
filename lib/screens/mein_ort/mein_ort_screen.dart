@@ -305,7 +305,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                         },
                       );
                     },
-                    isFavouriteVisible: state.isUserLoggedIn,
+                    isFavouriteVisible: true,
                     sourceId: 1,
                     imageFit: BoxFit.contain,
                     description: '',
@@ -404,9 +404,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                                 }));
                   },
                   isFavourite: city.isFavorite,
-                  isFavouriteVisible: ref
-                      .read(favouriteCitiesNotifier.notifier)
-                      .showFavoriteIcon(),
+                  isFavouriteVisible: true,
                   onFavoriteTap: () {
                     ref
                         .watch(favouriteCitiesNotifier.notifier)

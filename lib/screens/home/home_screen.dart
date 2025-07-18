@@ -1,6 +1,5 @@
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:flutter/material.dart';
-import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
@@ -9,13 +8,12 @@ import 'package:kusel/common_widgets/event_list_section_widget.dart';
 import 'package:kusel/common_widgets/highlights_card.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/weather_widget.dart';
+import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/providers/favorites_list_notifier.dart';
-import 'package:kusel/screens/all_event/all_event_screen_param.dart';
 import 'package:kusel/screens/dashboard/dashboard_screen_provider.dart';
 import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/home/home_screen_state.dart';
-import 'package:kusel/screens/no_network/network_status_screen.dart';
 import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
 
 import '../../../images_path.dart';
@@ -40,35 +38,32 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   void initState() {
     Future.microtask(() async {
-      bool networkStatus = await ref.read(networkStatusProvider.notifier).checkNetworkStatus();
-      if(networkStatus) {
-        ref.read(homeScreenProvider.notifier).fetchHomeScreenInitMethod();
-      }
+
       ref.read(dashboardScreenProvider.notifier).onIndexChanged(0);
+      ref.read(homeScreenProvider.notifier).initialCall();
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final networkStatus = ref.watch(networkStatusProvider).isNetworkAvailable;
-    return networkStatus ? Scaffold(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            body: SafeArea(
-              child: RefreshIndicator(
-                onRefresh: () async {
-                  ref.read(networkStatusProvider.notifier).checkNetworkStatus();
-                  if(networkStatus) {
-                    await ref.read(homeScreenProvider.notifier).refresh();
-                  }
-                },
-                child: SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    child: buildUi()
-                ),
-              ),
-            ),
-          ) : NetworkStatusScreen();
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: SafeArea(
+        child: RefreshIndicator(
+          onRefresh: () async {
+            final networkStatus = await ref
+                .read(networkStatusProvider.notifier)
+                .checkNetworkStatus();
+            if (networkStatus) {
+              await ref.read(homeScreenProvider.notifier).refresh();
+            }
+          },
+          child: SizedBox(
+              height: MediaQuery.of(context).size.height, child: buildUi()),
+        ),
+      ),
+    );
   }
 
   Widget buildUi() {
@@ -97,8 +92,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 child: Column(
                   children: [
                     Visibility(
-                        visible:
-                            !ref.watch(homeScreenProvider).isSignInButtonVisible,
+                        visible: !ref
+                            .watch(homeScreenProvider)
+                            .isSignInButtonVisible,
                         child: isLoading
                             ? CustomShimmerWidget.rectangular(
                                 height: 20.h,
@@ -147,8 +143,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ref.read(navigationProvider).navigateUsingPath(
                                 context: context,
                                 path: eventDetailScreenPath,
-                                params: EventDetailScreenParams(
-                                    event: listing));
+                                params:
+                                    EventDetailScreenParams(event: listing));
                           },
                           searchController: TextEditingController(),
                           hintText:
@@ -261,7 +257,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                       );
                 },
-                onFavClickCallback: (){
+                onFavClickCallback: () {
                   ref.read(homeScreenProvider.notifier).getNearbyEvents();
                 },
                 onHeadingTap: () {
@@ -282,7 +278,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ),
                       );
                 },
-                isFavVisible: (state.isSignInButtonVisible) ? false : true,
+                isFavVisible: true,
                 onSuccess: (bool isFav, int? id) {
                   ref
                       .read(homeScreenProvider.notifier)
@@ -310,7 +306,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ref.read(homeScreenProvider.notifier).getNews();
                           }));
                 },
-                onFavClickCallback: (){
+                onFavClickCallback: () {
                   ref.read(homeScreenProvider.notifier).getNews();
                 },
                 onHeadingTap: () {
@@ -325,7 +321,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ref.read(homeScreenProvider.notifier).getNews();
                           }));
                 },
-                isFavVisible: !state.isSignInButtonVisible,
+                isFavVisible: true,
                 onSuccess: (bool isFav, int? id) {
                   ref
                       .read(homeScreenProvider.notifier)
@@ -352,7 +348,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           },
                           listHeading: AppLocalizations.of(context).events));
                 },
-                onFavClickCallback: (){
+                onFavClickCallback: () {
                   ref.read(homeScreenProvider.notifier).getEvents();
                 },
                 onHeadingTap: () {
@@ -371,7 +367,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       .read(homeScreenProvider.notifier)
                       .setIsFavoriteEvent(isFav, eventId);
                 },
-                isFavVisible: (state.isSignInButtonVisible) ? false : true,
+                isFavVisible: true,
               ),
             FeedbackCardWidget(
               height: 270.h,
@@ -411,10 +407,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               path: selectedEventListScreenPath,
                               context: context,
                               params: SelectedEventListScreenParameter(
-                                categoryId: ListingCategoryId.highlights.eventId,
-                                listHeading: AppLocalizations.of(context).highlights,
-                                onFavChange: (){
-                                   ref
+                                categoryId:
+                                    ListingCategoryId.highlights.eventId,
+                                listHeading:
+                                    AppLocalizations.of(context).highlights,
+                                onFavChange: () {
+                                  ref
                                       .read(homeScreenProvider.notifier)
                                       .getHighlights();
                                 },
@@ -433,8 +431,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     context: context,
                                     path: eventDetailScreenPath,
                                     params: EventDetailScreenParams(
-                                        event:
-                                            state.highlightsList[index]));
+                                        event: state.highlightsList[index]));
                               },
                               child: Row(
                                 children: [
@@ -466,7 +463,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   child: PageView.builder(
                     controller: PageController(
                         viewportFraction:
-                            317.w / MediaQuery.of(context).size.width*.9),
+                            317.w / MediaQuery.of(context).size.width * .9),
                     scrollDirection: Axis.horizontal,
                     padEnds: false,
                     itemCount: state.highlightsList.length,
@@ -509,9 +506,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   message: message, context: context);
                             });
                           },
-                          isFavouriteVisible: !ref
-                              .watch(homeScreenProvider)
-                              .isSignInButtonVisible,
+                          isFavouriteVisible: true,
                           sourceId: listing.sourceId!,
                         ),
                       );

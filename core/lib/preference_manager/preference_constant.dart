@@ -3,12 +3,13 @@ const tokenKey = "token";
 const userIdKey = "userId";
 const languageKey = "language";
 const userNameKey = "userName";
-const environmentKey="environment";
-const searchListKey= "searchList";
-
+const environmentKey = "environment";
+const searchListKey = "searchList";
 
 // onboarding keys
 const onboardingCacheKey = "onboardingCache";
 const onboardingKey = "onboarding";
 const userFirstNameKey = "userFirstName";
 const selectedMunicipalIdKey = "selectedMunicipalId";
+
+const isUserSignedIn = "isUserSignedIn";

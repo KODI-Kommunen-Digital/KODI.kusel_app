@@ -24,6 +24,8 @@ import 'package:domain/usecase/weather/weather_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/common_widgets/listing_id_enum.dart';
+import 'package:kusel/database/digifit_cache_data/digifit_cache_data_controller.dart';
+import 'package:kusel/providers/guest_user_login_provider.dart';
 import 'package:kusel/providers/refresh_token_provider.dart';
 
 import '../../common_widgets/get_current_location.dart';
@@ -31,20 +33,24 @@ import '../../locale/localization_manager.dart';
 import 'home_screen_state.dart';
 
 final homeScreenProvider =
-    StateNotifierProvider<HomeScreenProvider, HomeScreenState>((ref) =>
-        HomeScreenProvider(
-            listingsUseCase: ref.read(listingsUseCaseProvider),
-            searchUseCase: ref.read(searchUseCaseProvider),
-            sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
-            userDetailUseCase: ref.read(userDetailUseCaseProvider),
-            weatherUseCase: ref.read(weatherUseCaseProvider),
-            signInStatusController: ref.read(signInStatusProvider.notifier),
-            refreshTokenProvider: ref.read(refreshTokenProvider),
-            tokenStatus: ref.read(tokenStatusProvider),
-            localeManagerController: ref.read(localeManagerProvider.notifier),
-            onboardingDetailsUseCase:
-                ref.read(onboardingDetailsUseCaseProvider),
-            refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider)));
+StateNotifierProvider<HomeScreenProvider, HomeScreenState>((ref) =>
+    HomeScreenProvider(
+        listingsUseCase: ref.read(listingsUseCaseProvider),
+        searchUseCase: ref.read(searchUseCaseProvider),
+        sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
+        userDetailUseCase: ref.read(userDetailUseCaseProvider),
+        weatherUseCase: ref.read(weatherUseCaseProvider),
+        signInStatusController: ref.read(signInStatusProvider.notifier),
+        refreshTokenProvider: ref.read(refreshTokenProvider),
+        tokenStatus: ref.read(tokenStatusProvider),
+        localeManagerController: ref.read(localeManagerProvider.notifier),
+        onboardingDetailsUseCase:
+        ref.read(onboardingDetailsUseCaseProvider),
+        refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider),
+        guestUserLogin: ref.read(guestUserLoginProvider),
+        digifitCacheDataController: ref.read(digifitCacheDataProvider.notifier)
+    ),
+);
 
 class HomeScreenProvider extends StateNotifier<HomeScreenState> {
   ListingsUseCase listingsUseCase;
@@ -58,6 +64,8 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
   LocaleManagerController localeManagerController;
   RefreshTokenUseCase refreshTokenUseCase;
   OnboardingDetailsUseCase onboardingDetailsUseCase;
+  GuestUserLogin guestUserLogin;
+  DigifitCacheDataController digifitCacheDataController;
 
   HomeScreenProvider(
       {required this.listingsUseCase,
@@ -70,8 +78,24 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       required this.tokenStatus,
       required this.localeManagerController,
       required this.onboardingDetailsUseCase,
-      required this.refreshTokenUseCase})
+      required this.refreshTokenUseCase,
+      required this.guestUserLogin,
+      required this.digifitCacheDataController
+      })
       : super(HomeScreenState.empty());
+
+  initialCall() async {
+    final res = sharedPreferenceHelper.getString(tokenKey);
+    if (res == null) {
+      await guestUserLogin.getGuestUserToken(
+        onSuccess: ()async{
+          await fetchHomeScreenInitMethod();
+        }
+      );
+    }else{
+      await fetchHomeScreenInitMethod();
+    }
+  }
 
   Future<void> getHighlights() async {
     try {
@@ -364,6 +388,8 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       getNews(),
       getLoginStatus(),
       getWeather(),
+      digifitCacheDataController.fetchAllDigifitDataFromNetwork(),
+      digifitCacheDataController.postDigifitExerciseDataToNetwork()
     ]);
   }
 
@@ -391,59 +417,56 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
 
   Future<void> getOnboardingDetails() async {
     try {
-
       final status = await signInStatusController.isUserLoggedIn();
-      if(status)
-        {
-          final response = tokenStatus.isAccessTokenExpired();
-          debugPrint('Is token valid = $response');
+      if (status) {
+        final response = tokenStatus.isAccessTokenExpired();
 
-          if (response) {
-            final userId = sharedPreferenceHelper.getInt(userIdKey);
-            RefreshTokenRequestModel requestModel =
-            RefreshTokenRequestModel(userId: userId?.toString() ?? "");
-            RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
+        if (response) {
+          final userId = sharedPreferenceHelper.getInt(userIdKey);
+          RefreshTokenRequestModel requestModel =
+              RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+          RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
-            final refreshResponse =
-            await refreshTokenUseCase.call(requestModel, responseModel);
+          final refreshResponse =
+              await refreshTokenUseCase.call(requestModel, responseModel);
 
-            bool refreshSuccess = await refreshResponse.fold(
-                  (left) {
-                debugPrint(
-                    'refresh token onboarding details fold exception : $left');
-                return false;
-              },
-                  (right) async {
-                final res = right as RefreshTokenResponseModel;
-                sharedPreferenceHelper.setString(
-                    tokenKey, res.data?.accessToken ?? "");
-                sharedPreferenceHelper.setString(
-                    refreshTokenKey, res.data?.refreshToken ?? "");
-                return true;
-              },
-            );
+          bool refreshSuccess = await refreshResponse.fold(
+            (left) {
+              debugPrint(
+                  'refresh token onboarding details fold exception : $left');
+              return false;
+            },
+            (right) async {
+              final res = right as RefreshTokenResponseModel;
+              sharedPreferenceHelper.setString(
+                  tokenKey, res.data?.accessToken ?? "");
+              sharedPreferenceHelper.setString(
+                  refreshTokenKey, res.data?.refreshToken ?? "");
+              return true;
+            },
+          );
 
-            if (!refreshSuccess) {
-              return;
-            }
+          if (!refreshSuccess) {
+            return;
           }
-
-          EmptyRequest requestModel = EmptyRequest();
-          OnboardingDetailsResponseModel responseModel =
-          OnboardingDetailsResponseModel();
-          final result =
-          await onboardingDetailsUseCase.call(requestModel, responseModel);
-
-          result.fold((l) {
-            debugPrint('get onboarding details fold exception : $l');
-          }, (r) async {
-            final response = r as OnboardingDetailsResponseModel;
-            if (response.data != null && response.data?.cityId != null) {
-              sharedPreferenceHelper.setInt(
-                  selectedMunicipalIdKey, response.data!.cityId!);
-            }
-          });
         }
+
+        EmptyRequest requestModel = EmptyRequest();
+        OnboardingDetailsResponseModel responseModel =
+            OnboardingDetailsResponseModel();
+        final result =
+            await onboardingDetailsUseCase.call(requestModel, responseModel);
+
+        result.fold((l) {
+          debugPrint('get onboarding details fold exception : $l');
+        }, (r) async {
+          final response = r as OnboardingDetailsResponseModel;
+          if (response.data != null && response.data?.cityId != null) {
+            sharedPreferenceHelper.setInt(
+                selectedMunicipalIdKey, response.data!.cityId!);
+          }
+        });
+      }
     } catch (error) {
       debugPrint('get onboarding details exception : $error');
     }

@@ -34,14 +34,14 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingTypePage> {
           20.verticalSpace,
           CustomSelectionButton(
               text:
-                  "${AppLocalizations.of(context).live_here}",
+                  AppLocalizations.of(context).i_live_in_district_onborading_type_page,
               isSelected: state.isResident,
               onTap: () {
                 stateNotifier.updateOnboardingType(OnBoardingType.resident);
               }),
           15.verticalSpace,
           CustomSelectionButton(
-              text: "${AppLocalizations.of(context).spend_my_free_time_here}",
+              text: AppLocalizations.of(context).spend_my_free_time_here,
               isSelected: state.isTourist,
               onTap: () {
                 stateNotifier.updateOnboardingType(OnBoardingType.tourist);

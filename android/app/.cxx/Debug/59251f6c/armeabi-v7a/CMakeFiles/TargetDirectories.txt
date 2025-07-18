@@ -1,0 +1,2 @@
+C:/Users/Fiftyfive/AndroidStudioProjects/KODI.kusel_app/android/app/.cxx/Debug/59251f6c/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/Fiftyfive/AndroidStudioProjects/KODI.kusel_app/android/app/.cxx/Debug/59251f6c/armeabi-v7a/CMakeFiles/rebuild_cache.dir
