@@ -182,9 +182,6 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
                         context: context,
                         params: DigifitExerciseDetailsParams(
                             station: DigifitInformationStationModel(id: null),
-                            locationId: widget.digifitOverviewScreenParams
-                                    .parcoursModel.locationId ??
-                                0,
                             slug: slugUrl,
                             onFavCallBack: () {
                               ref
