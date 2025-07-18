@@ -146,10 +146,10 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                 ref
                     .read(digifitInformationControllerProvider.notifier)
                     .getSlug(barcode, (String slugUrl) {
-                  final value =
+                  final isNetwork =
                       ref.read(networkStatusProvider).isNetworkAvailable;
 
-                  if (value) {
+                  if (isNetwork) {
                     ref.read(navigationProvider).navigateUsingPath(
                         path: digifitExerciseDetailScreenPath,
                         context: context,
@@ -206,11 +206,12 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                     if (value) {
                       ref.read(navigationProvider).navigateUsingPath(
                           path: digifitTrophiesScreenPath, context: context);
-                    } else {
-                      ref.read(navigationProvider).navigateUsingPath(
-                          path: offlineDigifitTrophiesScreenPath,
-                          context: context);
                     }
+                    // else {
+                    //   ref.read(navigationProvider).navigateUsingPath(
+                    //       path: offlineDigifitTrophiesScreenPath,
+                    //       context: context);
+                    // }
                   },
                 ),
               ),
