@@ -14,13 +14,15 @@ class DigifitVideoPlayerWidget extends ConsumerStatefulWidget {
   final VoidCallback startTimer;
   final VoidCallback pauseTimer;
   final int sourceId;
+  final int equipmentId;
 
   const DigifitVideoPlayerWidget(
       {super.key,
       required this.videoUrl,
       required this.startTimer,
       required this.pauseTimer,
-      required this.sourceId});
+      required this.sourceId,
+      required this.equipmentId});
 
   @override
   ConsumerState<DigifitVideoPlayerWidget> createState() =>
@@ -31,9 +33,10 @@ class _DigifitVideoPlayerWidgetState
     extends ConsumerState<DigifitVideoPlayerWidget> {
   @override
   void didUpdateWidget(covariant DigifitVideoPlayerWidget oldWidget) {
-    if ((oldWidget.videoUrl != widget.videoUrl && widget.videoUrl.isNotEmpty)) {
+    if ((oldWidget.videoUrl != widget.videoUrl && widget.videoUrl.isNotEmpty) && (oldWidget.sourceId !=widget.sourceId && widget.sourceId!=0)) {
+      debugPrint('print for this url is ${widget.sourceId} and ${widget.videoUrl}');
       ref
-          .read(videoPlayerControllerProvider.notifier)
+          .read(videoPlayerControllerProvider(widget.equipmentId).notifier)
           .initializeVideoController(widget.videoUrl, widget.sourceId);
     }
     super.didUpdateWidget(oldWidget);
@@ -41,6 +44,25 @@ class _DigifitVideoPlayerWidgetState
 
   @override
   Widget build(BuildContext context) {
+
+    bool isPauseCardWidgetVisible = (ref
+        .watch(digifitExerciseDetailsControllerProvider(widget.equipmentId))
+        .isScannerVisible ==
+        false &&
+        !ref
+            .watch(digifitExerciseDetailsControllerProvider(widget.equipmentId))
+            .isReadyToSubmitSet &&
+        (ref
+            .watch(digifitExerciseDetailsControllerProvider(widget.equipmentId))
+            .digifitExerciseEquipmentModel
+            ?.userProgress
+            .isCompleted !=
+            null &&
+            !ref
+                .watch(digifitExerciseDetailsControllerProvider(widget.equipmentId))
+                .digifitExerciseEquipmentModel!
+                .userProgress
+                .isCompleted));
     return Column(
       children: [
         Stack(
@@ -50,29 +72,13 @@ class _DigifitVideoPlayerWidgetState
               mainAxisSize: MainAxisSize.min,
               children: [
                 _buildVideoPlayer(),
-                SizedBox(height: 18.h),
+                SizedBox(height: 28.h),
                 Visibility(
-                    visible: (ref
-                                .watch(digifitExerciseDetailsControllerProvider)
-                                .isScannerVisible ==
-                            false &&
-                        !ref
-                            .watch(digifitExerciseDetailsControllerProvider)
-                            .isReadyToSubmitSet &&
-                        (ref
-                                    .watch(digifitExerciseDetailsControllerProvider)
-                                    .digifitExerciseEquipmentModel
-                                    ?.userProgress
-                                    .isCompleted !=
-                                null &&
-                            !ref
-                                .watch(digifitExerciseDetailsControllerProvider)
-                                .digifitExerciseEquipmentModel!
-                                .userProgress
-                                .isCompleted)),
+                    visible: isPauseCardWidgetVisible,
                     child: PauseCardWidget(
                       startTimer: widget.startTimer,
                       pauseTimer: widget.pauseTimer,
+                      equipmentId: widget.equipmentId,
                     )),
               ],
             ),
@@ -85,6 +91,7 @@ class _DigifitVideoPlayerWidgetState
                 borderRadius: BorderRadius.circular(20.r),
                 child: InfoCardWidget(
                   startTimer: widget.startTimer,
+                  equipmentId: widget.equipmentId,
                 ),
               ),
             ),
@@ -92,21 +99,21 @@ class _DigifitVideoPlayerWidgetState
         ),
         Visibility(
           visible: ref
-                      .watch(digifitExerciseDetailsControllerProvider)
+                      .watch(digifitExerciseDetailsControllerProvider(widget.equipmentId))
                       .isScannerVisible ==
                   false &&
               !ref
-                  .watch(digifitExerciseDetailsControllerProvider)
+                  .watch(digifitExerciseDetailsControllerProvider(widget.equipmentId))
                   .isReadyToSubmitSet &&
               ref
-                      .watch(digifitExerciseDetailsControllerProvider)
+                      .watch(digifitExerciseDetailsControllerProvider(widget.equipmentId))
                       .digifitExerciseEquipmentModel
                       ?.userProgress
                       .isCompleted ==
                   true,
           child: Column(
             children: [
-              SizedBox(height: 38.h),
+              SizedBox(height: 22.h),
               const SuccessCardWidget(),
             ],
           ),
@@ -116,7 +123,7 @@ class _DigifitVideoPlayerWidgetState
   }
 
   Widget _buildVideoPlayer() {
-    final videoControllerState = ref.watch(videoPlayerControllerProvider);
+    final videoControllerState = ref.watch(videoPlayerControllerProvider(widget.equipmentId));
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(20.r),
@@ -130,7 +137,7 @@ class _DigifitVideoPlayerWidgetState
               data: (controller) => GestureDetector(
                 onTap: () {
                   ref
-                      .read(videoPlayerControllerProvider.notifier)
+                      .read(videoPlayerControllerProvider(widget.equipmentId).notifier)
                       .playPauseVideo();
                 },
                 child: Stack(

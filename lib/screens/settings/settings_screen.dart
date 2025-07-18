@@ -1,19 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/app_router.dart';
+import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/images_path.dart';
+import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/navigation/navigation.dart';
+import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/settings/settings_screen_provider.dart';
 import 'package:kusel/utility/url_constants/url_constants.dart';
 
 import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/toast_message.dart';
 import '../../common_widgets/web_view_page.dart';
+import '../dashboard/dashboard_screen_provider.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -36,7 +39,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(child: _buildBody(context)),
-    );
+    ).loaderDialog(context, ref.watch(settingsScreenProvider).isLoading);
   }
 
   Widget _buildBody(BuildContext context) {
@@ -109,56 +112,49 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 params: WebViewParams(url: privacyPolicyUrl),
                 context: context),
           ),
-          Visibility(
-            visible: ref.watch(settingsScreenProvider).isLoggedIn,
-            child: Column(children: [
-              const Divider(),
-              ListTile(
-                leading: const Icon(Icons.favorite_border),
-                title: textBoldPoppins(
-                  text: AppLocalizations.of(context).favorites,
-                  textAlign: TextAlign.start,
-                ),
-                onTap: () async {
-                  ref.read(navigationProvider).navigateUsingPath(
-                      context: context, path: favoritesListScreenPath);
-                },
-              ),
-            ]),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.favorite_border),
+            title: textBoldPoppins(
+              text: AppLocalizations.of(context).favorites,
+              textAlign: TextAlign.start,
+            ),
+            onTap: () async {
+              ref.read(navigationProvider).navigateUsingPath(
+                  context: context, path: favoritesListScreenPath);
+            },
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.favorite_border),
+            title: textBoldPoppins(
+              text: AppLocalizations.of(context).favourite_city,
+              textAlign: TextAlign.start,
+            ),
+            onTap: () async {
+              ref.read(navigationProvider).navigateUsingPath(
+                  context: context, path: favouriteCityScreenPath);
+            },
           ),
           const Divider(),
           Visibility(
             visible: ref.watch(settingsScreenProvider).isLoggedIn,
-            child: Column(children: [
-              ListTile(
-                leading: const Icon(Icons.favorite_border),
-                title: textBoldPoppins(
-                  text: AppLocalizations.of(context).favourite_city,
-                  textAlign: TextAlign.start,
-                ),
-                onTap: () async {
-                  ref.read(navigationProvider).navigateUsingPath(
-                      context: context, path: favouriteCityScreenPath);
-                },
+            child: ListTile(
+              leading: const Icon(Icons.logout),
+              title: textBoldPoppins(
+                text: AppLocalizations.of(context).logout,
+                textAlign: TextAlign.start,
               ),
-            ]),
-          ),
-          Visibility(
-            visible: ref.watch(settingsScreenProvider).isLoggedIn,
-            child: Column(
-              children: [
-                const Divider(),
-                ListTile(
-                  leading: const Icon(Icons.logout),
-                  title: textBoldPoppins(
-                    text: AppLocalizations.of(context).logout,
-                    textAlign: TextAlign.start,
-                  ),
-                  onTap: () async {
-                    ref.read(settingsScreenProvider.notifier).logoutUser(() {});
-                  },
-                ),
-              ],
+              onTap: () async {
+                ref.read(settingsScreenProvider.notifier).logoutUser(() async {
+                  await ref.read(settingsScreenProvider.notifier).isLoggedIn();
+                  await ref.read(homeScreenProvider.notifier).getLoginStatus();
+                }, onSuccess: () {
+                  ref.read(dashboardScreenProvider.notifier).onIndexChanged(0);
+                  ref.read(navigationProvider).removeAllAndNavigate(
+                      context: context, path: signInScreenPath);
+                });
+              },
             ),
           ),
           Visibility(

@@ -38,7 +38,13 @@ class SharedPreferenceHelper {
 
   int? getInt(String key) => prefs.getInt(key);
 
-  bool? getBool(String key) => prefs.getBool(key);
+  bool? getBool(String key) {
+    final res = prefs.getBool(key);
+
+    return (res == null)
+        ? null
+        : res;
+  }
 
   Future<bool> setInt(String key, int value) async {
     return await prefs.setInt(key, value);

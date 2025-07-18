@@ -133,7 +133,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           textBoldPoppins(
-              text: AppLocalizations.of(context).associated_municipalities,
+              text: AppLocalizations.of(context).our_offers,
               textAlign: TextAlign.start,
               fontSize: 14),
           if (state.mobilityData != null &&

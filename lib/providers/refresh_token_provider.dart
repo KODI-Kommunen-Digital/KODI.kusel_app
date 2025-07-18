@@ -34,16 +34,19 @@ class RefreshTokenProvider {
           await refreshTokenUseCase.call(requestModel, responseModel);
       response.fold((l) {
         debugPrint('refresh token fold exception = $l');
-      }, (r) {
+        onError();
+      }, (r) async{
         final res = r as RefreshTokenResponseModel;
-        sharedPreferenceHelper.setString(tokenKey, res.data?.accessToken ?? "");
-        sharedPreferenceHelper.setString(
+        await sharedPreferenceHelper.setString(tokenKey, res.data?.accessToken ?? "");
+        await sharedPreferenceHelper.setString(
             refreshTokenKey, res.data?.refreshToken ?? "");
 
         onSuccess();
       });
     } catch (error) {
       debugPrint('refresh token exception : $error');
+      rethrow;
     }
   }
+
 }

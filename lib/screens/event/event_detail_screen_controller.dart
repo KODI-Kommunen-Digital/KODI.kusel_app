@@ -19,29 +19,31 @@ import 'package:kusel/screens/event/event_detail_screen_state.dart';
 
 import '../../common_widgets/location_const.dart';
 
-final eventDetailScreenProvider = StateNotifierProvider.autoDispose<
-        EventDetailScreenController, EventDetailScreenState>(
-    (ref) => EventDetailScreenController(
-          eventDetailsUseCase: ref.read(eventDetailsUseCaseProvider),
-          listingsUseCase: ref.read(listingsUseCaseProvider),
-          localeManagerController: ref.read(localeManagerProvider.notifier),
-      sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
-      signInStatusController: ref.read(signInStatusProvider.notifier),
-      tokenStatus: ref.read(tokenStatusProvider),
-      refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider)
-        ));
+final eventDetailScreenProvider = StateNotifierProvider.family
+    .autoDispose<EventDetailScreenController, EventDetailScreenState, int>(
+        (ref, eventId) => EventDetailScreenController(
+            eventDetailsUseCase: ref.read(eventDetailsUseCaseProvider),
+            listingsUseCase: ref.read(listingsUseCaseProvider),
+            localeManagerController: ref.read(localeManagerProvider.notifier),
+            sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
+            signInStatusController: ref.read(signInStatusProvider.notifier),
+            tokenStatus: ref.read(tokenStatusProvider),
+            refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider),
+            eventId: eventId));
 
 class EventDetailScreenController
     extends StateNotifier<EventDetailScreenState> {
+  final int eventId;
+
   EventDetailScreenController(
       {required this.eventDetailsUseCase,
       required this.listingsUseCase,
       required this.localeManagerController,
-        required this.sharedPreferenceHelper,
-        required this.signInStatusController,
-        required this.tokenStatus,
-        required this.refreshTokenUseCase
-      })
+      required this.sharedPreferenceHelper,
+      required this.signInStatusController,
+      required this.tokenStatus,
+      required this.refreshTokenUseCase,
+      required this.eventId})
       : super(EventDetailScreenState.empty());
 
   EventDetailsUseCase eventDetailsUseCase;
@@ -52,12 +54,7 @@ class EventDetailScreenController
   TokenStatus tokenStatus;
   RefreshTokenUseCase refreshTokenUseCase;
 
-  Future<void> fetchAddress() async {
-    String result = await getAddressFromLatLng(
-        state.eventDetails.latitude ?? EventLatLong.kusel.latitude,
-        state.eventDetails.longitude ?? EventLatLong.kusel.longitude);
-    state = state.copyWith(address: result);
-  }
+
 
   Future<void> getEventDetails(int? eventId) async {
     state = state.copyWith(loading: true);
@@ -66,19 +63,19 @@ class EventDetailScreenController
     if (response && status) {
       final userId = sharedPreferenceHelper.getInt(userIdKey);
       RefreshTokenRequestModel requestModel =
-      RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+          RefreshTokenRequestModel(userId: userId?.toString() ?? "");
       RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
       final refreshResponse =
-      await refreshTokenUseCase.call(requestModel, responseModel);
+          await refreshTokenUseCase.call(requestModel, responseModel);
 
       bool refreshSuccess = await refreshResponse.fold(
-            (left) {
+        (left) {
           debugPrint(
               'refresh token municipality detail fold exception : $left');
           return false;
         },
-            (right) async {
+        (right) async {
           final res = right as RefreshTokenResponseModel;
           sharedPreferenceHelper.setString(
               tokenKey, res.data?.accessToken ?? "");
@@ -119,7 +116,7 @@ class EventDetailScreenController
             state = state.copyWith(
                 eventDetails: eventData,
                 loading: false,
-                  isFavourite: eventData?.isFavorite ?? false);
+                isFavourite: eventData?.isFavorite ?? false);
             debugPrint("Printing isFav - ${eventData?.description}");
           },
         );
@@ -188,8 +185,7 @@ class EventDetailScreenController
     }
   }
 
-
-  assignIsFav(bool isFav){
+  assignIsFav(bool isFav) {
     state = state.copyWith(isFavourite: isFav);
   }
 
@@ -218,14 +214,13 @@ class EventDetailScreenController
 
   void toggleFav() {
     bool isFav = state.isFavourite;
-    state = state.copyWith(
-      isFavourite: isFav ? false : true
-    );
+    state = state.copyWith(isFavourite: isFav ? false : true);
   }
 }
 
 class EventDetailScreenParams {
   Listing? event;
   Function()? onFavClick;
+
   EventDetailScreenParams({required this.event, this.onFavClick});
 }

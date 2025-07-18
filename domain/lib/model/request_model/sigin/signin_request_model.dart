@@ -3,8 +3,9 @@ import 'package:core/base_model.dart';
 class SignInRequestModel implements BaseModel<SignInRequestModel> {
   String? username;
   String? password;
+  String? deviceId;
 
-  SignInRequestModel({this.username, this.password});
+  SignInRequestModel({this.username, this.password,this.deviceId});
 
   @override
   SignInRequestModel fromJson(Map<String, dynamic> json) {
@@ -16,9 +17,6 @@ class SignInRequestModel implements BaseModel<SignInRequestModel> {
 
   @override
   Map<String, dynamic> toJson() {
-    return {
-      'username': username,
-      'password': password,
-    };
+    return {'username': username, 'password': password, 'deviceId': deviceId};
   }
 }

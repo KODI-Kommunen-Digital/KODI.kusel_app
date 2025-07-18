@@ -13,8 +13,10 @@ import '../../../common_widgets/search_widget.dart';
 
 class SelectedFilterScreen extends ConsumerStatefulWidget {
   SelectedFilterScreenParams selectedFilterScreenParams;
+  ScrollController scrollController;
 
-  SelectedFilterScreen({super.key, required this.selectedFilterScreenParams});
+  SelectedFilterScreen({super.key, required this.selectedFilterScreenParams,
+  required this.scrollController});
 
   @override
   ConsumerState<SelectedFilterScreen> createState() =>
@@ -113,6 +115,7 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
             child: SingleChildScrollView(
               child: EventsListSectionWidget(
                 shrinkWrap: true,
+                scrollController: widget.scrollController,
                 eventsList: state.allEventList,
                 heading: null,
                 maxListLimit: state.allEventList.length,
@@ -121,7 +124,7 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
                 isLoading: false,
                 onButtonTap: () {},
                 context: context,
-                isFavVisible: state.isUserLoggedIn,
+                isFavVisible: true,
                 onHeadingTap: () {},
                 onSuccess: (bool isFav, int? id) {
                   ref

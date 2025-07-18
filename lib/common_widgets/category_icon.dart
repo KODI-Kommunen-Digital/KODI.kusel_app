@@ -31,19 +31,19 @@ String getCategoryIconPath(int categoryId) {
       path = 'placeholder_category_icon';
       break;
     case 6:
-      path = 'placeholder_category_icon';
+      path = 'search_icon';
       break;
     case 7:
       path = 'placeholder_category_icon';
       break;
     case 9:
-      path = 'placeholder_category_icon';
+      path = 'paw_icon';
       break;
     case 10:
-      path = 'placeholder_category_icon';
+      path = 'facilities_category_icon';
       break;
     case 11:
-      path = 'placeholder_category_icon';
+      path = 'transport_icon';
       break;
     case 12:
       path = 'placeholder_category_icon';
@@ -51,9 +51,12 @@ String getCategoryIconPath(int categoryId) {
     case 13:
       path = 'gastro_category_icon';
       break;
+    case 17:
+      path = 'tourism_service_image';
     case 41:
       path = 'placeholder_category_icon';
-      break;
+    case 48:
+      path = 'place_holder_icon';
     default:
       path = 'placeholder_category_icon'; // Fallback icon
       break;

@@ -9,9 +9,10 @@ import '../../../../l10n/app_localizations.dart';
 class PauseCardWidget extends ConsumerStatefulWidget {
   final VoidCallback startTimer;
   final VoidCallback pauseTimer;
+  final int equipmentId;
 
   const PauseCardWidget(
-      {super.key, required this.startTimer, required this.pauseTimer});
+      {super.key, required this.startTimer, required this.pauseTimer, required this.equipmentId});
 
   @override
   ConsumerState<PauseCardWidget> createState() => _PauseCardWidgetState();
@@ -25,6 +26,7 @@ class _PauseCardWidgetState extends ConsumerState<PauseCardWidget> {
 
   @override
   Widget build(BuildContext context) {
+
     return Material(
       elevation: 2,
       borderRadius: BorderRadius.only(
@@ -33,8 +35,7 @@ class _PauseCardWidgetState extends ConsumerState<PauseCardWidget> {
       ),
       child: Container(
         width: double.infinity,
-        height: 102.h,
-        padding: EdgeInsets.symmetric(horizontal: 24.w),
+        padding: EdgeInsets.only(left: 2.w, right: 36.w, top: 16.h),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
@@ -50,7 +51,7 @@ class _PauseCardWidgetState extends ConsumerState<PauseCardWidget> {
               padding: EdgeInsets.only(bottom: 16.h, left: 25.h),
               child: Text(
                 ((ref
-                            .watch(digifitExerciseDetailsControllerProvider)
+                            .watch(digifitExerciseDetailsControllerProvider(widget.equipmentId))
                             .timerState ==
                         TimerState.start))
                     ? AppLocalizations.of(context).play
@@ -63,9 +64,9 @@ class _PauseCardWidgetState extends ConsumerState<PauseCardWidget> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(bottom: 16.h, left: 30.h),
+              padding: EdgeInsets.only(bottom: 16.h, left: 20.h),
               child: Text(
-                '${formatTime(ref.watch(digifitExerciseDetailsControllerProvider).remainingPauseSecond)}${AppLocalizations.of(context).min}',
+                '${formatTime(ref.watch(digifitExerciseDetailsControllerProvider(widget.equipmentId)).remainingPauseSecond)}${AppLocalizations.of(context).min}',
                 style: TextStyle(
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w500,
@@ -74,11 +75,11 @@ class _PauseCardWidgetState extends ConsumerState<PauseCardWidget> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: 18.h, bottom: 6.h, left: 40.h),
+              padding: EdgeInsets.only(top: 18.h, bottom: 6.h, left: 30.h),
               child: InkWell(
                 onTap: () {
                   if (ref
-                          .read(digifitExerciseDetailsControllerProvider)
+                          .read(digifitExerciseDetailsControllerProvider(widget.equipmentId))
                           .timerState ==
                       TimerState.start) {
                     widget.pauseTimer();
@@ -91,7 +92,7 @@ class _PauseCardWidgetState extends ConsumerState<PauseCardWidget> {
                   backgroundColor: const Color(0xFF233B8C),
                   child: Icon(
                     (ref
-                                .watch(digifitExerciseDetailsControllerProvider)
+                                .watch(digifitExerciseDetailsControllerProvider(widget.equipmentId))
                                 .timerState ==
                             TimerState.start)
                         ? Icons.pause

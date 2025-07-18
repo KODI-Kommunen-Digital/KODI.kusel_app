@@ -184,8 +184,5 @@ class CityFavoritesNotifier extends StateNotifier<List<City>> {
     }
   }
 
-  bool showFavoriteIcon() {
-    final token = sharedPreferenceHelper.getString(tokenKey);
-    return token != null;
-  }
+
 }
