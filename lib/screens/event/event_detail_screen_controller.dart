@@ -181,7 +181,9 @@ class EventDetailScreenController
         },
       );
     } catch (error) {
-      state = state.copyWith(error: error.toString());
+      if(mounted){
+        state = state.copyWith(error: error.toString());
+      }
     }
   }
 

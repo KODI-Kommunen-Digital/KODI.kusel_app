@@ -156,7 +156,8 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                             .watch(searchScreenProvider.notifier)
                             .sortSuggestionList(search, list);
                         return sortedList;
-                      }
+                      },
+                    isPaddingEnabled: true,
                   ),
                   16.verticalSpace,
                   Visibility(
