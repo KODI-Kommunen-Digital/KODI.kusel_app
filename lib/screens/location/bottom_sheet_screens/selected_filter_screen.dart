@@ -27,8 +27,10 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
   @override
   void initState() {
     Future.microtask(() {
+      final currentPageNumber =
+          ref.read(locationScreenProvider).currentPageNo;
       ref.read(locationScreenProvider.notifier).getAllEventListUsingCategoryId(
-          widget.selectedFilterScreenParams.categoryId.toString());
+          widget.selectedFilterScreenParams.categoryId.toString(), currentPageNumber);
     });
     super.initState();
   }
@@ -99,6 +101,7 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
             return sortedList;
             return sortedList;
           },
+          isPaddingEnabled: true,
         ),
         Padding(
           padding: const EdgeInsets.all(16.0),
@@ -116,9 +119,9 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
               child: EventsListSectionWidget(
                 shrinkWrap: true,
                 scrollController: widget.scrollController,
-                eventsList: state.allEventList,
+                eventsList: state.allEventCategoryWiseList,
                 heading: null,
-                maxListLimit: state.allEventList.length,
+                maxListLimit: state.allEventCategoryWiseList.length,
                 buttonText: null,
                 buttonIconPath: null,
                 isLoading: false,
@@ -133,8 +136,19 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
                 },
                 onFavClickCallback: () {
                   ref.read(locationScreenProvider.notifier).getAllEventListUsingCategoryId(
-                      widget.selectedFilterScreenParams.categoryId.toString());
+                          widget.selectedFilterScreenParams.categoryId
+                              .toString(),
+                          ref.read(locationScreenProvider).currentPageNo);
                 },
+                isMultiplePagesList: true,
+                onLoadMoreTap: () {
+                  ref
+                      .read(locationScreenProvider.notifier)
+                      .onLoadMoreList(widget.selectedFilterScreenParams.categoryId.toString());
+                },
+                isMoreListLoading: ref
+                    .watch(locationScreenProvider)
+                    .isMoreListLoading,
               ),
             ),
           ),

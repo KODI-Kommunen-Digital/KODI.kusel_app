@@ -63,7 +63,7 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
         isDraggable:
             ref.watch(locationScreenProvider).isSlidingUpPanelDragAllowed,
         minHeight: 200.h,
-        maxHeight: 550.h,
+        maxHeight: 600.h,
         defaultPanelState: PanelState.CLOSED,
         borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
         controller: ref.read(locationScreenProvider).panelController,

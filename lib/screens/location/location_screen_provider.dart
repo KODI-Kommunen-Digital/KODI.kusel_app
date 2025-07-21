@@ -75,15 +75,17 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
     }
   }
 
-  Future<void> getAllEventListUsingCategoryId(String categoryId) async {
+  Future<void> getAllEventListUsingCategoryId(String categoryId, int pageNumber) async {
+    if(pageNumber>1){
+      state = state.copyWith(isMoreListLoading: true,isSelectedFilterScreenLoading : true);
+    }
     try {
-      state =
-          state.copyWith(isSelectedFilterScreenLoading: true, allEventList: []);
-
       Locale currentLocale = localeManagerController.getSelectedLocale();
 
       GetAllListingsRequestModel requestModel =
-          GetAllListingsRequestModel(categoryId: categoryId,
+          GetAllListingsRequestModel(
+              pageNo: pageNumber,
+              categoryId: categoryId,
               translate: "${currentLocale.languageCode}-${currentLocale.countryCode}");
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
 
@@ -94,8 +96,18 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
         debugPrint("Get all event list fold exception = $l");
       }, (r) {
         final response = r as GetAllListingsResponseModel;
+
+        List<Listing> eventList = response.data ?? [];
+        List<Listing> existingEventList = state.allEventCategoryWiseList;
+        if(eventList!=null && eventList.isNotEmpty){
+          existingEventList.addAll(eventList);
+        } else {
+          pageNumber--;
+        }
         state = state.copyWith(
-            isSelectedFilterScreenLoading: false, allEventList: response.data);
+            isMoreListLoading: false,
+            isSelectedFilterScreenLoading: false,
+            allEventCategoryWiseList: existingEventList);
       });
     } catch (error) {
       state = state.copyWith(isSelectedFilterScreenLoading: false);
@@ -169,7 +181,7 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
   }
 
   void setHeight(double desiredHeight) {
-    final maxHeight = 550.h;
+    final maxHeight = 600.h;
     final position = desiredHeight.h / maxHeight;
 
     state.panelController.animatePanelToPosition(
@@ -233,5 +245,11 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
   updateSlidingUpPanelIsDragStatus(bool value)
   {
     state = state.copyWith(isSlidingUpPanelDragAllowed: value);
+  }
+
+  void onLoadMoreList(String categoryId) async {
+    int currPageNo = state.currentPageNo;
+    currPageNo = currPageNo+1;
+    await getAllEventListUsingCategoryId(categoryId, currPageNo);
   }
 }

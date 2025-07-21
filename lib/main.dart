@@ -50,7 +50,7 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
-  late StreamSubscription<ConnectivityResult> subscription;
+  StreamSubscription<ConnectivityResult>? subscription;
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   @override
@@ -109,7 +109,7 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   @override
   void dispose() {
-    subscription.cancel();
+    subscription?.cancel();
     super.dispose();
   }
 }

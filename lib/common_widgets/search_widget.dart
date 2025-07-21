@@ -20,6 +20,7 @@ class SearchWidget extends ConsumerStatefulWidget {
   FutureOr<List<Listing>?> Function(String) suggestionCallback;
   Function(Listing) onItemClick;
   VerticalDirection? verticalDirection;
+  bool isPaddingEnabled;
 
   SearchWidget(
       {super.key,
@@ -27,7 +28,9 @@ class SearchWidget extends ConsumerStatefulWidget {
       required this.searchController,
       required this.suggestionCallback,
       required this.onItemClick,
-      this.verticalDirection});
+      this.verticalDirection,
+      required this.isPaddingEnabled
+      });
 
   @override
   ConsumerState<SearchWidget> createState() => _SearchWidgetState();
@@ -63,8 +66,8 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                   suggestionsCallback: widget.suggestionCallback,
                   decorationBuilder: (context,widget){
                     return Container(
-                      padding: EdgeInsets.symmetric(vertical: 10.h,
-                      horizontal: 5.w),
+                      padding: super.widget.isPaddingEnabled ? EdgeInsets.symmetric(vertical: 10.h,
+                        horizontal: 5.w) : null,
                       constraints: BoxConstraints(
                         maxHeight: 250.h,
                         maxWidth: double.infinity// Set max height here as per your UI

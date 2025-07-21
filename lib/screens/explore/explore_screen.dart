@@ -135,7 +135,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                 path: municipalDetailScreenPath,
                 context: context,
                 params: MunicipalDetailScreenParams(
-                    municipalId: municipalId.toString(), onFavUpdate: null));
+                    municipalId: municipalId.toString()));
           } else {
             ref.read(navigationProvider).navigateUsingPath(
                   path: meinOrtScreenPath,
