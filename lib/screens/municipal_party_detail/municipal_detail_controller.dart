@@ -120,6 +120,8 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
     try {
       state = state.copyWith(isLoading: true);
       final status = await signInStatusController.isUserLoggedIn();
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
       final response = tokenStatus.isAccessTokenExpired();
       if (response && status) {
         final userId = sharedPreferenceHelper.getInt(userIdKey);
@@ -152,7 +154,10 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
         }
       }
       MunicipalPartyDetailRequestModel requestModel =
-          MunicipalPartyDetailRequestModel(municipalId: id);
+          MunicipalPartyDetailRequestModel(
+              municipalId: id,
+              translate:
+                  '${currentLocale.languageCode}-${currentLocale.countryCode}');
       ExploreDetailsResponseModel responseModel = ExploreDetailsResponseModel();
 
       final detailResponse =
