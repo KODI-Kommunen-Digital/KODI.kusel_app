@@ -82,7 +82,10 @@ class _DigifitTrophiesScreenState extends ConsumerState<DigifitTrophiesScreen> {
                           30.verticalSpace,
                           FeedbackCardWidget(
                             height: 270.h,
-                            onTap: () {},
+                            onTap: () {
+                              ref.read(navigationProvider).navigateUsingPath(
+                                  path: feedbackScreenPath, context: context);
+                            },
                           ),
                         ],
                       ),
