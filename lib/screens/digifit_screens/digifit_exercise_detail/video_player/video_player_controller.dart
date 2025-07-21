@@ -36,7 +36,7 @@ class VideoControllerNotifier extends StateNotifier<AsyncValue<VideoPlayerContro
 
   void playPauseVideo() {
     final controller = state.valueOrNull;
-    if (controller != null) {
+    if (controller != null && mounted) {
       controller.value.isPlaying ? controller.pause() : controller.play();
       state = AsyncData(controller);
     }

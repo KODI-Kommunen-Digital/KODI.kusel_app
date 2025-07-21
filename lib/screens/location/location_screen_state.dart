@@ -5,7 +5,7 @@ import 'bottom_sheet_selected_ui_type.dart';
 
 class LocationScreenState {
   List<Listing> allEventList;
-
+  List<Listing> allEventCategoryWiseList;
   BottomSheetSelectedUIType bottomSheetSelectedUIType;
   int? selectedCategoryId;
   String? selectedCategoryName;
@@ -16,9 +16,12 @@ class LocationScreenState {
   bool isSelectedFilterScreenLoading;
   bool isUserLoggedIn;
   bool isSlidingUpPanelDragAllowed;
+  int currentPageNo;
+  bool isMoreListLoading;
 
   LocationScreenState(
       this.allEventList,
+      this.allEventCategoryWiseList,
       this.bottomSheetSelectedUIType,
       this.selectedCategoryId,
       this.selectedCategoryName,
@@ -28,15 +31,18 @@ class LocationScreenState {
       this.panelController,
       this.isSelectedFilterScreenLoading,
       this.isUserLoggedIn,
-      this.isSlidingUpPanelDragAllowed);
+      this.isSlidingUpPanelDragAllowed,
+      this.currentPageNo,
+      this.isMoreListLoading);
 
   factory LocationScreenState.empty() {
-    return LocationScreenState([], BottomSheetSelectedUIType.allEvent, null,
-        null, null, [], null, PanelController(), false, false,true);
+    return LocationScreenState([], [], BottomSheetSelectedUIType.allEvent, null,
+        null, null, [], null, PanelController(), false, false, true, 1, false);
   }
 
   LocationScreenState copyWith(
       {List<Listing>? allEventList,
+      List<Listing>? allEventCategoryWiseList,
       BottomSheetSelectedUIType? bottomSheetSelectedUIType,
       int? selectedCategoryId,
       String? selectedCategoryName,
@@ -49,10 +55,12 @@ class LocationScreenState {
       PanelController? panelController,
       bool? isSelectedFilterScreenLoading,
       bool? isUserLoggedIn,
-        bool? isSlidingUpPanelDragAllowed
-      }) {
+      bool? isSlidingUpPanelDragAllowed,
+      int? currentPageNo,
+      bool? isMoreListLoading}) {
     return LocationScreenState(
         allEventList ?? this.allEventList,
+        allEventCategoryWiseList ?? this.allEventCategoryWiseList,
         bottomSheetSelectedUIType ?? this.bottomSheetSelectedUIType,
         selectedCategoryId ?? this.selectedCategoryId,
         selectedCategoryName ?? this.selectedCategoryName,
@@ -62,6 +70,8 @@ class LocationScreenState {
         panelController ?? this.panelController,
         isSelectedFilterScreenLoading ?? this.isSelectedFilterScreenLoading,
         isUserLoggedIn ?? this.isUserLoggedIn,
-    isSlidingUpPanelDragAllowed??this.isSlidingUpPanelDragAllowed);
+        isSlidingUpPanelDragAllowed ?? this.isSlidingUpPanelDragAllowed,
+        currentPageNo ?? this.currentPageNo,
+        isMoreListLoading ?? this.isMoreListLoading);
   }
 }

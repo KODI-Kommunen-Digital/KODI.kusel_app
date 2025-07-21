@@ -167,6 +167,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 .sortSuggestionList(search, list);
                             return sortedList;
                           },
+                          isPaddingEnabled: false,
                         )
                       ],
                     )

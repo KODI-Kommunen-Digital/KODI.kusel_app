@@ -150,6 +150,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
               .isNotEmpty)
             _buildRecommendation(context),
           FeedbackCardWidget(
+            height: 270.h,
             onTap: () {
               ref.read(navigationProvider).navigateUsingPath(
                   path: feedbackScreenPath, context: context);
