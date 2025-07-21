@@ -123,7 +123,7 @@ class _CustomFlutterMapState extends ConsumerState<CustomFlutterMap> {
       children: [
         TileLayer(
             urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-            userAgentPackageName: "com.kusel.kusel"),
+            userAgentPackageName: "de.landkreiskusel.app"),
         MarkerLayer(
           markers: widget.markersList,
         ),
