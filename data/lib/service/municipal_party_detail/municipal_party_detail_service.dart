@@ -20,7 +20,11 @@ class MunicipalPartyDetailService {
 
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
-    final path = "$ortDetailEndPoint/${requestModel.toJson()["municipalId"]}";
+
+    final params = requestModel.toJson();
+    final municipalIdParams = requestModel.toJson()["municipalId"];
+
+    final path = "$ortDetailEndPoint/$municipalIdParams?translate=${params["translate"]}";
 
     String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
     final headers = {'Authorization': 'Bearer $token'};
