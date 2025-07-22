@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/common_widgets/device_helper.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/l10n/app_localizations.dart';
@@ -54,7 +55,8 @@ class _OnBoardingPreferencesPageState extends ConsumerState<OnBoardingPreference
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, mainAxisExtent: 135.h),
+            crossAxisCount: 2,
+            mainAxisExtent: DeviceHelper.isMobile(context) ? 135.h : 160.h),
         itemCount: state.interests.length,
         itemBuilder: (BuildContext context, int index) {
           var interest = state.interests[index];
