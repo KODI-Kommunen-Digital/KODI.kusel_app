@@ -22,7 +22,7 @@ class OrtDetailService {
     final params = requestModel.toJson();
     final ordIdParams = requestModel.toJson()["ortId"];
     final path =
-        "$ortDetailEndPoint/$ordIdParams?translate=${params["translate"]} ";
+        "$ortDetailEndPoint/$ordIdParams?translate=${params["translate"]}";
 
 
     String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
