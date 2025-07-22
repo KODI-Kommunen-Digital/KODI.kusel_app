@@ -58,6 +58,8 @@ class OrtDetailScreenController extends StateNotifier<OrtDetailScreenState> {
       final response = tokenStatus.isAccessTokenExpired();
       final status = await signInStatusController.isUserLoggedIn();
 
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
       if (response && status) {
         final userId = sharedPreferenceHelper.getInt(userIdKey);
         RefreshTokenRequestModel requestModel =
@@ -88,7 +90,10 @@ class OrtDetailScreenController extends StateNotifier<OrtDetailScreenState> {
         }
       }
 
-      OrtDetailRequestModel requestModel = OrtDetailRequestModel(ortId: ortId, translate: '');
+      OrtDetailRequestModel requestModel = OrtDetailRequestModel(
+          ortId: ortId,
+          translate:
+              "${currentLocale.languageCode}-${currentLocale.countryCode}");
       OrtDetailResponseModel responseModel = OrtDetailResponseModel();
 
       final detailResponse =
