@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/common_widgets/device_helper.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/images_path.dart';
 
@@ -36,7 +37,7 @@ class _CommonEventCardState extends ConsumerState<ExploreGridCardView> {
             children: [
               Container(
                 padding: EdgeInsets.only(top: 6.h, left: 6.w, right: 6.w),
-                height: 85.h,
+                height: (DeviceHelper.isMobile(context))?85.h:120.h,
                 width: 180.w,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8.r),

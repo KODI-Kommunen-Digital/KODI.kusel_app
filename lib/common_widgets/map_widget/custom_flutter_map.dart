@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/common_widgets/device_helper.dart';
 import 'package:kusel/common_widgets/map_widget/custom_flutter_map_provider.dart';
 import 'package:latlong2/latlong.dart';
 import 'dart:math' as math;
@@ -17,16 +18,15 @@ class CustomFlutterMap extends ConsumerStatefulWidget {
   final Function() onMapTap;
   final List<Marker> markersList;
 
-  const CustomFlutterMap({
-    super.key,
-    required this.latitude,
-    required this.longitude,
-    required this.height,
-    required this.width,
-    required this.initialZoom,
-    required this.onMapTap,
-    required this.markersList
-  });
+  const CustomFlutterMap(
+      {super.key,
+      required this.latitude,
+      required this.longitude,
+      required this.height,
+      required this.width,
+      required this.initialZoom,
+      required this.onMapTap,
+      required this.markersList});
 
   @override
   ConsumerState<CustomFlutterMap> createState() => _CustomFlutterMapState();
@@ -60,7 +60,10 @@ class _CustomFlutterMapState extends ConsumerState<CustomFlutterMap> {
             right: 8.w,
             child: Column(
               children: [
-                textBoldPoppins(text: "N", fontSize: 10, color: Theme.of(context).colorScheme.error),
+                textBoldPoppins(
+                    text: "N",
+                    fontSize: 10,
+                    color: Theme.of(context).colorScheme.error),
                 InkWell(
                   onTap: () => _mapController.rotate(0),
                   child: Transform.rotate(
@@ -73,11 +76,15 @@ class _CustomFlutterMapState extends ConsumerState<CustomFlutterMap> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: Colors.white,
-                          boxShadow: [BoxShadow(blurRadius: 4, color: Colors.black26)],
+                          boxShadow: [
+                            BoxShadow(blurRadius: 4, color: Colors.black26)
+                          ],
                         ),
                         child: Transform.rotate(
                             angle: -10.25,
-                            child: Icon(Icons.explore, color: Theme.of(context).primaryColor, size: 20.h)),
+                            child: Icon(Icons.explore,
+                                color: Theme.of(context).primaryColor,
+                                size: 20.h)),
                       ),
                     ),
                   ),
@@ -85,21 +92,48 @@ class _CustomFlutterMapState extends ConsumerState<CustomFlutterMap> {
               ],
             ),
           ),
-          Positioned(
-            top: 70.h,
-            right: 7.w,
-            child: FloatingActionButton(
-              mini: true,
-              heroTag: "recenter",
-              onPressed: _resetMap,
-              backgroundColor: Theme.of(context).canvasColor,
-              child: Icon(
-                Icons.my_location,
-                color: Theme.of(context).primaryColor,
-                size: 16.h.w,
-              ),
-            ),
-          ),
+          DeviceHelper.isMobile(context)
+              ? Positioned(
+                  top: 70.h,
+                  right: 7.w,
+                  child: FloatingActionButton(
+                    mini: true,
+                    heroTag: "recenter",
+                    onPressed: _resetMap,
+                    backgroundColor: Theme.of(context).canvasColor,
+                    child: Icon(
+                      Icons.my_location,
+                      color: Theme.of(context).primaryColor,
+                      size: 16.h.w,
+                    ),
+                  ),
+                )
+              : Positioned(
+                  top: 80.h,
+                  right: 10.w,
+                  child: GestureDetector(
+                    onTap: _resetMap,
+                    child: Material(
+                      elevation: 4,
+                      shape: const CircleBorder(),
+                      color: Theme.of(context).canvasColor,
+                      child: Container(
+                        width: 40.h,
+                        // Or any size you prefer
+                        height: 40.h,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.my_location,
+                          color: Theme.of(context).primaryColor,
+                          size: 12.h.w,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
         ],
       ),
     );
@@ -113,12 +147,11 @@ class _CustomFlutterMapState extends ConsumerState<CustomFlutterMap> {
         initialCenter: LatLng(widget.latitude, widget.longitude),
         initialZoom: widget.initialZoom,
         interactionOptions: InteractionOptions(
-          flags: InteractiveFlag.pinchZoom |
-          InteractiveFlag.drag |
-          InteractiveFlag.flingAnimation |
-          InteractiveFlag.doubleTapZoom |
-          InteractiveFlag.scrollWheelZoom
-        ),
+            flags: InteractiveFlag.pinchZoom |
+                InteractiveFlag.drag |
+                InteractiveFlag.flingAnimation |
+                InteractiveFlag.doubleTapZoom |
+                InteractiveFlag.scrollWheelZoom),
       ),
       children: [
         TileLayer(

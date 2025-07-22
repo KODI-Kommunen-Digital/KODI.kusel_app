@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kusel/common_widgets/device_helper.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -28,6 +29,7 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
     final state = ref.watch(onboardingScreenProvider);
     final stateNotifier = ref.read(onboardingScreenProvider.notifier);
     return SingleChildScrollView(
+      physics: AlwaysScrollableScrollPhysics(),
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 20.h),
         child: Column(
@@ -120,6 +122,8 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
                   ),
                 )),
             5.verticalSpace,
+            if(DeviceHelper.isTablet(context))
+              100.verticalSpace,
           ],
         ),
       ),
@@ -221,6 +225,8 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
                         fontSize: 11),
                   ),
                 )),
+            if(DeviceHelper.isTablet(context))
+              100.verticalSpace,
           ],
         ),
       ),
