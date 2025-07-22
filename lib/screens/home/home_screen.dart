@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
 import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
+import 'package:kusel/common_widgets/device_helper.dart';
 import 'package:kusel/common_widgets/event_list_section_widget.dart';
 import 'package:kusel/common_widgets/highlights_card.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
@@ -460,7 +461,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           isLoading
               ? highlightCardShimmerEffect()
               : SizedBox(
-                  height: 315.h,
+                  height: DeviceHelper.isMobile(context) ? 315.h : 340.h,
                   child: PageView.builder(
                     controller: PageController(
                         viewportFraction:
