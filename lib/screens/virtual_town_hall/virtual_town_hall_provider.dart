@@ -1,6 +1,6 @@
 import 'package:core/sign_in_status/sign_in_status_controller.dart';
-import 'package:domain/model/empty_request.dart';
 import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
+import 'package:domain/model/request_model/virtual_town_hall/virtual_town_hall_request_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/model/response_model/virtual_town_hall/virtual_town_hall_response_model.dart';
 import 'package:domain/usecase/listings/listings_usecase.dart';
@@ -93,9 +93,12 @@ class VirtualTownHallProvider extends StateNotifier<VirtualTownHallState> {
 
   Future<void> getVirtualTownHallDetails() async {
     try {
+      Locale currentLocale = localeManagerController.getSelectedLocale();
       state = state.copyWith(loading: true);
 
-      EmptyRequest requestModel = EmptyRequest();
+      VirtualTownHallRequestModel requestModel = VirtualTownHallRequestModel(
+          translate:
+              "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
       VirtualTownHallResponseModel responseModel =
           VirtualTownHallResponseModel();

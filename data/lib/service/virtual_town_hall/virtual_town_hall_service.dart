@@ -22,7 +22,8 @@ class VirtualTownHallService {
 
     String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
     final headers = {'Authorization': 'Bearer $token'};
-    final path = virtualTownHallEndPoint;
+    final params = requestModel.toJson();
+    final path = "$virtualTownHallEndPoint?translate=${params["translate"]}";
     final apiHelper = ref.read(apiHelperProvider);
 
     final result =
