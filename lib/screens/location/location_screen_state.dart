@@ -10,7 +10,6 @@ class LocationScreenState {
   int? selectedCategoryId;
   String? selectedCategoryName;
   int? selectedSubCategoryId;
-  List<Listing> distinctFilterCategoryList;
   Listing? selectedEvent;
   PanelController panelController;
   bool isSelectedFilterScreenLoading;
@@ -26,7 +25,6 @@ class LocationScreenState {
       this.selectedCategoryId,
       this.selectedCategoryName,
       this.selectedSubCategoryId,
-      this.distinctFilterCategoryList,
       this.selectedEvent,
       this.panelController,
       this.isSelectedFilterScreenLoading,
@@ -37,7 +35,7 @@ class LocationScreenState {
 
   factory LocationScreenState.empty() {
     return LocationScreenState([], [], BottomSheetSelectedUIType.allEvent, null,
-        null, null, [], null, PanelController(), false, false, true, 1, false);
+        null, null, null, PanelController(), false, false, true, 1, false);
   }
 
   LocationScreenState copyWith(
@@ -48,7 +46,6 @@ class LocationScreenState {
       String? selectedCategoryName,
       int? selectedSubCategoryId,
       Listing? selectedEvent,
-      List<Listing>? distinctFilterCategoryList,
       double? minHeight,
       double? maxHeight,
       double? openPosition,
@@ -65,7 +62,6 @@ class LocationScreenState {
         selectedCategoryId ?? this.selectedCategoryId,
         selectedCategoryName ?? this.selectedCategoryName,
         selectedSubCategoryId ?? this.selectedSubCategoryId,
-        distinctFilterCategoryList ?? this.distinctFilterCategoryList,
         selectedEvent ?? this.selectedEvent,
         panelController ?? this.panelController,
         isSelectedFilterScreenLoading ?? this.isSelectedFilterScreenLoading,
