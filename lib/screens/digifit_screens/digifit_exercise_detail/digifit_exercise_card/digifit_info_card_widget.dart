@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/common_widgets/device_helper.dart';
 import 'package:kusel/screens/digifit_screens/digifit_start/digifit_information_controller.dart';
 
 import '../../../../common_widgets/text_styles.dart';
@@ -35,7 +36,7 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
 
     return Container(
       width: double.infinity,
-      height: 80.h,
+      height: (DeviceHelper.isMobile(context))?80.h:100.h,
       padding: EdgeInsets.only(
         top: 16.h,
         right: 24.w,
@@ -59,7 +60,7 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
                   children: [
                     textBoldPoppins(
                       text: AppLocalizations.of(context).digifit_exercise_set,
-                      fontSize: 16.sp,
+                      fontSize: 16,
                       color: Theme.of(context).textTheme.bodyLarge?.color,
                     ),
                     SizedBox(height: 6.h),
@@ -74,11 +75,11 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
                   children: [
                     textBoldPoppins(
                       text: AppLocalizations.of(context).digifit_exercise_reps,
-                      fontSize: 16.sp,
+                      fontSize: 16,
                       color: Theme.of(context).textTheme.bodyLarge?.color,
                     ),
                     SizedBox(height: 6.h),
-                    textSemiBoldPoppins(
+                    textRegularMontserrat(
                       text: '${digifitExerciseUserProgress?.repetitionsPerSet ?? 0}',
                       color: Theme.of(context).textTheme.bodyLarge?.color,
                     ),
