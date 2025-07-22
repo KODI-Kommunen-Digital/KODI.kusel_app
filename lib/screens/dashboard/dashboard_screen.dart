@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kusel/app_router.dart';
+import 'package:kusel/common_widgets/device_helper.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/navigation/navigation.dart';
 
@@ -86,7 +87,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       selectedColor: Theme.of(context).indicatorColor,
                     ),
                     DotNavigationBarItem(
-                      icon: Padding(
+                      icon: DeviceHelper.isMobile(context) ? Padding(
                         padding: EdgeInsets.only(top: 3.h),
                         child: SizedBox(
                           height: 13.h,
@@ -103,6 +104,23 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             ),
                           ),
                         ),
+                      ): Padding(
+                        padding: EdgeInsets.only(top: 1.h),
+                        child: SizedBox(
+                          height: 12.h,
+                          width: 12.w,
+                          child: Center(
+                            child: ImageUtil.loadSvgImage(
+                              height: 10.h,
+                              width: 10.w,
+                              imageUrl: imagePath['discover_icon'] ?? "",
+                              context: context,
+                              color: selectedIndex == 1
+                                  ? Theme.of(context).indicatorColor
+                                  : Theme.of(context).colorScheme.onPrimary,
+                            ),
+                          ),
+                        ),
                       ),
                       selectedColor: Theme.of(context).indicatorColor,
                     ),
@@ -111,7 +129,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       selectedColor: Theme.of(context).indicatorColor,
                     ),
                     DotNavigationBarItem(
-                      icon: Padding(
+                      icon: DeviceHelper.isMobile(context) ? Padding(
                         padding: EdgeInsets.only(top: 2.h),
                         child: SizedBox(
                           height: 14.h,
@@ -120,6 +138,22 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             context: context,
                             height: 14.h,
                             width: 15.w,
+                            fit: BoxFit.contain,
+                            imageUrl: imagePath['location_icon'] ?? "",
+                            color: selectedIndex == 3
+                                ? Theme.of(context).indicatorColor
+                                : Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        ),
+                      ) : Padding(
+                        padding: EdgeInsets.only(top: 1.h),
+                        child: SizedBox(
+                          height: 11.h,
+                          width: 11.w,
+                          child: ImageUtil.loadSvgImage(
+                            context: context,
+                            height: 11.h,
+                            width: 12.w,
                             fit: BoxFit.contain,
                             imageUrl: imagePath['location_icon'] ?? "",
                             color: selectedIndex == 3

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:kusel/common_widgets/device_helper.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -247,7 +248,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
               ),
               16.verticalSpace,
               SizedBox(
-                height: 315.h,
+                height: DeviceHelper.isMobile(context) ? 315.h : 340.h,
                 width: MediaQuery.of(context).size.width,
                 child: ListView.builder(
                     shrinkWrap: true,
