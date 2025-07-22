@@ -59,7 +59,7 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
                   children: [
                     textBoldPoppins(
                       text: AppLocalizations.of(context).digifit_exercise_set,
-                      fontSize: 16.sp,
+                      fontSize: 16,
                       color: Theme.of(context).textTheme.bodyLarge?.color,
                     ),
                     SizedBox(height: 6.h),
@@ -74,11 +74,11 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
                   children: [
                     textBoldPoppins(
                       text: AppLocalizations.of(context).digifit_exercise_reps,
-                      fontSize: 16.sp,
+                      fontSize: 16,
                       color: Theme.of(context).textTheme.bodyLarge?.color,
                     ),
                     SizedBox(height: 6.h),
-                    textSemiBoldPoppins(
+                    textRegularMontserrat(
                       text: '${digifitExerciseUserProgress?.repetitionsPerSet ?? 0}',
                       color: Theme.of(context).textTheme.bodyLarge?.color,
                     ),
