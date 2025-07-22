@@ -19,8 +19,10 @@ class OrtDetailService {
 
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
+    final params = requestModel.toJson();
+    final ordIdParams = requestModel.toJson()["ortId"];
     final path =
-        "$ortDetailEndPoint/${requestModel.toJson()["ortId"]}";
+        "$ortDetailEndPoint/$ordIdParams?translate=${params["translate"]} ";
 
 
     String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
