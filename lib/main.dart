@@ -50,7 +50,7 @@ class MyApp extends ConsumerStatefulWidget {
 }
 
 class _MyAppState extends ConsumerState<MyApp> {
-  StreamSubscription<ConnectivityResult>? subscription;
+  StreamSubscription<List<ConnectivityResult>>? subscription;
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   @override
@@ -89,20 +89,21 @@ class _MyAppState extends ConsumerState<MyApp> {
     });
     super.initState();
 
-    subscription = Connectivity().onConnectivityChanged.listen((result) {
-      final isConnected = result != ConnectivityResult.none;
-      final networkNotifier = ref.read(networkStatusProvider.notifier);
-      final currentStatus = ref.read(networkStatusProvider).isNetworkAvailable;
+    final connectivity = Connectivity();
+    subscription = connectivity.onConnectivityChanged.listen((results) {
+      final isConnected = results.isNotEmpty && results.any((r) => r != ConnectivityResult.none);
 
-      if (currentStatus != isConnected) {
-        networkNotifier.updateNetworkStatus(isConnected);
+      final notifier = ref.read(networkStatusProvider.notifier);
+      final current = ref.read(networkStatusProvider).isNetworkAvailable;
 
-        // Navigate to root using the router
+      if (current != isConnected) {
+        notifier.updateNetworkStatus(isConnected);
+
         final router = isConnected
             ? ref.read(mobileRouterProvider)
             : ref.read(noInternetRouterProvider);
 
-        router.go("/");
+        router.go('/');
       }
     });
   }
