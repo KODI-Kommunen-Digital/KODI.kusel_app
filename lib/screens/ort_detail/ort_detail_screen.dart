@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
+import 'package:kusel/common_widgets/device_helper.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/local_image_text_service_card.dart';
@@ -517,7 +518,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
           ),
           10.verticalSpace,
           SizedBox(
-            height: 310.h,
+            height: DeviceHelper.isMobile(context) ? 315.h : 340.h,
             child: PageView.builder(
               controller: PageController(
                   viewportFraction: 317.w / MediaQuery.of(context).size.width),
