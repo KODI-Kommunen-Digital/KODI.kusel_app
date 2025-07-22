@@ -37,12 +37,11 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
 
   Future<void> getAllEventList() async {
     try {
-
       Locale currentLocale = localeManagerController.getSelectedLocale();
 
       GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(
-          translate: "${currentLocale.languageCode}-${currentLocale.countryCode}"
-      );
+          translate:
+              "${currentLocale.languageCode}-${currentLocale.countryCode}");
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
 
       state = state.copyWith(allEventList: []);
@@ -54,20 +53,7 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
         final response = r as GetAllListingsResponseModel;
 
         if (response.data != null) {
-          List<int> categoryIdList = [];
-          List<Listing> filterCategoryList = [];
-
-          for (Listing listing in response.data!) {
-            final categoryId = listing.categoryId;
-            if (categoryId != null && !categoryIdList.contains(categoryId)) {
-              filterCategoryList.add(listing);
-              categoryIdList.add(categoryId);
-            }
-          }
-
-          state = state.copyWith(
-              allEventList: response.data,
-              distinctFilterCategoryList: filterCategoryList);
+          state = state.copyWith(allEventList: response.data);
         }
       });
     } catch (error) {
@@ -75,18 +61,24 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
     }
   }
 
-  Future<void> getAllEventListUsingCategoryId(String categoryId, int pageNumber) async {
-    if(pageNumber>1){
-      state = state.copyWith(isMoreListLoading: true,isSelectedFilterScreenLoading : true);
+  Future<void> getAllEventListUsingCategoryId(
+      String categoryId, int pageNumber) async {
+    if (pageNumber > 1) {
+      state = state.copyWith(
+          isMoreListLoading: true);
+    } else {
+      state = state.copyWith(
+          allEventCategoryWiseList: [], isSelectedFilterScreenLoading: true,
+      allEventList: []);
     }
     try {
       Locale currentLocale = localeManagerController.getSelectedLocale();
 
-      GetAllListingsRequestModel requestModel =
-          GetAllListingsRequestModel(
-              pageNo: pageNumber,
-              categoryId: categoryId,
-              translate: "${currentLocale.languageCode}-${currentLocale.countryCode}");
+      GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(
+          pageNo: pageNumber,
+          categoryId: categoryId,
+          translate:
+              "${currentLocale.languageCode}-${currentLocale.countryCode}");
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
 
       final result = await listingsUseCase.call(requestModel, responseModel);
@@ -99,15 +91,18 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
 
         List<Listing> eventList = response.data ?? [];
         List<Listing> existingEventList = state.allEventCategoryWiseList;
-        if(eventList!=null && eventList.isNotEmpty){
+        List<Listing> allEventList = state.allEventList;
+        if (eventList.isNotEmpty) {
           existingEventList.addAll(eventList);
+          allEventList.addAll(eventList);
         } else {
           pageNumber--;
         }
         state = state.copyWith(
             isMoreListLoading: false,
             isSelectedFilterScreenLoading: false,
-            allEventCategoryWiseList: existingEventList);
+            allEventCategoryWiseList: existingEventList,
+        allEventList: allEventList);
       });
     } catch (error) {
       state = state.copyWith(isSelectedFilterScreenLoading: false);
@@ -242,14 +237,13 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
     return list;
   }
 
-  updateSlidingUpPanelIsDragStatus(bool value)
-  {
+  updateSlidingUpPanelIsDragStatus(bool value) {
     state = state.copyWith(isSlidingUpPanelDragAllowed: value);
   }
 
   void onLoadMoreList(String categoryId) async {
     int currPageNo = state.currentPageNo;
-    currPageNo = currPageNo+1;
+    currPageNo = currPageNo + 1;
     await getAllEventListUsingCategoryId(categoryId, currPageNo);
   }
 }
