@@ -1,5 +1,6 @@
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:flutter/material.dart';
+import 'package:kusel/common_widgets/device_helper.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -59,11 +60,12 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
                         BottomSheetSelectedUIType.allEvent);
               },
               icon: Icon(
+                size: DeviceHelper.isMobile(context) ? null : 12.h.w,
                 Icons.arrow_back,
                 color: Theme.of(context).textTheme.labelMedium!.color,
               ),
             ),
-            80.horizontalSpace,
+            DeviceHelper.isMobile(context) ? 80.horizontalSpace : 110.horizontalSpace,
             Align(
               alignment: Alignment.center,
               child: Container(
@@ -76,6 +78,7 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
             ),
           ],
         ),
+        15.verticalSpace,
         SearchWidget(
           onItemClick: (listing) {
             ref.read(locationScreenProvider.notifier).setEventItem(listing);
