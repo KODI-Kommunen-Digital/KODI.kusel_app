@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:kusel/common_widgets/device_helper.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/images_path.dart';
 
@@ -52,6 +53,8 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
           child: Row(
             children: [
               ImageUtil.loadSvgImage(
+                height: DeviceHelper.isMobile(context) ? null : 15.h,
+                  width: DeviceHelper.isMobile(context) ? null : 15.h,
                   imageUrl: imagePath['search_icon'] ?? '', context: context),
               8.horizontalSpace,
               Expanded(
@@ -87,7 +90,7 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                           hintText: widget.hintText,
                           border: InputBorder.none,
                           hintStyle: TextStyle(
-                              fontSize: 14,
+                              fontSize: 12.sp,
                               fontFamily: "Poppins",
                               fontWeight: FontWeight.w400,
                               color: Theme.of(context).hintColor,

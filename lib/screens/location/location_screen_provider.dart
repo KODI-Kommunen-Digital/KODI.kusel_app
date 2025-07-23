@@ -92,17 +92,21 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
         List<Listing> eventList = response.data ?? [];
         List<Listing> existingEventList = state.allEventCategoryWiseList;
         List<Listing> allEventList = state.allEventList;
+        bool? isLoadMoreButtonEnabled;
         if (eventList.isNotEmpty) {
           existingEventList.addAll(eventList);
           allEventList.addAll(eventList);
+          isLoadMoreButtonEnabled = true;
         } else {
           pageNumber--;
+          isLoadMoreButtonEnabled = false;
         }
         state = state.copyWith(
             isMoreListLoading: false,
             isSelectedFilterScreenLoading: false,
             allEventCategoryWiseList: existingEventList,
-        allEventList: allEventList);
+            isLoadMoreButtonEnabled: isLoadMoreButtonEnabled,
+            allEventList: allEventList);
       });
     } catch (error) {
       state = state.copyWith(isSelectedFilterScreenLoading: false);

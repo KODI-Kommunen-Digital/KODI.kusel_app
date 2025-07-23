@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
+import 'package:kusel/common_widgets/device_helper.dart';
 import 'package:kusel/common_widgets/digifit/digifit_text_image_card.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/get_slug.dart';
@@ -135,7 +136,9 @@ class _DigifitTrophiesScreenState extends ConsumerState<DigifitTrophiesScreen> {
           onPressed: () {
             ref.read(navigationProvider).removeTopPage(context: context);
           },
-          icon: Icon(Icons.arrow_back, color: Theme.of(context).primaryColor),
+          icon: Icon(
+              size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+              Icons.arrow_back, color: Theme.of(context).primaryColor),
         ),
         16.horizontalSpace,
         textBoldPoppins(

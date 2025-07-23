@@ -103,7 +103,9 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                               .read(allEventScreenProvider.notifier)
                               .getEventsList(currentPageNumber);
                         },
-                        isMultiplePagesList: true,
+                        isMultiplePagesList: ref
+                            .read(allEventScreenProvider)
+                            .isLoadMoreButtonEnabled,
                         onLoadMoreTap: () {
                           ref
                               .read(allEventScreenProvider.notifier)

@@ -17,6 +17,7 @@ class LocationScreenState {
   bool isSlidingUpPanelDragAllowed;
   int currentPageNo;
   bool isMoreListLoading;
+  bool isLoadMoreButtonEnabled;
 
   LocationScreenState(
       this.allEventList,
@@ -31,11 +32,23 @@ class LocationScreenState {
       this.isUserLoggedIn,
       this.isSlidingUpPanelDragAllowed,
       this.currentPageNo,
-      this.isMoreListLoading);
+      this.isMoreListLoading,
+      this.isLoadMoreButtonEnabled);
 
   factory LocationScreenState.empty() {
-    return LocationScreenState([], [], BottomSheetSelectedUIType.allEvent, null,
-        null, null, null, PanelController(), false, false, true, 1, false);
+    return LocationScreenState([], [],
+        BottomSheetSelectedUIType.allEvent,
+        null,
+        null,
+        null,
+        null,
+        PanelController(),
+        false,
+        false,
+        true,
+        1,
+        false,
+        true);
   }
 
   LocationScreenState copyWith(
@@ -54,7 +67,8 @@ class LocationScreenState {
       bool? isUserLoggedIn,
       bool? isSlidingUpPanelDragAllowed,
       int? currentPageNo,
-      bool? isMoreListLoading}) {
+      bool? isMoreListLoading,
+      bool? isLoadMoreButtonEnabled}) {
     return LocationScreenState(
         allEventList ?? this.allEventList,
         allEventCategoryWiseList ?? this.allEventCategoryWiseList,
@@ -68,6 +82,7 @@ class LocationScreenState {
         isUserLoggedIn ?? this.isUserLoggedIn,
         isSlidingUpPanelDragAllowed ?? this.isSlidingUpPanelDragAllowed,
         currentPageNo ?? this.currentPageNo,
-        isMoreListLoading ?? this.isMoreListLoading);
+        isMoreListLoading ?? this.isMoreListLoading,
+        isLoadMoreButtonEnabled ?? this.isLoadMoreButtonEnabled);
   }
 }
