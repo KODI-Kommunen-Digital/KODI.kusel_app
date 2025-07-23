@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/common_widgets/device_helper.dart';
 
 class CommonBottomNavCard extends ConsumerStatefulWidget {
   final void Function() onBackPress;
@@ -39,6 +40,7 @@ class _CommonBottomNavCardState extends ConsumerState<CommonBottomNavCard> {
             child: IconButton(
                 onPressed: widget.onBackPress,
                 icon: Icon(
+                  size: DeviceHelper.isMobile(context) ? null : 12.h.w,
                   Icons.arrow_back,
                   color: Theme.of(context).canvasColor,
                 )),
@@ -51,6 +53,7 @@ class _CommonBottomNavCardState extends ConsumerState<CommonBottomNavCard> {
                 height: 30.h,
                 width: 30.w,
                 child: Icon(
+                  size: DeviceHelper.isMobile(context) ? null : 12.h.w,
                   widget.isFav ? Icons.favorite_sharp : Icons.favorite_border,
                   color: !widget.isFav
                       ? Theme.of(context).canvasColor

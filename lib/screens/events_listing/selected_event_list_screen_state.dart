@@ -9,6 +9,7 @@ class SelectedEventListScreenState {
   String heading;
   int currentPageNo;
   bool isMoreListLoading;
+  bool isLoadMoreButtonEnabled;
 
   SelectedEventListScreenState(
       this.address,
@@ -18,10 +19,12 @@ class SelectedEventListScreenState {
       this.isUserLoggedIn,
       this.heading,
       this.currentPageNo,
-      this.isMoreListLoading);
+      this.isMoreListLoading,
+      this.isLoadMoreButtonEnabled);
 
   factory SelectedEventListScreenState.empty() {
-    return SelectedEventListScreenState('', '', false, [], false, '', 1, false);
+    return SelectedEventListScreenState(
+        '', '', false, [], false, '', 1, false, true);
   }
 
   SelectedEventListScreenState copyWith(
@@ -32,8 +35,8 @@ class SelectedEventListScreenState {
       bool? isUserLoggedIn,
       String? heading,
       int? currentPageNo,
-      bool? isMoreListLoading
-      }) {
+      bool? isMoreListLoading,
+      bool? isLoadMoreButtonEnabled}) {
     return SelectedEventListScreenState(
         address ?? this.address,
         error ?? this.error,
@@ -42,6 +45,7 @@ class SelectedEventListScreenState {
         isUserLoggedIn ?? this.isUserLoggedIn,
         heading ?? this.heading,
         currentPageNo ?? this.currentPageNo,
-        isMoreListLoading ?? this.isMoreListLoading);
+        isMoreListLoading ?? this.isMoreListLoading,
+        isLoadMoreButtonEnabled ?? this.isLoadMoreButtonEnabled);
   }
 }
