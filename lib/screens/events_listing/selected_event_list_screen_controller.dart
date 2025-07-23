@@ -78,17 +78,22 @@ class SelectedEventListScreenController
         (r) {
           var eventsList = (r as GetAllListingsResponseModel).data;
           List<Listing> existingEventList = state.eventsList;
+          bool isLoadMoreButtonEnabled;
           if(eventsList!=null && eventsList.isNotEmpty){
             existingEventList.addAll(eventsList);
+            isLoadMoreButtonEnabled = true;
           } else {
             pageNumber--;
+            isLoadMoreButtonEnabled = false;
           }
           state = state.copyWith(
               list: existingEventList,
               loading: false,
               isMoreListLoading: false,
               heading: eventListScreenParameter?.listHeading,
-              currentPageNo: pageNumber);
+              currentPageNo: pageNumber,
+              isLoadMoreButtonEnabled : isLoadMoreButtonEnabled
+          );
         },
       );
     } catch (error) {

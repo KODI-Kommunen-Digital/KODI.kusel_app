@@ -91,7 +91,7 @@ class _KuselTextFieldState extends ConsumerState<KuselTextField> {
       style: TextStyle(
         color: widget.textColor ??
             currentSelectedThemeData.textTheme.displayMedium!.color,
-        fontSize: 14,
+        fontSize: 12.sp,
       ),
       decoration: InputDecoration(
           fillColor: Colors.white,
@@ -104,7 +104,7 @@ class _KuselTextFieldState extends ConsumerState<KuselTextField> {
                   color: Color.fromRGBO(255, 255, 255, 0.8), width: 2)),
           hintText: widget.hintText,
           contentPadding:
-              widget.contentPadding ?? const EdgeInsets.only(top: 10, left: 10),
+              widget.contentPadding ?? EdgeInsets.only(top: 20.h, left: 10.w),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(borderRadius),
             borderSide: BorderSide(

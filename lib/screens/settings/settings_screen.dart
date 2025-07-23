@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/app_router.dart';
+import 'package:kusel/common_widgets/device_helper.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
@@ -58,7 +59,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             child: Column(
               children: [
                 ListTile(
-                  leading: const Icon(Icons.account_circle_outlined),
+                  leading: Icon(
+                      size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                      Icons.account_circle_outlined),
                   title: textBoldPoppins(
                     text: AppLocalizations.of(context).profile,
                     textAlign: TextAlign.start,
@@ -73,7 +76,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.language),
+            leading: Icon(
+                size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                Icons.language),
             title: textBoldPoppins(
                 textAlign: TextAlign.start,
                 text: AppLocalizations.of(context).change_language),
@@ -81,7 +86,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.link),
+            leading: Icon(
+                size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                Icons.link),
             title: textBoldPoppins(
                 textAlign: TextAlign.start,
                 text: AppLocalizations.of(context).imprint_page),
@@ -92,7 +99,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.text_snippet_outlined),
+            leading: Icon(
+                size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                Icons.text_snippet_outlined),
             title: textBoldPoppins(
                 textAlign: TextAlign.start,
                 text: AppLocalizations.of(context).terms_of_use),
@@ -103,7 +112,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.privacy_tip_outlined),
+            leading: Icon(
+                size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                Icons.privacy_tip_outlined),
             title: textBoldPoppins(
                 textAlign: TextAlign.start,
                 text: AppLocalizations.of(context).privacy_policy),
@@ -114,7 +125,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.favorite_border),
+            leading: Icon(
+                size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                Icons.favorite_border),
             title: textBoldPoppins(
               text: AppLocalizations.of(context).favorites,
               textAlign: TextAlign.start,
@@ -126,7 +139,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
           const Divider(),
           ListTile(
-            leading: const Icon(Icons.favorite_border),
+            leading: Icon(
+                size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                Icons.favorite_border),
             title: textBoldPoppins(
               text: AppLocalizations.of(context).favourite_city,
               textAlign: TextAlign.start,
@@ -140,7 +155,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           Visibility(
             visible: ref.watch(settingsScreenProvider).isLoggedIn,
             child: ListTile(
-              leading: const Icon(Icons.logout),
+              leading: Icon(
+                  size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                  Icons.logout),
               title: textBoldPoppins(
                 text: AppLocalizations.of(context).logout,
                 textAlign: TextAlign.start,
@@ -160,7 +177,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           Visibility(
             visible: !ref.watch(settingsScreenProvider).isLoggedIn,
             child: ListTile(
-              leading: const Icon(Icons.login),
+              leading: Icon(
+                  size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                  Icons.login),
               title: textBoldPoppins(
                 text: AppLocalizations.of(context).log_in_sign_up,
                 textAlign: TextAlign.start,
@@ -175,7 +194,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             children: [
               const Divider(),
               ListTile(
-                leading: const Icon(Icons.file_copy_outlined),
+                leading: Icon(
+                    size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                    Icons.file_copy_outlined),
                 title: textBoldPoppins(
                   text: AppLocalizations.of(context).edit_onboarding_details,
                   textAlign: TextAlign.start,
@@ -194,6 +215,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 const Divider(),
                 ListTile(
                   leading: Icon(
+                    size: DeviceHelper.isMobile(context) ? null : 12.h.w,
                     Icons.delete,
                     color: Theme.of(context).colorScheme.onTertiaryFixed,
                   ),

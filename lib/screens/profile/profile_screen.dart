@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
+import 'package:kusel/common_widgets/device_helper.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/screens/profile/profile_screen_provider.dart';
@@ -53,7 +54,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             Visibility(
               visible: ref.watch(profileScreenProvider).editingEnabled,
               child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25.w),
+                  padding: DeviceHelper.isMobile(context)
+                      ? EdgeInsets.symmetric(horizontal: 25.w)
+                      : EdgeInsets.zero,
                   child: CustomButton(
                       onPressed: () {
                         ref.read(profileScreenProvider.notifier).editUserDetails(
@@ -156,7 +159,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               backgroundImage: _getProfileImage(context, state),
               child: _buildProfilePlaceholder(context, state),
             ),
-            Positioned(
+            DeviceHelper.isMobile(context) ?             Positioned(
               left: 65.w,
               top: 60.h,
               child: GestureDetector(
@@ -174,7 +177,25 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ),
                 ),
               ),
-            )
+            ):             Positioned(
+              left: 55.w,
+              top: 65.h,
+              child: GestureDetector(
+                onTap: ref.read(profileScreenProvider.notifier).pickImage,
+                child: Container(
+                  padding: EdgeInsets.all(2.h.w),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    Icons.edit,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    size: 10.h.w,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -185,7 +206,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
     final state = ref.watch(profileScreenProvider);
     final stateNotifier = ref.read(profileScreenProvider.notifier);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 25.w),
+      padding: DeviceHelper.isMobile(context) ? EdgeInsets.symmetric(horizontal:  20.w) : EdgeInsets.zero,
       child: Column(
         children: [
           _customProfileDetailTile(
@@ -278,7 +299,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       child: Row(
         children: [
           Icon(icon,
-              size: 25.h.w,
+              size: DeviceHelper.isMobile(context) ? 25.h.w : 15.h.w,
               color: Theme.of(context).textTheme.labelMedium?.color),
           10.horizontalSpace,
           Column(
@@ -299,11 +320,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                             color: Theme.of(context).colorScheme.surface)
                         : null),
                 // height: 26.h,
-                width: 250.w,
+                width: DeviceHelper.isMobile(context) ? 250.w : 220.w,
                 child: Center(
                   child: TextField(
                     controller: textEditingController,
                     style: TextStyle(
+                      fontSize: 12.sp,
                         color: fieldEnabled
                             ? Theme.of(context).colorScheme.surface
                             : Theme.of(context).textTheme.labelMedium?.color),
