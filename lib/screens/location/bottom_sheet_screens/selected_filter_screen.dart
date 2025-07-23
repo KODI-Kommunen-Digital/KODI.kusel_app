@@ -140,7 +140,8 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
                               .toString(),
                           ref.read(locationScreenProvider).currentPageNo);
                 },
-                isMultiplePagesList: true,
+                isMultiplePagesList:
+                    ref.watch(locationScreenProvider).isLoadMoreButtonEnabled,
                 onLoadMoreTap: () {
                   ref
                       .read(locationScreenProvider.notifier)
@@ -152,7 +153,7 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
               ),
             ),
           ),
-        40.verticalSpace,
+        60.verticalSpace,
       ],
     );
   }

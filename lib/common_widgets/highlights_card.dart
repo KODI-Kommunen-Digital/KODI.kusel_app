@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/common_html_widget.dart';
 import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
+import 'package:kusel/common_widgets/device_helper.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/utility/kusel_date_utils.dart';
@@ -101,12 +102,12 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
+                            size: 12.h.w,
                             widget.isFavourite
                                 ? Icons.favorite_sharp
                                 : Icons.favorite_border_sharp,
                             color:
                                 widget.isFavourite ? Colors.red : Colors.white,
-                            size: 20,
                           ),
                         ),
                       ),

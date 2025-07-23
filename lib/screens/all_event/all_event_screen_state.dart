@@ -7,12 +7,13 @@ class AllEventScreenState {
   bool isUserLoggedIn;
   int currentPageNo;
   bool isMoreListLoading;
+  bool isLoadMoreButtonEnabled;
 
   AllEventScreenState(this.listingList, this.isLoading, this.filterCount,
-      this.isUserLoggedIn, this.currentPageNo, this.isMoreListLoading);
+      this.isUserLoggedIn, this.currentPageNo, this.isMoreListLoading, this.isLoadMoreButtonEnabled);
 
   factory AllEventScreenState.empty() {
-    return AllEventScreenState([], false, null, false, 1, false);
+    return AllEventScreenState([], false, null, false, 1, false, true);
   }
 
   AllEventScreenState copyWith(
@@ -21,13 +22,17 @@ class AllEventScreenState {
       int? filterCount,
       bool? isUserLoggedIn,
       int? currentPageNo,
-      bool? isMoreListLoading}) {
+      bool? isMoreListLoading,
+      bool? isLoadMoreButtonEnabled
+      }) {
     return AllEventScreenState(
         listingList ?? this.listingList,
         isLoading ?? this.isLoading,
         filterCount ?? this.filterCount,
         isUserLoggedIn ?? this.isUserLoggedIn,
         currentPageNo ?? this.currentPageNo,
-        isMoreListLoading ?? this.isMoreListLoading);
+        isMoreListLoading ?? this.isMoreListLoading,
+        isLoadMoreButtonEnabled ?? this.isLoadMoreButtonEnabled
+    );
   }
 }

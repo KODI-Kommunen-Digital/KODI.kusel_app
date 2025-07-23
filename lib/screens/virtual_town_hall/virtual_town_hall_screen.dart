@@ -1,5 +1,6 @@
 import 'package:domain/model/response_model/explore_details/explore_details_response_model.dart';
 import 'package:flutter/material.dart';
+import 'package:kusel/common_widgets/device_helper.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -204,7 +205,9 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
               onPressed: () {
                 ref.read(navigationProvider).removeTopPage(context: context);
               },
-              icon: Icon(Icons.arrow_back)),
+              icon: Icon(
+                  size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                  Icons.arrow_back)),
         )
       ],
     );

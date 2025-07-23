@@ -259,6 +259,7 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
             focusNode: focusNode,
             maxLines: 1,
             style: TextStyle(
+              fontSize: 12.sp,
                 color: Theme.of(context).textTheme.labelMedium?.color),
             decoration: InputDecoration(
               hintText: AppLocalizations.of(context).select_residence,

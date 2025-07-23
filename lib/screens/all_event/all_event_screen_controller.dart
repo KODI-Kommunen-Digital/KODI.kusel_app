@@ -52,18 +52,22 @@ class AllEventScreenController extends StateNotifier<AllEventScreenState> {
         },
         (r) {
           var eventsList = (r as GetAllListingsResponseModel).data;
-
+          bool isLoadMoreButtonEnabled;
           List<Listing> existingEventList = state.listingList;
           if(eventsList!=null && eventsList.isNotEmpty){
             existingEventList.addAll(eventsList);
+            isLoadMoreButtonEnabled = true;
           } else {
             pageNumber--;
+            isLoadMoreButtonEnabled = false;
           }
 
-          state = state.copyWith(listingList: existingEventList,
+          state = state.copyWith(
+              listingList: existingEventList,
               isLoading: false,
               isMoreListLoading: false,
-              currentPageNo: pageNumber);
+              currentPageNo: pageNumber,
+              isLoadMoreButtonEnabled: isLoadMoreButtonEnabled);
         },
       );
     } catch (error) {

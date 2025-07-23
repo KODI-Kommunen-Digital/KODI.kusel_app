@@ -115,7 +115,9 @@ class _ExploreScreenState extends ConsumerState<SelectedEventListScreen> {
 
                           widget.eventListScreenParameter.onFavChange();
                         },
-                        isMultiplePagesList: true,
+                        isMultiplePagesList: ref
+                            .watch(selectedEventListScreenProvider)
+                            .isLoadMoreButtonEnabled,
                         onLoadMoreTap: () {
                           ref
                               .read(selectedEventListScreenProvider.notifier)
