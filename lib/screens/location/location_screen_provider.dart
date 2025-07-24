@@ -64,12 +64,12 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
   Future<void> getAllEventListUsingCategoryId(
       String categoryId, int pageNumber) async {
     if (pageNumber > 1) {
-      state = state.copyWith(
-          isMoreListLoading: true);
+      state = state.copyWith(isMoreListLoading: true);
     } else {
       state = state.copyWith(
-          allEventCategoryWiseList: [], isSelectedFilterScreenLoading: true,
-      allEventList: []);
+          allEventCategoryWiseList: [],
+          isSelectedFilterScreenLoading: true,
+          allEventList: []);
     }
     try {
       Locale currentLocale = localeManagerController.getSelectedLocale();
@@ -106,7 +106,8 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
             isSelectedFilterScreenLoading: false,
             allEventCategoryWiseList: existingEventList,
             isLoadMoreButtonEnabled: isLoadMoreButtonEnabled,
-            allEventList: allEventList);
+            allEventList: allEventList,
+            currentPageNo: pageNumber);
       });
     } catch (error) {
       state = state.copyWith(isSelectedFilterScreenLoading: false);
