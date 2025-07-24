@@ -16,6 +16,7 @@ import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/home/home_screen_state.dart';
 import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
+import 'package:upgrader/upgrader.dart';
 
 import '../../../images_path.dart';
 import '../../app_router.dart';
@@ -36,34 +37,48 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  late final Upgrader upgrader;
   @override
   void initState() {
     Future.microtask(() async {
-
       ref.read(dashboardScreenProvider.notifier).onIndexChanged(0);
       ref.read(homeScreenProvider.notifier).initialCall();
     });
+    // Todo - Need to change debugDisplayAlways and debugLogging: true to false
+    upgrader = Upgrader(
+      debugDisplayAlways: true,
+      debugLogging: true,
+      storeController: UpgraderStoreController(),
+      durationUntilAlertAgain: const Duration(seconds: 1),
+    );
+    Upgrader.clearSavedSettings();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () async {
-            final networkStatus = await ref
-                .read(networkStatusProvider.notifier)
-                .checkNetworkStatus();
-            if (networkStatus) {
-              await ref.read(homeScreenProvider.notifier).refresh();
-            }
-          },
-          child: SizedBox(
-              height: MediaQuery.of(context).size.height, child: buildUi()),
+    return UpgradeAlert(
+        upgrader: upgrader,
+      showIgnore: false,
+      showLater: true,
+      dialogStyle: UpgradeDialogStyle.cupertino,
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: SafeArea(
+          child: RefreshIndicator(
+            onRefresh: () async {
+              final networkStatus = await ref
+                  .read(networkStatusProvider.notifier)
+                  .checkNetworkStatus();
+              if (networkStatus) {
+                await ref.read(homeScreenProvider.notifier).refresh();
+              }
+            },
+            child: SizedBox(
+                height: MediaQuery.of(context).size.height, child: buildUi()),
+          ),
         ),
-      ),
+      )
     );
   }
 
