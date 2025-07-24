@@ -24,6 +24,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get password_required => 'password is required';
 
   @override
+  String get password_required_error => 'Password must be 8+ characters, include upper/lowercase,\na number, and a special character';
+
+  @override
   String get password => 'Password';
 
   @override

@@ -223,8 +223,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 textEditingController: lastNameTextEditingController,
                 focusNode: lastNameFocusNode,
                 validator: (value) =>
-                    validateField(value, AppLocalizations.of(context).lastName),
-              ),
+                    validateField(value, "${AppLocalizations
+                        .of(context)
+                        .lastName} ${AppLocalizations
+                        .of(context)
+                        .is_required}")),
               32.verticalSpace,
               CustomButton(
                 onPressed: () async {
