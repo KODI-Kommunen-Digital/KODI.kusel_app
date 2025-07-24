@@ -1,4 +1,4 @@
-const baseUrlProd = "http://116.202.186.81:4001/v1";
+const baseUrlProd = "https://dev.boundless-innovation.com/api/v1";
 const imageDownloadingEndpoint = "";
 const baseUrlStage = "";
 const sigInEndPoint = "/users/login";

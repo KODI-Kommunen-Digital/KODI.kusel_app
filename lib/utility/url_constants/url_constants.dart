@@ -1,5 +1,5 @@
-const imprintPageUrl = "http://116.202.186.81:3000/impressum";
+const imprintPageUrl = "https://dev.boundless-innovation.com/impressum";
 
-const termsOfUseUrl = "http://116.202.186.81:3000/terms";
+const termsOfUseUrl = "https://dev.boundless-innovation.com/terms";
 
-const privacyPolicyUrl = "http://116.202.186.81:3000/privacy-policy";
+const privacyPolicyUrl = "https://dev.boundless-innovation.com/privacy-policy";
