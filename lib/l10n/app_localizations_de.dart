@@ -15,13 +15,16 @@ class AppLocalizationsDe extends AppLocalizations {
   String get app_title => 'Kusel';
 
   @override
-  String get enter_email_id => 'E-Mail-Adresse eingeben';
+  String get enter_email_id => 'E-Mail oder Benutzername';
 
   @override
   String get email_required => 'E-Mail-Adresse erforderlich';
 
   @override
   String get password_required => 'Passwort erforderlich';
+
+  @override
+  String get password_required_error => 'Das Passwort muss mindestens 8 Zeichen lang sein und Groß- und \nKleinbuchstaben,eine Zahl und ein Sonderzeichen enthalten.';
 
   @override
   String get password => 'Passwort';
