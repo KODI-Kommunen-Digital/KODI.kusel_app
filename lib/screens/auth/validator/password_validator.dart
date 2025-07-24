@@ -8,7 +8,7 @@ String? validatePassword(String? value, BuildContext context) {
   final passwordRegex = RegExp(
       r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&^])[A-Za-z\d@$!%*?#&^]{8,}$');
   if (!passwordRegex.hasMatch(value)) {
-    return 'Password must be 8+ characters, include upper/lowercase,\na number, and a special character';
+    return AppLocalizations.of(context).password_required_error;
   }
   return null;
 }
