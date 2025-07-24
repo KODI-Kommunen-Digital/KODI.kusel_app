@@ -231,6 +231,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                       .updateNewsIsFav(isFav, id);
                 },
               ),
+            if(ref.watch(ortDetailScreenControllerProvider).ortDetailDataModel?.mayorName!=null)
             _buildMayorCard(),
             LocalSvgImageTextServiceCard(
               onTap: () => ref.read(navigationProvider).navigateUsingPath(
