@@ -44,12 +44,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       ref.read(dashboardScreenProvider.notifier).onIndexChanged(0);
       ref.read(homeScreenProvider.notifier).initialCall();
     });
-    // Todo - Need to change debugDisplayAlways and debugLogging: true to false
     upgrader = Upgrader(
-      debugDisplayAlways: true,
-      debugLogging: true,
       storeController: UpgraderStoreController(),
-      durationUntilAlertAgain: const Duration(seconds: 1),
     );
     Upgrader.clearSavedSettings();
     super.initState();
