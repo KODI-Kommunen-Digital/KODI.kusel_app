@@ -125,6 +125,12 @@ abstract class AppLocalizations {
   /// **'password is required'**
   String get password_required;
 
+  /// No description provided for @password_required_error.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be 8+ characters, include upper/lowercase,\na number, and a special character'**
+  String get password_required_error;
+
   /// No description provided for @password.
   ///
   /// In en, this message translates to:
