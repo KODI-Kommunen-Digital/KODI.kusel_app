@@ -124,7 +124,7 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
 
   _buildDigifitOverviewScreenUi() {
     var state = ref.watch(digifitInformationControllerProvider);
-    final parsourList = state.digifitInformationDataModel?.parcours ?? [];
+    final parcoursList = state.digifitInformationDataModel?.parcours ?? [];
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w),
@@ -212,18 +212,13 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                       ref.read(navigationProvider).navigateUsingPath(
                           path: digifitTrophiesScreenPath, context: context);
                     }
-                    // else {
-                    //   ref.read(navigationProvider).navigateUsingPath(
-                    //       path: offlineDigifitTrophiesScreenPath,
-                    //       context: context);
-                    // }
                   },
                 ),
               ),
             ],
           ),
           12.verticalSpace,
-          ...parsourList.map(
+          ...parcoursList.map(
             (parcours) => _buildCourseDetailSection(
               parcoursModel: parcours,
             ),
