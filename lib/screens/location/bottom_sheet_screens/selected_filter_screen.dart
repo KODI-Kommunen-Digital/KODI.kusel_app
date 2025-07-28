@@ -31,7 +31,8 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
       final currentPageNumber =
           ref.read(locationScreenProvider).currentPageNo;
       ref.read(locationScreenProvider.notifier).getAllEventListUsingCategoryId(
-          widget.selectedFilterScreenParams.categoryId.toString(), currentPageNumber);
+          widget.selectedFilterScreenParams.categoryId.toString(),
+          currentPageNumber);
     });
     super.initState();
   }
@@ -119,6 +120,8 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
         if (!ref.read(locationScreenProvider).isSelectedFilterScreenLoading)
           Expanded(
             child: SingleChildScrollView(
+              controller: widget.scrollController,
+              physics: const ClampingScrollPhysics(),
               child: EventsListSectionWidget(
                 shrinkWrap: true,
                 scrollController: widget.scrollController,
