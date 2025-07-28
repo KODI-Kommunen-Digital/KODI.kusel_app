@@ -11,6 +11,7 @@ import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/weather_widget.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/providers/favorites_list_notifier.dart';
+import 'package:kusel/screens/all_event/all_event_screen_param.dart';
 import 'package:kusel/screens/dashboard/dashboard_screen_provider.dart';
 import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
@@ -352,28 +353,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 isLoading: isLoading,
                 onButtonTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
-                      path: selectedEventListScreenPath,
+                      path: allEventScreenPath,
                       context: context,
-                      params: SelectedEventListScreenParameter(
-                          categoryId: ListingCategoryId.event.eventId,
-                          onFavChange: () {
-                            ref.read(homeScreenProvider.notifier).getEvents();
-                          },
-                          listHeading: AppLocalizations.of(context).events));
+                      params: AllEventScreenParam(onFavChange: () {
+                        ref.read(homeScreenProvider.notifier).getEvents();
+                      }));
                 },
                 onFavClickCallback: () {
                   ref.read(homeScreenProvider.notifier).getEvents();
                 },
                 onHeadingTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
-                      path: selectedEventListScreenPath,
+                      path: allEventScreenPath,
                       context: context,
-                      params: SelectedEventListScreenParameter(
-                          categoryId: ListingCategoryId.event.eventId,
-                          onFavChange: () {
-                            ref.read(homeScreenProvider.notifier).getEvents();
-                          },
-                          listHeading: AppLocalizations.of(context).events));
+                      params: AllEventScreenParam(onFavChange: () {
+                        ref.read(homeScreenProvider.notifier).getEvents();
+                      }));
                 },
                 onSuccess: (isFav, eventId) {
                   ref
