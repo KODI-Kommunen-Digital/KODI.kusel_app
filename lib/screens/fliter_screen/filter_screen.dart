@@ -417,13 +417,17 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
           CustomToggleButton(
               selected: isToggled,
               onValueChange: (value) => {onValueChange(value, text)}),
-          Padding(
-            padding: EdgeInsets.only(left: 10.w),
-            child: textRegularPoppins(
-                text: displayText,
-                fontWeight: FontWeight.w600,
-                fontSize: 12,
-                color: Theme.of(context).textTheme.bodyMedium?.color),
+          Flexible(
+            child: Padding(
+              padding: EdgeInsets.only(left: 10.w),
+              child: textRegularPoppins(
+                  text: displayText,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 12,
+                  color: Theme.of(context).textTheme.bodyMedium?.color,
+                  textAlign: TextAlign.start,
+                  textOverflow: TextOverflow.visible),
+            ),
           ),
         ],
       ),
