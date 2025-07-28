@@ -1,5 +1,5 @@
 enum CityTypeConstant {
-  municipal("municipality");
+  city("city");
 
   final String name;
   const CityTypeConstant(this.name);

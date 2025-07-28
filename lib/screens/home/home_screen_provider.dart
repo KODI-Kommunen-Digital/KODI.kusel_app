@@ -462,7 +462,7 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
           final response = r as OnboardingDetailsResponseModel;
           if (response.data != null && response.data?.cityId != null) {
             sharedPreferenceHelper.setInt(
-                selectedMunicipalIdKey, response.data!.cityId!);
+                selectedCityIdKey, response.data!.cityId!);
           }
         });
       }

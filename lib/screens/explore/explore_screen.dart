@@ -17,6 +17,7 @@ import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
+import '../ort_detail/ort_detail_screen_params.dart';
 
 class ExploreScreen extends ConsumerStatefulWidget {
   const ExploreScreen({super.key});
@@ -126,16 +127,16 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
         break;
       case 1:
         onTap = () {
-          final municipalId = ref
+          final cityId = ref
               .read(sharedPreferenceHelperProvider)
-              .getInt(selectedMunicipalIdKey);
+              .getInt(selectedCityIdKey);
 
-          if ((municipalId != null && municipalId != 0)) {
+          if ((cityId != null && cityId != 0)) {
             ref.read(navigationProvider).navigateUsingPath(
-                path: municipalDetailScreenPath,
+                path: ortDetailScreenPath,
                 context: context,
-                params: MunicipalDetailScreenParams(
-                    municipalId: municipalId.toString()));
+                params: OrtDetailScreenParams(
+                    ortId: cityId.toString()));
           } else {
             ref.read(navigationProvider).navigateUsingPath(
                   path: meinOrtScreenPath,
