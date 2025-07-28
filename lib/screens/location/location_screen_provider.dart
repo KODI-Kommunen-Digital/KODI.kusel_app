@@ -254,4 +254,12 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
     currPageNo = currPageNo + 1;
     await getAllEventListUsingCategoryId(categoryId, currPageNo);
   }
+
+  void markCategoryAsFetched(int categoryId) {
+    final updatedMap = {...state.fetchedCategoryMap};
+    updatedMap[categoryId] = true;
+
+    state = state.copyWith(fetchedCategoryMap: updatedMap);
+  }
+
 }

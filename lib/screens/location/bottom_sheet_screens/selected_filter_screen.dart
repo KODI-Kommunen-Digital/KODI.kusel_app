@@ -28,11 +28,20 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
   @override
   void initState() {
     Future.microtask(() {
-      final currentPageNumber =
-          ref.read(locationScreenProvider).currentPageNo;
-      ref.read(locationScreenProvider.notifier).getAllEventListUsingCategoryId(
-          widget.selectedFilterScreenParams.categoryId.toString(),
-          currentPageNumber);
+      final notifier = ref.read(locationScreenProvider.notifier);
+      final state = ref.read(locationScreenProvider);
+      final categoryId = widget.selectedFilterScreenParams.categoryId;
+
+      final alreadyFetched = state.fetchedCategoryMap[categoryId] ?? false;
+
+      if (!alreadyFetched) {
+        debugPrint("Fetching data for categoryId $categoryId");
+        notifier.getAllEventListUsingCategoryId(
+            categoryId.toString(), state.currentPageNo);
+        notifier.markCategoryAsFetched(categoryId);
+      } else {
+        debugPrint("Skipping fetch, already fetched categoryId $categoryId");
+      }
     });
     super.initState();
   }
