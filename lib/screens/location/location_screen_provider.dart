@@ -74,6 +74,9 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
     try {
       Locale currentLocale = localeManagerController.getSelectedLocale();
 
+      if(pageNumber==0){
+        pageNumber=1;
+      }
       GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(
           pageNo: pageNumber,
           categoryId: categoryId,

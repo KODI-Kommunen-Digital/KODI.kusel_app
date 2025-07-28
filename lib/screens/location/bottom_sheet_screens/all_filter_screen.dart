@@ -107,7 +107,11 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
             ),
           ),
           5.verticalSpace,
-          textRegularMontserrat(text: categoryName, fontSize: 13, textAlign: TextAlign.center, textOverflow: TextOverflow.visible),
+          textRegularMontserrat(
+              text: categoryName,
+              fontSize: 13,
+              textAlign: TextAlign.center,
+              textOverflow: TextOverflow.visible),
         ],
       ),
     );
