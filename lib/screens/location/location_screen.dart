@@ -41,7 +41,7 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
       final isAtTop = _innerScrollController.offset <=
           _innerScrollController.position.minScrollExtent + 10;
       if (ref.read(locationScreenProvider).isSlidingUpPanelDragAllowed !=
-          isAtTop) {
+          isAtTop && _innerScrollController.offset!=0.0) {
         ref
             .read(locationScreenProvider.notifier)
             .updateSlidingUpPanelIsDragStatus(isAtTop);
