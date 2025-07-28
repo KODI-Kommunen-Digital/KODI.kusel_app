@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/location_const.dart';
 import 'package:kusel/screens/location/bottom_sheet_screens/selected_filter_screen.dart';
 import 'package:kusel/screens/location/location_screen_state.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
-import '../../common_widgets/category_icon.dart';
 import '../../common_widgets/custom_map_marker.dart';
 import '../../common_widgets/map_widget/custom_flutter_map.dart';
 import 'bottom_sheet_screens/all_filter_screen.dart';
@@ -38,10 +36,11 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
 
   void _handleScroll() {
     if (_innerScrollController.hasClients) {
-      final isAtTop = _innerScrollController.offset <=
-          _innerScrollController.position.minScrollExtent + 10;
-      if (ref.read(locationScreenProvider).isSlidingUpPanelDragAllowed !=
-          isAtTop && _innerScrollController.offset!=0.0) {
+      final offset = _innerScrollController.offset;
+      final isAtTop = offset <= _innerScrollController.position.minScrollExtent + 1;
+      final currentDragStatus =
+          ref.read(locationScreenProvider).isSlidingUpPanelDragAllowed;
+      if (currentDragStatus != isAtTop) {
         ref
             .read(locationScreenProvider.notifier)
             .updateSlidingUpPanelIsDragStatus(isAtTop);
