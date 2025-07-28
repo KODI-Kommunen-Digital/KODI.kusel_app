@@ -134,7 +134,6 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
 
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
-              categoryId: ListingCategoryId.event.eventId.toString(),
               translate:
                   "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
