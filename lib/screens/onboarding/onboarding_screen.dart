@@ -146,9 +146,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     stateNotifier.updateErrorMsgStatus(true);
                   } else {
                     stateNotifier.updateErrorMsgStatus(false);
-                    if (state.isLoggedIn) {
                       stateNotifier.submitUserDemographics();
-                    }
                     await stateNotifier.nextPage();
                   }
                   break;
