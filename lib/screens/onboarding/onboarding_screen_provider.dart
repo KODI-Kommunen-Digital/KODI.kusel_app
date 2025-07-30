@@ -169,7 +169,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   Future<void> fetchCities() async {
     try {
       GetCityDetailsRequestModel requestModel = GetCityDetailsRequestModel(
-          hasForum: false, type: CityTypeConstant.municipal.name);
+          hasForum: false, type: CityTypeConstant.city.name);
       GetCityDetailsResponseModel responseModel = GetCityDetailsResponseModel();
       final result =
           await getCityDetailsUseCase.call(requestModel, responseModel);
@@ -264,7 +264,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
 
     if(cityId!=0)
       {
-        sharedPreferenceHelper.setInt(selectedMunicipalIdKey, cityId);
+        sharedPreferenceHelper.setInt(selectedCityIdKey, cityId);
       }
     try {
       final response = tokenStatus.isAccessTokenExpired();
@@ -472,7 +472,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
             int cityId = getCityIdByName(state.cityDetailsMap, cityName) ?? 0;
             if(cityId!=0)
             {
-              await sharedPreferenceHelper.setInt(selectedMunicipalIdKey, cityId);
+              await sharedPreferenceHelper.setInt(selectedCityIdKey, cityId);
             }
           }
 
