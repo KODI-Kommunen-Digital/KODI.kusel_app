@@ -135,8 +135,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
             ref.read(navigationProvider).navigateUsingPath(
                 path: ortDetailScreenPath,
                 context: context,
-                params: OrtDetailScreenParams(
-                    ortId: cityId.toString()));
+                params: OrtDetailScreenParams(ortId: cityId.toString()));
           } else {
             ref.read(navigationProvider).navigateUsingPath(
                   path: meinOrtScreenPath,
