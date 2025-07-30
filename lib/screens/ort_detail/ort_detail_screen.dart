@@ -97,7 +97,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                         success: ({required bool isFavorite}) {
                           _updateCityFavStatus(
                               isFavorite, ortDetailDataModel?.id ?? 0);
-                          widget.ortDetailScreenParams.onFavSuccess(
+                          widget.ortDetailScreenParams.onFavSuccess!(
                               isFavorite, ortDetailDataModel?.id ?? 0);
                         },
                         error: ({required String message}) {
