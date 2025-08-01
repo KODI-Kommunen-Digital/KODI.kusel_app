@@ -75,7 +75,7 @@ Text textBoldPoppins(
       fontSize: fontSize?.sp ?? 14.sp,
       fontFamily: "Poppins",
       fontWeight: fontWeight ?? FontWeight.w600,
-      color: color,
+      color: color ?? Color.fromRGBO(0, 0, 0, 1),
       decoration: decoration,
       fontStyle: fontStyle,
     ),

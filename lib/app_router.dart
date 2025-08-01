@@ -11,6 +11,7 @@ import 'package:kusel/screens/auth/forgot_password/forgot_password_screen.dart';
 import 'package:kusel/screens/auth/signin/signin_screen.dart';
 import 'package:kusel/screens/auth/signup/signup_screen.dart';
 import 'package:kusel/screens/dashboard/dashboard_screen.dart';
+import 'package:kusel/screens/digifit_screens/brain_teaser_game/game_list_screen.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/digifit_exercise_detail_screen.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/params/digifit_exercise_details_params.dart';
 import 'package:kusel/screens/digifit_screens/digifit_overview/digifit_overview_screen.dart';
@@ -102,6 +103,7 @@ const mobilityScreenPath = "mobilityScreenPath";
 const participateScreenPath = "participateScreenPath";
 const digifitStartScreenPath = "digifitStartScreenPath";
 const digifitTrophiesScreenPath = "digifitTrophiesScreenPath";
+const brainTeasersGameListScreenPath = "brainTeasersGameListScreenPath";
 
 // DigiFit screen path
 const digifitOverViewScreenPath = "/digifitOverViewScreenPath";
@@ -118,7 +120,8 @@ final exploreSubScreenRoutes = [
   mobilityScreenPath,
   participateScreenPath,
   digifitStartScreenPath,
-  digifitTrophiesScreenPath
+  digifitTrophiesScreenPath,
+  brainTeasersGameListScreenPath
 ];
 
 // Full route list
@@ -262,6 +265,8 @@ final dashboardRoutes = StatefulShellRoute.indexedStack(
             GoRoute(
                 path: digifitTrophiesScreenPath,
                 builder: (_, __) => DigifitTrophiesScreen()),
+            GoRoute(path: brainTeasersGameListScreenPath,
+            builder: (_, __) => const BrainTeaserGameListScreen()),
             GoRoute(
               path: participateScreenPath,
               builder: (_, __) => const ParticipateScreen(),

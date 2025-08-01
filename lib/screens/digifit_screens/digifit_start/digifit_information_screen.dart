@@ -114,7 +114,6 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
         ),
         16.horizontalSpace,
         textBoldPoppins(
-          color: Theme.of(context).textTheme.labelLarge?.color,
           fontSize: 20,
           text: AppLocalizations.of(context).digifit_parcours,
         ),
@@ -197,7 +196,15 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                 child: DigifitOptionsCard(
                   cardText: AppLocalizations.of(context).brain_teasers,
                   svgImageUrl: imagePath['brain_teaser_icon'] ?? '',
-                  onCardTap: () {},
+                  onCardTap: () {
+                    final value =
+                        ref.read(networkStatusProvider).isNetworkAvailable;
+                    if (value) {
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: brainTeasersGameListScreenPath,
+                          context: context);
+                    }
+                  },
                 ),
               ),
               8.horizontalSpace,
