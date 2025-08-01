@@ -55,7 +55,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
               children: [
                 CommonBackgroundClipperWidget(
                     clipperType: DownstreamCurveClipper(),
-                    imageUrl: state.mobilityData?.iconUrl ??
+                    imageUrl: state.mobilityData?.imageUrl ??
                         'https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg',
                     isBackArrowEnabled: false,
                     isStaticImage: false),
