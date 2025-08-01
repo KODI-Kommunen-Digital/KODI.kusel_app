@@ -242,5 +242,6 @@
   "location_map_eat_drink": "Eat or Drink",
   "location_map_free_time": "Freetime and Tourism",
   "location_map_highlights": "Highlights",
-  "location_map_poi": "POI"
+  "location_map_poi": "POI",
+  "brain_teasers_list_title": "Brain teasers"
 }

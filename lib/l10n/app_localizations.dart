@@ -1558,6 +1558,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'POI'**
   String get location_map_poi;
+
+  /// No description provided for @brain_teasers_list_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Brain teasers'**
+  String get brain_teasers_list_title;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
