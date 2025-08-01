@@ -739,4 +739,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get location_map_poi => 'POI';
+
+  @override
+  String get brain_teasers_list_title => 'Denksportaufgaben';
 }
