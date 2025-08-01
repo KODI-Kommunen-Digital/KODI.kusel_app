@@ -1,9 +1,9 @@
 import 'package:core/token_status.dart';
-import 'package:domain/model/request_model/digifit/brain_teaser_game/brain_teaser_game_list_request_model.dart';
-import 'package:domain/model/response_model/digifit/brain_teaser_game/brain_teaser_game_list_response_model.dart';
+import 'package:domain/model/request_model/digifit/brain_teaser_game/game_list_request_model.dart';
+import 'package:domain/model/response_model/digifit/brain_teaser_game/game_list_response_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:domain/usecase/digifit/brain_teaser_game/brain_teaser_game_list_usecase.dart';
+import 'package:domain/usecase/digifit/brain_teaser_game/game_list_usecase.dart';
 import '../../../locale/localization_manager.dart';
 import '../../../providers/refresh_token_provider.dart';
 import 'game_list_state.dart';

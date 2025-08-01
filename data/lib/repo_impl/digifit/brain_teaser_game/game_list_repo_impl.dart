@@ -1,6 +1,6 @@
 import 'package:core/base_model.dart';
 import 'package:data/repo_impl/repository.dart';
-import 'package:data/service/digifit_services/brain_teaser_game/brain_teaser_game_list_service.dart';
+import 'package:data/service/digifit_services/brain_teaser_game/game_list_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dartz/dartz.dart';
 
