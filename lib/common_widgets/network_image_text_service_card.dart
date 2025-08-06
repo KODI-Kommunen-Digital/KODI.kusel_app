@@ -83,9 +83,7 @@ class _IconTextWidgetCardState extends ConsumerState<NetworkImageTextServiceCard
                 ),
               ),
               Expanded(
-                  flex: 1,
-                  child:
-                      Image.asset(imagePath["link_icon"] ?? '')),
+                  flex: 1, child: Image.asset(imagePath["link_icon"] ?? '')),
             ],
           ),
         ),
