@@ -56,7 +56,7 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
               children: [
                 CommonBackgroundClipperWidget(
                     clipperType: DownstreamCurveClipper(),
-                    imageUrl: state.participateData?.iconUrl ??
+                    imageUrl: state.participateData?.imageUrl ??
                         'https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg',
                     isBackArrowEnabled: false,
                     isStaticImage: false),
