@@ -70,6 +70,8 @@ class _IconTextWidgetCardState extends ConsumerState<NetworkImageTextServiceCard
                   children: [
                     textBoldMontserrat(
                         text: widget.text,
+                        textOverflow: TextOverflow.visible,
+                        textAlign: TextAlign.start,
                         color: Theme.of(context).textTheme.bodyLarge?.color),
                     if(widget.description != null)
                         textRegularMontserrat(
@@ -81,9 +83,7 @@ class _IconTextWidgetCardState extends ConsumerState<NetworkImageTextServiceCard
                 ),
               ),
               Expanded(
-                  flex: 1,
-                  child:
-                      Image.asset(imagePath["link_icon"] ?? '')),
+                  flex: 1, child: Image.asset(imagePath["link_icon"] ?? '')),
             ],
           ),
         ),
