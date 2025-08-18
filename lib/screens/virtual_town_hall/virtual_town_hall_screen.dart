@@ -388,6 +388,11 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
           10.verticalSpace,
           SizedBox(
             height: 280.h,
+            child: NotificationListener<OverscrollIndicatorNotification>(
+              onNotification: (overscroll) {
+                overscroll.disallowIndicator();
+                return true;
+              },
             child: PageView.builder(
               controller: PageController(
                   viewportFraction: 317.w / MediaQuery.of(context).size.width),
@@ -443,6 +448,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                     .read(virtualTownHallProvider.notifier)
                     .updateCardIndex(index);
               },
+              ),
             ),
           ),
         ],
