@@ -184,7 +184,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                           .getAllEvents();
                     },
                   ),
-                32.verticalSpace,
+                22.verticalSpace,
                 FeedbackCardWidget(
                     height: 270.h,
                     onTap: () {

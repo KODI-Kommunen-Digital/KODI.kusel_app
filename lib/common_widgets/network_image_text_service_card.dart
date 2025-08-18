@@ -49,14 +49,14 @@ class _IconTextWidgetCardState extends ConsumerState<NetworkImageTextServiceCard
               Expanded(
                 flex: 3,
                 child: ImageUtil.loadNetworkImage(
-                    onImageTap: () {
-                      ref.read(navigationProvider).navigateUsingPath(
-                          path: fullImageScreenPath,
-                          params: FullImageScreenParams(
-                            imageUrL: widget.imageUrl,
-                          ),
-                          context: context);
-                    },
+                    // onImageTap: () {
+                    //   ref.read(navigationProvider).navigateUsingPath(
+                    //       path: fullImageScreenPath,
+                    //       params: FullImageScreenParams(
+                    //         imageUrL: widget.imageUrl,
+                    //       ),
+                    //       context: context);
+                    // },
                     fit: BoxFit.contain,
                     height: 30.h,
                     width: 30.w,
@@ -67,6 +67,7 @@ class _IconTextWidgetCardState extends ConsumerState<NetworkImageTextServiceCard
                 flex: 6,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     textBoldMontserrat(
                         text: widget.text,
@@ -82,10 +83,14 @@ class _IconTextWidgetCardState extends ConsumerState<NetworkImageTextServiceCard
                   ],
                 ),
               ),
-              Expanded(
-                  flex: 1, child: Image.asset(imagePath["link_icon"] ?? '')),
-            ],
-          ),
+            SizedBox(
+              height: 48,
+              child: Image.asset(
+                imagePath["link_icon"] ?? '',
+                fit: BoxFit.contain,
+              ),
+            ),
+          ]),
         ),
       ),
     );
