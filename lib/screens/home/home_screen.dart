@@ -149,21 +149,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SearchWidget(
-                          showSuggestion: ref.watch(showSuggestionsProvider),
-                          // onSuggestionChange: (value) {
-                          //   ref.read(showSuggestionsProvider.notifier).state =
-                          //       value;
-                          // },
                           onItemClick: (listing) {
                             ref.read(navigationProvider).navigateUsingPath(
                                 context: context,
                                 path: eventDetailScreenPath,
                                 params:
-                                    EventDetailScreenParams(event: listing));
+                                EventDetailScreenParams(event: listing));
                           },
                           searchController: TextEditingController(),
                           hintText:
-                              AppLocalizations.of(context).enter_search_term,
+                          AppLocalizations.of(context).enter_search_term,
                           suggestionCallback: (search) async {
                             List<Listing>? list;
                             if (search.isEmpty) return [];
@@ -171,9 +166,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               list = await ref
                                   .read(homeScreenProvider.notifier)
                                   .searchList(
-                                      searchText: search,
-                                      success: () {},
-                                      error: (err) {});
+                                  searchText: search,
+                                  success: () {},
+                                  error: (err) {});
                             } catch (e) {
                               return [];
                             }

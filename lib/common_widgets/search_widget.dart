@@ -30,8 +30,7 @@ class SearchWidget extends ConsumerStatefulWidget {
       required this.suggestionCallback,
       required this.onItemClick,
       this.verticalDirection,
-      required this.isPaddingEnabled
-      });
+      required this.isPaddingEnabled});
 
   @override
   ConsumerState<SearchWidget> createState() => _SearchWidgetState();
@@ -53,9 +52,10 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
           child: Row(
             children: [
               ImageUtil.loadSvgImage(
-                height: DeviceHelper.isMobile(context) ? null : 15.h,
+                  height: DeviceHelper.isMobile(context) ? null : 15.h,
                   width: DeviceHelper.isMobile(context) ? null : 15.h,
-                  imageUrl: imagePath['search_icon'] ?? '', context: context),
+                  imageUrl: imagePath['search_icon'] ?? '',
+                  context: context),
               8.horizontalSpace,
               Expanded(
                 child: TypeAheadField<Listing>(
@@ -67,18 +67,20 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                   debounceDuration: Duration(milliseconds: 1000),
                   controller: widget.searchController,
                   suggestionsCallback: widget.suggestionCallback,
-                  decorationBuilder: (context,widget){
+                  decorationBuilder: (context, widget) {
                     return Container(
-                      padding: super.widget.isPaddingEnabled ? EdgeInsets.symmetric(vertical: 10.h,
-                        horizontal: 5.w) : null,
+                      padding: super.widget.isPaddingEnabled
+                          ? EdgeInsets.symmetric(
+                              vertical: 10.h, horizontal: 5.w)
+                          : null,
                       constraints: BoxConstraints(
-                        maxHeight: 250.h,
-                        maxWidth: double.infinity// Set max height here as per your UI
-                      ),
+                          maxHeight: 250.h,
+                          maxWidth: double
+                              .infinity // Set max height here as per your UI
+                          ),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).scaffoldBackgroundColor,
-                        borderRadius: BorderRadius.circular(10.r)
-                      ),
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                          borderRadius: BorderRadius.circular(10.r)),
                       child: widget,
                     );
                   },
