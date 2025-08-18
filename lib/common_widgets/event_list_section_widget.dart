@@ -24,7 +24,7 @@ class EventsListSectionWidget extends ConsumerStatefulWidget {
   final String? buttonIconPath;
   final bool isLoading;
   final bool? showEventLoading;
-  final VoidCallback onButtonTap;
+  final VoidCallback? onButtonTap;
   final BuildContext context;
   final VoidCallback onHeadingTap;
   final bool isFavVisible;
@@ -42,11 +42,11 @@ class EventsListSectionWidget extends ConsumerStatefulWidget {
       required this.eventsList,
       required this.heading,
       required this.maxListLimit,
-      required this.buttonText,
-      required this.buttonIconPath,
+      this.buttonText,
+      this.buttonIconPath,
       required this.isLoading,
       this.showEventLoading,
-      required this.onButtonTap,
+      this.onButtonTap,
       required this.context,
       required this.isFavVisible,
       required this.onHeadingTap,

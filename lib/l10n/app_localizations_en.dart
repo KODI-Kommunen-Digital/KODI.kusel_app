@@ -84,7 +84,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get logout => 'Logout';
 
   @override
-  String get select_language => 'Select your language';
+  String get select_language => 'Choose your language';
 
   @override
   String get medieval_market => 'Medieval market';
@@ -220,6 +220,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get i_live_in_district => 'I live in the district...';
+
+  @override
+  String get i_am_visiting_the_district => 'I am visiting the district ...';
 
   @override
   String get i_live_in_district_onborading_type_page => 'live here in the district';
@@ -495,10 +498,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get your_contact_persons => 'Your contact persons';
 
   @override
-  String get participate => 'PARTICIPATE';
+  String get participate => 'Participate';
 
   @override
-  String get register_here => 'Register here';
+  String get register_here => 'LogIn here';
 
   @override
   String get develop_kusel_together_text => 'We want to further develop the Kusel district together.';
@@ -561,7 +564,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get district => 'District';
 
   @override
-  String get favourite_city => 'Favourite cities';
+  String get favourite_places => 'Favourite places';
 
   @override
   String get delete_account => 'Delete account';
@@ -570,7 +573,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get success_delete_account_message => 'You account has been deleted successfully';
 
   @override
-  String get edit_onboarding_details => 'Edit onboarding details';
+  String get edit_onboarding_details => 'Edit User details';
 
   @override
   String get ok => 'Ok';
@@ -739,4 +742,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get location_map_poi => 'POI';
+
+  @override
+  String get mobility_centre => 'Mobility centre';
 }

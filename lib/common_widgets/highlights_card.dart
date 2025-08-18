@@ -128,8 +128,10 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                 (widget.date != null) ? 4.verticalSpace : SizedBox.shrink(),
                 textSemiBoldMontserrat(
                     text: widget.heading,
+                    textAlign: TextAlign.start,
                     fontWeight: FontWeight.w500,
                     fontSize: 11,
+                    textOverflow: TextOverflow.visible,
                     color: Theme.of(context).textTheme.bodyLarge?.color),
                 4.verticalSpace,
                 textSemiBoldMontserrat(

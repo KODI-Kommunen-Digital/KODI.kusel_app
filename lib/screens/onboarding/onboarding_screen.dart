@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -83,13 +85,19 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           _customPageViewer(pages, pageController),
           selectedPageIndex == 4
               ? Positioned(
-                  bottom: 1,
-                  left: 16,
-                  right: 16,
-                  child: Container(
-                    color: Colors.white.withAlpha(150),
-                    height: 100.h,
-                  ))
+            bottom: 0,
+            left: 1,
+            right: 1,
+            child: ClipRRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                child: Container(
+                  height: 140.h,
+                  color: Colors.white.withOpacity(0.3),
+                ),
+              ),
+            ),
+          )
               : Container(),
           Positioned(
             bottom: 16,
@@ -177,9 +185,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                         path: homeScreenPath, context: context);
                     ref.read(dashboardScreenProvider.notifier).onIndexChanged(0);
                   },
-                  child: textBoldPoppins(
+                  child: textSemiBoldMontserrat(
                     color: Theme.of(context).textTheme.bodyLarge?.color,
-                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
                     text: AppLocalizations.of(context).another_time,
                   ),
                 )

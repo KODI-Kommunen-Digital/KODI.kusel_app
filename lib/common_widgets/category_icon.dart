@@ -30,9 +30,6 @@ String getCategoryIconPath(int categoryId) {
     case 5:
       path = 'placeholder_category_icon';
       break;
-    case 6:
-      path = 'search_icon';
-      break;
     case 7:
       path = 'placeholder_category_icon';
       break;
