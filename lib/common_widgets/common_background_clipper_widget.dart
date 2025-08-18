@@ -78,15 +78,15 @@ class _CommonBackgroundClipperWidgetState
                               imageUrl: widget.imageUrl,
                               context: context,
                               sourceId: widget.sourceId,
-                              onImageTap: (){
-                                ref.read(navigationProvider).navigateUsingPath(
-                                    path: fullImageScreenPath,
-                                    params: FullImageScreenParams(
-                                        imageUrL: widget.imageUrl,
-                                      sourceId: widget.sourceId
-                                    ),
-                                    context: context);
-                              },
+                              // onImageTap: (){
+                              //   ref.read(navigationProvider).navigateUsingPath(
+                              //       path: fullImageScreenPath,
+                              //       params: FullImageScreenParams(
+                              //           imageUrL: widget.imageUrl,
+                              //         sourceId: widget.sourceId
+                              //       ),
+                              //       context: context);
+                              // },
                               svgErrorImagePath:
                                   imagePath['home_screen_background'] ?? '',
                             ),

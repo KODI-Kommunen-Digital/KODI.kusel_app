@@ -158,22 +158,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                     eventsList: state.allEventList,
                     heading: AppLocalizations.of(context).all_events,
                     maxListLimit: 5,
-                    buttonText: AppLocalizations.of(context).all_events,
-                    buttonIconPath: imagePath['calendar'] ?? "",
                     isLoading: false,
-                    onButtonTap: () {
-                      ref.read(navigationProvider).navigateUsingPath(
-                          path: selectedEventListScreenPath,
-                          context: context,
-                          params: SelectedEventListScreenParameter(
-                              listHeading: AppLocalizations.of(context).all_events,
-                              categoryId: ListingCategoryId.event.eventId,
-                              onFavChange: () {
-                                ref
-                                    .read(tourismScreenControllerProvider.notifier)
-                                    .getAllEvents();
-                              }));
-                    },
                     onHeadingTap: () {
                       ref.read(navigationProvider).navigateUsingPath(
                           path: selectedEventListScreenPath,
@@ -355,28 +340,32 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                   ],
                 ),
               ),
-              CustomFlutterMap(
-                latitude: EventLatLong.kusel.latitude,
-                longitude: EventLatLong.kusel.longitude,
-                height: 250.h,
-                width: MediaQuery.of(context).size.width,
-                initialZoom: 13,
-                onMapTap: () {},
-                markersList: (list.isNotEmpty)
-                    ? list
-                    .where((item) =>
-                item.latitude != null &&
-                    item.longitude != null)
-                    .map((item) {
-                  return Marker(
-                      point:
-                      LatLng(item.latitude!, item.longitude!),
-                      child: Icon(Icons.location_pin,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onTertiaryFixed));
-                }).toList()
-                    : [],
+              ClipRRect(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(8),
+                  bottomRight: Radius.circular(8),
+                ),
+                child: CustomFlutterMap(
+                  latitude: EventLatLong.kusel.latitude,
+                  longitude: EventLatLong.kusel.longitude,
+                  height: 250.h,
+                  width: MediaQuery.of(context).size.width,
+                  initialZoom: 13,
+                  onMapTap: () {},
+                  markersList: (list.isNotEmpty)
+                      ? list
+                          .where((item) =>
+                              item.latitude != null && item.longitude != null)
+                          .map((item) {
+                          return Marker(
+                              point: LatLng(item.latitude!, item.longitude!),
+                              child: Icon(Icons.location_pin,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onTertiaryFixed));
+                        }).toList()
+                      : [],
+                ),
               )
             ],
           ),

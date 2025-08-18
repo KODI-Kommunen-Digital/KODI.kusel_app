@@ -88,6 +88,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       onTap: () {
         FocusScope.of(context).unfocus();
       },
+
+      child: NotificationListener<OverscrollIndicatorNotification>(
+          onNotification: (overscroll) {
+            overscroll.disallowIndicator();
+            return true;
+          },
       child: SingleChildScrollView(
         physics: ClampingScrollPhysics(),
         child: Column(
@@ -97,7 +103,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               clipperType: UpstreamWaveClipper(),
               imageUrl: imagePath['home_screen_background'] ?? '',
               isStaticImage: true,
-              height: 285.h,
+              height: 265.h,
               customWidget1: Positioned(
                 top: 85.h,
                 left: 20.w,
@@ -142,16 +148,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 15.w),
-                          child: textRegularPoppins(
-                              text: AppLocalizations.of(context).search,
-                              fontSize: 12,
-                              fontStyle: FontStyle.italic,
-                              color:
-                                  Theme.of(context).textTheme.bodyLarge?.color),
-                        ),
                         SearchWidget(
+                          showSuggestion: ref.watch(showSuggestionsProvider),
+                          // onSuggestionChange: (value) {
+                          //   ref.read(showSuggestionsProvider.notifier).state =
+                          //       value;
+                          // },
                           onItemClick: (listing) {
                             ref.read(navigationProvider).navigateUsingPath(
                                 context: context,
@@ -386,6 +388,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
           ],
         ),
+      ),
       ),
     );
   }
