@@ -69,11 +69,14 @@ class _IconTextWidgetCardState extends ConsumerState<NetworkImageTextServiceCard
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    textBoldMontserrat(
-                        text: widget.text,
-                        textOverflow: TextOverflow.visible,
-                        textAlign: TextAlign.start,
-                        color: Theme.of(context).textTheme.bodyLarge?.color),
+                    Container(
+                      padding: EdgeInsets.only(top: 8.w),
+                      child: textBoldMontserrat(
+                          text: widget.text,
+                          textOverflow: TextOverflow.visible,
+                          textAlign: TextAlign.start,
+                          color: Theme.of(context).textTheme.bodyLarge?.color),
+                    ),
                     if(widget.description != null)
                         textRegularMontserrat(
                             text: widget.description ?? '',
@@ -85,6 +88,7 @@ class _IconTextWidgetCardState extends ConsumerState<NetworkImageTextServiceCard
               ),
             SizedBox(
               height: 48,
+              width: 48,
               child: Image.asset(
                 imagePath["link_icon"] ?? '',
                 fit: BoxFit.contain,
