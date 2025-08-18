@@ -133,7 +133,7 @@ class _EventsListSectionWidgetState
                   children: [
                     if (widget.heading != null)
                       Padding(
-                        padding: EdgeInsets.fromLTRB(8.w, 16.w, 0, 0),
+                        padding: EdgeInsets.fromLTRB(10.w, 10.w, 0, 0),
                         child: InkWell(
                           onTap: widget.onHeadingTap,
                           child: Row(
@@ -227,7 +227,7 @@ class _EventsListSectionWidgetState
                     if (widget.buttonText != null)
                       Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 16.w, vertical: 20.h),
+                            horizontal: 16.w, vertical: 8.h),
                         child: CustomButton(
                           onPressed: widget.onButtonTap,
                           text: widget.buttonText!,

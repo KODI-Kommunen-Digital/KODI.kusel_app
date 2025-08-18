@@ -143,13 +143,13 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
         children: [
           _buildClipper(),
           _buildDescription(context),
-          32.verticalSpace,
+          12.verticalSpace,
           _buildServicesList(context),
-          32.verticalSpace,
+          12.verticalSpace,
           _buildLocationCard(),
-          32.verticalSpace,
+          22.verticalSpace,
           _buildPlacesOfTheCommunity(context),
-          32.verticalSpace,
+          12.verticalSpace,
           if (ref.watch(municipalDetailControllerProvider).eventList.isNotEmpty)
             EventsListSectionWidget(
               context: context,
@@ -207,7 +207,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                     .getEventsUsingCityId(municipalId: id);
               },
             ),
-          32.verticalSpace,
+          12.verticalSpace,
           if (ref.watch(municipalDetailControllerProvider).newsList.isNotEmpty)
             EventsListSectionWidget(
               context: context,
@@ -384,8 +384,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
           lat: (state.municipalPartyDetailDataModel?.latitude != null)
               ? double.parse(state.municipalPartyDetailDataModel!.latitude!)
               : EventLatLong.kusel.latitude,
-          websiteText: state.municipalPartyDetailDataModel?.websiteUrl ??
-              AppLocalizations.of(context).visit_website,
+          websiteText: AppLocalizations.of(context).visit_website,
           calendarText:
               state.municipalPartyDetailDataModel?.openUntil ?? "16:00:00",
         ),
@@ -405,34 +404,37 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              Baseline(
-                baseline: 16, // Adjust based on your text size
-                baselineType: TextBaseline.alphabetic,
-                child: textRegularPoppins(
-                  text: AppLocalizations.of(context).places_of_the_community,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 12.w),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.baseline,
+              textBaseline: TextBaseline.alphabetic,
+              children: [
+                Baseline(
+                  baseline: 16, // Adjust based on your text size
+                  baselineType: TextBaseline.alphabetic,
+                  child: textRegularPoppins(
+                    text: AppLocalizations.of(context).places_of_the_community,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                  ),
                 ),
-              ),
-              10.horizontalSpace, // spacing between text and icon
-              Baseline(
-                baseline: 16,
-                baselineType: TextBaseline.alphabetic,
-                child: ImageUtil.loadSvgImage(
-                  imageUrl: imagePath['arrow_icon'] ?? "",
-                  context: context,
-                  height: 10.h,
-                  width: 16.w,
+                10.horizontalSpace, // spacing between text and icon
+                Baseline(
+                  baseline: 16,
+                  baselineType: TextBaseline.alphabetic,
+                  child: ImageUtil.loadSvgImage(
+                    imageUrl: imagePath['arrow_icon'] ?? "",
+                    context: context,
+                    height: 10.h,
+                    width: 16.w,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          16.verticalSpace,
+          10.verticalSpace,
           ListView.builder(
               shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
@@ -447,7 +449,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                 final item =
                     ref.read(municipalDetailControllerProvider).cityList[index];
                 return Padding(
-                  padding: EdgeInsets.symmetric(vertical: 5.h),
+                  padding: EdgeInsets.symmetric(vertical: 1.h),
                   child: ImageTextCardWidget(
                     onTap: () {
                       ref.read(navigationProvider).navigateUsingPath(
@@ -495,7 +497,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                   ),
                 );
               }),
-          16.verticalSpace,
+          10.verticalSpace,
           CustomButton(
               onPressed: () {
                 ref.read(navigationProvider).navigateUsingPath(
@@ -519,7 +521,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
         final state = ref.watch(municipalDetailControllerProvider);
 
         return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12.w),
+          padding: EdgeInsets.symmetric(horizontal: 10.w),
           child: Column(
             children: [
               ListView.builder(

@@ -173,7 +173,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 18.h, horizontal: 15.w),
       child: Card(
-        elevation: 6,
+        elevation: 1,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(6.r),
         ),
@@ -210,12 +210,15 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
               children: [
                 Row(
                   children: [
-                    textRegularPoppins(
-                        text: AppLocalizations.of(context)
-                            .associated_municipalities,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).textTheme.bodyLarge?.color),
+                    Container(
+                      padding: EdgeInsets.only(left: 2.w),
+                      child: textRegularPoppins(
+                          text: AppLocalizations.of(context)
+                              .associated_municipalities,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).textTheme.bodyLarge?.color),
+                    ),
                     12.horizontalSpace,
                     ImageUtil.loadSvgImage(
                         imageUrl: imagePath['arrow_icon'] ?? "",
@@ -356,7 +359,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.fromLTRB(8.w, 16.w, 0, 0),
+            padding: EdgeInsets.fromLTRB(10.w, 16.w, 0, 0),
             child: InkWell(
               onTap: onPress,
               child: Row(
@@ -389,7 +392,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
             itemBuilder: (context, index) {
               final city = eventsList[index];
               return Padding(
-                padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 12.w),
+                padding: EdgeInsets.symmetric(vertical: 1.h, horizontal: 12.w),
                 child: ImageTextCardWidget(
                   text: city.name,
                   imageUrl: city.image,
@@ -425,13 +428,13 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
             },
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
             child: CustomButton(
               onPressed: onPress,
               text: buttonText,
             ),
           ),
-          15.verticalSpace
+          5.verticalSpace
         ],
       );
     }

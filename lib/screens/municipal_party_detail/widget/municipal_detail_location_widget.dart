@@ -91,14 +91,30 @@ class _CityDetailLocationWidgetState
                     imageUrl: imagePath['calendar_icon'] ?? '',
                     context: context),
                 10.horizontalSpace,
-                textRegularPoppins(
-                  text:
-                      "${AppLocalizations.of(context).open} \n${AppLocalizations.of(context).close} ${widget.calendarText}",
-                  textAlign: TextAlign.start,
-                  maxLines: 3,
-                  textOverflow: TextOverflow.ellipsis,
-                  color: Theme.of(context).textTheme.labelMedium?.color,
-                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: Container(
+                        padding: EdgeInsets.only(top: 12.h),
+                        child: textBoldMontserrat(
+                          text: AppLocalizations.of(context).open,
+                          textOverflow: TextOverflow.ellipsis,
+                          color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                    ),
+                    textRegularPoppins(
+                      text:
+                          "${AppLocalizations.of(context).close} ${widget.calendarText}",
+                      textAlign: TextAlign.start,
+                      maxLines: 3,
+                      textOverflow: TextOverflow.ellipsis,
+                      color: Theme.of(context).textTheme.labelMedium?.color,
+                    ),
+                  ],
+                )
               ],
             ),
           ),
@@ -120,6 +136,7 @@ class _CityDetailLocationWidgetState
                   textRegularPoppins(
                     text: widget.phoneNumber,
                     textOverflow: TextOverflow.ellipsis,
+                    decoration: TextDecoration.underline,
                     color: Theme.of(context).textTheme.labelMedium?.color,
                   ),
                 ],
@@ -136,18 +153,18 @@ class _CityDetailLocationWidgetState
                   context: context),
               child: Row(
                 children: [
-                  5.horizontalSpace,
                   ImageUtil.loadSvgImage(
-                      imageUrl: imagePath['link_icon'] ?? '', context: context),
-                  15.horizontalSpace,
-                  Expanded(
-                    child: textRegularPoppins(
-                      text: widget.websiteText,
-                      textAlign: TextAlign.start,
-                      maxLines: 3,
-                      textOverflow: TextOverflow.ellipsis,
-                      color: Theme.of(context).textTheme.labelMedium?.color,
-                    ),
+                    imageUrl:
+                    imagePath['map_link_icon'] ?? '',
+                    context: context,
+                    color: Theme.of(context).textTheme.labelMedium?.color,
+                  ),
+                  10.horizontalSpace,
+                  textRegularPoppins(
+                    text: widget.websiteText,
+                    decoration: TextDecoration.underline,
+                    textOverflow: TextOverflow.ellipsis,
+                    color: Theme.of(context).textTheme.labelMedium?.color,
                   ),
                 ],
               ),
