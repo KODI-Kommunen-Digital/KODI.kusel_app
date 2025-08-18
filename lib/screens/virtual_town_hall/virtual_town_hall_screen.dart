@@ -272,10 +272,13 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          textBoldPoppins(
-              text: "${AppLocalizations.of(context).district} ${state.cityName}" ?? "",
-              color: Theme.of(context).textTheme.bodyLarge?.color,
-              fontSize: 16),
+          Container(
+            padding: EdgeInsets.only(left: 6.w),
+            child: textBoldPoppins(
+                text: "${AppLocalizations.of(context).district} ${state.cityName}" ?? "",
+                color: Theme.of(context).textTheme.bodyLarge?.color,
+                fontSize: 16),
+          ),
           15.verticalSpace,
           TownHallMapWidget(
             address: state.address ?? "",

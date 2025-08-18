@@ -726,7 +726,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get location_map_company_portraits => 'Firmenporträts';
 
   @override
-  String get location_map_transport => 'Fahrgemeinschaften';
+  String get location_map_transport => 'Fahr­gemeinschaft­en';
 
   @override
   String get location_map_offers => 'Angebote';

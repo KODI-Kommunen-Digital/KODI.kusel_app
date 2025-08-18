@@ -102,7 +102,7 @@ class _LocationCardWidgetState extends ConsumerState<TownHallMapWidget> {
             ],
           ),
           Padding(
-            padding: EdgeInsets.all(14.h),
+            padding: EdgeInsets.fromLTRB(14.w, 10.h, 14.w, 14.h),
             child: Column(
               children: [
                 Row(
@@ -117,11 +117,14 @@ class _LocationCardWidgetState extends ConsumerState<TownHallMapWidget> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Align(
-                          alignment: Alignment.centerLeft,
-                          child: textBoldMontserrat(
-                            text: widget.calendarText,
-                            textOverflow: TextOverflow.ellipsis,
-                            color: Theme.of(context).textTheme.labelMedium?.color,
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            padding: EdgeInsets.only(top:12.h),
+                            child: textBoldMontserrat(
+                              text: widget.calendarText,
+                              textOverflow: TextOverflow.ellipsis,
+                              color: Theme.of(context).primaryColor,
+                            ),
                           ),
                         ),
                         textRegularPoppins(
