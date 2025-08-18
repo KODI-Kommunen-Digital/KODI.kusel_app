@@ -171,4 +171,17 @@ class _CustomFlutterMapState extends ConsumerState<CustomFlutterMap> {
     );
     _mapController.rotate(0);
   }
+
+  @override
+  void didUpdateWidget(covariant CustomFlutterMap oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    final oldLatLng = LatLng(oldWidget.latitude, oldWidget.longitude);
+    final newLatLng = LatLng(widget.latitude, widget.longitude);
+
+    if (oldLatLng != newLatLng) {
+      _mapController.move(newLatLng, widget.initialZoom);
+    }
+  }
+
 }
