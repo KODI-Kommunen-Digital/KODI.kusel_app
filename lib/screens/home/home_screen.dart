@@ -88,14 +88,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       onTap: () {
         FocusScope.of(context).unfocus();
       },
-
       child: NotificationListener<OverscrollIndicatorNotification>(
-          onNotification: (overscroll) {
-            overscroll.disallowIndicator();
-            return true;
-          },
-      child: SingleChildScrollView(
-        physics: ClampingScrollPhysics(),
+        onNotification: (overscroll) {
+          overscroll.disallowIndicator();
+          return true;
+        },
+        child: SingleChildScrollView(
+          physics: ClampingScrollPhysics(),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [

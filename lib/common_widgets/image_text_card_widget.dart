@@ -59,7 +59,7 @@ class _ImageTextCardWidgetState extends ConsumerState<ImageTextCardWidget> {
       child: Card(
         color: Colors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        elevation: 4,
+        elevation: 1,
         child: Padding(
           padding: EdgeInsets.all(8.h.w),
           child: Row(
