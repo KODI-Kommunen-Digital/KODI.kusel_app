@@ -101,7 +101,9 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                     widget.isFavorite
                         ? Icons.favorite_sharp
                         : Icons.favorite_border,
-                    color: Colors.grey,
+                    color: !widget.isFavorite
+                        ? Theme.of(context).primaryColor
+                        : Theme.of(context).colorScheme.onTertiaryFixed,
                   ),
                 ),
               ),

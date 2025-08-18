@@ -248,7 +248,7 @@ abstract class AppLocalizations {
   /// No description provided for @select_language.
   ///
   /// In en, this message translates to:
-  /// **'Select your language'**
+  /// **'Choose your language'**
   String get select_language;
 
   /// No description provided for @medieval_market.
@@ -520,6 +520,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'I live in the district...'**
   String get i_live_in_district;
+
+  /// No description provided for @i_am_visiting_the_district.
+  ///
+  /// In en, this message translates to:
+  /// **'I am visiting the district ...'**
+  String get i_am_visiting_the_district;
 
   /// No description provided for @i_live_in_district_onborading_type_page.
   ///
@@ -1070,13 +1076,13 @@ abstract class AppLocalizations {
   /// No description provided for @participate.
   ///
   /// In en, this message translates to:
-  /// **'PARTICIPATE'**
+  /// **'Participate'**
   String get participate;
 
   /// No description provided for @register_here.
   ///
   /// In en, this message translates to:
-  /// **'Register here'**
+  /// **'LogIn here'**
   String get register_here;
 
   /// No description provided for @develop_kusel_together_text.
@@ -1199,11 +1205,11 @@ abstract class AppLocalizations {
   /// **'District'**
   String get district;
 
-  /// No description provided for @favourite_city.
+  /// No description provided for @favourite_places.
   ///
   /// In en, this message translates to:
-  /// **'Favourite cities'**
-  String get favourite_city;
+  /// **'Favourite places'**
+  String get favourite_places;
 
   /// No description provided for @delete_account.
   ///
@@ -1220,7 +1226,7 @@ abstract class AppLocalizations {
   /// No description provided for @edit_onboarding_details.
   ///
   /// In en, this message translates to:
-  /// **'Edit onboarding details'**
+  /// **'Edit User details'**
   String get edit_onboarding_details;
 
   /// No description provided for @ok.
@@ -1558,6 +1564,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'POI'**
   String get location_map_poi;
+
+  /// No description provided for @mobility_centre.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobility centre'**
+  String get mobility_centre;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
