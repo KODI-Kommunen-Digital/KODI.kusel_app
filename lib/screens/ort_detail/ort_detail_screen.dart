@@ -520,6 +520,11 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
           10.verticalSpace,
           SizedBox(
             height: DeviceHelper.isMobile(context) ? 315.h : 340.h,
+            child: NotificationListener<OverscrollIndicatorNotification>(
+              onNotification: (overscroll) {
+                overscroll.disallowIndicator();
+                return true;
+              },
             child: PageView.builder(
               controller: PageController(
                   viewportFraction: 317.w / MediaQuery.of(context).size.width),
@@ -564,6 +569,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                     .read(ortDetailScreenControllerProvider.notifier)
                     .updateCardIndex(index);
               },
+              ),
             ),
           ),
         ],
