@@ -260,6 +260,11 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
           10.verticalSpace,
           SizedBox(
             height: 280.h,
+            child: NotificationListener<OverscrollIndicatorNotification>(
+              onNotification: (overscroll) {
+                overscroll.disallowIndicator();
+                return true;
+              },
             child: PageView.builder(
               controller: PageController(
                   viewportFraction: 317.w / MediaQuery.of(context).size.width),
@@ -318,6 +323,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
               onPageChanged: (index) {
                 ref.read(meinOrtProvider.notifier).updateCardIndex(index);
               },
+              ),
             ),
           ),
         ],
