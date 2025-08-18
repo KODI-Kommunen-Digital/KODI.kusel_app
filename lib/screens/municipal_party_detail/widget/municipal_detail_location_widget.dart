@@ -178,7 +178,7 @@ class CityDetailMapContainer extends StatelessWidget {
         Marker(
           width: 35.w,
           height: 35.h,
-          point: LatLng(long, lat),
+          point: LatLng(lat, long),
           child: Icon(
             Icons.location_pin,
             color: Theme.of(context).colorScheme.onTertiaryFixed,
