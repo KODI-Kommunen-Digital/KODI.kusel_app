@@ -110,7 +110,9 @@ class _ImageTextCardWidgetState extends ConsumerState<ImageTextCardWidget> {
                         (isFavourite ?? false)
                             ? Icons.favorite_sharp
                             : Icons.favorite_border,
-                        color: Colors.grey,
+                        color: !widget.isFavourite!
+                            ? Theme.of(context).primaryColor
+                            : Theme.of(context).colorScheme.onTertiaryFixed,
                       ),
                     ),
                   ),

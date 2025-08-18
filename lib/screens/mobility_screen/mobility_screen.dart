@@ -100,8 +100,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
               text: state.mobilityData?.title ?? "_",
               fontSize: 16),
           10.verticalSpace,
-          textBoldMontserrat(
-              color: Theme.of(context).textTheme.bodyLarge?.color,
+          textRegularMontserrat(
               textAlign: TextAlign.start,
               fontSize: 12,
               text: state.mobilityData?.description ?? "_",
@@ -168,18 +167,19 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           5.verticalSpace,
-          if (state.mobilityData != null &&
-              state.mobilityData!.moreInformations!.isNotEmpty)
+          if (state.mobilityData?.moreInformations?.isNotEmpty == true)
             ListView.builder(
                 itemCount: state.mobilityData?.moreInformations?.length ?? 0,
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   final item = state.mobilityData?.moreInformations?[index];
-                  return CommonMoreInfoCard(
-                      title: item?.title ?? '_',
-                      phoneNumber: item?.phone ?? '_',
-                      description: item?.description);
+                  return item?.title != AppLocalizations.of(context).mobility_centre
+                      ? CommonMoreInfoCard(
+                          title: item?.title ?? '_',
+                          phoneNumber: item?.phone ?? '_',
+                          description: item?.description)
+                      : null;
                 })
         ],
       ),

@@ -84,7 +84,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get logout => 'Abmelden';
 
   @override
-  String get select_language => 'Wählen Sie Ihre Sprache';
+  String get select_language => 'Wählen sie Ihre Sprache';
 
   @override
   String get medieval_market => 'Medieval market';
@@ -222,6 +222,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get i_live_in_district => 'Ich lebe im Landkreis ...';
 
   @override
+  String get i_am_visiting_the_district => 'Ich besuche den Landkreis ...';
+
+  @override
   String get i_live_in_district_onborading_type_page => 'lebe hier im Landkreis';
 
   @override
@@ -339,7 +342,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get title => 'Titel';
 
   @override
-  String get feedback => 'Feedback';
+  String get feedback => 'Rückmeldung';
 
   @override
   String get enter_title => 'Titel eingeben';
@@ -498,7 +501,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get participate => 'MITMACHEN';
 
   @override
-  String get register_here => 'Hier anmelden';
+  String get register_here => 'Hier einloggen';
 
   @override
   String get develop_kusel_together_text => 'Wir möchten gemeinsam den Landkreis Kusel weiterentwickeln.';
@@ -561,7 +564,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get district => 'Landkreis';
 
   @override
-  String get favourite_city => 'Lieblingsstädte';
+  String get favourite_places => 'Lieblingsorte';
 
   @override
   String get delete_account => 'Konto löschen';
@@ -570,7 +573,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get success_delete_account_message => 'Ihr Konto wurde erfolgreich gelöscht';
 
   @override
-  String get edit_onboarding_details => 'Onboardingdetails bearbeiten';
+  String get edit_onboarding_details => 'Benutzerdetails bearbeiten';
 
   @override
   String get ok => 'Ok';
@@ -739,4 +742,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get location_map_poi => 'POI';
+
+  @override
+  String get mobility_centre => 'Mobilitätszentrale';
 }

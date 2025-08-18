@@ -189,6 +189,9 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                 visible: stateWatch.onError,
                 child: textSemiBoldMontserrat(
                     fontSize: 12,
+                    textOverflow: TextOverflow.visible,
+                    textAlign:  TextAlign.start,
+                    maxLines: 2,
                     color: Theme.of(context).colorScheme.error,
                     text: AppLocalizations.of(context).privacy_policy_error_msg)),
             10.verticalSpace,

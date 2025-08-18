@@ -52,9 +52,9 @@ class _LocationCardWidgetState extends ConsumerState<TownHallMapWidget> {
           borderRadius: BorderRadius.circular(15.r),
           boxShadow: [
             BoxShadow(
-              color: Theme.of(context).primaryColor.withValues(alpha: 0.46),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.10),
               offset: Offset(0, 4),
-              blurRadius: 8,
+              blurRadius: 12,
             ),
           ]),
       child: Column(

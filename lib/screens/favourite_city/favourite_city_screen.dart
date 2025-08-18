@@ -56,7 +56,7 @@ class _FavouriteCityScreenState extends ConsumerState<FavouriteCityScreen> {
                 imageUrl: imagePath['background_image'] ?? "",
                 headingText: AppLocalizations
                     .of(context)
-                    .favourite_city,
+                    .favourite_places,
                 height: 120.h,
                 blurredBackground: true,
                 isBackArrowEnabled: true,
@@ -138,11 +138,4 @@ class _FavouriteCityScreenState extends ConsumerState<FavouriteCityScreen> {
       ),
     );
   }
-
-// _updateList(bool isFav, int cityId) {
-//   ref
-//       .read(favouriteCitiesProvider.notifier)
-//       .setIsFavoriteCity(isFav, cityId);
-// }
-
 }

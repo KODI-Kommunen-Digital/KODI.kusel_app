@@ -233,7 +233,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                 onPressed: () async {
                   if (signupFormKey.currentState?.validate() ?? false) {
                     await ref.read(signUpScreenProvider.notifier).registerUser(
-                        userName: userNameTextEditingController.text,
+                        userName: userNameTextEditingController.text
+                            .trim()
+                            .toLowerCase(),
                         password: passwordTextEditingController.text,
                         firstName: firstNameTextEditingController.text,
                         lastName: lastNameTextEditingController.text,
