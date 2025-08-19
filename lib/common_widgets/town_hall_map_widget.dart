@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/common_widgets/web_view_page.dart';
+import 'package:kusel/utility/kusel_date_utils.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../app_router.dart';
@@ -46,6 +47,9 @@ class TownHallMapWidget extends ConsumerStatefulWidget {
 class _LocationCardWidgetState extends ConsumerState<TownHallMapWidget> {
   @override
   Widget build(BuildContext context) {
+
+    final formattedOpenUntil = KuselDateUtils.formatTime(widget.openUntil);
+
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -129,7 +133,7 @@ class _LocationCardWidgetState extends ConsumerState<TownHallMapWidget> {
                         ),
                         textRegularPoppins(
                           text:
-                              "${AppLocalizations.of(context).closes_at} ${widget.openUntil} ${AppLocalizations.of(context).clock}",
+                              "${AppLocalizations.of(context).closes_at} $formattedOpenUntil ${AppLocalizations.of(context).clock}",
                           textOverflow: TextOverflow.ellipsis,
                           color: Theme.of(context).textTheme.labelMedium?.color,
                         ),

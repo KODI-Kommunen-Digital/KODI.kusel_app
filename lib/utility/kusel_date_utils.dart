@@ -49,4 +49,14 @@ class KuselDateUtils {
       return inputDate;
     }
   }
+
+  static String formatTime(String? time) {
+    if (time == null || time.isEmpty) return '';
+    try {
+      final dateTime = DateFormat.Hms().parse(time);
+      return DateFormat.Hm().format(dateTime);
+    } catch (e) {
+      return time;
+    }
+  }
 }
