@@ -245,7 +245,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 context: context,
                 eventsList: state.nearbyEventsList,
                 heading: AppLocalizations.of(context).near_you,
-                maxListLimit: 5,
+                maxListLimit: 3,
                 buttonText: AppLocalizations.of(context).to_map_view,
                 buttonIconPath: imagePath['map_icon'] ?? "",
                 isLoading: isLoading,
