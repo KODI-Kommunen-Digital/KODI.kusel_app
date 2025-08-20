@@ -47,7 +47,6 @@ class TownHallMapWidget extends ConsumerStatefulWidget {
 class _LocationCardWidgetState extends ConsumerState<TownHallMapWidget> {
   @override
   Widget build(BuildContext context) {
-
     final formattedOpenUntil = KuselDateUtils.formatTime(widget.openUntil);
 
     return Container(
