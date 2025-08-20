@@ -24,7 +24,8 @@ import '../../app_router.dart';
 import '../../common_widgets/common_text_arrow_widget.dart';
 import '../../common_widgets/feedback_card_widget.dart';
 import '../../common_widgets/listing_id_enum.dart';
-import '../../common_widgets/search_widget.dart';
+import '../../common_widgets/search_widget/search_widget_provider.dart';
+import '../../common_widgets/search_widget/search_widget.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/toast_message.dart';
 import '../../navigation/navigation.dart';
@@ -51,7 +52,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     Upgrader.clearSavedSettings();
     super.initState();
   }
-
+  @override
+  void dispose() {
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return UpgradeAlert(
@@ -87,6 +91,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
+        ref.read(searchProvider.notifier).clearSearch();
       },
       child: NotificationListener<OverscrollIndicatorNotification>(
         onNotification: (overscroll) {
@@ -149,13 +154,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       children: [
                         SearchWidget(
                           onItemClick: (listing) {
+                            ref.read(dashboardScreenProvider.notifier).onScreenNavigation();
                             ref.read(navigationProvider).navigateUsingPath(
                                 context: context,
                                 path: eventDetailScreenPath,
                                 params:
                                 EventDetailScreenParams(event: listing));
                           },
-                          searchController: TextEditingController(),
+                          searchController: ref.watch(searchProvider),
                           hintText:
                           AppLocalizations.of(context).enter_search_term,
                           suggestionCallback: (search) async {
@@ -204,7 +210,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   )
                                 : GestureDetector(
                                     onTap: () {
-                                      ref
+                                        ref
+                                            .read(dashboardScreenProvider
+                                                .notifier)
+                                            .onScreenNavigation();
+                                        ref
                                           .read(navigationProvider)
                                           .removeCurrentAndNavigate(
                                               context: context,
@@ -250,7 +260,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 buttonIconPath: imagePath['map_icon'] ?? "",
                 isLoading: isLoading,
                 onButtonTap: () {
-                  ref.read(navigationProvider).navigateUsingPath(
+                  ref
+                        .read(dashboardScreenProvider.notifier)
+                        .onScreenNavigation();
+                    ref.read(navigationProvider).navigateUsingPath(
                         path: selectedEventListScreenPath,
                         context: context,
                         params: SelectedEventListScreenParameter(
@@ -271,6 +284,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ref.read(homeScreenProvider.notifier).getNearbyEvents();
                 },
                 onHeadingTap: () {
+                  ref
+                      .read(dashboardScreenProvider.notifier)
+                      .onScreenNavigation();
                   ref.read(navigationProvider).navigateUsingPath(
                         path: selectedEventListScreenPath,
                         context: context,
@@ -305,6 +321,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 buttonIconPath: imagePath['map_icon'] ?? "",
                 isLoading: false,
                 onButtonTap: () {
+                  ref
+                      .read(dashboardScreenProvider.notifier)
+                      .onScreenNavigation();
                   ref.read(navigationProvider).navigateUsingPath(
                       path: selectedEventListScreenPath,
                       context: context,
@@ -320,6 +339,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ref.read(homeScreenProvider.notifier).getNews();
                 },
                 onHeadingTap: () {
+                  ref
+                      .read(dashboardScreenProvider.notifier)
+                      .onScreenNavigation();
                   ref.read(navigationProvider).navigateUsingPath(
                       path: selectedEventListScreenPath,
                       context: context,
@@ -348,6 +370,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 buttonIconPath: imagePath['calendar'] ?? "",
                 isLoading: isLoading,
                 onButtonTap: () {
+                  ref
+                      .read(dashboardScreenProvider.notifier)
+                      .onScreenNavigation();
                   ref.read(navigationProvider).navigateUsingPath(
                       path: allEventScreenPath,
                       context: context,
@@ -358,8 +383,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 onFavClickCallback: () {
                   ref.read(homeScreenProvider.notifier).getEvents();
                 },
-                onHeadingTap: () {
-                  ref.read(navigationProvider).navigateUsingPath(
+                  onHeadingTap: () {
+                    ref
+                        .read(dashboardScreenProvider.notifier)
+                        .onScreenNavigation();
+                    ref.read(navigationProvider).navigateUsingPath(
                       path: allEventScreenPath,
                       context: context,
                       params: AllEventScreenParam(onFavChange: () {
@@ -376,6 +404,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             FeedbackCardWidget(
               height: 270.h,
               onTap: () {
+                ref
+                    .read(dashboardScreenProvider.notifier)
+                    .onScreenNavigation();
                 ref.read(navigationProvider).navigateUsingPath(
                     path: feedbackScreenPath, context: context);
               },
@@ -408,6 +439,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       CommonTextArrowWidget(
                         text: AppLocalizations.of(context).highlights,
                         onTap: () {
+                          ref
+                              .read(dashboardScreenProvider.notifier)
+                              .onScreenNavigation();
                           ref.read(navigationProvider).navigateUsingPath(
                               path: selectedEventListScreenPath,
                               context: context,
@@ -432,6 +466,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             state.highlightsList.length,
                             (index) => InkWell(
                               onTap: () {
+                                ref
+                                    .read(dashboardScreenProvider.notifier)
+                                    .onScreenNavigation();
                                 ref.read(navigationProvider).navigateUsingPath(
                                     context: context,
                                     path: eventDetailScreenPath,
@@ -484,6 +521,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           errorImagePath: imagePath['kusel_map_image'],
                           isFavourite: listing.isFavorite ?? false,
                           onPress: () {
+                            ref
+                                .read(dashboardScreenProvider.notifier)
+                                .onScreenNavigation();
                             ref.read(navigationProvider).navigateUsingPath(
                                   context: context,
                                   path: eventDetailScreenPath,

@@ -7,7 +7,7 @@ import 'package:kusel/screens/location/location_screen_provider.dart';
 
 import '../../../common_widgets/category_icon.dart';
 import '../../../common_widgets/image_utility.dart';
-import '../../../common_widgets/search_widget.dart';
+import '../../../common_widgets/search_widget/search_widget.dart';
 import '../../../l10n/app_localizations.dart';
 import '../bottom_sheet_selected_ui_type.dart';
 import '../filter_category.dart';

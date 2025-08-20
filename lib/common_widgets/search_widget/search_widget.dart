@@ -12,8 +12,8 @@ import 'package:kusel/common_widgets/device_helper.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/images_path.dart';
 
-import '../utility/kusel_date_utils.dart';
-import 'image_utility.dart';
+import '../../utility/kusel_date_utils.dart';
+import '../image_utility.dart';
 
 class SearchWidget extends ConsumerStatefulWidget {
   String hintText;
@@ -37,6 +37,14 @@ class SearchWidget extends ConsumerStatefulWidget {
 }
 
 class _SearchWidgetState extends ConsumerState<SearchWidget> {
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -60,7 +68,7 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
               Expanded(
                 child: TypeAheadField<Listing>(
                   hideOnEmpty: true,
-                  hideOnUnfocus: true,
+                  hideOnUnfocus: false,
                   hideOnSelect: true,
                   hideWithKeyboard: false,
                   direction: widget.verticalDirection ?? VerticalDirection.down,
@@ -97,6 +105,9 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                               fontWeight: FontWeight.w400,
                               color: Theme.of(context).hintColor,
                               fontStyle: FontStyle.italic)),
+                      onSubmitted: (value) {
+                        FocusScope.of(context).unfocus();
+                      },
                     );
                   },
                   itemBuilder: (context, event) {
