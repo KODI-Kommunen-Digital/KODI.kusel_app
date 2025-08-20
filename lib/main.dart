@@ -12,7 +12,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:kusel/l10n/app_localizations.dart';
-import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
 import 'package:kusel/theme_manager/theme_manager_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -56,12 +55,11 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   Widget build(BuildContext context) {
 
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-      ),
-    );
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      systemNavigationBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+    ));
 
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -80,7 +78,9 @@ class _MyAppState extends ConsumerState<MyApp> {
               : ref.read(noInternetRouterProvider),
           theme: ref.watch(themeManagerProvider).currentSelectedTheme,
           builder: (context, child) {
-            return child!;
+            return MediaQuery(data: MediaQuery.of(context).copyWith(
+              padding: EdgeInsets.zero,
+            ), child: child!);
           },
         );
       },
