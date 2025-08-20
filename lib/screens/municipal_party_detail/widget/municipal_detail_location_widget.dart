@@ -14,6 +14,7 @@ import '../../../common_widgets/text_styles.dart';
 import '../../../common_widgets/web_view_page.dart';
 import '../../../images_path.dart';
 import '../../../navigation/navigation.dart';
+import '../../../utility/kusel_date_utils.dart';
 import '../../../utility/url_launcher_utility.dart';
 
 class CityDetailLocationWidget extends ConsumerStatefulWidget {
@@ -44,6 +45,8 @@ class _CityDetailLocationWidgetState
     extends ConsumerState<CityDetailLocationWidget> {
   @override
   Widget build(BuildContext context) {
+    final formattedCalendarText = KuselDateUtils.formatTime(widget.calendarText);
+
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
@@ -107,7 +110,7 @@ class _CityDetailLocationWidgetState
                     ),
                     textRegularPoppins(
                       text:
-                          "${AppLocalizations.of(context).close} ${widget.calendarText}",
+                          "${AppLocalizations.of(context).close} $formattedCalendarText",
                       textAlign: TextAlign.start,
                       maxLines: 3,
                       textOverflow: TextOverflow.ellipsis,
