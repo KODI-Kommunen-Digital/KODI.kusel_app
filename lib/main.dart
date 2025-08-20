@@ -55,12 +55,6 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   Widget build(BuildContext context) {
 
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      systemNavigationBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-    ));
-
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -78,9 +72,7 @@ class _MyAppState extends ConsumerState<MyApp> {
               : ref.read(noInternetRouterProvider),
           theme: ref.watch(themeManagerProvider).currentSelectedTheme,
           builder: (context, child) {
-            return MediaQuery(data: MediaQuery.of(context).copyWith(
-              padding: EdgeInsets.zero,
-            ), child: child!);
+            return child!;
           },
         );
       },
