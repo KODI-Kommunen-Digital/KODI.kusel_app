@@ -39,32 +39,43 @@ class _CommonBottomNavCardState extends ConsumerState<CommonBottomNavCard> {
     final canAbortTap = widget.sessionStage == ExerciseStageConstant.start ||
         widget.sessionStage == ExerciseStageConstant.progress;
 
-    switch (widget.sessionStage) {
-      case ExerciseStageConstant.initial:
-        buttonText =
-            AppLocalizations.of(context).digifit_exercise_details_start_session;
-        icon = Icons.flag_outlined;
-        break;
+    debugPrint('value of the sessionStart is ${widget.sessionStage}');
+    if(widget.sessionStage != null) {
+      switch (widget.sessionStage) {
+        case ExerciseStageConstant.initial:
+          buttonText =
+              AppLocalizations
+                  .of(context)
+                  .digifit_exercise_details_start_session;
+          icon = Icons.flag_outlined;
+          break;
 
-      case ExerciseStageConstant.start:
-        buttonText = AppLocalizations.of(context).digifit_abort;
-        icon = Icons.close;
-        break;
+        case ExerciseStageConstant.start:
+          buttonText = AppLocalizations
+              .of(context)
+              .digifit_abort;
+          icon = Icons.close;
+          break;
 
-      case ExerciseStageConstant.progress:
-        buttonText = AppLocalizations.of(context).digifit_abort;
-        icon = Icons.close;
-        break;
+        case ExerciseStageConstant.progress:
+          buttonText = AppLocalizations
+              .of(context)
+              .digifit_abort;
+          icon = Icons.close;
+          break;
 
-      case ExerciseStageConstant.complete:
-        buttonText = AppLocalizations.of(context).complete;
-        icon = Icons.verified_outlined;
-        break;
+        case ExerciseStageConstant.complete:
+          buttonText = AppLocalizations
+              .of(context)
+              .complete;
+          icon = Icons.verified_outlined;
+          break;
 
-      default:
-        buttonText = 'Start';
-        icon = Icons.play_arrow;
-        break;
+        default:
+          buttonText = 'Start';
+          icon = Icons.play_arrow;
+          break;
+      }
     }
 
     return Container(
@@ -111,32 +122,35 @@ class _CommonBottomNavCardState extends ConsumerState<CommonBottomNavCard> {
                 ),
               ),
               10.horizontalSpace,
-              GestureDetector(
-                onTap: canAbortTap ? widget.onSessionTap : null,
-                child: Card(
-                  color: Theme.of(context).primaryColor,
-                  elevation: 1,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24.r),
-                  ),
-                  child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 12.w, vertical: 5.h),
-                    child: Row(
-                      children: [
-                        Icon(
-                          icon,
-                          color: Colors.white,
-                          size: 18.h.w,
-                        ),
-                        8.horizontalSpace,
-                        textBoldMontserrat(
-                          text: buttonText,
-                          color: Colors.white,
-                          textOverflow: TextOverflow.visible,
-                          fontSize: 13,
-                        )
-                      ],
+              Visibility(
+                visible: widget.sessionStage !=null,
+                child: GestureDetector(
+                  onTap: canAbortTap ? widget.onSessionTap : null,
+                  child: Card(
+                    color: Theme.of(context).primaryColor,
+                    elevation: 1,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24.r),
+                    ),
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12.w, vertical: 5.h),
+                      child: Row(
+                        children: [
+                          Icon(
+                            icon,
+                            color: Colors.white,
+                            size: 18.h.w,
+                          ),
+                          8.horizontalSpace,
+                          textBoldMontserrat(
+                            text: buttonText,
+                            color: Colors.white,
+                            textOverflow: TextOverflow.visible,
+                            fontSize: 13,
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
