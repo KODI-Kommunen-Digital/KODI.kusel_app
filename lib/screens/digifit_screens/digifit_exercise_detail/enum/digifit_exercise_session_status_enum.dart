@@ -1,4 +1,5 @@
 enum ExerciseStageConstant {
+  initial('INITIAL_SESSION'),
   start('START_SESSION'),
   progress('SET_CONFIRMED'),
   abort('ABORTED'),
