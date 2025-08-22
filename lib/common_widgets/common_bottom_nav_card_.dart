@@ -39,7 +39,6 @@ class _CommonBottomNavCardState extends ConsumerState<CommonBottomNavCard> {
     final canAbortTap = widget.sessionStage == ExerciseStageConstant.start ||
         widget.sessionStage == ExerciseStageConstant.progress;
 
-    debugPrint('value of the sessionStart is ${widget.sessionStage}');
     if(widget.sessionStage != null) {
       switch (widget.sessionStage) {
         case ExerciseStageConstant.initial:
