@@ -166,6 +166,23 @@ class _DigifitExerciseDetailScreenState
                       }
                     }
                   },
+                  sessionStage: ref
+                      .watch(
+                          digifitExerciseDetailsControllerProvider(equipmentId))
+                      .sessionStage,
+                  onSessionTap: () {
+                    final stage = ref
+                        .read(digifitExerciseDetailsControllerProvider(
+                            equipmentId))
+                        .sessionStage;
+
+                    if (stage == ExerciseStageConstant.start ||
+                        stage == ExerciseStageConstant.progress) {
+                      handleAbortBackNavigation(context);
+                    } else {
+                      null;
+                    }
+                  },
                 )),
             if (ref
                 .watch(digifitExerciseDetailsControllerProvider(equipmentId))

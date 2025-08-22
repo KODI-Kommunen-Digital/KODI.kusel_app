@@ -702,6 +702,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get digifit_exercise_details_open_station => 'Offene Stationen im Parcours';
 
   @override
+  String get digifit_exercise_details_start_session => 'Starten';
+
+  @override
   String get location_map_news => 'Nachricht';
 
   @override
@@ -745,4 +748,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get mobility_centre => 'Mobilitätszentrale';
+
+  @override
+  String get home_screen_today_event => 'Heutige Veranstaltungen';
 }
