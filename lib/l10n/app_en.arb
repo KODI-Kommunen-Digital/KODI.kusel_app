@@ -230,6 +230,7 @@
   "digifit_trophies_show_less": "Show less",
   "digifit_trophies_open": "open",
   "digifit_exercise_details_open_station": "Open stations in the course",
+  "digifit_exercise_details_start_session": "Start",
   "location_map_news": "News",
   "location_map_events": "Events",
   "location_map_clubs": "Clubs",
@@ -244,5 +245,6 @@
   "location_map_free_time": "Freetime and Tourism",
   "location_map_highlights": "Highlights",
   "location_map_poi": "POI",
-  "mobility_centre": "Mobility centre"
+  "mobility_centre": "Mobility centre",
+  "home_screen_today_event": "Today's events"
 }
