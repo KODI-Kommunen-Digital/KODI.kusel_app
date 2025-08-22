@@ -1,5 +1,6 @@
 import 'package:domain/model/request_model/digifit/digifit_update_exercise_request_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_exercise_details_response_model.dart';
+import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/enum/digifit_exercise_session_status_enum.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/enum/digifit_exercise_timer_state.dart';
 
 class DigifitExerciseDetailsState {
@@ -21,6 +22,7 @@ class DigifitExerciseDetailsState {
   final String createdAt;
   final String updatedAt;
   final List<String>? setTimeList;
+  final ExerciseStageConstant sessionStage;
 
   DigifitExerciseDetailsState(
       {required this.isLoading,
@@ -36,11 +38,12 @@ class DigifitExerciseDetailsState {
       required this.timerState,
       required this.time,
       required this.isNetworkAvailable,
-      required this.digifitUpdateExerciseRequestModel,
-      required this.createdAt,
-      required this.updatedAt,
-      required this.setTimeList,
-      });
+    required this.digifitUpdateExerciseRequestModel,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.setTimeList,
+    required this.sessionStage,
+  });
 
   factory DigifitExerciseDetailsState.empty() {
     return DigifitExerciseDetailsState(
@@ -61,7 +64,7 @@ class DigifitExerciseDetailsState {
         createdAt: '',
         updatedAt: '',
         setTimeList: [],
-    );
+        sessionStage: ExerciseStageConstant.initial);
   }
 
   DigifitExerciseDetailsState copyWith(
@@ -82,7 +85,8 @@ class DigifitExerciseDetailsState {
       DigifitUpdateExerciseRequestModel? digifitUpdateExerciseRequestModel,
       String? createdAt,
       String? updatedAt,
-      List<String>? setTimeList}) {
+      List<String>? setTimeList,
+      ExerciseStageConstant? sessionStage}) {
     return DigifitExerciseDetailsState(
         isLoading: isLoading ?? this.isLoading,
         errorMessage: errorMessage ?? this.errorMessage,
@@ -100,10 +104,12 @@ class DigifitExerciseDetailsState {
         timerState: timerState ?? this.timerState,
         time: time ?? this.time,
         isNetworkAvailable: isNetworkAvailable ?? this.isNetworkAvailable,
-        digifitUpdateExerciseRequestModel: digifitUpdateExerciseRequestModel ??
-            this.digifitUpdateExerciseRequestModel,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        setTimeList: setTimeList ?? this.setTimeList);
+      digifitUpdateExerciseRequestModel: digifitUpdateExerciseRequestModel ??
+          this.digifitUpdateExerciseRequestModel,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      setTimeList: setTimeList ?? this.setTimeList,
+      sessionStage: sessionStage ?? this.sessionStage,
+    );
   }
 }

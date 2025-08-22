@@ -1481,6 +1481,12 @@ abstract class AppLocalizations {
   /// **'Open stations in the course'**
   String get digifit_exercise_details_open_station;
 
+  /// No description provided for @digifit_exercise_details_start_session.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get digifit_exercise_details_start_session;
+
   /// No description provided for @location_map_news.
   ///
   /// In en, this message translates to:
@@ -1570,6 +1576,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Mobility centre'**
   String get mobility_centre;
+
+  /// No description provided for @home_screen_today_event.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s events'**
+  String get home_screen_today_event;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

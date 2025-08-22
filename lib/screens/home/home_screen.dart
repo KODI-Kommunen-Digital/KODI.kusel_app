@@ -364,7 +364,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               EventsListSectionWidget(
                 context: context,
                 eventsList: state.eventsList,
-                heading: AppLocalizations.of(context).all_events,
+                heading: AppLocalizations.of(context).home_screen_today_event,
                 maxListLimit: 3,
                 buttonText: AppLocalizations.of(context).all_events,
                 buttonIconPath: imagePath['calendar'] ?? "",
