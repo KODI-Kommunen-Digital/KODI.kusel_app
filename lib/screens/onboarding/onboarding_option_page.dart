@@ -17,7 +17,6 @@ class OnboardingOptionPage extends ConsumerStatefulWidget {
 }
 
 class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
-
   @override
   Widget build(BuildContext context) {
     return ref.read(onboardingScreenProvider).isResident
@@ -56,7 +55,7 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
               onTap: (){
                 FocusScope.of(context).unfocus();
               },
-                child: _autoCompleteTextDropDown()),
+                child: _dropDownResidence()),
             20.verticalSpace,
             Divider(
               height: 3.h,
@@ -160,7 +159,7 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
                 onTap: (){
                   FocusScope.of(context).unfocus();
                 },
-                child: _autoCompleteTextDropDown()),
+                child: _dropDownResidence()),
             20.verticalSpace,
             Divider(
               height: 3.h,
@@ -233,72 +232,113 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
     );
   }
 
-  Widget _autoCompleteTextDropDown() {
+  Widget _dropDownResidence() {
     final stateNotifier = ref.read(onboardingScreenProvider.notifier);
+    final state = ref.watch(onboardingScreenProvider);
+
+    Offset getPopupOffset(BuildContext context) {
+      if (DeviceHelper.isMobile(context)) {
+        return Offset(6, 64);
+      } else {
+        return Offset(16, 64);
+      }
+    }
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.onPrimary,
         borderRadius: BorderRadius.circular(30.r),
+        border: Border.all(
+          color: Theme.of(context).dividerColor,
+          width: 1,
+        ),
       ),
-      child: Autocomplete<String>(
-        optionsBuilder: (TextEditingValue textEditingValue) {
-          if (textEditingValue.text.isEmpty) {
-            return const Iterable<String>.empty();
-          }
-          return ref.read(onboardingScreenProvider).residenceList.where(
-                  (String city) => city
-                  .toLowerCase()
-                  .contains(textEditingValue.text.toLowerCase()));
+      child: PopupMenuButton<String>(
+        offset: getPopupOffset(context), // Dynamic offset
+        onSelected: (value) {
+          stateNotifier.updateUserType(value);
         },
-        onSelected: (String selection) {
-          stateNotifier.updateUserType(selection ?? '');
-          FocusScope.of(context).unfocus();
-        },
-        fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
-          if(ref.read(onboardingScreenProvider).resident!=null){
-            controller.text = ref.read(onboardingScreenProvider).resident!;
-          }
-          return TextField(
-            textAlign: TextAlign.center,
-            controller: controller,
-            focusNode: focusNode,
-            maxLines: 1,
-            style: TextStyle(
-              fontSize: 12.sp,
-                color: Theme.of(context).textTheme.labelMedium?.color),
-            decoration: InputDecoration(
-              hintText: AppLocalizations.of(context).select_residence,
-              border: InputBorder.none,
-            ),
-          );
-        },
-        optionsViewBuilder: (context, onSelected, options) {
-          return Align(
-            alignment: Alignment.topLeft,
-            child: Material(
-              elevation: 4,
-              borderRadius: BorderRadius.circular(8),
-              child: SizedBox(
-                width: 285.w,
-                child: ListView.builder(
-                  padding: EdgeInsets.zero,
-                  shrinkWrap: true,
-                  itemCount: options.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final option = options.elementAt(index);
-                    return ListTile(
-                      title: Text(option),
-                      onTap: () {
-                        onSelected(option);
-                      },
-                    );
-                  },
+        itemBuilder: (BuildContext context) {
+          return [
+            PopupMenuItem<String>(
+              enabled: false,
+              child: NotificationListener<OverscrollIndicatorNotification>(
+                onNotification: (overscroll) {
+                  overscroll.disallowIndicator();
+                  return true;
+                },
+                child: SizedBox(
+                  height: 200.h,
+                  width: DeviceHelper.isMobile(context) ? 250.w : 300.w, // Device based width
+                  child: ListView.builder(
+                    itemCount:
+                        ref.read(onboardingScreenProvider).residenceList.length,
+                    itemBuilder: (context, index) {
+                      final city = ref
+                          .read(onboardingScreenProvider)
+                          .residenceList[index];
+                      return InkWell(
+                        onTap: () {
+                          Navigator.pop(context);
+                          stateNotifier.updateUserType(city);
+                        },
+                        child: Container(
+                          constraints: const BoxConstraints(
+                            maxHeight: 40,
+                          ),
+                          alignment: Alignment.centerLeft,
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          child: Text(
+                            city,
+                            style: TextStyle(fontSize: 14, color: Colors.black),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ),
-          );
+          ];
         },
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        constraints: BoxConstraints(
+          maxHeight: 200.h,
+          minWidth: DeviceHelper.isMobile(context)
+              ? 250.w
+              : 300.w, // Device based constraints
+        ),
+        child: SizedBox(
+          height: 50.h,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  state.resident ??
+                      AppLocalizations.of(context).select_residence,
+                  style: TextStyle(
+                    fontSize: state.resident != null ? 14.sp : 13.sp,
+                    color: state.resident != null
+                        ? Theme.of(context).textTheme.labelMedium?.color
+                        : Theme.of(context).hintColor,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Icon(
+                Icons.keyboard_arrow_down,
+                color: Theme.of(context).primaryColor,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
