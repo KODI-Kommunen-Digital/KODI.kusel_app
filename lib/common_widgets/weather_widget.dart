@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/l10n/app_localizations.dart';
@@ -34,9 +35,9 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
             Positioned(
               bottom: 15.h,
               child: Container(
-                padding: EdgeInsets.only(left: 10.w),
-                width: 220.w,
-                height: 240.h,
+                padding: EdgeInsets.only(left: 30.w),
+                width: 270.w,
+                height: 231.h,
                 color: Colors.white,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,24 +72,54 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           _DayWeather(
-                              day: getDayFromDate(context, widget.weatherResponseModel
-                                      ?.forecast?.forecastday?[0].date ??
-                                  DateTime.now().toString()),
-                              icon: Icons.wb_sunny_outlined,
+                              day: getDayFromDate(
+                                  context,
+                                  widget.weatherResponseModel?.forecast
+                                          ?.forecastday?[0].date ??
+                                      DateTime.now().toString()),
+                              icon: imagePath[getWeatherIcon(widget
+                                          .weatherResponseModel
+                                          ?.forecast
+                                          ?.forecastday?[0]
+                                          .day
+                                          ?.condition
+                                          ?.code ??
+                                      1000)] ??
+                                  '',
                               temp:
                                   "${widget.weatherResponseModel?.forecast?.forecastday?[0].day?.maxtempC ?? ""}\u00B0"),
                           _DayWeather(
-                              day: getDayFromDate(context, widget.weatherResponseModel
-                                      ?.forecast?.forecastday?[1].date ??
-                                  DateTime.now().toString()),
-                              icon: Icons.wb_sunny_outlined,
+                              day: getDayFromDate(
+                                  context,
+                                  widget.weatherResponseModel?.forecast
+                                          ?.forecastday?[1].date ??
+                                      DateTime.now().toString()),
+                              icon: imagePath[getWeatherIcon(widget
+                                          .weatherResponseModel
+                                          ?.forecast
+                                          ?.forecastday?[1]
+                                          .day
+                                          ?.condition
+                                          ?.code ??
+                                      1000)] ??
+                                  '',
                               temp:
                                   "${widget.weatherResponseModel?.forecast?.forecastday?[1].day?.maxtempC ?? ""}\u00B0"),
                           _DayWeather(
-                              day: getDayFromDate(context, widget.weatherResponseModel
-                                      ?.forecast?.forecastday?[2].date ??
-                                  DateTime.now().toString()),
-                              icon: Icons.wb_sunny_outlined,
+                              day: getDayFromDate(
+                                  context,
+                                  widget.weatherResponseModel?.forecast
+                                          ?.forecastday?[2].date ??
+                                      DateTime.now().toString()),
+                              icon: imagePath[getWeatherIcon(widget
+                                          .weatherResponseModel
+                                          ?.forecast
+                                          ?.forecastday?[2]
+                                          .day
+                                          ?.condition
+                                          ?.code ??
+                                      1000)] ??
+                                  '',
                               temp:
                                   "${widget.weatherResponseModel?.forecast?.forecastday?[2].day?.maxtempC ?? ""}\u00B0"),
                         ],
@@ -98,14 +129,30 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
                 ),
               ),
             ),
+            Visibility(
+              visible:
+                  widget.weatherResponseModel?.current?.condition?.code == 1000,
+              child: Positioned(
+                  right: 42.w,
+                  bottom: 128.h,
+                  child: SizedBox(
+                    width: 169.w,
+                    height: 160.h,
+                    child: Image.asset(
+                      imagePath["sun_weather_image"] ?? "",
+                      fit: BoxFit.contain,
+                    ),
+                  )),
+            ),
             Positioned(
-               right: 20.w,
-               bottom: 5.h,
+              right: 6.w,
+              bottom: 3.h,
               child: SizedBox(
-                width: 170.w,
+                width: 143.w,
+                height: 166.h,
                 child: Image.asset(
                   imagePath[getWeatherImageAsset(widget
-                      .weatherResponseModel?.current?.condition?.code ??
+                              .weatherResponseModel?.current?.condition?.code ??
                           0)] ??
                       "",
                   fit: BoxFit.contain,
@@ -142,11 +189,10 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
     }
   }
 
-
   String getWeatherImageAsset(int weatherCode) {
     if (weatherCode == 1000) {
       // Sunny
-      return 'sunny_image';
+      return 'boldi_new_sunny_image';
     } else if ([1003, 1006, 1009, 1030, 1135, 1147].contains(weatherCode)) {
       // Cloudy, fog, mist
       return 'spring_image';
@@ -204,9 +250,64 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
   }
 }
 
+String getWeatherIcon(int weatherCode) {
+  if (weatherCode == 1000) {
+    return 'sunny_icon'; // Sunny
+  } else if ([1003, 1006, 1009, 1030, 1135, 1147].contains(weatherCode)) {
+    return 'partly_cloudy_icon'; // Cloudy
+  } else if ([
+    1063,
+    1150,
+    1153,
+    1180,
+    1183,
+    1186,
+    1189,
+    1192,
+    1195,
+    1201,
+    1240,
+    1243,
+    1246,
+    1273,
+    1276
+  ].contains(weatherCode)) {
+    return 'rainy_icon'; // Rain
+  } else if ([
+    1066,
+    1069,
+    1072,
+    1114,
+    1117,
+    1168,
+    1171,
+    1204,
+    1207,
+    1210,
+    1213,
+    1216,
+    1219,
+    1222,
+    1225,
+    1237,
+    1249,
+    1252,
+    1255,
+    1258,
+    1261,
+    1264,
+    1279,
+    1282
+  ].contains(weatherCode)) {
+    return 'snow_icon'; // Snow
+  } else {
+    return 'sunny_icon'; // Default
+  }
+}
+
 class _DayWeather extends StatelessWidget {
   final String day;
-  final IconData icon;
+  final String icon;
   final String temp;
 
   const _DayWeather({
@@ -220,11 +321,14 @@ class _DayWeather extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        textRegularMontserrat(text: day),
+        textRegularMontserrat(
+            text: day, color: Theme.of(context).textTheme.labelMedium?.color),
         4.horizontalSpace,
-        Icon(icon),
+        ImageUtil.loadSvgImage(
+            imageUrl: icon, context: context, height: 28, width: 28),
         4.horizontalSpace,
-        textSemiBoldMontserrat(text: temp),
+        textRegularMontserrat(
+            text: temp, color: Theme.of(context).textTheme.labelMedium?.color),
       ],
     );
   }
