@@ -10,7 +10,7 @@ final lightTheme = ThemeData(
   scaffoldBackgroundColor: lightThemeScaffoldBackgroundColor,
   indicatorColor: lightThemeIndicatorColor,
   highlightColor: lightThemeShimmerColor,
-  bottomAppBarTheme: BottomAppBarTheme(
+  bottomAppBarTheme: BottomAppBarThemeData(
     color: lightThemeSecondaryColor
   ),
   colorScheme: ColorScheme(
@@ -35,7 +35,7 @@ final lightTheme = ThemeData(
       labelMedium: TextStyle(color: lightThemeLabelMediumColor),
       labelLarge: TextStyle(color: lightThemeLabelLargeColor),
   ),
-  cardTheme: CardTheme(
+  cardTheme: CardThemeData(
     color: lightThemeCardDarkColor,
   ),
   canvasColor: lightThemeCanvasColor,
