@@ -24,7 +24,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get password_required => 'password is required';
 
   @override
-  String get password_required_error => 'Password must be 8+ characters, include upper/lowercase,\na number, and a special character';
+  String get password_required_error =>
+      'Password must be 8+ characters, include upper/lowercase,\na number, and a special character';
 
   @override
   String get password => 'Password';
@@ -69,7 +70,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get email_send => 'Email has been send';
 
   @override
-  String get something_went_wrong => 'Something went wrong, Please try again later';
+  String get something_went_wrong =>
+      'Something went wrong, Please try again later';
 
   @override
   String get highlights => 'Highlights';
@@ -105,7 +107,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get feedback_heading => 'What do you think of the app?';
 
   @override
-  String get feedback_description => 'Is there anything missing or have you noticed something? Let us know so we can continually improve the app.';
+  String get feedback_description =>
+      'Is there anything missing or have you noticed something? Let us know so we can continually improve the app.';
 
   @override
   String get send_feedback => 'Send feedback';
@@ -192,7 +195,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get search_result => 'Search Results';
 
   @override
-  String get check_your_email => 'A link has been send to your email, please verify';
+  String get check_your_email =>
+      'A link has been send to your email, please verify';
 
   @override
   String get lets_get_started => 'Let\'s get started';
@@ -225,16 +229,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get i_am_visiting_the_district => 'I am visiting the district ...';
 
   @override
-  String get i_live_in_district_onborading_type_page => 'live here in the district';
+  String get i_live_in_district_onborading_type_page =>
+      'live here in the district';
 
   @override
   String get welcome_text => 'Welcome!';
 
   @override
-  String get welcome_para_first => 'In order to offer you tailored content from the region that will also interest you, we would need a little information.';
+  String get welcome_para_first =>
+      'In order to offer you tailored content from the region that will also interest you, we would need a little information.';
 
   @override
-  String get welcome_para_second => 'This information is voluntary and can be skipped. You can adjust it at any time in the settings.';
+  String get welcome_para_second =>
+      'This information is voluntary and can be skipped. You can adjust it at any time in the settings.';
 
   @override
   String get live_here => 'live in';
@@ -276,10 +283,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get complete => 'Complete';
 
   @override
-  String get preparing_the_app_text => 'I\'m now preparing the app for you.\nThis will take a moment.';
+  String get preparing_the_app_text =>
+      'I\'m now preparing the app for you.\nThis will take a moment.';
 
   @override
-  String get i_have_prepared_everything_text => 'I\'ve prepared everything for you.\nHave fun!';
+  String get i_have_prepared_everything_text =>
+      'I\'ve prepared everything for you.\nHave fun!';
 
   @override
   String get continue_to_homepage => 'Continue to the homepage';
@@ -396,7 +405,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get select_end_date => 'Select end date';
 
   @override
-  String get please_select_start_and_end_date => 'Please select start and end date';
+  String get please_select_start_and_end_date =>
+      'Please select start and end date';
 
   @override
   String get today_its_going_to_be => 'It’s going to be sunny today!';
@@ -483,7 +493,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get show_all_places => 'Show all places';
 
   @override
-  String get mein_ort_display_message => 'Welcome to the overview page for your places in the Kuseler Land – your guide to the places in the region.';
+  String get mein_ort_display_message =>
+      'Welcome to the overview page for your places in the Kuseler Land – your guide to the places in the region.';
 
   @override
   String get hiking_trails => 'Hiking trails app';
@@ -504,7 +515,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get register_here => 'LogIn here';
 
   @override
-  String get develop_kusel_together_text => 'We want to further develop the Kusel district together.';
+  String get develop_kusel_together_text =>
+      'We want to further develop the Kusel district together.';
 
   @override
   String get sunday_text => 'Su';
@@ -570,7 +582,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get delete_account => 'Delete account';
 
   @override
-  String get success_delete_account_message => 'You account has been deleted successfully';
+  String get success_delete_account_message =>
+      'You account has been deleted successfully';
 
   @override
   String get edit_onboarding_details => 'Edit User details';
@@ -579,7 +592,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get ok => 'Ok';
 
   @override
-  String get delete_account_information => 'Are you sure you want to delete your account?';
+  String get delete_account_information =>
+      'Are you sure you want to delete your account?';
 
   @override
   String get digifit_parcours => 'Digifit Parcours';
@@ -609,7 +623,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get link_copy_to_clipboard => 'Link copied to clipboard';
 
   @override
-  String get privacy_policy_error_msg => 'Please accept the Privacy Policy to continue.';
+  String get privacy_policy_error_msg =>
+      'Please accept the Privacy Policy to continue.';
 
   @override
   String get digifit => 'Digifit';
@@ -648,7 +663,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get error => 'Error';
 
   @override
-  String get validation_falied_message => 'Invalid scan. Unable to start session.';
+  String get validation_falied_message =>
+      'Invalid scan. Unable to start session.';
 
   @override
   String get session_start => 'Session has been started';
@@ -669,7 +685,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get digifit_success_card_title => 'Great perseverance!';
 
   @override
-  String get digifit_success_card_desp => 'Now complete the exercise to collect your points.';
+  String get digifit_success_card_desp =>
+      'Now complete the exercise to collect your points.';
 
   @override
   String get digifit_abort => 'Abort';
@@ -678,7 +695,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get digifit_abort_exercise_title => 'Abort Exercise?';
 
   @override
-  String get digifit_abort_exercise_desp => 'The current exercise is not yet completed. Do you really want to abort and go back?';
+  String get digifit_abort_exercise_desp =>
+      'The current exercise is not yet completed. Do you really want to abort and go back?';
 
   @override
   String get digifit_latest_trophies => 'Latest trophies';
@@ -699,7 +717,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get digifit_trophies_open => 'open';
 
   @override
-  String get digifit_exercise_details_open_station => 'Open stations in the course';
+  String get digifit_exercise_details_open_station =>
+      'Open stations in the course';
 
   @override
   String get digifit_exercise_details_start_session => 'Start';
