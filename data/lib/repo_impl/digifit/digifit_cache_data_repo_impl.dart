@@ -2,7 +2,6 @@ import 'package:core/base_model.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../service/digifit_services/digifit_cache_data_service.dart';
-import '../../service/digifit_services/digifit_information_services.dart';
 
 final digifitCacheDataRepositoryProvider = Provider((ref) =>
     DigifitCacheDataRepoImpl(
