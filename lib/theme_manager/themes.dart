@@ -10,7 +10,7 @@ final lightTheme = ThemeData(
   scaffoldBackgroundColor: lightThemeScaffoldBackgroundColor,
   indicatorColor: lightThemeIndicatorColor,
   highlightColor: lightThemeShimmerColor,
-  bottomAppBarTheme: BottomAppBarThemeData(
+  bottomAppBarTheme: BottomAppBarTheme(
     color: lightThemeSecondaryColor
   ),
   colorScheme: ColorScheme(

@@ -1,7 +1,6 @@
 import 'package:core/base_model.dart';
 import 'package:dartz/dartz.dart';
 import 'package:domain/model/response_model/favorites/get_favorites_response_model.dart';
-import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/usecase/usecase.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

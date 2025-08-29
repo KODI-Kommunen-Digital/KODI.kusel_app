@@ -2,7 +2,6 @@ import 'package:core/base_model.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../service/city_details/get_cities_service.dart';
 import '../../service/onboarding/onboarding_details_service.dart';
 
 final onboardingDetailsRepositoryProvider = Provider((ref) =>
