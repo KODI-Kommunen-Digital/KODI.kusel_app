@@ -79,7 +79,6 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
                   .watch(locationScreenProvider.notifier)
                   .sortSuggestionList(search, list);
               return sortedList;
-              return sortedList;
             },
             isPaddingEnabled: true,
           ),
@@ -90,9 +89,9 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
             itemCount: staticFilterCategoryList(context).length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
-              mainAxisExtent: 90.h,
-              crossAxisSpacing: 20.h,
-              mainAxisSpacing: 16.h,
+              mainAxisExtent: 75.h,
+              crossAxisSpacing: 10.h,
+              mainAxisSpacing: 15.h,
             ),
             itemBuilder: (context, index) {
               final listing = staticFilterCategoryList(context)[index];
