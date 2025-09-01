@@ -74,7 +74,8 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
                             heading: item?.title ?? '_',
                             description: item?.description ?? "_");
                       }),
-                _buildContactDetailsList(),
+                // _buildContactDetailsList(),
+                15.verticalSpace,
                 FeedbackCardWidget(
                     height: 270.h,
                     onTap: () {
