@@ -86,7 +86,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get logout => 'Abmelden';
 
   @override
-  String get select_language => 'Wählen sie Ihre Sprache';
+  String get select_language => 'Wähle Deine Sprache';
 
   @override
   String get medieval_market => 'Medieval market';
