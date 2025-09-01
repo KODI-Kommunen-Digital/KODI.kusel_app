@@ -34,7 +34,9 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
       final state = ref.read(locationScreenProvider);
       final categoryId = widget.selectedFilterScreenParams.categoryId;
 
-      final alreadyFetched = state.fetchedCategoryMap[categoryId] ?? false;
+
+      final alreadyFetched = state.categoryEventLists[categoryId]?.isNotEmpty ?? false;
+
 
       if (!alreadyFetched) {
         debugPrint("Fetching data for categoryId $categoryId");
@@ -71,10 +73,14 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
             children: [
               IconButton(
                 onPressed: () {
+                  state.currentPageNo = 0;
                   ref
                       .read(locationScreenProvider.notifier)
                       .updateBottomSheetSelectedUIType(
                           BottomSheetSelectedUIType.allEvent);
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    ref.read(locationScreenProvider.notifier).updateSlidingUpPanelIsDragStatus(true); // allow drag
+                  });
                 },
                 icon: Icon(
                   size: DeviceHelper.isMobile(context) ? null : 12.h.w,
@@ -119,7 +125,6 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
                   .watch(locationScreenProvider.notifier)
                   .sortSuggestionList(search, list);
               return sortedList;
-              return sortedList;
             },
             isPaddingEnabled: true,
           ),
@@ -141,9 +146,9 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
                 child: EventsListSectionWidget(
                   shrinkWrap: true,
                   scrollController: widget.scrollController,
-                  eventsList: state.allEventCategoryWiseList,
+                  eventsList: state.categoryEventLists[widget.selectedFilterScreenParams.categoryId] ?? [],
                   heading: null,
-                  maxListLimit: state.allEventCategoryWiseList.length,
+                  maxListLimit: state.categoryEventLists[widget.selectedFilterScreenParams.categoryId]?.length ?? 0,
                   buttonText: null,
                   buttonIconPath: null,
                   isLoading: false,
