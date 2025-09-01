@@ -236,7 +236,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
             LocalSvgImageTextServiceCard(
               onTap: () => ref.read(navigationProvider).navigateUsingPath(
                   path: webViewPagePath,
-                  params: WebViewParams(url: "https://www.landkreis-kusel.de"),
+                  params: WebViewParams(url: "https://www.pfaelzerbergland.de/de/aktiv-in-der-natur/wandern"),
                   context: context),
               imageUrl: 'tourism_service_image',
               text: AppLocalizations.of(context).hiking_trails,
