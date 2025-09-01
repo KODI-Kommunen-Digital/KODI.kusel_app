@@ -319,11 +319,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                     },
                   )
                 : Center(
-                    child: Image.asset(
-                      imagePath['crest']!,
-                      height: 120.h,
-                      width: 100.w,
-                    ),
+                    child:  CircularProgressIndicator()
                   ),
           ),
         )
