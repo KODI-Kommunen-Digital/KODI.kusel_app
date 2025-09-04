@@ -82,7 +82,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                     clipperType: UpstreamWaveClipper(),
                     imageUrl: imagePath['background_image'] ?? "",
                     headingText: AppLocalizations.of(context).tourism_and_leisure,
-                    height: 150.h,
+                    height: 130.h,
                     blurredBackground: true,
                     isBackArrowEnabled: false,
                     isStaticImage: true),
@@ -196,14 +196,17 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
             ),
           ),
           Positioned(
-            top: 30.h,
-            left: 12.h,
-            child: ArrowBackWidget(
-              onTap: () {
-                ref.read(navigationProvider).removeTopPage(context: context);
-              },
-            ),
-          ),
+            top: 26.h,
+            left: 12.w,
+            child: IconButton(
+                onPressed: () {
+                  ref.read(navigationProvider).removeTopPage(context: context);
+                },
+                icon: Icon(
+                    size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                    color: Theme.of(context).primaryColor,
+                    Icons.arrow_back)),
+          )
         ],
       ),
     );
