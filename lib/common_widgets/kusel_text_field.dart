@@ -108,7 +108,7 @@ class _KuselTextFieldState extends ConsumerState<KuselTextField> {
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(borderRadius),
             borderSide: BorderSide(
-                color: widget.focusBorderColor ?? Color.fromRGBO(0, 0, 0, 0.8),
+                color: widget.focusBorderColor ?? Colors.transparent,
                 width: 0.7),
           ),
           enabledBorder: OutlineInputBorder(

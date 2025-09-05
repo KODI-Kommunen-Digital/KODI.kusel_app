@@ -1,6 +1,5 @@
 import 'package:core/base_model.dart';
 import 'package:dartz/dartz.dart';
-import 'package:data/service/user_detail/user_detail_service.dart';
 import 'package:data/service/weather/weather_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

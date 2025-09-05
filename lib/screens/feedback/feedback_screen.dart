@@ -8,10 +8,10 @@ import 'package:kusel/common_widgets/kusel_text_field.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/web_view_page.dart';
+import 'package:kusel/screens/dashboard/dashboard_screen_provider.dart';
 import 'package:kusel/screens/feedback/feedback_screen_provider.dart';
 import 'package:kusel/screens/feedback/feedback_screen_state.dart';
 import 'package:kusel/utility/url_constants/url_constants.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../common_widgets/arrow_back_widget.dart';
 import '../../common_widgets/common_background_clipper_widget.dart';
@@ -19,7 +19,6 @@ import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/toast_message.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
-import '../../utility/url_launcher_utility.dart';
 import '../auth/validator/empty_field_validator.dart';
 
 class FeedbackScreen extends ConsumerStatefulWidget {
@@ -61,6 +60,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
               left: 16.w,
               child: ArrowBackWidget(
                 onTap: () {
+                  ref.read(dashboardScreenProvider).selectedIndex = 0;
                   ref
                       .read(navigationProvider)
                       .removeAllAndNavigate(path: homeScreenPath, context: context);
@@ -189,6 +189,9 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                 visible: stateWatch.onError,
                 child: textSemiBoldMontserrat(
                     fontSize: 12,
+                    textOverflow: TextOverflow.visible,
+                    textAlign:  TextAlign.start,
+                    maxLines: 2,
                     color: Theme.of(context).colorScheme.error,
                     text: AppLocalizations.of(context).privacy_policy_error_msg)),
             10.verticalSpace,

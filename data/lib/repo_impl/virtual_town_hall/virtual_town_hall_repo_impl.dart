@@ -1,6 +1,5 @@
 import 'package:core/base_model.dart';
 import 'package:dartz/dartz.dart';
-import 'package:data/service/user_detail/user_detail_service.dart';
 import 'package:data/service/virtual_town_hall/virtual_town_hall_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

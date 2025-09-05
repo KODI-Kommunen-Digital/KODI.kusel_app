@@ -236,7 +236,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
             LocalSvgImageTextServiceCard(
               onTap: () => ref.read(navigationProvider).navigateUsingPath(
                   path: webViewPagePath,
-                  params: WebViewParams(url: "https://www.landkreis-kusel.de"),
+                  params: WebViewParams(url: "https://www.pfaelzerbergland.de/de/aktiv-in-der-natur/wandern"),
                   context: context),
               imageUrl: 'tourism_service_image',
               text: AppLocalizations.of(context).hiking_trails,
@@ -520,6 +520,11 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
           10.verticalSpace,
           SizedBox(
             height: DeviceHelper.isMobile(context) ? 315.h : 340.h,
+            child: NotificationListener<OverscrollIndicatorNotification>(
+              onNotification: (overscroll) {
+                overscroll.disallowIndicator();
+                return true;
+              },
             child: PageView.builder(
               controller: PageController(
                   viewportFraction: 317.w / MediaQuery.of(context).size.width),
@@ -564,6 +569,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                     .read(ortDetailScreenControllerProvider.notifier)
                     .updateCardIndex(index);
               },
+              ),
             ),
           ),
         ],

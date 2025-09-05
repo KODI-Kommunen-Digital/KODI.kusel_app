@@ -62,7 +62,8 @@ import 'app_localizations_en.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale)
+      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -70,7 +71,8 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate =
+      _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -82,7 +84,8 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
     delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
@@ -248,7 +251,7 @@ abstract class AppLocalizations {
   /// No description provided for @select_language.
   ///
   /// In en, this message translates to:
-  /// **'Select your language'**
+  /// **'Choose your language'**
   String get select_language;
 
   /// No description provided for @medieval_market.
@@ -520,6 +523,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'I live in the district...'**
   String get i_live_in_district;
+
+  /// No description provided for @i_am_visiting_the_district.
+  ///
+  /// In en, this message translates to:
+  /// **'I am visiting the district ...'**
+  String get i_am_visiting_the_district;
 
   /// No description provided for @i_live_in_district_onborading_type_page.
   ///
@@ -1070,13 +1079,13 @@ abstract class AppLocalizations {
   /// No description provided for @participate.
   ///
   /// In en, this message translates to:
-  /// **'PARTICIPATE'**
+  /// **'Participate'**
   String get participate;
 
   /// No description provided for @register_here.
   ///
   /// In en, this message translates to:
-  /// **'Register here'**
+  /// **'LogIn here'**
   String get register_here;
 
   /// No description provided for @develop_kusel_together_text.
@@ -1199,11 +1208,11 @@ abstract class AppLocalizations {
   /// **'District'**
   String get district;
 
-  /// No description provided for @favourite_city.
+  /// No description provided for @favourite_places.
   ///
   /// In en, this message translates to:
-  /// **'Favourite cities'**
-  String get favourite_city;
+  /// **'Favourite places'**
+  String get favourite_places;
 
   /// No description provided for @delete_account.
   ///
@@ -1220,7 +1229,7 @@ abstract class AppLocalizations {
   /// No description provided for @edit_onboarding_details.
   ///
   /// In en, this message translates to:
-  /// **'Edit onboarding details'**
+  /// **'Edit User details'**
   String get edit_onboarding_details;
 
   /// No description provided for @ok.
@@ -1475,6 +1484,12 @@ abstract class AppLocalizations {
   /// **'Open stations in the course'**
   String get digifit_exercise_details_open_station;
 
+  /// No description provided for @digifit_exercise_details_start_session.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get digifit_exercise_details_start_session;
+
   /// No description provided for @location_map_news.
   ///
   /// In en, this message translates to:
@@ -1559,6 +1574,18 @@ abstract class AppLocalizations {
   /// **'POI'**
   String get location_map_poi;
 
+  /// No description provided for @mobility_centre.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobility centre'**
+  String get mobility_centre;
+
+  /// No description provided for @home_screen_today_event.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s events'**
+  String get home_screen_today_event;
+
   /// No description provided for @brain_teasers_list_title.
   ///
   /// In en, this message translates to:
@@ -1566,7 +1593,8 @@ abstract class AppLocalizations {
   String get brain_teasers_list_title;
 }
 
-class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate
+    extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -1575,25 +1603,25 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['de', 'en'].contains(locale.languageCode);
+  bool isSupported(Locale locale) =>
+      <String>['de', 'en'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
-
-
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'de': return AppLocalizationsDe();
-    case 'en': return AppLocalizationsEn();
+    case 'de':
+      return AppLocalizationsDe();
+    case 'en':
+      return AppLocalizationsEn();
   }
 
   throw FlutterError(
-    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-    'an issue with the localizations generation tool. Please file an issue '
-    'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.'
-  );
+      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+      'an issue with the localizations generation tool. Please file an issue '
+      'on GitHub with a reproducible sample app and the gen-l10n configuration '
+      'that was used.');
 }

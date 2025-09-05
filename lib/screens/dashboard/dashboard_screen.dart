@@ -69,6 +69,8 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                   unselectedItemColor: Theme.of(context).colorScheme.onPrimary,
                   currentIndex: selectedIndex,
                   enableFloatingNavBar: true,
+                  enablePaddingAnimation: false,
+
                   paddingR: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                   marginR: const EdgeInsets.all(0),
                   onTap: (index) {

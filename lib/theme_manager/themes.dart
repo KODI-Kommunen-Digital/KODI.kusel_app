@@ -35,7 +35,7 @@ final lightTheme = ThemeData(
       labelMedium: TextStyle(color: lightThemeLabelMediumColor),
       labelLarge: TextStyle(color: lightThemeLabelLargeColor),
   ),
-  cardTheme: CardTheme(
+  cardTheme: CardThemeData(
     color: lightThemeCardDarkColor,
   ),
   canvasColor: lightThemeCanvasColor,
