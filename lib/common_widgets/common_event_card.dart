@@ -41,9 +41,9 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
   Widget build(BuildContext context) {
     return Card(
       color: Colors.white,
-      margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+      margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 4.h),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      elevation: 4,
+      elevation: 2,
       child: InkWell(
         borderRadius: BorderRadius.circular(8),
         onTap: widget.onCardTap,
@@ -101,7 +101,9 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                     widget.isFavorite
                         ? Icons.favorite_sharp
                         : Icons.favorite_border,
-                    color: Colors.grey,
+                    color: !widget.isFavorite
+                        ? Theme.of(context).primaryColor
+                        : Theme.of(context).colorScheme.onTertiaryFixed,
                   ),
                 ),
               ),

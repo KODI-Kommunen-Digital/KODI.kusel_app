@@ -240,7 +240,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
       required String subHeading,
       required String description}) {
     return Padding(
-      padding: EdgeInsets.all(12.h.w),
+      padding: EdgeInsets.only(left: 8.w, right: 10.w, top: 10.h, bottom: 10.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -513,7 +513,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: EdgeInsets.only(left: 16.w),
+            padding: EdgeInsets.only(left: 20.w),
             child: textBoldPoppins(
                 text: AppLocalizations.of(context).recommendations,
                 fontSize: 16,

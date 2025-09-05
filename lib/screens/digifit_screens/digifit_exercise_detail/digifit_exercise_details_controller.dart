@@ -332,8 +332,10 @@ class DigifitExerciseDetailsController
         isCompleted = true;
         saveExerciseCacheData(exerciseId: equipmentId.toString(), locationId: locationId);
       } else if (stageConstant == ExerciseStageConstant.abort) {
-        saveExerciseCacheData(exerciseId: equipmentId.toString(),  locationId: locationId);
+        saveExerciseCacheData(
+            exerciseId: equipmentId.toString(), locationId: locationId);
       }
+      updateSessionStage(stageConstant);
       onSuccess();
       DigifitExerciseEquipmentModel? digifitExerciseEquipmentModel =
           state.digifitExerciseEquipmentModel;
@@ -387,6 +389,7 @@ class DigifitExerciseDetailsController
             isLoading: false,
             currentSetNumber: response.completedSets,
             digifitExerciseEquipmentModel: digifitExerciseEquipmentModel);
+        updateSessionStage(stageConstant);
         onSuccess();
       });
     } catch (error) {
@@ -494,5 +497,9 @@ class DigifitExerciseDetailsController
   String getCurrentUTCTime() {
     final now = DateTime.now().toUtc();
     return now.toIso8601String();
+  }
+
+  void updateSessionStage(ExerciseStageConstant value) {
+    state = state.copyWith(sessionStage: value);
   }
 }

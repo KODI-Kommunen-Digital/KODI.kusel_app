@@ -53,11 +53,11 @@ class SignUpController extends StateNotifier<SignUpState> {
           await signUpUseCase.call(signUpRequestModel, signUpResponseModel);
 
       result.fold((l) async{
+        debugPrint('sign up  fold exception');
         final text = await translateErrorMessage.translateErrorMessage(l.toString());
         state = state.copyWith(isLoading: false);
         onError(text);
       }, (r) {
-        debugPrint('sign up  fold exception');
         state = state.copyWith(isLoading: false);
         final result = r as SignUpResponseModel;
 

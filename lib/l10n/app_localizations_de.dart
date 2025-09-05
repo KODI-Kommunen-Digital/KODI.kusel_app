@@ -24,7 +24,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get password_required => 'Passwort erforderlich';
 
   @override
-  String get password_required_error => 'Das Passwort muss mindestens 8 Zeichen lang sein und Groß- und \nKleinbuchstaben,eine Zahl und ein Sonderzeichen enthalten.';
+  String get password_required_error =>
+      'Das Passwort muss mindestens 8 Zeichen lang sein und Groß- und \nKleinbuchstaben,eine Zahl und ein Sonderzeichen enthalten.';
 
   @override
   String get password => 'Passwort';
@@ -69,7 +70,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get email_send => 'E-Mail wurde gesendet';
 
   @override
-  String get something_went_wrong => 'Etwas ist schiefgelaufen. Bitte versuchen Sie es später noch einmal';
+  String get something_went_wrong =>
+      'Etwas ist schiefgelaufen. Bitte versuchen Sie es später noch einmal';
 
   @override
   String get highlights => 'Highlights';
@@ -84,7 +86,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get logout => 'Abmelden';
 
   @override
-  String get select_language => 'Wählen Sie Ihre Sprache';
+  String get select_language => 'Wähle Deine Sprache';
 
   @override
   String get medieval_market => 'Medieval market';
@@ -105,7 +107,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get feedback_heading => 'Wie findest du die App?';
 
   @override
-  String get feedback_description => 'Fehlt dir noch etwas oder ist dir etwas aufgefallen? Lass es uns wissen, um die App stetig zu verbessern.';
+  String get feedback_description =>
+      'Fehlt dir noch etwas oder ist dir etwas aufgefallen? Lass es uns wissen, um die App stetig zu verbessern.';
 
   @override
   String get send_feedback => 'Feedback senden';
@@ -177,7 +180,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get select_environment => 'Wählen Sie Umgebung aus';
 
   @override
-  String get search_heading => 'Wie kann ich dir helfen? \nFrag mich einfach etwas.';
+  String get search_heading =>
+      'Wie kann ich dir helfen? \nFrag mich einfach etwas.';
 
   @override
   String get near_me => 'Was gibt’s in meiner Nähe';
@@ -192,7 +196,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get search_result => 'Suchergebnisse';
 
   @override
-  String get check_your_email => 'Ein Link wurde an deine E-Mail-Adresse gesendet. Bitte überprüfe sie.';
+  String get check_your_email =>
+      'Ein Link wurde an deine E-Mail-Adresse gesendet. Bitte überprüfe sie.';
 
   @override
   String get lets_get_started => 'Legen wir los';
@@ -222,16 +227,22 @@ class AppLocalizationsDe extends AppLocalizations {
   String get i_live_in_district => 'Ich lebe im Landkreis ...';
 
   @override
-  String get i_live_in_district_onborading_type_page => 'lebe hier im Landkreis';
+  String get i_am_visiting_the_district => 'Ich besuche den Landkreis ...';
+
+  @override
+  String get i_live_in_district_onborading_type_page =>
+      'lebe hier im Landkreis';
 
   @override
   String get welcome_text => 'Willkommen!';
 
   @override
-  String get welcome_para_first => 'Um dir maßgeschneiderte Inhalte aus der Region zu bieten, die dich auch interessieren, bräuchten wir ein paar kleine Infos.';
+  String get welcome_para_first =>
+      'Um dir maßgeschneiderte Inhalte aus der Region zu bieten, die dich auch interessieren, bräuchten wir ein paar kleine Infos.';
 
   @override
-  String get welcome_para_second => 'Es sind freiwillige Angaben und können auch übersprungen werden. In den Einstellungen kannst du diese jederzeit anpassen.';
+  String get welcome_para_second =>
+      'Es sind freiwillige Angaben und können auch übersprungen werden. In den Einstellungen kannst du diese jederzeit anpassen.';
 
   @override
   String get live_here => 'lebe hier im';
@@ -267,16 +278,19 @@ class AppLocalizationsDe extends AppLocalizations {
   String get almost_there => 'Fast geschafft, ';
 
   @override
-  String get what_interest_you => '! Für was interessierst du dich im Landkreis?';
+  String get what_interest_you =>
+      '! Für was interessierst du dich im Landkreis?';
 
   @override
   String get complete => 'Abschließen';
 
   @override
-  String get preparing_the_app_text => 'Ich bereite die App nun für dich vor.\nDas dauert einen kleinen Moment.';
+  String get preparing_the_app_text =>
+      'Ich bereite die App nun für dich vor.\nDas dauert einen kleinen Moment.';
 
   @override
-  String get i_have_prepared_everything_text => 'Ich habe alles für dich vorbereitet.\nViel Spaß !';
+  String get i_have_prepared_everything_text =>
+      'Ich habe alles für dich vorbereitet.\nViel Spaß !';
 
   @override
   String get continue_to_homepage => 'Weiter zur Startseite';
@@ -333,13 +347,14 @@ class AppLocalizationsDe extends AppLocalizations {
   String get favorites => 'Favoriten';
 
   @override
-  String get please_select_the_field => 'Bitte vervollständigen Sie das Formular';
+  String get please_select_the_field =>
+      'Bitte vervollständigen Sie das Formular';
 
   @override
   String get title => 'Titel';
 
   @override
-  String get feedback => 'Feedback';
+  String get feedback => 'Rückmeldung';
 
   @override
   String get enter_title => 'Titel eingeben';
@@ -393,7 +408,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get select_end_date => 'Enddatum auswählen';
 
   @override
-  String get please_select_start_and_end_date => 'Bitte Start- und Enddatum auswählen';
+  String get please_select_start_and_end_date =>
+      'Bitte Start- und Enddatum auswählen';
 
   @override
   String get today_its_going_to_be => 'Heute wird’s sonnig!';
@@ -453,7 +469,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get event_text => 'Veranstaltungen';
 
   @override
-  String get feedback_text => 'Ich habe die Datenschutzerklärung zur Kenntnis genommen';
+  String get feedback_text =>
+      'Ich habe die Datenschutzerklärung zur Kenntnis genommen';
 
   @override
   String get imprint_page => 'Impressum';
@@ -480,7 +497,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get show_all_places => 'Alle Orte anzeigen';
 
   @override
-  String get mein_ort_display_message => 'Willkommen auf der Übersichtsseite für deine Orte im Kuseler Land – Deinem Guide zu den Orten der Region.';
+  String get mein_ort_display_message =>
+      'Willkommen auf der Übersichtsseite für deine Orte im Kuseler Land – Deinem Guide zu den Orten der Region.';
 
   @override
   String get hiking_trails => 'Wanderwege App';
@@ -498,10 +516,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get participate => 'MITMACHEN';
 
   @override
-  String get register_here => 'Hier anmelden';
+  String get register_here => 'Hier einloggen';
 
   @override
-  String get develop_kusel_together_text => 'Wir möchten gemeinsam den Landkreis Kusel weiterentwickeln.';
+  String get develop_kusel_together_text =>
+      'Wir möchten gemeinsam den Landkreis Kusel weiterentwickeln.';
 
   @override
   String get sunday_text => 'So';
@@ -531,7 +550,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get accessible => 'Erreichbar';
 
   @override
-  String get reachable_by_public_transport => 'Mit öffentlichen Verkehrsmitteln erreichbar';
+  String get reachable_by_public_transport =>
+      'Mit öffentlichen Verkehrsmitteln erreichbar';
 
   @override
   String get free_of_charge => 'Kostenlos';
@@ -561,22 +581,24 @@ class AppLocalizationsDe extends AppLocalizations {
   String get district => 'Landkreis';
 
   @override
-  String get favourite_city => 'Lieblingsstädte';
+  String get favourite_places => 'Lieblingsorte';
 
   @override
   String get delete_account => 'Konto löschen';
 
   @override
-  String get success_delete_account_message => 'Ihr Konto wurde erfolgreich gelöscht';
+  String get success_delete_account_message =>
+      'Ihr Konto wurde erfolgreich gelöscht';
 
   @override
-  String get edit_onboarding_details => 'Onboardingdetails bearbeiten';
+  String get edit_onboarding_details => 'Benutzerdetails bearbeiten';
 
   @override
   String get ok => 'Ok';
 
   @override
-  String get delete_account_information => 'Möchten Sie Ihr Konto wirklich löschen?';
+  String get delete_account_information =>
+      'Möchten Sie Ihr Konto wirklich löschen?';
 
   @override
   String get digifit_parcours => 'Digifit Parcours';
@@ -606,7 +628,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get link_copy_to_clipboard => 'Link in die Zwischenablage kopiert';
 
   @override
-  String get privacy_policy_error_msg => 'Bitte akzeptieren Sie die Datenschutzrichtlinie, um fortzufahren.';
+  String get privacy_policy_error_msg =>
+      'Bitte akzeptieren Sie die Datenschutzrichtlinie, um fortzufahren.';
 
   @override
   String get digifit => 'Digifit';
@@ -645,7 +668,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get error => 'Fehler';
 
   @override
-  String get validation_falied_message => 'Ungültiger Scan. Sitzung kann nicht gestartet werden.';
+  String get validation_falied_message =>
+      'Ungültiger Scan. Sitzung kann nicht gestartet werden.';
 
   @override
   String get session_start => 'Die Sitzung wurde gestartet';
@@ -666,7 +690,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get digifit_success_card_title => 'Super durchgehalten!';
 
   @override
-  String get digifit_success_card_desp => 'Schließe die Übung nun ab, um deine Punkte abzuholen.';
+  String get digifit_success_card_desp =>
+      'Schließe die Übung nun ab, um deine Punkte abzuholen.';
 
   @override
   String get digifit_abort => 'Abbrechen';
@@ -675,7 +700,8 @@ class AppLocalizationsDe extends AppLocalizations {
   String get digifit_abort_exercise_title => 'Übung abbrechen?';
 
   @override
-  String get digifit_abort_exercise_desp => 'Die aktuelle Übung ist noch nicht abgeschlossen. Möchtest du sie wirklich abbrechen und zur vorherigen Seite zurückkehren?';
+  String get digifit_abort_exercise_desp =>
+      'Die aktuelle Übung ist noch nicht abgeschlossen. Möchtest du sie wirklich abbrechen und zur vorherigen Seite zurückkehren?';
 
   @override
   String get digifit_latest_trophies => 'Neuste Trophäen';
@@ -696,7 +722,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get digifit_trophies_open => 'offen';
 
   @override
-  String get digifit_exercise_details_open_station => 'Offene Stationen im Parcours';
+  String get digifit_exercise_details_open_station =>
+      'Offene Stationen im Parcours';
+
+  @override
+  String get digifit_exercise_details_start_session => 'Starten';
 
   @override
   String get location_map_news => 'Nachricht';
@@ -723,7 +753,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get location_map_company_portraits => 'Firmenporträts';
 
   @override
-  String get location_map_transport => 'Fahrgemeinschaften';
+  String get location_map_transport => 'Fahr­gemeinschaft­en';
 
   @override
   String get location_map_offers => 'Angebote';
@@ -739,6 +769,12 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get location_map_poi => 'POI';
+
+  @override
+  String get mobility_centre => 'Mobilitätszentrale';
+
+  @override
+  String get home_screen_today_event => 'Heutige Veranstaltungen';
 
   @override
   String get brain_teasers_list_title => 'Denksportaufgaben';

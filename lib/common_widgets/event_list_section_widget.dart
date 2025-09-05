@@ -24,7 +24,7 @@ class EventsListSectionWidget extends ConsumerStatefulWidget {
   final String? buttonIconPath;
   final bool isLoading;
   final bool? showEventLoading;
-  final VoidCallback onButtonTap;
+  final VoidCallback? onButtonTap;
   final BuildContext context;
   final VoidCallback onHeadingTap;
   final bool isFavVisible;
@@ -42,11 +42,11 @@ class EventsListSectionWidget extends ConsumerStatefulWidget {
       required this.eventsList,
       required this.heading,
       required this.maxListLimit,
-      required this.buttonText,
-      required this.buttonIconPath,
+      this.buttonText,
+      this.buttonIconPath,
       required this.isLoading,
       this.showEventLoading,
-      required this.onButtonTap,
+      this.onButtonTap,
       required this.context,
       required this.isFavVisible,
       required this.onHeadingTap,
@@ -133,7 +133,7 @@ class _EventsListSectionWidgetState
                   children: [
                     if (widget.heading != null)
                       Padding(
-                        padding: EdgeInsets.fromLTRB(8.w, 16.w, 0, 0),
+                        padding: EdgeInsets.fromLTRB(10.w, 10.w, 0, 0),
                         child: InkWell(
                           onTap: widget.onHeadingTap,
                           child: Row(
@@ -227,7 +227,7 @@ class _EventsListSectionWidgetState
                     if (widget.buttonText != null)
                       Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: 16.w, vertical: 20.h),
+                            horizontal: 16.w, vertical: 8.h),
                         child: CustomButton(
                           onPressed: widget.onButtonTap,
                           text: widget.buttonText!,

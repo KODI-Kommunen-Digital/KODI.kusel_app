@@ -1,3 +1,4 @@
+import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,6 +7,8 @@ import 'package:kusel/screens/location/location_screen_provider.dart';
 
 import '../../../common_widgets/category_icon.dart';
 import '../../../common_widgets/image_utility.dart';
+import '../../../common_widgets/search_widget/search_widget.dart';
+import '../../../l10n/app_localizations.dart';
 import '../bottom_sheet_selected_ui_type.dart';
 import '../filter_category.dart';
 
@@ -53,14 +56,42 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
             ),
           ),
           10.verticalSpace,
+          SearchWidget(
+            onItemClick: (listing) {
+              ref.read(locationScreenProvider.notifier).setEventItem(listing);
+              ref
+                  .read(locationScreenProvider.notifier)
+                  .updateBottomSheetSelectedUIType(
+                  BottomSheetSelectedUIType.eventDetail);
+            },
+            searchController: TextEditingController(),
+            hintText: AppLocalizations.of(context).enter_search_term,
+            suggestionCallback: (search) async {
+              List<Listing>? list;
+              if (search.isEmpty) return [];
+              try {
+                list = await ref.read(locationScreenProvider.notifier).searchList(
+                    searchText: search, success: () {}, error: (err) {});
+              } catch (e) {
+                return [];
+              }
+              final sortedList = ref
+                  .watch(locationScreenProvider.notifier)
+                  .sortSuggestionList(search, list);
+              return sortedList;
+            },
+            isPaddingEnabled: true,
+          ),
+
+          20.verticalSpace,
           GridView.builder(
             shrinkWrap: true,
             itemCount: staticFilterCategoryList(context).length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
-              mainAxisExtent: 90.h,
-              crossAxisSpacing: 20.h,
-              mainAxisSpacing: 16.h,
+              mainAxisExtent: 75.h,
+              crossAxisSpacing: 10.h,
+              mainAxisSpacing: 15.h,
             ),
             itemBuilder: (context, index) {
               final listing = staticFilterCategoryList(context)[index];
