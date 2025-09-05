@@ -49,14 +49,14 @@ class _IconTextWidgetCardState extends ConsumerState<NetworkImageTextServiceCard
               Expanded(
                 flex: 3,
                 child: ImageUtil.loadNetworkImage(
-                    onImageTap: () {
-                      ref.read(navigationProvider).navigateUsingPath(
-                          path: fullImageScreenPath,
-                          params: FullImageScreenParams(
-                            imageUrL: widget.imageUrl,
-                          ),
-                          context: context);
-                    },
+                    // onImageTap: () {
+                    //   ref.read(navigationProvider).navigateUsingPath(
+                    //       path: fullImageScreenPath,
+                    //       params: FullImageScreenParams(
+                    //         imageUrL: widget.imageUrl,
+                    //       ),
+                    //       context: context);
+                    // },
                     fit: BoxFit.contain,
                     height: 30.h,
                     width: 30.w,
@@ -67,10 +67,16 @@ class _IconTextWidgetCardState extends ConsumerState<NetworkImageTextServiceCard
                 flex: 6,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    textBoldMontserrat(
-                        text: widget.text,
-                        color: Theme.of(context).textTheme.bodyLarge?.color),
+                    Container(
+                      padding: EdgeInsets.only(top: 8.w),
+                      child: textBoldMontserrat(
+                          text: widget.text,
+                          textOverflow: TextOverflow.visible,
+                          textAlign: TextAlign.start,
+                          color: Theme.of(context).textTheme.bodyLarge?.color),
+                    ),
                     if(widget.description != null)
                         textRegularMontserrat(
                             text: widget.description ?? '',
@@ -80,12 +86,15 @@ class _IconTextWidgetCardState extends ConsumerState<NetworkImageTextServiceCard
                   ],
                 ),
               ),
-              Expanded(
-                  flex: 1,
-                  child:
-                      Image.asset(imagePath["link_icon"] ?? '')),
-            ],
-          ),
+            SizedBox(
+              height: 48,
+              width: 48,
+              child: Image.asset(
+                imagePath["link_icon"] ?? '',
+                fit: BoxFit.contain,
+              ),
+            ),
+          ]),
         ),
       ),
     );

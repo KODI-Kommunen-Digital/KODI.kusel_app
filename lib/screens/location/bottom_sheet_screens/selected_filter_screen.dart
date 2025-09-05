@@ -10,7 +10,9 @@ import 'package:kusel/screens/location/bottom_sheet_selected_ui_type.dart';
 import 'package:kusel/screens/location/location_screen_provider.dart';
 import 'package:kusel/screens/location/location_screen_state.dart';
 
-import '../../../common_widgets/search_widget.dart';
+import '../../../common_widgets/search_widget/search_widget_provider.dart';
+import '../../../common_widgets/search_widget/search_widget.dart';
+import '../../dashboard/dashboard_screen_provider.dart';
 
 class SelectedFilterScreen extends ConsumerStatefulWidget {
   SelectedFilterScreenParams selectedFilterScreenParams;
@@ -32,7 +34,9 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
       final state = ref.read(locationScreenProvider);
       final categoryId = widget.selectedFilterScreenParams.categoryId;
 
-      final alreadyFetched = state.fetchedCategoryMap[categoryId] ?? false;
+
+      final alreadyFetched = state.categoryEventLists[categoryId]?.isNotEmpty ?? false;
+
 
       if (!alreadyFetched) {
         debugPrint("Fetching data for categoryId $categoryId");
@@ -56,120 +60,129 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
 
   _buildBody(BuildContext context) {
     LocationScreenState state = ref.watch(locationScreenProvider);
-    return Column(
-      children: [
-        16.verticalSpace,
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            IconButton(
-              onPressed: () {
-                ref
-                    .read(locationScreenProvider.notifier)
-                    .updateBottomSheetSelectedUIType(
-                        BottomSheetSelectedUIType.allEvent);
-              },
-              icon: Icon(
-                size: DeviceHelper.isMobile(context) ? null : 12.h.w,
-                Icons.arrow_back,
-                color: Theme.of(context).textTheme.labelMedium!.color,
-              ),
-            ),
-            DeviceHelper.isMobile(context) ? 80.horizontalSpace : 110.horizontalSpace,
-            Align(
-              alignment: Alignment.center,
-              child: Container(
-                height: 5.h,
-                width: 100.w,
-                decoration: BoxDecoration(
-                    color: Theme.of(context).textTheme.labelMedium!.color,
-                    borderRadius: BorderRadius.circular(10)),
-              ),
-            ),
-          ],
-        ),
-        15.verticalSpace,
-        SearchWidget(
-          onItemClick: (listing) {
-            ref.read(locationScreenProvider.notifier).setEventItem(listing);
-            ref
-                .read(locationScreenProvider.notifier)
-                .updateBottomSheetSelectedUIType(
-                    BottomSheetSelectedUIType.eventDetail);
-          },
-          searchController: TextEditingController(),
-          hintText: AppLocalizations.of(context).enter_search_term,
-          suggestionCallback: (search) async {
-            List<Listing>? list;
-            if (search.isEmpty) return [];
-            try {
-              list = await ref.read(locationScreenProvider.notifier).searchList(
-                  searchText: search, success: () {}, error: (err) {});
-            } catch (e) {
-              return [];
-            }
-            final sortedList = ref
-                .watch(locationScreenProvider.notifier)
-                .sortSuggestionList(search, list);
-            return sortedList;
-            return sortedList;
-          },
-          isPaddingEnabled: true,
-        ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: textSemiBoldPoppins(
-                text: "${state.selectedCategoryName}", fontSize: 16),
-          ),
-        ),
-        if (ref.watch(locationScreenProvider).isSelectedFilterScreenLoading)
-          CircularProgressIndicator(),
-        if (!ref.read(locationScreenProvider).isSelectedFilterScreenLoading)
-          Expanded(
-            child: SingleChildScrollView(
-              controller: widget.scrollController,
-              physics: const ClampingScrollPhysics(),
-              child: EventsListSectionWidget(
-                shrinkWrap: true,
-                scrollController: widget.scrollController,
-                eventsList: state.allEventCategoryWiseList,
-                heading: null,
-                maxListLimit: state.allEventCategoryWiseList.length,
-                buttonText: null,
-                buttonIconPath: null,
-                isLoading: false,
-                onButtonTap: () {},
-                context: context,
-                isFavVisible: true,
-                onHeadingTap: () {},
-                onSuccess: (bool isFav, int? id) {
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+        ref.read(dashboardScreenProvider.notifier).onScreenNavigation();
+      },
+      child: Column(
+        children: [
+          16.verticalSpace,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              IconButton(
+                onPressed: () {
+                  state.currentPageNo = 0;
                   ref
                       .read(locationScreenProvider.notifier)
-                      .updateIsFav(isFav, id);
+                      .updateBottomSheetSelectedUIType(
+                          BottomSheetSelectedUIType.allEvent);
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    ref.read(locationScreenProvider.notifier).updateSlidingUpPanelIsDragStatus(true); // allow drag
+                  });
                 },
-                onFavClickCallback: () {
-                  ref.read(locationScreenProvider.notifier).getAllEventListUsingCategoryId(
-                          widget.selectedFilterScreenParams.categoryId
-                              .toString(),
-                          ref.read(locationScreenProvider).currentPageNo);
-                },
-                isMultiplePagesList:
-                    ref.watch(locationScreenProvider).isLoadMoreButtonEnabled,
-                onLoadMoreTap: () {
-                  ref
-                      .read(locationScreenProvider.notifier)
-                      .onLoadMoreList(widget.selectedFilterScreenParams.categoryId.toString());
-                },
-                isMoreListLoading: ref
-                    .watch(locationScreenProvider)
-                    .isMoreListLoading,
+                icon: Icon(
+                  size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                  Icons.arrow_back,
+                  color: Theme.of(context).textTheme.labelMedium!.color,
+                ),
               ),
+              DeviceHelper.isMobile(context) ? 80.horizontalSpace : 110.horizontalSpace,
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  height: 5.h,
+                  width: 100.w,
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).textTheme.labelMedium!.color,
+                      borderRadius: BorderRadius.circular(10)),
+                ),
+              ),
+            ],
+          ),
+          15.verticalSpace,
+          SearchWidget(
+            onItemClick: (listing) {
+              ref.read(locationScreenProvider.notifier).setEventItem(listing);
+              ref
+                  .read(locationScreenProvider.notifier)
+                  .updateBottomSheetSelectedUIType(
+                      BottomSheetSelectedUIType.eventDetail);
+            },
+            searchController: ref.watch(searchProvider),
+            hintText: AppLocalizations.of(context).enter_search_term,
+            suggestionCallback: (search) async {
+              List<Listing>? list;
+              if (search.isEmpty) return [];
+              try {
+                list = await ref.read(locationScreenProvider.notifier).searchList(
+                    searchText: search, success: () {}, error: (err) {});
+              } catch (e) {
+                return [];
+              }
+              final sortedList = ref
+                  .watch(locationScreenProvider.notifier)
+                  .sortSuggestionList(search, list);
+              return sortedList;
+            },
+            isPaddingEnabled: true,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: textSemiBoldPoppins(
+                  text: "${state.selectedCategoryName}", fontSize: 16),
             ),
           ),
-        60.verticalSpace,
-      ],
+          if (ref.watch(locationScreenProvider).isSelectedFilterScreenLoading)
+            CircularProgressIndicator(),
+          if (!ref.read(locationScreenProvider).isSelectedFilterScreenLoading)
+            Expanded(
+              child: SingleChildScrollView(
+                controller: widget.scrollController,
+                physics: const ClampingScrollPhysics(),
+                child: EventsListSectionWidget(
+                  shrinkWrap: true,
+                  scrollController: widget.scrollController,
+                  eventsList: state.categoryEventLists[widget.selectedFilterScreenParams.categoryId] ?? [],
+                  heading: null,
+                  maxListLimit: state.categoryEventLists[widget.selectedFilterScreenParams.categoryId]?.length ?? 0,
+                  buttonText: null,
+                  buttonIconPath: null,
+                  isLoading: false,
+                  onButtonTap: () {},
+                  context: context,
+                  isFavVisible: true,
+                  onHeadingTap: () {},
+                  onSuccess: (bool isFav, int? id) {
+                    ref
+                        .read(locationScreenProvider.notifier)
+                        .updateIsFav(isFav, id);
+                  },
+                  onFavClickCallback: () {
+                    ref.read(locationScreenProvider.notifier).getAllEventListUsingCategoryId(
+                            widget.selectedFilterScreenParams.categoryId
+                                .toString(),
+                            ref.read(locationScreenProvider).currentPageNo);
+                  },
+                  isMultiplePagesList:
+                      ref.watch(locationScreenProvider).isLoadMoreButtonEnabled,
+                  onLoadMoreTap: () {
+                    ref
+                        .read(locationScreenProvider.notifier)
+                        .onLoadMoreList(widget.selectedFilterScreenParams.categoryId.toString());
+                  },
+                  isMoreListLoading: ref
+                      .watch(locationScreenProvider)
+                      .isMoreListLoading,
+                ),
+              ),
+            ),
+          60.verticalSpace,
+        ],
+      ),
     );
   }
 }

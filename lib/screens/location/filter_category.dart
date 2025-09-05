@@ -39,11 +39,6 @@ List<FilterCategory> staticFilterCategoryList(BuildContext context) {
       imagePath: "placeholder_category_icon",
     ),
     FilterCategory(
-      categoryId: 6,
-      categoryName: localization.location_map_search,
-      imagePath: "search_icon",
-    ),
-    FilterCategory(
       categoryId: 7,
       categoryName: localization.location_map_new_citizen,
       imagePath: "placeholder_category_icon",

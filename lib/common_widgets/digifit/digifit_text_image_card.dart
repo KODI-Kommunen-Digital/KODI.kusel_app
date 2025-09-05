@@ -126,7 +126,9 @@ class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
                         widget.isFavorite
                             ? Icons.favorite_sharp
                             : Icons.favorite_border,
-                        color: Theme.of(context).primaryColor,
+                        color: !widget.isFavorite
+                            ? Theme.of(context).primaryColor
+                            : Theme.of(context).colorScheme.onTertiaryFixed,
                       ),
                     ),
                   ),

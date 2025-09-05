@@ -82,7 +82,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                     clipperType: UpstreamWaveClipper(),
                     imageUrl: imagePath['background_image'] ?? "",
                     headingText: AppLocalizations.of(context).tourism_and_leisure,
-                    height: 150.h,
+                    height: 130.h,
                     blurredBackground: true,
                     isBackArrowEnabled: false,
                     isStaticImage: true),
@@ -146,7 +146,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                 LocalSvgImageTextServiceCard(
                   onTap: () => ref.read(navigationProvider).navigateUsingPath(
                       path: webViewPagePath,
-                      params: WebViewParams(url: "https://www.landkreis-kusel.de"),
+                      params: WebViewParams(url: "https://www.pfaelzerbergland.de/de/aktiv-in-der-natur/wandern"),
                       context: context),
                   imageUrl: 'tourism_service_image',
                   text: AppLocalizations.of(context).hiking_trails,
@@ -158,22 +158,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                     eventsList: state.allEventList,
                     heading: AppLocalizations.of(context).all_events,
                     maxListLimit: 5,
-                    buttonText: AppLocalizations.of(context).all_events,
-                    buttonIconPath: imagePath['calendar'] ?? "",
                     isLoading: false,
-                    onButtonTap: () {
-                      ref.read(navigationProvider).navigateUsingPath(
-                          path: selectedEventListScreenPath,
-                          context: context,
-                          params: SelectedEventListScreenParameter(
-                              listHeading: AppLocalizations.of(context).all_events,
-                              categoryId: ListingCategoryId.event.eventId,
-                              onFavChange: () {
-                                ref
-                                    .read(tourismScreenControllerProvider.notifier)
-                                    .getAllEvents();
-                              }));
-                    },
                     onHeadingTap: () {
                       ref.read(navigationProvider).navigateUsingPath(
                           path: selectedEventListScreenPath,
@@ -199,7 +184,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                           .getAllEvents();
                     },
                   ),
-                32.verticalSpace,
+                22.verticalSpace,
                 FeedbackCardWidget(
                     height: 270.h,
                     onTap: () {
@@ -211,14 +196,17 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
             ),
           ),
           Positioned(
-            top: 30.h,
-            left: 12.h,
-            child: ArrowBackWidget(
-              onTap: () {
-                ref.read(navigationProvider).removeTopPage(context: context);
-              },
-            ),
-          ),
+            top: 26.h,
+            left: 12.w,
+            child: IconButton(
+                onPressed: () {
+                  ref.read(navigationProvider).removeTopPage(context: context);
+                },
+                icon: Icon(
+                    size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                    color: Theme.of(context).primaryColor,
+                    Icons.arrow_back)),
+          )
         ],
       ),
     );
@@ -355,28 +343,32 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                   ],
                 ),
               ),
-              CustomFlutterMap(
-                latitude: EventLatLong.kusel.latitude,
-                longitude: EventLatLong.kusel.longitude,
-                height: 250.h,
-                width: MediaQuery.of(context).size.width,
-                initialZoom: 13,
-                onMapTap: () {},
-                markersList: (list.isNotEmpty)
-                    ? list
-                    .where((item) =>
-                item.latitude != null &&
-                    item.longitude != null)
-                    .map((item) {
-                  return Marker(
-                      point:
-                      LatLng(item.latitude!, item.longitude!),
-                      child: Icon(Icons.location_pin,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onTertiaryFixed));
-                }).toList()
-                    : [],
+              ClipRRect(
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(8),
+                  bottomRight: Radius.circular(8),
+                ),
+                child: CustomFlutterMap(
+                  latitude: EventLatLong.kusel.latitude,
+                  longitude: EventLatLong.kusel.longitude,
+                  height: 250.h,
+                  width: MediaQuery.of(context).size.width,
+                  initialZoom: 13,
+                  onMapTap: () {},
+                  markersList: (list.isNotEmpty)
+                      ? list
+                          .where((item) =>
+                              item.latitude != null && item.longitude != null)
+                          .map((item) {
+                          return Marker(
+                              point: LatLng(item.latitude!, item.longitude!),
+                              child: Icon(Icons.location_pin,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onTertiaryFixed));
+                        }).toList()
+                      : [],
+                ),
               )
             ],
           ),

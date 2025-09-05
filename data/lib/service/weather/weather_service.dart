@@ -16,8 +16,8 @@ class WeatherService {
     final json = requestModel.toJson();
 
     final path =
-        "$weatherEndPoint?q=${json['placeName']}&days=${json['days']}&key=$weatherApiKey";
-    final apiHelper = ref.read(apiHelperForWeatherProvider);
+        "$weatherEndPoint?location=${json['placeName']}&days=${json['days']}";
+    final apiHelper = ref.read(apiHelperProvider);
 
     final result = await apiHelper.getRequest(
       path: path,

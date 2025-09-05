@@ -6,7 +6,7 @@ import 'package:kusel/theme_manager/colors.dart';
 import '../images_path.dart';
 
 class CustomButton extends StatelessWidget {
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final String text;
   final double? height;
   final double? width;
@@ -78,7 +78,7 @@ class CustomButton extends StatelessWidget {
             : ElevatedButton(
                 onPressed: () {
                   FocusManager.instance.primaryFocus?.unfocus();
-                  onPressed();
+                  onPressed!();
                 },
                 style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(

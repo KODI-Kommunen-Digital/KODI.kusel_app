@@ -27,6 +27,9 @@ class _CommonPhoneNumberCardState extends ConsumerState<CommonPhoneNumberCard> {
         borderRadius: BorderRadius.circular(12.r),
       ),
       child: InkWell(
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        borderRadius: BorderRadius.circular(12.r),
         onTap: () =>
             UrlLauncherUtil.launchDialer(phoneNumber: widget.phoneNumber),
         child: Container(

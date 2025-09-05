@@ -141,9 +141,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ListTile(
             leading: Icon(
                 size: DeviceHelper.isMobile(context) ? null : 12.h.w,
-                Icons.favorite_border),
+                Icons.place),
             title: textBoldPoppins(
-              text: AppLocalizations.of(context).favourite_city,
+              text: AppLocalizations.of(context).favourite_places,
               textAlign: TextAlign.start,
             ),
             onTap: () async {
