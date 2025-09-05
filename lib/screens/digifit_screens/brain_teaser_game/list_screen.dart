@@ -14,7 +14,7 @@ import '../../../common_widgets/text_styles.dart';
 import '../../../images_path.dart';
 import '../../../l10n/app_localizations.dart';
 import '../../../navigation/navigation.dart';
-import 'game_list_controller.dart';
+import 'list_controller.dart';
 
 class BrainTeaserGameListScreen extends ConsumerStatefulWidget {
   const BrainTeaserGameListScreen({super.key});
