@@ -1,7 +1,7 @@
 import 'package:core/base_model.dart';
 import 'package:dartz/dartz.dart';
-import 'package:data/repo_impl/digifit/brain_teaser_game/game_list_repo_impl.dart';
-import 'package:domain/model/request_model/digifit/brain_teaser_game/game_list_request_model.dart';
+import 'package:data/repo_impl/digifit/brain_teaser_game/list_repo_impl.dart';
+import 'package:domain/model/request_model/digifit/brain_teaser_game/list_request_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../usecase.dart';
