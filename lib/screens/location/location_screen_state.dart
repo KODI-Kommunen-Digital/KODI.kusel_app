@@ -19,7 +19,7 @@ class LocationScreenState {
   bool isMoreListLoading;
   bool isLoadMoreButtonEnabled;
   Map<int, bool> fetchedCategoryMap;
-
+  Map<int, List<Listing>> categoryEventLists;
 
   LocationScreenState(
       this.allEventList,
@@ -36,7 +36,8 @@ class LocationScreenState {
       this.currentPageNo,
       this.isMoreListLoading,
       this.isLoadMoreButtonEnabled,
-      this.fetchedCategoryMap
+      this.fetchedCategoryMap,
+      this.categoryEventLists,
       );
 
   factory LocationScreenState.empty() {
@@ -55,6 +56,7 @@ class LocationScreenState {
         1,
         false,
         true,
+        {},
         {});
   }
 
@@ -76,7 +78,8 @@ class LocationScreenState {
       int? currentPageNo,
       bool? isMoreListLoading,
       bool? isLoadMoreButtonEnabled,
-      Map<int, bool>? fetchedCategoryMap
+        Map<int, bool>? fetchedCategoryMap,
+        Map<int, List<Listing>>? categoryEventLists
       }) {
     return LocationScreenState(
         allEventList ?? this.allEventList,
@@ -93,7 +96,8 @@ class LocationScreenState {
         currentPageNo ?? this.currentPageNo,
         isMoreListLoading ?? this.isMoreListLoading,
         isLoadMoreButtonEnabled ?? this.isLoadMoreButtonEnabled,
-        fetchedCategoryMap ?? this.fetchedCategoryMap
+        fetchedCategoryMap ?? this.fetchedCategoryMap,
+        categoryEventLists ?? this.categoryEventLists
     );
   }
 }

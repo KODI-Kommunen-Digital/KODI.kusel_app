@@ -24,7 +24,8 @@ import '../../app_router.dart';
 import '../../common_widgets/common_text_arrow_widget.dart';
 import '../../common_widgets/feedback_card_widget.dart';
 import '../../common_widgets/listing_id_enum.dart';
-import '../../common_widgets/search_widget.dart';
+import '../../common_widgets/search_widget/search_widget_provider.dart';
+import '../../common_widgets/search_widget/search_widget.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/toast_message.dart';
 import '../../navigation/navigation.dart';
@@ -51,7 +52,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     Upgrader.clearSavedSettings();
     super.initState();
   }
-
+  @override
+  void dispose() {
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return UpgradeAlert(
@@ -87,9 +91,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
+        ref.read(searchProvider.notifier).clearSearch();
       },
-      child: SingleChildScrollView(
-        physics: ClampingScrollPhysics(),
+      child: NotificationListener<OverscrollIndicatorNotification>(
+        onNotification: (overscroll) {
+          overscroll.disallowIndicator();
+          return true;
+        },
+        child: SingleChildScrollView(
+          physics: ClampingScrollPhysics(),
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
@@ -97,7 +107,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               clipperType: UpstreamWaveClipper(),
               imageUrl: imagePath['home_screen_background'] ?? '',
               isStaticImage: true,
-              height: 285.h,
+              height: 265.h,
               customWidget1: Positioned(
                 top: 85.h,
                 left: 20.w,
@@ -142,26 +152,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: EdgeInsets.only(left: 15.w),
-                          child: textRegularPoppins(
-                              text: AppLocalizations.of(context).search,
-                              fontSize: 12,
-                              fontStyle: FontStyle.italic,
-                              color:
-                                  Theme.of(context).textTheme.bodyLarge?.color),
-                        ),
                         SearchWidget(
                           onItemClick: (listing) {
+                            ref.read(dashboardScreenProvider.notifier).onScreenNavigation();
                             ref.read(navigationProvider).navigateUsingPath(
                                 context: context,
                                 path: eventDetailScreenPath,
                                 params:
-                                    EventDetailScreenParams(event: listing));
+                                EventDetailScreenParams(event: listing));
                           },
-                          searchController: TextEditingController(),
+                          searchController: ref.watch(searchProvider),
                           hintText:
-                              AppLocalizations.of(context).enter_search_term,
+                          AppLocalizations.of(context).enter_search_term,
                           suggestionCallback: (search) async {
                             List<Listing>? list;
                             if (search.isEmpty) return [];
@@ -169,9 +171,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               list = await ref
                                   .read(homeScreenProvider.notifier)
                                   .searchList(
-                                      searchText: search,
-                                      success: () {},
-                                      error: (err) {});
+                                  searchText: search,
+                                  success: () {},
+                                  error: (err) {});
                             } catch (e) {
                               return [];
                             }
@@ -208,7 +210,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   )
                                 : GestureDetector(
                                     onTap: () {
-                                      ref
+                                        ref
+                                            .read(dashboardScreenProvider
+                                                .notifier)
+                                            .onScreenNavigation();
+                                        ref
                                           .read(navigationProvider)
                                           .removeCurrentAndNavigate(
                                               context: context,
@@ -249,12 +255,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 context: context,
                 eventsList: state.nearbyEventsList,
                 heading: AppLocalizations.of(context).near_you,
-                maxListLimit: 5,
+                maxListLimit: 3,
                 buttonText: AppLocalizations.of(context).to_map_view,
                 buttonIconPath: imagePath['map_icon'] ?? "",
                 isLoading: isLoading,
                 onButtonTap: () {
-                  ref.read(navigationProvider).navigateUsingPath(
+                  ref
+                        .read(dashboardScreenProvider.notifier)
+                        .onScreenNavigation();
+                    ref.read(navigationProvider).navigateUsingPath(
                         path: selectedEventListScreenPath,
                         context: context,
                         params: SelectedEventListScreenParameter(
@@ -275,6 +284,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ref.read(homeScreenProvider.notifier).getNearbyEvents();
                 },
                 onHeadingTap: () {
+                  ref
+                      .read(dashboardScreenProvider.notifier)
+                      .onScreenNavigation();
                   ref.read(navigationProvider).navigateUsingPath(
                         path: selectedEventListScreenPath,
                         context: context,
@@ -309,6 +321,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 buttonIconPath: imagePath['map_icon'] ?? "",
                 isLoading: false,
                 onButtonTap: () {
+                  ref
+                      .read(dashboardScreenProvider.notifier)
+                      .onScreenNavigation();
                   ref.read(navigationProvider).navigateUsingPath(
                       path: selectedEventListScreenPath,
                       context: context,
@@ -324,6 +339,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ref.read(homeScreenProvider.notifier).getNews();
                 },
                 onHeadingTap: () {
+                  ref
+                      .read(dashboardScreenProvider.notifier)
+                      .onScreenNavigation();
                   ref.read(navigationProvider).navigateUsingPath(
                       path: selectedEventListScreenPath,
                       context: context,
@@ -346,12 +364,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               EventsListSectionWidget(
                 context: context,
                 eventsList: state.eventsList,
-                heading: AppLocalizations.of(context).all_events,
+                heading: AppLocalizations.of(context).home_screen_today_event,
                 maxListLimit: 3,
                 buttonText: AppLocalizations.of(context).all_events,
                 buttonIconPath: imagePath['calendar'] ?? "",
                 isLoading: isLoading,
                 onButtonTap: () {
+                  ref
+                      .read(dashboardScreenProvider.notifier)
+                      .onScreenNavigation();
                   ref.read(navigationProvider).navigateUsingPath(
                       path: allEventScreenPath,
                       context: context,
@@ -362,8 +383,11 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 onFavClickCallback: () {
                   ref.read(homeScreenProvider.notifier).getEvents();
                 },
-                onHeadingTap: () {
-                  ref.read(navigationProvider).navigateUsingPath(
+                  onHeadingTap: () {
+                    ref
+                        .read(dashboardScreenProvider.notifier)
+                        .onScreenNavigation();
+                    ref.read(navigationProvider).navigateUsingPath(
                       path: allEventScreenPath,
                       context: context,
                       params: AllEventScreenParam(onFavChange: () {
@@ -380,12 +404,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             FeedbackCardWidget(
               height: 270.h,
               onTap: () {
+                ref
+                    .read(dashboardScreenProvider.notifier)
+                    .onScreenNavigation();
                 ref.read(navigationProvider).navigateUsingPath(
                     path: feedbackScreenPath, context: context);
               },
             ),
           ],
         ),
+      ),
       ),
     );
   }
@@ -411,6 +439,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       CommonTextArrowWidget(
                         text: AppLocalizations.of(context).highlights,
                         onTap: () {
+                          ref
+                              .read(dashboardScreenProvider.notifier)
+                              .onScreenNavigation();
                           ref.read(navigationProvider).navigateUsingPath(
                               path: selectedEventListScreenPath,
                               context: context,
@@ -435,6 +466,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             state.highlightsList.length,
                             (index) => InkWell(
                               onTap: () {
+                                ref
+                                    .read(dashboardScreenProvider.notifier)
+                                    .onScreenNavigation();
                                 ref.read(navigationProvider).navigateUsingPath(
                                     context: context,
                                     path: eventDetailScreenPath,
@@ -487,6 +521,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           errorImagePath: imagePath['kusel_map_image'],
                           isFavourite: listing.isFavorite ?? false,
                           onPress: () {
+                            ref
+                                .read(dashboardScreenProvider.notifier)
+                                .onScreenNavigation();
                             ref.read(navigationProvider).navigateUsingPath(
                                   context: context,
                                   path: eventDetailScreenPath,

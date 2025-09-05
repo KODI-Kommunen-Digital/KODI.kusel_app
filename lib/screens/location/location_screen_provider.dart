@@ -63,54 +63,60 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
 
   Future<void> getAllEventListUsingCategoryId(
       String categoryId, int pageNumber) async {
+    final catId = int.tryParse(categoryId);
+    if (catId == null) return;
+    if (state.categoryEventLists.containsKey(catId) && pageNumber == 1) {
+      final cachedList = state.categoryEventLists[catId]!;
+      state = state.copyWith(
+        allEventCategoryWiseList: cachedList,
+        isSelectedFilterScreenLoading: false,
+      );
+      return;
+    }
+
     if (pageNumber > 1) {
       state = state.copyWith(isMoreListLoading: true);
     } else {
       state = state.copyWith(
-          allEventCategoryWiseList: [],
-          isSelectedFilterScreenLoading: true,
-          allEventList: []);
+        allEventCategoryWiseList: [],
+        isSelectedFilterScreenLoading: true,
+        currentPageNo: 1,
+      );
     }
+
     try {
       Locale currentLocale = localeManagerController.getSelectedLocale();
+      if (pageNumber == 0) pageNumber = 1;
 
-      if(pageNumber==0){
-        pageNumber=1;
-      }
       GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(
-          pageNo: pageNumber,
-          categoryId: categoryId,
-          translate:
-              "${currentLocale.languageCode}-${currentLocale.countryCode}");
-      GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
+        pageNo: pageNumber,
+        categoryId: categoryId,
+        translate: "${currentLocale.languageCode}-${currentLocale.countryCode}",
+      );
 
+      GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
       final result = await listingsUseCase.call(requestModel, responseModel);
 
       result.fold((l) {
         state = state.copyWith(isSelectedFilterScreenLoading: false);
-        debugPrint("Get all event list fold exception = $l");
       }, (r) {
         final response = r as GetAllListingsResponseModel;
+        List<Listing> newEventList = response.data ?? [];
 
-        List<Listing> eventList = response.data ?? [];
-        List<Listing> existingEventList = state.allEventCategoryWiseList;
-        List<Listing> allEventList = state.allEventList;
-        bool? isLoadMoreButtonEnabled;
-        if (eventList.isNotEmpty) {
-          existingEventList.addAll(eventList);
-          allEventList.addAll(eventList);
-          isLoadMoreButtonEnabled = true;
-        } else {
-          pageNumber--;
-          isLoadMoreButtonEnabled = false;
-        }
+        final currentList = state.categoryEventLists[catId] ?? [];
+        final updatedList = [...currentList, ...newEventList];
+
+        final updatedMap = {...state.categoryEventLists};
+        updatedMap[catId] = updatedList;
+
         state = state.copyWith(
-            isMoreListLoading: false,
-            isSelectedFilterScreenLoading: false,
-            allEventCategoryWiseList: existingEventList,
-            isLoadMoreButtonEnabled: isLoadMoreButtonEnabled,
-            allEventList: allEventList,
-            currentPageNo: pageNumber);
+          categoryEventLists: updatedMap,
+          allEventCategoryWiseList: updatedList,
+          isMoreListLoading: false,
+          isSelectedFilterScreenLoading: false,
+          isLoadMoreButtonEnabled: newEventList.isNotEmpty,
+          currentPageNo: pageNumber,
+        );
       });
     } catch (error) {
       state = state.copyWith(isSelectedFilterScreenLoading: false);

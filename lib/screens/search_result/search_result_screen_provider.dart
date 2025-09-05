@@ -80,7 +80,7 @@ class SearchResultScreenProvider
         },
       );
     } catch (error) {
-      print("error $error");
+      debugPrint("error $error");
       state = state.copyWith(loading: false, error: error.toString());
     }
   }

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/common_widgets/web_view_page.dart';
+import 'package:kusel/utility/kusel_date_utils.dart';
 import 'package:latlong2/latlong.dart';
 
 import '../app_router.dart';
@@ -46,15 +47,17 @@ class TownHallMapWidget extends ConsumerStatefulWidget {
 class _LocationCardWidgetState extends ConsumerState<TownHallMapWidget> {
   @override
   Widget build(BuildContext context) {
+    final formattedOpenUntil = KuselDateUtils.formatTime(widget.openUntil);
+
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(15.r),
           boxShadow: [
             BoxShadow(
-              color: Theme.of(context).primaryColor.withValues(alpha: 0.46),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.10),
               offset: Offset(0, 4),
-              blurRadius: 8,
+              blurRadius: 12,
             ),
           ]),
       child: Column(
@@ -102,7 +105,7 @@ class _LocationCardWidgetState extends ConsumerState<TownHallMapWidget> {
             ],
           ),
           Padding(
-            padding: EdgeInsets.all(14.h),
+            padding: EdgeInsets.fromLTRB(14.w, 10.h, 14.w, 14.h),
             child: Column(
               children: [
                 Row(
@@ -117,16 +120,19 @@ class _LocationCardWidgetState extends ConsumerState<TownHallMapWidget> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Align(
-                          alignment: Alignment.centerLeft,
-                          child: textBoldMontserrat(
-                            text: widget.calendarText,
-                            textOverflow: TextOverflow.ellipsis,
-                            color: Theme.of(context).textTheme.labelMedium?.color,
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            padding: EdgeInsets.only(top:12.h),
+                            child: textBoldMontserrat(
+                              text: widget.calendarText,
+                              textOverflow: TextOverflow.ellipsis,
+                              color: Theme.of(context).primaryColor,
+                            ),
                           ),
                         ),
                         textRegularPoppins(
                           text:
-                              "${AppLocalizations.of(context).closes_at} ${widget.openUntil} ${AppLocalizations.of(context).clock}",
+                              "${AppLocalizations.of(context).closes_at} $formattedOpenUntil ${AppLocalizations.of(context).clock}",
                           textOverflow: TextOverflow.ellipsis,
                           color: Theme.of(context).textTheme.labelMedium?.color,
                         ),

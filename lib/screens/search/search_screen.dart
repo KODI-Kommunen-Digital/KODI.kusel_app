@@ -7,14 +7,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
-import 'package:kusel/common_widgets/search_widget.dart';
+import 'package:kusel/common_widgets/search_widget/search_widget.dart';
 import 'package:kusel/screens/search/search_screen_provider.dart';
 import 'package:kusel/screens/search_result/search_result_screen_parameter.dart';
 
+import '../../common_widgets/search_widget/search_widget_provider.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
+import '../dashboard/dashboard_screen_provider.dart';
 import '../event/event_detail_screen_controller.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
@@ -54,6 +56,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
+        ref.read(dashboardScreenProvider.notifier).onScreenNavigation();
       },
       child: SingleChildScrollView(
         physics: ClampingScrollPhysics(),
@@ -128,6 +131,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                   SearchWidget(
                     verticalDirection: VerticalDirection.up,
                     onItemClick: (listing) {
+                      ref.read(dashboardScreenProvider.notifier).onScreenNavigation();
                       ref.read(navigationProvider).navigateUsingPath(
                           context: context,
                           path: eventDetailScreenPath,
@@ -136,7 +140,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                           .read(searchScreenProvider.notifier)
                           .loadSavedListings();
                     },
-                    searchController: searchTextEditingController,
+                    searchController: ref.watch(searchProvider),
                     hintText: AppLocalizations.of(context).enter_search_term,
                       suggestionCallback: (search) async {
                         List<Listing>? list;
@@ -178,6 +182,9 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                     itemBuilder: (context, index) {
                       return InkWell(
                         onTap: () {
+                          ref
+                              .read(dashboardScreenProvider.notifier)
+                              .onScreenNavigation();
                           ref.read(navigationProvider).navigateUsingPath(
                               context: context,
                               path: eventDetailScreenPath,

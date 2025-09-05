@@ -7,15 +7,11 @@ import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/screens/mobility_screen/mobility_screen_provider.dart';
-import 'package:kusel/utility/url_launcher_utility.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import '../../common_widgets/arrow_back_widget.dart';
 import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/common_contact_details_card.dart';
 import '../../common_widgets/common_more_info_card.dart';
 import '../../common_widgets/downstream_wave_clipper.dart';
-import '../../common_widgets/image_utility.dart';
 import '../../common_widgets/network_image_text_service_card.dart';
 import '../../common_widgets/web_view_page.dart';
 import '../../navigation/navigation.dart';
@@ -100,8 +96,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
               text: state.mobilityData?.title ?? "_",
               fontSize: 16),
           10.verticalSpace,
-          textBoldMontserrat(
-              color: Theme.of(context).textTheme.bodyLarge?.color,
+          textRegularMontserrat(
               textAlign: TextAlign.start,
               fontSize: 12,
               text: state.mobilityData?.description ?? "_",
@@ -168,18 +163,19 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           5.verticalSpace,
-          if (state.mobilityData != null &&
-              state.mobilityData!.moreInformations!.isNotEmpty)
+          if (state.mobilityData?.moreInformations?.isNotEmpty == true)
             ListView.builder(
                 itemCount: state.mobilityData?.moreInformations?.length ?? 0,
                 physics: NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   final item = state.mobilityData?.moreInformations?[index];
-                  return CommonMoreInfoCard(
-                      title: item?.title ?? '_',
-                      phoneNumber: item?.phone ?? '_',
-                      description: item?.description);
+                  return item?.title != AppLocalizations.of(context).mobility_centre
+                      ? CommonMoreInfoCard(
+                          title: item?.title ?? '_',
+                          phoneNumber: item?.phone ?? '_',
+                          description: item?.description)
+                      : null;
                 })
         ],
       ),

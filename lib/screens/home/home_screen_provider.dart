@@ -162,9 +162,9 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       debugPrint(
           "user coordinates [ lat : ${position.latitude}, long: ${position.longitude} ");
 
-      final lat = position.latitude;
-      final long = position.longitude;
-      final radius = SearchRadius.radius.value;
+      final lat =  49.5375;
+      final long = 7.4064;
+      final radius = 20;
       state = state.copyWith(error: "");
 
       Locale currentLocale = localeManagerController.getSelectedLocale();
@@ -172,8 +172,8 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
               radius: radius,
-              centerLongitude: lat,
-              centerLatitude: long,
+              centerLongitude: long,
+              centerLatitude: lat,
               translate:
                   "${currentLocale.languageCode}-${currentLocale.countryCode}");
       GetAllListingsResponseModel getAllListingsResponseModel =
