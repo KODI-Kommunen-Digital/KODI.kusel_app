@@ -1,4 +1,4 @@
-import 'package:domain/model/response_model/digifit/brain_teaser_game/game_list_response_model.dart';
+import 'package:domain/model/response_model/digifit/brain_teaser_game/list_response_model.dart';
 
 class BrainTeaserGameListState {
   bool isLoading;
