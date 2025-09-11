@@ -13,6 +13,7 @@ import 'package:kusel/screens/search_result/search_result_screen_state.dart';
 
 import '../../common_widgets/get_current_location.dart';
 import '../../common_widgets/listing_id_enum.dart';
+import '../../common_widgets/location_const.dart';
 
 final searchResultScreenProvider = StateNotifierProvider.autoDispose<
         SearchResultScreenProvider, SearchResultScreenState>(
@@ -42,8 +43,8 @@ class SearchResultScreenProvider
       debugPrint(
           "user coordinates [ lat : ${position.latitude}, long: ${position.longitude} ");
 
-      final lat = position.latitude;
-      final long = position.longitude;
+      final lat = EventLatLong.kusel.latitude;
+      final long = EventLatLong.kusel.longitude;
       final radius = SearchRadius.radius.value;
 
       Locale currentLocale = localeManagerController.getSelectedLocale();
