@@ -250,16 +250,23 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
             padding: EdgeInsets.all(25.w),
             decoration:
                 BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-            child: ImageUtil.loadNetworkImage(
-              onImageTap: () => ref.read(navigationProvider).navigateUsingPath(
-                params: FullImageScreenParams(imageUrL: imageUrl ?? '', sourceId: 1),
-                  path: fullImageScreenPath, context: context),
-              imageUrl: imageUrl ?? '',
-              sourceId: 1,
-              fit: BoxFit.contain,
-              svgErrorImagePath: imagePath['virtual_town_hall_map_image']!,
-              context: context,
-            ),
+            child: (imageUrl != null)
+                ? ImageUtil.loadNetworkImage(
+                    onImageTap: () => ref
+                        .read(navigationProvider)
+                        .navigateUsingPath(
+                            params: FullImageScreenParams(
+                                imageUrL: imageUrl ?? '', sourceId: 1),
+                            path: fullImageScreenPath,
+                            context: context),
+                    imageUrl: imageUrl ?? '',
+                    sourceId: 1,
+                    fit: BoxFit.contain,
+                    svgErrorImagePath:
+                        imagePath['virtual_town_hall_map_image']!,
+                    context: context,
+                  )
+                : Center(child: CircularProgressIndicator()),
           ),
         ),
       ],
