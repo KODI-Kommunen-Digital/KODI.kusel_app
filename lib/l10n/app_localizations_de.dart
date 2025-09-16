@@ -732,7 +732,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get location_map_news => 'Nachricht';
 
   @override
-  String get location_map_events => 'Veranstaltungen';
+  String get location_map_events => 'Veranstal­tungen';
 
   @override
   String get location_map_clubs => 'Vereine';
@@ -759,7 +759,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get location_map_offers => 'Angebote';
 
   @override
-  String get location_map_eat_drink => 'Essen oder trinken';
+  String get location_map_eat_drink => 'Gastro';
 
   @override
   String get location_map_free_time => 'Freizeit und Tourismus';

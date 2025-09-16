@@ -103,5 +103,7 @@ Map<String, String> _svgCategoryIconImagePath = {
   "sports": "assets/svg/category_icon/sports.svg",
   "facilities_category_icon": "assets/svg/category_icon/facilities.svg",
   "fav_category_icon": "assets/svg/category_icon/fav.svg",
-  "placeholder_category_icon":"assets/svg/category_icon/placeholder.svg"
+  "placeholder_category_icon":"assets/svg/category_icon/placeholder.svg",
+  "tourism_service_map_image": "assets/svg/category_icon/tourism_service_map_image.svg",
+  "highlights_map": "assets/svg/category_icon/highlights_map.svg"
 };
