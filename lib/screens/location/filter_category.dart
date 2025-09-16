@@ -19,9 +19,9 @@ List<FilterCategory> staticFilterCategoryList(BuildContext context) {
 
   return [
     FilterCategory(
-      categoryId: 1,
-      categoryName: localization.location_map_news,
-      imagePath: "placeholder_category_icon",
+      categoryId: 13,
+      categoryName: localization.location_map_eat_drink,
+      imagePath: "gastro_category_icon",
     ),
     FilterCategory(
       categoryId: 3,
@@ -29,59 +29,25 @@ List<FilterCategory> staticFilterCategoryList(BuildContext context) {
       imagePath: "event_category_icon",
     ),
     FilterCategory(
-      categoryId: 4,
-      categoryName: localization.location_map_clubs,
-      imagePath: "placeholder_category_icon",
-    ),
-    FilterCategory(
-      categoryId: 5,
-      categoryName: localization.location_map_regional_products,
-      imagePath: "placeholder_category_icon",
-    ),
-    FilterCategory(
-      categoryId: 7,
-      categoryName: localization.location_map_new_citizen,
-      imagePath: "placeholder_category_icon",
-    ),
-    FilterCategory(
-      categoryId: 9,
-      categoryName: localization.location_map_lost_and_found,
-      imagePath: "paw_icon",
-    ),
-    FilterCategory(
-      categoryId: 10,
-      categoryName: localization.location_map_company_portraits,
-      imagePath: "facilities_category_icon",
-    ),
-    FilterCategory(
-      categoryId: 11,
-      categoryName: localization.location_map_transport,
-      imagePath: "transport_icon",
-    ),
-    FilterCategory(
-      categoryId: 12,
-      categoryName: localization.location_map_offers,
-      imagePath: "placeholder_category_icon",
-    ),
-    FilterCategory(
-      categoryId: 13,
-      categoryName: localization.location_map_eat_drink,
-      imagePath: "gastro_category_icon",
-    ),
-    FilterCategory(
       categoryId: 17,
       categoryName: localization.location_map_free_time,
-      imagePath: "tourism_service_image",
+      imagePath: "tourism_service_map_image",
     ),
     FilterCategory(
       categoryId: 41,
       categoryName: localization.location_map_highlights,
-      imagePath: "placeholder_category_icon",
+      imagePath: "highlights_map",
     ),
     FilterCategory(
-      categoryId: 48,
-      categoryName: localization.location_map_poi,
-      imagePath: "place_holder_icon",
+      categoryId: 1,
+      categoryName: localization.location_map_news,
+      imagePath: "event_category_icon",
+    ),
+ // TODO: Mark the categoryId as 100 (there is no such categoryId). This is just to simplify the logic.
+    FilterCategory(
+      categoryId: 100,
+      categoryName: localization.map_fav,
+      imagePath: "fav_category_icon",
     ),
   ];
 }

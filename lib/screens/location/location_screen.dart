@@ -62,7 +62,7 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
         isDraggable:
             ref.watch(locationScreenProvider).isSlidingUpPanelDragAllowed,
         minHeight: 200.h,
-        maxHeight: 600.h,
+        maxHeight: _getMaxHeight(ref.watch(locationScreenProvider).bottomSheetSelectedUIType),
         defaultPanelState: PanelState.CLOSED,
         borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
         controller: ref.read(locationScreenProvider).panelController,
@@ -153,4 +153,16 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
     }
     return widget;
   }
+}
+
+double _getMaxHeight(BottomSheetSelectedUIType type) {
+  switch (type) {
+    case BottomSheetSelectedUIType.allEvent:
+    return 400.h;
+
+    case BottomSheetSelectedUIType.eventDetail:
+      return 600.h;
+
+    case BottomSheetSelectedUIType.eventList:
+      return 600.h; }
 }
