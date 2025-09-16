@@ -89,8 +89,8 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
             itemCount: staticFilterCategoryList(context).length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
-              mainAxisExtent: 75.h,
-              crossAxisSpacing: 10.h,
+              mainAxisExtent: 110.h,
+              crossAxisSpacing: 6.h,
               mainAxisSpacing: 15.h,
             ),
             itemBuilder: (context, index) {
@@ -125,7 +125,7 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
             shape: const CircleBorder(),
             color: Theme.of(context).colorScheme.onPrimary, // background color
             child: Padding(
-              padding:  EdgeInsets.symmetric(vertical: 8.h, horizontal: 8.w),
+              padding: EdgeInsets.all(20),
               child: SizedBox(
                 height: 20.h,
                 width: 20.w,
@@ -137,7 +137,7 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
               ),
             ),
           ),
-          5.verticalSpace,
+          6.verticalSpace,
           textRegularMontserrat(
               text: categoryName,
               fontSize: 13,

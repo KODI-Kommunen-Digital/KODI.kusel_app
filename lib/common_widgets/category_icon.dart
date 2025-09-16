@@ -19,7 +19,7 @@ String getCategoryIconPath(int categoryId) {
 
   switch (categoryId) {
     case 1:
-      path = 'placeholder_category_icon';
+      path = 'event_category_icon';
       break;
     case 3:
       path = 'event_category_icon';
@@ -49,11 +49,13 @@ String getCategoryIconPath(int categoryId) {
       path = 'gastro_category_icon';
       break;
     case 17:
-      path = 'tourism_service_image';
+      path = 'tourism_service_map_image';
     case 41:
-      path = 'placeholder_category_icon';
+      path = 'highlights_map';
     case 48:
       path = 'place_holder_icon';
+    case 100:
+      path = 'fav_category_icon';
     default:
       path = 'placeholder_category_icon'; // Fallback icon
       break;
