@@ -66,6 +66,8 @@ class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
             isBackArrowEnabled: true,
             headingText: AppLocalizations.of(context).search_result,
           ),
+
+          if(!searchResultScreenState.loading)
           searchResultScreenState.groupedEvents.isEmpty
               ? Center(
                   child: textHeadingMontserrat(
