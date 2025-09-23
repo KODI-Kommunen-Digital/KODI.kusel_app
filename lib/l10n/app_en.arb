@@ -247,5 +247,7 @@
   "location_map_poi": "POI",
   "mobility_centre": "Mobility centre",
   "home_screen_today_event": "Today's events",
-  "brain_teasers_list_title": "Brain teasers"
+  "brain_teasers_list_title": "Brain teasers",
+  "show_all_events": "Show all events",
+  "events_in_your_area": "Events in your area"
 }
