@@ -38,6 +38,8 @@ class SearchResultScreenProvider
 
   Future<void> getNearbyList() async {
     try {
+      state = state.copyWith(loading: true, error: "");
+
       final position = await getLatLong();
 
       debugPrint(
@@ -49,7 +51,6 @@ class SearchResultScreenProvider
 
       Locale currentLocale = localeManagerController.getSelectedLocale();
 
-      state = state.copyWith(loading: true, error: "");
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
               radius: radius, centerLatitude: lat, centerLongitude: long,
