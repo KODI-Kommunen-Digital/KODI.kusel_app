@@ -248,5 +248,7 @@
   "location_map_poi": "POI",
   "brain_teasers_list_title": "Denksportaufgaben",
   "mobility_centre": "Mobilitätszentrale",
-  "home_screen_today_event": "Heutige Veranstaltungen"
+  "home_screen_today_event": "Heutige Veranstaltungen",
+  "show_all_events": "Alle Veranstaltungen anzeigen",
+  "events_in_your_area": "Veranstaltungen in Ihrer Umgebung"
 }
