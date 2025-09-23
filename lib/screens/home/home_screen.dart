@@ -7,6 +7,7 @@ import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
 import 'package:kusel/common_widgets/device_helper.dart';
 import 'package:kusel/common_widgets/event_list_section_widget.dart';
 import 'package:kusel/common_widgets/highlights_card.dart';
+import 'package:kusel/common_widgets/location_const.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/weather_widget.dart';
 import 'package:kusel/l10n/app_localizations.dart';
@@ -256,7 +257,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 eventsList: state.nearbyEventsList,
                 heading: AppLocalizations.of(context).near_you,
                 maxListLimit: 3,
-                buttonText: AppLocalizations.of(context).to_map_view,
+                buttonText: AppLocalizations.of(context).show_all_events,
                 buttonIconPath: imagePath['map_icon'] ?? "",
                 isLoading: isLoading,
                 onButtonTap: () {
@@ -268,10 +269,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         context: context,
                         params: SelectedEventListScreenParameter(
                           radius: 1,
-                          centerLatitude: latitude,
-                          centerLongitude: longitude,
+                          centerLatitude: EventLatLong.kusel.latitude,
+                          centerLongitude: EventLatLong.kusel.longitude,
                           categoryId: 3,
-                          listHeading: "Events in your area",
+                          listHeading: AppLocalizations.of(context).events_in_your_area,
                           onFavChange: () {
                             ref
                                 .read(homeScreenProvider.notifier)
@@ -287,23 +288,24 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   ref
                       .read(dashboardScreenProvider.notifier)
                       .onScreenNavigation();
-                  ref.read(navigationProvider).navigateUsingPath(
-                        path: selectedEventListScreenPath,
-                        context: context,
-                        params: SelectedEventListScreenParameter(
-                          radius: 1,
-                          centerLatitude: latitude,
-                          centerLongitude: longitude,
-                          categoryId: 3,
-                          listHeading: "Events in your area",
-                          onFavChange: () {
-                            ref
-                                .read(homeScreenProvider.notifier)
-                                .getNearbyEvents();
-                          },
-                        ),
-                      );
-                },
+                    ref.read(navigationProvider).navigateUsingPath(
+                          path: selectedEventListScreenPath,
+                          context: context,
+                          params: SelectedEventListScreenParameter(
+                            radius: 1,
+                            centerLatitude: EventLatLong.kusel.latitude,
+                            centerLongitude: EventLatLong.kusel.longitude,
+                            categoryId: 3,
+                            listHeading: AppLocalizations.of(context)
+                                .events_in_your_area,
+                            onFavChange: () {
+                              ref
+                                  .read(homeScreenProvider.notifier)
+                                  .getNearbyEvents();
+                            },
+                          ),
+                        );
+                  },
                 isFavVisible: true,
                 onSuccess: (bool isFav, int? id) {
                   ref

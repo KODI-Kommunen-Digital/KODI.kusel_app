@@ -778,4 +778,10 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get brain_teasers_list_title => 'Denksportaufgaben';
+
+  @override
+  String get show_all_events => 'Alle Veranstaltungen anzeigen';
+
+  @override
+  String get events_in_your_area => 'Veranstaltungen in Ihrer Umgebung';
 }
