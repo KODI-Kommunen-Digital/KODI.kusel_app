@@ -773,4 +773,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get brain_teasers_list_title => 'Brain teasers';
+
+  @override
+  String get show_all_events => 'Show all events';
+
+  @override
+  String get events_in_your_area => 'Events in your area';
 }

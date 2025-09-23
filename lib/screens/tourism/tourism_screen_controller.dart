@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/common_widgets/get_current_location.dart';
 import 'package:kusel/common_widgets/listing_id_enum.dart';
+import 'package:kusel/common_widgets/location_const.dart';
 import 'package:kusel/locale/localization_manager.dart';
 import 'package:kusel/screens/tourism/tourism_screen_state.dart';
 
@@ -62,8 +63,8 @@ class TourismScreenController extends StateNotifier<TourismScreenState> {
 
       Locale currentLocale = localeManagerController.getSelectedLocale();
 
-      final lat = position.latitude;
-      final long = position.longitude;
+      final lat = EventLatLong.kusel.latitude;
+      final long = EventLatLong.kusel.longitude;
       final radius = SearchRadius.radius.value;
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
       GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(

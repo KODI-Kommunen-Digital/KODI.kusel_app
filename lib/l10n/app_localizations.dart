@@ -1591,6 +1591,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Brain teasers'**
   String get brain_teasers_list_title;
+
+  /// No description provided for @show_all_events.
+  ///
+  /// In en, this message translates to:
+  /// **'Show all events'**
+  String get show_all_events;
+
+  /// No description provided for @events_in_your_area.
+  ///
+  /// In en, this message translates to:
+  /// **'Events in your area'**
+  String get events_in_your_area;
 }
 
 class _AppLocalizationsDelegate
