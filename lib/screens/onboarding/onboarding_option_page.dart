@@ -28,7 +28,7 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
     final state = ref.watch(onboardingScreenProvider);
     final stateNotifier = ref.read(onboardingScreenProvider.notifier);
     return SingleChildScrollView(
-      physics: AlwaysScrollableScrollPhysics(),
+      physics: ClampingScrollPhysics(),
       child: Padding(
         padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 20.h),
         child: Column(

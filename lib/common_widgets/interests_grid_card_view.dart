@@ -31,7 +31,7 @@ class _CommonEventCardState extends ConsumerState<InterestsGridCardView> {
           : Colors.white,
       margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
-      elevation: 4,
+      elevation: 1,
       child: Column(
         children: [
           Container(

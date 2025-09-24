@@ -32,6 +32,7 @@ class KuselTextField extends ConsumerStatefulWidget {
   void Function(String)? onFieldSubmitted;
   FocusNode? focusNode;
   TextAlign? textAlign;
+  final List<String>? autofillHints;
 
   KuselTextField(
       {required this.textEditingController,
@@ -60,6 +61,7 @@ class KuselTextField extends ConsumerStatefulWidget {
       this.onFieldSubmitted,
       this.focusNode,
       this.textAlign,
+      this.autofillHints,
       super.key});
 
   @override
@@ -89,6 +91,7 @@ class _KuselTextFieldState extends ConsumerState<KuselTextField> {
       focusNode: widget.focusNode,
       textInputAction: TextInputAction.done,
       onChanged: widget.onChanged,
+      autofillHints: widget.autofillHints,
       style: TextStyle(
         color: widget.textColor ??
             currentSelectedThemeData.textTheme.displayMedium!.color,

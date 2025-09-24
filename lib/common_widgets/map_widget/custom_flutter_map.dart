@@ -55,46 +55,46 @@ class _CustomFlutterMapState extends ConsumerState<CustomFlutterMap> {
       child: Stack(
         children: [
           _customMapWidget(),
-          Positioned(
-            top: 10.h,
-            right: 8.w,
-            child: Column(
-              children: [
-                textBoldPoppins(
-                    text: "N",
-                    fontSize: 10,
-                    color: Theme.of(context).colorScheme.error),
-                InkWell(
-                  onTap: () => _mapController.rotate(0),
-                  child: Transform.rotate(
-                    angle: -_currentRotation * math.pi / 180,
-                    child: Card(
-                      elevation: 4,
-                      shape: const CircleBorder(),
-                      child: Container(
-                        padding: EdgeInsets.all(5.h.w),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(blurRadius: 4, color: Colors.black26)
-                          ],
-                        ),
-                        child: Transform.rotate(
-                            angle: -10.25,
-                            child: Icon(Icons.explore,
-                                color: Theme.of(context).primaryColor,
-                                size: 20.h)),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          // Positioned(
+          //   top: 10.h,
+          //   right: 8.w,
+          //   child: Column(
+          //     children: [
+          //       textBoldPoppins(
+          //           text: "N",
+          //           fontSize: 10,
+          //           color: Theme.of(context).colorScheme.error),
+          //       InkWell(
+          //         onTap: () => _mapController.rotate(0),
+          //         child: Transform.rotate(
+          //           angle: -_currentRotation * math.pi / 180,
+          //           child: Card(
+          //             elevation: 4,
+          //             shape: const CircleBorder(),
+          //             child: Container(
+          //               padding: EdgeInsets.all(5.h.w),
+          //               decoration: BoxDecoration(
+          //                 shape: BoxShape.circle,
+          //                 color: Colors.white,
+          //                 boxShadow: [
+          //                   BoxShadow(blurRadius: 4, color: Colors.black26)
+          //                 ],
+          //               ),
+          //               child: Transform.rotate(
+          //                   angle: -10.25,
+          //                   child: Icon(Icons.explore,
+          //                       color: Theme.of(context).primaryColor,
+          //                       size: 20.h)),
+          //             ),
+          //           ),
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
           DeviceHelper.isMobile(context)
               ? Positioned(
-                  top: 70.h,
+                  top: 30.h,
                   right: 7.w,
                   child: FloatingActionButton(
                     mini: true,
