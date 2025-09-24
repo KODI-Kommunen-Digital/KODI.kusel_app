@@ -17,6 +17,7 @@ import 'package:kusel/screens/auth/signin/signin_controller.dart';
 
 import '../../../common_widgets/arrow_back_widget.dart';
 import '../../../navigation/navigation.dart';
+import '../../dashboard/dashboard_screen_provider.dart';
 import '../../environment/environment_dialog.dart';
 import '../validator/empty_field_validator.dart';
 
