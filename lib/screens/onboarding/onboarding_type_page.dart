@@ -37,14 +37,25 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingTypePage> {
                   AppLocalizations.of(context).i_live_in_district_onborading_type_page,
               isSelected: state.isResident,
               onTap: () {
-                stateNotifier.updateOnboardingType(OnBoardingType.resident);
+                if(state.isResident)
+                  {
+                    stateNotifier.updateOnboardingType(null);
+                  }else{
+                  stateNotifier.updateOnboardingType(OnBoardingType.resident);
+                }
               }),
           15.verticalSpace,
           CustomSelectionButton(
               text: AppLocalizations.of(context).spend_my_free_time_here,
               isSelected: state.isTourist,
               onTap: () {
-                stateNotifier.updateOnboardingType(OnBoardingType.tourist);
+                if(state.isTourist)
+                {
+                  stateNotifier.updateOnboardingType(null);
+                }else{
+                  stateNotifier.updateOnboardingType(OnBoardingType.tourist);
+                }
+
               }),
           12.verticalSpace,
           Visibility(

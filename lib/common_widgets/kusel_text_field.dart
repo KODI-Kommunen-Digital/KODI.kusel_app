@@ -88,6 +88,7 @@ class _KuselTextFieldState extends ConsumerState<KuselTextField> {
       keyboardType: widget.keyboardType,
       focusNode: widget.focusNode,
       textInputAction: TextInputAction.done,
+      onChanged: widget.onChanged,
       style: TextStyle(
         color: widget.textColor ??
             currentSelectedThemeData.textTheme.displayMedium!.color,
