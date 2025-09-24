@@ -55,23 +55,31 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.onSecondary,
         body: SafeArea(
-          child: Stack(
-            children: [
-              _buildBody(context),
-              if (isLoading)
-                Center(
-                    child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  height: 100.h,
-                  width: 100.w,
-                  child: const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                )),
-            ],
+          child: RefreshIndicator(
+            onRefresh: () async {
+              await ref
+                  .read(virtualTownHallProvider.notifier)
+                  .getVirtualTownHallDetails();
+              ref.read(virtualTownHallProvider.notifier).isUserLoggedIn();
+            },
+            child: Stack(
+              children: [
+                _buildBody(context),
+                if (isLoading)
+                  Center(
+                      child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                    height: 100.h,
+                    width: 100.w,
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )),
+              ],
+            ),
           ),
         ));
   }
@@ -207,6 +215,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
               },
               icon: Icon(
                   size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                  color: Theme.of(context).primaryColor,
                   Icons.arrow_back)),
         )
       ],

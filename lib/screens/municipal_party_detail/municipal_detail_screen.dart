@@ -598,15 +598,21 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      textBoldMontserrat(
-                          text: text,
-                          color: Theme.of(context).textTheme.bodyLarge?.color),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 12.0),
+                        child: textBoldMontserrat(
+                            text: text,
+                            color: Theme.of(context).textTheme.bodyLarge?.color, textAlign: TextAlign.center),
+                      ),
                       if (description != null)
-                        textRegularMontserrat(
-                            text: description ?? '',
-                            fontSize: 11,
-                            textOverflow: TextOverflow.visible,
-                            textAlign: TextAlign.start)
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: textRegularMontserrat(
+                              text: description ?? '',
+                              fontSize: 11,
+                              textOverflow: TextOverflow.visible,
+                              textAlign: TextAlign.start),
+                        )
                     ],
                   ),
                 ],
