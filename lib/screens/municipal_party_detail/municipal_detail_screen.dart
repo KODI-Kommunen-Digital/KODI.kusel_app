@@ -599,14 +599,14 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 12.0),
+                        padding: const EdgeInsets.only(left: 26.0),
                         child: textBoldMontserrat(
                             text: text,
                             color: Theme.of(context).textTheme.bodyLarge?.color, textAlign: TextAlign.center),
                       ),
                       if (description != null)
                         Padding(
-                          padding: const EdgeInsets.only(left: 8),
+                          padding: const EdgeInsets.only(left: 24),
                           child: textRegularMontserrat(
                               text: description ?? '',
                               fontSize: 11,
