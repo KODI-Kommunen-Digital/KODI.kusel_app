@@ -75,47 +75,63 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
     final state = ref.watch(ortDetailScreenControllerProvider);
     final ortDetailDataModel = state.ortDetailDataModel;
     return SafeArea(
-      child: Stack(
-        children: [
-          Positioned.fill(
-            child: _buildScreen(context),
-          ),
-          Positioned(
-              bottom: 16.h,
-              left: 16.w,
-              right: 16.w,
-              child: CommonBottomNavCard(
-                onBackPress: () {
+      child: RefreshIndicator(
+        onRefresh: () async {
+          await ref
+              .read(ortDetailScreenControllerProvider.notifier)
+              .getOrtDetail(ortId: widget.ortDetailScreenParams.ortId);
+          ref.read(ortDetailScreenControllerProvider.notifier).getHighlights();
+          ref
+              .read(ortDetailScreenControllerProvider.notifier)
+              .getEvents(widget.ortDetailScreenParams.ortId);
+          ref
+              .read(ortDetailScreenControllerProvider.notifier)
+              .getNews(widget.ortDetailScreenParams.ortId);
+
+          ref.read(ortDetailScreenControllerProvider.notifier).isUserLoggedIn();
+        },
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: _buildScreen(context),
+            ),
+            Positioned(
+                bottom: 16.h,
+                left: 16.w,
+                right: 16.w,
+                child: CommonBottomNavCard(
+                  onBackPress: () {
+                    ref.read(navigationProvider).removeTopPage(context: context);
+                  },
+                  isFavVisible: true,
+                  isFav: ortDetailDataModel?.isFavorite ?? false,
+                  onFavChange: () {
+                    ref.watch(favouriteCitiesNotifier.notifier).toggleFavorite(
+                          isFavourite: ortDetailDataModel?.isFavorite,
+                          id: ortDetailDataModel?.id,
+                          success: ({required bool isFavorite}) {
+                            _updateCityFavStatus(
+                                isFavorite, ortDetailDataModel?.id ?? 0);
+                            widget.ortDetailScreenParams.onFavSuccess!(
+                                isFavorite, ortDetailDataModel?.id ?? 0);
+                          },
+                          error: ({required String message}) {
+                            showErrorToast(message: message, context: context);
+                          },
+                        );
+                  },
+                )),
+            Positioned(
+              top: 30.h,
+              left: 12.h,
+              child: ArrowBackWidget(
+                onTap: () {
                   ref.read(navigationProvider).removeTopPage(context: context);
                 },
-                isFavVisible: true,
-                isFav: ortDetailDataModel?.isFavorite ?? false,
-                onFavChange: () {
-                  ref.watch(favouriteCitiesNotifier.notifier).toggleFavorite(
-                        isFavourite: ortDetailDataModel?.isFavorite,
-                        id: ortDetailDataModel?.id,
-                        success: ({required bool isFavorite}) {
-                          _updateCityFavStatus(
-                              isFavorite, ortDetailDataModel?.id ?? 0);
-                          widget.ortDetailScreenParams.onFavSuccess!(
-                              isFavorite, ortDetailDataModel?.id ?? 0);
-                        },
-                        error: ({required String message}) {
-                          showErrorToast(message: message, context: context);
-                        },
-                      );
-                },
-              )),
-          Positioned(
-            top: 30.h,
-            left: 12.h,
-            child: ArrowBackWidget(
-              onTap: () {
-                ref.read(navigationProvider).removeTopPage(context: context);
-              },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
