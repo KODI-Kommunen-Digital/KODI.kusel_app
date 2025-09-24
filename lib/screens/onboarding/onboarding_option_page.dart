@@ -65,8 +65,8 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
             CustomSelectionButton(
                 text: AppLocalizations.of(context).alone,
                 isSelected: state.isSingle,
-                onTap: () {
-                  stateNotifier
+                onTap: () async{
+                  await stateNotifier
                       .updateOnboardingFamilyType(OnBoardingFamilyType.single);
                   stateNotifier.isAllOptionFieldsCompleted();
                 }),
@@ -74,8 +74,8 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
             CustomSelectionButton(
                 text: AppLocalizations.of(context).for_two,
                 isSelected: state.isForTwo,
-                onTap: () {
-                  stateNotifier
+                onTap: () async{
+                  await stateNotifier
                       .updateOnboardingFamilyType(OnBoardingFamilyType.withTwo);
                   stateNotifier.isAllOptionFieldsCompleted();
                 }),
@@ -83,8 +83,8 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
             CustomSelectionButton(
                 text: AppLocalizations.of(context).with_my_family,
                 isSelected: state.isWithFamily,
-                onTap: () {
-                  stateNotifier.updateOnboardingFamilyType(
+                onTap: () async{
+                  await stateNotifier.updateOnboardingFamilyType(
                       OnBoardingFamilyType.withMyFamily);
                   stateNotifier.isAllOptionFieldsCompleted();
                 }),
