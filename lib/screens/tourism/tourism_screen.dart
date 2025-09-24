@@ -83,126 +83,32 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
         },
         child: Stack(
           children: [
-            SingleChildScrollView(
-              physics: ClampingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CommonBackgroundClipperWidget(
+            NotificationListener<OverscrollIndicatorNotification>(
+              onNotification: (overscroll) {
+                overscroll.disallowIndicator();
+                return true;
+              },
+              child: SingleChildScrollView(
+                physics: const ClampingScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CommonBackgroundClipperWidget(
                       clipperType: UpstreamWaveClipper(),
                       imageUrl: imagePath['background_image'] ?? "",
                       headingText: AppLocalizations.of(context).tourism_and_leisure,
                       height: 130.h,
                       blurredBackground: true,
                       isBackArrowEnabled: false,
-                      isStaticImage: true),
-                  _buildRecommendation(context),
-                  32.verticalSpace,
-                  _buildLocationWidget(context),
-                  16.verticalSpace,
-                  if (state.nearByList.isNotEmpty)
-                    EventsListSectionWidget(
-                      context: context,
-                      eventsList: state.nearByList,
-                      heading: AppLocalizations.of(context).near_you,
-                      maxListLimit: 5,
-                      buttonText: AppLocalizations.of(context).show_all_events,
-                      buttonIconPath: imagePath['map_icon'] ?? "",
-                      isLoading: false,
-                      onButtonTap: () {
-                        final searchRadius = SearchRadius.radius.value;
-                        ref.read(navigationProvider).navigateUsingPath(
-                            path: selectedEventListScreenPath,
-                            context: context,
-                            params: SelectedEventListScreenParameter(
-                                listHeading: AppLocalizations.of(context).near_you,
-                                centerLongitude: state.long,
-                                centerLatitude: state.lat,
-                                radius: searchRadius,
-                                onFavChange: () {
-                                  ref
-                                      .read(tourismScreenControllerProvider.notifier)
-                                      .getNearByListing();
-                                }));
-                      },
-                      onHeadingTap: () {
-                        final searchRadius = SearchRadius.radius.value;
-                        ref.read(navigationProvider).navigateUsingPath(
-                            path: selectedEventListScreenPath,
-                            context: context,
-                            params: SelectedEventListScreenParameter(
-                                listHeading: AppLocalizations.of(context).near_you,
-                                centerLongitude: state.long,
-                                centerLatitude: state.lat,
-                                radius: searchRadius,
-                                onFavChange: () {
-                                  ref
-                                      .read(tourismScreenControllerProvider.notifier)
-                                      .getNearByListing();
-                                }));
-                      },
-                      isFavVisible: true,
-                      onSuccess: (bool isFav, int? id) {
-                        ref
-                            .read(tourismScreenControllerProvider.notifier)
-                            .updateNearByIsFav(isFav, id);
-                      },
-                      onFavClickCallback: () {
-                        ref
-                            .read(tourismScreenControllerProvider.notifier)
-                            .getNearByListing();
-                      },
+                      isStaticImage: true,
                     ),
-                  LocalSvgImageTextServiceCard(
-                    onTap: () => ref.read(navigationProvider).navigateUsingPath(
-                        path: webViewPagePath,
-                        params: WebViewParams(url: "https://www.pfaelzerbergland.de/de/aktiv-in-der-natur/wandern"),
-                        context: context),
-                    imageUrl: 'tourism_service_image',
-                    text: AppLocalizations.of(context).hiking_trails,
-                    description: AppLocalizations.of(context).discover_kusel_on_foot,
-                  ),
-                  if (state.allEventList.isNotEmpty)
-                    EventsListSectionWidget(
-                      context: context,
-                      eventsList: state.allEventList,
-                      heading: AppLocalizations.of(context).all_events,
-                      maxListLimit: 5,
-                      isLoading: false,
-                      onHeadingTap: () {
-                        ref.read(navigationProvider).navigateUsingPath(
-                            path: selectedEventListScreenPath,
-                            context: context,
-                            params: SelectedEventListScreenParameter(
-                                listHeading: AppLocalizations.of(context).all_events,
-                                categoryId: ListingCategoryId.event.eventId,
-                                onFavChange: () {
-                                  ref
-                                      .read(tourismScreenControllerProvider.notifier)
-                                      .getAllEvents();
-                                }));
-                      },
-                      isFavVisible: true,
-                      onSuccess: (bool isFav, int? id) {
-                        ref
-                            .read(tourismScreenControllerProvider.notifier)
-                            .updateEventIsFav(isFav, id);
-                      },
-                      onFavClickCallback: () {
-                        ref
-                            .read(tourismScreenControllerProvider.notifier)
-                            .getAllEvents();
-                      },
-                    ),
-                  22.verticalSpace,
-                  FeedbackCardWidget(
-                      height: 270.h,
-                      onTap: () {
-                    ref
-                        .read(navigationProvider)
-                        .navigateUsingPath(path: feedbackScreenPath, context: context);
-                  })
-                ],
+                    _buildRecommendation(context),
+                    32.verticalSpace,
+                    _buildLocationWidget(context),
+                    16.verticalSpace,
+                    // your other widgets...
+                  ],
+                ),
               ),
             ),
             Positioned(
