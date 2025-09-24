@@ -147,7 +147,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
             _buildClipper(),
             _buildTitle(context),
             _buildDescription(context),
-            32.verticalSpace,
+            10.verticalSpace,
             _buildButton(context),
             8.verticalSpace,
             customPageViewer(),
@@ -446,7 +446,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
     return Consumer(builder: (context, ref, _) {
       final state = ref.watch(ortDetailScreenControllerProvider);
       return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        padding: EdgeInsets.only(left: 16),
         child: CustomButton(
             onPressed: () => ref.read(navigationProvider).navigateUsingPath(
                 path: webViewPagePath,

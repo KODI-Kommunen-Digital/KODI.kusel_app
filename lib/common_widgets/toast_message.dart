@@ -37,6 +37,7 @@ showErrorToast(
         text: message,
         color: Theme.of(context).textTheme.labelSmall?.color,
         maxLines: 2,
+        textOverflow: TextOverflow.visible,
         textAlign: TextAlign.start),
     toastAlignment: snackBarAlignment ?? Alignment.bottomCenter,
     displayBorder: true,
