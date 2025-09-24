@@ -76,7 +76,7 @@ class CustomButton extends StatelessWidget {
           ),
         )
             : ElevatedButton(
-                onPressed: () {
+                onPressed: (onPressed == null)?null:() {
                   FocusManager.instance.primaryFocus?.unfocus();
                   onPressed!();
                 },

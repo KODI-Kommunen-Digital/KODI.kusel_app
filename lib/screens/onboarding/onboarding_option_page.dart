@@ -68,6 +68,7 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
                 onTap: () {
                   stateNotifier
                       .updateOnboardingFamilyType(OnBoardingFamilyType.single);
+                  stateNotifier.isAllOptionFieldsCompleted();
                 }),
             12.verticalSpace,
             CustomSelectionButton(
@@ -76,6 +77,7 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
                 onTap: () {
                   stateNotifier
                       .updateOnboardingFamilyType(OnBoardingFamilyType.withTwo);
+                  stateNotifier.isAllOptionFieldsCompleted();
                 }),
             12.verticalSpace,
             CustomSelectionButton(
@@ -84,6 +86,7 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
                 onTap: () {
                   stateNotifier.updateOnboardingFamilyType(
                       OnBoardingFamilyType.withMyFamily);
+                  stateNotifier.isAllOptionFieldsCompleted();
                 }),
             20.verticalSpace,
             Divider(

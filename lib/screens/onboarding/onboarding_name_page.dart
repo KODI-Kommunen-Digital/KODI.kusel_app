@@ -71,6 +71,16 @@ class _OnboardingStartPageState extends ConsumerState<OnBoardingNamePage> {
                   "${AppLocalizations.of(context).name} ${AppLocalizations.of(context).is_required}",
                 );
               },
+              onChanged: (value){
+                if(value.isNotEmpty )
+                  {
+                    ref.read(onboardingScreenProvider.notifier).updateIsNameScreenButtonVisibility(true);
+                  }
+                  else{
+                  ref.read(onboardingScreenProvider.notifier).updateIsNameScreenButtonVisibility(false);
+
+                }
+              },
               maxLines: 1,
             )
           ],
