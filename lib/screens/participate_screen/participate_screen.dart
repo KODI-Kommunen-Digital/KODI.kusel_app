@@ -147,10 +147,13 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          textBoldPoppins(
-              text: AppLocalizations.of(context).participate,
-              textAlign: TextAlign.start,
-              fontSize: 14),
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: textBoldPoppins(
+                text: AppLocalizations.of(context).participate,
+                textAlign: TextAlign.start,
+                fontSize: 14),
+          ),
           10.verticalSpace,
           if (state.participateData != null &&
               state.participateData!.servicesOffered!.isNotEmpty)
@@ -179,7 +182,7 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
 
   _buildInfoMessage({required String heading, required String description}) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 12.w),
+      padding: EdgeInsets.symmetric(horizontal: 22.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

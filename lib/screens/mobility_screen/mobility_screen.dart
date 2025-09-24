@@ -158,7 +158,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
   _buildContactListUi() {
     final state = ref.watch(mobilityScreenProvider);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 12.w),
+      padding: EdgeInsets.symmetric(horizontal: 18.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -185,7 +185,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
   _buildContactDetailsList() {
     final state = ref.watch(mobilityScreenProvider);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 12.w),
+      padding: EdgeInsets.symmetric(horizontal: 18.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

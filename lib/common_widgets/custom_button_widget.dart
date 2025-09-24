@@ -21,18 +21,18 @@ class CustomButton extends StatelessWidget {
 
   const CustomButton(
       {super.key,
-      required this.onPressed,
-      required this.text,
-      this.height,
-      this.width,
-      this.iconHeight,
-      this.iconWidth,
-      this.icon,
-      this.isOutLined = false,
-      this.buttonColor,
-      this.textColor,
-      this.textSize,
-      this.borderColor});
+        required this.onPressed,
+        required this.text,
+        this.height,
+        this.width,
+        this.iconHeight,
+        this.iconWidth,
+        this.icon,
+        this.isOutLined = false,
+        this.buttonColor,
+        this.textColor,
+        this.textSize,
+        this.borderColor});
 
   @override
   Widget build(BuildContext context) {
@@ -76,42 +76,50 @@ class CustomButton extends StatelessWidget {
           ),
         )
             : ElevatedButton(
-                onPressed: (onPressed == null)?null:() {
-                  FocusManager.instance.primaryFocus?.unfocus();
-                  onPressed!();
-                },
-                style: ElevatedButton.styleFrom(
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(
-                          color: borderColor ?? Theme.of(context).primaryColor,
-                          width: 2),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    backgroundColor:
-                        buttonColor ?? Theme.of(context).primaryColor),
-                child: FittedBox(
-                  child: icon != null
-                      ? Row(
-                          children: [
-                            Image.asset(
-                              icon ?? "",
-                              width: iconWidth,
-                              height: iconHeight,
-                            ),
-                            SizedBox(width: 12),
-                            textRegularPoppins(
-                              fontSize: textSize,
-                              color: textColor ?? Theme.of(context).textTheme.labelSmall?.color,
-                              text: text,
-                            ),
-                          ],
-                        )
-                      : textRegularPoppins(
-                          fontSize: textSize,
-                          color: textColor ?? Theme.of(context).textTheme.labelSmall?.color,
-                          text: text,
-                        ),
+          onPressed: (onPressed == null)?null:() {
+            FocusManager.instance.primaryFocus?.unfocus();
+            onPressed!();
+          },
+          style: ButtonStyle(
+            shape: WidgetStateProperty.all(
+              RoundedRectangleBorder(
+                side: BorderSide(
+                    color: borderColor ?? Theme.of(context).primaryColor,
+                    width: 2
                 ),
-              ));
+                borderRadius: BorderRadius.circular(50),
+              ),
+            ),
+            backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
+              if (states.contains(WidgetState.disabled)) {
+                return const Color(0x4D283583);
+              }
+              return buttonColor ?? Theme.of(context).primaryColor;
+            }),
+          ),
+          child: FittedBox(
+            child: icon != null
+                ? Row(
+              children: [
+                Image.asset(
+                  icon ?? "",
+                  width: iconWidth,
+                  height: iconHeight,
+                ),
+                SizedBox(width: 12),
+                textRegularPoppins(
+                  fontSize: textSize,
+                  color: textColor ?? Theme.of(context).textTheme.labelSmall?.color,
+                  text: text,
+                ),
+              ],
+            )
+                : textRegularPoppins(
+              fontSize: textSize,
+              color: textColor ?? Theme.of(context).textTheme.labelSmall?.color,
+              text: text,
+            ),
+          ),
+        ));
   }
 }
