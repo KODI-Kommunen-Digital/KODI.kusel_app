@@ -133,7 +133,7 @@ class _EventsListSectionWidgetState
                   children: [
                     if (widget.heading != null)
                       Padding(
-                        padding: EdgeInsets.fromLTRB(10.w, 10.w, 0, 0),
+                        padding: EdgeInsets.fromLTRB(10.w, 10.w, 0, 10),
                         child: InkWell(
                           onTap: widget.onHeadingTap,
                           child: Row(

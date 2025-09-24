@@ -251,6 +251,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               weatherResponseModel:
                   ref.watch(homeScreenProvider).weatherResponseModel,
             ),
+            10.horizontalSpace,
             if (ref.watch(homeScreenProvider).nearbyEventsList.isNotEmpty)
               EventsListSectionWidget(
                 context: context,
@@ -313,6 +314,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       .setIsFavoriteNearBy(isFav, id);
                 },
               ),
+            10.horizontalSpace,
             if (state.newsList != null && state.newsList!.isNotEmpty)
               EventsListSectionWidget(
                 context: context,
