@@ -59,13 +59,13 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(25.r),
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(context).primaryColor.withOpacity(0.12),
-              offset: const Offset(0, 4),
-              blurRadius: 24,
-            ),
-          ],
+          // boxShadow: [
+          //   BoxShadow(
+          //     color: Theme.of(context).primaryColor.withOpacity(0.12),
+          //     offset: const Offset(0, 4),
+          //     blurRadius: 24,
+          //   ),
+          // ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

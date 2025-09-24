@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -153,6 +154,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                 return validateField(value,
                     "${AppLocalizations.of(context).name_or_email} ${AppLocalizations.of(context).is_required}");
               },
+              autofillHints: const [AutofillHints.email],
             ),
             22.verticalSpace,
             Padding(
@@ -164,6 +166,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             ),
             5.verticalSpace,
             KuselTextField(
+              autofillHints: const [AutofillHints.password],
               maxLines: 1,
               textEditingController: passwordTextEditingController,
               obscureText: !ref.watch(signInScreenProvider).showPassword,
