@@ -146,7 +146,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     }
   }
 
-  void updateOnboardingFamilyType(OnBoardingFamilyType onBoardingFamilyType) {
+  Future<void> updateOnboardingFamilyType(OnBoardingFamilyType onBoardingFamilyType) async{
     bool alreadySelected;
     switch (onBoardingFamilyType) {
       case OnBoardingFamilyType.single:
@@ -171,6 +171,9 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
           ? !alreadySelected
           : false,
     );
+    
+    
+    updateIsOptionScreenButtonVisibility(state.isSingle||state.isForTwo || state.isWithFamily);
   }
 
   void updateUserType(String value) {
@@ -448,8 +451,6 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   bool isAllOptionFieldsCompleted() {
     bool martialStatusFilled =
         (!state.isSingle && !state.isForTwo && !state.isWithFamily);
-
-    updateIsOptionScreenButtonVisibility(!martialStatusFilled);
     return martialStatusFilled;
   }
 
