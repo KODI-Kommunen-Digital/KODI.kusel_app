@@ -24,6 +24,10 @@ class OnboardingScreenState {
   String? userCurrentCity;
   OnboardingData? onboardingData;
   bool isLoggedIn;
+  bool isOptionPageButtonVisible;
+  bool isNameScreenButtonVisible;
+  bool isPreferencePageButtonVisible;
+  bool isInterestPageButtonVisible;
 
   OnboardingScreenState(
       this.selectedPageIndex,
@@ -47,8 +51,11 @@ class OnboardingScreenState {
       this.interestsMap,
       this.userCurrentCity,
       this.onboardingData,
-      this.isLoggedIn
-      );
+      this.isLoggedIn,
+      this.isOptionPageButtonVisible,
+      this.isNameScreenButtonVisible,
+      this.isPreferencePageButtonVisible,
+      this.isInterestPageButtonVisible);
 
   factory OnboardingScreenState.empty() {
     return OnboardingScreenState(
@@ -73,6 +80,10 @@ class OnboardingScreenState {
         {},
         null,
         null,
+        false,
+        false,
+        false,
+        false,
         false);
   }
 
@@ -98,8 +109,11 @@ class OnboardingScreenState {
       Map<int, bool>? interestsMap,
       String? userCurrentCity,
       OnboardingData? onboardingData,
-      bool? isLoggedIn
-      }) {
+      bool? isLoggedIn,
+      bool? isOptionPageButtonVisible,
+      bool? isNameScreenButtonVisible,
+      bool? isPreferencePageButtonVisible,
+      bool? isInterestPageButtonVisible}) {
     return OnboardingScreenState(
         selectedPageIndex ?? this.selectedPageIndex,
         onBoardingButtonText ?? this.onBoardingButtonText,
@@ -122,6 +136,10 @@ class OnboardingScreenState {
         interestsMap ?? this.interestsMap,
         userCurrentCity ?? this.userCurrentCity,
         onboardingData ?? this.onboardingData,
-        isLoggedIn ?? this.isLoggedIn);
+        isLoggedIn ?? this.isLoggedIn,
+        isOptionPageButtonVisible ?? this.isOptionPageButtonVisible,
+        isNameScreenButtonVisible ?? this.isNameScreenButtonVisible,
+        isPreferencePageButtonVisible ?? this.isPreferencePageButtonVisible,
+        isInterestPageButtonVisible ?? this.isInterestPageButtonVisible);
   }
 }

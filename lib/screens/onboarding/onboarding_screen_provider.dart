@@ -114,15 +114,26 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     state = state.copyWith(isErrorMsgVisible: value);
   }
 
-  void updateOnboardingType(OnBoardingType onBoardingType) {
-    final isResidentSelected = onBoardingType == OnBoardingType.resident;
-    final alreadySelected =
-        isResidentSelected ? state.isResident : state.isTourist;
+  void updateOnboardingType(OnBoardingType? onBoardingType) {
+
+    if(onBoardingType == null)
+      {
+        state = state.copyWith(
+          isResident: false,
+          isTourist: false,
+        );
+
+        updateIsInterestScreenButtonVisibility(false);
+        return;
+      }
 
     state = state.copyWith(
-      isResident: isResidentSelected ? !alreadySelected : false,
-      isTourist: !isResidentSelected ? !alreadySelected : false,
+      isResident: onBoardingType == OnBoardingType.resident,
+      isTourist: onBoardingType == OnBoardingType.tourist,
     );
+
+    updateIsInterestScreenButtonVisibility(true);
+
   }
 
   Future<void> updateCurrentCity() async {
@@ -437,6 +448,8 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   bool isAllOptionFieldsCompleted() {
     bool martialStatusFilled =
         (!state.isSingle && !state.isForTwo && !state.isWithFamily);
+
+    updateIsOptionScreenButtonVisibility(!martialStatusFilled);
     return martialStatusFilled;
   }
 
@@ -861,6 +874,28 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
       state = state.copyWith(loading: false);
     }
   }
+
+  void updateIsNameScreenButtonVisibility(bool value)
+  {
+    state = state.copyWith(isNameScreenButtonVisible: value);
+  }
+
+  void updateIsPreferenceScreenButtonVisibility(bool value)
+  {
+    state = state.copyWith(isPreferencePageButtonVisible: value);
+  }
+
+  void updateIsOptionScreenButtonVisibility(bool value)
+  {
+    state = state.copyWith(isOptionPageButtonVisible: value);
+  }
+
+
+  void updateIsInterestScreenButtonVisibility(bool value)
+  {
+    state = state.copyWith(isInterestPageButtonVisible: value);
+  }
+
 }
 
 enum OnBoardingType { resident, tourist }

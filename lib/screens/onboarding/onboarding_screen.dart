@@ -114,69 +114,110 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       PageController pageController) {
     final state = ref.read(onboardingScreenProvider);
     final stateNotifier = ref.read(onboardingScreenProvider.notifier);
+
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10.w),
       child: Column(
         children: [
-          CustomButton(
-            onPressed: () async{
-              switch (selectedPageIndex) {
-                case 0:
+
+          if(selectedPageIndex == 0)
+            CustomButton(
+              onPressed: () async{
+                await stateNotifier.nextPage();
+              },
+              text: (selectedPageIndex == 0)
+                  ? AppLocalizations.of(context).lets_get_started
+                  : selectedPageIndex == 4
+                  ? AppLocalizations.of(context).complete
+                  : AppLocalizations.of(context).next,
+            ),
+
+          if(selectedPageIndex == 1)
+            CustomButton(
+              onPressed: (!ref.watch(onboardingScreenProvider).isNameScreenButtonVisible)?null:() async{
+
+                if (stateNotifier.onboardingNameFormKey.currentState
+                    ?.validate() ??
+                    false) {
+                  if(state.userFirstName!=null && state.isLoggedIn){
+                    stateNotifier.editUserName(onSuccess: () async {
+                      await stateNotifier.getUserDetails();
+                    }, onError: (msg){
+                      showErrorToast(message: msg, context: context);
+                    });
+                  }
                   await stateNotifier.nextPage();
-                  break;
-                case 1:
-                  if (stateNotifier.onboardingNameFormKey.currentState
-                          ?.validate() ??
-                      false) {
-                    if(state.userFirstName!=null && state.isLoggedIn){
-                      stateNotifier.editUserName(onSuccess: () async {
-                        await stateNotifier.getUserDetails();
-                      }, onError: (msg){
-                        showErrorToast(message: msg, context: context);
-                      });
-                    }
-                    await stateNotifier.nextPage();
-                  }
-                  break;
-                case 2:
-                  if(!state.isTourist && !state.isResident){
-                    stateNotifier.updateErrorMsgStatus(true);
-                  } else {
-                    stateNotifier.updateErrorMsgStatus(false);
-                    if (state.isLoggedIn) {
-                      stateNotifier.submitUserType();
-                    }
-                    await stateNotifier.nextPage();
-                  }
-                  break;
-                case 3:
-                  if (stateNotifier.isAllOptionFieldsCompleted()) {
-                    stateNotifier.updateErrorMsgStatus(true);
-                  } else {
-                    stateNotifier.updateErrorMsgStatus(false);
-                      stateNotifier.submitUserDemographics();
-                    await stateNotifier.nextPage();
-                  }
-                  break;
-                case 4:
+                }
+
+              },
+              text: (selectedPageIndex == 0)
+                  ? AppLocalizations.of(context).lets_get_started
+                  : selectedPageIndex == 4
+                  ? AppLocalizations.of(context).complete
+                  : AppLocalizations.of(context).next,
+            ),
+
+          if(selectedPageIndex == 2)
+            CustomButton(
+              onPressed: (!ref.watch(onboardingScreenProvider).isInterestPageButtonVisible)?null: () async{
+
+                if(!state.isTourist && !state.isResident){
+                  stateNotifier.updateErrorMsgStatus(true);
+                } else {
+                  stateNotifier.updateErrorMsgStatus(false);
                   if (state.isLoggedIn) {
-                    stateNotifier.submitUserInterests();
+                    stateNotifier.submitUserType();
                   }
-                  ref.read(navigationProvider).navigateUsingPath(
-                        path: onboardingLoadingPagePath,
-                        context: context,
-                      );
-                  break;
-                default:
-                  break;
+                  await stateNotifier.nextPage();
+                }
+
+              },
+              text: (selectedPageIndex == 0)
+                  ? AppLocalizations.of(context).lets_get_started
+                  : selectedPageIndex == 4
+                  ? AppLocalizations.of(context).complete
+                  : AppLocalizations.of(context).next,
+            ),
+
+          if(selectedPageIndex == 3)
+          CustomButton(
+            onPressed: (!ref.watch(onboardingScreenProvider).isOptionPageButtonVisible)?null:() async{
+
+              if (stateNotifier.isAllOptionFieldsCompleted()) {
+                stateNotifier.updateErrorMsgStatus(true);
+              } else {
+                stateNotifier.updateErrorMsgStatus(false);
+                stateNotifier.submitUserDemographics();
+                await stateNotifier.nextPage();
               }
+
             },
             text: (selectedPageIndex == 0)
                 ? AppLocalizations.of(context).lets_get_started
                 : selectedPageIndex == 4
-                    ? AppLocalizations.of(context).complete
-                    : AppLocalizations.of(context).next,
+                ? AppLocalizations.of(context).complete
+                : AppLocalizations.of(context).next,
           ),
+
+          if(selectedPageIndex == 4)
+            CustomButton(
+              onPressed: ()async{
+                if (state.isLoggedIn) {
+                  stateNotifier.submitUserInterests();
+                }
+                ref.read(navigationProvider).navigateUsingPath(
+                  path: onboardingLoadingPagePath,
+                  context: context,
+                );
+              },
+              text: (selectedPageIndex == 0)
+                  ? AppLocalizations.of(context).lets_get_started
+                  : selectedPageIndex == 4
+                  ? AppLocalizations.of(context).complete
+                  : AppLocalizations.of(context).next,
+            ),
+
           18.verticalSpace,
           selectedPageIndex == 0
               ? GestureDetector(

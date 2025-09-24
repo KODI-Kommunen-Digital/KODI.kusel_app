@@ -29,6 +29,7 @@ import 'package:kusel/providers/guest_user_login_provider.dart';
 import 'package:kusel/providers/refresh_token_provider.dart';
 
 import '../../common_widgets/get_current_location.dart';
+import '../../common_widgets/location_const.dart';
 import '../../locale/localization_manager.dart';
 import 'home_screen_state.dart';
 
@@ -162,8 +163,8 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       debugPrint(
           "user coordinates [ lat : ${position.latitude}, long: ${position.longitude} ");
 
-      final lat =  49.5375;
-      final long = 7.4064;
+      final lat =  EventLatLong.kusel.latitude;
+      final long = EventLatLong.kusel.longitude;
       final radius = 20;
       state = state.copyWith(error: "");
 
