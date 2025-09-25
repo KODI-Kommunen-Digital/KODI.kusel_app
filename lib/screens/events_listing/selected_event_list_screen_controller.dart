@@ -42,6 +42,7 @@ class SelectedEventListScreenController
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
             pageNo: pageNumber,
+              sortByStartDate: true,
               translate: "${currentLocale.languageCode}-${currentLocale.countryCode}"
           );
       if (eventListScreenParameter?.categoryId != null) {
