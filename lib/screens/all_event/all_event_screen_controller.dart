@@ -37,6 +37,7 @@ class AllEventScreenController extends StateNotifier<AllEventScreenState> {
 
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
+              sortByStartDate: true,
               translate:
                   "${currentLocale.languageCode}-${currentLocale.countryCode}",
               pageNo: pageNumber);
@@ -99,6 +100,7 @@ class AllEventScreenController extends StateNotifier<AllEventScreenState> {
       Locale currentLocale = localeManagerController.getSelectedLocale();
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
+              sortByStartDate: true,
               translate: "${currentLocale.languageCode}-${currentLocale.countryCode}"
           );
       if (startAfterDate != null) {

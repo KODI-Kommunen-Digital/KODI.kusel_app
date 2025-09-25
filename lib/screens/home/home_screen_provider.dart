@@ -105,6 +105,7 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
       Locale currentLocale = localeManagerController.getSelectedLocale();
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
+              sortByStartDate: true,
               categoryId: ListingCategoryId.highlights.eventId.toString(),
               translate:
                   "${currentLocale.languageCode}-${currentLocale.countryCode}");
@@ -135,6 +136,7 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
 
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
+              sortByStartDate: true,
               translate:
                   "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
@@ -172,6 +174,7 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
 
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
+              sortByStartDate: true,
               radius: radius,
               centerLongitude: long,
               centerLatitude: lat,
