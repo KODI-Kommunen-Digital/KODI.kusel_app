@@ -150,8 +150,12 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             5.verticalSpace,
             KuselTextField(
               textEditingController: emailTextEditingController,
+              inputFormatters: [
+                FilteringTextInputFormatter.deny(RegExp(r'\s')), // Prevent spaces
+              ],
               validator: (value) {
-                return validateField(value,
+                final trimmedValue = value?.trim();
+                return validateField(trimmedValue,
                     "${AppLocalizations.of(context).name_or_email} ${AppLocalizations.of(context).is_required}");
               },
               autofillHints: const [AutofillHints.email],
@@ -168,6 +172,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
             KuselTextField(
               autofillHints: const [AutofillHints.password],
               maxLines: 1,
+              inputFormatters: [
+                FilteringTextInputFormatter.deny(RegExp(r'\s')), // Prevent spaces
+              ],
               textEditingController: passwordTextEditingController,
               obscureText: !ref.watch(signInScreenProvider).showPassword,
               suffixIcon: ref.read(signInScreenProvider).showPassword
@@ -197,8 +204,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                       ),
                     ),
               validator: (value) {
+                final trimmedValue = value?.trim();
                 return validateField(
-                    value, "${AppLocalizations
+                    trimmedValue, "${AppLocalizations
                     .of(context)
                     .password} ${AppLocalizations
                     .of(context)

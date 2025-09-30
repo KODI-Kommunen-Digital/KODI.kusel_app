@@ -159,8 +159,12 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               KuselTextField(
                 textEditingController: emailTextEditingController,
                 focusNode: emailFocusNode,
+                inputFormatters: [
+                  FilteringTextInputFormatter.deny(RegExp(r'\s')), // Prevent spaces
+                ],
                 validator: (value){
-                  return validateEmail(value, context);
+                  final trimmedValue = value?.trim();
+                  return validateEmail(trimmedValue, context);
                 },
               ),
               22.verticalSpace,
@@ -168,9 +172,13 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               KuselTextField(
                 maxLines: 1,
                 textEditingController: passwordTextEditingController,
+                inputFormatters: [
+                  FilteringTextInputFormatter.deny(RegExp(r'\s')), // Prevent spaces
+                ],
                 focusNode: passwordFocusNode,
                 validator: (value){
-                  return validatePassword(value, context);
+                  final trimmedValue = value?.trim();
+                  return validatePassword(trimmedValue, context); // or validateEmail for email field
                 },
                 obscureText: !ref.watch(signUpScreenProvider).showPassword,
                 suffixIcon: ref.read(signUpScreenProvider).showPassword
@@ -250,7 +258,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                         userName: userNameTextEditingController.text
                             .trim()
                             .toLowerCase(),
-                        password: passwordTextEditingController.text,
+                        password: passwordTextEditingController.text.trim(),
                         firstName: firstNameTextEditingController.text.trim(),
                         lastName: lastNameTextEditingController.text.trim(),
                         email: emailTextEditingController.text.trim(),
