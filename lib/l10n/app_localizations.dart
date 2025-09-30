@@ -1603,6 +1603,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Events in your area'**
   String get events_in_your_area;
+
+  /// No description provided for @new_municipality.
+  ///
+  /// In en, this message translates to:
+  /// **'Collective municipality'**
+  String get new_municipality;
 }
 
 class _AppLocalizationsDelegate
