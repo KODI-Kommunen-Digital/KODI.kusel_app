@@ -784,4 +784,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get events_in_your_area => 'Veranstaltungen in Ihrer Umgebung';
+
+  @override
+  String get new_municipality => 'Verbandsgemeinde';
 }

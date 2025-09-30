@@ -779,4 +779,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get events_in_your_area => 'Events in your area';
+
+  @override
+  String get new_municipality => 'Collective municipality';
 }
