@@ -37,6 +37,7 @@ class AllEventScreenController extends StateNotifier<AllEventScreenState> {
 
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
+             categoryId: "3",
               sortByStartDate: true,
               translate:
                   "${currentLocale.languageCode}-${currentLocale.countryCode}",

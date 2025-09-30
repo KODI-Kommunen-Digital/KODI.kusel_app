@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -207,6 +208,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               KuselTextField(
                 textEditingController: userNameTextEditingController,
                 focusNode: userNameFocusNode,
+                inputFormatters: [
+                  FilteringTextInputFormatter.deny(RegExp(r'\s')), // Prevent spaces
+                ],
                 validator: (value) => validateField(value,
                     "${AppLocalizations.of(context).username} ${AppLocalizations.of(context).is_required}"),
               ),
@@ -215,19 +219,29 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               KuselTextField(
                   textEditingController: firstNameTextEditingController,
                   focusNode: firstNameFocusNode,
-                  validator: (value) => validateField(value,
-                      "${AppLocalizations.of(context).firstName} ${AppLocalizations.of(context).is_required}")),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'\s')), // Prevent spaces
+                  ],
+                validator: (value) {
+                  final trimmedValue = value?.trim();
+                  return validateField(trimmedValue,
+                      "${AppLocalizations.of(context).firstName} ${AppLocalizations.of(context).is_required}");
+                }
+              ),
               22.verticalSpace,
               _buildLabel(context, AppLocalizations.of(context).lastName),
               KuselTextField(
                 textEditingController: lastNameTextEditingController,
                 focusNode: lastNameFocusNode,
-                validator: (value) =>
-                    validateField(value, "${AppLocalizations
-                        .of(context)
-                        .lastName} ${AppLocalizations
-                        .of(context)
-                        .is_required}")),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.deny(RegExp(r'^\s')), // Prevent leading spaces
+                  ],
+                  validator: (value) {
+                    final trimmedValue = value?.trim();
+                    return validateField(trimmedValue,
+                        "${AppLocalizations.of(context).lastName} ${AppLocalizations.of(context).is_required}");
+                  }
+              ),
               32.verticalSpace,
               CustomButton(
                 onPressed: () async {
@@ -237,9 +251,9 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                             .trim()
                             .toLowerCase(),
                         password: passwordTextEditingController.text,
-                        firstName: firstNameTextEditingController.text,
-                        lastName: lastNameTextEditingController.text,
-                        email: emailTextEditingController.text,
+                        firstName: firstNameTextEditingController.text.trim(),
+                        lastName: lastNameTextEditingController.text.trim(),
+                        email: emailTextEditingController.text.trim(),
                         onError: (value) {
                           showErrorToast(message: value, context: context);
                         },
