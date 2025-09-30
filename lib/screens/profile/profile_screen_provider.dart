@@ -216,12 +216,13 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
       }, (r) async {
         var resData = (r as EditUserDetailsResponseModel).status;
         debugPrint("Edit Api Result : $resData");
-        await getUserDetails();
+        // await getUserDetails();
         state = state.copyWith(loading: false, editingEnabled: false);
         onSuccess();
         debugPrint("Edit API Success");
       });
     } catch (error) {
+      state = state.copyWith(loading: false);
       debugPrint(error.toString());
       onError("API Error - ${error.toString()}");
     }
