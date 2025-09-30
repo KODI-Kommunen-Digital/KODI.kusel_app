@@ -353,9 +353,12 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
             32.verticalSpace,
             textBoldPoppins(
                 text:
-                    "${state.municipalPartyDetailDataModel?.name ?? ""} ${AppLocalizations.of(context).municipality}",
+                    "${AppLocalizations.of(context).new_municipality} ${state.municipalPartyDetailDataModel?.name ?? ""} ",
                 color: Theme.of(context).textTheme.bodyLarge?.color,
-                fontSize: 13)
+                fontSize: 18,
+            textAlign: TextAlign.start,
+            fontWeight: FontWeight.w500,
+            textOverflow: TextOverflow.visible)
           ],
         ),
       );

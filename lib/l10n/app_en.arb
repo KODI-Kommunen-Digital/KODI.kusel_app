@@ -249,5 +249,6 @@
   "home_screen_today_event": "Today's events",
   "brain_teasers_list_title": "Brain teasers",
   "show_all_events": "Show all events",
-  "events_in_your_area": "Events in your area"
+  "events_in_your_area": "Events in your area",
+  "new_municipality": "Collective municipality"
 }
