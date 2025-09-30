@@ -63,9 +63,9 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
             '_';
     userNameEditingController.text = state.userData?.username ?? '_';
     emailEditingController.text = state.userData?.email ?? '_';
-    phoneNumberEditingController.text = state.userData?.phoneNumber ?? '_';
-    descriptionEditingController.text = state.userData?.description ?? '_';
-    websiteEditingController.text = state.userData?.website ?? '_';
+    phoneNumberEditingController.text = state.userData?.phoneNumber ?? '';
+    descriptionEditingController.text = state.userData?.description ?? '';
+    websiteEditingController.text = state.userData?.website ?? '';
   }
 
 
@@ -210,7 +210,7 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
       final result = await editUserDetailUseCase.call(
           editUserDetailRequestModel, editUserDetailsResponseModel);
       result.fold((l) {
-        state = state.copyWith(loading: false, editingEnabled: false);
+        state = state.copyWith(loading: false, editingEnabled: true);
         debugPrint(l.toString());
         onError(l.toString());
       }, (r) async {

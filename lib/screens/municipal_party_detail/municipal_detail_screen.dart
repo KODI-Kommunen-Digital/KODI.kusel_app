@@ -20,6 +20,7 @@ import '../../common_widgets/arrow_back_widget.dart';
 import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/event_list_section_widget.dart';
 import '../../common_widgets/feedback_card_widget.dart';
+import '../../common_widgets/network_image_text_service_card.dart';
 import '../../common_widgets/toast_message.dart';
 import '../../common_widgets/web_view_page.dart';
 import '../../images_path.dart';
@@ -531,7 +532,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                       null) {
                     final item = state
                         .municipalPartyDetailDataModel!.onlineServices![index];
-                    return _customTextIconCard(
+                    return NetworkImageTextServiceCard(
                         onTap: () => ref
                             .read(navigationProvider)
                             .navigateUsingPath(
@@ -555,81 +556,80 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
     );
   }
 
-  Widget _customTextIconCard(
-      {required Function() onTap,
-      required String imageUrl,
-      required String text,
-      String? description}) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.r),
-      ),
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          padding:
-              EdgeInsets.only(left: 2.w, right: 14.w, top: 20.h, bottom: 20.h),
-          decoration: BoxDecoration(
-              color: Theme.of(context).canvasColor,
-              borderRadius: BorderRadius.circular(15.r)),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  20.horizontalSpace,
-                  ImageUtil.loadNetworkImage(
-                    onImageTap: () {
-                      ref.read(navigationProvider).navigateUsingPath(
-                          path: fullImageScreenPath,
-                          params: FullImageScreenParams(
-                              imageUrL: imageUrl, sourceId: 3),
-                          context: context);
-                    },
-                    height: 35.h,
-                    width: 35.w,
-                    imageUrl: imageUrl,
-                    context: context,
-                    sourceId: 3,
-                    fit: BoxFit.cover,
-                  ),
-                  10.horizontalSpace,
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(left: 26.0),
-                        child: textBoldMontserrat(
-                            text: text,
-                            color: Theme.of(context).textTheme.bodyLarge?.color, textAlign: TextAlign.center),
-                      ),
-                      if (description != null)
-                        Padding(
-                          padding: const EdgeInsets.only(left: 24),
-                          child: textRegularMontserrat(
-                              text: description ?? '',
-                              fontSize: 11,
-                              textOverflow: TextOverflow.visible,
-                              textAlign: TextAlign.start),
-                        )
-                    ],
-                  ),
-                ],
-              ),
-              Align(
-                  alignment: Alignment.centerRight,
-                  child: Image.asset(
-                    imagePath["link_icon"] ?? '',
-                    height: 40.h,
-                    width: 40.w,
-                  )),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget _customTextIconCard(
+  //     {required Function() onTap,
+  //     required String imageUrl,
+  //     required String text,
+  //     String? description}) {
+  //   return Card(
+  //     elevation: 2,
+  //     shape: RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.circular(15.r),
+  //     ),
+  //     child: GestureDetector(
+  //       onTap: onTap,
+  //       child: Container(
+  //         padding:
+  //             EdgeInsets.only(left: 2.w, right: 14.w, top: 20.h, bottom: 20.h),
+  //         decoration: BoxDecoration(
+  //             color: Theme.of(context).canvasColor,
+  //             borderRadius: BorderRadius.circular(15.r)),
+  //         child: Row(
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             20.horizontalSpace,
+  //             Expanded(
+  //               flex: 3,
+  //               child: ImageUtil.loadNetworkImage(
+  //                 // onImageTap: () {
+  //                 //   ref.read(navigationProvider).navigateUsingPath(
+  //                 //       path: fullImageScreenPath,
+  //                 //       params: FullImageScreenParams(
+  //                 //           imageUrL: imageUrl, sourceId: 3),
+  //                 //       context: context);
+  //                 // },
+  //                 height: 35.h,
+  //                 width: 35.w,
+  //                 imageUrl: imageUrl,
+  //                 context: context,
+  //                 sourceId: 3,
+  //                 fit: BoxFit.cover,
+  //               ),
+  //             ),
+  //             10.horizontalSpace,
+  //             Column(
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: [
+  //                 Padding(
+  //                   padding: const EdgeInsets.only(left: 26.0),
+  //                   child: textBoldMontserrat(
+  //                       text: text,
+  //                       color: Theme.of(context).textTheme.bodyLarge?.color, textAlign: TextAlign.center, textOverflow: TextOverflow.visible),
+  //                 ),
+  //                 if (description != null)
+  //                   Padding(
+  //                     padding: const EdgeInsets.only(left: 24),
+  //                     child: textRegularMontserrat(
+  //                         text: description ?? '',
+  //                         fontSize: 11,
+  //                         textOverflow: TextOverflow.visible,
+  //                         textAlign: TextAlign.start),
+  //                   )
+  //               ],
+  //             ),
+  //             Align(
+  //                 alignment: Alignment.centerRight,
+  //                 child: Image.asset(
+  //                   imagePath["link_icon"] ?? '',
+  //                   height: 40.h,
+  //                   width: 40.w,
+  //                 )),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   _updateCityList(bool isFav, int cityId) {
     ref
