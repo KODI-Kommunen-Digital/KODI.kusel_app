@@ -282,7 +282,7 @@ class AppLocalizationsDe extends AppLocalizations {
       '! Für was interessierst du dich im Landkreis?';
 
   @override
-  String get complete => 'AbschließenD';
+  String get complete => 'Abschließend';
 
   @override
   String get preparing_the_app_text =>
