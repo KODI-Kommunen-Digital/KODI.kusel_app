@@ -123,9 +123,9 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
                         fontSize: 11),
                   ),
                 )),
-            5.verticalSpace,
+            10.verticalSpace,
             if(DeviceHelper.isTablet(context))
-              100.verticalSpace,
+              120.verticalSpace,
           ],
         ),
       ),
