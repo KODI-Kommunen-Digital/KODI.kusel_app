@@ -108,8 +108,9 @@ class SearchResultScreenProvider
 
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
-              translate: "${currentLocale.languageCode}-${currentLocale.countryCode}"
-          );
+              sortByStartDate: true,
+              translate:
+                  "${currentLocale.languageCode}-${currentLocale.countryCode}");
       GetAllListingsResponseModel getAllListingsResponseModel =
           GetAllListingsResponseModel();
       final result = await listingsUseCase.call(

@@ -56,65 +56,140 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
             ref.watch(allEventScreenProvider).filterCount! > 0;
     return Stack(
       children: [
-        SingleChildScrollView(
-          physics: ClampingScrollPhysics(),
-          child: Column(
-            children: [
-              CommonBackgroundClipperWidget(
-                clipperType: UpstreamWaveClipper(),
-                height: 130.h,
-                headingTextLeftMargin: 20,
-                imageUrl: imagePath['home_screen_background'] ?? '',
-                isStaticImage: true,
-                isBackArrowEnabled: false,
-                headingText: AppLocalizations.of(context).events,
-                customWidget1: _buildFilterWidget(isFilterApplied),
-              ),
-              if (!ref.watch(allEventScreenProvider).isLoading)
-                ref.watch(allEventScreenProvider).listingList.isEmpty
-                    ? Center(
-                        child: textHeadingMontserrat(
-                            text: AppLocalizations.of(context).no_data),
-                      )
-                    : EventsListSectionWidget(
-                        eventsList:
-                            ref.watch(allEventScreenProvider).listingList,
-                        heading: null,
-                        maxListLimit: ref
-                            .watch(allEventScreenProvider)
-                            .listingList
-                            .length,
-                        buttonText: null,
-                        buttonIconPath: null,
-                        isLoading: false,
-                        onButtonTap: () {},
+        NotificationListener<OverscrollIndicatorNotification>(
+          onNotification: (overscroll) {
+            overscroll.disallowIndicator();
+            return true;
+          },
+          child: SingleChildScrollView(
+            physics: ClampingScrollPhysics(),
+            child: Column(
+              children: [
+                CommonBackgroundClipperWidget(
+                  clipperType: UpstreamWaveClipper(),
+                  height: 130.h,
+                  headingTextLeftMargin: 20,
+                  imageUrl: imagePath['home_screen_background'] ?? '',
+                  isStaticImage: true,
+                  isBackArrowEnabled: false,
+                  headingText: AppLocalizations.of(context).events,
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12.w),
+                  width: MediaQuery.of(context).size.width,
+                  alignment: Alignment.centerRight,
+                  child: GestureDetector(
+                    onTap: () {
+                      showModalBottomSheet(
                         context: context,
-                        isFavVisible:
-                            true,
-                        onHeadingTap: () {},
-                        onSuccess: (bool isFav, int? id) {
-                          ref
-                              .read(allEventScreenProvider.notifier)
-                              .updateIsFav(isFav, id);
-                          widget.allEventScreenParam.onFavChange();
-                        },
-                        onFavClickCallback: () {
-                          ref
-                              .read(allEventScreenProvider.notifier)
-                              .getEventsList(currentPageNumber);
-                        },
-                        isMultiplePagesList: ref
-                            .read(allEventScreenProvider)
-                            .isLoadMoreButtonEnabled,
-                        onLoadMoreTap: () {
-                          ref
-                              .read(allEventScreenProvider.notifier)
-                              .onLoadMoreList(currentPageNumber);
-                        },
-                        isMoreListLoading: ref
-                            .watch(allEventScreenProvider)
-                            .isMoreListLoading),
-            ],
+                        isScrollControlled: true,
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(20.r)),
+                        ),
+                        builder: (context) => SizedBox(
+                            height: MediaQuery.of(context).size.height * 0.80,
+                            child: FilterScreen()),
+                      );
+                    },
+                    child: Container(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 10.r, vertical: 5.h),
+                      decoration: BoxDecoration(
+                        color: isFilterApplied
+                            ? Theme.of(context).colorScheme.onPrimary
+                            : Theme.of(context).primaryColor,
+                        borderRadius: BorderRadius.circular(8.r),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Center(
+                            child: Image.asset(imagePath['filter_icon'] ?? '',
+                                height: 14.h,
+                                width: 20.w,
+                                color: isFilterApplied
+                                    ? Theme.of(context).primaryColor
+                                    : Theme.of(context).colorScheme.onPrimary),
+                          ),
+                          4.horizontalSpace,
+                          textRegularPoppins(
+                              text: AppLocalizations.of(context).settings,
+                              fontSize: 12,
+                              color: isFilterApplied
+                                  ? Theme.of(context).primaryColor
+                                  : Theme.of(context).colorScheme.onPrimary),
+                          8.horizontalSpace,
+                          Visibility(
+                            visible: isFilterApplied,
+                            child: Container(
+                              padding: EdgeInsets.all(4.h.w),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Theme.of(context).primaryColor),
+                              child: textRegularPoppins(
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .labelSmall
+                                      ?.color,
+                                  fontSize: 10,
+                                  text: ref
+                                      .watch(allEventScreenProvider)
+                                      .filterCount
+                                      .toString()),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                8.verticalSpace,
+                if (!ref.watch(allEventScreenProvider).isLoading)
+                  ref.watch(allEventScreenProvider).listingList.isEmpty
+                      ? Center(
+                          child: textHeadingMontserrat(
+                              text: AppLocalizations.of(context).no_data),
+                        )
+                      : EventsListSectionWidget(
+                          eventsList:
+                              ref.watch(allEventScreenProvider).listingList,
+                          heading: null,
+                          maxListLimit: ref
+                              .watch(allEventScreenProvider)
+                              .listingList
+                              .length,
+                          buttonText: null,
+                          buttonIconPath: null,
+                          isLoading: false,
+                          onButtonTap: () {},
+                          context: context,
+                          isFavVisible: true,
+                          onHeadingTap: () {},
+                          onSuccess: (bool isFav, int? id) {
+                            ref
+                                .read(allEventScreenProvider.notifier)
+                                .updateIsFav(isFav, id);
+                            widget.allEventScreenParam.onFavChange();
+                          },
+                          onFavClickCallback: () {
+                            ref
+                                .read(allEventScreenProvider.notifier)
+                                .getEventsList(currentPageNumber);
+                          },
+                          isMultiplePagesList: ref
+                              .read(allEventScreenProvider)
+                              .isLoadMoreButtonEnabled,
+                          onLoadMoreTap: () {
+                            ref
+                                .read(allEventScreenProvider.notifier)
+                                .onLoadMoreList(currentPageNumber);
+                          },
+                          isMoreListLoading: ref
+                              .watch(allEventScreenProvider)
+                              .isMoreListLoading),
+              ],
+            ),
           ),
         ),
         Positioned(
@@ -127,82 +202,6 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
           ),
         ),
       ],
-    );
-  }
-
-  _buildFilterWidget(bool isFilterApplied) {
-    return Positioned(
-      top: 120,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 12.w),
-        width: MediaQuery.of(context).size.width,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            GestureDetector(
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    isScrollControlled: true,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.vertical(top: Radius.circular(20.r)),
-                    ),
-                    builder: (context) => SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.80,
-                        child: FilterScreen()),
-                  );
-                },
-                child: Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 10.r, vertical: 5.h),
-                  decoration: BoxDecoration(
-                    color: isFilterApplied
-                        ? Theme.of(context).colorScheme.onPrimary
-                        : Theme.of(context).primaryColor,
-                    borderRadius: BorderRadius.circular(8.r),
-                  ),
-                  child: Row(
-                    children: [
-                      Center(
-                        child: Image.asset(imagePath['filter_icon'] ?? '',
-                            height: 14.h,
-                            width: 20.w,
-                            color: isFilterApplied
-                                ? Theme.of(context).primaryColor
-                                : Theme.of(context).colorScheme.onPrimary),
-                      ),
-                      4.horizontalSpace,
-                      textRegularPoppins(
-                          text: AppLocalizations.of(context).settings,
-                          fontSize: 12,
-                          color: isFilterApplied
-                              ? Theme.of(context).primaryColor
-                              : Theme.of(context).colorScheme.onPrimary),
-                      8.horizontalSpace,
-                      Visibility(
-                        visible: isFilterApplied,
-                        child: Container(
-                          padding: EdgeInsets.all(4.h.w),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Theme.of(context).primaryColor),
-                          child: textRegularPoppins(
-                              color:
-                                  Theme.of(context).textTheme.labelSmall?.color,
-                              fontSize: 10,
-                              text: ref
-                                  .watch(allEventScreenProvider)
-                                  .filterCount
-                                  .toString()),
-                        ),
-                      )
-                    ],
-                  ),
-                )),
-          ],
-        ),
-      ),
     );
   }
 }

@@ -9,7 +9,7 @@ enum ListingCategoryId {
 }
 
 enum SearchRadius {
-  radius(100);
+  radius(20);
 
   final int value;
 

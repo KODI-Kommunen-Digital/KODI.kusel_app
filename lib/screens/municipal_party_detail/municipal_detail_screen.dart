@@ -304,6 +304,8 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                 BoxDecoration(shape: BoxShape.circle, color: Colors.white),
             child: (state.municipalPartyDetailDataModel?.image != null)
                 ? ImageUtil.loadNetworkImage(
+                    memCacheWidth: 100,
+                    memCacheHeight: 100,
                     imageUrl: state.municipalPartyDetailDataModel!.image!,
                     sourceId: 1,
                     fit: BoxFit.contain,

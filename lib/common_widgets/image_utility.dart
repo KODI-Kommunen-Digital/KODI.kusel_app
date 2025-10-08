@@ -2,23 +2,23 @@ import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/utility/image_loader_utility.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../navigation/navigation.dart';
-import 'arrow_back_widget.dart';
+import 'custom_cache_manager.dart';
 
 class ImageUtil {
-  static Widget loadNetworkImage(
-      {required String imageUrl,
-      String? svgErrorImagePath,
-      required BuildContext context,
-      double? height,
-      double? width,
-      BoxFit? fit,
+  static Widget loadNetworkImage({
+    required String imageUrl,
+    String? svgErrorImagePath,
+    CustomCacheManager? cacheMemory,
+    required BuildContext context,
+    double? height,
+    double? width,
+    int? memCacheHeight,
+    int? memCacheWidth,
+    BoxFit? fit,
+
       Function()? onImageTap,
       int? sourceId
       }) {
@@ -29,7 +29,9 @@ class ImageUtil {
         height: height,
         width: width,
         imageUrl: imageLoaderUtility(image: imageUrl, sourceId: sourceId ?? 3),
-        progressIndicatorBuilder: (context, value ,_) {
+        memCacheHeight: memCacheHeight ?? 600,
+        memCacheWidth: memCacheWidth ?? 800,
+        progressIndicatorBuilder: (context, value, _) {
           return Center(
             child: CircularProgressIndicator(),
           );
