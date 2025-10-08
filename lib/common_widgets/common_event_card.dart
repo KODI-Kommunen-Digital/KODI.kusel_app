@@ -55,6 +55,8 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: ImageUtil.loadNetworkImage(
+                    memCacheHeight: 400,
+                    memCacheWidth: 500,
                     height: 75.h,
                     width: 80.w,
                     imageUrl: imageLoaderUtility(
