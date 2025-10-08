@@ -30,15 +30,18 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   @override
   void initState() {
-    Future.microtask((){
-      ref.read(onboardingScreenProvider.notifier).initialCall().then((value){
-        if (ref.read(onboardingScreenProvider.notifier).isOnboardingDone()) {
-          ref.read(onboardingScreenProvider.notifier).getOnboardingDetails();
-        } else if(ref.read(onboardingScreenProvider.notifier).isOfflineOnboardingDone()) {
-          ref.read(onboardingScreenProvider.notifier).getOnboardingOfflineData();
-        }
-      });
+    Future.microtask(() async {
+      if (!mounted) return;
+      final notifier = ref.read(onboardingScreenProvider.notifier);
+      await notifier.initialCall();
+
+      if (notifier.isOnboardingDone()) {
+        notifier.getOnboardingDetails();
+      } else if (notifier.isOfflineOnboardingDone()) {
+        notifier.getOnboardingOfflineData();
+      }
     });
+
 
     super.initState();
   }

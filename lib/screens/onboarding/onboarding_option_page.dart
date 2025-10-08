@@ -145,24 +145,24 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
                 text: AppLocalizations.of(context).i_am_visiting_the_district,
                 fontSize: 18,
                 color: Theme.of(context).textTheme.bodyLarge?.color),
-            20.verticalSpace,
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: EdgeInsets.only(left: 12.w, bottom: 4.h),
-                child: textSemiBoldPoppins(
-                  text: AppLocalizations.of(context).your_location,
-                  fontStyle: FontStyle.italic,
-                  fontSize: 11,
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
-                ),
-              ),
-            ),
-            GestureDetector(
-                onTap: (){
-                  FocusScope.of(context).unfocus();
-                },
-                child: _dropDownResidence()),
+            // 20.verticalSpace,
+            // Align(
+            //   alignment: Alignment.centerLeft,
+            //   child: Padding(
+            //     padding: EdgeInsets.only(left: 12.w, bottom: 4.h),
+            //     child: textSemiBoldPoppins(
+            //       text: AppLocalizations.of(context).your_location,
+            //       fontStyle: FontStyle.italic,
+            //       fontSize: 11,
+            //       color: Theme.of(context).textTheme.bodyLarge?.color,
+            //     ),
+            //   ),
+            // ),
+            // GestureDetector(
+            //     onTap: (){
+            //       FocusScope.of(context).unfocus();
+            //     },
+            //     child: _dropDownResidence()),
             20.verticalSpace,
             Divider(
               height: 3.h,
