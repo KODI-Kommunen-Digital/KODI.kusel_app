@@ -371,6 +371,8 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                 BoxDecoration(shape: BoxShape.circle, color: Colors.white),
             child: (state.ortDetailDataModel?.image != null)
                 ? ImageUtil.loadNetworkImage(
+                     memCacheWidth: 100,
+                    memCacheHeight: 100,
                     imageUrl: state.ortDetailDataModel!.image!,
                     sourceId: 1,
                     fit: BoxFit.contain,
