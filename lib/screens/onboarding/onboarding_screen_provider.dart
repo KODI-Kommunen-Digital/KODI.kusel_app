@@ -555,31 +555,57 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
         .map((interest) => interest.key)
         .toList();
 
-    String? userType;
-    if (state.isTourist || state.isResident) {
-      userType = state.isResident ? "citizen" : "tourist";
+    bool hasUserType = state.isTourist || state.isResident;
+    bool hasMaritalStatus =
+        state.isSingle || state.isForTwo || state.isWithFamily;
+    bool hasAccommodation = state.isWithDog || state.isBarrierearm;
+    bool hasInterests = interestIds.isNotEmpty;
+    bool hasCity = state.resident != null && state.resident!.isNotEmpty;
+
+    if (!hasUserType &&
+        !hasMaritalStatus &&
+        !hasAccommodation &&
+        !hasInterests &&
+        !hasCity) {
+      debugPrint('No data filled - not saving');
+      return;
     }
 
-    String maritalStatus = state.isSingle
-        ? "alone"
-        : state.isForTwo
-            ? "married"
-            : "with_family";
+    String? userType;
+    if (state.isTourist) {
+      userType = "tourist";
+    } else if (state.isResident) {
+      userType = "citizen";
+    }
+
+    String? maritalStatus;
+    if (state.isSingle) {
+      maritalStatus = "alone";
+    } else if (state.isForTwo) {
+      maritalStatus = "married";
+    } else if (state.isWithFamily) {
+      maritalStatus = "with_family";
+    }
+
     final accommodationPreference = <String>[
       if (state.isWithDog) "dog",
       if (state.isBarrierearm) "low_barrier",
     ];
+
     String cityName = state.resident ?? '';
-    int cityId = getCityIdByName(state.cityDetailsMap, cityName) ?? 0;
+    int? cityId = getCityIdByName(state.cityDetailsMap, cityName);
 
     OnboardingData onboardingData = OnboardingData(
         userType: userType,
         cityId: cityId,
         maritalStatus: maritalStatus,
-        accommodationPreference: accommodationPreference,
-        interests: interestIds,
+        accommodationPreference:
+            accommodationPreference.isEmpty ? null : accommodationPreference,
+        interests: interestIds.isEmpty ? null : interestIds,
         onBoarded: 1);
-    sharedPreferenceHelper.saveObject(onboardingCacheKey, onboardingData);
+
+    await sharedPreferenceHelper.saveObject(onboardingCacheKey, onboardingData);
+    debugPrint('Saved onboarding data');
   }
 
   Future<void> getInterests() async {
@@ -669,40 +695,66 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   void initializeOnboardingData() {
     // Update Name
     final userFistName = sharedPreferenceHelper.getString(userFirstNameKey);
+    debugPrint('Initializing onboarding data for: $userFistName');
     state = state.copyWith(userFirstName: userFistName);
 
     final onboardingData = state.onboardingData;
-    if (onboardingData == null) return;
+    if (onboardingData == null) {
+      debugPrint('No onboarding data to initialize');
+      return;
+    }
 
-    // Handle user type
-    state = onboardingData.userType == "tourist"
-        ? state.copyWith(isTourist: true)
-        : state.copyWith(isResident: true);
+    debugPrint('Loading onboarding data');
 
-    // Handle marital status
-    state = switch (onboardingData.maritalStatus) {
-      "alone" => state.copyWith(isSingle: true),
-      "married" => state.copyWith(isForTwo: true),
-      _ => state.copyWith(isWithFamily: true),
-    };
+    if (onboardingData.userType != null) {
+      if (onboardingData.userType == "tourist") {
+        state = state.copyWith(isTourist: true, isResident: false);
+      } else if (onboardingData.userType == "citizen") {
+        state = state.copyWith(isResident: true, isTourist: false);
+      }
+      debugPrint('Loaded user type: ${onboardingData.userType}');
+    }
 
-    // Handle accommodation preferences
+    if (onboardingData.maritalStatus != null &&
+        onboardingData.maritalStatus!.isNotEmpty) {
+      state = switch (onboardingData.maritalStatus) {
+        "alone" =>
+          state.copyWith(isSingle: true, isForTwo: false, isWithFamily: false),
+        "married" =>
+          state.copyWith(isForTwo: true, isSingle: false, isWithFamily: false),
+        "with_family" =>
+          state.copyWith(isWithFamily: true, isSingle: false, isForTwo: false),
+        _ => state,
+      };
+      debugPrint('Loaded marital status: ${onboardingData.maritalStatus}');
+    }
+
     final accommodationPrefs = onboardingData.accommodationPreference ?? [];
-    state = state.copyWith(
-      isWithDog: accommodationPrefs.contains("dog"),
-      isBarrierearm: accommodationPrefs.contains("low_barrier"),
-    );
+    if (accommodationPrefs.isNotEmpty) {
+      state = state.copyWith(
+        isWithDog: accommodationPrefs.contains("dog"),
+        isBarrierearm: accommodationPrefs.contains("low_barrier"),
+      );
+      debugPrint('Loaded accommodation prefs: $accommodationPrefs');
+    }
 
-    // Updating city
-    final cityDetailsMap = state.cityDetailsMap;
-    String? city = cityDetailsMap[onboardingData.cityId];
-    state = state.copyWith(resident: city);
+    // Updating city - if available
+    if (onboardingData.cityId != null && onboardingData.cityId! > 0) {
+      final cityDetailsMap = state.cityDetailsMap;
+      String? city = cityDetailsMap[onboardingData.cityId];
+      if (city != null) {
+        state = state.copyWith(resident: city);
+        debugPrint('   Loaded city: $city');
+      }
+    }
 
-    // Handle interests map
+    // Handle interests - if available
     final interestIdList = onboardingData.interests;
-
-    for (final id in interestIdList ?? []) {
-      updateInterestMap(id);
+    if (interestIdList != null && interestIdList.isNotEmpty) {
+      for (final id in interestIdList) {
+        updateInterestMap(id);
+      }
+      debugPrint('   Loaded ${interestIdList.length} interests');
     }
   }
 
@@ -738,16 +790,33 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   }
 
   void getOnboardingOfflineData() {
-    final jsonOnboardingDataString = sharedPreferenceHelper
-        .getString(onboardingCacheKey); // gets raw JSON string
-    final Map<String, dynamic> jsonMap = jsonDecode(jsonOnboardingDataString!);
-    final onboardingData = OnboardingData.fromJson(jsonMap);
-    final userFistName = sharedPreferenceHelper.getString(userFirstNameKey);
-    state = state.copyWith(
-        onboardingData: onboardingData,
-        userFirstName: userFistName,
-        isLoading: false);
-    initializeOnboardingData();
+    try {
+      final jsonOnboardingDataString =
+          sharedPreferenceHelper.getString(onboardingCacheKey);
+
+      if (jsonOnboardingDataString == null ||
+          jsonOnboardingDataString.isEmpty) {
+        debugPrint('⚠No cached onboarding data found');
+        state = state.copyWith(isLoading: false);
+        return;
+      }
+
+      final Map<String, dynamic> jsonMap = jsonDecode(jsonOnboardingDataString);
+      final onboardingData = OnboardingData.fromJson(jsonMap);
+
+      final userFistName = sharedPreferenceHelper.getString(userFirstNameKey);
+
+      debugPrint('Loading cached onboarding data (may be partial)');
+      state = state.copyWith(
+          onboardingData: onboardingData,
+          userFirstName: userFistName,
+          isLoading: false);
+      initializeOnboardingData();
+    } catch (e) {
+      debugPrint('Error loading cached data: $e');
+      sharedPreferenceHelper.remove(onboardingCacheKey);
+      state = state.copyWith(isLoading: false);
+    }
   }
 
   void updateFirstName(String value) {
@@ -849,6 +918,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
             final response = r as UserDetailResponseModel;
             await sharedPreferenceHelper.setString(
                 userFirstNameKey, response.data?.firstname ?? "");
+            debugPrint('first time get this id 2 is ${state.userFirstName}');
             state = state.copyWith(
                 loading: false);
           });
@@ -866,6 +936,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
           final response = r as UserDetailResponseModel;
           await sharedPreferenceHelper.setString(
               userFirstNameKey, response.data?.firstname ?? "");
+          debugPrint('first time get this id 23 is ${state.userFirstName}');
           state = state.copyWith(
               loading: false);
         });

@@ -81,6 +81,8 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                       height: widget.imageHeight ?? 200.h,
                       width: widget.imageWidth ?? double.infinity,
                       child: ImageUtil.loadNetworkImage(
+                          memCacheHeight: 400,
+                          memCacheWidth: 650,
                           imageUrl: widget.imageUrl,
                           fit: widget.imageFit ?? BoxFit.cover,
                           sourceId: widget.sourceId,

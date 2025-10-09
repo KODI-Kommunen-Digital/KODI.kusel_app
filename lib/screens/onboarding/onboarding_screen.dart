@@ -143,7 +143,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 if (stateNotifier.onboardingNameFormKey.currentState
                     ?.validate() ??
                     false) {
-                  if(state.userFirstName!=null && state.isLoggedIn){
+                  if(state.userFirstName!=null || state.isLoggedIn){
                     stateNotifier.editUserName(onSuccess: () async {
                       await stateNotifier.getUserDetails();
                     }, onError: (msg){
