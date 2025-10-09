@@ -35,12 +35,12 @@ List<FilterCategory> staticFilterCategoryList(BuildContext context) {
     ),
     FilterCategory(
       categoryId: 41,
-      categoryName: localization.location_map_highlights,
+      categoryName: localization.highlights,
       imagePath: "highlights_map",
     ),
     FilterCategory(
       categoryId: 1,
-      categoryName: localization.location_map_news,
+      categoryName: localization.news,
       imagePath: "event_category_icon",
     ),
  // TODO: Mark the categoryId as 100 (there is no such categoryId). This is just to simplify the logic.
