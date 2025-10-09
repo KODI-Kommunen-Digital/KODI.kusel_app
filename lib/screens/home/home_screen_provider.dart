@@ -280,22 +280,25 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
 
   Future<void> getUserDetails() async {
     try {
-      final userId = sharedPreferenceHelper.getInt(userIdKey);
+      final status = await signInStatusController.isUserLoggedIn();
+      if (status) {
+        final userId = sharedPreferenceHelper.getInt(userIdKey);
 
-      if (userId != null) {
-        final status = tokenStatus.isAccessTokenExpired();
+        if (userId != null) {
+          final status = tokenStatus.isAccessTokenExpired();
 
-        if (status) {
-          await refreshTokenProvider.getNewToken(
-              onError: () {},
-              onSuccess: () async {
-                await _getDetails(userId);
-              });
-        } else {
-          _getDetails(userId);
+          if (status) {
+            await refreshTokenProvider.getNewToken(
+                onError: () {},
+                onSuccess: () async {
+                  await _getDetails(userId);
+                });
+          } else {
+            _getDetails(userId);
+          }
         }
       }
-    } catch (error) {
+    }catch (error) {
       debugPrint('get user details exception : $error');
     }
   }
@@ -314,6 +317,7 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
             userNameKey, response.data?.username ?? "");
         await sharedPreferenceHelper.setString(
             userFirstNameKey, response.data?.firstname ?? "");
+        debugPrint('first time get this id 33 is ${state.userName}');
         state = state.copyWith(userName: response.data?.firstname ?? "");
       });
     } catch (e) {
@@ -423,7 +427,9 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
   Future<void> getOnboardingDetails() async {
     try {
       final status = await signInStatusController.isUserLoggedIn();
+      debugPrint('is userlogin or not');
       if (status) {
+        debugPrint('is userlogin or not 2');
         final response = tokenStatus.isAccessTokenExpired();
 
         if (response) {

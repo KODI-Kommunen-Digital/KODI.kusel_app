@@ -1,5 +1,5 @@
 const baseUrlProd = "https://dev.boundless-innovation.com/api/v1";
-const imageDownloadingEndpoint = "";
+const imageDownloadingEndpoint = "https://kusel1heidi.obs.eu-de.otc.t-systems.com/";
 const baseUrlStage = "";
 const sigInEndPoint = "/users/login";
 const exploreEndpoint = "/categories";
