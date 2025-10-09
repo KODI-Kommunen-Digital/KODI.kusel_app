@@ -161,10 +161,10 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
 
   Future<void> getNearbyEvents() async {
     try {
-      final position = await getLatLong();
-
-      debugPrint(
-          "user coordinates [ lat : ${position.latitude}, long: ${position.longitude} ");
+      // final position = await getLatLong();
+      //
+      // debugPrint(
+      //     "user coordinates [ lat : ${position.latitude}, long: ${position.longitude} ");
 
       final lat =  EventLatLong.kusel.latitude;
       final long = EventLatLong.kusel.longitude;
@@ -427,9 +427,7 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
   Future<void> getOnboardingDetails() async {
     try {
       final status = await signInStatusController.isUserLoggedIn();
-      debugPrint('is userlogin or not');
       if (status) {
-        debugPrint('is userlogin or not 2');
         final response = tokenStatus.isAccessTokenExpired();
 
         if (response) {
