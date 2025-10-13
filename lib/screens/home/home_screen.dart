@@ -253,7 +253,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             10.horizontalSpace,
             if (ref.watch(homeScreenProvider).nearbyEventsList.isNotEmpty)
-              EventsListSectionWidget(
+              EventsListSectionWidget
+                (
                 context: context,
                 eventsList: state.nearbyEventsList,
                 heading: AppLocalizations.of(context).near_you,
