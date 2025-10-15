@@ -274,7 +274,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           centerLatitude: EventLatLong.kusel.latitude,
                           centerLongitude: EventLatLong.kusel.longitude,
                           categoryId: 3,
-                          listHeading: AppLocalizations.of(context).events_in_your_area,
+                            listHeading:
+                            AppLocalizations.of(context).near_you,
                           onFavChange: () {
                             ref
                                 .read(homeScreenProvider.notifier)
@@ -298,8 +299,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             centerLatitude: EventLatLong.kusel.latitude,
                             centerLongitude: EventLatLong.kusel.longitude,
                             categoryId: 3,
-                            listHeading: AppLocalizations.of(context)
-                                .events_in_your_area,
+                              listHeading:
+                              AppLocalizations.of(context).near_you,
                             onFavChange: () {
                               ref
                                   .read(homeScreenProvider.notifier)
