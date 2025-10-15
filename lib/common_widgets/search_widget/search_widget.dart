@@ -185,3 +185,166 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
         .setString(searchListKey, updatedJson);
   }
 }
+
+class SearchStringWidget extends ConsumerStatefulWidget {
+  final TextEditingController searchController;
+  final FutureOr<List<String>?> Function(String) suggestionCallback;
+  final Function(String) onItemClick;
+  final VerticalDirection? verticalDirection;
+  final bool isPaddingEnabled;
+
+  const SearchStringWidget({
+    super.key,
+    required this.searchController,
+    required this.suggestionCallback,
+    required this.onItemClick,
+    this.verticalDirection,
+    required this.isPaddingEnabled,
+  });
+
+  @override
+  ConsumerState<SearchStringWidget> createState() => SearchStringWidgetState();
+}
+
+class SearchStringWidgetState extends ConsumerState<SearchStringWidget> {
+  final SuggestionsController<String> _suggestionsController =
+      SuggestionsController<String>();
+
+  @override
+  void dispose() {
+    _suggestionsController.dispose();
+    super.dispose();
+  }
+
+  void closeSuggestions() {
+    _suggestionsController.close();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 40.h,
+      width: 350.w,
+      decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.onPrimary,
+          borderRadius: BorderRadius.circular(30.r),
+          border: Border.all(width: 1, color: Theme.of(context).dividerColor)),
+      child: Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 14.0.w),
+          child: Row(
+            children: [
+              Expanded(
+                child: TypeAheadField<String>(
+                  controller: widget.searchController,
+                  suggestionsController: _suggestionsController,
+                  hideOnEmpty: true,
+                  hideOnUnfocus: true,
+                  hideOnSelect: true,
+                  hideWithKeyboard: false,
+                  direction: widget.verticalDirection ?? VerticalDirection.down,
+                  debounceDuration: Duration(milliseconds: 300),
+                  suggestionsCallback: (pattern) async {
+                    final results = await widget.suggestionCallback(pattern);
+                    if (results == null || results.isEmpty) {
+                      return null;
+                    }
+                    return results;
+                  },
+                  emptyBuilder: (context) => SizedBox.shrink(),
+                  loadingBuilder: (context) {
+                    return Container(
+                      padding: EdgeInsets.symmetric(vertical: 15.h),
+                      child: Center(
+                        child: SizedBox(
+                          height: 20.h,
+                          width: 20.h,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              Theme.of(context).primaryColor,
+                            ),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                  itemBuilder: (context, suggestion) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 2.0, vertical: 2.0),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 4.0),
+                        title: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            suggestion,
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black87,
+                                fontFamily: "Poppins"),
+                          ),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 18,
+                        ),
+                      ),
+                    );
+                  },
+                  onSelected: (suggestion) {
+                    widget.onItemClick(suggestion);
+                    _suggestionsController.close();
+                  },
+                  builder: (context, controller, focusNode) {
+                    return TextField(
+                      controller: controller,
+                      focusNode: focusNode,
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                        hintStyle: TextStyle(
+                            fontSize: 12.sp,
+                            fontFamily: "Poppins",
+                            fontWeight: FontWeight.w400,
+                            color: Theme.of(context).hintColor,
+                            fontStyle: FontStyle.italic),
+                        suffixIcon: null,
+                      ),
+                      onSubmitted: (value) {
+                        _suggestionsController.close();
+                        focusNode.unfocus();
+                      },
+                    );
+                  },
+                  decorationBuilder: (context, widgetChild) {
+                    return Container(
+                      padding: widget.isPaddingEnabled
+                          ? EdgeInsets.symmetric(
+                              vertical: 10.h, horizontal: 5.w)
+                          : null,
+                      constraints: BoxConstraints(
+                        maxHeight: 250.h,
+                        minHeight: 0,
+                        maxWidth: double.infinity,
+                      ),
+                      decoration: BoxDecoration(
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                          borderRadius: BorderRadius.circular(10.r)),
+                      child: widgetChild,
+                    );
+                  },
+                ),
+              ),
+              Icon(
+                Icons.keyboard_arrow_down,
+                color: Theme.of(context).iconTheme.color ?? Colors.grey,
+                size: 24,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

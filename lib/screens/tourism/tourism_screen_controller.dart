@@ -56,10 +56,10 @@ class TourismScreenController extends StateNotifier<TourismScreenState> {
 
   getNearByListing() async {
     try {
-      final position = await getLatLong();
-
-      debugPrint(
-          "user coordinates [ lat : ${position.latitude}, long: ${position.longitude} ");
+      // final position = await getLatLong();
+      //
+      // debugPrint(
+      //     "user coordinates [ lat : ${position.latitude}, long: ${position.longitude} ");
 
       Locale currentLocale = localeManagerController.getSelectedLocale();
 
@@ -68,8 +68,13 @@ class TourismScreenController extends StateNotifier<TourismScreenState> {
       final radius = SearchRadius.radius.value;
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
       GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(
-          centerLatitude: lat, centerLongitude: long, radius: radius,
-          translate: "${currentLocale.languageCode}-${currentLocale.countryCode}");
+          categoryId: "3",
+          sortByStartDate: true,
+          centerLatitude: lat,
+          centerLongitude: long,
+          radius: radius,
+          translate:
+              "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
       final response = await listingsUseCase.call(requestModel, responseModel);
 
