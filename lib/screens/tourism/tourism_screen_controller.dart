@@ -1,7 +1,9 @@
 import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
+import 'package:domain/model/request_model/listings/recommendations_request_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/usecase/listings/listings_usecase.dart';
+import 'package:domain/usecase/listings/recommendations_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/common_widgets/get_current_location.dart';
@@ -14,6 +16,7 @@ final tourismScreenControllerProvider = StateNotifierProvider.autoDispose<
         TourismScreenController, TourismScreenState>(
     (ref) => TourismScreenController(
         listingsUseCase: ref.read(listingsUseCaseProvider),
+        recommendationsUseCase: ref.read(recommendationUseCaseProvider),
         signInStatusController: ref.read(signInStatusProvider.notifier),
         localeManagerController: ref.read(localeManagerProvider.notifier)));
 
@@ -21,11 +24,12 @@ class TourismScreenController extends StateNotifier<TourismScreenState> {
   ListingsUseCase listingsUseCase;
   SignInStatusController signInStatusController;
   LocaleManagerController localeManagerController;
-
+  RecommendationsUseCase recommendationsUseCase;
   TourismScreenController(
       {required this.listingsUseCase,
       required this.signInStatusController,
-      required this.localeManagerController})
+      required this.localeManagerController,
+      required this.recommendationsUseCase})
       : super(TourismScreenState.empty());
 
   getAllEvents() async {
@@ -96,13 +100,12 @@ class TourismScreenController extends StateNotifier<TourismScreenState> {
 
       Locale currentLocale = localeManagerController.getSelectedLocale();
 
-
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
-      GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(
-          translate: "${currentLocale.languageCode}-${currentLocale.countryCode}"
-      );
+      RecommendationsRequestModel requestModel = RecommendationsRequestModel(
+          translate:
+              "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
-      final response = await listingsUseCase.call(requestModel, responseModel);
+      final response = await recommendationsUseCase.call(requestModel, responseModel);
 
       response.fold((left) {
         state = state.copyWith(isRecommendationLoading: false);
