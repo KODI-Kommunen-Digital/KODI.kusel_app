@@ -253,41 +253,33 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
     final stateNotifier = ref.read(onboardingScreenProvider.notifier);
     final state = ref.watch(onboardingScreenProvider);
 
-    // Controller ko state se sync karo
-    if (state.resident != null && _searchController.text != state.resident) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _searchController.text = state.resident!;
-      });
-    }
-
-    return SearchStringWidget(
-      key: _searchWidgetKey,
-      searchController: _searchController,
-      isPaddingEnabled: true,
-      suggestionCallback: (pattern) async {
-        final list = state.residenceList;
-
-        if (list.isEmpty) {
-          return [];
-        }
-
-        // Agar pattern empty hai toh puri list return karo
-        if (pattern.trim().isEmpty) {
-          return list;
-        }
-
-        // Filter karo
-        final filtered = list
-            .where((e) => e.toLowerCase().contains(pattern.toLowerCase()))
-            .toList();
-
-        return filtered;
+    return NotificationListener<OverscrollIndicatorNotification>(
+      onNotification: (overscroll) {
+        overscroll.disallowIndicator();
+        return true;
       },
-      onItemClick: (selected) {
-        _searchController.text = selected;
-        stateNotifier.updateUserType(selected);
-        _searchWidgetKey.currentState?.closeSuggestions();
-      },
+      child: SearchStringWidget(
+        key: _searchWidgetKey,
+        searchController: _searchController,
+        isPaddingEnabled: true,
+        suggestionCallback: (pattern) async {
+          final list = state.residenceList;
+          if (list.isEmpty) return [];
+
+          if (pattern.trim().isEmpty) {
+            return list;
+          }
+
+          return list
+              .where((e) => e.toLowerCase().contains(pattern.toLowerCase()))
+              .toList();
+        },
+        onItemClick: (selected) {
+          _searchController.text = selected;
+          stateNotifier.updateUserType(selected);
+          stateNotifier.isAllOptionFieldsCompleted();
+        },
+      ),
     );
   }
 }

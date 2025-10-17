@@ -126,6 +126,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                                       AppLocalizations.of(context).near_you,
                                   centerLongitude: state.long,
                                   centerLatitude: state.lat,
+                                  categoryId: 3,
                                   radius: searchRadius,
                                   onFavChange: () {
                                     ref
@@ -140,6 +141,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                               path: selectedEventListScreenPath,
                               context: context,
                               params: SelectedEventListScreenParameter(
+                                  categoryId: 3,
                                   listHeading:
                                       AppLocalizations.of(context).near_you,
                                   centerLongitude: state.long,

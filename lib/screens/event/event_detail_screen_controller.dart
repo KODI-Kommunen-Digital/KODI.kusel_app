@@ -4,12 +4,14 @@ import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:core/token_status.dart';
 import 'package:domain/model/request_model/event_details/event_details_request_model.dart';
 import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
+import 'package:domain/model/request_model/listings/recommendations_request_model.dart';
 import 'package:domain/model/request_model/refresh_token/refresh_token_request_model.dart';
 import 'package:domain/model/response_model/event_details/event_details_response_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/model/response_model/refresh_token/refresh_token_response_model.dart';
 import 'package:domain/usecase/event_details/event_details_usecase.dart';
 import 'package:domain/usecase/listings/listings_usecase.dart';
+import 'package:domain/usecase/listings/recommendations_usecase.dart';
 import 'package:domain/usecase/refresh_token/refresh_token_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -28,6 +30,7 @@ final eventDetailScreenProvider = StateNotifierProvider.family
             sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
             signInStatusController: ref.read(signInStatusProvider.notifier),
             tokenStatus: ref.read(tokenStatusProvider),
+            recommendationsUseCase: ref.read(recommendationUseCaseProvider),
             refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider),
             eventId: eventId));
 
@@ -43,7 +46,8 @@ class EventDetailScreenController
       required this.signInStatusController,
       required this.tokenStatus,
       required this.refreshTokenUseCase,
-      required this.eventId})
+      required this.eventId,
+      required this.recommendationsUseCase})
       : super(EventDetailScreenState.empty());
 
   EventDetailsUseCase eventDetailsUseCase;
@@ -53,7 +57,7 @@ class EventDetailScreenController
   SignInStatusController signInStatusController;
   TokenStatus tokenStatus;
   RefreshTokenUseCase refreshTokenUseCase;
-
+  RecommendationsUseCase recommendationsUseCase;
 
 
   Future<void> getEventDetails(int? eventId) async {
@@ -145,17 +149,14 @@ class EventDetailScreenController
     try {
       Locale currentLocale = localeManagerController.getSelectedLocale();
 
-      GetAllListingsRequestModel getAllListingsRequestModel =
-          GetAllListingsRequestModel(
-              centerLongitude: EventLatLong.kusel.longitude,
-              centerLatitude: EventLatLong.kusel.latitude,
-              radius: 20,
+      RecommendationsRequestModel recommendationsRequestModel =
+          RecommendationsRequestModel(
               translate:
                   "${currentLocale.languageCode}-${currentLocale.countryCode}");
       GetAllListingsResponseModel getAllListingsResponseModel =
           GetAllListingsResponseModel();
-      final result = await listingsUseCase.call(
-          getAllListingsRequestModel, getAllListingsResponseModel);
+      final result = await recommendationsUseCase.call(
+          recommendationsRequestModel, getAllListingsResponseModel);
       result.fold(
         (l) {
           state = state.copyWith(error: l.toString());
