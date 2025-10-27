@@ -45,9 +45,8 @@ class AllCityScreenController extends StateNotifier<AllCityScreenState> {
       debugPrint(' = $response');
       final status = await signInStatusController.isUserLoggedIn();
       if (response&& status) {
-        final userId = sharedPreferenceHelper.getInt(userIdKey);
         RefreshTokenRequestModel requestModel =
-        RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+        RefreshTokenRequestModel();
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
         final refreshResponse =

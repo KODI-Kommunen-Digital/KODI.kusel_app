@@ -24,10 +24,9 @@ class RefreshTokenProvider {
       {required void Function() onError,
       required void Function() onSuccess}) async {
     try {
-      final userId = sharedPreferenceHelper.getInt(userIdKey);
 
       RefreshTokenRequestModel requestModel =
-          RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+          RefreshTokenRequestModel();
       RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
       final response =

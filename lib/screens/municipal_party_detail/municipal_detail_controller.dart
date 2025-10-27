@@ -124,9 +124,8 @@ class MunicipalDetailController extends StateNotifier<MunicipalDetailState> {
 
       final response = tokenStatus.isAccessTokenExpired();
       if (response && status) {
-        final userId = sharedPreferenceHelper.getInt(userIdKey);
         RefreshTokenRequestModel requestModel =
-            RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+            RefreshTokenRequestModel();
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
         final refreshResponse =

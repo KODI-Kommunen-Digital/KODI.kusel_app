@@ -45,10 +45,9 @@ class CityFavoritesNotifier extends StateNotifier<List<City>> {
       final response = tokenStatus.isAccessTokenExpired();
 
       if (response) {
-        final userId = sharedPreferenceHelper.getInt(userIdKey);
 
         RefreshTokenRequestModel requestModel =
-            RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+            RefreshTokenRequestModel();
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
         final response =
@@ -111,10 +110,9 @@ class CityFavoritesNotifier extends StateNotifier<List<City>> {
       final response = tokenStatus.isAccessTokenExpired();
 
       if (response) {
-        final userId = sharedPreferenceHelper.getInt(userIdKey);
 
         RefreshTokenRequestModel requestModel =
-            RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+            RefreshTokenRequestModel();
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
         final response =
@@ -129,10 +127,8 @@ class CityFavoritesNotifier extends StateNotifier<List<City>> {
           sharedPreferenceHelper.setString(
               refreshTokenKey, res.data?.refreshToken ?? "");
 
-          final userId = sharedPreferenceHelper.getInt(userIdKey);
-
           DeleteFavouriteCityRequestModel requestModel =
-              DeleteFavouriteCityRequestModel(userId: userId, cityId: id);
+              DeleteFavouriteCityRequestModel(cityId: id);
           DeleteFavouriteCityResponseModel responseModel =
               DeleteFavouriteCityResponseModel();
           final result = await deleteFavouriteCityUseCase.call(
@@ -148,10 +144,9 @@ class CityFavoritesNotifier extends StateNotifier<List<City>> {
           );
         });
       } else {
-        final userId = sharedPreferenceHelper.getInt(userIdKey);
 
         DeleteFavouriteCityRequestModel requestModel =
-            DeleteFavouriteCityRequestModel(userId: userId, cityId: id);
+            DeleteFavouriteCityRequestModel(cityId: id);
         DeleteFavouriteCityResponseModel responseModel =
             DeleteFavouriteCityResponseModel();
         final result =

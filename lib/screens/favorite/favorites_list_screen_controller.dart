@@ -48,11 +48,10 @@ class FavoritesListScreenController
       final response = tokenStatus.isAccessTokenExpired();
 
       if (response) {
-        final userId = sharedPreferenceHelper.getInt(userIdKey);
 
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
         RefreshTokenRequestModel requestModel =
-            RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+            RefreshTokenRequestModel();
 
         final result =
             await refreshTokenUseCase.call(requestModel, responseModel);
@@ -71,7 +70,6 @@ class FavoritesListScreenController
 
           GetFavoritesRequestModel getAllListingsRequestModel =
               GetFavoritesRequestModel(
-                  userId: sharedPreferenceHelper.getInt(userIdKey).toString(),
                   translate:
                   "${currentLocale.languageCode}-${currentLocale.countryCode}"
               );
@@ -95,7 +93,6 @@ class FavoritesListScreenController
 
         GetFavoritesRequestModel getAllListingsRequestModel =
             GetFavoritesRequestModel(
-                userId: sharedPreferenceHelper.getInt(userIdKey).toString(),
                 translate:
                 "${currentLocale.languageCode}-${currentLocale.countryCode}"
             );
