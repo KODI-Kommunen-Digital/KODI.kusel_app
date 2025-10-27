@@ -216,10 +216,9 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
         state = state.copyWith(loading: true);
         final response = tokenStatus.isAccessTokenExpired();
         if (response) {
-          final userId = sharedPreferenceHelper.getInt(userIdKey);
           RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
           RefreshTokenRequestModel requestModel =
-              RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+              RefreshTokenRequestModel();
           final result =
               await refreshTokenUseCase.call(requestModel, responseModel);
           result.fold((l) {
@@ -283,10 +282,9 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     try {
       final response = tokenStatus.isAccessTokenExpired();
       if (response) {
-        final userId = sharedPreferenceHelper.getInt(userIdKey);
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
         RefreshTokenRequestModel requestModel =
-            RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+            RefreshTokenRequestModel();
         final result =
             await refreshTokenUseCase.call(requestModel, responseModel);
         result.fold((l) {
@@ -350,10 +348,9 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
 
       final response = tokenStatus.isAccessTokenExpired();
       if (response) {
-        final userId = sharedPreferenceHelper.getInt(userIdKey);
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
         RefreshTokenRequestModel requestModel =
-            RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+            RefreshTokenRequestModel();
         final result =
             await refreshTokenUseCase.call(requestModel, responseModel);
         result.fold((l) {
@@ -406,10 +403,9 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     try {
       final response = tokenStatus.isAccessTokenExpired();
       if (response) {
-        final userId = sharedPreferenceHelper.getInt(userIdKey);
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
         RefreshTokenRequestModel requestModel =
-            RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+            RefreshTokenRequestModel();
         final result =
             await refreshTokenUseCase.call(requestModel, responseModel);
         result.fold((l) {
@@ -641,9 +637,8 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
       final response = tokenStatus.isAccessTokenExpired();
 
       if (response) {
-        final userId = sharedPreferenceHelper.getInt(userIdKey);
         RefreshTokenRequestModel requestModel =
-            RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+            RefreshTokenRequestModel();
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
         final refreshResponse =
@@ -829,9 +824,8 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
       required void Function(String msg) onError}) async {
     final response = tokenStatus.isAccessTokenExpired();
     if (response) {
-      final userId = sharedPreferenceHelper.getInt(userIdKey);
       RefreshTokenRequestModel requestModel =
-          RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+          RefreshTokenRequestModel();
       RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
       final refreshResponse =
@@ -861,8 +855,6 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
 
     EditUserDetailRequestModel editUserDetailRequestModel =
         EditUserDetailRequestModel();
-    final userId = sharedPreferenceHelper.getInt(userIdKey);
-    editUserDetailRequestModel.id = userId;
     editUserDetailRequestModel.firstname = state.userFirstName;
 
     try {
@@ -891,10 +883,9 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
       final response = tokenStatus.isAccessTokenExpired();
 
       if (response) {
-        final userId = sharedPreferenceHelper.getInt(userIdKey);
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
         RefreshTokenRequestModel requestModel =
-        RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+        RefreshTokenRequestModel();
         final result =
         await refreshTokenUseCase.call(requestModel, responseModel);
 
@@ -907,8 +898,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
           sharedPreferenceHelper.setString(
               refreshTokenKey, res.data?.refreshToken ?? "");
 
-          UserDetailRequestModel requestModel = UserDetailRequestModel(
-              id: sharedPreferenceHelper.getInt(userIdKey));
+          UserDetailRequestModel requestModel = UserDetailRequestModel();
           UserDetailResponseModel responseModel = UserDetailResponseModel();
           final result =
           await userDetailUseCase.call(requestModel, responseModel);
@@ -924,8 +914,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
           });
         });
       } else {
-        UserDetailRequestModel requestModel = UserDetailRequestModel(
-            id: sharedPreferenceHelper.getInt(userIdKey));
+        UserDetailRequestModel requestModel = UserDetailRequestModel();
         UserDetailResponseModel responseModel = UserDetailResponseModel();
         final result =
         await userDetailUseCase.call(requestModel, responseModel);
