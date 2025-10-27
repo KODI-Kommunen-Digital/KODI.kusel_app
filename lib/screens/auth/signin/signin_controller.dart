@@ -148,9 +148,8 @@ class SignInController extends StateNotifier<SignInState> {
       try {
         final response = tokenStatus.isAccessTokenExpired();
         if (response) {
-          final userId = sharedPreferenceHelper.getInt(userIdKey);
           RefreshTokenRequestModel requestModel =
-              RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+              RefreshTokenRequestModel();
           RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
           final refreshResponse =
@@ -247,10 +246,9 @@ class SignInController extends StateNotifier<SignInState> {
     try {
       final response = tokenStatus.isAccessTokenExpired();
       if (response) {
-        final userId = sharedPreferenceHelper.getInt(userIdKey);
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
         RefreshTokenRequestModel requestModel =
-            RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+            RefreshTokenRequestModel();
         final result =
             await refreshTokenUseCase.call(requestModel, responseModel);
         result.fold((l) {
@@ -299,9 +297,8 @@ class SignInController extends StateNotifier<SignInState> {
       required void Function(String msg) onError}) async {
     final response = tokenStatus.isAccessTokenExpired();
     if (response) {
-      final userId = sharedPreferenceHelper.getInt(userIdKey);
       RefreshTokenRequestModel requestModel =
-          RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+          RefreshTokenRequestModel();
       RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
       final refreshResponse =
@@ -331,9 +328,7 @@ class SignInController extends StateNotifier<SignInState> {
 
     EditUserDetailRequestModel editUserDetailRequestModel =
         EditUserDetailRequestModel();
-    final userId = sharedPreferenceHelper.getInt(userIdKey);
     final userFirstName = sharedPreferenceHelper.getString(userFirstNameKey);
-    editUserDetailRequestModel.id = userId;
     editUserDetailRequestModel.firstname = userFirstName;
 
     try {

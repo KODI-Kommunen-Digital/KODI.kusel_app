@@ -5,7 +5,7 @@ class DeleteFavouriteCityRequestModel
   final int? userId;
   final int? cityId;
 
-  DeleteFavouriteCityRequestModel({required this.userId, required this.cityId});
+  DeleteFavouriteCityRequestModel({this.userId, required this.cityId});
 
   @override
   DeleteFavouriteCityRequestModel fromJson(Map<String, dynamic> json) {
