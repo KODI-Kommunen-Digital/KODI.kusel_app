@@ -46,6 +46,8 @@ Map<String, String> _svgImagePath = {
   "sunny_icon": "assets/svg/sunny_icon.svg",
   "rainy_icon": "assets/svg/rainy_icon.svg",
   "partly_cloudy_icon": "assets/svg/partly_cloudy_icon.svg",
+  "correct":"assets/svg/correct.svg",
+  "filter_button":"assets/svg/filter_button.svg"
 };
 
 Map<String, String> _pngImagePath = {
