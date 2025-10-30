@@ -90,6 +90,14 @@ class _NewFilterScreenState extends ConsumerState<NewFilterScreen> {
           )),
       title: textBoldPoppins(
           text: AppLocalizations.of(context).filter, fontSize: 20),
+      actions: [
+        TextButton(onPressed: (){
+          ref.read(newFilterScreenControllerProvider.notifier).reset();
+          periodTextEditingController.text="";
+        }, child: textBoldMontserrat(text: AppLocalizations.of(context).reset,
+        color: Theme.of(context).colorScheme.secondary),
+        )
+      ],
     );
   }
 

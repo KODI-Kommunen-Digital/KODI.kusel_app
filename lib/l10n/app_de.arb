@@ -256,6 +256,17 @@
   "all": "Alle",
   "category": "Kategorie",
   "location_and_distance": "Ort und Entfernung",
-  "location_distance": "Ort/Entfernung"
+  "location_distance": "Ort/Entfernung",
+  "maximum_characters": "Maximal 300 Zeichen erlaubt.",
+  "regarding": "Betreff",
+  "feedback_about_app":"Feedback zur App",
+
+  "infrastructure_and_public_space": "Infrastruktur & öffentlicher Raum",
+  "transportation_and_mobility": "Verkehr & Mobilität",
+  "cleanliness_and_environment": "Sauberkeit & Umwelt",
+  "digital_services_and_app_functionality" : "Digitale Dienste & App-Funktion",
+  "disruptions_and_damage": "Störungen & Schäden",
+  "citizen_services_and_administration": "Bürgerservice & Verwaltung",
+  "general_feedback": "Allgemeines Feedback"
 
 }

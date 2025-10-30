@@ -255,5 +255,16 @@
   "all": "All",
   "category": "Category",
   "location_and_distance": "Location and distance",
-  "location_distance": "Location/Distance"
+  "location_distance": "Location/Distance",
+  "maximum_characters": "Maximum 300 characters allowed.",
+  "regarding": "Regarding",
+  "feedback_about_app":"Feedback about app",
+  "infrastructure_and_public_space": "Infrastructure & Public Space",
+  "transportation_and_mobility": "Transport & Mobility",
+  "cleanliness_and_environment": "Cleanliness & Environment",
+  "digital_services_and_app_functionality": "Digital Services & App Functionality",
+  "disruptions_and_damage": "Disruptions & Damage",
+  "citizen_services_and_administration": "Citizen Services & Administration",
+  "general_feedback": "General Feedback"
+
 }
