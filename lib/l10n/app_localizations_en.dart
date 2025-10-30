@@ -782,4 +782,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get new_municipality => 'Collective municipality';
+
+  @override
+  String get filter => 'Filter';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get category => 'Category';
+
+  @override
+  String get location_and_distance => 'Location and distance';
+
+  @override
+  String get location_distance => 'Location/Distance';
 }

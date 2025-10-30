@@ -1609,6 +1609,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Collective municipality'**
   String get new_municipality;
+
+  /// No description provided for @filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get filter;
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
+  /// No description provided for @category.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get category;
+
+  /// No description provided for @location_and_distance.
+  ///
+  /// In en, this message translates to:
+  /// **'Location and distance'**
+  String get location_and_distance;
+
+  /// No description provided for @location_distance.
+  ///
+  /// In en, this message translates to:
+  /// **'Location/Distance'**
+  String get location_distance;
 }
 
 class _AppLocalizationsDelegate
