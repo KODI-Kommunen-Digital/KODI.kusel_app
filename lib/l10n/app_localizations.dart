@@ -1639,6 +1639,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Location/Distance'**
   String get location_distance;
+
+  /// No description provided for @maximum_characters.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum 300 characters allowed.'**
+  String get maximum_characters;
+
+  /// No description provided for @regarding.
+  ///
+  /// In en, this message translates to:
+  /// **'Regarding'**
+  String get regarding;
+
+  /// No description provided for @feedback_about_app.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback about app'**
+  String get feedback_about_app;
+
+  /// No description provided for @infrastructure_and_public_space.
+  ///
+  /// In en, this message translates to:
+  /// **'Infrastructure & Public Space'**
+  String get infrastructure_and_public_space;
+
+  /// No description provided for @transportation_and_mobility.
+  ///
+  /// In en, this message translates to:
+  /// **'Transport & Mobility'**
+  String get transportation_and_mobility;
+
+  /// No description provided for @cleanliness_and_environment.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleanliness & Environment'**
+  String get cleanliness_and_environment;
+
+  /// No description provided for @digital_services_and_app_functionality.
+  ///
+  /// In en, this message translates to:
+  /// **'Digital Services & App Functionality'**
+  String get digital_services_and_app_functionality;
+
+  /// No description provided for @disruptions_and_damage.
+  ///
+  /// In en, this message translates to:
+  /// **'Disruptions & Damage'**
+  String get disruptions_and_damage;
+
+  /// No description provided for @citizen_services_and_administration.
+  ///
+  /// In en, this message translates to:
+  /// **'Citizen Services & Administration'**
+  String get citizen_services_and_administration;
+
+  /// No description provided for @general_feedback.
+  ///
+  /// In en, this message translates to:
+  /// **'General Feedback'**
+  String get general_feedback;
 }
 
 class _AppLocalizationsDelegate

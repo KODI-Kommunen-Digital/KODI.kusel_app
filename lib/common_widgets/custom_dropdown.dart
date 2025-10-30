@@ -50,7 +50,7 @@
                   color: Theme.of(context).hintColor,
                   fontSize: 12,
                 ),
-              ): textRegularPoppins(
+              ): textRegularMontserrat(
                 text: widget.hintText,
                 color: Theme.of(context).hintColor,
                 fontSize: 12,
@@ -62,7 +62,7 @@
               items: widget.items.map((String item) {
                 return DropdownMenuItem<String>(
                   value: item,
-                  child: Text(item),
+                  child: textRegularMontserrat(text:item,fontSize: 12),
                 );
               }).toList(),
               onChanged: (String? newValue) {

@@ -802,4 +802,37 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get location_distance => 'Ort/Entfernung';
+
+  @override
+  String get maximum_characters => 'Maximal 300 Zeichen erlaubt.';
+
+  @override
+  String get regarding => 'Betreff';
+
+  @override
+  String get feedback_about_app => 'Feedback zur App';
+
+  @override
+  String get infrastructure_and_public_space =>
+      'Infrastruktur & öffentlicher Raum';
+
+  @override
+  String get transportation_and_mobility => 'Verkehr & Mobilität';
+
+  @override
+  String get cleanliness_and_environment => 'Sauberkeit & Umwelt';
+
+  @override
+  String get digital_services_and_app_functionality =>
+      'Digitale Dienste & App-Funktion';
+
+  @override
+  String get disruptions_and_damage => 'Störungen & Schäden';
+
+  @override
+  String get citizen_services_and_administration =>
+      'Bürgerservice & Verwaltung';
+
+  @override
+  String get general_feedback => 'Allgemeines Feedback';
 }

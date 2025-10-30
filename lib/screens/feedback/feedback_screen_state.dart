@@ -5,6 +5,7 @@ class FeedbackScreenState {
   bool onError;
   bool loading;
 
+
   FeedbackScreenState(
       this.title, this.description, this.isChecked, this.onError, this.loading);
 
