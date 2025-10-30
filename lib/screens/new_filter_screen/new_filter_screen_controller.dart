@@ -107,4 +107,17 @@ class NewFilterScreenController extends StateNotifier<NewFilterScreenState> {
       state = state.copyWith(isLoading: false);
     }
   }
+
+
+  void reset()
+  {
+    state=state.copyWith(
+      selectedCategoryName: [],
+      selectedCategoryId: [],
+      selectedCityName: "",
+      selectedCityId: 0,
+      startDate: defaultDate,
+      endDate: defaultDate
+    );
+  }
 }

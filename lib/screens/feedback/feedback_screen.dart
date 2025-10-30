@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kusel/common_widgets/custom_dropdown.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -30,6 +31,36 @@ class FeedbackScreen extends ConsumerStatefulWidget {
 
 class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
   GlobalKey<FormState> feedbackFormKey = GlobalKey();
+  List<String> titleList = [];
+
+  @override
+  void initState() {
+
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (titleList.isEmpty) { // prevent multiple rebuilds
+      titleList = [
+        AppLocalizations.of(context).infrastructure_and_public_space,
+        AppLocalizations.of(context).transportation_and_mobility,
+        AppLocalizations.of(context).cleanliness_and_environment,
+        AppLocalizations.of(context).digital_services_and_app_functionality,
+        AppLocalizations.of(context).disruptions_and_damage,
+        AppLocalizations.of(context).citizen_services_and_administration,
+        AppLocalizations.of(context).general_feedback,
+      ];
+
+      Future.microtask((){
+        ref.read(feedbackScreenProvider.notifier).updateTitle(titleList[0]);
+
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -61,9 +92,8 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
               child: ArrowBackWidget(
                 onTap: () {
                   ref.read(dashboardScreenProvider).selectedIndex = 0;
-                  ref
-                      .read(navigationProvider)
-                      .removeAllAndNavigate(path: homeScreenPath, context: context);
+                  ref.read(navigationProvider).removeAllAndNavigate(
+                      path: homeScreenPath, context: context);
                 },
               ),
             ),
@@ -107,60 +137,74 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
         padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 20.w),
         child: Column(
           children: [
-            Align(
-                alignment: Alignment.centerLeft,
-                child: textRegularPoppins(
-                    text: AppLocalizations.of(context).email,
-                    color: Theme.of(context).textTheme.labelMedium?.color,
-                    fontWeight: FontWeight.w600)),
+            Padding(
+              padding: EdgeInsets.only(left: 8.w),
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: textRegularMontserrat(
+                      text: AppLocalizations.of(context).regarding,
+                      fontSize: 14)),
+            ),
+            6.verticalSpace,
+            CustomDropdown(
+                hintText: AppLocalizations.of(context).feedback_about_app,
+                items: titleList,
+                selectedItem: ref.watch(feedbackScreenProvider).title.isEmpty
+                    ? ''
+                    : ref.read(feedbackScreenProvider).title,
+                onSelected: (value) {
+                  ref
+                      .read(feedbackScreenProvider.notifier)
+                      .updateTitle(value ?? "");
+                }),
+            6.verticalSpace,
+            Padding(
+              padding: EdgeInsets.only(left: 8.w),
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: textRegularMontserrat(
+                      text: AppLocalizations.of(context).email, fontSize: 14)),
+            ),
             6.verticalSpace,
             KuselTextField(
               textEditingController: emailEditingController,
               hintText: AppLocalizations.of(context).enter_email,
               validator: (value) {
-                return validateField(
-                    value,
+                return validateField(value,
                     "${AppLocalizations.of(context).email} ${AppLocalizations.of(context).is_required}");
               },
             ),
             15.verticalSpace,
-            Align(
-                alignment: Alignment.centerLeft,
-                child: textRegularPoppins(
-                    text: AppLocalizations.of(context).title,
-                    color: Theme.of(context).textTheme.labelMedium?.color,
-                    fontWeight: FontWeight.w600)),
-            6.verticalSpace,
-            KuselTextField(
-              textEditingController: titleEditingController,
-              hintText: AppLocalizations.of(context).enter_title,
-              validator: (value) {
-                return validateField(
-                    value,
-                    "${AppLocalizations.of(context).title} ${AppLocalizations.of(context).is_required}");
-              },
+            Padding(
+              padding: EdgeInsets.only(left: 8.w),
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: textRegularMontserrat(
+                      text: AppLocalizations.of(context).news, fontSize: 14)),
             ),
-            15.verticalSpace,
-            Align(
-                alignment: Alignment.centerLeft,
-                child: textRegularPoppins(
-                    text: AppLocalizations.of(context).description,
-                    color: Theme.of(context).textTheme.labelMedium?.color,
-                    fontWeight: FontWeight.w600)),
             6.verticalSpace,
             KuselTextField(
               textEditingController: descriptionEditingController,
-              maxLines: 10,
+              maxLength: 300,
+              maxLines: 6,
               contentPadding:
                   EdgeInsets.symmetric(vertical: 15.h, horizontal: 12.w),
               hintText: AppLocalizations.of(context).enter_description,
               validator: (value) {
-                return validateField(
-                    value,
+                return validateField(value,
                     "${AppLocalizations.of(context).description} ${AppLocalizations.of(context).is_required}");
               },
             ),
-            5.verticalSpace,
+            8.verticalSpace,
+            Padding(
+              padding: EdgeInsets.only(left: 8.w),
+              child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: textRegularMontserrat(
+                      text: AppLocalizations.of(context).maximum_characters,
+                      fontSize: 12)),
+            ),
+            16.verticalSpace,
             Row(
               children: [
                 Checkbox(
@@ -175,12 +219,11 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                         path: webViewPagePath,
                         params: WebViewParams(url: privacyPolicyUrl),
                         context: context),
-                    child: textRegularPoppins(
+                    child: textBoldMontserrat(
                         text: AppLocalizations.of(context).feedback_text,
                         textOverflow: TextOverflow.visible,
                         textAlign: TextAlign.start,
-                        decoration: TextDecoration.underline,
-                        fontSize: 11),
+                        fontSize: 12),
                   ),
                 ),
               ],
@@ -190,14 +233,16 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                 child: textSemiBoldMontserrat(
                     fontSize: 12,
                     textOverflow: TextOverflow.visible,
-                    textAlign:  TextAlign.start,
+                    textAlign: TextAlign.start,
                     maxLines: 2,
                     color: Theme.of(context).colorScheme.error,
-                    text: AppLocalizations.of(context).privacy_policy_error_msg)),
+                    text:
+                        AppLocalizations.of(context).privacy_policy_error_msg)),
             10.verticalSpace,
             CustomButton(
                 onPressed: () {
-                  if (feedbackFormKey.currentState!.validate() && stateWatch.isChecked) {
+                  if (feedbackFormKey.currentState!.validate() &&
+                      stateWatch.isChecked) {
                     ref.read(feedbackScreenProvider.notifier).sendFeedback(
                         success: () {
                           showSuccessToast(
@@ -213,7 +258,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                         onError: (String msg) {
                           showErrorToast(message: msg, context: context);
                         },
-                        title: titleEditingController.text,
+                        title: ref.read(feedbackScreenProvider).title,
                         description: descriptionEditingController.text,
                         email: emailEditingController.text);
                   }
@@ -225,5 +270,4 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
       ),
     );
   }
-
 }
