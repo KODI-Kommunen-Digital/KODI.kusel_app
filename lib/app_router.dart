@@ -36,6 +36,10 @@ import 'package:kusel/screens/mein_ort/mein_ort_screen.dart';
 import 'package:kusel/screens/mobility_screen/mobility_screen.dart';
 import 'package:kusel/screens/municipal_party_detail/municipal_detail_screen.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
+import 'package:kusel/screens/new_filter_screen/category_filter_screen.dart';
+import 'package:kusel/screens/new_filter_screen/location_and_distance_filter_screen.dart';
+import 'package:kusel/screens/new_filter_screen/new_filter_screen.dart';
+import 'package:kusel/screens/new_filter_screen/new_filter_screen_params.dart';
 import 'package:kusel/screens/no_network/network_status_screen.dart';
 import 'package:kusel/screens/onboarding/onboarding_finish_page.dart';
 import 'package:kusel/screens/onboarding/onboarding_loading_page.dart';
@@ -86,6 +90,9 @@ const municipalDetailScreenPath = "/municipalDetailScreenPath";
 const allCityScreenPath = "/allCityScreenPath";
 const allMunicipalityScreenPath = "/allMunicipalityScreenPath";
 const ortDetailScreenPath = "/ortDetailScreenPath";
+const newFilterScreenPath = "/newFilterScreen";
+const categoryFilterScreenPath = "/categoryFilterScreen";
+const locationDistanceScreenPath = "/locationDistanceScreen";
 
 // Bottom Nav & Explore sub‑routes paths
 const homeScreenPath = "/homeScreenPath";
@@ -214,6 +221,22 @@ List<RouteBase> goRouteList = [
       builder: (_, state) => FullImageScreen(
           fullImageScreenParams: state.extra as FullImageScreenParams)),
 
+  GoRoute(
+      path: newFilterScreenPath,
+      builder: (_, state) => NewFilterScreen(
+            params: state.extra as NewFilterScreenParams,
+          )),
+
+  GoRoute(
+      path: categoryFilterScreenPath,
+      builder: (_, state) => CategoryFilterScreen(
+      )),
+
+  GoRoute(
+      path: locationDistanceScreenPath,
+      builder: (_, state) => LocationAndDistanceFilterScreen(
+          )),
+
   // Dashboard + tabs
   dashboardRoutes,
 ];
@@ -265,8 +288,9 @@ final dashboardRoutes = StatefulShellRoute.indexedStack(
             GoRoute(
                 path: digifitTrophiesScreenPath,
                 builder: (_, __) => DigifitTrophiesScreen()),
-            GoRoute(path: brainTeasersGameListScreenPath,
-            builder: (_, __) => const BrainTeaserGameListScreen()),
+            GoRoute(
+                path: brainTeasersGameListScreenPath,
+                builder: (_, __) => const BrainTeaserGameListScreen()),
             GoRoute(
               path: participateScreenPath,
               builder: (_, __) => const ParticipateScreen(),
@@ -304,7 +328,3 @@ final dashboardRoutes = StatefulShellRoute.indexedStack(
     ),
   ],
 );
-
-
-
-

@@ -251,5 +251,11 @@
   "mobility_centre": "Mobilitätszentrale",
   "home_screen_today_event": "Heutige Veranstaltungen",
   "show_all_events": "Alle Veranstaltungen anzeigen",
-  "events_in_your_area": "Veranstaltungen in Ihrer Umgebung"
+  "events_in_your_area": "Veranstaltungen in Ihrer Umgebung",
+  "filter": "Filter",
+  "all": "Alle",
+  "category": "Kategorie",
+  "location_and_distance": "Ort und Entfernung",
+  "location_distance": "Ort/Entfernung"
+
 }
