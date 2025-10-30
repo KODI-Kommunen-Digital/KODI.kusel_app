@@ -30,6 +30,7 @@ dependencies:
   webview_flutter: ^4.13.0
   video_player: ^2.10.0
   device_info_plus: ^10.0.0
+  calendar_date_picker2: ^2.0.1
   core:
     path: core
 

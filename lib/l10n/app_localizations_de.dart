@@ -787,4 +787,19 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get new_municipality => 'Verbandsgemeinde';
+
+  @override
+  String get filter => 'Filter';
+
+  @override
+  String get all => 'Alle';
+
+  @override
+  String get category => 'Kategorie';
+
+  @override
+  String get location_and_distance => 'Ort und Entfernung';
+
+  @override
+  String get location_distance => 'Ort/Entfernung';
 }
