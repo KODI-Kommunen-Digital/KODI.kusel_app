@@ -260,13 +260,24 @@
   "maximum_characters": "Maximal 300 Zeichen erlaubt.",
   "regarding": "Betreff",
   "feedback_about_app":"Feedback zur App",
-
   "infrastructure_and_public_space": "Infrastruktur & öffentlicher Raum",
   "transportation_and_mobility": "Verkehr & Mobilität",
   "cleanliness_and_environment": "Sauberkeit & Umwelt",
   "digital_services_and_app_functionality" : "Digitale Dienste & App-Funktion",
   "disruptions_and_damage": "Störungen & Schäden",
   "citizen_services_and_administration": "Bürgerservice & Verwaltung",
-  "general_feedback": "Allgemeines Feedback"
-
+  "general_feedback": "Allgemeines Feedback",
+  "games_stamps_desc": "Diese Stempel kannst du hier sammeln",
+  "stamps_achievements": "Meine Errungenschaften",
+  "choose_level": "Wähle ein Level",
+  "more_games": "Weitere Spiele",
+  "try_again": "Versuchs nochmal",
+  "abort_game": "BoldiFinder-Spiel abbrechen?",
+  "abort_game_desc": "Das aktuelle Spiel ist noch nicht abgeschlossen. Möchten Sie es wirklich abbrechen und von vorne beginnen?",
+  "level_complete": "Level abgeschlossen!",
+  "level_complete_desc": "Um zum nächsten Level zu gelangen, klicken Sie bitte auf OK, um zurückzukehren.",
+  "successful_game_title": "Super!",
+  "successful_game_desc": "Bist du bereit für Level 2?",
+  "error_game_title": "Leider falsch",
+  "error_game_des": "Versuche es gleich nochmal!"
 }

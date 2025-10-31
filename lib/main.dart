@@ -41,6 +41,17 @@ void main() async {
   ], child: MyApp()));
 }
 
+class NoGlowScrollBehavior extends ScrollBehavior {
+  @override
+  Widget buildOverscrollIndicator(
+      BuildContext context,
+      Widget child,
+      ScrollableDetails details,
+      ) {
+    return child;
+  }
+}
+
 class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 
@@ -71,10 +82,12 @@ class _MyAppState extends ConsumerState<MyApp> {
               ? ref.read(mobileRouterProvider)
               : ref.read(noInternetRouterProvider),
           theme: ref.watch(themeManagerProvider).currentSelectedTheme,
-          builder: (context, child) {
-            return child!;
-          },
-        );
+            builder: (context, child) {
+              return ScrollConfiguration(
+                behavior: NoGlowScrollBehavior(),
+                child: child!,
+              );
+            });
       },
     );
   }
