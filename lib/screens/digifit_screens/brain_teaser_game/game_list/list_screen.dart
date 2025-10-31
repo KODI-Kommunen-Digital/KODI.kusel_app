@@ -15,6 +15,7 @@ import '../../../../common_widgets/text_styles.dart';
 import '../../../../images_path.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../navigation/navigation.dart';
+import '../../digifit_start/digifit_information_controller.dart';
 import 'list_controller.dart';
 
 class BrainTeaserGameListScreen extends ConsumerStatefulWidget {
@@ -95,7 +96,7 @@ class _BrainTeaserGameListScreenState
     return Row(
       children: [
         IconButton(
-          onPressed: () {
+          onPressed: () async {
             ref.read(navigationProvider).removeTopPage(context: context);
           },
           icon: Icon(
