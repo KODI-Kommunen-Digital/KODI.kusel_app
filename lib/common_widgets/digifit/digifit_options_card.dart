@@ -47,7 +47,10 @@ class _DigifitStatusWidgetState extends ConsumerState<DigifitOptionsCard> {
                   ),
                 ),
                 15.verticalSpace,
-                textRegularMontserrat(text: widget.cardText?? '_', textAlign: TextAlign.start, textOverflow: TextOverflow.visible),
+                Padding(
+                  padding: const EdgeInsets.only(left: 4),
+                  child: textRegularMontserrat(text: widget.cardText?? '_', textAlign: TextAlign.start, textOverflow: TextOverflow.visible),
+                ),
                 8.verticalSpace,
               ],
             ),
