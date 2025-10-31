@@ -21,29 +21,29 @@ class NewFilterScreenController extends StateNotifier<NewFilterScreenState> {
       : super(NewFilterScreenState.empty());
 
   updateSelectedCity(int cityId, String cityName) {
-    if (cityId == state.selectedCityId) {
+    if (cityId == state.tempSelectedCityId) {
       state = state.copyWith(
-          selectedCityId: 0, sliderValue: 0, selectedCityName: "");
+          tempSelectedCityId: 0, tempSliderValue: 0, tempSelectedCityName: "");
     } else {
       state = state.copyWith(
-          selectedCityId: cityId,
-          sliderValue: state.sliderValue,
-          selectedCityName: cityName);
+          tempSelectedCityId: cityId,
+          tempSliderValue: state.sliderValue,
+          tempSelectedCityName: cityName);
     }
   }
 
   updateLocationAndDistanceAllValue() {
-    state =
-        state.copyWith(selectedCityId: 0, sliderValue: 0, selectedCityName: "");
+    state = state.copyWith(
+        tempSelectedCityId: 0, tempSliderValue: 0, tempSelectedCityName: "");
   }
 
   updateSliderValue(double value) {
-    state = state.copyWith(sliderValue: value);
+    state = state.copyWith(tempSliderValue: value);
   }
 
   updateSelectedCategoryList(FilterItem filterItem) {
-    final nameList = state.selectedCategoryName;
-    final idList = state.selectedCategoryId;
+    final nameList = state.tempCategoryNameList;
+    final idList = state.tempCategoryIdList;
 
     if (nameList.contains(filterItem.name)) {
       nameList.remove(filterItem.name);
@@ -54,11 +54,11 @@ class NewFilterScreenController extends StateNotifier<NewFilterScreenState> {
     }
 
     state = state.copyWith(
-        selectedCategoryName: nameList, selectedCategoryId: idList);
+        tempCategoryNameList: nameList, tempCategoryIdList: idList);
   }
 
   updateCategoryAllValue() {
-    state = state.copyWith(selectedCategoryName: [], selectedCategoryId: []);
+    state = state.copyWith(tempCategoryNameList: [], tempCategoryIdList: []);
   }
 
   updateStartEndDate(DateTime startDate, DateTime endDate) {
@@ -108,16 +108,57 @@ class NewFilterScreenController extends StateNotifier<NewFilterScreenState> {
     }
   }
 
+  Future<void> assignCategoryValues() async {
+    final tempCategoryIdList = state.tempCategoryIdList;
+    final tempCategoryNameList = state.tempCategoryNameList;
 
-  void reset()
-  {
-    state=state.copyWith(
-      selectedCategoryName: [],
-      selectedCategoryId: [],
-      selectedCityName: "",
-      selectedCityId: 0,
-      startDate: defaultDate,
-      endDate: defaultDate
-    );
+    state = state.copyWith(
+        selectedCategoryId: List.from(tempCategoryIdList),
+        selectedCategoryName: List.from(tempCategoryNameList));
+  }
+
+  Future<void> assignCategoryTemporaryValues(
+      List<int> categoryIdList, List<String> categoryNameList) async {
+    state = state.copyWith(
+        tempCategoryIdList: categoryIdList,
+        tempCategoryNameList: categoryNameList);
+  }
+
+  Future<void> assignLocationAndDistanceValues() async {
+    final sliderRadius = state.tempSliderValue;
+    final selectedCityId = state.tempSelectedCityId;
+    final selectedCityName = state.tempSelectedCityName;
+
+    state = state.copyWith(
+        sliderValue: sliderRadius,
+        selectedCityId: selectedCityId,
+        selectedCityName: selectedCityName);
+  }
+
+  Future<void> assignLocationAndDistanceTemporaryValues() async {
+    final sliderRadius = state.sliderValue;
+    final selectedCityId = state.selectedCityId;
+    final selectedCityName = state.selectedCityName;
+
+    state = state.copyWith(
+        tempSliderValue: sliderRadius,
+        tempSelectedCityId: selectedCityId,
+        tempSelectedCityName: selectedCityName);
+  }
+
+  void reset() {
+    state = state.copyWith(
+        selectedCategoryName: [],
+        selectedCategoryId: [],
+        selectedCityName: "",
+        selectedCityId: 0,
+        startDate: defaultDate,
+        endDate: defaultDate,
+        sliderValue: 0,
+        tempCategoryIdList: [],
+        tempCategoryNameList: [],
+        tempSelectedCityId: 0,
+        tempSelectedCityName: "",
+        tempSliderValue: 0);
   }
 }
