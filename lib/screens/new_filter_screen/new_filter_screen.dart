@@ -7,6 +7,7 @@ import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/kusel_text_field.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/navigation/navigation.dart';
+import 'package:kusel/screens/new_filter_screen/category_filter_screen.dart';
 import 'package:kusel/screens/new_filter_screen/new_filter_screen_controller.dart';
 import 'package:kusel/screens/new_filter_screen/new_filter_screen_params.dart';
 import 'package:kusel/screens/new_filter_screen/new_filter_screen_state.dart';
@@ -91,11 +92,14 @@ class _NewFilterScreenState extends ConsumerState<NewFilterScreen> {
       title: textBoldPoppins(
           text: AppLocalizations.of(context).filter, fontSize: 20),
       actions: [
-        TextButton(onPressed: (){
-          ref.read(newFilterScreenControllerProvider.notifier).reset();
-          periodTextEditingController.text="";
-        }, child: textBoldMontserrat(text: AppLocalizations.of(context).reset,
-        color: Theme.of(context).colorScheme.secondary),
+        TextButton(
+          onPressed: () {
+            ref.read(newFilterScreenControllerProvider.notifier).reset();
+            periodTextEditingController.text = "";
+          },
+          child: textBoldMontserrat(
+              text: AppLocalizations.of(context).reset,
+              color: Theme.of(context).colorScheme.secondary),
         )
       ],
     );
@@ -222,9 +226,15 @@ class _NewFilterScreenState extends ConsumerState<NewFilterScreen> {
         ref.read(newFilterScreenControllerProvider).selectedCategoryName,
         AppLocalizations.of(context).category, () {
       ref.read(navigationProvider).navigateUsingPath(
-            path: categoryFilterScreenPath,
-            context: context,
-          );
+          path: categoryFilterScreenPath,
+          context: context,
+          params: CategoryScreenParams(
+              selectedCategoryIdList: List.from(ref
+                  .read(newFilterScreenControllerProvider)
+                  .selectedCategoryId),
+              selectedCategoryNameList: List.from(ref
+                  .read(newFilterScreenControllerProvider)
+                  .selectedCategoryName)));
     });
   }
 
