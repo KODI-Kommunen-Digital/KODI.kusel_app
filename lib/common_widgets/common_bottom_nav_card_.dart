@@ -6,6 +6,7 @@ import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/enum/digifit_exercise_session_status_enum.dart';
 
 import '../l10n/app_localizations.dart';
+import '../screens/digifit_screens/brain_teaser_game/enum/game_session_status.dart';
 
 class CommonBottomNavCard extends ConsumerStatefulWidget {
   final void Function() onBackPress;
@@ -14,6 +15,8 @@ class CommonBottomNavCard extends ConsumerStatefulWidget {
   bool isFav;
   ExerciseStageConstant? sessionStage;
   final VoidCallback? onSessionTap;
+  GameStageConstant? gameDetailsStageConstant;
+  final VoidCallback? onGameStageConstantTap;
 
   CommonBottomNavCard(
       {super.key,
@@ -22,7 +25,9 @@ class CommonBottomNavCard extends ConsumerStatefulWidget {
       this.onFavChange,
       required this.isFav,
       this.sessionStage,
-      this.onSessionTap});
+      this.onSessionTap,
+      this.gameDetailsStageConstant,
+      this.onGameStageConstantTap});
 
   @override
   ConsumerState<CommonBottomNavCard> createState() =>
@@ -32,41 +37,64 @@ class CommonBottomNavCard extends ConsumerStatefulWidget {
 class _CommonBottomNavCardState extends ConsumerState<CommonBottomNavCard> {
   @override
   Widget build(BuildContext context) {
-
     String buttonText = '';
     IconData icon = Icons.close;
 
     final canAbortTap = widget.sessionStage == ExerciseStageConstant.start ||
         widget.sessionStage == ExerciseStageConstant.progress;
 
-    if(widget.sessionStage != null) {
+    if (widget.gameDetailsStageConstant != null) {
+      switch (widget.gameDetailsStageConstant) {
+        case GameStageConstant.initial:
+          buttonText = AppLocalizations.of(context)
+              .digifit_exercise_details_start_session;
+          icon = Icons.play_circle_outline;
+          break;
+
+        case GameStageConstant.progress:
+          buttonText = AppLocalizations.of(context).digifit_abort;
+          icon = Icons.close;
+          break;
+
+        case GameStageConstant.abort:
+          buttonText = AppLocalizations.of(context).try_again;
+          icon = Icons.refresh;
+          break;
+
+        case GameStageConstant.complete:
+          buttonText = AppLocalizations.of(context)
+              .digifit_exercise_details_start_session;
+          icon = Icons.play_circle_outline;
+          break;
+
+        default:
+          buttonText = AppLocalizations.of(context)
+              .digifit_exercise_details_start_session;
+          icon = Icons.play_arrow;
+          break;
+      }
+    }
+
+    if (widget.sessionStage != null) {
       switch (widget.sessionStage) {
         case ExerciseStageConstant.initial:
-          buttonText =
-              AppLocalizations
-                  .of(context)
-                  .digifit_exercise_details_start_session;
+          buttonText = AppLocalizations.of(context)
+              .digifit_exercise_details_start_session;
           icon = Icons.flag_outlined;
           break;
 
         case ExerciseStageConstant.start:
-          buttonText = AppLocalizations
-              .of(context)
-              .digifit_abort;
+          buttonText = AppLocalizations.of(context).digifit_abort;
           icon = Icons.close;
           break;
 
         case ExerciseStageConstant.progress:
-          buttonText = AppLocalizations
-              .of(context)
-              .digifit_abort;
+          buttonText = AppLocalizations.of(context).digifit_abort;
           icon = Icons.close;
           break;
 
         case ExerciseStageConstant.complete:
-          buttonText = AppLocalizations
-              .of(context)
-              .complete;
+          buttonText = AppLocalizations.of(context).complete;
           icon = Icons.verified_outlined;
           break;
 
@@ -122,9 +150,42 @@ class _CommonBottomNavCardState extends ConsumerState<CommonBottomNavCard> {
               ),
               10.horizontalSpace,
               Visibility(
-                visible: widget.sessionStage !=null,
+                visible: widget.sessionStage != null,
                 child: GestureDetector(
                   onTap: canAbortTap ? widget.onSessionTap : null,
+                  child: Card(
+                    color: Theme.of(context).primaryColor,
+                    elevation: 1,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24.r),
+                    ),
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 12.w, vertical: 5.h),
+                      child: Row(
+                        children: [
+                          Icon(
+                            icon,
+                            color: Colors.white,
+                            size: 18.h.w,
+                          ),
+                          8.horizontalSpace,
+                          textBoldMontserrat(
+                            text: buttonText,
+                            color: Colors.white,
+                            textOverflow: TextOverflow.visible,
+                            fontSize: 13,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: widget.gameDetailsStageConstant != null,
+                child: GestureDetector(
+                  onTap: widget.onGameStageConstantTap,
                   child: Card(
                     color: Theme.of(context).primaryColor,
                     elevation: 1,
