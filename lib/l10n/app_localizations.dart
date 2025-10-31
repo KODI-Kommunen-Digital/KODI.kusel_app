@@ -1699,6 +1699,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'General Feedback'**
   String get general_feedback;
+
+  /// No description provided for @games_stamps_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'You can collect these stamps here'**
+  String get games_stamps_desc;
+
+  /// No description provided for @stamps_achievements.
+  ///
+  /// In en, this message translates to:
+  /// **'My achievements'**
+  String get stamps_achievements;
+
+  /// No description provided for @choose_level.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a level'**
+  String get choose_level;
+
+  /// No description provided for @more_games.
+  ///
+  /// In en, this message translates to:
+  /// **'More games'**
+  String get more_games;
+
+  /// No description provided for @try_again.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get try_again;
+
+  /// No description provided for @abort_game.
+  ///
+  /// In en, this message translates to:
+  /// **'Abort BoldiFinder Game?'**
+  String get abort_game;
+
+  /// No description provided for @abort_game_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'The current Game is not yet completed. Do you really want to abort and go back?'**
+  String get abort_game_desc;
+
+  /// No description provided for @level_complete.
+  ///
+  /// In en, this message translates to:
+  /// **'Level Complete!'**
+  String get level_complete;
+
+  /// No description provided for @level_complete_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'To start the next level, please click OK to go back.'**
+  String get level_complete_desc;
+
+  /// No description provided for @successful_game_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Super!'**
+  String get successful_game_title;
+
+  /// No description provided for @successful_game_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you ready for Level 2?'**
+  String get successful_game_desc;
+
+  /// No description provided for @error_game_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Unfortunately wrong'**
+  String get error_game_title;
+
+  /// No description provided for @error_game_des.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again right away!'**
+  String get error_game_des;
 }
 
 class _AppLocalizationsDelegate

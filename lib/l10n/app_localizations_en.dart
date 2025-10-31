@@ -829,4 +829,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get general_feedback => 'General Feedback';
+
+  @override
+  String get games_stamps_desc => 'You can collect these stamps here';
+
+  @override
+  String get stamps_achievements => 'My achievements';
+
+  @override
+  String get choose_level => 'Choose a level';
+
+  @override
+  String get more_games => 'More games';
+
+  @override
+  String get try_again => 'Try again';
+
+  @override
+  String get abort_game => 'Abort BoldiFinder Game?';
+
+  @override
+  String get abort_game_desc =>
+      'The current Game is not yet completed. Do you really want to abort and go back?';
+
+  @override
+  String get level_complete => 'Level Complete!';
+
+  @override
+  String get level_complete_desc =>
+      'To start the next level, please click OK to go back.';
+
+  @override
+  String get successful_game_title => 'Super!';
+
+  @override
+  String get successful_game_desc => 'Are you ready for Level 2?';
+
+  @override
+  String get error_game_title => 'Unfortunately wrong';
+
+  @override
+  String get error_game_des => 'Try again right away!';
 }
