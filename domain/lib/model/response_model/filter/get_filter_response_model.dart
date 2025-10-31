@@ -1,5 +1,4 @@
 import 'package:core/base_model.dart';
-import 'package:equatable/equatable.dart';
 
 class GetFilterResponseModel implements BaseModel<GetFilterResponseModel> {
   String? status;
