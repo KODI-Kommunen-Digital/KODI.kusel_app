@@ -235,6 +235,11 @@ class AllEventScreenController extends StateNotifier<AllEventScreenState> {
         len+=1;
       }
 
+    if(state.radius!=0)
+      {
+        len+=1;
+      }
+
     state = state.copyWith(numberOfFiltersApplied: len);
   }
 

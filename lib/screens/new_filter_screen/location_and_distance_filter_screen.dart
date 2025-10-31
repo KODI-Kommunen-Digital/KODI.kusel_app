@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/new_filter_screen/new_filter_screen_controller.dart';
+import '../../common_widgets/custom_button_widget.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../l10n/app_localizations.dart';
 
@@ -22,6 +23,9 @@ class _LocationAndDistanceFilterScreenState
     extends ConsumerState<LocationAndDistanceFilterScreen> {
   @override
   void initState() {
+    Future.microtask((){
+      ref.read(newFilterScreenControllerProvider.notifier).assignLocationAndDistanceTemporaryValues();
+    });
     super.initState();
   }
 
@@ -42,15 +46,53 @@ class _LocationAndDistanceFilterScreenState
         ),
         title: textBoldPoppins(text: appLoc.location_distance, fontSize: 18),
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
-        child: Column(
-          children: [
-            32.verticalSpace,
-            _RadiusUI(),
-            16.verticalSpace,
-            _CityList(),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          child: Column(
+            children: [
+              32.verticalSpace,
+              _RadiusUI(),
+              16.verticalSpace,
+              _CityList(),
+              16.verticalSpace,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                      width: 150.w,
+                      child: CustomButton(
+                        onPressed: () {
+                          ref
+                              .read(navigationProvider)
+                              .removeTopPage(context: context);
+                        },
+                        isOutLined: true,
+                        text: AppLocalizations.of(context).cancel,
+                        textColor: Theme.of(context).colorScheme.secondary,
+                      )),
+                  SizedBox(
+                      width: 150.w,
+                      child: CustomButton(
+                          icon: "assets/png/check.png",
+                          iconHeight: 20.h,
+                          iconWidth: 20.w,
+                          onPressed: () async {
+                            final controller =
+                            ref.read(newFilterScreenControllerProvider.notifier);
+
+                            await controller.assignLocationAndDistanceValues();
+
+                            ref
+                                .read(navigationProvider)
+                                .removeTopPage(context: context);
+                          },
+                          text: AppLocalizations.of(context).apply))
+                ],
+              ),
+              20.verticalSpace
+            ],
+          ),
         ),
       ),
     );
@@ -84,7 +126,7 @@ class _RadiusUI extends ConsumerWidget {
             children: [
               Flexible(
                 flex: 7,
-                child: (controller.selectedCityId == 0)
+                child: (controller.tempSelectedCityId == 0)
                     ? Container(
                         height: 10.h,
                         decoration: BoxDecoration(
@@ -93,7 +135,7 @@ class _RadiusUI extends ConsumerWidget {
                         ),
                       )
                     : Slider(
-                        value: controller.sliderValue,
+                        value: controller.tempSliderValue,
                         inactiveColor:
                             Theme.of(context).indicatorColor.withOpacity(0.2),
                         thumbColor: Theme.of(context).colorScheme.secondary,
@@ -101,7 +143,7 @@ class _RadiusUI extends ConsumerWidget {
                         max: 100,
                         divisions: 100,
                         activeColor: Theme.of(context).indicatorColor,
-                        label: controller.sliderValue.round().toString(),
+                        label: controller.tempSliderValue.round().toString(),
                         onChanged: (double value) {
                           controllerNotifier.updateSliderValue(value);
                         },
@@ -113,7 +155,7 @@ class _RadiusUI extends ConsumerWidget {
                 child: Padding(
                   padding: EdgeInsets.only(left: 10.w),
                   child: textBoldMontserrat(
-                    text: "${controller.sliderValue.round()} km",
+                    text: "${controller.tempSliderValue.round()} km",
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
                   ),
@@ -151,7 +193,7 @@ class _CityList extends ConsumerWidget {
         children: [
           _SelectableRow(
             label: appLoc.all,
-            isSelected: controller.selectedCityId == 0,
+            isSelected: controller.tempSelectedCityId == 0,
             onTap: () => controllerNotifier.updateLocationAndDistanceAllValue(),
           ),
           const Divider(thickness: 2),
@@ -164,7 +206,7 @@ class _CityList extends ConsumerWidget {
                   final city = controller.cityList[index];
                   return _SelectableRow(
                     label: city.name ?? '',
-                    isSelected: controller.selectedCityId == city.id,
+                    isSelected: controller.tempSelectedCityId == city.id,
                     onTap: () => controllerNotifier.updateSelectedCity(
                       city.id ?? 0,
                       city.name ?? "",
