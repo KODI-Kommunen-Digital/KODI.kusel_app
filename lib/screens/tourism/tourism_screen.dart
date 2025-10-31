@@ -182,7 +182,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                       EventsListSectionWidget(
                         context: context,
                         eventsList: state.allEventList,
-                        heading: AppLocalizations.of(context).all_events,
+                        heading: AppLocalizations.of(context).events,
                         maxListLimit: 5,
                         isLoading: false,
                         onHeadingTap: () {
@@ -191,7 +191,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                               context: context,
                               params: SelectedEventListScreenParameter(
                                   listHeading:
-                                      AppLocalizations.of(context).all_events,
+                                      AppLocalizations.of(context).events,
                                   categoryId: ListingCategoryId.event.eventId,
                                   onFavChange: () {
                                     ref
