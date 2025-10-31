@@ -526,7 +526,7 @@ class _BoldiFinderScreenState extends ConsumerState<BoldiFinderScreen> {
                         .notifier)
                     .fetchBrainTeaserGameDetails(
                         gameId: widget.boldiFinderParams?.gameId ?? 1);
-                await ref
+               ref
                    .read(digifitInformationControllerProvider.notifier)
                    .fetchDigifitInformation();
               },
