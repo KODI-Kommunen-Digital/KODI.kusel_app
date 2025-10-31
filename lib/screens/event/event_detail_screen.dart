@@ -189,7 +189,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
           15.verticalSpace,
 
           LocationCardWidget(
-            address: state.eventDetails.place??"-",
+            address: state.eventDetails.place ?? state.eventDetails.address ?? '-',
             websiteText: AppLocalizations.of(context).visit_website,
             websiteUrl: state.eventDetails.website ?? "",
             latitude:
