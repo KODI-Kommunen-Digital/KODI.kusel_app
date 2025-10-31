@@ -296,12 +296,12 @@ List<RouteBase> goRouteList = [
   GoRoute(
       path: categoryFilterScreenPath,
       builder: (_, state) => CategoryFilterScreen(
-      )),
+            categoryScreenParams: state.extra as CategoryScreenParams,
+          )),
 
   GoRoute(
       path: locationDistanceScreenPath,
-      builder: (_, state) => LocationAndDistanceFilterScreen(
-          )),
+      builder: (_, state) => LocationAndDistanceFilterScreen()),
 
   // Dashboard + tabs
   dashboardRoutes,

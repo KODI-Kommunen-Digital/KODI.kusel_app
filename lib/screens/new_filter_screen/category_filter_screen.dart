@@ -4,13 +4,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/new_filter_screen/new_filter_screen_controller.dart';
 
+import '../../common_widgets/custom_button_widget.dart';
 import '../../common_widgets/image_utility.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../l10n/app_localizations.dart';
 
 class CategoryFilterScreen extends ConsumerStatefulWidget {
+  CategoryScreenParams categoryScreenParams;
 
-  CategoryFilterScreen({super.key});
+  CategoryFilterScreen({super.key, required this.categoryScreenParams});
 
   @override
   ConsumerState<CategoryFilterScreen> createState() =>
@@ -20,6 +22,14 @@ class CategoryFilterScreen extends ConsumerStatefulWidget {
 class _CategoryFilterScreenState extends ConsumerState<CategoryFilterScreen> {
   @override
   void initState() {
+    Future.microtask(() {
+      ref
+          .read(newFilterScreenControllerProvider.notifier)
+          .assignCategoryTemporaryValues(
+              widget.categoryScreenParams.selectedCategoryIdList,
+              widget.categoryScreenParams.selectedCategoryNameList);
+    });
+
     super.initState();
   }
 
@@ -47,49 +57,88 @@ class _CategoryFilterScreenState extends ConsumerState<CategoryFilterScreen> {
   }
 
   _buildBody(BuildContext context) {
-
-    final controller =
-        ref.watch(newFilterScreenControllerProvider);
+    final controller = ref.watch(newFilterScreenControllerProvider);
     final controllerNotifier =
         ref.read(newFilterScreenControllerProvider.notifier);
     final theme = Theme.of(context);
     final appLoc = AppLocalizations.of(context);
 
-    return Container(
-      height: 400.h,
-      margin: EdgeInsets.symmetric(vertical:32.h,horizontal: 16.w ),
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20.r),
-        color: theme.canvasColor,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _SelectableRow(
-            label: appLoc.all,
-            isSelected: controller.selectedCategoryId.isEmpty,
-            onTap: () => controllerNotifier.updateCategoryAllValue(),
+    return Column(
+      children: [
+        Container(
+          height: 400.h,
+          margin: EdgeInsets.symmetric(vertical: 32.h, horizontal: 16.w),
+          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20.r),
+            color: theme.canvasColor,
           ),
-          const Divider(thickness: 2),
-          if (controller.categoryList.isNotEmpty)
-            Expanded(
-              child: ListView.separated(
-                itemCount: controller.categoryList.length,
-                separatorBuilder: (_, __) => SizedBox(height: 4.h),
-                itemBuilder: (context, index) {
-                  final category = controller.categoryList[index];
-                  return _SelectableRow(
-                    label: category.name ?? '',
-                    isSelected: controller.selectedCategoryId.contains(category.id)?true:false,
-                    onTap: () =>
-                        controllerNotifier.updateSelectedCategoryList(category),
-                  );
-                },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _SelectableRow(
+                label: appLoc.all,
+                isSelected: controller.tempCategoryIdList.isEmpty,
+                onTap: () => controllerNotifier.updateCategoryAllValue(),
               ),
-            ),
-        ],
-      ),
+              const Divider(thickness: 2),
+              if (controller.categoryList.isNotEmpty)
+                Expanded(
+                  child: ListView.separated(
+                    itemCount: controller.categoryList.length,
+                    separatorBuilder: (_, __) => SizedBox(height: 4.h),
+                    itemBuilder: (context, index) {
+                      final category = controller.categoryList[index];
+                      return _SelectableRow(
+                        label: category.name ?? '',
+                        isSelected:
+                            controller.tempCategoryIdList.contains(category.id)
+                                ? true
+                                : false,
+                        onTap: () => controllerNotifier
+                            .updateSelectedCategoryList(category),
+                      );
+                    },
+                  ),
+                ),
+            ],
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            SizedBox(
+                width: 150.w,
+                child: CustomButton(
+                  onPressed: () {
+                    ref
+                        .read(navigationProvider)
+                        .removeTopPage(context: context);
+                  },
+                  isOutLined: true,
+                  text: AppLocalizations.of(context).cancel,
+                  textColor: Theme.of(context).colorScheme.secondary,
+                )),
+            SizedBox(
+                width: 150.w,
+                child: CustomButton(
+                    icon: "assets/png/check.png",
+                    iconHeight: 20.h,
+                    iconWidth: 20.w,
+                    onPressed: () async {
+                      final controller =
+                          ref.read(newFilterScreenControllerProvider.notifier);
+
+                      await controller.assignCategoryValues();
+
+                      ref
+                          .read(navigationProvider)
+                          .removeTopPage(context: context);
+                    },
+                    text: AppLocalizations.of(context).apply))
+          ],
+        )
+      ],
     );
   }
 }
@@ -132,4 +181,13 @@ class _SelectableRow extends StatelessWidget {
       ),
     );
   }
+}
+
+class CategoryScreenParams {
+  List<int> selectedCategoryIdList;
+  List<String> selectedCategoryNameList;
+
+  CategoryScreenParams(
+      {required this.selectedCategoryIdList,
+      required this.selectedCategoryNameList});
 }
