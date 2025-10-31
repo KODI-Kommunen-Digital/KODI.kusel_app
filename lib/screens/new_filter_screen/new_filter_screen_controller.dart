@@ -154,6 +154,7 @@ class NewFilterScreenController extends StateNotifier<NewFilterScreenState> {
         selectedCityId: 0,
         startDate: defaultDate,
         endDate: defaultDate,
+        sliderValue: 0,
         tempCategoryIdList: [],
         tempCategoryNameList: [],
         tempSelectedCityId: 0,
