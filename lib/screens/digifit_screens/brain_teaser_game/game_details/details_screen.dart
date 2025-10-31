@@ -199,7 +199,7 @@ class _BrainTeaserGameDetailsScreenState
                 alignment: Alignment.center,
                 children: [
                   ImageUtil.loadAssetImage(
-                    imageUrl: imagePath['spiel_image'] ?? '',
+                    imageUrl: imagePath['cloud_message_image'] ?? '',
                     height: 168.h,
                     width: 134.w,
                     fit: BoxFit.contain,
@@ -225,7 +225,7 @@ class _BrainTeaserGameDetailsScreenState
             top: 0,
             right: 10.w,
             child: ImageUtil.loadAssetImage(
-              imageUrl: imagePath['boldi_new_sunny_image'] ?? '',
+              imageUrl: imagePath['boldi_game_details_image'] ?? '',
               height: 241.h,
               width: 192.w,
               fit: BoxFit.contain,
@@ -297,7 +297,7 @@ class _BrainTeaserGameDetailsScreenState
               context: context,
             )
           : ImageUtil.loadAssetImage(
-              imageUrl: imagePath["frame_icon"] ?? '',
+              imageUrl: imagePath["stamps_icon"] ?? '',
               context: context,
             ),
     );

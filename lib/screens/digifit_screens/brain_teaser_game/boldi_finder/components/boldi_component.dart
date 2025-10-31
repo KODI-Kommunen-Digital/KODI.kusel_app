@@ -88,7 +88,7 @@ class BoldiComponent extends SpriteComponent {
 
   @override
   Future<void> onLoad() async {
-    sprite = await Sprite.load('assets/png/Boldi.png');
+    sprite = await Sprite.load('assets/png/grid_boldi.png');
 
     final x =
         column * gridViewUIParams.tileWidth + gridViewUIParams.tileWidth / 2;
