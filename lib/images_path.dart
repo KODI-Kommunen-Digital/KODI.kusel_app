@@ -86,10 +86,10 @@ Map<String, String> _pngImagePath = {
   "digifit_map_image": "assets/png/digifit_map_image.png",
   "exercise_background": "assets/png/exercise_background.png",
   "sun_weather_image": "assets/png/sun_weather.png",
-  "boldi_new_sunny_image": "assets/png/boldi_new_sunny.png",
-  "frame_icon": "assets/png/frame.png",
-  "spiel_image": "assets/png/spiel.png",
-  "boldi_new_new_image": "assets/png/Boldi.png",
+  "boldi_game_details_image": "assets/png/boldi_game_details.png",
+  "stamps_icon": "assets/png/stamps_icon.png",
+  "cloud_message_image": "assets/png/cloud_message.png",
+  "grid_boldi": "assets/png/grid_boldi.png",
   "boldi_successor": "assets/png/boldi_successor.png",
   "unlock_stamp_image": "assets/png/unlock_stamp_image.png"
 };
