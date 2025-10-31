@@ -199,11 +199,11 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                   onCardTap: () {
                     final value =
                         ref.read(networkStatusProvider).isNetworkAvailable;
-                    // if (value) {
-                    //   ref.read(navigationProvider).navigateUsingPath(
-                    //       path: brainTeasersGameListScreenPath,
-                    //       context: context);
-                    // }
+                    if (value) {
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: brainTeasersGameListScreenPath,
+                          context: context);
+                    }
                   },
                 ),
               ),

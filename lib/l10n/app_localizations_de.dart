@@ -835,4 +835,45 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get general_feedback => 'Allgemeines Feedback';
+
+  @override
+  String get games_stamps_desc => 'Diese Stempel kannst du hier sammeln';
+
+  @override
+  String get stamps_achievements => 'Meine Errungenschaften';
+
+  @override
+  String get choose_level => 'Wähle ein Level';
+
+  @override
+  String get more_games => 'Weitere Spiele';
+
+  @override
+  String get try_again => 'Versuchs nochmal';
+
+  @override
+  String get abort_game => 'BoldiFinder-Spiel abbrechen?';
+
+  @override
+  String get abort_game_desc =>
+      'Das aktuelle Spiel ist noch nicht abgeschlossen. Möchten Sie es wirklich abbrechen und von vorne beginnen?';
+
+  @override
+  String get level_complete => 'Level abgeschlossen!';
+
+  @override
+  String get level_complete_desc =>
+      'Um zum nächsten Level zu gelangen, klicken Sie bitte auf OK, um zurückzukehren.';
+
+  @override
+  String get successful_game_title => 'Super!';
+
+  @override
+  String get successful_game_desc => 'Bist du bereit für Level 2?';
+
+  @override
+  String get error_game_title => 'Leider falsch';
+
+  @override
+  String get error_game_des => 'Versuche es gleich nochmal!';
 }

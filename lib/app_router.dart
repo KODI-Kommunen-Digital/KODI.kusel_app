@@ -11,7 +11,12 @@ import 'package:kusel/screens/auth/forgot_password/forgot_password_screen.dart';
 import 'package:kusel/screens/auth/signin/signin_screen.dart';
 import 'package:kusel/screens/auth/signup/signup_screen.dart';
 import 'package:kusel/screens/dashboard/dashboard_screen.dart';
-import 'package:kusel/screens/digifit_screens/brain_teaser_game/list_screen.dart';
+import 'package:kusel/screens/digifit_screens/brain_teaser_game/boldi_finder/params/boldi_finder_params.dart';
+import 'package:kusel/screens/digifit_screens/brain_teaser_game/boldi_finder/boldi_finder_screen.dart';
+import 'package:kusel/screens/digifit_screens/brain_teaser_game/common_navigation/game_registry.dart';
+import 'package:kusel/screens/digifit_screens/brain_teaser_game/game_details/details_screen.dart';
+import 'package:kusel/screens/digifit_screens/brain_teaser_game/game_details/params/details_params.dart';
+import 'package:kusel/screens/digifit_screens/brain_teaser_game/game_list/list_screen.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/digifit_exercise_detail_screen.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/params/digifit_exercise_details_params.dart';
 import 'package:kusel/screens/digifit_screens/digifit_overview/digifit_overview_screen.dart';
@@ -117,6 +122,14 @@ const digifitOverViewScreenPath = "/digifitOverViewScreenPath";
 const digifitQRScannerScreenPath = "/digifitQRScannerScreenPath";
 const digifitExerciseDetailScreenPath = "/digifitExerciseDetailScreenPath";
 
+// Game's screen Path
+const brainTeaserGameDetailsScreenPath = "/brainTeasersGameDetailsScreenPath";
+const String boldiFinderScreenPath = '/boldi-finder';
+const String matheJagdScreenPath = '/mathe-jagd';
+const String flipCatchScreenPath = '/flip-catch';
+const String digitDashScreenPath = '/digit-dash';
+const String bilderSpielScreenPath = '/bilder-spiel';
+
 const webViewPagePath = "/webViewPagePath";
 const fullImageScreenPath = '/fullImageScreenPath';
 
@@ -128,7 +141,7 @@ final exploreSubScreenRoutes = [
   participateScreenPath,
   digifitStartScreenPath,
   digifitTrophiesScreenPath,
-  brainTeasersGameListScreenPath
+  brainTeasersGameListScreenPath,
 ];
 
 // Full route list
@@ -211,6 +224,59 @@ List<RouteBase> goRouteList = [
             digifitExerciseDetailsParams:
                 state.extra as DigifitExerciseDetailsParams,
           )),
+
+  GoRoute(
+      path: brainTeaserGameDetailsScreenPath,
+      builder: (_, state) => BrainTeaserGameDetailsScreen(
+            brainTeaserGameDetailsParams:
+                state.extra as BrainTeaserGameDetailsParams,
+          )),
+
+  // GoRoute(
+  //     path: brainTeaserGameGridScreenPath,
+  //     builder: (_, state) => CommonGridUiScreen(
+  //           boldiFinderParams: state.extra as BoldiFinderParams,
+  //         )),
+
+  GoRoute(
+    path: boldiFinderScreenPath,
+    builder: (context, state) {
+      final params = state.extra as BoldiFinderParams?;
+      return GameRegistry.getGameScreen(1, params);
+    },
+  ),
+
+  GoRoute(
+    path: matheJagdScreenPath,
+    builder: (context, state) {
+      final params = state.extra as BoldiFinderParams?;
+      return GameRegistry.getGameScreen(2, params);
+    },
+  ),
+
+  GoRoute(
+    path: flipCatchScreenPath,
+    builder: (context, state) {
+      final params = state.extra as BoldiFinderParams?;
+      return GameRegistry.getGameScreen(3, params);
+    },
+  ),
+
+  GoRoute(
+    path: digitDashScreenPath,
+    builder: (context, state) {
+      final params = state.extra as BoldiFinderParams?;
+      return GameRegistry.getGameScreen(4, params);
+    },
+  ),
+
+  GoRoute(
+    path: bilderSpielScreenPath,
+    builder: (context, state) {
+      final params = state.extra as BoldiFinderParams?;
+      return GameRegistry.getGameScreen(5, params);
+    },
+  ),
 
   GoRoute(
       path: webViewPagePath,

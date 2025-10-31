@@ -265,6 +265,19 @@
   "digital_services_and_app_functionality": "Digital Services & App Functionality",
   "disruptions_and_damage": "Disruptions & Damage",
   "citizen_services_and_administration": "Citizen Services & Administration",
-  "general_feedback": "General Feedback"
-
+  "general_feedback": "General Feedback",
+  "new_municipality": "Collective municipality",
+  "games_stamps_desc": "You can collect these stamps here",
+  "stamps_achievements": "My achievements",
+  "choose_level": "Choose a level",
+  "more_games": "More games",
+  "try_again": "Try again",
+  "abort_game": "Abort BoldiFinder Game?",
+  "abort_game_desc": "The current Game is not yet completed. Do you really want to abort and go back?",
+  "level_complete": "Level Complete!",
+  "level_complete_desc": "To start the next level, please click OK to go back.",
+  "successful_game_title": "Super!",
+  "successful_game_desc": "Are you ready for Level 2?",
+  "error_game_title": "Unfortunately wrong",
+  "error_game_des": "Try again right away!"
 }
