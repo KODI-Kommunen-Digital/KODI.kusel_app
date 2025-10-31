@@ -613,10 +613,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get trophies => 'Trophäen';
 
   @override
-  String get brain_teasers => 'Denksportaufgaben';
+  String get brain_teasers => 'Denksportaufga­ben';
 
   @override
-  String get points_and_trophy => 'Punkte & Trophäen';
+  String get points_and_trophy => 'Punkte & ­ Trophäen';
 
   @override
   String get show_course => 'Parcours anzeigen';

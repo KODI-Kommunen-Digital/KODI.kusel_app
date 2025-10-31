@@ -20,6 +20,7 @@ import '../../../../common_widgets/upstream_wave_clipper.dart';
 import '../../../../images_path.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../navigation/navigation.dart';
+import '../../digifit_start/digifit_information_controller.dart';
 import 'components/arrow_direction.dart';
 import 'components/boldi_component.dart';
 import 'boldi_finder_controller.dart';
@@ -519,12 +520,15 @@ class _BoldiFinderScreenState extends ConsumerState<BoldiFinderScreen> {
 
                 ref.read(navigationProvider).removeTopPage(context: context);
 
-                ref
+               await ref
                     .read(brainTeaserGameDetailsControllerProvider(
                             widget.boldiFinderParams?.gameId ?? 1)
                         .notifier)
                     .fetchBrainTeaserGameDetails(
                         gameId: widget.boldiFinderParams?.gameId ?? 1);
+                await ref
+                   .read(digifitInformationControllerProvider.notifier)
+                   .fetchDigifitInformation();
               },
               isDefaultAction: true,
               child: textBoldPoppins(
