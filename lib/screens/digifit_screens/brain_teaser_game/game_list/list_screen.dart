@@ -117,7 +117,7 @@ class _BrainTeaserGameListScreenState
 
   _buildBrainTeaserGameListUi(int sourceId, List brainTeaserGameList) {
     return Padding(
-      padding: const EdgeInsets.only(left: 18, right: 8),
+      padding: const EdgeInsets.only(left: 10, right: 10),
       child: ListView.builder(
           physics: NeverScrollableScrollPhysics(),
           shrinkWrap: true,
