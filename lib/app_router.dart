@@ -19,6 +19,7 @@ import 'package:kusel/screens/digifit_screens/brain_teaser_game/game_details/par
 import 'package:kusel/screens/digifit_screens/brain_teaser_game/game_list/list_screen.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/digifit_exercise_detail_screen.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/params/digifit_exercise_details_params.dart';
+import 'package:kusel/screens/digifit_screens/digifit_fav_screen/digifit_fav_Screen.dart';
 import 'package:kusel/screens/digifit_screens/digifit_overview/digifit_overview_screen.dart';
 import 'package:kusel/screens/digifit_screens/digifit_overview/params/digifit_overview_params.dart';
 import 'package:kusel/screens/digifit_screens/digifit_qr_scanner/digifit_qr_scanner_screen.dart';
@@ -101,7 +102,6 @@ const locationDistanceScreenPath = "/locationDistanceScreen";
 
 // Bottom Nav & Explore sub‑routes paths
 const homeScreenPath = "/homeScreenPath";
-const exploreShellScreenPath = "/exploreShellScreenPath";
 const exploreScreenPath = "/exploreScreenPath";
 const searchScreenPath = "/searchScreenPath";
 const locationScreenPath = "/locationScreenPath";
@@ -121,6 +121,7 @@ const brainTeasersGameListScreenPath = "brainTeasersGameListScreenPath";
 const digifitOverViewScreenPath = "/digifitOverViewScreenPath";
 const digifitQRScannerScreenPath = "/digifitQRScannerScreenPath";
 const digifitExerciseDetailScreenPath = "/digifitExerciseDetailScreenPath";
+const digifitFavScreenPath = "/digifitFavScreen";
 
 // Game's screen Path
 const brainTeaserGameDetailsScreenPath = "/brainTeasersGameDetailsScreenPath";
@@ -133,6 +134,11 @@ const String bilderSpielScreenPath = '/bilder-spiel';
 const webViewPagePath = "/webViewPagePath";
 const fullImageScreenPath = '/fullImageScreenPath';
 
+
+const subShellFeedbackScreenPath = "feedbackScreenPath";
+
+
+
 final exploreSubScreenRoutes = [
   tourismScreenPath,
   virtualTownHallScreenPath,
@@ -144,10 +150,13 @@ final exploreSubScreenRoutes = [
   brainTeasersGameListScreenPath,
 ];
 
+
+
 // Full route list
 List<RouteBase> goRouteList = [
   // Auth & misc screens
   GoRoute(path: splashScreenPath, builder: (_, __) => SplashScreen()),
+  GoRoute(path: feedbackScreenPath, builder: (_, __) => FeedbackScreen()),
   GoRoute(path: signInScreenPath, builder: (_, __) => SignInScreen()),
   GoRoute(path: signUpScreenPath, builder: (_, __) => SignupScreen()),
   GoRoute(
@@ -184,7 +193,6 @@ List<RouteBase> goRouteList = [
       path: favoritesListScreenPath, builder: (_, __) => FavoritesListScreen()),
   GoRoute(
       path: favouriteCityScreenPath, builder: (_, __) => FavouriteCityScreen()),
-  GoRoute(path: feedbackScreenPath, builder: (_, __) => FeedbackScreen()),
   GoRoute(
       path: allEventScreenPath,
       builder: (_, state) => AllEventScreen(
@@ -303,6 +311,10 @@ List<RouteBase> goRouteList = [
       path: locationDistanceScreenPath,
       builder: (_, state) => LocationAndDistanceFilterScreen()),
 
+  GoRoute(
+      path: digifitFavScreenPath,
+      builder: (_, state) => DigifitFavScreen()),
+
   // Dashboard + tabs
   dashboardRoutes,
 ];
@@ -321,16 +333,27 @@ final dashboardRoutes = StatefulShellRoute.indexedStack(
         GoRoute(
           path: homeScreenPath,
           builder: (_, __) => HomeScreen(),
+          routes: [
+            GoRoute(
+              path: subShellFeedbackScreenPath,
+              builder: (_, __) => const FeedbackScreen(),
+            ),
+          ]
         ),
       ],
     ),
     //  Explore Tab + sub routes
     StatefulShellBranch(
       routes: [
+
         GoRoute(
           path: exploreScreenPath,
           builder: (_, __) => const ExploreScreen(),
           routes: [
+            GoRoute(
+              path: subShellFeedbackScreenPath,
+              builder: (_, __) => const FeedbackScreen(),
+            ),
             GoRoute(
               path: tourismScreenPath,
               builder: (_, __) => const TourismScreen(),

@@ -52,6 +52,8 @@ const deleteAccountEndPoint = "/users";
 // DIGIFIT API
 const digifitInformationEndPoint = "/digifit";
 
+const digifitFavEndPoint = "/digifit/favoriteEquipments";
+
 const digifitOverviewEndPoint = "/digifit/user-equipment-stats";
 
 const digifitExerciseDetailsEndPoint = "/digifit/exercise-details";

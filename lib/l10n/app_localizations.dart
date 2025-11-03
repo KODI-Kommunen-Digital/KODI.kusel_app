@@ -1777,6 +1777,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Try again right away!'**
   String get error_game_des;
+
+  /// No description provided for @contact.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact'**
+  String get contact;
 }
 
 class _AppLocalizationsDelegate
