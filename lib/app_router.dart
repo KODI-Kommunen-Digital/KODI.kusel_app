@@ -11,8 +11,7 @@ import 'package:kusel/screens/auth/forgot_password/forgot_password_screen.dart';
 import 'package:kusel/screens/auth/signin/signin_screen.dart';
 import 'package:kusel/screens/auth/signup/signup_screen.dart';
 import 'package:kusel/screens/dashboard/dashboard_screen.dart';
-import 'package:kusel/screens/digifit_screens/brain_teaser_game/boldi_finder/params/boldi_finder_params.dart';
-import 'package:kusel/screens/digifit_screens/brain_teaser_game/boldi_finder/boldi_finder_screen.dart';
+import 'package:kusel/screens/digifit_screens/brain_teaser_game/all_games/params/all_game_params.dart';
 import 'package:kusel/screens/digifit_screens/brain_teaser_game/common_navigation/game_registry.dart';
 import 'package:kusel/screens/digifit_screens/brain_teaser_game/game_details/details_screen.dart';
 import 'package:kusel/screens/digifit_screens/brain_teaser_game/game_details/params/details_params.dart';
@@ -232,16 +231,10 @@ List<RouteBase> goRouteList = [
                 state.extra as BrainTeaserGameDetailsParams,
           )),
 
-  // GoRoute(
-  //     path: brainTeaserGameGridScreenPath,
-  //     builder: (_, state) => CommonGridUiScreen(
-  //           boldiFinderParams: state.extra as BoldiFinderParams,
-  //         )),
-
   GoRoute(
     path: boldiFinderScreenPath,
     builder: (context, state) {
-      final params = state.extra as BoldiFinderParams?;
+      final params = state.extra as AllGameParams?;
       return GameRegistry.getGameScreen(1, params);
     },
   ),
@@ -249,7 +242,7 @@ List<RouteBase> goRouteList = [
   GoRoute(
     path: matheJagdScreenPath,
     builder: (context, state) {
-      final params = state.extra as BoldiFinderParams?;
+      final params = state.extra as AllGameParams?;
       return GameRegistry.getGameScreen(2, params);
     },
   ),
@@ -257,7 +250,7 @@ List<RouteBase> goRouteList = [
   GoRoute(
     path: flipCatchScreenPath,
     builder: (context, state) {
-      final params = state.extra as BoldiFinderParams?;
+      final params = state.extra as AllGameParams?;
       return GameRegistry.getGameScreen(3, params);
     },
   ),
@@ -265,7 +258,7 @@ List<RouteBase> goRouteList = [
   GoRoute(
     path: digitDashScreenPath,
     builder: (context, state) {
-      final params = state.extra as BoldiFinderParams?;
+      final params = state.extra as AllGameParams?;
       return GameRegistry.getGameScreen(4, params);
     },
   ),
@@ -273,7 +266,7 @@ List<RouteBase> goRouteList = [
   GoRoute(
     path: bilderSpielScreenPath,
     builder: (context, state) {
-      final params = state.extra as BoldiFinderParams?;
+      final params = state.extra as AllGameParams?;
       return GameRegistry.getGameScreen(5, params);
     },
   ),

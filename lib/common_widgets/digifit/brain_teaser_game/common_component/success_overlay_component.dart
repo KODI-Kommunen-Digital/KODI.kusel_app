@@ -5,7 +5,7 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../screens/digifit_screens/brain_teaser_game/grid_view_params.dart';
+import '../../../../screens/digifit_screens/brain_teaser_game/all_games/params/grid_view_params.dart';
 
 class SuccessOverlayGame extends FlameGame {
   final int row;
