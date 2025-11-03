@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../boldi_finder/params/boldi_finder_params.dart';
-import '../boldi_finder/boldi_finder_screen.dart';
+import '../all_games/boldi_finder/boldi_finder_screen.dart';
+import '../all_games/params/all_game_params.dart';
 import 'enum/game_type.dart';
 
 class GameRegistry {
   GameRegistry._();
 
-  static final Map<GameType, Widget Function(BoldiFinderParams?)>
+  static final Map<GameType, Widget Function(AllGameParams?)>
       _screenBuilders = {
     GameType.boldiFinder: (params) =>
         BoldiFinderScreen(boldiFinderParams: params),
@@ -35,7 +35,7 @@ class GameRegistry {
     return GameType.fromId(gameId) != null;
   }
 
-  static Widget getGameScreen(int gameId, BoldiFinderParams? params) {
+  static Widget getGameScreen(int gameId, AllGameParams? params) {
     final gameType = GameType.fromId(gameId);
 
     if (gameType == null) {
@@ -49,7 +49,7 @@ class GameRegistry {
   }
 
   static Widget _buildPlaceholder(
-      GameType gameType, BoldiFinderParams? params) {
+      GameType gameType, AllGameParams? params) {
     return Scaffold(
       body: Center(
         child: Padding(

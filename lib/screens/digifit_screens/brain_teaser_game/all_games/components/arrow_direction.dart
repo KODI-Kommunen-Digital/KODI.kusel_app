@@ -6,9 +6,8 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
-import '../../grid_view_params.dart';
+import '../params/grid_view_params.dart';
 
-/// ✅ ArrowDirection enum
 enum ArrowDirection {
   up,
   down,
@@ -26,7 +25,6 @@ enum ArrowDirection {
   }
 }
 
-/// Wrapper game for ArrowComponent with direction update
 class ArrowOverlayGame extends FlameGame {
   String direction;
   final double gridWidth;
@@ -91,33 +89,27 @@ class ArrowOverlayGame extends FlameGame {
     add(_currentArrow!);
   }
 
-  /// ✅ FIX: Completely clear and recreate arrow
   void updateDirection(String newDirection) {
     direction = newDirection;
 
-    // ✅ STEP 1: Remove old arrow immediately
     if (_currentArrow != null) {
       remove(_currentArrow!);
       _currentArrow = null;
     }
 
-    // ✅ STEP 2: Clear all children to ensure clean state
     removeAll(children);
 
-    // ✅ STEP 3: Create new arrow on next frame
     Future.microtask(() {
       if (!isMounted) return;
       _createArrow(newDirection);
     });
   }
 
-  /// ✅ Update timer duration from backend
   void updateDuration(int newDurationSeconds) {
     durationSeconds = newDurationSeconds;
   }
 }
 
-/// ✅ UPDATED ArrowComponent - Reset progress properly
 class ArrowComponent extends PositionComponent {
   final ArrowDirection direction;
   final GridViewUIParams gridViewUIParams;
@@ -136,7 +128,6 @@ class ArrowComponent extends PositionComponent {
 
   @override
   Future<void> onLoad() async {
-    // ✅ Reset animation state on load
     _progress = 0.0;
     _elapsedTime = 0.0;
 
@@ -156,7 +147,6 @@ class ArrowComponent extends PositionComponent {
   void update(double dt) {
     super.update(dt);
 
-    // Update progress based on elapsed time
     if (_elapsedTime < durationSeconds) {
       _elapsedTime += dt;
       _progress = (_elapsedTime / durationSeconds).clamp(0.0, 1.0);
@@ -171,14 +161,12 @@ class ArrowComponent extends PositionComponent {
 
     final strokeWidth = radius * 0.14;
 
-    // Draw outer circular background (light gray)
     final bgPaint = Paint()
       ..color = gridViewUIParams.borderColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = strokeWidth;
     canvas.drawCircle(center, radius, bgPaint);
 
-    // Draw animated progress arc
     final progressPaint = Paint()
       ..color = gridViewUIParams.arrowColor
       ..style = PaintingStyle.stroke
@@ -196,7 +184,6 @@ class ArrowComponent extends PositionComponent {
       progressPaint,
     );
 
-    // Draw arrow in center
     final arrowPaint = Paint()
       ..color = gridViewUIParams.arrowColor
       ..strokeWidth = strokeWidth * 0.6
