@@ -266,7 +266,6 @@
   "disruptions_and_damage": "Disruptions & Damage",
   "citizen_services_and_administration": "Citizen Services & Administration",
   "general_feedback": "General Feedback",
-  "new_municipality": "Collective municipality",
   "games_stamps_desc": "You can collect these stamps here",
   "stamps_achievements": "My achievements",
   "choose_level": "Choose a level",
@@ -279,5 +278,6 @@
   "successful_game_title": "Super!",
   "successful_game_desc": "Are you ready for Level 2?",
   "error_game_title": "Unfortunately wrong",
-  "error_game_des": "Try again right away!"
+  "error_game_des": "Try again right away!",
+  "contact": "Contact"
 }

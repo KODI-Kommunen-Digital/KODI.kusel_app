@@ -870,4 +870,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get error_game_des => 'Try again right away!';
+
+  @override
+  String get contact => 'Contact';
 }
