@@ -61,7 +61,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get description => 'Beschreibung';
 
   @override
-  String get submit => 'Senden';
+  String get submit => 'Absenden';
 
   @override
   String get forgot => 'Passwort vergessen';
@@ -876,4 +876,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get error_game_des => 'Versuche es gleich nochmal!';
+
+  @override
+  String get contact => 'Kontakt';
 }

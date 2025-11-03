@@ -59,19 +59,24 @@ class _NewFilterScreenState extends ConsumerState<NewFilterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: _buildAppBar(context),
-        body: SingleChildScrollView(
-          child: Stack(
-            children: [
-              _buildBody(context),
-              if (ref.watch(newFilterScreenControllerProvider).isLoading)
-                Center(
-                  child: CircularProgressIndicator(),
-                )
-            ],
-          ),
-        ));
+    return PopScope(
+      onPopInvokedWithResult: (value,_){
+
+      },
+      child: Scaffold(
+          appBar: _buildAppBar(context),
+          body: SingleChildScrollView(
+            child: Stack(
+              children: [
+                _buildBody(context),
+                if (ref.watch(newFilterScreenControllerProvider).isLoading)
+                  Center(
+                    child: CircularProgressIndicator(),
+                  )
+              ],
+            ),
+          )),
+    );
   }
 
   _buildAppBar(BuildContext context) {

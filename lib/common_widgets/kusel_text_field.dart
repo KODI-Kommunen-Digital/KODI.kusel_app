@@ -99,9 +99,10 @@ class _KuselTextFieldState extends ConsumerState<KuselTextField> {
       onChanged: widget.onChanged,
       autofillHints: widget.autofillHints,
       style: TextStyle(
-        color: widget.textColor ??
-            currentSelectedThemeData.textTheme.displayMedium!.color,
-        fontSize: 12.sp,
+        fontSize:  14.sp,
+        fontFamily: "Montserrat",
+        fontWeight:  FontWeight.w400,
+        color: Theme.of(context).textTheme.displayMedium!.color!,
       ),
       decoration: InputDecoration(
           fillColor: Colors.white,
@@ -141,8 +142,10 @@ class _KuselTextFieldState extends ConsumerState<KuselTextField> {
             fontSize: 11,
           ),
           hintStyle: TextStyle(
-            color: widget.hintTextColor ?? currentSelectedThemeData.hintColor,
-            fontSize: 14,
+            fontSize:  14.sp,
+            fontFamily: "Montserrat",
+            fontWeight:  FontWeight.w400,
+            color: Theme.of(context).textTheme.displayMedium!.color!.withOpacity(0.5),
           )),
     );
   }
