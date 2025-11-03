@@ -16,7 +16,8 @@
   "firstName": "Vorname",
   "lastName": "Nachname",
   "roleId": "Rollen-ID",
-  "submit": "Senden",
+  "send": "Senden",
+  "submit": "Absenden",
   "forgot": "Passwort vergessen",
   "description": "Beschreibung",
   "email_send": "E-Mail wurde gesendet",
@@ -279,5 +280,6 @@
   "successful_game_title": "Super!",
   "successful_game_desc": "Bist du bereit für Level 2?",
   "error_game_title": "Leider falsch",
-  "error_game_des": "Versuche es gleich nochmal!"
+  "error_game_des": "Versuche es gleich nochmal!",
+  "contact": "Kontakt"
 }

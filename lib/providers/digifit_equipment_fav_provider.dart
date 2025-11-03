@@ -66,7 +66,7 @@ class DigifitEquipmentFav {
           await digifitEquipmentFavUseCase.call(requestModel, responseModel);
 
       response.fold((l) {
-        debugPrint('exception while marking fav = ${l.toString()}');
+        debugPrint('fold exception while marking fav = ${l.toString()}');
       }, (r) async {
         final res = r as DigifitEquipmentFavResponseModel;
 
