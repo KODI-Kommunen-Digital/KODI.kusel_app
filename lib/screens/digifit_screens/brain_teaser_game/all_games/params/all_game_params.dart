@@ -1,10 +1,10 @@
-class BoldiFinderParams {
+class AllGameParams {
   int? gameId;
   int? levelId;
   String? title;
   String? desc;
 
-  BoldiFinderParams(
+  AllGameParams(
       {required this.gameId,
       required this.levelId,
       required this.desc,

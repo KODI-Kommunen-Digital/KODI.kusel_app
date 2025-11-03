@@ -6,16 +6,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dartz/dartz.dart';
 import '../../../end_points.dart';
 
-final brainTeaserGameBoldiFinderServiceProvider = Provider((ref) =>
-    BrainTeaserGameBoldiFinderService(
+final brainTeaserGamesServiceProvider = Provider((ref) =>
+    BrainTeaserGamesService(
         ref: ref,
         sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider)));
 
-class BrainTeaserGameBoldiFinderService {
+class BrainTeaserGamesService {
   Ref ref;
   SharedPreferenceHelper sharedPreferenceHelper;
 
-  BrainTeaserGameBoldiFinderService(
+  BrainTeaserGamesService(
       {required this.ref, required this.sharedPreferenceHelper});
 
   Future<Either<Exception, BaseModel>> call(
@@ -27,7 +27,7 @@ class BrainTeaserGameBoldiFinderService {
     final gameId = requestModel.toJson()['gameId'];
     final levelId = requestModel.toJson()['levelId'];
 
-    final path = "$brainTeaserGameBoldiFinderEndPoint/$gameId/$levelId";
+    final path = "$brainTeaserGamesEndPoint/$gameId/$levelId";
 
     final result = await apiHelper.getRequest(
         path: path, create: () => responseModel, headers: headers);
