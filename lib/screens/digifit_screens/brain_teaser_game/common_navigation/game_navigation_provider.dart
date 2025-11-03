@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:riverpod/riverpod.dart';
 
 import '../../../../navigation/navigation.dart';
-import '../boldi_finder/params/boldi_finder_params.dart';
+import '../all_games/params/all_game_params.dart';
 import 'game_registry.dart';
 
 final gameNavigationProvider = Provider((ref) => GameNavigationService(ref));
@@ -25,7 +25,7 @@ class GameNavigationService {
 
     final routePath = GameRegistry.getGameRoutePath(gameId);
 
-    final params = BoldiFinderParams(
+    final params = AllGameParams(
       gameId: gameId,
       levelId: levelId,
       desc: description,

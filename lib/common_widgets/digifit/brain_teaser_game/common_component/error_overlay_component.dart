@@ -7,7 +7,7 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:kusel/common_widgets/digifit/brain_teaser_game/common_component/success_overlay_component.dart';
 
-import '../../../../screens/digifit_screens/brain_teaser_game/grid_view_params.dart';
+import '../../../../screens/digifit_screens/brain_teaser_game/all_games/params/grid_view_params.dart';
 
 class ErrorOverlayGame extends FlameGame {
   final int wrongRow;

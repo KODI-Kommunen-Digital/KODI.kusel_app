@@ -6,7 +6,7 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
-import '../../grid_view_params.dart';
+import '../params/grid_view_params.dart';
 
 class PauseOverlayGame extends FlameGame {
   final double gridWidth;
