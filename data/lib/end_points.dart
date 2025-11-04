@@ -22,6 +22,7 @@ const onboardingCompleteEndpoint = "/onboardingComplete";
 const onboardingDetailEndPoint = "/onboardingDetail";
 const feedbackEndpoint = "/feedbacks";
 const municipalPartyDetailEndPoint = "/virtualTownhall/getMunicipalityById";
+const resetPasswordEndPoint='/users/change-password';
 
 // WEATHER API
 const weatherEndPoint = "/thirdParty/weather";

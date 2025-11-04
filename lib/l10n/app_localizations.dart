@@ -1783,6 +1783,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Contact'**
   String get contact;
+
+  /// No description provided for @profile_setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Setting'**
+  String get profile_setting;
+
+  /// No description provided for @new_password.
+  ///
+  /// In en, this message translates to:
+  /// **'New Password'**
+  String get new_password;
+
+  /// No description provided for @confirm_new_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm new password'**
+  String get confirm_new_password;
+
+  /// No description provided for @at_least_8_character.
+  ///
+  /// In en, this message translates to:
+  /// **'at least 8 characters'**
+  String get at_least_8_character;
+
+  /// No description provided for @contains_letters_and_numbers.
+  ///
+  /// In en, this message translates to:
+  /// **'contain letters and numbers'**
+  String get contains_letters_and_numbers;
+
+  /// No description provided for @contains_upper_case_and_lower_case.
+  ///
+  /// In en, this message translates to:
+  /// **'contains uppercase and lowercase'**
+  String get contains_upper_case_and_lower_case;
+
+  /// No description provided for @contains_special_character.
+  ///
+  /// In en, this message translates to:
+  /// **'contains special character'**
+  String get contains_special_character;
+
+  /// No description provided for @current_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Password'**
+  String get current_password;
+
+  /// No description provided for @update_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Password'**
+  String get update_password;
+
+  /// No description provided for @field_cannot_be_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Field cannot be empty'**
+  String get field_cannot_be_empty;
+
+  /// No description provided for @password_is_not_same_as_new_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is not same as new password'**
+  String get password_is_not_same_as_new_password;
+
+  /// No description provided for @reset_password_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Password has been successfully reset'**
+  String get reset_password_success;
 }
 
 class _AppLocalizationsDelegate

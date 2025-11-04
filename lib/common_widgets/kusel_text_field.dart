@@ -26,7 +26,6 @@ class KuselTextField extends ConsumerStatefulWidget {
   int? maxLines;
   EdgeInsetsGeometry? contentPadding;
   bool? obscureText;
-  BoxConstraints? suffixIconConstraints;
   bool outlined;
   List<TextInputFormatter>? inputFormatters;
   void Function(String)? onFieldSubmitted;
@@ -35,6 +34,7 @@ class KuselTextField extends ConsumerStatefulWidget {
   final List<String>? autofillHints;
   Function()? onTap;
   int? maxLength;
+  Widget? prefixIcon;
 
   KuselTextField(
       {required this.textEditingController,
@@ -57,7 +57,6 @@ class KuselTextField extends ConsumerStatefulWidget {
       this.maxLines,
       this.contentPadding,
       this.obscureText,
-      this.suffixIconConstraints,
       this.outlined = false,
       this.inputFormatters,
       this.onFieldSubmitted,
@@ -66,6 +65,7 @@ class KuselTextField extends ConsumerStatefulWidget {
       this.autofillHints,
         this.maxLength,
         this.onTap,
+        this.prefixIcon,
       super.key});
 
   @override
@@ -105,9 +105,18 @@ class _KuselTextFieldState extends ConsumerState<KuselTextField> {
         color: Theme.of(context).textTheme.displayMedium!.color!,
       ),
       decoration: InputDecoration(
+          prefixIconConstraints: BoxConstraints(
+            maxHeight: 44.h,
+            maxWidth: 44.w
+          ),
           fillColor: Colors.white,
+          prefixIcon: Padding(
+            padding:  EdgeInsets.only(left: 12.w,right: 6.w),
+            child: widget.prefixIcon,
+          ),
           filled: true,
-          suffixIconConstraints: widget.suffixIconConstraints,
+          suffixIconConstraints:
+          BoxConstraints(maxWidth: 40.w, maxHeight: 40.h),
           suffixIcon: widget.suffixIcon,
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(borderRadius),

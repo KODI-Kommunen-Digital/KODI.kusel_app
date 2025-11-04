@@ -54,6 +54,7 @@ import 'package:kusel/screens/ort_detail/ort_detail_screen.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen_params.dart';
 import 'package:kusel/screens/participate_screen/participate_screen.dart';
 import 'package:kusel/screens/profile/profile_screen.dart';
+import 'package:kusel/screens/reset_password/reset_password_screen.dart';
 import 'package:kusel/screens/search/search_screen.dart';
 import 'package:kusel/screens/search_result/search_result_screen.dart';
 import 'package:kusel/screens/search_result/search_result_screen_parameter.dart';
@@ -135,7 +136,9 @@ const webViewPagePath = "/webViewPagePath";
 const fullImageScreenPath = '/fullImageScreenPath';
 
 
-const subShellFeedbackScreenPath = "feedbackScreenPath";
+const subShellFeedbackScreenPath = "feedbackScreen";
+
+const resetPasswordScreenPath ="/resetPasswordScreen;";
 
 
 
@@ -217,6 +220,10 @@ List<RouteBase> goRouteList = [
           municipalityScreenParams: state.extra as MunicipalityScreenParams)),
   GoRoute(
       path: favouriteCityScreenPath, builder: (_, __) => FavouriteCityScreen()),
+
+  GoRoute(
+      path: resetPasswordScreenPath, builder: (_, __) => ResetPasswordScreen()),
+
   GoRoute(
       path: digifitOverViewScreenPath,
       builder: (_, state) => DigifitOverviewScreen(
