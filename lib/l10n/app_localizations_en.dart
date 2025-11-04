@@ -870,4 +870,45 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get error_game_des => 'Try again right away!';
+
+  @override
+  String get contact => 'Contact';
+
+  @override
+  String get profile_setting => 'Profile Setting';
+
+  @override
+  String get new_password => 'New Password';
+
+  @override
+  String get confirm_new_password => 'Confirm new password';
+
+  @override
+  String get at_least_8_character => 'at least 8 characters';
+
+  @override
+  String get contains_letters_and_numbers => 'contain letters and numbers';
+
+  @override
+  String get contains_upper_case_and_lower_case =>
+      'contains uppercase and lowercase';
+
+  @override
+  String get contains_special_character => 'contains special character';
+
+  @override
+  String get current_password => 'Current Password';
+
+  @override
+  String get update_password => 'Update Password';
+
+  @override
+  String get field_cannot_be_empty => 'Field cannot be empty';
+
+  @override
+  String get password_is_not_same_as_new_password =>
+      'Password is not same as new password';
+
+  @override
+  String get reset_password_success => 'Password has been successfully reset';
 }

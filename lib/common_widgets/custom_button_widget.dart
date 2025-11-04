@@ -32,7 +32,8 @@ class CustomButton extends StatelessWidget {
         this.buttonColor,
         this.textColor,
         this.textSize,
-        this.borderColor});
+        this.borderColor,
+     });
 
   @override
   Widget build(BuildContext context) {
