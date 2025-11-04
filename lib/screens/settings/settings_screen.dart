@@ -190,6 +190,30 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               },
             ),
           ),
+
+
+          Visibility(
+            visible: ref.watch(settingsScreenProvider).isLoggedIn,
+            child: Column(
+              children: [
+                const Divider(),
+                ListTile(
+                  leading: Icon(
+                      size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                      Icons.lock_reset),
+                  title: textBoldPoppins(
+                    text: AppLocalizations.of(context).profile_setting,
+                    textAlign: TextAlign.start,
+                  ),
+                  onTap: () {
+                    ref.read(navigationProvider).navigateUsingPath(
+                        path: resetPasswordScreenPath, context: context);
+                  },
+                ),
+              ],
+            ),
+          ),
+
           Column(
             children: [
               const Divider(),

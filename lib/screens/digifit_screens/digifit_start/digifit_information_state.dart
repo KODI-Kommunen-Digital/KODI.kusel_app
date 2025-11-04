@@ -4,20 +4,19 @@ class DigifitState {
   bool isLoading;
   final DigifitInformationDataModel? digifitInformationDataModel;
   final String errorMessage;
-  final bool isNetworkAvailable;
 
   DigifitState(
       {required this.isLoading,
       required this.digifitInformationDataModel,
       this.errorMessage = '',
-      required this.isNetworkAvailable});
+      });
 
   factory DigifitState.empty() {
     return DigifitState(
         isLoading: false,
         digifitInformationDataModel: null,
         errorMessage: '',
-        isNetworkAvailable: true);
+        );
   }
 
   DigifitState copyWith(
@@ -30,6 +29,6 @@ class DigifitState {
         digifitInformationDataModel:
             digifitInformationDataModel ?? this.digifitInformationDataModel,
         errorMessage: errorMessage ?? this.errorMessage,
-        isNetworkAvailable: isNetworkAvailable ?? this.isNetworkAvailable);
+        );
   }
 }
