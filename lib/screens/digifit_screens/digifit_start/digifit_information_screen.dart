@@ -76,23 +76,27 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                   child: _buildHeadingArrowSection(),
                 ),
 
-                Positioned(
-                  top: 30.h,
-                  right: 10.r,
-                  child: GestureDetector(
-                    onTap: () {
-                      ref.read(navigationProvider).navigateUsingPath(
-                          path: digifitFavScreenPath, context: context);
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 8.w, vertical: 8.h),
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Theme.of(context).colorScheme.secondary),
-                      child: Icon(
-                        Icons.favorite_border,
-                        color: Theme.of(context).cardColor,
+                // fav icon
+                Visibility(
+                  visible: ref.watch(networkStatusProvider).isNetworkAvailable,
+                  child: Positioned(
+                    top: 30.h,
+                    right: 10.r,
+                    child: GestureDetector(
+                      onTap: () {
+                        ref.read(navigationProvider).navigateUsingPath(
+                            path: digifitFavScreenPath, context: context);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 8.w, vertical: 8.h),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Theme.of(context).colorScheme.secondary),
+                        child: Icon(
+                          Icons.favorite_border,
+                          color: Theme.of(context).cardColor,
+                        ),
                       ),
                     ),
                   ),

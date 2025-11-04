@@ -208,8 +208,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                               context: context),
                         ),
                       ),
-                suffixIconConstraints:
-                    BoxConstraints(maxWidth: 40.w, maxHeight: 40.h),
               ),
               22.verticalSpace,
               _buildLabel(context, AppLocalizations.of(context).username),

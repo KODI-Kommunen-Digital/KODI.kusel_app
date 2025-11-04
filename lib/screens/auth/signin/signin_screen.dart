@@ -212,8 +212,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                     .of(context)
                     .is_required}");
               },
-              suffixIconConstraints:
-                  BoxConstraints(maxWidth: 40.w, maxHeight: 40.h),
+
             ),
             22.verticalSpace,
             GestureDetector(
