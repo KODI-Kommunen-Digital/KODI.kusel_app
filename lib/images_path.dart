@@ -47,7 +47,10 @@ Map<String, String> _svgImagePath = {
   "rainy_icon": "assets/svg/rainy_icon.svg",
   "partly_cloudy_icon": "assets/svg/partly_cloudy_icon.svg",
   "correct":"assets/svg/correct.svg",
-  "filter_button":"assets/svg/filter_button.svg"
+  "filter_button":"assets/svg/filter_button.svg",
+  "lock":"assets/svg/lock.svg",
+  "circular_check_outline":"assets/svg/circular_check_outlined.svg",
+  "circular_check_filled":"assets/svg/circular_check_filled.svg"
 };
 
 Map<String, String> _pngImagePath = {
