@@ -2,6 +2,7 @@ import 'package:domain/model/response_model/digifit/digifit_information_response
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hive/hive.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
@@ -27,7 +28,7 @@ import '../../../navigation/navigation.dart';
 import '../digifit_exercise_detail/params/digifit_exercise_details_params.dart';
 import '../digifit_overview/params/digifit_overview_params.dart';
 
-  class DigifitInformationScreen extends ConsumerStatefulWidget {
+class DigifitInformationScreen extends ConsumerStatefulWidget {
   const DigifitInformationScreen({super.key});
 
   @override
@@ -75,6 +76,32 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                   child: _buildHeadingArrowSection(),
                 ),
 
+                // fav icon
+                Visibility(
+                  visible: ref.watch(networkStatusProvider).isNetworkAvailable,
+                  child: Positioned(
+                    top: 30.h,
+                    right: 10.r,
+                    child: GestureDetector(
+                      onTap: () {
+                        ref.read(navigationProvider).navigateUsingPath(
+                            path: digifitFavScreenPath, context: context);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 8.w, vertical: 8.h),
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Theme.of(context).colorScheme.secondary),
+                        child: Icon(
+                          Icons.favorite_border,
+                          color: Theme.of(context).cardColor,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
                 Padding(
                   padding: EdgeInsets.only(top: 100.h),
                   child: Column(
@@ -110,7 +137,8 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
           },
           icon: Icon(
               size: DeviceHelper.isMobile(context) ? null : 12.h.w,
-              Icons.arrow_back, color: Theme.of(context).primaryColor),
+              Icons.arrow_back,
+              color: Theme.of(context).primaryColor),
         ),
         16.horizontalSpace,
         textBoldPoppins(
@@ -307,9 +335,7 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                   heading: station.muscleGroups ?? '',
                   title: station.name ?? '',
                   isFavouriteVisible:
-                  ref
-                      .read(networkStatusProvider)
-                      .isNetworkAvailable,
+                      ref.read(networkStatusProvider).isNetworkAvailable,
                   isFavorite: station.isFavorite ?? false,
                   sourceId: sourceId,
                   onCardTap: () {

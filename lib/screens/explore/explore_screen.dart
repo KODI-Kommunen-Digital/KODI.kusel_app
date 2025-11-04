@@ -59,7 +59,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
               height: 270.h,
               onTap: () {
                 ref.read(navigationProvider).navigateUsingPath(
-                    path: feedbackScreenPath, context: context);
+                    path: '$exploreScreenPath/$subShellFeedbackScreenPath', context: context);
               },
             ),
           ],
