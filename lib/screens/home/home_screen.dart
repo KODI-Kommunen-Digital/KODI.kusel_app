@@ -414,7 +414,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     .read(dashboardScreenProvider.notifier)
                     .onScreenNavigation();
                 ref.read(navigationProvider).navigateUsingPath(
-                    path: feedbackScreenPath, context: context);
+                    path: '$homeScreenPath/$subShellFeedbackScreenPath', context: context);
               },
             ),
           ],

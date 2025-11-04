@@ -22,6 +22,7 @@ const onboardingCompleteEndpoint = "/onboardingComplete";
 const onboardingDetailEndPoint = "/onboardingDetail";
 const feedbackEndpoint = "/feedbacks";
 const municipalPartyDetailEndPoint = "/virtualTownhall/getMunicipalityById";
+const resetPasswordEndPoint='/users/change-password';
 
 // WEATHER API
 const weatherEndPoint = "/thirdParty/weather";
@@ -51,6 +52,8 @@ const deleteAccountEndPoint = "/users";
 
 // DIGIFIT API
 const digifitInformationEndPoint = "/digifit";
+
+const digifitFavEndPoint = "/digifit/favoriteEquipments";
 
 const digifitOverviewEndPoint = "/digifit/user-equipment-stats";
 

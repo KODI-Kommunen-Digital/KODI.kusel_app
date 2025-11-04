@@ -35,7 +35,6 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
 
   @override
   void initState() {
-
     super.initState();
   }
 
@@ -43,7 +42,8 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    if (titleList.isEmpty) { // prevent multiple rebuilds
+    if (titleList.isEmpty) {
+      // prevent multiple rebuilds
       titleList = [
         AppLocalizations.of(context).infrastructure_and_public_space,
         AppLocalizations.of(context).transportation_and_mobility,
@@ -54,13 +54,11 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
         AppLocalizations.of(context).general_feedback,
       ];
 
-      Future.microtask((){
+      Future.microtask(() {
         ref.read(feedbackScreenProvider.notifier).updateTitle(titleList[0]);
-
       });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -89,12 +87,18 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
             Positioned(
               top: 30.h,
               left: 16.w,
-              child: ArrowBackWidget(
-                onTap: () {
-                  ref.read(dashboardScreenProvider).selectedIndex = 0;
-                  ref.read(navigationProvider).removeAllAndNavigate(
-                      path: homeScreenPath, context: context);
-                },
+              child: Row(
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      ref.read(navigationProvider).removeTopPage(context: context);
+                    },
+                    icon: Icon(Icons.arrow_back),
+                  ),
+                  8.horizontalSpace,
+                  textBoldPoppins(text: AppLocalizations.of(context).contact,
+                  fontSize:24 )
+                ],
               ),
             ),
           ],
@@ -114,7 +118,6 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
         CommonBackgroundClipperWidget(
             clipperType: UpstreamWaveClipper(),
             imageUrl: imagePath['background_image'] ?? "",
-            headingText: AppLocalizations.of(context).feedback,
             height: 130.h,
             blurredBackground: true,
             isBackArrowEnabled: false,
@@ -143,7 +146,9 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                   alignment: Alignment.centerLeft,
                   child: textRegularMontserrat(
                       text: AppLocalizations.of(context).regarding,
-                      fontSize: 14)),
+                      fontSize: 14,
+                      color: Theme.of(context).textTheme.displayMedium!.color,
+                      fontStyle: FontStyle.italic)),
             ),
             6.verticalSpace,
             CustomDropdown(
@@ -157,13 +162,16 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                       .read(feedbackScreenProvider.notifier)
                       .updateTitle(value ?? "");
                 }),
-            6.verticalSpace,
+            16.verticalSpace,
             Padding(
               padding: EdgeInsets.only(left: 8.w),
               child: Align(
                   alignment: Alignment.centerLeft,
                   child: textRegularMontserrat(
-                      text: AppLocalizations.of(context).email, fontSize: 14)),
+                      color: Theme.of(context).textTheme.displayMedium!.color,
+                      text: AppLocalizations.of(context).email,
+                      fontSize: 14,
+                      fontStyle: FontStyle.italic)),
             ),
             6.verticalSpace,
             KuselTextField(
@@ -174,13 +182,15 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                     "${AppLocalizations.of(context).email} ${AppLocalizations.of(context).is_required}");
               },
             ),
-            15.verticalSpace,
+            16.verticalSpace,
             Padding(
               padding: EdgeInsets.only(left: 8.w),
               child: Align(
                   alignment: Alignment.centerLeft,
                   child: textRegularMontserrat(
-                      text: AppLocalizations.of(context).news, fontSize: 14)),
+                      text: AppLocalizations.of(context).news,
+                      fontSize: 14,
+                      fontStyle: FontStyle.italic)),
             ),
             6.verticalSpace,
             KuselTextField(
@@ -201,18 +211,26 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
               child: Align(
                   alignment: Alignment.centerLeft,
                   child: textRegularMontserrat(
+                      color: Theme.of(context).textTheme.displayMedium!.color,
                       text: AppLocalizations.of(context).maximum_characters,
                       fontSize: 12)),
             ),
             16.verticalSpace,
             Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Checkbox(
-                    value: stateWatch.isChecked,
-                    activeColor: Theme.of(context).indicatorColor,
-                    onChanged: (value) {
-                      stateNotifier.updateCheckBox(value ?? false);
-                    }),
+                SizedBox(
+                  height: 24.h,
+                  width: 24.w,
+                  child: Checkbox(
+                      value: stateWatch.isChecked,
+                      activeColor: Theme.of(context).indicatorColor,
+                      checkColor: Theme.of(context).colorScheme.secondary,
+                      onChanged: (value) {
+                        stateNotifier.updateCheckBox(value ?? false);
+                      }),
+                ),
+                8.horizontalSpace,
                 Expanded(
                   child: GestureDetector(
                     onTap: () => ref.read(navigationProvider).navigateUsingPath(
@@ -223,7 +241,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                         text: AppLocalizations.of(context).feedback_text,
                         textOverflow: TextOverflow.visible,
                         textAlign: TextAlign.start,
-                        fontSize: 12),
+                        fontSize: 14),
                   ),
                 ),
               ],
@@ -238,7 +256,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                     color: Theme.of(context).colorScheme.error,
                     text:
                         AppLocalizations.of(context).privacy_policy_error_msg)),
-            10.verticalSpace,
+            40.verticalSpace,
             CustomButton(
                 onPressed: () {
                   if (feedbackFormKey.currentState!.validate() &&
@@ -264,10 +282,11 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
                   }
                 },
                 text: AppLocalizations.of(context).submit),
-            25.verticalSpace,
+            70.verticalSpace,
           ],
         ),
       ),
     );
   }
+
 }

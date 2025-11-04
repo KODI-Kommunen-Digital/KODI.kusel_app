@@ -61,7 +61,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get description => 'Beschreibung';
 
   @override
-  String get submit => 'Senden';
+  String get submit => 'Absenden';
 
   @override
   String get forgot => 'Passwort vergessen';
@@ -876,4 +876,46 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get error_game_des => 'Versuche es gleich nochmal!';
+
+  @override
+  String get contact => 'Kontakt';
+
+  @override
+  String get profile_setting => 'Profileinstellungen';
+
+  @override
+  String get new_password => 'Neues Passwort';
+
+  @override
+  String get confirm_new_password => 'Neues Passwort bestätigen';
+
+  @override
+  String get at_least_8_character => 'mindestens 8 Zeichen';
+
+  @override
+  String get contains_letters_and_numbers => 'enthält Buchstaben und Zahlen';
+
+  @override
+  String get contains_upper_case_and_lower_case =>
+      'enthält Groß- und Kleinbuchstaben';
+
+  @override
+  String get contains_special_character => 'enthält Sonderzeichen';
+
+  @override
+  String get current_password => 'Aktuelles Passwort';
+
+  @override
+  String get update_password => 'Passwort aktualisieren';
+
+  @override
+  String get field_cannot_be_empty => 'Feld darf nicht leer sein';
+
+  @override
+  String get password_is_not_same_as_new_password =>
+      'Passwort ist nicht dasselbe wie das neue Passwort';
+
+  @override
+  String get reset_password_success =>
+      'Das Passwort wurde erfolgreich zurückgesetzt.';
 }
