@@ -7,9 +7,16 @@ class KuselSettingState {
   bool isLoading;
   int totalPoints;
   int totalStamp;
+  String appVersion;
 
-  KuselSettingState(this.languageList, this.selectedLanguage,
-      this.isUserLoggedIn, this.isLoading, this.totalPoints, this.totalStamp);
+  KuselSettingState(
+      this.languageList,
+      this.selectedLanguage,
+      this.isUserLoggedIn,
+      this.isLoading,
+      this.totalPoints,
+      this.totalStamp,
+      this.appVersion);
 
   factory KuselSettingState.empty() {
     return KuselSettingState(
@@ -18,7 +25,8 @@ class KuselSettingState {
         false,
         false,
         0,
-        0);
+        0,
+        '');
   }
 
   KuselSettingState copyWith(
@@ -27,13 +35,15 @@ class KuselSettingState {
       bool? isUserLoggedIn,
       bool? isLoading,
       int? totalPoints,
-      int? totalStamp}) {
+      int? totalStamp,
+      String? appVersion}) {
     return KuselSettingState(
         languageList ?? this.languageList,
         selectedLanguage ?? this.selectedLanguage,
         isUserLoggedIn ?? this.isUserLoggedIn,
         isLoading ?? this.isLoading,
         totalPoints ?? this.totalPoints,
-        totalStamp ?? this.totalStamp);
+        totalStamp ?? this.totalStamp,
+        appVersion ?? this.appVersion);
   }
 }

@@ -32,19 +32,26 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
       controller.fetchCurrentLanguage();
       controller.isUserLoggedIn();
       controller.getUserScore();
+      controller.getAppVersion();
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _buildBody(context),
-    ).loaderDialog(context,ref.watch(kuselSettingScreenProvider).isLoading);
+    return RefreshIndicator(
+      onRefresh: () async{
+        await ref.read(kuselSettingScreenProvider.notifier).getUserScore();
+      },
+      child: Scaffold(
+        body: _buildBody(context),
+      ).loaderDialog(context,ref.watch(kuselSettingScreenProvider).isLoading),
+    );
   }
 
   _buildBody(BuildContext context) {
     return SingleChildScrollView(
+      physics: ClampingScrollPhysics(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -135,7 +142,9 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
                   'setting_profile',
                   () {}),
               _buildImageSettingCard(context,
-                  AppLocalizations.of(context).my_fav, 'my_fav', () {}),
+                  AppLocalizations.of(context).my_fav, 'my_fav', () {
+                ref.read(navigationProvider).navigateUsingPath(path: '$kuselSettingScreenPath/$kuselFavScreenPath', context: context);
+                  }),
             ],
           ),
           32.verticalSpace,
@@ -270,7 +279,9 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
 
           _buildCommonArrowTile(
               context: context,
-              onTap: () {},
+              onTap: () {
+                ref.read(navigationProvider).navigateUsingPath(path: '$kuselSettingScreenPath/$subShellFeedbackScreenPath', context: context);
+              },
               title: AppLocalizations.of(context).feedback,
               hasTopRadius: false,
               hasBottomRadius: false,
@@ -334,7 +345,7 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
                     fontSize: 14),
                 5.verticalSpace,
                 textSemiBoldMontserrat(
-                    text: '1.0.0',
+                    text: state.appVersion,
                     color: Theme.of(context)
                         .textTheme
                         .displayMedium!
