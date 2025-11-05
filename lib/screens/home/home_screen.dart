@@ -217,7 +217,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                             .onScreenNavigation();
                                         ref
                                           .read(navigationProvider)
-                                          .removeCurrentAndNavigate(
+                                          .navigateUsingPath(
                                               context: context,
                                               path: signInScreenPath);
                                     },
