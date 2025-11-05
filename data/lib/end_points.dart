@@ -71,6 +71,8 @@ const guestUserLoginEndPoint = "/users/guest/login";
 
 const localDigifitBulkTrackingEndPoint = "/digifit/bulk-trackers";
 
+const userScoreEndPoint = "/users/user-points";
+
 // BRAIN TEASERS API
 const brainTeaserGameListEndPoint = "/digifit/games-list";
 const brainTeaserGameDetailsEndPoint = "/digifit/game";
