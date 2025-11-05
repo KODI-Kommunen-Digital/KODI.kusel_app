@@ -37,6 +37,7 @@ import 'package:kusel/screens/fliter_screen/filter_screen.dart';
 import 'package:kusel/screens/full_image/full_image_screen.dart';
 import 'package:kusel/screens/highlight/highlight_screen.dart';
 import 'package:kusel/screens/home/home_screen.dart';
+import 'package:kusel/screens/kusel_setting_screen/kusel_setting_screen.dart';
 import 'package:kusel/screens/location/location_screen.dart';
 import 'package:kusel/screens/mein_ort/mein_ort_screen.dart';
 import 'package:kusel/screens/mobility_screen/mobility_screen.dart';
@@ -418,7 +419,7 @@ final dashboardRoutes = StatefulShellRoute.indexedStack(
       routes: [
         GoRoute(
           path: settingScreenPath,
-          builder: (_, __) => const SettingsScreen(),
+          builder: (_, __) => KuselSettingScreen()//const SettingsScreen(),
         ),
       ],
     ),
