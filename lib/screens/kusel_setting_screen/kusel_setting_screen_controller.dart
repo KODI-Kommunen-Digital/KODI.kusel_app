@@ -12,6 +12,7 @@ import 'package:kusel/screens/kusel_setting_screen/kusel_setting_state.dart';
 import 'package:domain/usecase/user_score/user_score_usecase.dart';
 import '../../locale/locale_constant.dart';
 import 'package:domain/model/response_model/user_score/user_score_response_model.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 final kuselSettingScreenProvider =
     StateNotifierProvider<KuselSettingScreenController, KuselSettingState>(
@@ -123,5 +124,14 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
       debugPrint('user score exception : $error');
       state = state.copyWith(isLoading: false);
     }
+  }
+
+  getAppVersion()async{
+    final obj = await PackageInfo.fromPlatform();
+
+    final appVersion = obj.version;
+
+    state = state.copyWith(appVersion: appVersion);
+
   }
 }
