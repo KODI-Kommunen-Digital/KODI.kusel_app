@@ -63,10 +63,9 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
                 FeedbackCardWidget(
                     height: 270.h,
                     onTap: () {
-                  ref
-                      .read(navigationProvider)
-                      .navigateUsingPath(path: feedbackScreenPath, context: context);
-                })
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: feedbackScreenPath, context: context);
+                    })
               ],
             ),
           ),
@@ -142,7 +141,9 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
                   return NetworkImageTextServiceCard(
                     onTap: () => ref.read(navigationProvider).navigateUsingPath(
                         path: webViewPagePath,
-                        params: WebViewParams(url: item?.linkUrl ?? 'https://www.landkreis-kusel.de'),
+                        params: WebViewParams(
+                            url: item?.linkUrl ??
+                                'https://www.landkreis-kusel.de'),
                         context: context),
                     imageUrl: item?.iconUrl ?? '',
                     text: item?.title ?? '_',
@@ -153,7 +154,6 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
       ),
     );
   }
-
 
   _buildContactListUi() {
     final state = ref.watch(mobilityScreenProvider);

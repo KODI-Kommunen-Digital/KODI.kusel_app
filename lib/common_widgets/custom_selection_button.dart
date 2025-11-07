@@ -32,6 +32,8 @@ class _CustomSelectionButtonState extends ConsumerState<CustomSelectionButton> {
         ),
         child: textRegularPoppins(
             text: widget.text,
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
             color: widget.isSelected
                 ? Theme.of(context).textTheme.labelSmall?.color
                 : Theme.of(context).textTheme.labelMedium?.color),

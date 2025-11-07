@@ -232,7 +232,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   child: textSemiBoldMontserrat(
                     color: Theme.of(context).textTheme.bodyLarge?.color,
                     fontWeight: FontWeight.w600,
-                    fontSize: 16,
+                    fontSize: 14,
                     text: AppLocalizations.of(context).another_time,
                   ),
                 )
