@@ -35,12 +35,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       final notifier = ref.read(onboardingScreenProvider.notifier);
       await notifier.initialCall();
 
-      if (!mounted) return; // ✅ prevent calling after dispose
-
       if (notifier.isOnboardingDone()) {
         notifier.getOnboardingDetails();
-      } else if (notifier.isOfflineOnboardingDone()) {
-        notifier.getOnboardingOfflineData();
       }
     });
 
@@ -208,9 +204,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           if(selectedPageIndex == 4)
             CustomButton(
               onPressed: ()async{
-                if (state.isLoggedIn) {
-                  stateNotifier.submitUserInterests();
-                }
+                //if (state.isLoggedIn) {
+                 await  stateNotifier.submitUserInterests();
+               // }
                 ref.read(navigationProvider).navigateUsingPath(
                   path: onboardingLoadingPagePath,
                   context: context,

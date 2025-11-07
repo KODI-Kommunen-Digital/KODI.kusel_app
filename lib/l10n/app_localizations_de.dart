@@ -959,4 +959,19 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get app_version => 'App-Version';
+
+  @override
+  String get mobile => 'Telefonnummer';
+
+  @override
+  String get optional => 'optional';
+
+  @override
+  String get address => 'Adresse';
+
+  @override
+  String get change_password => 'Passwort ändern';
+
+  @override
+  String get edit_interest_profile => 'Interessenprofil bearbeiten';
 }
