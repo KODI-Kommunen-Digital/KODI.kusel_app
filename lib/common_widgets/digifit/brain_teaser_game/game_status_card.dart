@@ -8,8 +8,10 @@ import '../../text_styles.dart';
 
 class GameStatusCardWidget extends ConsumerWidget {
   bool isStatus;
+  String description;
 
-  GameStatusCardWidget({super.key, required this.isStatus});
+  GameStatusCardWidget(
+      {super.key, required this.isStatus, required this.description});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -50,8 +52,7 @@ class GameStatusCardWidget extends ConsumerWidget {
                           ),
                           SizedBox(height: 8.h),
                           textRegularMontserrat(
-                            text: AppLocalizations.of(context)
-                                .successful_game_desc,
+                            text: description,
                             textAlign: TextAlign.start,
                             fontWeight: FontWeight.w400,
                             fontSize: 14.sp,

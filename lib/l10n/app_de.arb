@@ -277,8 +277,11 @@
   "abort_game_desc": "Das aktuelle Spiel ist noch nicht abgeschlossen. Möchten Sie es wirklich abbrechen und von vorne beginnen?",
   "level_complete": "Level abgeschlossen!",
   "level_complete_desc": "Um zum nächsten Level zu gelangen, klicken Sie bitte auf OK, um zurückzukehren.",
+  "all_level_complete": "Alle Level sind abgeschlossen. Bitte klicken Sie auf OK, um zurückzukehren.",
   "successful_game_title": "Super!",
-  "successful_game_desc": "Bist du bereit für Level 2?",
+  "successful_game_desc_for_level_1": "Bist du bereit für Level 2?",
+  "successful_game_desc_for_level_2": "Bist du bereit für Level 3?",
+  "successful_game_desc_for_level_3": "Alle Level sind abgeschlossen",
   "error_game_title": "Leider falsch",
   "error_game_des": "Versuche es gleich nochmal!",
   "contact": "Kontakt",
@@ -299,6 +302,9 @@
   "rubber_stamp": "Stempel",
   "treasure_pass": "Schätzepass",
   "data_protection_information": "Datenschutzhinweise",
-  "app_version": "App-Version"
-
+  "app_version": "App-Version",
+  "abort_math_hunt_game": "Mathe-Spiel abbrechen?",
+  "math_hunt_game_desc": "Bereit zum Kopfrechnen?",
+  "flip_catch_desc": "Bereit für den Flip-Catch",
+  "abort_flip_catch": "Flip Catch abbrechen?"
 }

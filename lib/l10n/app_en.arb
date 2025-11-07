@@ -275,8 +275,11 @@
   "abort_game_desc": "The current Game is not yet completed. Do you really want to abort and go back?",
   "level_complete": "Level Complete!",
   "level_complete_desc": "To start the next level, please click OK to go back.",
+  "all_level_complete": "All level's are completed, please click OK to go back.",
   "successful_game_title": "Super!",
-  "successful_game_desc": "Are you ready for Level 2?",
+  "successful_game_desc_for_level_1": "Are you ready for Level 2?",
+  "successful_game_desc_for_level_2": "Are you ready for Level 3?",
+  "successful_game_desc_for_level_3": "All Level's are completed",
   "error_game_title": "Unfortunately wrong",
   "error_game_des": "Try again right away!",
   "contact": "Contact",
@@ -292,13 +295,14 @@
   "field_cannot_be_empty": "Field cannot be empty",
   "password_is_not_same_as_new_password": "Password is not same as new password",
   "reset_password_success": "Password has been successfully reset",
+  "abort_math_hunt_game": "Abort MathHunt Game?",
+  "math_hunt_game_desc": "Ready for some mental arithmetic?",
+  "flip_catch_desc": "Ready for Flip catch",
+  "abort_flip_catch": "Abort Flip Catch?",
   "my_profile": "My Profile",
   "my_fav": "My favorites",
   "rubber_stamp": "Rubber Stamp",
   "treasure_pass": "Treasure pass",
   "data_protection_information": "Data Protection",
   "app_version": "App-Version"
-
-
-
 }

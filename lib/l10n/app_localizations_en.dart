@@ -860,10 +860,20 @@ class AppLocalizationsEn extends AppLocalizations {
       'To start the next level, please click OK to go back.';
 
   @override
+  String get all_level_complete =>
+      'All level\'s are completed, please click OK to go back.';
+
+  @override
   String get successful_game_title => 'Super!';
 
   @override
-  String get successful_game_desc => 'Are you ready for Level 2?';
+  String get successful_game_desc_for_level_1 => 'Are you ready for Level 2?';
+
+  @override
+  String get successful_game_desc_for_level_2 => 'Are you ready for Level 3?';
+
+  @override
+  String get successful_game_desc_for_level_3 => 'All Level\'s are completed';
 
   @override
   String get error_game_title => 'Unfortunately wrong';
@@ -911,6 +921,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reset_password_success => 'Password has been successfully reset';
+
+  @override
+  String get abort_math_hunt_game => 'Abort MathHunt Game?';
+
+  @override
+  String get math_hunt_game_desc => 'Ready for some mental arithmetic?';
+
+  @override
+  String get flip_catch_desc => 'Ready for Flip catch';
+
+  @override
+  String get abort_flip_catch => 'Abort Flip Catch?';
 
   @override
   String get my_profile => 'My Profile';

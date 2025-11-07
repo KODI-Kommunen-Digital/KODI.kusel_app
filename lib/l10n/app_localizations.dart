@@ -1754,17 +1754,35 @@ abstract class AppLocalizations {
   /// **'To start the next level, please click OK to go back.'**
   String get level_complete_desc;
 
+  /// No description provided for @all_level_complete.
+  ///
+  /// In en, this message translates to:
+  /// **'All level\'s are completed, please click OK to go back.'**
+  String get all_level_complete;
+
   /// No description provided for @successful_game_title.
   ///
   /// In en, this message translates to:
   /// **'Super!'**
   String get successful_game_title;
 
-  /// No description provided for @successful_game_desc.
+  /// No description provided for @successful_game_desc_for_level_1.
   ///
   /// In en, this message translates to:
   /// **'Are you ready for Level 2?'**
-  String get successful_game_desc;
+  String get successful_game_desc_for_level_1;
+
+  /// No description provided for @successful_game_desc_for_level_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you ready for Level 3?'**
+  String get successful_game_desc_for_level_2;
+
+  /// No description provided for @successful_game_desc_for_level_3.
+  ///
+  /// In en, this message translates to:
+  /// **'All Level\'s are completed'**
+  String get successful_game_desc_for_level_3;
 
   /// No description provided for @error_game_title.
   ///
@@ -1855,6 +1873,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Password has been successfully reset'**
   String get reset_password_success;
+
+  /// No description provided for @abort_math_hunt_game.
+  ///
+  /// In en, this message translates to:
+  /// **'Abort MathHunt Game?'**
+  String get abort_math_hunt_game;
+
+  /// No description provided for @math_hunt_game_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready for some mental arithmetic?'**
+  String get math_hunt_game_desc;
+
+  /// No description provided for @flip_catch_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready for Flip catch'**
+  String get flip_catch_desc;
+
+  /// No description provided for @abort_flip_catch.
+  ///
+  /// In en, this message translates to:
+  /// **'Abort Flip Catch?'**
+  String get abort_flip_catch;
 
   /// No description provided for @my_profile.
   ///
