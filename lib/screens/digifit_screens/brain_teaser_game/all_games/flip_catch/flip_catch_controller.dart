@@ -284,9 +284,6 @@ class BrainTeaserGameFlipCatchFinderController
         .map((word) => word.trim())
         .toList();
 
-    // final selectedWord =
-    //     selectedIndex < words.length ? words[selectedIndex] : '';
-
     state = state.copyWith(
       isGamePlayEnabled: false,
       selectedWordIndex: selectedIndex,
@@ -443,12 +440,6 @@ class BrainTeaserGameFlipCatchFinderController
       return;
     }
 
-    state = state.copyWith(
-      isGamePlayEnabled: false,
-      selectedStartIndex: startIndex,
-      selectedEndIndex: endIndex,
-    );
-
     final targetWordsList = state.flipCatchData?.targetWords ?? [];
     final currentTargetIndex = state.currentTargetIndex ?? 0;
 
@@ -489,6 +480,15 @@ class BrainTeaserGameFlipCatchFinderController
       }
     }
 
+    state = state.copyWith(
+      isGamePlayEnabled: false,
+      selectedStartIndex: startIndex,
+      selectedEndIndex: endIndex,
+      isAnswerCorrect: isCorrect,
+      correctStartIndex: correctStart,
+      correctEndIndex: correctEnd,
+    );
+
     if (isCorrect) {
       final newTargetIndex = currentTargetIndex + 1;
       final isLastWord = newTargetIndex >= targetWordsList.length;
@@ -500,11 +500,6 @@ class BrainTeaserGameFlipCatchFinderController
             state = state.copyWith(
               isLoading: false,
               showResult: true,
-              selectedStartIndex: startIndex,
-              selectedEndIndex: endIndex,
-              isAnswerCorrect: true,
-              correctStartIndex: correctStart,
-              correctEndIndex: correctEnd,
               gameStageConstant: GameStageConstant.complete,
             );
           }
@@ -516,11 +511,6 @@ class BrainTeaserGameFlipCatchFinderController
         ];
 
         state = state.copyWith(
-          selectedStartIndex: startIndex,
-          selectedEndIndex: endIndex,
-          isAnswerCorrect: true,
-          correctStartIndex: correctStart,
-          correctEndIndex: correctEnd,
           completedRanges: updatedRanges,
           isGamePlayEnabled: false,
         );
@@ -543,11 +533,6 @@ class BrainTeaserGameFlipCatchFinderController
           state = state.copyWith(
             isLoading: false,
             showResult: true,
-            selectedStartIndex: startIndex,
-            selectedEndIndex: endIndex,
-            isAnswerCorrect: false,
-            correctStartIndex: correctStart,
-            correctEndIndex: correctEnd,
             gameStageConstant: GameStageConstant.abort,
           );
         }
