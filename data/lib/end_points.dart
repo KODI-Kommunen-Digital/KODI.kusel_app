@@ -73,8 +73,11 @@ const localDigifitBulkTrackingEndPoint = "/digifit/bulk-trackers";
 
 const userScoreEndPoint = "/users/user-points";
 
+const getLegalPolicyEndPoint = "/moreInfo/legal";
+
 // BRAIN TEASERS API
 const brainTeaserGameListEndPoint = "/digifit/games-list";
 const brainTeaserGameDetailsEndPoint = "/digifit/game";
 const brainTeaserGamesEndPoint = "/digifit/game-steps";
 const brainTeaserGameDetailsTrackerEndPoint = "/digifit/games-tracker";
+

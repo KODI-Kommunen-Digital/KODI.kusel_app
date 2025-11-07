@@ -22,8 +22,16 @@ class FavoritesService {
 
     String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
     final headers = {'Authorization': 'Bearer $token'};
+
+    final queryParams = requestModel
+        .toJson()
+        .entries
+        .where((e) => e.value != null)
+        .map((e) => "${e.key}=${Uri.encodeComponent(e.value.toString())}")
+        .join("&");
+
     final path =
-        "$getFavoritesListingEndpoint?translate=${requestModel.toJson()["translate"]}";
+        "$getFavoritesListingEndpoint?$queryParams";
 
     final result = await apiHelper.getRequest(
         path: path, create: () => responseModel, headers: headers);
