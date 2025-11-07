@@ -293,5 +293,12 @@
   "update_password": "Passwort aktualisieren",
   "field_cannot_be_empty": "Feld darf nicht leer sein",
   "password_is_not_same_as_new_password": "Passwort ist nicht dasselbe wie das neue Passwort",
-  "reset_password_success": "Das Passwort wurde erfolgreich zurückgesetzt."
+  "reset_password_success": "Das Passwort wurde erfolgreich zurückgesetzt.",
+  "my_profile": "Mein Profil",
+  "my_fav": "Meine Favoriten",
+  "rubber_stamp": "Stempel",
+  "treasure_pass": "Schätzepass",
+  "data_protection_information": "Datenschutzhinweise",
+  "app_version": "App-Version"
+
 }

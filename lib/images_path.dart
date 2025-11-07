@@ -50,7 +50,11 @@ Map<String, String> _svgImagePath = {
   "filter_button":"assets/svg/filter_button.svg",
   "lock":"assets/svg/lock.svg",
   "circular_check_outline":"assets/svg/circular_check_outlined.svg",
-  "circular_check_filled":"assets/svg/circular_check_filled.svg"
+  "circular_check_filled":"assets/svg/circular_check_filled.svg",
+  "setting_header_image":"assets/svg/setting_header_image.svg",
+  "setting_profile":"assets/svg/setting_profile.svg",
+  "my_fav":"assets/svg/my_fav.svg",
+  "forward_arrow":"assets/svg/forward_arrow.svg"
 };
 
 Map<String, String> _pngImagePath = {

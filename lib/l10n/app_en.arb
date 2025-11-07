@@ -291,5 +291,14 @@
   "update_password": "Update Password",
   "field_cannot_be_empty": "Field cannot be empty",
   "password_is_not_same_as_new_password": "Password is not same as new password",
-  "reset_password_success": "Password has been successfully reset"
+  "reset_password_success": "Password has been successfully reset",
+  "my_profile": "My Profile",
+  "my_fav": "My favorites",
+  "rubber_stamp": "Rubber Stamp",
+  "treasure_pass": "Treasure pass",
+  "data_protection_information": "Data Protection",
+  "app_version": "App-Version"
+
+
+
 }

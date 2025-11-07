@@ -918,4 +918,22 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get reset_password_success =>
       'Das Passwort wurde erfolgreich zurückgesetzt.';
+
+  @override
+  String get my_profile => 'Mein Profil';
+
+  @override
+  String get my_fav => 'Meine Favoriten';
+
+  @override
+  String get rubber_stamp => 'Stempel';
+
+  @override
+  String get treasure_pass => 'Schätzepass';
+
+  @override
+  String get data_protection_information => 'Datenschutzhinweise';
+
+  @override
+  String get app_version => 'App-Version';
 }
