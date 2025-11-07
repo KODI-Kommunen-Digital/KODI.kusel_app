@@ -527,75 +527,12 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   }
 
   Future<void> startLoadingTimer(Function() callBack) async {
-    if (state.isLoggedIn) {
       await updateOnboardingSuccess();
-    } else {
-      saveCacheOnboardingData();
-    }
     Future.delayed(const Duration(seconds: 2), () {
       callBack();
     });
   }
 
-  Future<void> saveCacheOnboardingData() async {
-    Map<int, bool> interestSMap = state.interestsMap;
-    List<int> interestIds = interestSMap.entries
-        .where((interest) => interest.value)
-        .map((interest) => interest.key)
-        .toList();
-
-    bool hasUserType = state.isTourist || state.isResident;
-    bool hasMaritalStatus =
-        state.isSingle || state.isForTwo || state.isWithFamily;
-    bool hasAccommodation = state.isWithDog || state.isBarrierearm;
-    bool hasInterests = interestIds.isNotEmpty;
-    bool hasCity = state.resident != null && state.resident!.isNotEmpty;
-
-    if (!hasUserType &&
-        !hasMaritalStatus &&
-        !hasAccommodation &&
-        !hasInterests &&
-        !hasCity) {
-      debugPrint('No data filled - not saving');
-      return;
-    }
-
-    String? userType;
-    if (state.isTourist) {
-      userType = "tourist";
-    } else if (state.isResident) {
-      userType = "citizen";
-    }
-
-    String? maritalStatus;
-    if (state.isSingle) {
-      maritalStatus = "alone";
-    } else if (state.isForTwo) {
-      maritalStatus = "married";
-    } else if (state.isWithFamily) {
-      maritalStatus = "with_family";
-    }
-
-    final accommodationPreference = <String>[
-      if (state.isWithDog) "dog",
-      if (state.isBarrierearm) "low_barrier",
-    ];
-
-    String cityName = state.resident ?? '';
-    int? cityId = getCityIdByName(state.cityDetailsMap, cityName);
-
-    OnboardingData onboardingData = OnboardingData(
-        userType: userType,
-        cityId: cityId,
-        maritalStatus: maritalStatus,
-        accommodationPreference:
-            accommodationPreference.isEmpty ? null : accommodationPreference,
-        interests: interestIds.isEmpty ? null : interestIds,
-        onBoarded: 1);
-
-    await sharedPreferenceHelper.saveObject(onboardingCacheKey, onboardingData);
-    debugPrint('Saved onboarding data');
-  }
 
   Future<void> getInterests() async {
     try {
