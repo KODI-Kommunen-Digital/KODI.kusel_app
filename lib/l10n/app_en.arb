@@ -304,5 +304,10 @@
   "rubber_stamp": "Rubber Stamp",
   "treasure_pass": "Treasure pass",
   "data_protection_information": "Data Protection",
-  "app_version": "App-Version"
+  "app_version": "App-Version",
+  "mobile": "Mobile",
+  "optional": "optional",
+  "address": "Address",
+  "change_password": "Change Password",
+  "edit_interest_profile": "Edit interest profile"
 }

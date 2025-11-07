@@ -1933,6 +1933,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'App-Version'**
   String get app_version;
+
+  /// No description provided for @mobile.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile'**
+  String get mobile;
+
+  /// No description provided for @optional.
+  ///
+  /// In en, this message translates to:
+  /// **'optional'**
+  String get optional;
+
+  /// No description provided for @address.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get address;
+
+  /// No description provided for @change_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get change_password;
+
+  /// No description provided for @edit_interest_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit interest profile'**
+  String get edit_interest_profile;
 }
 
 class _AppLocalizationsDelegate
