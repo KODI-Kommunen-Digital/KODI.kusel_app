@@ -1855,6 +1855,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Password has been successfully reset'**
   String get reset_password_success;
+
+  /// No description provided for @my_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'My Profile'**
+  String get my_profile;
+
+  /// No description provided for @my_fav.
+  ///
+  /// In en, this message translates to:
+  /// **'My favorites'**
+  String get my_fav;
+
+  /// No description provided for @rubber_stamp.
+  ///
+  /// In en, this message translates to:
+  /// **'Rubber Stamp'**
+  String get rubber_stamp;
+
+  /// No description provided for @treasure_pass.
+  ///
+  /// In en, this message translates to:
+  /// **'Treasure pass'**
+  String get treasure_pass;
+
+  /// No description provided for @data_protection_information.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Protection'**
+  String get data_protection_information;
+
+  /// No description provided for @app_version.
+  ///
+  /// In en, this message translates to:
+  /// **'App-Version'**
+  String get app_version;
 }
 
 class _AppLocalizationsDelegate

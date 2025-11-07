@@ -911,4 +911,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reset_password_success => 'Password has been successfully reset';
+
+  @override
+  String get my_profile => 'My Profile';
+
+  @override
+  String get my_fav => 'My favorites';
+
+  @override
+  String get rubber_stamp => 'Rubber Stamp';
+
+  @override
+  String get treasure_pass => 'Treasure pass';
+
+  @override
+  String get data_protection_information => 'Data Protection';
+
+  @override
+  String get app_version => 'App-Version';
 }

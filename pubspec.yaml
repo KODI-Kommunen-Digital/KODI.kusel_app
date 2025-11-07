@@ -31,6 +31,7 @@ dependencies:
   video_player: ^2.10.0
   device_info_plus: ^10.0.0
   calendar_date_picker2: ^2.0.1
+  package_info_plus: ^9.0.0
   core:
     path: core
 

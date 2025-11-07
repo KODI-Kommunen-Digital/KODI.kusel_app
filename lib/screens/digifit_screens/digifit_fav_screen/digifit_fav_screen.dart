@@ -36,7 +36,7 @@ class _DigifitFavScreenState extends ConsumerState<DigifitFavScreen> {
 
     return PopScope(
       onPopInvokedWithResult: (value,_){
-        ref.read(digifitInformationControllerProvider.notifier).fetchDigifitInformation();
+        //ref.read(digifitInformationControllerProvider.notifier).fetchDigifitInformation();
       },
       child: Scaffold(
         body: (state.isLoading)
@@ -59,7 +59,7 @@ class _DigifitFavScreenState extends ConsumerState<DigifitFavScreen> {
           CommonBackgroundClipperWidget(
               clipperType: UpstreamWaveClipper(),
               imageUrl: imagePath['background_image'] ?? "",
-              headingText: AppLocalizations.of(context).favorites,
+              headingText: AppLocalizations.of(context).digifit,
               height: 120.h,
               blurredBackground: true,
               isBackArrowEnabled: true,

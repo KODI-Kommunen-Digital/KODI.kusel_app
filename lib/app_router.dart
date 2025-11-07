@@ -36,6 +36,8 @@ import 'package:kusel/screens/fliter_screen/filter_screen.dart';
 import 'package:kusel/screens/full_image/full_image_screen.dart';
 import 'package:kusel/screens/highlight/highlight_screen.dart';
 import 'package:kusel/screens/home/home_screen.dart';
+import 'package:kusel/screens/kusel_setting_screen/kusel_fav_screen.dart';
+import 'package:kusel/screens/kusel_setting_screen/kusel_setting_screen.dart';
 import 'package:kusel/screens/location/location_screen.dart';
 import 'package:kusel/screens/mein_ort/mein_ort_screen.dart';
 import 'package:kusel/screens/mobility_screen/mobility_screen.dart';
@@ -105,7 +107,7 @@ const homeScreenPath = "/homeScreenPath";
 const exploreScreenPath = "/exploreScreenPath";
 const searchScreenPath = "/searchScreenPath";
 const locationScreenPath = "/locationScreenPath";
-const settingScreenPath = "/settingScreenPath";
+const kuselSettingScreenPath = "/settingScreenPath";
 
 // BECAUSE WE ARE USING STATEFUL SHELL ROUTING i.e; we are not putting forward slash
 const tourismScreenPath = "tourismScreenPath";
@@ -139,7 +141,8 @@ const subShellFeedbackScreenPath = "feedbackScreen";
 
 const resetPasswordScreenPath ="/resetPasswordScreen;";
 
-
+// setting screen
+const kuselFavScreenPath = "kuselFavScreen";
 
 final exploreSubScreenRoutes = [
   tourismScreenPath,
@@ -410,8 +413,19 @@ final dashboardRoutes = StatefulShellRoute.indexedStack(
     StatefulShellBranch(
       routes: [
         GoRoute(
-          path: settingScreenPath,
-          builder: (_, __) => const SettingsScreen(),
+          path: kuselSettingScreenPath,
+          builder: (_, __) => KuselSettingScreen(),//const SettingsScreen()
+          routes: [
+            GoRoute(
+              path: kuselFavScreenPath,
+              builder: (_, __) => const KuselFavScreen(),
+            ),
+
+            GoRoute(
+              path: subShellFeedbackScreenPath,
+              builder: (_, __) => const FeedbackScreen(),
+            )
+          ]
         ),
       ],
     ),
