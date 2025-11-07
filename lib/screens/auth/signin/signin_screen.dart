@@ -37,15 +37,12 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: true??false,
+      canPop: false,
       onPopInvokedWithResult: (didPop, dynamicType) {
         if (!didPop) {
-          //TODO: need to check this as for now we are using shell route
-          // ref
-          //     .read(navigationProvider)
-          //     .removeAllAndNavigate(path: homeScreenPath, context: context);
-
-          ref.read(navigationProvider).removeTopPage(context: context);
+          ref
+              .read(navigationProvider)
+              .removeAllAndNavigate(path: homeScreenPath, context: context);
         }
       },
       child: Scaffold(
@@ -112,7 +109,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
               onTap: () {
                 ref
                     .read(navigationProvider)
-                    .removeTopPage(context: context);
+                    .removeAllAndNavigate(path: homeScreenPath, context: context);
               },
             ),
           ),

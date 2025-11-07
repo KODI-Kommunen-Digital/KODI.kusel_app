@@ -35,6 +35,7 @@ import 'package:domain/usecase/refresh_token/refresh_token_usecase.dart';
 import 'package:domain/usecase/user_detail/user_detail_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kusel/providers/guest_user_login_provider.dart';
 import 'package:kusel/screens/onboarding/onboarding_screen_state.dart';
 
 import '../../common_widgets/city_type_constant.dart';
@@ -57,7 +58,8 @@ final onboardingScreenProvider = StateNotifierProvider.autoDispose<
         sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
         signInStatusController: ref.read(signInStatusProvider.notifier),
         editUserDetailUseCase: ref.read(editUserDetailUseCaseProvider),
-        userDetailUseCase: ref.read(userDetailUseCaseProvider)));
+        userDetailUseCase: ref.read(userDetailUseCaseProvider),
+        guestUserLogin: ref.read(guestUserLoginProvider)));
 
 class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   OnboardingScreenController(
@@ -73,7 +75,8 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
       required this.sharedPreferenceHelper,
       required this.signInStatusController,
       required this.editUserDetailUseCase,
-      required this.userDetailUseCase})
+      required this.userDetailUseCase,
+      required this.guestUserLogin})
       : super(OnboardingScreenState.empty());
   OnboardingUserTypeUseCase onboardingUserTypeUseCase;
   OnboardingUserDemographicsUseCase onboardingUserDemographicsUseCase;
@@ -91,6 +94,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   SignInStatusController signInStatusController;
   EditUserDetailUseCase editUserDetailUseCase;
   UserDetailUseCase userDetailUseCase;
+  GuestUserLogin guestUserLogin;
 
   Future<void> initialCall() async {
     state = state.copyWith(isLoading: true);
@@ -115,17 +119,15 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   }
 
   void updateOnboardingType(OnBoardingType? onBoardingType) {
+    if (onBoardingType == null) {
+      state = state.copyWith(
+        isResident: false,
+        isTourist: false,
+      );
 
-    if(onBoardingType == null)
-      {
-        state = state.copyWith(
-          isResident: false,
-          isTourist: false,
-        );
-
-        updateIsInterestScreenButtonVisibility(false);
-        return;
-      }
+      updateIsInterestScreenButtonVisibility(false);
+      return;
+    }
 
     state = state.copyWith(
       isResident: onBoardingType == OnBoardingType.resident,
@@ -133,20 +135,19 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     );
 
     updateIsInterestScreenButtonVisibility(true);
-
   }
 
   Future<void> updateCurrentCity() async {
     try {
       String? userCurrentCity = await fetchCity();
       state = state.copyWith(userCurrentCity: userCurrentCity);
-    }catch(error)
-    {
+    } catch (error) {
       debugPrint('fetch city exception : $error');
     }
   }
 
-  Future<void> updateOnboardingFamilyType(OnBoardingFamilyType onBoardingFamilyType) async{
+  Future<void> updateOnboardingFamilyType(
+      OnBoardingFamilyType onBoardingFamilyType) async {
     bool alreadySelected;
     switch (onBoardingFamilyType) {
       case OnBoardingFamilyType.single:
@@ -171,9 +172,9 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
           ? !alreadySelected
           : false,
     );
-    
-    
-    updateIsOptionScreenButtonVisibility(state.isSingle||state.isForTwo || state.isWithFamily);
+
+    updateIsOptionScreenButtonVisibility(
+        state.isSingle || state.isForTwo || state.isWithFamily);
   }
 
   void updateUserType(String value) {
@@ -217,8 +218,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
         final response = tokenStatus.isAccessTokenExpired();
         if (response) {
           RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
-          RefreshTokenRequestModel requestModel =
-              RefreshTokenRequestModel();
+          RefreshTokenRequestModel requestModel = RefreshTokenRequestModel();
           final result =
               await refreshTokenUseCase.call(requestModel, responseModel);
           result.fold((l) {
@@ -275,16 +275,14 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     String cityName = state.resident ?? '';
     int cityId = getCityIdByName(state.cityDetailsMap, cityName) ?? 0;
 
-    if(cityId!=0)
-      {
-        sharedPreferenceHelper.setInt(selectedCityIdKey, cityId);
-      }
+    if (cityId != 0) {
+      sharedPreferenceHelper.setInt(selectedCityIdKey, cityId);
+    }
     try {
       final response = tokenStatus.isAccessTokenExpired();
       if (response) {
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
-        RefreshTokenRequestModel requestModel =
-            RefreshTokenRequestModel();
+        RefreshTokenRequestModel requestModel = RefreshTokenRequestModel();
         final result =
             await refreshTokenUseCase.call(requestModel, responseModel);
         result.fold((l) {
@@ -349,8 +347,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
       final response = tokenStatus.isAccessTokenExpired();
       if (response) {
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
-        RefreshTokenRequestModel requestModel =
-            RefreshTokenRequestModel();
+        RefreshTokenRequestModel requestModel = RefreshTokenRequestModel();
         final result =
             await refreshTokenUseCase.call(requestModel, responseModel);
         result.fold((l) {
@@ -404,8 +401,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
       final response = tokenStatus.isAccessTokenExpired();
       if (response) {
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
-        RefreshTokenRequestModel requestModel =
-            RefreshTokenRequestModel();
+        RefreshTokenRequestModel requestModel = RefreshTokenRequestModel();
         final result =
             await refreshTokenUseCase.call(requestModel, responseModel);
         result.fold((l) {
@@ -470,21 +466,18 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     return null;
   }
 
-  Future<void> nextPage() async{
+  Future<void> nextPage() async {
     if (pageController.hasClients) {
       final nextPage = state.selectedPageIndex + 1;
       debugPrint("current page == ${state.selectedPageIndex}");
       if (nextPage < 5) {
-
-        if(nextPage == 3)
-          {
-            String cityName = state.resident ?? '';
-            int cityId = getCityIdByName(state.cityDetailsMap, cityName) ?? 0;
-            if(cityId!=0)
-            {
-              await sharedPreferenceHelper.setInt(selectedCityIdKey, cityId);
-            }
+        if (nextPage == 3) {
+          String cityName = state.resident ?? '';
+          int cityId = getCityIdByName(state.cityDetailsMap, cityName) ?? 0;
+          if (cityId != 0) {
+            await sharedPreferenceHelper.setInt(selectedCityIdKey, cityId);
           }
+        }
 
         pageController.animateToPage(
           nextPage,
@@ -637,8 +630,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
       final response = tokenStatus.isAccessTokenExpired();
 
       if (response) {
-        RefreshTokenRequestModel requestModel =
-            RefreshTokenRequestModel();
+        RefreshTokenRequestModel requestModel = RefreshTokenRequestModel();
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
         final refreshResponse =
@@ -781,37 +773,13 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
 
   Future<void> isLoggedIn() async {
     final status = await signInStatusController.isUserLoggedIn();
-    state = state.copyWith(isLoggedIn: status);
-  }
 
-  void getOnboardingOfflineData() {
-    try {
-      final jsonOnboardingDataString =
-          sharedPreferenceHelper.getString(onboardingCacheKey);
-
-      if (jsonOnboardingDataString == null ||
-          jsonOnboardingDataString.isEmpty) {
-        debugPrint('⚠No cached onboarding data found');
-        state = state.copyWith(isLoading: false);
-        return;
+    if(!status)
+      {
+        await guestUserLogin.getGuestUserToken();
       }
 
-      final Map<String, dynamic> jsonMap = jsonDecode(jsonOnboardingDataString);
-      final onboardingData = OnboardingData.fromJson(jsonMap);
-
-      final userFistName = sharedPreferenceHelper.getString(userFirstNameKey);
-
-      debugPrint('Loading cached onboarding data (may be partial)');
-      state = state.copyWith(
-          onboardingData: onboardingData,
-          userFirstName: userFistName,
-          isLoading: false);
-      initializeOnboardingData();
-    } catch (e) {
-      debugPrint('Error loading cached data: $e');
-      sharedPreferenceHelper.remove(onboardingCacheKey);
-      state = state.copyWith(isLoading: false);
-    }
+    state = state.copyWith(isLoggedIn: status);
   }
 
   void updateFirstName(String value) {
@@ -824,8 +792,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
       required void Function(String msg) onError}) async {
     final response = tokenStatus.isAccessTokenExpired();
     if (response) {
-      RefreshTokenRequestModel requestModel =
-          RefreshTokenRequestModel();
+      RefreshTokenRequestModel requestModel = RefreshTokenRequestModel();
       RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
       final refreshResponse =
@@ -884,10 +851,9 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
 
       if (response) {
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
-        RefreshTokenRequestModel requestModel =
-        RefreshTokenRequestModel();
+        RefreshTokenRequestModel requestModel = RefreshTokenRequestModel();
         final result =
-        await refreshTokenUseCase.call(requestModel, responseModel);
+            await refreshTokenUseCase.call(requestModel, responseModel);
 
         result.fold((l) {
           state = state.copyWith(loading: false);
@@ -901,7 +867,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
           UserDetailRequestModel requestModel = UserDetailRequestModel();
           UserDetailResponseModel responseModel = UserDetailResponseModel();
           final result =
-          await userDetailUseCase.call(requestModel, responseModel);
+              await userDetailUseCase.call(requestModel, responseModel);
           result.fold((l) {
             debugPrint('get user details fold exception : $l');
           }, (r) async {
@@ -909,15 +875,14 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
             await sharedPreferenceHelper.setString(
                 userFirstNameKey, response.data?.firstname ?? "");
             debugPrint('first time get this id 2 is ${state.userFirstName}');
-            state = state.copyWith(
-                loading: false);
+            state = state.copyWith(loading: false);
           });
         });
       } else {
         UserDetailRequestModel requestModel = UserDetailRequestModel();
         UserDetailResponseModel responseModel = UserDetailResponseModel();
         final result =
-        await userDetailUseCase.call(requestModel, responseModel);
+            await userDetailUseCase.call(requestModel, responseModel);
 
         result.fold((l) {
           debugPrint('get user details fold exception : $l');
@@ -926,8 +891,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
           await sharedPreferenceHelper.setString(
               userFirstNameKey, response.data?.firstname ?? "");
           debugPrint('first time get this id 23 is ${state.userFirstName}');
-          state = state.copyWith(
-              loading: false);
+          state = state.copyWith(loading: false);
         });
       }
     } catch (error) {
@@ -936,27 +900,21 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     }
   }
 
-  void updateIsNameScreenButtonVisibility(bool value)
-  {
+  void updateIsNameScreenButtonVisibility(bool value) {
     state = state.copyWith(isNameScreenButtonVisible: value);
   }
 
-  void updateIsPreferenceScreenButtonVisibility(bool value)
-  {
+  void updateIsPreferenceScreenButtonVisibility(bool value) {
     state = state.copyWith(isPreferencePageButtonVisible: value);
   }
 
-  void updateIsOptionScreenButtonVisibility(bool value)
-  {
+  void updateIsOptionScreenButtonVisibility(bool value) {
     state = state.copyWith(isOptionPageButtonVisible: value);
   }
 
-
-  void updateIsInterestScreenButtonVisibility(bool value)
-  {
+  void updateIsInterestScreenButtonVisibility(bool value) {
     state = state.copyWith(isInterestPageButtonVisible: value);
   }
-
 }
 
 enum OnBoardingType { resident, tourist }
