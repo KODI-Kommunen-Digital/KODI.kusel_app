@@ -43,7 +43,7 @@ class _OnboardingFinishPageState extends ConsumerState<OnboardingFinishPage> {
                 ),
                 textBoldPoppins(
                     text: AppLocalizations.of(context).ready,
-                    fontSize: 18,
+                    fontSize: 20,
                     color: Theme.of(context).textTheme.bodyLarge?.color),
                 15.verticalSpace,
                 textRegularPoppins(
@@ -51,7 +51,7 @@ class _OnboardingFinishPageState extends ConsumerState<OnboardingFinishPage> {
                         .i_have_prepared_everything_text,
                     color: Theme.of(context).textTheme.bodyLarge?.color,
                     textOverflow: TextOverflow.visible,
-                    fontSize: 12),
+                    fontSize: 13),
                 25.verticalSpace,
                 CustomButton(
                     onPressed: () {
