@@ -29,7 +29,7 @@ class _CommonEventCardState extends ConsumerState<InterestsGridCardView> {
       color: widget.isSelected
           ? Theme.of(context).indicatorColor
           : Colors.white,
-      margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+      margin: EdgeInsets.symmetric(horizontal: 8.w, vertical: 6.h),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
       elevation: 1,
       child: Column(

@@ -29,7 +29,7 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingTypePage> {
           65.verticalSpace,
           textBoldPoppins(
               text: AppLocalizations.of(context).ich_text,
-              fontSize: 18,
+              fontSize: 20,
               color: Theme.of(context).textTheme.bodyLarge?.color),
           20.verticalSpace,
           CustomSelectionButton(

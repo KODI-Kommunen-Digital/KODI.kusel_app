@@ -53,7 +53,7 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
               65.verticalSpace,
               textBoldPoppins(
                   text: AppLocalizations.of(context).i_live_in_district,
-                  fontSize: 18,
+                  fontSize: 20,
                   color: Theme.of(context).textTheme.bodyLarge?.color),
               20.verticalSpace,
               Align(
