@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
+
 import '../../../../../app_router.dart';
 
 enum GameType {
   boldiFinder(1, boldiFinderScreenPath),
-  matheJagd(2, matheJagdScreenPath),
-  flipCatch(3, flipCatchScreenPath),
+  flipCatch(2, flipCatchScreenPath),
+  matheJagd(3, matheJagdScreenPath),
   digitDash(4, digitDashScreenPath),
   bilderSpiel(5, bilderSpielScreenPath);
 

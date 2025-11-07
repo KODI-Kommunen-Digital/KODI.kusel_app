@@ -98,7 +98,10 @@ Map<String, String> _pngImagePath = {
   "cloud_message_image": "assets/png/cloud_message.png",
   "grid_boldi": "assets/png/grid_boldi.png",
   "boldi_successor": "assets/png/boldi_successor.png",
-  "unlock_stamp_image": "assets/png/unlock_stamp_image.png"
+  "unlock_stamp_image": "assets/png/unlock_stamp_image.png",
+  "cloud_image_math_hunt": "assets/png/cloud_image_math_hunt.png",
+  "boldi_new_sunny_image": "assets/png/boldi_new_sunny.png",
+  "math_hunt_boldi": "assets/png/math_hunt_boldi.png",
 };
 
 Map<String, String> _jpegImagePath = {

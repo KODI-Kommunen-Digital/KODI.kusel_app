@@ -258,7 +258,7 @@ List<RouteBase> goRouteList = [
   ),
 
   GoRoute(
-    path: matheJagdScreenPath,
+    path: flipCatchScreenPath,
     builder: (context, state) {
       final params = state.extra as AllGameParams?;
       return GameRegistry.getGameScreen(2, params);
@@ -266,7 +266,7 @@ List<RouteBase> goRouteList = [
   ),
 
   GoRoute(
-    path: flipCatchScreenPath,
+    path: matheJagdScreenPath,
     builder: (context, state) {
       final params = state.extra as AllGameParams?;
       return GameRegistry.getGameScreen(3, params);

@@ -60,8 +60,8 @@ class BrainTeaserGameBoldiFinderState {
       isLoading: false,
       errorMessage: null,
       gameData: null,
-      rows: 5,
-      columns: 5,
+      rows: 3,
+      columns: 3,
       timerSeconds: 3,
       gameStage: GameStageConstant.initial,
       isGamePlayEnabled: false,
@@ -82,7 +82,6 @@ class BrainTeaserGameBoldiFinderState {
     );
   }
 
-  /// Simple copyWith method
   BrainTeaserGameBoldiFinderState copyWith({
     bool? isLoading,
     String? errorMessage,
