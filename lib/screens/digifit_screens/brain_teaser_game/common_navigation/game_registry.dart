@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:kusel/app_router.dart';
+import 'package:kusel/screens/digifit_screens/brain_teaser_game/all_games/math_hunt/math_hunt_screen.dart';
 
 import '../all_games/boldi_finder/boldi_finder_screen.dart';
+import '../all_games/flip_catch/flip_catch_screen.dart';
 import '../all_games/params/all_game_params.dart';
 import 'enum/game_type.dart';
 
 class GameRegistry {
   GameRegistry._();
 
-  static final Map<GameType, Widget Function(AllGameParams?)>
-      _screenBuilders = {
+  static final Map<GameType, Widget Function(AllGameParams?)> _screenBuilders =
+      {
     GameType.boldiFinder: (params) =>
         BoldiFinderScreen(boldiFinderParams: params),
-    GameType.matheJagd: (params) =>
-        _buildPlaceholder(GameType.matheJagd, params),
-    GameType.flipCatch: (params) =>
-        _buildPlaceholder(GameType.flipCatch, params),
+    GameType.flipCatch: (params) => FlipCatchScreen(flipCatchParams: params),
+    GameType.matheJagd: (params) => MathHuntScreen(
+          mathHuntGameParams: params,
+        ),
     GameType.digitDash: (params) =>
         _buildPlaceholder(GameType.digitDash, params),
     GameType.bilderSpiel: (params) =>
@@ -48,8 +51,7 @@ class GameRegistry {
     return builder?.call(params) ?? _buildErrorScreen(gameId);
   }
 
-  static Widget _buildPlaceholder(
-      GameType gameType, AllGameParams? params) {
+  static Widget _buildPlaceholder(GameType gameType, AllGameParams? params) {
     return Scaffold(
       body: Center(
         child: Padding(

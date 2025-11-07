@@ -28,7 +28,7 @@ class MathHuntResponseModel extends BaseModel<MathHuntResponseModel> {
 
 class MathHuntDataModel extends BaseModel<MathHuntDataModel> {
   final List<String>? problem;
-  final List<int>? options;
+  final List<String>? options;
   final int? correctAnswer;
   final int? timer;
   final int? sessionId;
@@ -48,7 +48,8 @@ class MathHuntDataModel extends BaseModel<MathHuntDataModel> {
     return MathHuntDataModel(
       problem:
           json['problem'] != null ? List<String>.from(json['problem']) : null,
-      options: json['options'] != null ? List<int>.from(json['options']) : null,
+      options:
+          json['options'] != null ? List<String>.from(json['options']) : null,
       correctAnswer: json['correctAnswer'],
       timer: json['timer'],
       sessionId: json['sessionId'],

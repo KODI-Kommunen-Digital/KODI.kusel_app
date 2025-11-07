@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
+import 'package:kusel/screens/digifit_screens/brain_teaser_game/all_games/flip_catch/component/flip_catch_boldi_cloud_overlay_game.dart';
+import 'package:kusel/screens/digifit_screens/brain_teaser_game/all_games/flip_catch/component/word_timer_overlay.dart';
+import 'package:kusel/screens/digifit_screens/brain_teaser_game/all_games/flip_catch/flip_catch_state.dart';
 import 'package:kusel/screens/digifit_screens/brain_teaser_game/game_details/details_controller.dart';
 
 import '../../../../../common_widgets/common_background_clipper_widget.dart';
 import '../../../../../common_widgets/common_bottom_nav_card_.dart';
 import '../../../../../common_widgets/common_html_widget.dart';
 import '../../../../../common_widgets/device_helper.dart';
-import '../../../../../common_widgets/digifit/brain_teaser_game/common_component/error_overlay_component.dart';
-import '../../../../../common_widgets/digifit/brain_teaser_game/common_component/success_overlay_component.dart';
 import '../../../../../common_widgets/digifit/brain_teaser_game/game_status_card.dart';
-import '../../../../../common_widgets/digifit/brain_teaser_game/grid_widget.dart';
 import '../../../../../common_widgets/text_styles.dart';
 import '../../../../../common_widgets/upstream_wave_clipper.dart';
 import '../../../../../images_path.dart';
@@ -21,27 +21,24 @@ import '../../../../../l10n/app_localizations.dart';
 import '../../../../../navigation/navigation.dart';
 import '../../../digifit_start/digifit_information_controller.dart';
 import '../../enum/game_session_status.dart';
-import '../components/arrow_direction.dart';
-import '../components/boldi_component.dart';
-import '../components/pause_icon.dart';
 import '../params/all_game_params.dart';
-import 'boldi_finder_controller.dart';
-import 'boldi_finder_state.dart';
+import 'component/drag_selection_component.dart';
+import 'component/word_list_overlay.dart';
+import 'flip_catch_controller.dart';
 
-class BoldiFinderScreen extends ConsumerStatefulWidget {
-  final AllGameParams? boldiFinderParams;
+class FlipCatchScreen extends ConsumerStatefulWidget {
+  final AllGameParams? flipCatchParams;
 
-  const BoldiFinderScreen({super.key, required this.boldiFinderParams});
+  const FlipCatchScreen({super.key, required this.flipCatchParams});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() {
-    return _BoldiFinderScreenState();
+    return _FlipCatchScannerState();
   }
 }
 
-class _BoldiFinderScreenState extends ConsumerState<BoldiFinderScreen> {
-  CommonGridWidget? _gridGame;
-  final GlobalKey _gridKey = GlobalKey();
+class _FlipCatchScannerState extends ConsumerState<FlipCatchScreen> {
+  WordTimerOverlayGame? _wordTimerGame;
 
   @override
   void initState() {
@@ -51,53 +48,125 @@ class _BoldiFinderScreenState extends ConsumerState<BoldiFinderScreen> {
       if (!mounted) return;
 
       final controller = ref.read(
-        brainTeaserGameBoldiFinderControllerProvider(
-          widget.boldiFinderParams?.levelId ?? 1,
+        brainTeaserGameFlipCatchControllerProvider(
+          widget.flipCatchParams?.levelId ?? 1,
         ).notifier,
       );
 
       controller.fetchGameData(
-        gameId: widget.boldiFinderParams?.gameId ?? 1,
-        levelId: widget.boldiFinderParams?.levelId ?? 1,
+        gameId: widget.flipCatchParams?.gameId ?? 1,
+        levelId: widget.flipCatchParams?.levelId ?? 1,
       );
     });
+  }
+
+  double _calculateWordTimerHeight(List<String> targetWords) {
+    final horizontalScreenPadding = 14.0;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final cardWidth = screenWidth - (horizontalScreenPadding * 2);
+    final horizontalPaddingInside = 20.0;
+    final verticalPaddingInside = 35.0;
+    final topMargin = 40.0;
+
+    final textPainter = TextPainter(
+      text: TextSpan(
+        text: targetWords.join('   '),
+        style: const TextStyle(
+          fontSize: 20.0,
+          fontWeight: FontWeight.w600,
+          height: 1.4,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+      textAlign: TextAlign.left,
+      maxLines: null,
+    );
+
+    textPainter.layout(maxWidth: cardWidth - horizontalPaddingInside * 2);
+
+    final cardHeight = textPainter.height + (verticalPaddingInside * 2) - 10;
+    final totalHeight = topMargin + cardHeight + 10;
+
+    // Minimum 280, maximum 700
+    return totalHeight.clamp(280.0, 700.0);
+  }
+
+  double _calculateWordListHeight(String fullText) {
+    final horizontalScreenPadding = 14.0;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final cardWidth = screenWidth - (horizontalScreenPadding * 2);
+    final horizontalPaddingInside = 20.0;
+    final verticalPaddingInside = 35.0;
+    final topMargin = 30.0;
+    final fontSize = 20.0;
+    final lineHeight = fontSize * 1.4;
+
+    final words = fullText
+        .split(' ')
+        .where((word) => word.trim().isNotEmpty)
+        .map((word) => word.trim())
+        .toList();
+
+    final spaceWidth = _calculateSpaceWidth(fontSize);
+
+    double currentX = 0;
+    double currentY = 0;
+    int lineCount = 1;
+
+    for (int i = 0; i < words.length; i++) {
+      final textPainter = TextPainter(
+        text: TextSpan(
+          text: words[i],
+          style: TextStyle(
+            fontSize: fontSize,
+            fontWeight: FontWeight.w600,
+            height: 1.4,
+          ),
+        ),
+        textDirection: TextDirection.ltr,
+      );
+      textPainter.layout();
+
+      if (currentX + textPainter.width >
+              cardWidth - horizontalPaddingInside * 2 &&
+          currentX > 0) {
+        currentX = 0;
+        currentY += lineHeight + 8;
+        lineCount++;
+      }
+
+      currentX += textPainter.width + spaceWidth;
+    }
+
+    final actualContentHeight =
+        (lineCount * lineHeight) + ((lineCount - 1) * 8);
+    final cardHeight = actualContentHeight + (verticalPaddingInside * 2) + 40;
+    final totalHeight = topMargin + cardHeight + 50;
+
+    return totalHeight.clamp(360.0, 800.0);
+  }
+
+  double _calculateSpaceWidth(double fontSize) {
+    final spacePainter = TextPainter(
+      text: TextSpan(
+        text: ' ',
+        style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.w600),
+      ),
+      textDirection: TextDirection.ltr,
+    );
+    spacePainter.layout();
+    return spacePainter.width + 2;
   }
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(
-      brainTeaserGameBoldiFinderControllerProvider(
-        widget.boldiFinderParams?.levelId ?? 1,
+      brainTeaserGameFlipCatchControllerProvider(
+        widget.flipCatchParams?.levelId ?? 1,
       ),
     );
 
-    final headingText = widget.boldiFinderParams?.title ?? '';
-    final useInnerPadding = widget.boldiFinderParams?.gameId == 3;
-
-    final gridHeight = 330.w;
-    final gridWidth = 330.w;
-    final rows = state.rows;
-    final columns = state.columns;
-    final tileWidth = gridWidth / columns;
-    final tileHeight = gridHeight / rows;
-
-    if (_gridGame == null ||
-        _gridGame!.params.rows != rows ||
-        _gridGame!.params.columns != columns) {
-      _gridGame = CommonGridWidget(
-        params: CommonGridParams(
-          width: gridWidth,
-          height: gridHeight,
-          tileHeight: tileHeight,
-          tileWidth: tileWidth,
-          rows: rows,
-          columns: columns,
-          borderColor: Theme.of(context).dividerColor,
-          useInnerPadding: useInnerPadding,
-          onCellTapped: _handleCellTap,
-        ),
-      );
-    }
+    final headingText = widget.flipCatchParams?.title ?? '';
 
     return PopScope(
       canPop: false,
@@ -130,25 +199,8 @@ class _BoldiFinderScreenState extends ConsumerState<BoldiFinderScreen> {
                       Column(
                         children: [
                           130.verticalSpace,
-                          Align(
-                            alignment: Alignment.center,
-                            child: SizedBox(
-                              height: gridHeight,
-                              width: gridWidth,
-                              child: _buildGameStack(
-                                state: state,
-                                gridWidth: gridWidth,
-                                gridHeight: gridHeight,
-                                tileWidth: tileWidth,
-                                tileHeight: tileHeight,
-                                context: context,
-                              ),
-                            ),
-                          ),
-
-                          10.verticalSpace,
-
-                          // Description
+                          _buildGameStack(state),
+                          20.verticalSpace,
                           Padding(
                             padding: const EdgeInsets.only(
                               left: 20,
@@ -157,9 +209,10 @@ class _BoldiFinderScreenState extends ConsumerState<BoldiFinderScreen> {
                             ),
                             child: CommonHtmlWidget(
                               fontSize: 16,
-                              data: widget.boldiFinderParams?.desc ?? '',
+                              data: widget.flipCatchParams?.desc ?? '',
                             ),
                           ),
+                          state.showResult ? 80.verticalSpace : 1.verticalSpace
                         ],
                       ),
                     ],
@@ -179,11 +232,11 @@ class _BoldiFinderScreenState extends ConsumerState<BoldiFinderScreen> {
                   isFavVisible: false,
                   isFav: false,
                   onGameStageConstantTap: _handleBottomNavTap,
-                  gameDetailsStageConstant: state.gameStage,
+                  gameDetailsStageConstant: state.gameStageConstant,
                 ),
               ),
 
-              if (state.showResult && state.hasAnswerResult)
+              if (state.showResult)
                 Positioned(
                   bottom: 80.h,
                   left: 0,
@@ -191,108 +244,13 @@ class _BoldiFinderScreenState extends ConsumerState<BoldiFinderScreen> {
                   child: GameStatusCardWidget(
                     isStatus: state.isAnswerCorrect ?? false,
                     description: _getGameStatusDescription(
-                        widget.boldiFinderParams?.levelId ?? 1),
+                        widget.flipCatchParams?.levelId ?? 1),
                   ),
                 ),
             ],
           ),
         ),
       ).loaderDialog(context, state.isLoading),
-    );
-  }
-
-  Widget _buildGameStack({
-    required BrainTeaserGameBoldiFinderState state,
-    required double gridWidth,
-    required double gridHeight,
-    required double tileWidth,
-    required double tileHeight,
-    required BuildContext context,
-  }) {
-    return Stack(
-      children: [
-        GameWidget(
-          key: _gridKey,
-          game: _gridGame!,
-        ),
-        if (state.showBoldi && state.hasBoldiPosition)
-          GameWidget(
-            key: ValueKey('boldi_${state.boldiRow}_${state.boldiCol}'),
-            game: BoldiOverlayGame(
-              row: state.boldiRow!,
-              column: state.boldiCol!,
-              gridWidth: gridWidth,
-              gridHeight: gridHeight,
-              tileWidth: tileWidth,
-              tileHeight: tileHeight,
-            ),
-          ),
-        if (state.showArrow && state.hasArrowDirection)
-          GameWidget(
-            key: ValueKey(
-              'arrow_${state.arrowDisplayIndex}_${state.currentArrowDirection}',
-            ),
-            game: ArrowOverlayGame(
-              direction: state.currentArrowDirection!,
-              gridWidth: gridWidth,
-              gridHeight: gridHeight,
-              tileWidth: tileWidth,
-              tileHeight: tileHeight,
-              borderColor: Theme.of(context).dividerColor,
-              arrowColor:
-                  Theme.of(context).textTheme.bodyMedium?.color ?? Colors.black,
-              durationSeconds: state.timerSeconds,
-            ),
-          ),
-        if (state.showPause)
-          GameWidget(
-            key: const ValueKey('pause'),
-            game: PauseOverlayGame(
-              gridWidth: gridWidth,
-              gridHeight: gridHeight,
-              tileWidth: tileWidth,
-              tileHeight: tileHeight,
-              borderColor: Theme.of(context).dividerColor,
-              arrowColor:
-                  Theme.of(context).textTheme.bodyMedium?.color ?? Colors.black,
-            ),
-          ),
-        if (state.showResult &&
-            state.hasAnswerResult &&
-            state.isAnswerCorrect == true)
-          GameWidget(
-            key: ValueKey('success_${state.selectedRow}_${state.selectedCol}'),
-            game: SuccessOverlayGame(
-              row: state.selectedRow!,
-              column: state.selectedCol!,
-              gridWidth: gridWidth,
-              gridHeight: gridHeight,
-              tileWidth: tileWidth,
-              tileHeight: tileHeight,
-              successColor: Colors.green,
-            ),
-          ),
-        if (state.showResult &&
-            state.hasAnswerResult &&
-            state.isAnswerCorrect == false)
-          GameWidget(
-            key: ValueKey(
-              'error_${state.selectedRow}_${state.selectedCol}_${state.correctRow}_${state.correctCol}',
-            ),
-            game: ErrorOverlayGame(
-              wrongRow: state.selectedRow!,
-              wrongColumn: state.selectedCol!,
-              correctRow: state.correctRow ?? 0,
-              correctColumn: state.correctCol ?? 0,
-              gridWidth: gridWidth,
-              gridHeight: gridHeight,
-              tileWidth: tileWidth,
-              tileHeight: tileHeight,
-              errorColor: Colors.red,
-              correctColor: Colors.green,
-            ),
-          ),
-      ],
     );
   }
 
@@ -320,22 +278,105 @@ class _BoldiFinderScreenState extends ConsumerState<BoldiFinderScreen> {
     );
   }
 
+  Widget _buildGameStack(BrainTeaserGameFlipCatchState state) {
+    final useWordClick = (widget.flipCatchParams?.levelId ?? 1) <= 5;
+
+    double stackHeight = 240.h;
+
+    if (state.showWordWithTimer && state.currentWord.isNotEmpty) {
+      stackHeight =
+          _calculateWordTimerHeight(state.flipCatchData?.targetWords ?? []);
+    } else if (state.showWordList && state.wordOptions.isNotEmpty) {
+      stackHeight = _calculateWordListHeight(state.wordOptions[0]);
+    }
+
+    return Container(
+      width: double.infinity,
+      height: stackHeight,
+      margin: EdgeInsets.zero,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          if (state.showBoldiWithCloud)
+            GameWidget(
+              key: const ValueKey('boldi_cloud'),
+              game: FlipCatchBoldiCloudOverlayGame(
+                width: 330.w,
+                height: 330.w,
+                cloudText: AppLocalizations.of(context).flip_catch_desc,
+                textColor: Theme.of(context).textTheme.bodyLarge?.color,
+              ),
+            ),
+          if (state.showWordWithTimer && state.currentWord.isNotEmpty)
+            GameWidget(
+              key: ValueKey('word_timer_${state.currentWord}'),
+              game: _wordTimerGame ??= WordTimerOverlayGame(
+                targetWords: state.flipCatchData!.targetWords,
+                durationSeconds: state.timerSecond,
+                width: MediaQuery.of(context).size.width,
+                height: stackHeight,
+                timerColor: Theme.of(context).primaryColor,
+                textColor: Theme.of(context).textTheme.bodyLarge?.color,
+              ),
+            ),
+          if (state.showWordList && useWordClick)
+            GameWidget(
+              key: ValueKey(
+                  'game_${state.currentTargetIndex}_${state.selectedWordIndex}_${state.isGamePlayEnabled}'),
+              game: WordListOverlayGame(
+                fullText: state.wordOptions[0],
+                onWordSelected: (index) => _handleWordSelection(index),
+                width: MediaQuery.of(context).size.width,
+                height: stackHeight,
+                background: Colors.white,
+                selectedColor: Colors.blue,
+                selectedIndex: state.selectedWordIndex,
+                isCorrect: state.isAnswerCorrect,
+                correctIndex: state.correctWordIndex,
+                isEnabled: state.isGamePlayEnabled,
+                ccompletedIndices: state.completedTargetIndices,
+                currentTargetIndex: state.currentTargetIndex ?? 0,
+                textColor: Theme.of(context).textTheme.bodyLarge?.color,
+              ),
+            ),
+          if (state.showWordList && !useWordClick)
+            DragSelectTextWidget(
+              key: ValueKey(
+                  'drag_select_${state.currentTargetIndex}_${state.selectedStartIndex}_${state.isGamePlayEnabled}'),
+              fullText: state.wordOptions[0],
+              onWordSelected: (text, start, end) =>
+                  _handleDragSelection(text, start, end),
+              selectedStartIndex: state.selectedStartIndex,
+              selectedEndIndex: state.selectedEndIndex,
+              isCorrect: state.isAnswerCorrect,
+              correctStartIndex: state.correctStartIndex,
+              correctEndIndex: state.correctEndIndex,
+              isEnabled: state.isGamePlayEnabled,
+              completedRanges: state.completedRanges,
+              textColor:
+                  Theme.of(context).textTheme.bodyLarge!.color ?? Colors.blue,
+            ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _handleBottomNavTap() async {
     if (!mounted) return;
 
     final controller = ref.read(
-      brainTeaserGameBoldiFinderControllerProvider(
-        widget.boldiFinderParams?.levelId ?? 1,
+      brainTeaserGameFlipCatchControllerProvider(
+        widget.flipCatchParams?.levelId ?? 1,
       ).notifier,
     );
 
     final state = ref.read(
-      brainTeaserGameBoldiFinderControllerProvider(
-        widget.boldiFinderParams?.levelId ?? 1,
+      brainTeaserGameFlipCatchControllerProvider(
+        widget.flipCatchParams?.levelId ?? 1,
       ),
     );
 
-    switch (state.gameStage) {
+    switch (state.gameStageConstant) {
       case GameStageConstant.initial:
         await controller.startGame();
         break;
@@ -345,9 +386,12 @@ class _BoldiFinderScreenState extends ConsumerState<BoldiFinderScreen> {
         break;
 
       case GameStageConstant.abort:
+        _wordTimerGame?.stopTimer();
+        _wordTimerGame = null;
+
         await controller.restartGame(
-          widget.boldiFinderParams?.gameId ?? 1,
-          widget.boldiFinderParams?.levelId ?? 1,
+          widget.flipCatchParams?.gameId ?? 1,
+          widget.flipCatchParams?.levelId ?? 1,
         );
         break;
 
@@ -360,36 +404,17 @@ class _BoldiFinderScreenState extends ConsumerState<BoldiFinderScreen> {
     }
   }
 
-  void _handleCellTap(int row, int column) {
-    if (!mounted) return;
-
-    final controller = ref.read(
-      brainTeaserGameBoldiFinderControllerProvider(
-        widget.boldiFinderParams?.levelId ?? 1,
-      ).notifier,
-    );
-
-    controller.checkAnswer(row, column);
-  }
-
   Future<void> _handleBackNavigation(BuildContext context) async {
     if (!mounted) return;
 
-    final controller = ref.read(
-      brainTeaserGameBoldiFinderControllerProvider(
-        widget.boldiFinderParams?.levelId ?? 1,
-      ).notifier,
-    );
-
     final state = ref.read(
-      brainTeaserGameBoldiFinderControllerProvider(
-        widget.boldiFinderParams?.levelId ?? 1,
+      brainTeaserGameFlipCatchControllerProvider(
+        widget.flipCatchParams?.levelId ?? 1,
       ),
     );
 
-    switch (state.gameStage) {
+    switch (state.gameStageConstant) {
       case GameStageConstant.progress:
-        controller.pauseGame();
         await _showAbortDialog(context);
         break;
 
@@ -408,12 +433,20 @@ class _BoldiFinderScreenState extends ConsumerState<BoldiFinderScreen> {
   Future<void> _showAbortDialog(BuildContext context) async {
     if (!mounted) return;
 
+    final controller = ref.read(
+      brainTeaserGameFlipCatchControllerProvider(
+        widget.flipCatchParams?.levelId ?? 1,
+      ).notifier,
+    );
+    _wordTimerGame?.pauseTimer();
+    controller.pauseGameTimer();
+
     await showCupertinoDialog(
       context: context,
       barrierDismissible: false,
       builder: (ctx) => CupertinoAlertDialog(
         title: textBoldPoppins(
-          text: AppLocalizations.of(context).abort_game,
+          text: AppLocalizations.of(context).abort_flip_catch,
           textAlign: TextAlign.center,
           fontSize: 16,
         ),
@@ -430,14 +463,8 @@ class _BoldiFinderScreenState extends ConsumerState<BoldiFinderScreen> {
           CupertinoDialogAction(
             onPressed: () {
               if (!mounted) return;
-
-              final controller = ref.read(
-                brainTeaserGameBoldiFinderControllerProvider(
-                  widget.boldiFinderParams?.levelId ?? 1,
-                ).notifier,
-              );
-
-              controller.resumeGame();
+              _wordTimerGame?.resumeTimer();
+              controller.resumeGameTimer();
               ref.read(navigationProvider).removeDialog(context: context);
             },
             isDefaultAction: true,
@@ -452,8 +479,8 @@ class _BoldiFinderScreenState extends ConsumerState<BoldiFinderScreen> {
               if (!mounted) return;
 
               final controller = ref.read(
-                brainTeaserGameBoldiFinderControllerProvider(
-                  widget.boldiFinderParams?.levelId ?? 1,
+                brainTeaserGameFlipCatchControllerProvider(
+                  widget.flipCatchParams?.levelId ?? 1,
                 ).notifier,
               );
 
@@ -486,8 +513,8 @@ class _BoldiFinderScreenState extends ConsumerState<BoldiFinderScreen> {
   Future<void> _showCompletionDialog(BuildContext context) async {
     if (!mounted) return;
 
-    String text = ((widget.boldiFinderParams?.levelId ?? 1) == 1 ||
-        (widget.boldiFinderParams?.levelId ?? 1) == 2)
+    String text = ((widget.flipCatchParams?.levelId ?? 1) == 1 ||
+            (widget.flipCatchParams?.levelId ?? 1) == 2)
         ? AppLocalizations.of(context).level_complete_desc
         : AppLocalizations.of(context).all_level_complete;
 
@@ -503,7 +530,7 @@ class _BoldiFinderScreenState extends ConsumerState<BoldiFinderScreen> {
         content: Padding(
           padding: EdgeInsets.only(top: 8.h),
           child: textRegularPoppins(
-            text:text,
+            text: text,
             textAlign: TextAlign.center,
             textOverflow: TextOverflow.visible,
             fontSize: 12,
@@ -524,11 +551,11 @@ class _BoldiFinderScreenState extends ConsumerState<BoldiFinderScreen> {
                 await ref
                     .read(
                       brainTeaserGameDetailsControllerProvider(
-                        widget.boldiFinderParams?.gameId ?? 1,
+                        widget.flipCatchParams?.gameId ?? 1,
                       ).notifier,
                     )
                     .fetchBrainTeaserGameDetails(
-                      gameId: widget.boldiFinderParams?.gameId ?? 1,
+                      gameId: widget.flipCatchParams?.gameId ?? 1,
                     );
 
                 ref
@@ -548,13 +575,34 @@ class _BoldiFinderScreenState extends ConsumerState<BoldiFinderScreen> {
     );
   }
 
+  void _handleDragSelection(String selectedText, int start, int end) {
+    if (!mounted) return;
+    final controller = ref.read(
+      brainTeaserGameFlipCatchControllerProvider(
+        widget.flipCatchParams?.levelId ?? 1,
+      ).notifier,
+    );
+
+    controller.checkAnswerByCharRange(selectedText, start, end);
+  }
+
+  void _handleWordSelection(int index) {
+    if (!mounted) return;
+    final controller = ref.read(
+      brainTeaserGameFlipCatchControllerProvider(
+        widget.flipCatchParams?.levelId ?? 1,
+      ).notifier,
+    );
+    controller.checkAnswer(index);
+  }
+
   String _getGameStatusDescription(int levelId) {
     switch (levelId) {
-      case 7:
+      case 4:
         return AppLocalizations.of(context).successful_game_desc_for_level_1;
-      case 8:
+      case 5:
         return AppLocalizations.of(context).successful_game_desc_for_level_2;
-      case 9:
+      case 6:
         return AppLocalizations.of(context).successful_game_desc_for_level_3;
       default:
         return "Great effort! Keep pushing your limits.";
@@ -563,7 +611,8 @@ class _BoldiFinderScreenState extends ConsumerState<BoldiFinderScreen> {
 
   @override
   void dispose() {
-    _gridGame = null;
+    _wordTimerGame?.stopTimer();
+    _wordTimerGame = null;
     super.dispose();
   }
 }
