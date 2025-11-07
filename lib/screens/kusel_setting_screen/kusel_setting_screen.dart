@@ -9,6 +9,8 @@ import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/screens/kusel_setting_screen/kusel_setting_screen_controller.dart';
+import 'package:kusel/screens/kusel_setting_screen/legal_policy_screen.dart';
+import 'package:kusel/screens/kusel_setting_screen/poilcy_type.dart';
 import 'package:kusel/screens/settings/settings_screen_provider.dart';
 
 import '../../common_widgets/common_background_clipper_widget.dart';
@@ -40,12 +42,12 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
-      onRefresh: () async{
+      onRefresh: () async {
         await ref.read(kuselSettingScreenProvider.notifier).getUserScore();
       },
       child: Scaffold(
         body: _buildBody(context),
-      ).loaderDialog(context,ref.watch(kuselSettingScreenProvider).isLoading),
+      ).loaderDialog(context, ref.watch(kuselSettingScreenProvider).isLoading),
     );
   }
 
@@ -139,12 +141,17 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
               _buildImageSettingCard(
                   context,
                   AppLocalizations.of(context).profile_setting,
-                  'setting_profile',
-                  () {}),
-              _buildImageSettingCard(context,
-                  AppLocalizations.of(context).my_fav, 'my_fav', () {
-                ref.read(navigationProvider).navigateUsingPath(path: '$kuselSettingScreenPath/$kuselFavScreenPath', context: context);
-                  }),
+                  'setting_profile', () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: '$kuselSettingScreenPath/$profileSettingScreenPath',
+                    context: context);
+              }),
+              _buildImageSettingCard(
+                  context, AppLocalizations.of(context).my_fav, 'my_fav', () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: '$kuselSettingScreenPath/$kuselFavScreenPath',
+                    context: context);
+              }),
             ],
           ),
           32.verticalSpace,
@@ -173,7 +180,7 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
               width: double.infinity,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.r),
-                  color: Color.fromRGBO(235, 235, 235, 1)),
+                  color: Color.fromRGBO(234, 235, 243, 1)),
               child: Column(
                 children: [
                   textSemiBoldPoppins(
@@ -216,7 +223,7 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.r),
-                    color: Color.fromRGBO(235, 235, 235, 1)),
+                    color: Color.fromRGBO(234, 235, 243, 1)),
                 child: ImageUtil.loadLocalSvgImage(
                     imageUrl: imagePath,
                     context: context,
@@ -255,7 +262,15 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
 
           _buildCommonArrowTile(
               context: context,
-              onTap: () {},
+              onTap: () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: legalPolicyScreenPath,
+                    context: context,
+                    params: LegalPolicyScreenParams(
+                        title: AppLocalizations.of(context)
+                            .data_protection_information,
+                        policyType: PolicyType.privacyPolicy));
+              },
               title: AppLocalizations.of(context).data_protection_information,
               hasTopRadius: true,
               hasBottomRadius: false,
@@ -263,7 +278,14 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
 
           _buildCommonArrowTile(
               context: context,
-              onTap: () {},
+              onTap: () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: legalPolicyScreenPath,
+                    context: context,
+                    params: LegalPolicyScreenParams(
+                        title: AppLocalizations.of(context).terms_of_use,
+                        policyType: PolicyType.termsAndConditions));
+              },
               title: AppLocalizations.of(context).terms_of_use,
               hasTopRadius: false,
               hasBottomRadius: false,
@@ -271,7 +293,14 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
 
           _buildCommonArrowTile(
               context: context,
-              onTap: () {},
+              onTap: () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: legalPolicyScreenPath,
+                    context: context,
+                    params: LegalPolicyScreenParams(
+                        title: AppLocalizations.of(context).imprint_page,
+                        policyType: PolicyType.imprintPage));
+              },
               title: AppLocalizations.of(context).imprint_page,
               hasTopRadius: false,
               hasBottomRadius: false,
@@ -280,7 +309,9 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
           _buildCommonArrowTile(
               context: context,
               onTap: () {
-                ref.read(navigationProvider).navigateUsingPath(path: '$kuselSettingScreenPath/$subShellFeedbackScreenPath', context: context);
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: '$kuselSettingScreenPath/$subShellFeedbackScreenPath',
+                    context: context);
               },
               title: AppLocalizations.of(context).feedback,
               hasTopRadius: false,
@@ -304,10 +335,12 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
                 onTap: () {
                   controller.logoutUser(() async {
                     await controller.isUserLoggedIn();
-                    await ref.read(homeScreenProvider.notifier).getLoginStatus();
-                  },onSuccess: ()async{
+                    await ref
+                        .read(homeScreenProvider.notifier)
+                        .getLoginStatus();
+                  }, onSuccess: () async {
                     await controller.getUserScore();
-                  } );
+                  });
                 },
                 title: AppLocalizations.of(context).logout,
                 hasTopRadius: false,
@@ -320,7 +353,7 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
             child: _buildCommonArrowTile(
                 context: context,
                 onTap: () {
-                  ref.read(navigationProvider).navigateUsingPath(
+                  ref.read(navigationProvider).removeAllAndNavigate(
                       path: signInScreenPath, context: context);
                 },
                 title: AppLocalizations.of(context).log_in_sign_up,
@@ -339,19 +372,19 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                textSemiBoldMontserrat(
+                textBoldMontserrat(
                     text: AppLocalizations.of(context).app_version,
                     color: Theme.of(context).textTheme.displayMedium!.color,
                     fontSize: 14),
                 5.verticalSpace,
-                textSemiBoldMontserrat(
+                textBoldMontserrat(
                     text: state.appVersion,
                     color: Theme.of(context)
                         .textTheme
                         .displayMedium!
                         .color!
                         .withOpacity(0.5),
-                    fontSize: 12),
+                    fontSize: 14),
               ],
             ),
           )
@@ -388,7 +421,7 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            textSemiBoldMontserrat(
+            textBoldMontserrat(
                 text: title,
                 color: Theme.of(context).textTheme.displayMedium!.color,
                 fontSize: 14),

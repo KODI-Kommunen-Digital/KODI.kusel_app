@@ -1,3 +1,5 @@
+import 'package:domain/model/response_model/user_detail/user_detail_response_model.dart';
+
 import '../../locale/locale_constant.dart';
 
 class KuselSettingState {
@@ -8,6 +10,11 @@ class KuselSettingState {
   int totalPoints;
   int totalStamp;
   String appVersion;
+  bool isLegalPolicyLoading;
+  String legalPolicyData;
+  bool isProfilePageLoading;
+  List<UserDetailInterest> listOfUserInterest;
+  String selectedOrt;
 
   KuselSettingState(
       this.languageList,
@@ -16,7 +23,12 @@ class KuselSettingState {
       this.isLoading,
       this.totalPoints,
       this.totalStamp,
-      this.appVersion);
+      this.appVersion,
+      this.isLegalPolicyLoading,
+      this.legalPolicyData,
+      this.isProfilePageLoading,
+      this.listOfUserInterest,
+      this.selectedOrt);
 
   factory KuselSettingState.empty() {
     return KuselSettingState(
@@ -26,6 +38,11 @@ class KuselSettingState {
         false,
         0,
         0,
+        '',
+        false,
+        '',
+        false,
+        [],
         '');
   }
 
@@ -36,7 +53,12 @@ class KuselSettingState {
       bool? isLoading,
       int? totalPoints,
       int? totalStamp,
-      String? appVersion}) {
+      String? appVersion,
+      bool? isLegalPolicyLoading,
+      String? legalPolicyData,
+      bool? isProfilePageLoading,
+      List<UserDetailInterest>? listOfUserInterest,
+      String? selectedOrt}) {
     return KuselSettingState(
         languageList ?? this.languageList,
         selectedLanguage ?? this.selectedLanguage,
@@ -44,6 +66,11 @@ class KuselSettingState {
         isLoading ?? this.isLoading,
         totalPoints ?? this.totalPoints,
         totalStamp ?? this.totalStamp,
-        appVersion ?? this.appVersion);
+        appVersion ?? this.appVersion,
+        isLegalPolicyLoading ?? this.isLegalPolicyLoading,
+        legalPolicyData ?? this.legalPolicyData,
+        isProfilePageLoading ?? this.isProfilePageLoading,
+        listOfUserInterest ?? this.listOfUserInterest,
+        selectedOrt ?? this.selectedOrt);
   }
 }

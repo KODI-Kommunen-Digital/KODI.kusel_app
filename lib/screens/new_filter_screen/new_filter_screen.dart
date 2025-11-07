@@ -41,28 +41,28 @@ class _NewFilterScreenState extends ConsumerState<NewFilterScreen> {
           startDate: widget.params.startDate);
     });
 
-    if (!KuselDateUtils.checkDatesAreSame(
-        widget.params.startDate, defaultDate)) {
-      periodTextEditingController.text =
-          KuselDateUtils.formatDateInFormatYYYYMMDD(
-              widget.params.startDate.toString());
-
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!KuselDateUtils.checkDatesAreSame(
-          widget.params.endDate, defaultDate)) {
+          widget.params.startDate, defaultDate)) {
         periodTextEditingController.text =
-            "${periodTextEditingController.text}-${KuselDateUtils.formatDateInFormatYYYYMMDD(widget.params.endDate.toString())}";
-      }
-    }
+            KuselDateUtils.formatDateInFormatYYYYMMDD(
+                widget.params.startDate.toString());
 
+        if (!KuselDateUtils.checkDatesAreSame(
+            widget.params.endDate, defaultDate)) {
+          final toLabel = AppLocalizations.of(context).to;
+          periodTextEditingController.text =
+              "${periodTextEditingController.text} $toLabel ${KuselDateUtils.formatDateInFormatYYYYMMDD(widget.params.endDate.toString())}";
+        }
+      }
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      onPopInvokedWithResult: (value,_){
-
-      },
+      onPopInvokedWithResult: (value, _) {},
       child: Scaffold(
           appBar: _buildAppBar(context),
           body: SingleChildScrollView(
@@ -153,7 +153,7 @@ class _NewFilterScreenState extends ConsumerState<NewFilterScreen> {
                     if (!KuselDateUtils.checkDatesAreSame(
                         endDate, defaultDate)) {
                       periodTextEditingController.text =
-                          "${periodTextEditingController.text}-${KuselDateUtils.formatDateInFormatYYYYMMDD(endDate.toString())}";
+                          "${periodTextEditingController.text} ${AppLocalizations.of(context).to} ${KuselDateUtils.formatDateInFormatYYYYMMDD(endDate.toString())}";
                     }
 
                     ref
@@ -165,9 +165,12 @@ class _NewFilterScreenState extends ConsumerState<NewFilterScreen> {
             },
             readOnly: true,
             textEditingController: periodTextEditingController,
-            suffixIcon: Icon(
-              Icons.calendar_month,
-              color: Theme.of(context).colorScheme.primary,
+            suffixIcon: Padding(
+              padding:  EdgeInsets.only(right: 16.w),
+              child: Icon(
+                Icons.calendar_month,
+                color: Theme.of(context).colorScheme.primary,
+              ),
             ),
           ),
           16.verticalSpace,
