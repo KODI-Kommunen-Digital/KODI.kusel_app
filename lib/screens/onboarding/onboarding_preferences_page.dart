@@ -34,7 +34,7 @@ class _OnBoardingPreferencesPageState extends ConsumerState<OnBoardingPreference
               65.verticalSpace,
               textBoldPoppins(
                   text: displayMsg,
-                  fontSize: 18,
+                  fontSize: 20,
                   textOverflow: TextOverflow.visible,
                   color: Theme.of(context).textTheme.bodyLarge?.color),
               20.verticalSpace,
