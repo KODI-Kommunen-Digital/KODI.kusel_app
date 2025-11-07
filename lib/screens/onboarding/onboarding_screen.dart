@@ -204,13 +204,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           if(selectedPageIndex == 4)
             CustomButton(
               onPressed: ()async{
-                //if (state.isLoggedIn) {
-                 await  stateNotifier.submitUserInterests();
-               // }
-                ref.read(navigationProvider).navigateUsingPath(
-                  path: onboardingLoadingPagePath,
-                  context: context,
-                );
+                 await  stateNotifier.submitUserInterests(
+                     (){
+                       ref.read(navigationProvider).navigateUsingPath(
+                         path: onboardingLoadingPagePath,
+                         context: context,
+                       );
+                     }
+                 );
+
+
               },
               text: (selectedPageIndex == 0)
                   ? AppLocalizations.of(context).lets_get_started
