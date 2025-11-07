@@ -321,9 +321,10 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
           _buildCommonArrowTile(
               context: context,
               onTap: () {
-                _showLanguageDialog(context);
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: onboardingScreenPath, context: context);
               },
-              title: AppLocalizations.of(context).change_language,
+              title: AppLocalizations.of(context).edit_onboarding_details,
               hasTopRadius: false,
               hasBottomRadius: false,
               borderRadius: borderRadius),
