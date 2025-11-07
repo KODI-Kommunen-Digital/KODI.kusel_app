@@ -336,7 +336,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     }
   }
 
-  Future<void> submitUserInterests() async {
+  Future<void> submitUserInterests(void Function() onSuccess) async {
     try {
       Map<int, bool> interestSMap = state.interestsMap;
       List<int> interestIds = interestSMap.entries
@@ -388,6 +388,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
           debugPrint('update onboarding user interests fold exception : $l');
         }, (r) async {
           final result = r as OnboardingUserInterestsResponseModel;
+          onSuccess();
         });
       }
     } catch (error) {
