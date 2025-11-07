@@ -39,6 +39,8 @@ import 'package:kusel/screens/highlight/highlight_screen.dart';
 import 'package:kusel/screens/home/home_screen.dart';
 import 'package:kusel/screens/kusel_setting_screen/kusel_fav_screen.dart';
 import 'package:kusel/screens/kusel_setting_screen/kusel_setting_screen.dart';
+import 'package:kusel/screens/kusel_setting_screen/legal_policy_screen.dart';
+import 'package:kusel/screens/kusel_setting_screen/profile_setting_screen.dart';
 import 'package:kusel/screens/location/location_screen.dart';
 import 'package:kusel/screens/mein_ort/mein_ort_screen.dart';
 import 'package:kusel/screens/mobility_screen/mobility_screen.dart';
@@ -137,13 +139,14 @@ const String bilderSpielScreenPath = '/bilder-spiel';
 const webViewPagePath = "/webViewPagePath";
 const fullImageScreenPath = '/fullImageScreenPath';
 
-
 const subShellFeedbackScreenPath = "feedbackScreen";
 
-const resetPasswordScreenPath ="/resetPasswordScreen;";
+const resetPasswordScreenPath = "/resetPasswordScreen;";
 
 // setting screen
 const kuselFavScreenPath = "kuselFavScreen";
+const legalPolicyScreenPath = "/legalPolicyScreen";
+const profileSettingScreenPath = "profileSettingScreen";
 
 final exploreSubScreenRoutes = [
   tourismScreenPath,
@@ -155,8 +158,6 @@ final exploreSubScreenRoutes = [
   digifitTrophiesScreenPath,
   brainTeasersGameListScreenPath,
 ];
-
-
 
 // Full route list
 List<RouteBase> goRouteList = [
@@ -244,6 +245,12 @@ List<RouteBase> goRouteList = [
           )),
 
   GoRoute(
+      path: legalPolicyScreenPath,
+      builder: (_, state) => LegalPolicyScreen(
+            legalPolicyScreenParams: state.extra as LegalPolicyScreenParams,
+          )),
+
+  GoRoute(
       path: brainTeaserGameDetailsScreenPath,
       builder: (_, state) => BrainTeaserGameDetailsScreen(
             brainTeaserGameDetailsParams:
@@ -322,8 +329,7 @@ List<RouteBase> goRouteList = [
       builder: (_, state) => LocationAndDistanceFilterScreen()),
 
   GoRoute(
-      path: digifitFavScreenPath,
-      builder: (_, state) => DigifitFavScreen()),
+      path: digifitFavScreenPath, builder: (_, state) => DigifitFavScreen()),
 
   // Dashboard + tabs
   dashboardRoutes,
@@ -341,21 +347,19 @@ final dashboardRoutes = StatefulShellRoute.indexedStack(
     StatefulShellBranch(
       routes: [
         GoRoute(
-          path: homeScreenPath,
-          builder: (_, __) => HomeScreen(),
-          routes: [
-            GoRoute(
-              path: subShellFeedbackScreenPath,
-              builder: (_, __) => const FeedbackScreen(),
-            ),
-          ]
-        ),
+            path: homeScreenPath,
+            builder: (_, __) => HomeScreen(),
+            routes: [
+              GoRoute(
+                path: subShellFeedbackScreenPath,
+                builder: (_, __) => const FeedbackScreen(),
+              ),
+            ]),
       ],
     ),
     //  Explore Tab + sub routes
     StatefulShellBranch(
       routes: [
-
         GoRoute(
           path: exploreScreenPath,
           builder: (_, __) => const ExploreScreen(),
@@ -420,20 +424,22 @@ final dashboardRoutes = StatefulShellRoute.indexedStack(
     StatefulShellBranch(
       routes: [
         GoRoute(
-          path: kuselSettingScreenPath,
-          builder: (_, __) => KuselSettingScreen(),//const SettingsScreen()
-          routes: [
-            GoRoute(
-              path: kuselFavScreenPath,
-              builder: (_, __) => const KuselFavScreen(),
-            ),
-
-            GoRoute(
-              path: subShellFeedbackScreenPath,
-              builder: (_, __) => const FeedbackScreen(),
-            )
-          ]
-        ),
+            path: kuselSettingScreenPath,
+            builder: (_, __) => KuselSettingScreen(), //const SettingsScreen()
+            routes: [
+              GoRoute(
+                path: kuselFavScreenPath,
+                builder: (_, __) => const KuselFavScreen(),
+              ),
+              GoRoute(
+                path: subShellFeedbackScreenPath,
+                builder: (_, __) => const FeedbackScreen(),
+              ),
+              GoRoute(
+                path: profileSettingScreenPath,
+                builder: (_, __) => const ProfileSettingScreen(),
+              )
+            ]),
       ],
     ),
   ],

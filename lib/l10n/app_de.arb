@@ -299,6 +299,11 @@
   "rubber_stamp": "Stempel",
   "treasure_pass": "Schätzepass",
   "data_protection_information": "Datenschutzhinweise",
-  "app_version": "App-Version"
+  "app_version": "App-Version",
+  "mobile": "Telefonnummer",
+  "optional": "optional",
+  "address": "Adresse",
+  "change_password": "Passwort ändern",
+  "edit_interest_profile": "Interessenprofil bearbeiten"
 
 }

@@ -929,4 +929,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get app_version => 'App-Version';
+
+  @override
+  String get mobile => 'Mobile';
+
+  @override
+  String get optional => 'optional';
+
+  @override
+  String get address => 'Address';
+
+  @override
+  String get change_password => 'Change Password';
+
+  @override
+  String get edit_interest_profile => 'Edit interest profile';
 }
