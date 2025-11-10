@@ -212,8 +212,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                        );
                      }
                  );
-
-
               },
               text: (selectedPageIndex == 0)
                   ? AppLocalizations.of(context).lets_get_started

@@ -309,5 +309,7 @@
   "optional": "optional",
   "address": "Address",
   "change_password": "Change Password",
-  "edit_interest_profile": "Edit interest profile"
+  "edit_interest_profile": "Edit interest profile",
+  "location_sharing": "Location sharing",
+  "an": "To"
 }

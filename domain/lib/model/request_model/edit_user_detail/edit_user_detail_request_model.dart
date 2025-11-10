@@ -1,6 +1,7 @@
 import 'package:core/base_model.dart';
 
-class EditUserDetailRequestModel implements BaseModel<EditUserDetailRequestModel> {
+class EditUserDetailRequestModel
+    implements BaseModel<EditUserDetailRequestModel> {
   int? id;
   String? username;
   String? socialMedia;
@@ -12,6 +13,7 @@ class EditUserDetailRequestModel implements BaseModel<EditUserDetailRequestModel
   String? firstname;
   String? lastname;
   int? roleId;
+  String? address;
 
   EditUserDetailRequestModel({
     this.id,
@@ -25,6 +27,7 @@ class EditUserDetailRequestModel implements BaseModel<EditUserDetailRequestModel
     this.firstname,
     this.lastname,
     this.roleId,
+    this.address
   });
 
   @override
@@ -46,18 +49,20 @@ class EditUserDetailRequestModel implements BaseModel<EditUserDetailRequestModel
 
   @override
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = {};
-    if (id != null) data['id'] = id;
-    if (username != null) data['username'] = username;
-    if (socialMedia != null) data['socialMedia'] = socialMedia;
-    if (email != null) data['email'] = email;
-    if (website != null) data['website'] = website;
-    if (description != null) data['description'] = description;
-    if (image != null) data['image'] = image;
-    if (phoneNumber != null) data['phoneNumber'] = phoneNumber;
-    if (firstname != null) data['firstname'] = firstname;
-    if (lastname != null) data['lastname'] = lastname;
-    if (roleId != null) data['roleId'] = roleId;
-    return data;
+    final entries = {
+      'id': id,
+      'username': username,
+      'socialMedia': socialMedia,
+      'email': email,
+      'website': website,
+      'description': description,
+      'image': image,
+      'phoneNumber': phoneNumber,
+      'firstname': firstname,
+      'lastname': lastname,
+      'roleId': roleId,
+      'address': address
+    }.entries.where((e) => e.value != null);
+    return Map.fromEntries(entries);
   }
 }

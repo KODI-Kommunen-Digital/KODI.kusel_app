@@ -15,6 +15,8 @@ class FavoritesListScreenState {
   DateTime endDate;
   List<int> selectedCategoryIdList;
   int numberOfFiltersApplied;
+  bool isPaginationLoading;
+  int pageNumber;
 
   FavoritesListScreenState(
       this.address,
@@ -28,11 +30,13 @@ class FavoritesListScreenState {
       this.startDate,
       this.endDate,
       this.selectedCategoryIdList,
-      this.numberOfFiltersApplied);
+      this.numberOfFiltersApplied,
+      this.isPaginationLoading,
+      this.pageNumber);
 
   factory FavoritesListScreenState.empty() {
-    return FavoritesListScreenState(
-        '', '', false, [], [], 0, '', 0, defaultDate, defaultDate, [], 0);
+    return FavoritesListScreenState('', '', false, [], [], 0, '', 0,
+        defaultDate, defaultDate, [], 0, false, 1);
   }
 
   FavoritesListScreenState copyWith(
@@ -47,7 +51,9 @@ class FavoritesListScreenState {
       DateTime? startDate,
       DateTime? endDate,
       List<int>? selectedCategoryIdList,
-      int? numberOfFiltersApplied}) {
+      int? numberOfFiltersApplied,
+      bool? isPaginationLoading,
+      int? pageNumber}) {
     return FavoritesListScreenState(
         address ?? this.address,
         error ?? this.error,
@@ -60,6 +66,8 @@ class FavoritesListScreenState {
         startDate ?? this.startDate,
         endDate ?? this.endDate,
         selectedCategoryIdList ?? this.selectedCategoryIdList,
-        numberOfFiltersApplied ?? this.numberOfFiltersApplied);
+        numberOfFiltersApplied ?? this.numberOfFiltersApplied,
+        isPaginationLoading ?? this.isPaginationLoading,
+        pageNumber ?? this.pageNumber);
   }
 }

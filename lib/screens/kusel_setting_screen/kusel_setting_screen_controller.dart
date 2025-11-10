@@ -5,12 +5,15 @@ import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:core/token_status.dart';
 import 'package:domain/model/request_model/delete_account/delete_account_request_model.dart';
+import 'package:domain/model/request_model/edit_user_detail/edit_user_detail_request_model.dart';
 import 'package:domain/model/request_model/get_legal_policy/get_legal_policy_request_model.dart';
 import 'package:domain/model/request_model/user_detail/user_detail_request_model.dart';
 import 'package:domain/model/request_model/user_score/user_score_request_model.dart';
 import 'package:domain/model/response_model/delete_account/delete_account_response_model.dart';
+import 'package:domain/model/response_model/edit_user_detail/edit_user_detail_response_model.dart';
 import 'package:domain/model/response_model/user_detail/user_detail_response_model.dart';
 import 'package:domain/usecase/delete_account/delete_account_usecase.dart';
+import 'package:domain/usecase/edit_user_detail/edit_user_detail_usecase.dart';
 import 'package:domain/usecase/user_detail/user_detail_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -21,6 +24,7 @@ import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/kusel_setting_screen/kusel_setting_state.dart';
 import 'package:domain/usecase/user_score/user_score_usecase.dart';
 import 'package:kusel/screens/kusel_setting_screen/poilcy_type.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../locale/locale_constant.dart';
 import 'package:domain/model/response_model/user_score/user_score_response_model.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -28,9 +32,8 @@ import 'package:domain/usecase/get_legal_policy/get_legal_policy_use_case.dart';
 import 'package:domain/model/response_model/get_legal_policy/get_legal_policy_response_model.dart';
 
 final kuselSettingScreenProvider =
-StateNotifierProvider<KuselSettingScreenController, KuselSettingState>(
-        (ref) =>
-        KuselSettingScreenController(
+    StateNotifierProvider<KuselSettingScreenController, KuselSettingState>(
+        (ref) => KuselSettingScreenController(
             localeManagerController: ref.read(localeManagerProvider.notifier),
             signInStatusController: ref.read(signInStatusProvider.notifier),
             sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
@@ -41,7 +44,8 @@ StateNotifierProvider<KuselSettingScreenController, KuselSettingState>(
             deleteAccountUseCase: ref.read(deleteAccountUseCaseProvider),
             getLegalPolicyUseCase: ref.read(getLegalPolicyUseCaseProvider),
             homeScreenProvider: ref.read(homeScreenProvider.notifier),
-            userDetailUseCase: ref.read(userDetailUseCaseProvider)));
+            userDetailUseCase: ref.read(userDetailUseCaseProvider),
+            editUserDetailUseCase: ref.read(editUserDetailUseCaseProvider)));
 
 class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
   LocaleManagerController localeManagerController;
@@ -55,18 +59,21 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
   GetLegalPolicyUseCase getLegalPolicyUseCase;
   HomeScreenProvider homeScreenProvider;
   UserDetailUseCase userDetailUseCase;
+  EditUserDetailUseCase editUserDetailUseCase;
 
-  KuselSettingScreenController({required this.localeManagerController,
-    required this.signInStatusController,
-    required this.sharedPreferenceHelper,
-    required this.guestUserLogin,
-    required this.userScoreUseCase,
-    required this.tokenStatus,
-    required this.refreshTokenProvider,
-    required this.deleteAccountUseCase,
-    required this.getLegalPolicyUseCase,
-    required this.homeScreenProvider,
-    required this.userDetailUseCase})
+  KuselSettingScreenController(
+      {required this.localeManagerController,
+      required this.signInStatusController,
+      required this.sharedPreferenceHelper,
+      required this.guestUserLogin,
+      required this.userScoreUseCase,
+      required this.tokenStatus,
+      required this.refreshTokenProvider,
+      required this.deleteAccountUseCase,
+      required this.getLegalPolicyUseCase,
+      required this.homeScreenProvider,
+      required this.userDetailUseCase,
+      required this.editUserDetailUseCase})
       : super(KuselSettingState.empty());
 
   void fetchCurrentLanguage() {
@@ -82,9 +89,7 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
       }
     } else {
       final languageCode =
-          localeManagerController
-              .getSelectedLocale()
-              .languageCode;
+          localeManagerController.getSelectedLocale().languageCode;
 
       if (languageCode == LocaleConstant.english.languageCode) {
         state = state.copyWith(
@@ -126,7 +131,7 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
     await sharedPreferenceHelper.clear();
     await callBack();
 
-    await guestUserLogin.getGuestUserToken(onSuccess: ()async{
+    await guestUserLogin.getGuestUserToken(onSuccess: () async {
       await _getUserDetail();
     });
     if (showIsLoading) {
@@ -173,8 +178,8 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
     state = state.copyWith(appVersion: appVersion);
   }
 
-  Future<void> deleteAccount(void Function() onSuccess,
-      void Function(String) onError) async {
+  Future<void> deleteAccount(
+      void Function() onSuccess, void Function(String) onError) async {
     try {
       state = state.copyWith(isProfilePageLoading: true);
       final status = tokenStatus.isAccessTokenExpired();
@@ -197,7 +202,7 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
     final token = sharedPreferenceHelper.getString(tokenKey);
 
     DeleteAccountRequestModel requestModel =
-    DeleteAccountRequestModel(token: token ?? '');
+        DeleteAccountRequestModel(token: token ?? '');
 
     DeleteAccountResponseModel responseModel = DeleteAccountResponseModel();
 
@@ -215,7 +220,6 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
       await logoutUser(showIsLoading: false, () async {
         await isUserLoggedIn();
         await homeScreenProvider.getLoginStatus();
-
       });
       onSuccess();
       state = state.copyWith(isProfilePageLoading: false);
@@ -230,7 +234,7 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
 
       GetLegalPolicyRequestModel requestModel = GetLegalPolicyRequestModel(
           translate:
-          "${currentLocale.languageCode}-${currentLocale.countryCode}",
+              "${currentLocale.languageCode}-${currentLocale.countryCode}",
           policyType: policyType.name);
 
       GetLegalPolicyResponseModel responseModel = GetLegalPolicyResponseModel();
@@ -269,15 +273,18 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
       }
     } catch (e) {
       debugPrint('delete account exception');
-    }finally{
-      state = state.copyWith(isProfilePageLoading: false);
+    } finally {
+      if (state.isProfilePageLoading) {
+        state = state.copyWith(isProfilePageLoading: false);
+      }
     }
   }
 
   _getUserDetail() async {
     try {
       UserDetailRequestModel userDetailRequestModel = UserDetailRequestModel();
-      UserDetailResponseModel userDetailResponseModel = UserDetailResponseModel();
+      UserDetailResponseModel userDetailResponseModel =
+          UserDetailResponseModel();
 
       final res = await userDetailUseCase.call(
           userDetailRequestModel, userDetailResponseModel);
@@ -290,12 +297,102 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
         if (result.data != null) {
           state = state.copyWith(
               listOfUserInterest: result.data?.interests ?? [],
-              selectedOrt: result.data?.place?.name ?? ''
-          );
+              selectedOrt: result.data?.place?.name ?? '',
+              name: result.data?.username ?? '',
+              email: result.data?.email ?? '',
+              address: result.data?.address ?? '',
+              mobileNumber: result.data?.phoneNumber ?? '');
         }
       });
     } catch (error) {
       rethrow;
+    }
+  }
+
+  updateName(String value) {
+    state = state.copyWith(name: value);
+  }
+
+  updateEmail(String value) {
+    state = state.copyWith(email: value);
+  }
+
+  updatePhoneNumber(String value) {
+    state = state.copyWith(mobileNumber: value);
+  }
+
+  updateAddress(String value) {
+    state = state.copyWith(address: value);
+  }
+
+  updateUserDetails(
+      {required Function() onSuccess,
+      required Function(String) onError}) async {
+    try {
+      state = state.copyWith(isProfilePageLoading: true);
+      final status = tokenStatus.isAccessTokenExpired();
+
+      if (status) {
+        await refreshTokenProvider.getNewToken(
+            onError: () {},
+            onSuccess: () async {
+              await _updateUserDetails(onSuccess: onSuccess, onError: onError);
+            });
+      } else {
+        await _updateUserDetails(onSuccess: onSuccess, onError: onError);
+      }
+    } catch (e) {
+      debugPrint('update user detail exception: $e');
+    } finally {
+      state = state.copyWith(isProfilePageLoading: false);
+    }
+  }
+
+  _updateUserDetails(
+      {required Function() onSuccess,
+      required Function(String) onError}) async {
+    try {
+      EditUserDetailRequestModel requestModel = EditUserDetailRequestModel(
+          username: state.name.isEmpty ? null : state.name,
+          email: state.email.isEmpty ? null : state.email,
+          phoneNumber: state.mobileNumber.isEmpty ? null : state.mobileNumber,
+          address: state.address.isEmpty ? null : state.address);
+      EditUserDetailsResponseModel responseModel =
+          EditUserDetailsResponseModel();
+
+      final result =
+          await editUserDetailUseCase.call(requestModel, responseModel);
+
+      result.fold((l) {
+        debugPrint('edit user detail fold exception : $l');
+        onError(l.toString());
+      }, (r) {
+        onSuccess();
+      });
+    } catch (error) {
+      rethrow;
+    }
+  }
+
+  getLocationPermissionStatus() async {
+    final status = await Permission.locationWhenInUse.status;
+    state = state.copyWith(
+        isLocationPermissionGranted: status == PermissionStatus.granted);
+  }
+
+  Future<void> requestOrHandleLocationPermission(bool value) async {
+    if (value) {
+      final status = await Permission.location.request();
+
+      if (status.isGranted) {
+        state = state.copyWith(isLocationPermissionGranted: true);
+      } else if (status.isPermanentlyDenied) {
+        await openAppSettings();
+      } else {
+        state = state.copyWith(isLocationPermissionGranted: false);
+      }
+    } else {
+      state = state.copyWith(isLocationPermissionGranted: false);
     }
   }
 }
