@@ -52,7 +52,7 @@ class FavoritesListScreenController
   LocaleManagerController localeManagerController;
   SignInStatusController signInStatusController;
 
-  Future<void> getFavoritesList() async {
+  Future<void> getFavoritesList(int pageNumber, {int? pageSize}) async {
     try {
       state = state.copyWith(loading: true, error: "");
 
@@ -63,10 +63,10 @@ class FavoritesListScreenController
         await refreshTokenProvider.getNewToken(
             onError: () {},
             onSuccess: () async {
-              await _getFav();
+              await _getFav(pageNumber, pageSize: pageSize);
             });
       } else {
-        await _getFav();
+        await _getFav(pageNumber, pageSize: pageSize);
       }
     } catch (error) {
       debugPrint('get Fav exception : $error');
@@ -76,9 +76,9 @@ class FavoritesListScreenController
     }
   }
 
-  Future<void> _getFav() async {
+  Future<void> _getFav(int pageNumber, {int? pageSize}) async {
     try {
-      state = state.copyWith(list: []);
+      state = state.copyWith(list: (pageNumber == 1) ? [] : state.eventsList);
       Locale currentLocale = localeManagerController.getSelectedLocale();
 
       String categoryId = "";
@@ -103,6 +103,8 @@ class FavoritesListScreenController
         translate: "${currentLocale.languageCode}-${currentLocale.countryCode}",
         startAfterDate: startDate,
         endBeforeDate: endDate,
+        pageNo: pageNumber,
+        pageSize: pageSize,
         categoryId: categoryId.isEmpty
             ? null
             : categoryId.substring(0, categoryId.length - 1),
@@ -131,14 +133,99 @@ class FavoritesListScreenController
     }
   }
 
+  Future<void> getLoadMoreList(int pageNumber, {int? pageSize}) async {
+    try {
+      state = state.copyWith(isPaginationLoading: true, error: "");
+
+      final response = tokenStatus.isAccessTokenExpired();
+
+      if (response) {
+        await refreshTokenProvider.getNewToken(
+            onError: () {},
+            onSuccess: () async {
+              await _getLoadMoreList(pageNumber, pageSize);
+            });
+      } else {
+        await _getLoadMoreList(pageNumber, pageSize);
+      }
+    } catch (error) {
+      debugPrint('get Fav exception : $error');
+      state = state.copyWith(error: error.toString());
+    } finally {
+      state = state.copyWith(isPaginationLoading: false, error: "");
+    }
+  }
+
+  Future<void> _getLoadMoreList(int pageNumber, int? pageSize) async {
+    try {
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
+      String categoryId = "";
+
+      for (int item in state.selectedCategoryIdList) {
+        categoryId = "$categoryId$item,";
+      }
+
+      String? startDate =
+          KuselDateUtils.checkDatesAreSame(state.startDate, defaultDate)
+              ? null
+              : KuselDateUtils.formatDateInFormatYYYYMMDD(
+                  state.startDate.toString());
+
+      String? endDate = KuselDateUtils.checkDatesAreSame(
+              state.endDate, defaultDate)
+          ? null
+          : KuselDateUtils.formatDateInFormatYYYYMMDD(state.endDate.toString());
+
+      GetFavoritesRequestModel getAllListingsRequestModel =
+          GetFavoritesRequestModel(
+        translate: "${currentLocale.languageCode}-${currentLocale.countryCode}",
+        startAfterDate: startDate,
+        endBeforeDate: endDate,
+        pageNo: pageNumber,
+        pageSize: pageSize,
+        categoryId: categoryId.isEmpty
+            ? null
+            : categoryId.substring(0, categoryId.length - 1),
+        cityId:
+            state.selectedCityId == 0 ? null : state.selectedCityId.toString(),
+        sortByStartDate: true,
+        radius: state.radius == 0 ? null : state.radius.toInt(),
+      );
+      GetAllListingsResponseModel getAllListResponseModel =
+          GetAllListingsResponseModel();
+
+      final result = await getFavoritesUseCaseProvider.call(
+          getAllListingsRequestModel, getAllListResponseModel);
+      result.fold(
+        (l) {
+          state = state.copyWith(error: l.toString());
+        },
+        (r) {
+          final eventsList = (r as GetAllListingsResponseModel).data;
+          if (eventsList != null) {
+            final list = state.eventsList;
+
+            if (eventsList.isNotEmpty) {
+              list.addAll(eventsList);
+              state = state.copyWith(list: list, pageNumber: pageNumber);
+            }
+          }
+        },
+      );
+    } catch (error) {
+      rethrow;
+    }
+  }
+
   void removeFavorite(bool isFavorite, int? id) {
     if (id == null) return;
 
-    for (var listing in state.eventsList) {
-      if (listing.id == id) {
-        listing.isFavorite = isFavorite;
-      }
-    }
+    // for (var listing in state.eventsList) {
+    //   if (listing.id == id) {
+    //     listing.isFavorite = isFavorite;
+    //   }
+    // }
     final updatedList =
         state.eventsList.where((listing) => listing.id != id).toList();
     state = state.copyWith(
@@ -164,28 +251,23 @@ class FavoritesListScreenController
         selectedCategoryIdList: categoryIdList);
   }
 
-  void numberOfFiltersApplied()
-  {
+  void numberOfFiltersApplied() {
     int len = 0;
 
-    if(state.selectedCategoryIdList.isNotEmpty)
-    {
-      len+=state.selectedCategoryIdList.length;
+    if (state.selectedCategoryIdList.isNotEmpty) {
+      len += state.selectedCategoryIdList.length;
     }
 
-    if(state.selectedCityId !=0)
-    {
-      len+=1;
+    if (state.selectedCityId != 0) {
+      len += 1;
     }
 
-    if(!KuselDateUtils.checkDatesAreSame(state.startDate, defaultDate))
-    {
-      len+=1;
+    if (!KuselDateUtils.checkDatesAreSame(state.startDate, defaultDate)) {
+      len += 1;
     }
 
-    if(state.radius!=0)
-    {
-      len+=1;
+    if (state.radius != 0) {
+      len += 1;
     }
 
     state = state.copyWith(numberOfFiltersApplied: len);

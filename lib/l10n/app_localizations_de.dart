@@ -974,4 +974,10 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get edit_interest_profile => 'Interessenprofil bearbeiten';
+
+  @override
+  String get location_sharing => 'Standortfreigabe';
+
+  @override
+  String get an => 'An';
 }

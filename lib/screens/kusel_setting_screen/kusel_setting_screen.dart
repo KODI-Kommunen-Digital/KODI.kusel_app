@@ -36,7 +36,10 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
       controller.getUserScore();
       controller.getAppVersion();
     });
+
     super.initState();
+
+
   }
 
   @override
@@ -50,6 +53,9 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
       ).loaderDialog(context, ref.watch(kuselSettingScreenProvider).isLoading),
     );
   }
+
+
+
 
   _buildBody(BuildContext context) {
     return SingleChildScrollView(
