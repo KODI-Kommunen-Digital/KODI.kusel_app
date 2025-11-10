@@ -78,6 +78,9 @@ class DigifitEquipmentFav {
       rethrow;
     }
   }
+
+
+
 }
 
 class DigifitEquipmentFavParams {

@@ -1963,6 +1963,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Edit interest profile'**
   String get edit_interest_profile;
+
+  /// No description provided for @location_sharing.
+  ///
+  /// In en, this message translates to:
+  /// **'Location sharing'**
+  String get location_sharing;
+
+  /// No description provided for @an.
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get an;
 }
 
 class _AppLocalizationsDelegate
