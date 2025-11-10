@@ -311,5 +311,8 @@
   "abort_math_hunt_game": "Mathe-Spiel abbrechen?",
   "math_hunt_game_desc": "Bereit zum Kopfrechnen?",
   "flip_catch_desc": "Bereit für den Flip-Catch",
-  "abort_flip_catch": "Flip Catch abbrechen?"
+  "abort_flip_catch": "Flip Catch abbrechen?",
+  "location_sharing": "Standortfreigabe",
+  "an": "An"
+
 }
