@@ -6,22 +6,26 @@ import 'package:data/dio_helper_object.dart';
 import 'package:data/end_points.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final digifitFavServiceProvider = Provider((ref) =>
-    DigifitFavService(
-        ref: ref,
-        sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider)));
+final digifitFavServiceProvider = Provider((ref) => DigifitFavService(
+    ref: ref,
+    sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider)));
 
 class DigifitFavService {
   Ref ref;
   SharedPreferenceHelper sharedPreferenceHelper;
 
-  DigifitFavService(
-      {required this.ref, required this.sharedPreferenceHelper});
+  DigifitFavService({required this.ref, required this.sharedPreferenceHelper});
 
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
-    final params = requestModel.toJson();
-    final path = '$digifitFavEndPoint?translate=${params["translate"]}';
+    final queryParams = requestModel
+        .toJson()
+        .entries
+        .where((e) => e.value != null)
+        .map((e) => "${e.key}=${Uri.encodeComponent(e.value.toString())}")
+        .join("&");
+
+    final path = '$digifitFavEndPoint?$queryParams';
 
     final apiHelper = ref.read(apiHelperProvider);
     String token = sharedPreferenceHelper.getString(tokenKey) ?? '';

@@ -16,6 +16,13 @@ class KuselSettingState {
   List<UserDetailInterest> listOfUserInterest;
   String selectedOrt;
 
+  String name;
+  String email;
+  String mobileNumber;
+  String address;
+
+  bool isLocationPermissionGranted;
+
   KuselSettingState(
       this.languageList,
       this.selectedLanguage,
@@ -28,7 +35,12 @@ class KuselSettingState {
       this.legalPolicyData,
       this.isProfilePageLoading,
       this.listOfUserInterest,
-      this.selectedOrt);
+      this.selectedOrt,
+      this.name,
+      this.email,
+      this.mobileNumber,
+      this.address,
+      this.isLocationPermissionGranted);
 
   factory KuselSettingState.empty() {
     return KuselSettingState(
@@ -43,7 +55,12 @@ class KuselSettingState {
         '',
         false,
         [],
-        '');
+        '',
+        '',
+        '',
+        '',
+        '',
+        false);
   }
 
   KuselSettingState copyWith(
@@ -58,7 +75,12 @@ class KuselSettingState {
       String? legalPolicyData,
       bool? isProfilePageLoading,
       List<UserDetailInterest>? listOfUserInterest,
-      String? selectedOrt}) {
+      String? selectedOrt,
+      String? name,
+      String? email,
+      String? mobileNumber,
+      String? address,
+      bool? isLocationPermissionGranted}) {
     return KuselSettingState(
         languageList ?? this.languageList,
         selectedLanguage ?? this.selectedLanguage,
@@ -71,6 +93,11 @@ class KuselSettingState {
         legalPolicyData ?? this.legalPolicyData,
         isProfilePageLoading ?? this.isProfilePageLoading,
         listOfUserInterest ?? this.listOfUserInterest,
-        selectedOrt ?? this.selectedOrt);
+        selectedOrt ?? this.selectedOrt,
+        name ?? this.name,
+        email ?? this.email,
+        mobileNumber ?? this.mobileNumber,
+        address ?? this.address,
+        isLocationPermissionGranted ?? this.isLocationPermissionGranted);
   }
 }
