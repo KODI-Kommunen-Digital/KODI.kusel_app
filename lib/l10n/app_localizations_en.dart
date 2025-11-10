@@ -966,4 +966,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get edit_interest_profile => 'Edit interest profile';
+
+  @override
+  String get location_sharing => 'Location sharing';
+
+  @override
+  String get an => 'To';
 }

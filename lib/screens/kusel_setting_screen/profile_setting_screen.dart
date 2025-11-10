@@ -27,19 +27,41 @@ class ProfileSettingScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen> {
-  @override
-  void initState() {
-    Future.microtask(() {
-      ref.read(kuselSettingScreenProvider.notifier).getUserDetail();
-    });
-    super.initState();
-  }
-
   TextEditingController userNameTextEditingController = TextEditingController();
   TextEditingController emailTextEditingController = TextEditingController();
   TextEditingController phoneNumberTextEditingController =
       TextEditingController();
   TextEditingController addressTextEditingController = TextEditingController();
+
+  late ProviderSubscription removeListener;
+
+  @override
+  void initState() {
+    super.initState();
+
+    removeListener = ref.listenManual(
+      kuselSettingScreenProvider,
+      (previous, next) {
+        userNameTextEditingController.text = next.name;
+        emailTextEditingController.text = next.email;
+        addressTextEditingController.text = next.address;
+        phoneNumberTextEditingController.text = next.mobileNumber;
+      },
+    );
+
+    Future.microtask(() {
+      final controller = ref.read(kuselSettingScreenProvider.notifier);
+
+      controller.getUserDetail();
+      controller.getLocationPermissionStatus();
+    });
+  }
+
+  @override
+  void dispose() {
+    removeListener.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,63 +100,23 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen> {
                   }
                 }),
           ),
-          16.verticalSpace,
-          //USERNAME
-          _buildTextFieldHeadingText(AppLocalizations.of(context).username),
-          6.verticalSpace,
-          _buildTextFormField(
-              controller: userNameTextEditingController,
-              onChanged: (value) {},
-              hintText:
-                  AppLocalizations.of(context).enter_username.toLowerCase()),
-
-          16.verticalSpace,
-          //EMAIL
-          _buildTextFieldHeadingText(AppLocalizations.of(context).email),
-          6.verticalSpace,
-          _buildTextFormField(
-              controller: emailTextEditingController,
-              onChanged: (value) {},
-              hintText: AppLocalizations.of(context).enter_email.toLowerCase(),
-              textInputType: TextInputType.emailAddress),
-
-          16.verticalSpace,
-          //MOBILE
-          _buildTextFieldHeadingText(
-              "${AppLocalizations.of(context).mobile}(${AppLocalizations.of(context).optional})"),
-          6.verticalSpace,
-          _buildTextFormField(
-              textInputType: TextInputType.number,
-              controller: phoneNumberTextEditingController,
-              onChanged: (value) {},
-              hintText: AppLocalizations.of(context)
-                  .enter_phone_number
-                  .toLowerCase()),
-
-          16.verticalSpace,
-          _buildTextFieldHeadingText(
-              "${AppLocalizations.of(context).address}(${AppLocalizations.of(context).optional})"),
-          6.verticalSpace,
-          _buildTextFormField(
-              controller: addressTextEditingController,
-              onChanged: (value) {},
-              hintText: AppLocalizations.of(context).address.toLowerCase()),
+          _buildUserForm(context),
           32.verticalSpace,
-
+          _buildLocationToggle(context),
+          32.verticalSpace,
           _buildArrowContainer(
               context, AppLocalizations.of(context).ort, () async {},
               subChild: state.selectedOrt.isEmpty
                   ? null
                   : textSemiBoldMontserrat(
                       text: state.selectedOrt,
-                      fontSize: 14,
+                      fontSize: 12,
                       color: Theme.of(context)
                           .textTheme
                           .displayMedium!
                           .color!
                           .withOpacity(0.5))),
           6.verticalSpace,
-
           _buildArrowContainer(context,
               AppLocalizations.of(context).edit_interest_profile, () {},
               subChild: state.listOfUserInterest.isEmpty
@@ -154,7 +136,6 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen> {
                               isExtra: true),
                       ],
                     )),
-
           32.verticalSpace,
           Visibility(
             visible: state.isUserLoggedIn,
@@ -165,19 +146,17 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen> {
             }),
           ),
           12.verticalSpace,
-
           Visibility(
             visible: state.isUserLoggedIn,
             child: _buildArrowContainer(
                 context, AppLocalizations.of(context).delete_account, () async {
               await ref.read(kuselSettingScreenProvider.notifier).deleteAccount(
-                  () async{
+                  () async {
                 showSuccessToast(
                     message: AppLocalizations.of(context)
                         .success_delete_account_message,
                     context: context,
                     snackBarAlignment: Alignment.topCenter);
-
               }, (message) {
                 showErrorToast(
                     message: message,
@@ -187,16 +166,27 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen> {
             }, labelColor: Theme.of(context).colorScheme.error),
           ),
           34.verticalSpace,
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: SizedBox(
-              width: double.infinity,
-              child: CustomButton(
-                  onPressed: () {},
-                  text: AppLocalizations.of(context).save_changes),
+          Visibility(
+            visible: state.isUserLoggedIn,
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: SizedBox(
+                width: double.infinity,
+                child: CustomButton(
+                    onPressed: () async {
+                      await controller.updateUserDetails(onSuccess: () {
+                        showSuccessToast(
+                            message: AppLocalizations.of(context).save_changes,
+                            context: context,
+                            snackBarAlignment: Alignment.topCenter);
+                      }, onError: (message) {
+                        showErrorToast(message: message, context: context);
+                      });
+                    },
+                    text: AppLocalizations.of(context).save_changes),
+              ),
             ),
           ),
-
           100.verticalSpace
         ],
       ),
@@ -235,6 +225,67 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen> {
     );
   }
 
+  Widget _buildUserForm(BuildContext context) {
+    final state = ref.watch(kuselSettingScreenProvider);
+    final controller = ref.read(kuselSettingScreenProvider.notifier);
+
+    return Visibility(
+        visible: state.isUserLoggedIn,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            16.verticalSpace,
+            //USERNAME
+            _buildTextFieldHeadingText(AppLocalizations.of(context).username),
+            6.verticalSpace,
+            _buildTextFormField(
+                controller: userNameTextEditingController,
+                hintText:
+                    AppLocalizations.of(context).enter_username.toLowerCase(),
+                enable: false),
+
+            16.verticalSpace,
+            //EMAIL
+            _buildTextFieldHeadingText(AppLocalizations.of(context).email),
+            6.verticalSpace,
+            _buildTextFormField(
+                controller: emailTextEditingController,
+                onChanged: (value) {
+                  controller.updateEmail(value);
+                },
+                hintText:
+                    AppLocalizations.of(context).enter_email.toLowerCase(),
+                textInputType: TextInputType.emailAddress),
+
+            16.verticalSpace,
+            //MOBILE
+            _buildTextFieldHeadingText(
+                "${AppLocalizations.of(context).mobile}(${AppLocalizations.of(context).optional})"),
+            6.verticalSpace,
+            _buildTextFormField(
+                textInputType: TextInputType.number,
+                controller: phoneNumberTextEditingController,
+                onChanged: (value) {
+                  controller.updatePhoneNumber(value);
+                },
+                hintText: AppLocalizations.of(context)
+                    .enter_phone_number
+                    .toLowerCase()),
+
+            16.verticalSpace,
+            _buildTextFieldHeadingText(
+                "${AppLocalizations.of(context).address}(${AppLocalizations.of(context).optional})"),
+            6.verticalSpace,
+            _buildTextFormField(
+                controller: addressTextEditingController,
+                onChanged: (value) {
+                  controller.updateAddress(value);
+                },
+                hintText: AppLocalizations.of(context).address.toLowerCase()),
+          ],
+        ));
+  }
+
   _buildTextFieldHeadingText(String text) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -248,13 +299,15 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen> {
 
   _buildTextFormField(
       {required TextEditingController controller,
-      required Function(String)? onChanged,
+      Function(String)? onChanged,
       required String hintText,
       String? Function(String?)? validator,
-      TextInputType? textInputType}) {
+      TextInputType? textInputType,
+      bool enable = true}) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w),
       child: KuselTextField(
+        enable: enable,
         keyboardType: textInputType,
         hintText: hintText,
         textEditingController: controller,
@@ -283,9 +336,9 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      textSemiBoldMontserrat(
+                      textBoldMontserrat(
                           text: label,
-                          fontSize: 16,
+                          fontSize: 14,
                           color: labelColor ??
                               Theme.of(context).textTheme.displayMedium!.color),
                       5.verticalSpace,
@@ -317,8 +370,50 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen> {
       ),
       child: textRegularMontserrat(
           text: label,
-          fontSize: 13,
+          fontSize: 12,
           color: Theme.of(context).textTheme.displayMedium!.color),
     );
+  }
+
+  _buildLocationToggle(BuildContext context) {
+    final state = ref.watch(kuselSettingScreenProvider);
+    final controller = ref.read(kuselSettingScreenProvider.notifier);
+    return Container(
+        margin: EdgeInsets.symmetric(horizontal: 16.w),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+        decoration: BoxDecoration(
+            color: Theme.of(context).canvasColor,
+            borderRadius: BorderRadius.circular(15.r)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    textBoldMontserrat(
+                        text: AppLocalizations.of(context).location_sharing,
+                        fontSize: 16,
+                        color:
+                            Theme.of(context).textTheme.displayMedium!.color),
+                    5.verticalSpace,
+                    textSemiBoldMontserrat(
+                        text: AppLocalizations.of(context).an,
+                        fontSize: 14,
+                        color:
+                            Theme.of(context).textTheme.displayMedium!.color),
+                  ],
+                ),
+              ),
+              Switch(
+                  value: state.isLocationPermissionGranted,
+                  activeColor: Theme.of(context).indicatorColor,
+                  onChanged: (value) async {
+                    await controller.requestOrHandleLocationPermission(value);
+                  }),
+            ])
+          ],
+        ));
   }
 }

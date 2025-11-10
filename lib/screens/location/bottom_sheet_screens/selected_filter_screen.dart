@@ -48,7 +48,7 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
         final alreadyFetchedFav = favState.eventsList.isNotEmpty;
         if (!alreadyFetchedFav) {
           debugPrint("Fetching favorites for categoryId 100");
-          favNotifier.getFavoritesList();
+          favNotifier.getFavoritesList(1);
         } else {
           debugPrint("Skipping fetch, favorites already fetched");
         }
@@ -186,7 +186,7 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
                           onFavClickCallback: () {
                             ref
                                 .read(favoritesListScreenProvider.notifier)
-                                .getFavoritesList();
+                                .getFavoritesList(1);
                           },
                         )
                       : EventsListSectionWidget(
