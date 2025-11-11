@@ -26,7 +26,8 @@ class ProfileSettingScreen extends ConsumerStatefulWidget {
       _ProfileSettingScreenState();
 }
 
-class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen> {
+class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen>
+    with WidgetsBindingObserver{
   TextEditingController userNameTextEditingController = TextEditingController();
   TextEditingController emailTextEditingController = TextEditingController();
   TextEditingController phoneNumberTextEditingController =
@@ -55,12 +56,24 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen> {
       controller.getUserDetail();
       controller.getLocationPermissionStatus();
     });
+
+    WidgetsBinding.instance.addObserver(this);
+
   }
 
   @override
   void dispose() {
     removeListener.close();
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      ref.read(kuselSettingScreenProvider.notifier)
+          .getLocationPermissionStatus();
+    }
   }
 
   @override
@@ -180,7 +193,8 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen> {
                             context: context,
                             snackBarAlignment: Alignment.topCenter);
                       }, onError: (message) {
-                        showErrorToast(message: message, context: context);
+                        showErrorToast(message: message, context: context,
+                            snackBarAlignment: Alignment.topCenter);
                       });
                     },
                     text: AppLocalizations.of(context).save_changes),
@@ -250,6 +264,7 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen> {
             6.verticalSpace,
             _buildTextFormField(
                 controller: emailTextEditingController,
+                enable: false,
                 onChanged: (value) {
                   controller.updateEmail(value);
                 },
