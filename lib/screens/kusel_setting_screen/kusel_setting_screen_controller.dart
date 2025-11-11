@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:core/preference_manager/preference_constant.dart';
@@ -119,7 +120,7 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
 
   isUserLoggedIn() async {
     final ans = await signInStatusController.isUserLoggedIn();
-
+    homeScreenProvider.getLoginStatus();
     state = state.copyWith(isUserLoggedIn: ans);
   }
 
@@ -374,25 +375,55 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
     }
   }
 
-  getLocationPermissionStatus() async {
-    final status = await Permission.locationWhenInUse.status;
-    state = state.copyWith(
-        isLocationPermissionGranted: status == PermissionStatus.granted);
+  Future<void> getLocationPermissionStatus() async {
+    PermissionStatus status;
+
+    if (Platform.isIOS) {
+      status = await Permission.locationWhenInUse.status;
+    } else {
+      status = await Permission.location.status;
+    }
+
+    final isGranted =
+        status.isGranted || status.isLimited;
+
+    state = state.copyWith(isLocationPermissionGranted: isGranted);
   }
+
+
 
   Future<void> requestOrHandleLocationPermission(bool value) async {
-    if (value) {
-      final status = await Permission.location.request();
-
-      if (status.isGranted) {
-        state = state.copyWith(isLocationPermissionGranted: true);
-      } else if (status.isPermanentlyDenied) {
-        await openAppSettings();
-      } else {
-        state = state.copyWith(isLocationPermissionGranted: false);
-      }
-    } else {
+    if (!value) {
       state = state.copyWith(isLocationPermissionGranted: false);
+      return;
     }
+
+    PermissionStatus status;
+
+    if (Platform.isIOS) {
+      status = await Permission.locationWhenInUse.request();
+    } else {
+      status = await Permission.location.request();
+    }
+
+    debugPrint('STATUS = $status');
+
+    final currentStatus = Platform.isIOS
+        ? await Permission.locationWhenInUse.status
+        : await Permission.location.status;
+
+    if (currentStatus.isGranted || currentStatus.isLimited) {
+      state = state.copyWith(isLocationPermissionGranted: true);
+      return;
+    }
+
+    if (currentStatus.isPermanentlyDenied || currentStatus.isDenied) {
+      await openAppSettings();
+      return;
+    }
+
+    // If user pressed 'Deny'
+    state = state.copyWith(isLocationPermissionGranted: false);
   }
+
 }
