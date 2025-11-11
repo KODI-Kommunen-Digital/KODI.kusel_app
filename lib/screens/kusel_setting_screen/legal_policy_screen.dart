@@ -7,6 +7,7 @@ import 'package:kusel/screens/kusel_setting_screen/poilcy_type.dart';
 
 import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/common_html_widget.dart';
+import '../../common_widgets/device_helper.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
 import '../../images_path.dart';
@@ -82,11 +83,17 @@ class _LegalPolicyScreenState extends ConsumerState<LegalPolicyScreen> {
                 onPressed: () {
                   ref.read(navigationProvider).removeTopPage(context: context);
                 },
-                icon: const Icon(Icons.arrow_back),
+                icon: Icon(
+                    size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                    Icons.arrow_back,
+                    color: Theme.of(context).primaryColor),
               ),
               8.horizontalSpace,
-              textBoldPoppins(
-                  text: widget.legalPolicyScreenParams.title, fontSize: 20),
+              textSemiBoldPoppins(
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).textTheme.bodyLarge!.color,
+                  text: widget.legalPolicyScreenParams.title,
+                  fontSize: 22),
             ],
           ),
         ),

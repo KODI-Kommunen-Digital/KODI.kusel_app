@@ -76,7 +76,7 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
 
   _buildHeader(BuildContext context) {
     return SizedBox(
-      height: 140.h,
+      height: 200.h,
       width: double.infinity,
       child: Stack(
         children: [
@@ -88,17 +88,17 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
                 clipperType: UpstreamWaveClipper(),
                 imageUrl: imagePath['home_screen_background'] ?? '',
                 isStaticImage: true,
-                height: 90.h,
+                height: 120.h,
               )),
           Positioned(
               right: 0.w,
               left: 0.w,
-              top: 15.h,
+              top: 26.h,
               child: SizedBox(
-                height: 130.h,
-                width: 130.w,
-                child: ImageUtil.loadLocalSvgImage(
-                    imageUrl: 'setting_header_image',
+                height: 190.h,
+                width: 180.w,
+                child: ImageUtil.loadAssetImage(
+                    imageUrl: imagePath["onboarding_logo"] ?? '',
                     context: context,
                     fit: BoxFit.contain),
               ))
