@@ -2,6 +2,7 @@ import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
@@ -173,8 +174,8 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 150.h,
-        width: 150.w,
+        height: 160.h,
+        width: 160.w,
         padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20.r), color: Colors.white),
@@ -182,7 +183,7 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
           children: [
             Container(
               padding: EdgeInsets.symmetric(vertical: 4.h),
-              height: 90.h,
+              height: 100.h,
               width: double.infinity,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.r),
@@ -216,8 +217,8 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 150.h,
-        width: 150.w,
+        height: 160.h,
+        width: 160.w,
         padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20.r), color: Colors.white),
@@ -225,7 +226,7 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
           children: [
             Container(
                 padding: EdgeInsets.symmetric(vertical: 24.h, horizontal: 32.w),
-                height: 90.h,
+                height: 100.h,
                 width: double.infinity,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.r),
@@ -339,15 +340,23 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
             visible: state.isUserLoggedIn,
             child: _buildCommonArrowTile(
                 context: context,
-                onTap: () {
-                  controller.logoutUser(() async {
-                    await controller.isUserLoggedIn();
-                    await ref
-                        .read(homeScreenProvider.notifier)
-                        .getLoginStatus();
+                onTap: () async{
+
+                  final controller = ref.read(kuselSettingScreenProvider.notifier);
+                  final router = GoRouter.of(context);
+
+                  await controller.logoutUser(() async {
+                   // await controller.isUserLoggedIn();
                   }, onSuccess: () async {
-                    await controller.getUserScore();
+                   // await controller.getUserScore();
                   });
+
+                  router.go(splashScreenPath);
+                  router.refresh();
+                  Future.microtask(() {
+                    router.go(signInScreenPath);
+                  });
+
                 },
                 title: AppLocalizations.of(context).logout,
                 hasTopRadius: false,
@@ -444,67 +453,4 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
     );
   }
 
-  void _showLanguageDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        final state = ref.watch(kuselSettingScreenProvider);
-        final controller = ref.read(kuselSettingScreenProvider.notifier);
-
-        final selectedLanguage = state.selectedLanguage;
-
-        final languageList = state.languageList;
-
-        return AlertDialog(
-          backgroundColor: Theme.of(context).colorScheme.secondary,
-          title: textBoldPoppins(
-            color: Colors.white,
-            text: AppLocalizations.of(context).select_language,
-          ),
-          content: Container(
-            color: Theme.of(context).colorScheme.secondary,
-            width: double.maxFinite,
-            height: 90.h,
-            child: ListView(
-              shrinkWrap: true,
-              children: languageList.map((language) {
-                return RadioTheme(
-                    data: RadioThemeData(
-                      fillColor: WidgetStateProperty.resolveWith<Color>(
-                          (Set<MaterialState> states) {
-                        if (states.contains(MaterialState.selected)) {
-                          return Colors.white; // selected radio button
-                        }
-                        return Colors.white; // unselected radio button
-                      }),
-                    ),
-                    child: RadioListTile<String>(
-                      hoverColor: Colors.white,
-                      title: Align(
-                        alignment: Alignment.centerLeft,
-                        child: textRegularPoppins(
-                            text: language, color: Colors.white),
-                      ),
-                      value: language,
-                      selectedTileColor: Colors.white,
-                      groupValue: selectedLanguage,
-                      onChanged: (String? value) async {
-                        if (value != null) {
-                          await controller.changeLanguage(
-                              selectedLanguage: value);
-                          if (context.mounted) {
-                            ref
-                                .read(navigationProvider)
-                                .removeDialog(context: context);
-                          }
-                        }
-                      },
-                    ));
-              }).toList(),
-            ),
-          ),
-        );
-      },
-    );
-  }
 }
