@@ -43,26 +43,40 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
   _buildBody(BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
-        physics: ClampingScrollPhysics(),
-        child: Column(
-          children: [
-            CommonBackgroundClipperWidget(
+        physics: const ClampingScrollPhysics(),
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height * 1.15, // ensure space
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              CommonBackgroundClipperWidget(
                 clipperType: UpstreamWaveClipper(),
                 imageUrl: imagePath['background_image'] ?? "",
                 headingText: AppLocalizations.of(context).category_heading,
-                height: 100.h,
+                height: 110.h,
                 blurredBackground: true,
-                isStaticImage: true),
-            _buildExploreView(context),
-            32.verticalSpace,
-            FeedbackCardWidget(
-              height: 270.h,
-              onTap: () {
-                ref.read(navigationProvider).navigateUsingPath(
-                    path: '$exploreScreenPath/$subShellFeedbackScreenPath', context: context);
-              },
-            ),
-          ],
+                isStaticImage: true,
+              ),
+              Positioned(
+                top: 70.h,
+                left: 0,
+                right: 0,
+                child: _buildExploreView(context),
+              ),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: FeedbackCardWidget(
+                  height: 270.h,
+                  onTap: () {
+                    ref.read(navigationProvider).navigateUsingPath(
+                        path: '$exploreScreenPath/$subShellFeedbackScreenPath', context: context);
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -96,6 +110,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
       ];
 
       return GridView.builder(
+        padding: EdgeInsets.symmetric(horizontal: 5.w),
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
         itemCount: exploreList.length,

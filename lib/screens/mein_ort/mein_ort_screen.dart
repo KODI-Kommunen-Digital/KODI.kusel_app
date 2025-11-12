@@ -16,6 +16,7 @@ import 'package:kusel/screens/ort_detail/ort_detail_screen_params.dart';
 import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/common_event_card.dart';
 import '../../common_widgets/custom_button_widget.dart';
+import '../../common_widgets/custom_progress_bar.dart';
 import '../../common_widgets/custom_shimmer_widget.dart';
 import '../../common_widgets/highlights_card.dart';
 import '../../common_widgets/image_utility.dart';
@@ -52,19 +53,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
       child: Stack(
         children: [
           _buildBody(context),
-          if (isLoading)
-            Center(
-                child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              height: 100.h,
-              width: 100.w,
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
-            )),
+          if (isLoading) CustomProgressBar(),
           Positioned(
             top: 13.h,
             left: 5.w,

@@ -8,6 +8,8 @@ class TourismScreenState {
   double long;
   bool isRecommendationLoading;
   bool isUserLoggedIn;
+  int highlightCount;
+
 
   TourismScreenState(
       this.allEventList,
@@ -16,10 +18,12 @@ class TourismScreenState {
       this.lat,
       this.long,
       this.isRecommendationLoading,
-      this.isUserLoggedIn);
+      this.isUserLoggedIn,
+      this.highlightCount
+      );
 
   factory TourismScreenState.empty() {
-    return TourismScreenState([], [], [], 0, 0, true, false);
+    return TourismScreenState([], [], [], 0, 0, true, false,0);
   }
 
   TourismScreenState copyWith(
@@ -29,7 +33,9 @@ class TourismScreenState {
       double? lat,
       double? long,
       bool? isRecommendationLoading,
-      bool? isUserLoggedIn}) {
+      bool? isUserLoggedIn,
+      int? highlightCount
+      }) {
     return TourismScreenState(
         allEventList ?? this.allEventList,
         nearByList ?? this.nearByList,
@@ -37,6 +43,8 @@ class TourismScreenState {
         lat ?? this.lat,
         long ?? this.long,
         isRecommendationLoading ?? this.isRecommendationLoading,
-        isUserLoggedIn ?? this.isUserLoggedIn);
+        isUserLoggedIn ?? this.isUserLoggedIn,
+      highlightCount ?? this.highlightCount
+    );
   }
 }

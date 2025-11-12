@@ -110,7 +110,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               isStaticImage: true,
               height: 265.h,
               customWidget1: Positioned(
-                top: 85.h,
+                top: 65.h,
                 left: 20.w,
                 right: 20.w,
                 child: Column(
@@ -126,13 +126,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 shapeBorder: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12.r)))
                             : textBoldPoppins(
-                                fontSize: 20,
+                                fontSize: 21,
                                 color: Theme.of(context)
                                     .textTheme
                                     .bodyLarge
                                     ?.color,
                                 textAlign: TextAlign.center,
-                                text: ref.watch(homeScreenProvider).userName,
+                                text: "Hey ${ref.watch(homeScreenProvider).userName}",
                               )),
                     isLoading ? 10.verticalSpace : 0.verticalSpace,
                     isLoading
@@ -142,7 +142,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             shapeBorder: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12.r)))
                         : textBoldPoppins(
-                            fontSize: 20,
+                            fontSize: 21,
                             color: Theme.of(context).textTheme.bodyLarge?.color,
                             textAlign: TextAlign.center,
                             textOverflow: TextOverflow.visible,
@@ -503,7 +503,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ],
                   ),
           ),
-          10.verticalSpace,
+          25.verticalSpace,
           isLoading
               ? highlightCardShimmerEffect()
               : SizedBox(

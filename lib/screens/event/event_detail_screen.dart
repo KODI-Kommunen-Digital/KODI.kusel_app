@@ -17,6 +17,7 @@ import '../../common_widgets/arrow_back_widget.dart';
 import '../../common_widgets/common_bottom_nav_card_.dart';
 import '../../common_widgets/common_event_card.dart';
 import '../../common_widgets/common_html_widget.dart';
+import '../../common_widgets/custom_progress_bar.dart';
 import '../../common_widgets/location_card_widget.dart';
 import '../../common_widgets/toast_message.dart';
 import '../../images_path.dart';
@@ -66,19 +67,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
         child: Stack(
           children: [
             _buildBody(context, state),
-            if (isLoading)
-              Center(
-                  child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.r),
-                ),
-                height: 100.h,
-                width: 100.w,
-                child: const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              )),
+          if (isLoading) CustomProgressBar(),
             Positioned(
               top: 30,
               left: 20,

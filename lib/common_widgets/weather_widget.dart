@@ -38,7 +38,10 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
                 padding: EdgeInsets.only(left: 30.w),
                 width: 270.w,
                 height: 231.h,
-                color: Colors.white,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(topRight: Radius.circular(16.r), bottomRight: Radius.circular(16.r))
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   // Align content to left
