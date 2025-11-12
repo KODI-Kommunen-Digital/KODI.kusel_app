@@ -189,7 +189,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
           15.verticalSpace,
 
           LocationCardWidget(
-            address: state.eventDetails.address??"-",
+            address: state.eventDetails.place ?? state.eventDetails.address ?? '-',
             websiteText: AppLocalizations.of(context).visit_website,
             websiteUrl: state.eventDetails.website ?? "",
             latitude:
@@ -217,6 +217,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
             heading: AppLocalizations.of(context).description,
             subHeading: '',
             description: state.eventDetails.description ?? "",
+            state: state
           )
         ],
       ),
@@ -238,7 +239,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
   Widget _eventInfoWidget(
       {required String heading,
       required String subHeading,
-      required String description}) {
+      required String description, required EventDetailScreenState state}) {
     return Padding(
       padding: EdgeInsets.only(left: 8.w, right: 10.w, top: 10.h, bottom: 10.h),
       child: Column(
@@ -273,7 +274,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                           .eventDetails
                           .endDate !=
                       null,
-              child: Align(child: _buildExpandedTile()))
+              child: Align(child: _buildExpandedTile(state)))
         ],
       ),
     );
@@ -423,7 +424,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
     );
   }
 
-  Widget _buildExpandedTile() {
+  Widget _buildExpandedTile(EventDetailScreenState state) {
     return ExpansionTile(
       tilePadding: EdgeInsets.zero,
       iconColor: Theme.of(context).primaryColor,

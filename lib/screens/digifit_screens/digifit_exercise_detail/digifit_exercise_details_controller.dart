@@ -39,7 +39,7 @@ final digifitExerciseDetailsControllerProvider = StateNotifierProvider
     signInStatusController: ref.read(signInStatusProvider.notifier),
     networkStatusProvider: ref.read(networkStatusProvider.notifier),
     digifitCacheDataController: ref.read(digifitCacheDataProvider.notifier),
-    equipmentId: equipmentId, // Pass equipmentId to controller
+    equipmentId: equipmentId,
   ),
 );
 
