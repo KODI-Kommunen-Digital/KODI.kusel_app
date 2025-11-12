@@ -1,9 +1,9 @@
 import 'package:core/base_model.dart';
 
 class RefreshTokenRequestModel extends BaseModel<RefreshTokenRequestModel> {
-  String userId;
+  String? userId;
 
-  RefreshTokenRequestModel({required this.userId});
+  RefreshTokenRequestModel({this.userId});
 
   @override
   RefreshTokenRequestModel fromJson(Map<String, dynamic> json) {
