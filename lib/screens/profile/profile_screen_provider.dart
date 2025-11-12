@@ -75,10 +75,9 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
       final response = tokenStatus.isAccessTokenExpired();
 
       if (response) {
-        final userId = sharedPreferenceHelper.getInt(userIdKey);
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
         RefreshTokenRequestModel requestModel =
-            RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+            RefreshTokenRequestModel();
         final result =
             await refreshTokenUseCase.call(requestModel, responseModel);
 
@@ -91,9 +90,11 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
           sharedPreferenceHelper.setString(
               refreshTokenKey, res.data?.refreshToken ?? "");
 
-          UserDetailRequestModel requestModel = UserDetailRequestModel(
-              id: sharedPreferenceHelper.getInt(userIdKey));
+          UserDetailRequestModel requestModel = UserDetailRequestModel();
           UserDetailResponseModel responseModel = UserDetailResponseModel();
+
+          debugPrint('value for this is the ${requestModel}');
+
           final result =
               await userDetailUseCase.call(requestModel, responseModel);
           result.fold((l) {
@@ -110,8 +111,7 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
           });
         });
       } else {
-        UserDetailRequestModel requestModel = UserDetailRequestModel(
-            id: sharedPreferenceHelper.getInt(userIdKey));
+        UserDetailRequestModel requestModel = UserDetailRequestModel();
         UserDetailResponseModel responseModel = UserDetailResponseModel();
         final result =
             await userDetailUseCase.call(requestModel, responseModel);
@@ -146,9 +146,8 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
 
     final response = tokenStatus.isAccessTokenExpired();
     if (response) {
-      final userId = sharedPreferenceHelper.getInt(userIdKey);
       RefreshTokenRequestModel requestModel =
-      RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+      RefreshTokenRequestModel();
       RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
       final refreshResponse =
@@ -177,7 +176,7 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
 
     EditUserDetailRequestModel editUserDetailRequestModel =
         EditUserDetailRequestModel();
-    editUserDetailRequestModel.id = state.userData?.id ?? 0;
+    // editUserDetailRequestModel.id = state.userData?.id ?? 0;
 
     final name = splitFullName(nameEditingController.text);
 
@@ -262,9 +261,8 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
 
   Future<void> uploadUserImage(File imageFile) async {
     try {
-      final userId = sharedPreferenceHelper.getInt(userIdKey);
       EditUserImageRequestModel requestModel =
-          EditUserImageRequestModel(id: userId, imagePath: imageFile.path);
+          EditUserImageRequestModel(imagePath: imageFile.path);
       EditUserImageResponseModel responseModel = EditUserImageResponseModel();
       final result =
           await editUserImageUseCase.call(requestModel, responseModel);

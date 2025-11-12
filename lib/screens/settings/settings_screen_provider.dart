@@ -131,11 +131,9 @@ class SettingsScreenProvider extends StateNotifier<SettingsScreenState> {
   }
 
   _deleteUser(void Function() onSuccess, void Function(String) onError) async {
-    final userId = sharedPreferenceHelper.getInt(userIdKey);
     final token = sharedPreferenceHelper.getString(tokenKey);
 
-    DeleteAccountRequestModel requestModel = DeleteAccountRequestModel(
-        id: userId?.toString() ?? '0', token: token ?? '');
+    DeleteAccountRequestModel requestModel = DeleteAccountRequestModel(token: token ?? '');
 
     DeleteAccountResponseModel responseModel = DeleteAccountResponseModel();
 

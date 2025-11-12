@@ -19,7 +19,7 @@ class UserDetailService {
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
     final path =
-        "$userDetailsEndPoint/${requestModel.toJson()["id"]}$fetchUserOwnDataEndPoint";
+        "$userDetailsEndPoint$fetchUserOwnDataEndPoint";
     final apiHelper = ref.read(apiHelperProvider);
     String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
     final headers = {'Authorization': 'Bearer $token'};
