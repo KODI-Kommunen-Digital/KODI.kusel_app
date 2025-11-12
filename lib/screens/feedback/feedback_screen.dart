@@ -73,35 +73,50 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
-        child: Stack(
-          children: [
-            SingleChildScrollView(
-              physics: ClampingScrollPhysics(),
-              child: _buildFeedbackUi(
+        child: SingleChildScrollView(
+          physics: ClampingScrollPhysics(),
+          child: Column(
+            children: [
+
+
+              Stack(
+                children: [
+                  CommonBackgroundClipperWidget(
+                      clipperType: UpstreamWaveClipper(),
+                      imageUrl: imagePath['background_image'] ?? "",
+                      height: 130.h,
+                      blurredBackground: true,
+                      isBackArrowEnabled: false,
+                      isStaticImage: true),
+
+                  Positioned(
+                    top: 30.h,
+                    left: 16.w,
+                    child: Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            ref.read(navigationProvider).removeTopPage(context: context);
+                          },
+                          icon: Icon(Icons.arrow_back),
+                        ),
+                        8.horizontalSpace,
+                        textBoldPoppins(text: AppLocalizations.of(context).contact,
+                            fontSize:24 )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+
+              _buildFeedbackUi(
                   titleEditingController,
                   descriptionEditingController,
                   emailEditingController,
                   stateWatch,
                   stateNotifier),
-            ),
-            Positioned(
-              top: 30.h,
-              left: 16.w,
-              child: Row(
-                children: [
-                  IconButton(
-                    onPressed: () {
-                      ref.read(navigationProvider).removeTopPage(context: context);
-                    },
-                    icon: Icon(Icons.arrow_back),
-                  ),
-                  8.horizontalSpace,
-                  textBoldPoppins(text: AppLocalizations.of(context).contact,
-                  fontSize:24 )
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     ).loaderDialog(context, stateWatch.loading);
@@ -113,19 +128,8 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
       TextEditingController emailEditingController,
       FeedbackScreenState stateWatch,
       FeedbackScreenProvider stateNotifier) {
-    return Column(
-      children: [
-        CommonBackgroundClipperWidget(
-            clipperType: UpstreamWaveClipper(),
-            imageUrl: imagePath['background_image'] ?? "",
-            height: 130.h,
-            blurredBackground: true,
-            isBackArrowEnabled: false,
-            isStaticImage: true),
-        _buildForm(titleEditingController, descriptionEditingController,
-            emailEditingController, stateWatch, stateNotifier)
-      ],
-    );
+    return _buildForm(titleEditingController, descriptionEditingController,
+        emailEditingController, stateWatch, stateNotifier);
   }
 
   Widget _buildForm(
