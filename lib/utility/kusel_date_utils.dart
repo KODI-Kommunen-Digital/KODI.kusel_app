@@ -40,6 +40,17 @@ class KuselDateUtils {
     }
   }
 
+  /// Formats a DateTime object into 'dd.MM.yyyy' format
+  static String formatDateInFormatYYYYMMDD(String inputDate) {
+    try {
+      final DateTime parsedDate = DateTime.parse(inputDate);
+      final DateFormat formatter = DateFormat('yyyy-MM-dd');
+      return formatter.format(parsedDate);
+    } catch (e) {
+      return inputDate;
+    }
+  }
+
   static String formatDateTime(String inputDate) {
     try {
       final DateTime parsedDate = DateTime.parse(inputDate);
@@ -57,6 +68,16 @@ class KuselDateUtils {
       return DateFormat.Hm().format(dateTime);
     } catch (e) {
       return time;
+    }
+  }
+
+  static bool checkDatesAreSame(DateTime date1, DateTime date2) {
+    if (date1.isBefore(date2)) {
+      return false;
+    } else if (date1.isAfter(date2)) {
+      return false;
+    } else {
+      return true;
     }
   }
 }

@@ -782,4 +782,194 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get new_municipality => 'Collective municipality';
+
+  @override
+  String get filter => 'Filter';
+
+  @override
+  String get all => 'All';
+
+  @override
+  String get category => 'Category';
+
+  @override
+  String get location_and_distance => 'Location and distance';
+
+  @override
+  String get location_distance => 'Location/Distance';
+
+  @override
+  String get maximum_characters => 'Maximum 300 characters allowed.';
+
+  @override
+  String get regarding => 'Regarding';
+
+  @override
+  String get feedback_about_app => 'Feedback about app';
+
+  @override
+  String get infrastructure_and_public_space => 'Infrastructure & Public Space';
+
+  @override
+  String get transportation_and_mobility => 'Transport & Mobility';
+
+  @override
+  String get cleanliness_and_environment => 'Cleanliness & Environment';
+
+  @override
+  String get digital_services_and_app_functionality =>
+      'Digital Services & App Functionality';
+
+  @override
+  String get disruptions_and_damage => 'Disruptions & Damage';
+
+  @override
+  String get citizen_services_and_administration =>
+      'Citizen Services & Administration';
+
+  @override
+  String get general_feedback => 'General Feedback';
+
+  @override
+  String get games_stamps_desc => 'You can collect these stamps here';
+
+  @override
+  String get stamps_achievements => 'My achievements';
+
+  @override
+  String get choose_level => 'Choose a level';
+
+  @override
+  String get more_games => 'More games';
+
+  @override
+  String get try_again => 'Try again';
+
+  @override
+  String get abort_game => 'Abort BoldiFinder Game?';
+
+  @override
+  String get abort_game_desc =>
+      'The current Game is not yet completed. Do you really want to abort and go back?';
+
+  @override
+  String get level_complete => 'Level Complete!';
+
+  @override
+  String get level_complete_desc =>
+      'To start the next level, please click OK to go back.';
+
+  @override
+  String get all_level_complete =>
+      'All level\'s are completed, please click OK to go back.';
+
+  @override
+  String get successful_game_title => 'Super!';
+
+  @override
+  String get successful_game_desc_for_level_1 => 'Are you ready for Level 2?';
+
+  @override
+  String get successful_game_desc_for_level_2 => 'Are you ready for Level 3?';
+
+  @override
+  String get successful_game_desc_for_level_3 => 'All Level\'s are completed';
+
+  @override
+  String get error_game_title => 'Unfortunately wrong';
+
+  @override
+  String get error_game_des => 'Try again right away!';
+
+  @override
+  String get contact => 'Contact';
+
+  @override
+  String get profile_setting => 'Profile Setting';
+
+  @override
+  String get new_password => 'New Password';
+
+  @override
+  String get confirm_new_password => 'Confirm new password';
+
+  @override
+  String get at_least_8_character => 'at least 8 characters';
+
+  @override
+  String get contains_letters_and_numbers => 'contain letters and numbers';
+
+  @override
+  String get contains_upper_case_and_lower_case =>
+      'contains uppercase and lowercase';
+
+  @override
+  String get contains_special_character => 'contains special character';
+
+  @override
+  String get current_password => 'Current Password';
+
+  @override
+  String get update_password => 'Update Password';
+
+  @override
+  String get field_cannot_be_empty => 'Field cannot be empty';
+
+  @override
+  String get password_is_not_same_as_new_password =>
+      'Password is not same as new password';
+
+  @override
+  String get reset_password_success => 'Password has been successfully reset';
+
+  @override
+  String get abort_math_hunt_game => 'Abort MathHunt Game?';
+
+  @override
+  String get math_hunt_game_desc => 'Ready for some mental arithmetic?';
+
+  @override
+  String get flip_catch_desc => 'Ready for Flip catch';
+
+  @override
+  String get abort_flip_catch => 'Abort Flip Catch?';
+
+  @override
+  String get my_profile => 'My Profile';
+
+  @override
+  String get my_fav => 'My favorites';
+
+  @override
+  String get rubber_stamp => 'Rubber Stamp';
+
+  @override
+  String get treasure_pass => 'Treasure pass';
+
+  @override
+  String get data_protection_information => 'Data Protection';
+
+  @override
+  String get app_version => 'App-Version';
+
+  @override
+  String get mobile => 'Mobile';
+
+  @override
+  String get optional => 'optional';
+
+  @override
+  String get address => 'Address';
+
+  @override
+  String get change_password => 'Change Password';
+
+  @override
+  String get edit_interest_profile => 'Edit interest profile';
+
+  @override
+  String get location_sharing => 'Location sharing';
+
+  @override
+  String get an => 'To';
 }

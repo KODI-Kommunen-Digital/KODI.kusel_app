@@ -22,7 +22,7 @@ class BrainTeaserGameListService {
       BaseModel requestModel, BaseModel responseModel) async {
     final params = requestModel.toJson();
     final path =
-        "$brainTeasersGameListEndPoint?translate=${params["translate"]}";
+        "$brainTeaserGameListEndPoint?translate=${params["translate"]}";
 
     final apiHelper = ref.read(apiHelperProvider);
     String token = sharedPreferenceHelper.getString(tokenKey) ?? '';

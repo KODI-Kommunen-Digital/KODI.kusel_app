@@ -6,8 +6,9 @@ import "package:motion_toast/motion_toast.dart";
 showSuccessToast(
     {required String message,
     required BuildContext context,
-    Alignment? snackBarAlignment}) {
-  MotionToast(
+    Alignment? snackBarAlignment,
+    void Function()? onCLose}) {
+  MotionToast(onClose: onCLose,
     primaryColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: .3),
     description: textRegularPoppins(
         text: message,
