@@ -253,6 +253,11 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
     final stateNotifier = ref.read(onboardingScreenProvider.notifier);
     final state = ref.watch(onboardingScreenProvider);
 
+    if(state.resident!=null && state.resident!.isNotEmpty)
+      {
+        _searchController.text = state.resident!;
+      }
+
     return NotificationListener<OverscrollIndicatorNotification>(
       onNotification: (overscroll) {
         overscroll.disallowIndicator();

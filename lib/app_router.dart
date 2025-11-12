@@ -11,9 +11,14 @@ import 'package:kusel/screens/auth/forgot_password/forgot_password_screen.dart';
 import 'package:kusel/screens/auth/signin/signin_screen.dart';
 import 'package:kusel/screens/auth/signup/signup_screen.dart';
 import 'package:kusel/screens/dashboard/dashboard_screen.dart';
-import 'package:kusel/screens/digifit_screens/brain_teaser_game/list_screen.dart';
+import 'package:kusel/screens/digifit_screens/brain_teaser_game/all_games/params/all_game_params.dart';
+import 'package:kusel/screens/digifit_screens/brain_teaser_game/common_navigation/game_registry.dart';
+import 'package:kusel/screens/digifit_screens/brain_teaser_game/game_details/details_screen.dart';
+import 'package:kusel/screens/digifit_screens/brain_teaser_game/game_details/params/details_params.dart';
+import 'package:kusel/screens/digifit_screens/brain_teaser_game/game_list/list_screen.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/digifit_exercise_detail_screen.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/params/digifit_exercise_details_params.dart';
+import 'package:kusel/screens/digifit_screens/digifit_fav_screen/digifit_fav_Screen.dart';
 import 'package:kusel/screens/digifit_screens/digifit_overview/digifit_overview_screen.dart';
 import 'package:kusel/screens/digifit_screens/digifit_overview/params/digifit_overview_params.dart';
 import 'package:kusel/screens/digifit_screens/digifit_qr_scanner/digifit_qr_scanner_screen.dart';
@@ -31,11 +36,19 @@ import 'package:kusel/screens/fliter_screen/filter_screen.dart';
 import 'package:kusel/screens/full_image/full_image_screen.dart';
 import 'package:kusel/screens/highlight/highlight_screen.dart';
 import 'package:kusel/screens/home/home_screen.dart';
+import 'package:kusel/screens/kusel_setting_screen/kusel_fav_screen.dart';
+import 'package:kusel/screens/kusel_setting_screen/kusel_setting_screen.dart';
+import 'package:kusel/screens/kusel_setting_screen/legal_policy_screen.dart';
+import 'package:kusel/screens/kusel_setting_screen/profile_setting_screen.dart';
 import 'package:kusel/screens/location/location_screen.dart';
 import 'package:kusel/screens/mein_ort/mein_ort_screen.dart';
 import 'package:kusel/screens/mobility_screen/mobility_screen.dart';
 import 'package:kusel/screens/municipal_party_detail/municipal_detail_screen.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
+import 'package:kusel/screens/new_filter_screen/category_filter_screen.dart';
+import 'package:kusel/screens/new_filter_screen/location_and_distance_filter_screen.dart';
+import 'package:kusel/screens/new_filter_screen/new_filter_screen.dart';
+import 'package:kusel/screens/new_filter_screen/new_filter_screen_params.dart';
 import 'package:kusel/screens/no_network/network_status_screen.dart';
 import 'package:kusel/screens/onboarding/onboarding_finish_page.dart';
 import 'package:kusel/screens/onboarding/onboarding_loading_page.dart';
@@ -44,6 +57,7 @@ import 'package:kusel/screens/ort_detail/ort_detail_screen.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen_params.dart';
 import 'package:kusel/screens/participate_screen/participate_screen.dart';
 import 'package:kusel/screens/profile/profile_screen.dart';
+import 'package:kusel/screens/reset_password/reset_password_screen.dart';
 import 'package:kusel/screens/search/search_screen.dart';
 import 'package:kusel/screens/search_result/search_result_screen.dart';
 import 'package:kusel/screens/search_result/search_result_screen_parameter.dart';
@@ -86,14 +100,16 @@ const municipalDetailScreenPath = "/municipalDetailScreenPath";
 const allCityScreenPath = "/allCityScreenPath";
 const allMunicipalityScreenPath = "/allMunicipalityScreenPath";
 const ortDetailScreenPath = "/ortDetailScreenPath";
+const newFilterScreenPath = "/newFilterScreen";
+const categoryFilterScreenPath = "/categoryFilterScreen";
+const locationDistanceScreenPath = "/locationDistanceScreen";
 
 // Bottom Nav & Explore sub‑routes paths
 const homeScreenPath = "/homeScreenPath";
-const exploreShellScreenPath = "/exploreShellScreenPath";
 const exploreScreenPath = "/exploreScreenPath";
 const searchScreenPath = "/searchScreenPath";
 const locationScreenPath = "/locationScreenPath";
-const settingScreenPath = "/settingScreenPath";
+const kuselSettingScreenPath = "/settingScreenPath";
 
 // BECAUSE WE ARE USING STATEFUL SHELL ROUTING i.e; we are not putting forward slash
 const tourismScreenPath = "tourismScreenPath";
@@ -109,9 +125,27 @@ const brainTeasersGameListScreenPath = "brainTeasersGameListScreenPath";
 const digifitOverViewScreenPath = "/digifitOverViewScreenPath";
 const digifitQRScannerScreenPath = "/digifitQRScannerScreenPath";
 const digifitExerciseDetailScreenPath = "/digifitExerciseDetailScreenPath";
+const digifitFavScreenPath = "/digifitFavScreen";
+
+// Game's screen Path
+const brainTeaserGameDetailsScreenPath = "/brainTeasersGameDetailsScreenPath";
+const String boldiFinderScreenPath = '/boldi-finder';
+const String matheJagdScreenPath = '/mathe-jagd';
+const String flipCatchScreenPath = '/flip-catch';
+const String digitDashScreenPath = '/digit-dash';
+const String bilderSpielScreenPath = '/bilder-spiel';
 
 const webViewPagePath = "/webViewPagePath";
 const fullImageScreenPath = '/fullImageScreenPath';
+
+const subShellFeedbackScreenPath = "feedbackScreen";
+
+const resetPasswordScreenPath = "/resetPasswordScreen;";
+
+// setting screen
+const kuselFavScreenPath = "kuselFavScreen";
+const legalPolicyScreenPath = "/legalPolicyScreen";
+const profileSettingScreenPath = "profileSettingScreen";
 
 final exploreSubScreenRoutes = [
   tourismScreenPath,
@@ -121,13 +155,14 @@ final exploreSubScreenRoutes = [
   participateScreenPath,
   digifitStartScreenPath,
   digifitTrophiesScreenPath,
-  brainTeasersGameListScreenPath
+  brainTeasersGameListScreenPath,
 ];
 
 // Full route list
 List<RouteBase> goRouteList = [
   // Auth & misc screens
   GoRoute(path: splashScreenPath, builder: (_, __) => SplashScreen()),
+  GoRoute(path: feedbackScreenPath, builder: (_, __) => FeedbackScreen()),
   GoRoute(path: signInScreenPath, builder: (_, __) => SignInScreen()),
   GoRoute(path: signUpScreenPath, builder: (_, __) => SignupScreen()),
   GoRoute(
@@ -164,7 +199,6 @@ List<RouteBase> goRouteList = [
       path: favoritesListScreenPath, builder: (_, __) => FavoritesListScreen()),
   GoRoute(
       path: favouriteCityScreenPath, builder: (_, __) => FavouriteCityScreen()),
-  GoRoute(path: feedbackScreenPath, builder: (_, __) => FeedbackScreen()),
   GoRoute(
       path: allEventScreenPath,
       builder: (_, state) => AllEventScreen(
@@ -189,6 +223,10 @@ List<RouteBase> goRouteList = [
           municipalityScreenParams: state.extra as MunicipalityScreenParams)),
   GoRoute(
       path: favouriteCityScreenPath, builder: (_, __) => FavouriteCityScreen()),
+
+  GoRoute(
+      path: resetPasswordScreenPath, builder: (_, __) => ResetPasswordScreen()),
+
   GoRoute(
       path: digifitOverViewScreenPath,
       builder: (_, state) => DigifitOverviewScreen(
@@ -206,6 +244,59 @@ List<RouteBase> goRouteList = [
           )),
 
   GoRoute(
+      path: legalPolicyScreenPath,
+      builder: (_, state) => LegalPolicyScreen(
+            legalPolicyScreenParams: state.extra as LegalPolicyScreenParams,
+          )),
+
+  GoRoute(
+      path: brainTeaserGameDetailsScreenPath,
+      builder: (_, state) => BrainTeaserGameDetailsScreen(
+            brainTeaserGameDetailsParams:
+                state.extra as BrainTeaserGameDetailsParams,
+          )),
+
+  GoRoute(
+    path: boldiFinderScreenPath,
+    builder: (context, state) {
+      final params = state.extra as AllGameParams?;
+      return GameRegistry.getGameScreen(1, params);
+    },
+  ),
+
+  GoRoute(
+    path: flipCatchScreenPath,
+    builder: (context, state) {
+      final params = state.extra as AllGameParams?;
+      return GameRegistry.getGameScreen(2, params);
+    },
+  ),
+
+  GoRoute(
+    path: matheJagdScreenPath,
+    builder: (context, state) {
+      final params = state.extra as AllGameParams?;
+      return GameRegistry.getGameScreen(3, params);
+    },
+  ),
+
+  GoRoute(
+    path: digitDashScreenPath,
+    builder: (context, state) {
+      final params = state.extra as AllGameParams?;
+      return GameRegistry.getGameScreen(4, params);
+    },
+  ),
+
+  GoRoute(
+    path: bilderSpielScreenPath,
+    builder: (context, state) {
+      final params = state.extra as AllGameParams?;
+      return GameRegistry.getGameScreen(5, params);
+    },
+  ),
+
+  GoRoute(
       path: webViewPagePath,
       builder: (_, state) =>
           WebViewPage(webViewParams: state.extra as WebViewParams)),
@@ -213,6 +304,25 @@ List<RouteBase> goRouteList = [
       path: fullImageScreenPath,
       builder: (_, state) => FullImageScreen(
           fullImageScreenParams: state.extra as FullImageScreenParams)),
+
+  GoRoute(
+      path: newFilterScreenPath,
+      builder: (_, state) => NewFilterScreen(
+            params: state.extra as NewFilterScreenParams,
+          )),
+
+  GoRoute(
+      path: categoryFilterScreenPath,
+      builder: (_, state) => CategoryFilterScreen(
+            categoryScreenParams: state.extra as CategoryScreenParams,
+          )),
+
+  GoRoute(
+      path: locationDistanceScreenPath,
+      builder: (_, state) => LocationAndDistanceFilterScreen()),
+
+  GoRoute(
+      path: digifitFavScreenPath, builder: (_, state) => DigifitFavScreen()),
 
   // Dashboard + tabs
   dashboardRoutes,
@@ -230,9 +340,14 @@ final dashboardRoutes = StatefulShellRoute.indexedStack(
     StatefulShellBranch(
       routes: [
         GoRoute(
-          path: homeScreenPath,
-          builder: (_, __) => HomeScreen(),
-        ),
+            path: homeScreenPath,
+            builder: (_, __) => HomeScreen(),
+            routes: [
+              GoRoute(
+                path: subShellFeedbackScreenPath,
+                builder: (_, __) => const FeedbackScreen(),
+              ),
+            ]),
       ],
     ),
     //  Explore Tab + sub routes
@@ -242,6 +357,10 @@ final dashboardRoutes = StatefulShellRoute.indexedStack(
           path: exploreScreenPath,
           builder: (_, __) => const ExploreScreen(),
           routes: [
+            GoRoute(
+              path: subShellFeedbackScreenPath,
+              builder: (_, __) => const FeedbackScreen(),
+            ),
             GoRoute(
               path: tourismScreenPath,
               builder: (_, __) => const TourismScreen(),
@@ -265,8 +384,9 @@ final dashboardRoutes = StatefulShellRoute.indexedStack(
             GoRoute(
                 path: digifitTrophiesScreenPath,
                 builder: (_, __) => DigifitTrophiesScreen()),
-            GoRoute(path: brainTeasersGameListScreenPath,
-            builder: (_, __) => const BrainTeaserGameListScreen()),
+            GoRoute(
+                path: brainTeasersGameListScreenPath,
+                builder: (_, __) => const BrainTeaserGameListScreen()),
             GoRoute(
               path: participateScreenPath,
               builder: (_, __) => const ParticipateScreen(),
@@ -297,14 +417,23 @@ final dashboardRoutes = StatefulShellRoute.indexedStack(
     StatefulShellBranch(
       routes: [
         GoRoute(
-          path: settingScreenPath,
-          builder: (_, __) => const SettingsScreen(),
-        ),
+            path: kuselSettingScreenPath,
+            builder: (_, __) => KuselSettingScreen(), //const SettingsScreen()
+            routes: [
+              GoRoute(
+                path: kuselFavScreenPath,
+                builder: (_, __) => const KuselFavScreen(),
+              ),
+              GoRoute(
+                path: subShellFeedbackScreenPath,
+                builder: (_, __) => const FeedbackScreen(),
+              ),
+              GoRoute(
+                path: profileSettingScreenPath,
+                builder: (_, __) => const ProfileSettingScreen(),
+              )
+            ]),
       ],
     ),
   ],
 );
-
-
-
-

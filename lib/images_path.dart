@@ -46,6 +46,15 @@ Map<String, String> _svgImagePath = {
   "sunny_icon": "assets/svg/sunny_icon.svg",
   "rainy_icon": "assets/svg/rainy_icon.svg",
   "partly_cloudy_icon": "assets/svg/partly_cloudy_icon.svg",
+  "correct":"assets/svg/correct.svg",
+  "filter_button":"assets/svg/filter_button.svg",
+  "lock":"assets/svg/lock.svg",
+  "circular_check_outline":"assets/svg/circular_check_outlined.svg",
+  "circular_check_filled":"assets/svg/circular_check_filled.svg",
+  "setting_header_image":"assets/svg/setting_header_image.svg",
+  "setting_profile":"assets/svg/setting_profile.svg",
+  "my_fav":"assets/svg/my_fav.svg",
+  "forward_arrow":"assets/svg/forward_arrow.svg"
 };
 
 Map<String, String> _pngImagePath = {
@@ -84,7 +93,15 @@ Map<String, String> _pngImagePath = {
   "digifit_map_image": "assets/png/digifit_map_image.png",
   "exercise_background": "assets/png/exercise_background.png",
   "sun_weather_image": "assets/png/sun_weather.png",
-  "boldi_new_sunny_image": "assets/png/boldi_new_sunny.png"
+  "boldi_game_details_image": "assets/png/boldi_game_details.png",
+  "stamps_icon": "assets/png/stamps_icon.png",
+  "cloud_message_image": "assets/png/cloud_message.png",
+  "grid_boldi": "assets/png/grid_boldi.png",
+  "boldi_successor": "assets/png/boldi_successor.png",
+  "unlock_stamp_image": "assets/png/unlock_stamp_image.png",
+  "cloud_image_math_hunt": "assets/png/cloud_image_math_hunt.png",
+  "boldi_new_sunny_image": "assets/png/boldi_new_sunny.png",
+  "math_hunt_boldi": "assets/png/math_hunt_boldi.png",
 };
 
 Map<String, String> _jpegImagePath = {

@@ -1609,6 +1609,372 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Collective municipality'**
   String get new_municipality;
+
+  /// No description provided for @filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get filter;
+
+  /// No description provided for @all.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get all;
+
+  /// No description provided for @category.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get category;
+
+  /// No description provided for @location_and_distance.
+  ///
+  /// In en, this message translates to:
+  /// **'Location and distance'**
+  String get location_and_distance;
+
+  /// No description provided for @location_distance.
+  ///
+  /// In en, this message translates to:
+  /// **'Location/Distance'**
+  String get location_distance;
+
+  /// No description provided for @maximum_characters.
+  ///
+  /// In en, this message translates to:
+  /// **'Maximum 300 characters allowed.'**
+  String get maximum_characters;
+
+  /// No description provided for @regarding.
+  ///
+  /// In en, this message translates to:
+  /// **'Regarding'**
+  String get regarding;
+
+  /// No description provided for @feedback_about_app.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback about app'**
+  String get feedback_about_app;
+
+  /// No description provided for @infrastructure_and_public_space.
+  ///
+  /// In en, this message translates to:
+  /// **'Infrastructure & Public Space'**
+  String get infrastructure_and_public_space;
+
+  /// No description provided for @transportation_and_mobility.
+  ///
+  /// In en, this message translates to:
+  /// **'Transport & Mobility'**
+  String get transportation_and_mobility;
+
+  /// No description provided for @cleanliness_and_environment.
+  ///
+  /// In en, this message translates to:
+  /// **'Cleanliness & Environment'**
+  String get cleanliness_and_environment;
+
+  /// No description provided for @digital_services_and_app_functionality.
+  ///
+  /// In en, this message translates to:
+  /// **'Digital Services & App Functionality'**
+  String get digital_services_and_app_functionality;
+
+  /// No description provided for @disruptions_and_damage.
+  ///
+  /// In en, this message translates to:
+  /// **'Disruptions & Damage'**
+  String get disruptions_and_damage;
+
+  /// No description provided for @citizen_services_and_administration.
+  ///
+  /// In en, this message translates to:
+  /// **'Citizen Services & Administration'**
+  String get citizen_services_and_administration;
+
+  /// No description provided for @general_feedback.
+  ///
+  /// In en, this message translates to:
+  /// **'General Feedback'**
+  String get general_feedback;
+
+  /// No description provided for @games_stamps_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'You can collect these stamps here'**
+  String get games_stamps_desc;
+
+  /// No description provided for @stamps_achievements.
+  ///
+  /// In en, this message translates to:
+  /// **'My achievements'**
+  String get stamps_achievements;
+
+  /// No description provided for @choose_level.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a level'**
+  String get choose_level;
+
+  /// No description provided for @more_games.
+  ///
+  /// In en, this message translates to:
+  /// **'More games'**
+  String get more_games;
+
+  /// No description provided for @try_again.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get try_again;
+
+  /// No description provided for @abort_game.
+  ///
+  /// In en, this message translates to:
+  /// **'Abort BoldiFinder Game?'**
+  String get abort_game;
+
+  /// No description provided for @abort_game_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'The current Game is not yet completed. Do you really want to abort and go back?'**
+  String get abort_game_desc;
+
+  /// No description provided for @level_complete.
+  ///
+  /// In en, this message translates to:
+  /// **'Level Complete!'**
+  String get level_complete;
+
+  /// No description provided for @level_complete_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'To start the next level, please click OK to go back.'**
+  String get level_complete_desc;
+
+  /// No description provided for @all_level_complete.
+  ///
+  /// In en, this message translates to:
+  /// **'All level\'s are completed, please click OK to go back.'**
+  String get all_level_complete;
+
+  /// No description provided for @successful_game_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Super!'**
+  String get successful_game_title;
+
+  /// No description provided for @successful_game_desc_for_level_1.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you ready for Level 2?'**
+  String get successful_game_desc_for_level_1;
+
+  /// No description provided for @successful_game_desc_for_level_2.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you ready for Level 3?'**
+  String get successful_game_desc_for_level_2;
+
+  /// No description provided for @successful_game_desc_for_level_3.
+  ///
+  /// In en, this message translates to:
+  /// **'All Level\'s are completed'**
+  String get successful_game_desc_for_level_3;
+
+  /// No description provided for @error_game_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Unfortunately wrong'**
+  String get error_game_title;
+
+  /// No description provided for @error_game_des.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again right away!'**
+  String get error_game_des;
+
+  /// No description provided for @contact.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact'**
+  String get contact;
+
+  /// No description provided for @profile_setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Setting'**
+  String get profile_setting;
+
+  /// No description provided for @new_password.
+  ///
+  /// In en, this message translates to:
+  /// **'New Password'**
+  String get new_password;
+
+  /// No description provided for @confirm_new_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm new password'**
+  String get confirm_new_password;
+
+  /// No description provided for @at_least_8_character.
+  ///
+  /// In en, this message translates to:
+  /// **'at least 8 characters'**
+  String get at_least_8_character;
+
+  /// No description provided for @contains_letters_and_numbers.
+  ///
+  /// In en, this message translates to:
+  /// **'contain letters and numbers'**
+  String get contains_letters_and_numbers;
+
+  /// No description provided for @contains_upper_case_and_lower_case.
+  ///
+  /// In en, this message translates to:
+  /// **'contains uppercase and lowercase'**
+  String get contains_upper_case_and_lower_case;
+
+  /// No description provided for @contains_special_character.
+  ///
+  /// In en, this message translates to:
+  /// **'contains special character'**
+  String get contains_special_character;
+
+  /// No description provided for @current_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Password'**
+  String get current_password;
+
+  /// No description provided for @update_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Password'**
+  String get update_password;
+
+  /// No description provided for @field_cannot_be_empty.
+  ///
+  /// In en, this message translates to:
+  /// **'Field cannot be empty'**
+  String get field_cannot_be_empty;
+
+  /// No description provided for @password_is_not_same_as_new_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password is not same as new password'**
+  String get password_is_not_same_as_new_password;
+
+  /// No description provided for @reset_password_success.
+  ///
+  /// In en, this message translates to:
+  /// **'Password has been successfully reset'**
+  String get reset_password_success;
+
+  /// No description provided for @abort_math_hunt_game.
+  ///
+  /// In en, this message translates to:
+  /// **'Abort MathHunt Game?'**
+  String get abort_math_hunt_game;
+
+  /// No description provided for @math_hunt_game_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready for some mental arithmetic?'**
+  String get math_hunt_game_desc;
+
+  /// No description provided for @flip_catch_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready for Flip catch'**
+  String get flip_catch_desc;
+
+  /// No description provided for @abort_flip_catch.
+  ///
+  /// In en, this message translates to:
+  /// **'Abort Flip Catch?'**
+  String get abort_flip_catch;
+
+  /// No description provided for @my_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'My Profile'**
+  String get my_profile;
+
+  /// No description provided for @my_fav.
+  ///
+  /// In en, this message translates to:
+  /// **'My favorites'**
+  String get my_fav;
+
+  /// No description provided for @rubber_stamp.
+  ///
+  /// In en, this message translates to:
+  /// **'Rubber Stamp'**
+  String get rubber_stamp;
+
+  /// No description provided for @treasure_pass.
+  ///
+  /// In en, this message translates to:
+  /// **'Treasure pass'**
+  String get treasure_pass;
+
+  /// No description provided for @data_protection_information.
+  ///
+  /// In en, this message translates to:
+  /// **'Data Protection'**
+  String get data_protection_information;
+
+  /// No description provided for @app_version.
+  ///
+  /// In en, this message translates to:
+  /// **'App-Version'**
+  String get app_version;
+
+  /// No description provided for @mobile.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobile'**
+  String get mobile;
+
+  /// No description provided for @optional.
+  ///
+  /// In en, this message translates to:
+  /// **'optional'**
+  String get optional;
+
+  /// No description provided for @address.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get address;
+
+  /// No description provided for @change_password.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get change_password;
+
+  /// No description provided for @edit_interest_profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit interest profile'**
+  String get edit_interest_profile;
+
+  /// No description provided for @location_sharing.
+  ///
+  /// In en, this message translates to:
+  /// **'Location sharing'**
+  String get location_sharing;
+
+  /// No description provided for @an.
+  ///
+  /// In en, this message translates to:
+  /// **'To'**
+  String get an;
 }
 
 class _AppLocalizationsDelegate
