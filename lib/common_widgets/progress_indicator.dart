@@ -6,14 +6,18 @@ extension WidgetExtension on Widget {
     if (isLoading) {
       return GestureDetector(
         onTap: () {
-          Navigator.pop(context);
+          if (Navigator.canPop(context)) {
+            // ✅ Safe check
+            Navigator.pop(context);
+          }
         },
         child: Stack(
           alignment: Alignment.center,
           children: [
             this,
             Container(
-              color: Colors.black.withValues(alpha: 0.5),
+              color: Colors.black
+                  .withOpacity(0.5),
             ),
             Container(
               decoration: BoxDecoration(
@@ -33,4 +37,3 @@ extension WidgetExtension on Widget {
     return this;
   }
 }
-

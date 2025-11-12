@@ -19,10 +19,8 @@ class ModifyFavouriteCityService {
   Future<Either<Exception, BaseModel>> addFavourite(
       BaseModel requestModel, BaseModel responseModel) async {
 
-    final userId = sharedPreferenceHelper.getInt(userIdKey);
-
     final path =
-        "$userDetailsEndPoint/$userId$favouriteCitiesPath$ortDetailEndPoint";
+        "$userDetailsEndPoint$favouriteCitiesPath$ortDetailEndPoint";
     String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
     final headers = {'Authorization': 'Bearer $token'};
 
@@ -44,9 +42,8 @@ class ModifyFavouriteCityService {
 
   Future<Either<Exception, BaseModel>> deleteFavourite(
       BaseModel requestModel, BaseModel responseModel) async {
-    final userId = sharedPreferenceHelper.getInt(userIdKey);
     final path =
-        "$userDetailsEndPoint/$userId$favouriteCitiesPath$ortDetailEndPoint/${requestModel.toJson()['cityId']}";
+        "$userDetailsEndPoint$favouriteCitiesPath$ortDetailEndPoint/${requestModel.toJson()['cityId']}";
     final apiHelper = ref.read(apiHelperProvider);
     String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
     final headers = {'Authorization': 'Bearer $token'};
