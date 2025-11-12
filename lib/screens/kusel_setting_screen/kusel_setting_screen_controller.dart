@@ -376,54 +376,58 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
   }
 
   Future<void> getLocationPermissionStatus() async {
-    PermissionStatus status;
 
-    if (Platform.isIOS) {
-      status = await Permission.locationWhenInUse.status;
-    } else {
-      status = await Permission.location.status;
+   try{
+     PermissionStatus status;
+
+     if (Platform.isIOS) {
+       status = await Permission.locationWhenInUse.status;
+     } else {
+       status = await Permission.location.status;
+     }
+
+     final isGranted = status.isGranted || status.isLimited;
+
+     state = state.copyWith(isLocationPermissionGranted: isGranted);
+   }catch(error)
+    {
+      debugPrint('exception getLocationPermissionStatus: $error');
     }
-
-    final isGranted =
-        status.isGranted || status.isLimited;
-
-    state = state.copyWith(isLocationPermissionGranted: isGranted);
   }
 
+  Future<bool> requestOrHandleLocationPermission(bool value) async {
+    try {
+      if (!value) {
+        return false;
+      }
 
+      PermissionStatus status;
 
-  Future<void> requestOrHandleLocationPermission(bool value) async {
-    if (!value) {
+      if (Platform.isIOS) {
+        status = await Permission.locationWhenInUse.request();
+      } else {
+        status = await Permission.location.request();
+      }
+
+      final currentStatus = Platform.isIOS
+          ? await Permission.locationWhenInUse.status
+          : await Permission.location.status;
+
+      if (currentStatus.isGranted || currentStatus.isLimited) {
+        state = state.copyWith(isLocationPermissionGranted: true);
+        return true;
+      }
+
+      if (currentStatus.isPermanentlyDenied || currentStatus.isDenied) {
+        return false; // UI decides what to do next
+      }
+
       state = state.copyWith(isLocationPermissionGranted: false);
-      return;
+      return false;
+    } catch (error) {
+      debugPrint('Exception requestOrHandleLocationPermission : $error ');
+      return false;
     }
-
-    PermissionStatus status;
-
-    if (Platform.isIOS) {
-      status = await Permission.locationWhenInUse.request();
-    } else {
-      status = await Permission.location.request();
-    }
-
-    debugPrint('STATUS = $status');
-
-    final currentStatus = Platform.isIOS
-        ? await Permission.locationWhenInUse.status
-        : await Permission.location.status;
-
-    if (currentStatus.isGranted || currentStatus.isLimited) {
-      state = state.copyWith(isLocationPermissionGranted: true);
-      return;
-    }
-
-    if (currentStatus.isPermanentlyDenied || currentStatus.isDenied) {
-      await openAppSettings();
-      return;
-    }
-
-    // If user pressed 'Deny'
-    state = state.copyWith(isLocationPermissionGranted: false);
   }
 
 }
