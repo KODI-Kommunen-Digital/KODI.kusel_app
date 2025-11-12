@@ -75,6 +75,8 @@ const userScoreEndPoint = "/users/user-points";
 
 const getLegalPolicyEndPoint = "/moreInfo/legal";
 
+const getPOICoordinatesEndPoint ="/listings/poiCoordinate";
+
 // BRAIN TEASERS API
 const brainTeaserGameListEndPoint = "/digifit/games-list";
 const brainTeaserGameDetailsEndPoint = "/digifit/game";

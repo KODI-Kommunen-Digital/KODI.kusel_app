@@ -1,9 +1,12 @@
 import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
 import 'package:domain/model/request_model/listings/search_request_model.dart';
+import 'package:domain/model/request_model/poi_coordinate/poi_coordinates_request_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/model/response_model/listings_model/search_listings_response_model.dart';
+import 'package:domain/model/response_model/poi_coordinates/poi_coordinates_response_model.dart';
 import 'package:domain/usecase/listings/listings_usecase.dart';
+import 'package:domain/usecase/poi_coordinates/poi_coordinates_usecase.dart';
 import 'package:domain/usecase/search/search_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,6 +23,7 @@ final locationScreenProvider = StateNotifierProvider.autoDispose<
           searchUseCase: ref.read(searchUseCaseProvider),
           signInStatusController: ref.read(signInStatusProvider.notifier),
           localeManagerController: ref.read(localeManagerProvider.notifier),
+          poiCoordinatesUseCase: ref.read(poiCoordinatesUseCaseProvider),
         ));
 
 class LocationScreenProvider extends StateNotifier<LocationScreenState> {
@@ -27,12 +31,14 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
   SearchUseCase searchUseCase;
   SignInStatusController signInStatusController;
   LocaleManagerController localeManagerController;
+  PoiCoordinatesUseCase poiCoordinatesUseCase;
 
   LocationScreenProvider(
       {required this.listingsUseCase,
       required this.searchUseCase,
       required this.signInStatusController,
-      required this.localeManagerController})
+      required this.localeManagerController,
+      required this.poiCoordinatesUseCase})
       : super(LocationScreenState.empty());
 
   Future<void> getAllEventList() async {
@@ -268,4 +274,28 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
     state = state.copyWith(fetchedCategoryMap: updatedMap);
   }
 
+  getPoiCoordinates() async {
+    try {
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+      PoiCoordinatesRequestModel requestModel = PoiCoordinatesRequestModel(
+          translate:
+              "${currentLocale.languageCode}-${currentLocale.countryCode}");
+
+      PoiCoordinatesResponseModel responseModel = PoiCoordinatesResponseModel();
+
+      final res = await poiCoordinatesUseCase.call(requestModel, responseModel);
+
+      res.fold((l) {
+        debugPrint('fold exception poi coordinates : $l');
+      }, (r) {
+        final result = r as PoiCoordinatesResponseModel;
+
+        if (result.data != null) {
+          state = state.copyWith(poiCoordinatesItemList: result.data);
+        }
+      });
+    } catch (error) {
+      debugPrint('get poi coordinates exception : $error');
+    }
+  }
 }
