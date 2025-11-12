@@ -131,36 +131,39 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                   SearchWidget(
                     verticalDirection: VerticalDirection.up,
                     onItemClick: (listing) {
-                      ref.read(dashboardScreenProvider.notifier).onScreenNavigation();
+                      ref
+                          .read(dashboardScreenProvider.notifier)
+                          .onScreenNavigation();
                       ref.read(navigationProvider).navigateUsingPath(
                           context: context,
                           path: eventDetailScreenPath,
-                          params: EventDetailScreenParams(event: listing));
+                          params: EventDetailScreenParams(
+                              eventId: listing.id ?? 0));
                       ref
                           .read(searchScreenProvider.notifier)
                           .loadSavedListings();
                     },
                     searchController: ref.watch(searchProvider),
                     hintText: AppLocalizations.of(context).enter_search_term,
-                      suggestionCallback: (search) async {
-                        List<Listing>? list;
-                        if (search.isEmpty) return [];
-                        try {
-                          list = await ref
-                              .read(searchScreenProvider.notifier)
-                              .searchList(
-                              searchText: search,
-                              success: () {},
-                              error: (err) {});
-                        } catch (e) {
-                          print("exception >>$e");
-                          return [];
-                        }
-                        final sortedList = ref
-                            .watch(searchScreenProvider.notifier)
-                            .sortSuggestionList(search, list);
-                        return sortedList;
-                      },
+                    suggestionCallback: (search) async {
+                      List<Listing>? list;
+                      if (search.isEmpty) return [];
+                      try {
+                        list = await ref
+                            .read(searchScreenProvider.notifier)
+                            .searchList(
+                                searchText: search,
+                                success: () {},
+                                error: (err) {});
+                      } catch (e) {
+                        print("exception >>$e");
+                        return [];
+                      }
+                      final sortedList = ref
+                          .watch(searchScreenProvider.notifier)
+                          .sortSuggestionList(search, list);
+                      return sortedList;
+                    },
                     isPaddingEnabled: true,
                   ),
                   16.verticalSpace,
@@ -189,9 +192,11 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                               context: context,
                               path: eventDetailScreenPath,
                               params: EventDetailScreenParams(
-                                  event: ref
-                                      .watch(searchScreenProvider)
-                                      .searchedList[index]));
+                                  eventId: ref
+                                          .watch(searchScreenProvider)
+                                          .searchedList[index]
+                                          .id ??
+                                      0));
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),

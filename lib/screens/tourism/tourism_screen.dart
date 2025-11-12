@@ -59,12 +59,11 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:
-          (ref.watch(tourismScreenControllerProvider).isRecommendationLoading)
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : _buildBody(context),
+      body: (ref.watch(tourismScreenControllerProvider).isRecommendationLoading)
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : _buildBody(context),
     );
   }
 
@@ -72,8 +71,8 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
     final state = ref.watch(tourismScreenControllerProvider);
     return SafeArea(
       child: RefreshIndicator(
-        onRefresh: () async{
-          await  ref
+        onRefresh: () async {
+          await ref
               .read(tourismScreenControllerProvider.notifier)
               .getRecommendationListing();
           ref.read(tourismScreenControllerProvider.notifier).getAllEvents();
@@ -96,7 +95,8 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                     CommonBackgroundClipperWidget(
                       clipperType: UpstreamWaveClipper(),
                       imageUrl: imagePath['background_image'] ?? "",
-                      headingText: AppLocalizations.of(context).tourism_and_leisure,
+                      headingText:
+                          AppLocalizations.of(context).tourism_and_leisure,
                       height: 130.h,
                       blurredBackground: true,
                       isBackArrowEnabled: false,
@@ -228,7 +228,9 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
               left: 12.w,
               child: IconButton(
                   onPressed: () {
-                    ref.read(navigationProvider).removeTopPage(context: context);
+                    ref
+                        .read(navigationProvider)
+                        .removeTopPage(context: context);
                   },
                   icon: Icon(
                       size: DeviceHelper.isMobile(context) ? null : 12.h.w,
@@ -291,7 +293,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                                   path: eventDetailScreenPath,
                                   context: context,
                                   params: EventDetailScreenParams(
-                                      event: item,
+                                      eventId: item.id ?? 0,
                                       onFavClick: () {
                                         ref
                                             .read(
@@ -304,16 +306,16 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                               ref
                                   .watch(favoritesProvider.notifier)
                                   .toggleFavorite(item,
-                                  success: ({required bool isFavorite}) {
-                                    ref
-                                        .read(tourismScreenControllerProvider.notifier)
-                                        .updateRecommendationIsFav
-                                      (
+                                      success: ({required bool isFavorite}) {
+                                ref
+                                    .read(tourismScreenControllerProvider
+                                        .notifier)
+                                    .updateRecommendationIsFav(
                                         isFavorite, item.id);
-                                  }, error: ({required String message}) {
-                                    showErrorToast(
-                                        message: message, context: context);
-                                  });
+                              }, error: ({required String message}) {
+                                showErrorToast(
+                                    message: message, context: context);
+                              });
                             },
                             isFavouriteVisible: true),
                       );
