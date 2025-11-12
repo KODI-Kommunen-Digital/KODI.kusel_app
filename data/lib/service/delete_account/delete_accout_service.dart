@@ -14,10 +14,9 @@ class DeleteAccountService {
 
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
-    final id = requestModel.toJson()["id"];
     final token = requestModel.toJson()["token"];
 
-    final path = "$deleteAccountEndPoint/$id";
+    final path = "$deleteAccountEndPoint/";
     final apiHelper = ref.read(apiHelperProvider);
     final headers = {'Authorization': 'Bearer $token'};
     final result = await apiHelper.delete(

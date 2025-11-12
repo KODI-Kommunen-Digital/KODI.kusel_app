@@ -39,10 +39,9 @@ class FavouriteCityScreenController extends StateNotifier<FavouriteCityScreenSta
       final response = tokenStatus.isAccessTokenExpired();
 
       if (response) {
-        final userId = sharedPreferenceHelper.getInt(userIdKey);
 
         RefreshTokenRequestModel requestModel =
-        RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+        RefreshTokenRequestModel();
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
         final response =
@@ -58,8 +57,7 @@ class FavouriteCityScreenController extends StateNotifier<FavouriteCityScreenSta
               refreshTokenKey, res.data?.refreshToken ?? "");
 
           GetFavouriteCitiesRequestModel requestModel =
-          GetFavouriteCitiesRequestModel(
-              userId: sharedPreferenceHelper.getInt(userIdKey));
+          GetFavouriteCitiesRequestModel();
 
           GetFavouriteCitiesResponseModel responseModel =
           GetFavouriteCitiesResponseModel();
@@ -79,8 +77,7 @@ class FavouriteCityScreenController extends StateNotifier<FavouriteCityScreenSta
         });
       } else {
         GetFavouriteCitiesRequestModel requestModel =
-        GetFavouriteCitiesRequestModel(
-            userId: sharedPreferenceHelper.getInt(userIdKey));
+        GetFavouriteCitiesRequestModel();
 
         GetFavouriteCitiesResponseModel responseModel =
         GetFavouriteCitiesResponseModel();

@@ -4,7 +4,7 @@ class GetFavouriteCitiesRequestModel
     implements BaseModel<GetFavouriteCitiesRequestModel> {
   final int? userId;
 
-  GetFavouriteCitiesRequestModel({required this.userId});
+  GetFavouriteCitiesRequestModel({this.userId});
 
   @override
   GetFavouriteCitiesRequestModel fromJson(Map<String, dynamic> json) {

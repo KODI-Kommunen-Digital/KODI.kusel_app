@@ -35,6 +35,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       final notifier = ref.read(onboardingScreenProvider.notifier);
       await notifier.initialCall();
 
+      if (!mounted) return; // ✅ prevent calling after dispose
+
       if (notifier.isOnboardingDone()) {
         notifier.getOnboardingDetails();
       } else if (notifier.isOfflineOnboardingDone()) {
