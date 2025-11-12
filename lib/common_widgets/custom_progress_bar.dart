@@ -6,7 +6,7 @@ class CustomProgressBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return SizedBox.expand(
       child: Container(
         color: Theme.of(context).cardColor,
         child: Center(
