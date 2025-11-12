@@ -60,7 +60,7 @@ class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
         children: [
           CommonBackgroundClipperWidget(
             clipperType: UpstreamWaveClipper(),
-            height: 130.h,
+            height: 110.h,
             imageUrl: imagePath['home_screen_background'] ?? '',
             isStaticImage: true,
             isBackArrowEnabled: true,

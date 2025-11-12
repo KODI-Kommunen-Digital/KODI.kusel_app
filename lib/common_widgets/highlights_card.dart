@@ -104,7 +104,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
-                            size: 12.h.w,
+                            size: 15.h.w,
                             widget.isFavourite
                                 ? Icons.favorite_sharp
                                 : Icons.favorite_border_sharp,
@@ -131,7 +131,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                 textSemiBoldMontserrat(
                     text: widget.heading,
                     textAlign: TextAlign.start,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.w600,
                     fontSize: 11,
                     textOverflow: TextOverflow.visible,
                     color: Theme.of(context).textTheme.bodyLarge?.color),
