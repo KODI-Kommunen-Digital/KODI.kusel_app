@@ -70,8 +70,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
               hintText: AppLocalizations.of(context).current_password,
               validator: (value) {
                 if (value == null || value.isEmpty) {
-                  return AppLocalizations.of(context).current_password +
-                      " cannot be empty";
+                  return AppLocalizations.of(context).password_required;
                 }
                 return null;
               },
