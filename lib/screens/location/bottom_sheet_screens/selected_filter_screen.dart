@@ -99,7 +99,9 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
                       .updateBottomSheetSelectedUIType(
                           BottomSheetSelectedUIType.allEvent);
                   WidgetsBinding.instance.addPostFrameCallback((_) {
-                    ref.read(locationScreenProvider.notifier).updateSlidingUpPanelIsDragStatus(true); // allow drag
+                    ref
+                        .read(locationScreenProvider.notifier)
+                        .updateSlidingUpPanelIsDragStatus(true); // allow drag
                   });
                 },
                 icon: Icon(
@@ -108,7 +110,9 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
                   color: Theme.of(context).textTheme.labelMedium!.color,
                 ),
               ),
-              DeviceHelper.isMobile(context) ? 80.horizontalSpace : 110.horizontalSpace,
+              DeviceHelper.isMobile(context)
+                  ? 80.horizontalSpace
+                  : 110.horizontalSpace,
               Align(
                 alignment: Alignment.center,
                 child: Container(
@@ -136,8 +140,10 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
               List<Listing>? list;
               if (search.isEmpty) return [];
               try {
-                list = await ref.read(locationScreenProvider.notifier).searchList(
-                    searchText: search, success: () {}, error: (err) {});
+                list = await ref
+                    .read(locationScreenProvider.notifier)
+                    .searchList(
+                        searchText: search, success: () {}, error: (err) {});
               } catch (e) {
                 return [];
               }
