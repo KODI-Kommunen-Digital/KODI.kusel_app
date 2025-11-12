@@ -94,6 +94,10 @@ class TourismScreenController extends StateNotifier<TourismScreenState> {
     }
   }
 
+  updateCardIndex(int index) {
+    state = state.copyWith(highlightCount: index);
+  }
+
   getRecommendationListing() async {
     try {
       state = state.copyWith(isRecommendationLoading: true);

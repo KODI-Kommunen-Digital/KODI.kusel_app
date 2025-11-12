@@ -126,7 +126,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                       iconHeight: 20.w,
                       textColor: Theme.of(context).textTheme.labelLarge?.color),
                   16.verticalSpace,
-                  Divider(height: 1.h),
+                  Divider(thickness: 1.h),
                   16.verticalSpace,
                   SearchWidget(
                     verticalDirection: VerticalDirection.up,
@@ -161,7 +161,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                             .sortSuggestionList(search, list);
                         return sortedList;
                       },
-                    isPaddingEnabled: true,
+                    isPaddingEnabled: false,
                   ),
                   16.verticalSpace,
                   Visibility(

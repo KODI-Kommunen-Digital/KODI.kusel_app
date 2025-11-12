@@ -87,7 +87,7 @@ class _CityDetailLocationWidgetState
             long: widget.long ?? EventLatLong.kusel.longitude,
           ),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 12.0, horizontal: 16),
+            padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
             child: Row(
               children: [
                 ImageUtil.loadSvgImage(
@@ -123,7 +123,7 @@ class _CityDetailLocationWidgetState
           ),
           Padding(
             padding:
-                EdgeInsets.only(top: 8.0, bottom: 12.0, left: 16, right: 16),
+                EdgeInsets.only(top: 4.0, bottom: 8.0, left: 16, right: 16),
             child: GestureDetector(
               onTap: () {
                 UrlLauncherUtil.launchDialer(phoneNumber: widget.phoneNumber);

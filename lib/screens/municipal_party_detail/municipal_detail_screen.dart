@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/common_bottom_nav_card_.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
+import 'package:kusel/common_widgets/custom_progress_bar.dart';
 import 'package:kusel/common_widgets/downstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/image_text_card_widget.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
@@ -73,19 +74,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
         fit: StackFit.expand,
         children: [
           Positioned.fill(child: _buildBody(context)),
-          if (isLoading)
-            Center(
-                child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10.r),
-              ),
-              height: 100.h,
-              width: 100.w,
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
-            )),
+          if (isLoading) CustomProgressBar(),
           Positioned(
               bottom: 16.h,
               left: 16.w,
@@ -216,7 +205,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
               heading: AppLocalizations.of(context).news,
               maxListLimit: 5,
               buttonText: AppLocalizations.of(context).all_news,
-              buttonIconPath: imagePath['calendar'] ?? "",
+              buttonIconPath: imagePath['news_icon'] ?? "",
               isLoading: false,
               showEventLoading: state.showNewsLoading,
               onButtonTap: () {
@@ -293,7 +282,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
           ),
         ),
         Positioned(
-          top: 120.h,
+          top: 105.h,
           left: 0.w,
           right: 0.w,
           child: Container(
@@ -349,6 +338,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                 maxLines: 20,
                 textAlign: TextAlign.start,
                 textOverflow: TextOverflow.ellipsis,
+                fontWeight: FontWeight.w500,
                 color: Theme.of(context).textTheme.bodyLarge?.color,
                 text: state.municipalPartyDetailDataModel?.description ??
                     "Die Verbandsgemeinde Kusel-Altenglan ist eine Gebietskörperschaft im Landkreis Kusel  in Rheinland-Pfalz. Sie ist zum 1. Januar 2018 aus dem freiwilligen Zusammenschluss der  Verbandsgemeinden Altenglan und Kusel entstanden. Ihr gehören die Stadt Kusel sowie 33 weitere Ortsgemeinden an, der Verwaltungssitz ist in Kusel."),
