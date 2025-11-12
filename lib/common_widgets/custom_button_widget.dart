@@ -109,16 +109,16 @@ class CustomButton extends StatelessWidget {
                   height: iconHeight,
                 ),
                 SizedBox(width: 12),
-                textRegularPoppins(
-                  fontSize: textSize,
+                textHeadingMontserrat(
+                  fontSize: textSize ?? 14,
                   fontWeight: FontWeight.w600,
                   color: textColor ?? Theme.of(context).textTheme.labelSmall?.color,
                   text: text,
                 ),
               ],
             )
-                : textRegularPoppins(
-              fontSize: textSize,
+                : textHeadingMontserrat(
+              fontSize: textSize ?? 14,
               fontWeight: FontWeight.w600,
               color: textColor ?? Theme.of(context).textTheme.labelSmall?.color,
               text: text,
