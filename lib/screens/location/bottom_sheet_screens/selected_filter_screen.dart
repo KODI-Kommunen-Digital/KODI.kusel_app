@@ -187,7 +187,7 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
                           onSuccess: (bool isFav, int? id) {
                             ref
                                 .read(favoritesListScreenProvider.notifier)
-                                .removeFavorite(isFav, id);
+                                .removeFavorite(id);
                           },
                           onFavClickCallback: () {
                             ref
