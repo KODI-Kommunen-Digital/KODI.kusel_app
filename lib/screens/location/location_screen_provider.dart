@@ -230,13 +230,18 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
   }
 
   updateIsFav(bool isFav, int? eventId) {
-    final list = state.allEventList;
-    for (var listing in list) {
+    final list = state.categoryEventLists[state.selectedCategoryId];
+    for (var listing in list!) {
       if (listing.id == eventId) {
         listing.isFavorite = isFav;
       }
     }
-    state = state.copyWith(allEventList: list);
+
+    final map = state.categoryEventLists ;
+
+    map[state.selectedCategoryId!] =list;
+
+    state = state.copyWith(categoryEventLists: map);
   }
 
   List<Listing> sortSuggestionList(String search, List<Listing> list) {
