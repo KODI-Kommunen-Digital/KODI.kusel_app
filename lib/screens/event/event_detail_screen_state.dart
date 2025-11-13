@@ -4,33 +4,30 @@ import 'package:domain/model/response_model/listings_model/get_all_listings_resp
 class EventDetailScreenState {
   String error;
   bool loading;
-  EventData eventDetails;
-  List<Listing> eventsList;
-  Map<int, List<Listing>> groupedEvents;
+  Listing eventDetails;
+  List<Listing> recommendList;
   bool isFavourite;
 
   EventDetailScreenState( this.error, this.loading,
-      this.eventDetails, this.eventsList, this.groupedEvents, this.isFavourite);
+      this.eventDetails, this.recommendList, this.isFavourite);
 
   factory EventDetailScreenState.empty() {
-    return EventDetailScreenState( '', false, EventData(), [], {}, false);
+    return EventDetailScreenState( '', false, Listing(), [], false);
   }
 
   EventDetailScreenState copyWith(
       {
       String? error,
       bool? loading,
-      EventData? eventDetails,
-      List<Listing>? eventsList,
-      Map<int, List<Listing>>? groupedEvents,
+      Listing? eventDetails,
+      List<Listing>? recommendList,
       bool? isFavourite
       }) {
     return EventDetailScreenState(
         error ?? this.error,
         loading ?? this.loading,
         eventDetails ?? this.eventDetails,
-        eventsList ?? this.eventsList,
-        groupedEvents ?? this.groupedEvents,
+        recommendList ?? this.recommendList,
         isFavourite ?? this.isFavourite
     );
   }
