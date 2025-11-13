@@ -4,17 +4,20 @@ import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:core/token_status.dart';
 import 'package:domain/model/request_model/event_details/event_details_request_model.dart';
 import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
+import 'package:domain/model/request_model/listings/recommendations_request_model.dart';
 import 'package:domain/model/request_model/refresh_token/refresh_token_request_model.dart';
 import 'package:domain/model/response_model/event_details/event_details_response_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/model/response_model/refresh_token/refresh_token_response_model.dart';
 import 'package:domain/usecase/event_details/event_details_usecase.dart';
 import 'package:domain/usecase/listings/listings_usecase.dart';
+import 'package:domain/usecase/listings/recommendations_usecase.dart';
 import 'package:domain/usecase/refresh_token/refresh_token_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:kusel/locale/localization_manager.dart';
+import 'package:kusel/providers/refresh_token_provider.dart';
 import 'package:kusel/screens/event/event_detail_screen_state.dart';
 
 import '../../common_widgets/location_const.dart';
@@ -28,7 +31,8 @@ final eventDetailScreenProvider = StateNotifierProvider.family
             sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
             signInStatusController: ref.read(signInStatusProvider.notifier),
             tokenStatus: ref.read(tokenStatusProvider),
-            refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider),
+            recommendationsUseCase: ref.read(recommendationUseCaseProvider),
+            refreshTokenProvider: ref.read(refreshTokenProvider),
             eventId: eventId));
 
 class EventDetailScreenController
@@ -42,8 +46,9 @@ class EventDetailScreenController
       required this.sharedPreferenceHelper,
       required this.signInStatusController,
       required this.tokenStatus,
-      required this.refreshTokenUseCase,
-      required this.eventId})
+      required this.refreshTokenProvider,
+      required this.eventId,
+      required this.recommendationsUseCase})
       : super(EventDetailScreenState.empty());
 
   EventDetailsUseCase eventDetailsUseCase;
@@ -52,78 +57,60 @@ class EventDetailScreenController
   SharedPreferenceHelper sharedPreferenceHelper;
   SignInStatusController signInStatusController;
   TokenStatus tokenStatus;
-  RefreshTokenUseCase refreshTokenUseCase;
-
-
+  RefreshTokenProvider refreshTokenProvider;
+  RecommendationsUseCase recommendationsUseCase;
 
   Future<void> getEventDetails(int? eventId) async {
-    state = state.copyWith(loading: true);
-    final status = await signInStatusController.isUserLoggedIn();
-    final response = tokenStatus.isAccessTokenExpired();
-    if (response && status) {
-      final userId = sharedPreferenceHelper.getInt(userIdKey);
-      RefreshTokenRequestModel requestModel =
-          RefreshTokenRequestModel(userId: userId?.toString() ?? "");
-      RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
+    try {
+      state = state.copyWith(loading: true);
 
-      final refreshResponse =
-          await refreshTokenUseCase.call(requestModel, responseModel);
+      final response = tokenStatus.isAccessTokenExpired();
+      if (response) {
+        await refreshTokenProvider.getNewToken(
+            onError: () {},
+            onSuccess: () async {
+              await _getEventDetails();
+            });
+      } else {
+        await _getEventDetails();
+      }
+    } catch (error) {
+      debugPrint('exception while getting event details :$error');
+    } finally {
+      state = state.copyWith(loading: false);
+    }
+  }
 
-      bool refreshSuccess = await refreshResponse.fold(
-        (left) {
-          debugPrint(
-              'refresh token municipality detail fold exception : $left');
-          return false;
+  _getEventDetails() async {
+    try {
+      state = state.copyWith(loading: true, error: "");
+
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
+      GetEventDetailsRequestModel getEventDetailsRequestModel =
+          GetEventDetailsRequestModel(
+              id: eventId,
+              translate:
+                  "${currentLocale.languageCode}-${currentLocale.countryCode}");
+
+      GetEventDetailsResponseModel getEventDetailsResponseModel =
+          GetEventDetailsResponseModel();
+      final result = await eventDetailsUseCase.call(
+          getEventDetailsRequestModel, getEventDetailsResponseModel);
+      result.fold(
+        (l) {
+          debugPrint("Event details fold exception $l");
+          state = state.copyWith(error: l.toString());
         },
-        (right) async {
-          final res = right as RefreshTokenResponseModel;
-          sharedPreferenceHelper.setString(
-              tokenKey, res.data?.accessToken ?? "");
-          sharedPreferenceHelper.setString(
-              refreshTokenKey, res.data?.refreshToken ?? "");
-          return true;
+        (r) {
+          var eventData = (r as GetEventDetailsResponseModel).data;
+          state = state.copyWith(
+              eventDetails: eventData,
+              isFavourite: eventData?.isFavorite ?? false);
         },
       );
-
-      if (!refreshSuccess) {
-        state = state.copyWith(loading: false);
-        return;
-      }
-    }
-    if (eventId != null) {
-      try {
-        state = state.copyWith(loading: true, error: "");
-
-        Locale currentLocale = localeManagerController.getSelectedLocale();
-
-        GetEventDetailsRequestModel getEventDetailsRequestModel =
-            GetEventDetailsRequestModel(
-                id: eventId,
-                translate:
-                    "${currentLocale.languageCode}-${currentLocale.countryCode}");
-
-        GetEventDetailsResponseModel getEventDetailsResponseModel =
-            GetEventDetailsResponseModel();
-        final result = await eventDetailsUseCase.call(
-            getEventDetailsRequestModel, getEventDetailsResponseModel);
-        result.fold(
-          (l) {
-            debugPrint("Event details fold exception $l");
-            state = state.copyWith(loading: false, error: l.toString());
-          },
-          (r) {
-            var eventData = (r as GetEventDetailsResponseModel).data;
-            state = state.copyWith(
-                eventDetails: eventData,
-                loading: false,
-                isFavourite: eventData?.isFavorite ?? false);
-            debugPrint("Printing isFav - ${eventData?.description}");
-          },
-        );
-      } catch (error) {
-        debugPrint("Event details exception $error");
-        state = state.copyWith(loading: false, error: error.toString());
-      }
+    } catch (error) {
+      rethrow;
     }
   }
 
@@ -145,43 +132,33 @@ class EventDetailScreenController
     try {
       Locale currentLocale = localeManagerController.getSelectedLocale();
 
-      GetAllListingsRequestModel getAllListingsRequestModel =
-          GetAllListingsRequestModel(
-              centerLongitude: EventLatLong.kusel.longitude,
-              centerLatitude: EventLatLong.kusel.latitude,
-              radius: 20,
+      RecommendationsRequestModel recommendationsRequestModel =
+          RecommendationsRequestModel(
               translate:
                   "${currentLocale.languageCode}-${currentLocale.countryCode}");
       GetAllListingsResponseModel getAllListingsResponseModel =
           GetAllListingsResponseModel();
-      final result = await listingsUseCase.call(
-          getAllListingsRequestModel, getAllListingsResponseModel);
+
+      final result = await recommendationsUseCase.call(
+          recommendationsRequestModel, getAllListingsResponseModel);
       result.fold(
         (l) {
+          debugPrint('fold exception while getting recommendation : $l');
+
           state = state.copyWith(error: l.toString());
         },
         (r) {
-          var listings = getSortedTop10Listings(
-              (r as GetAllListingsResponseModel).data ?? []);
+          final res = r as GetAllListingsResponseModel;
 
-          final groupedEvents = <int, List<Listing>>{};
-
-          for (final event in listings ?? []) {
-            final categoryId = event.categoryId ?? 0;
-            if (!groupedEvents.containsKey(categoryId)) {
-              groupedEvents[categoryId] = [];
-            }
-            groupedEvents[categoryId]!.add(event);
+          if (res.data != null) {
+            state = state.copyWith(recommendList: res.data);
           }
-          state = state.copyWith(
-            groupedEvents: groupedEvents,
-            eventsList: listings,
-            loading: false,
-          );
         },
       );
     } catch (error) {
-      if(mounted){
+      debugPrint('exception while getting recommendation : $error');
+
+      if (mounted) {
         state = state.copyWith(error: error.toString());
       }
     }
@@ -221,8 +198,8 @@ class EventDetailScreenController
 }
 
 class EventDetailScreenParams {
-  Listing? event;
+  int eventId;
   Function()? onFavClick;
 
-  EventDetailScreenParams({required this.event, this.onFavClick});
+  EventDetailScreenParams({required this.eventId, this.onFavClick});
 }

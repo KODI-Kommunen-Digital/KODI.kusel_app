@@ -24,8 +24,7 @@ class EditUserImageService {
       BaseModel responseModel) async {
     final apiHelper = ref.read(apiHelperProvider);
     final path =
-        "$userDetailsEndPoint/${requestModel
-        .toJson()["id"]}${uploadImageEndPoint}";
+        "$userDetailsEndPoint${uploadImageEndPoint}";
     String imagePath = requestModel.toJson()['imagePath'];
 
     FormData body = FormData.fromMap({

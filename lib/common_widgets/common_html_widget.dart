@@ -24,6 +24,7 @@ class _CommonHtmlWidgetState extends ConsumerState<CommonHtmlWidget> {
         fontSize: FontSize(widget.fontSize ?? 12.sp),
         color: Theme.of(context).textTheme.bodyLarge?.color,
         textAlign: TextAlign.left,
+        backgroundColor: Colors.transparent,
         margin: Margins.zero,
         padding: HtmlPaddings.zero
       ),

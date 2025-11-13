@@ -18,9 +18,16 @@ class GetFavouriteCitiesService {
 
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
-    final userId = sharedPreferenceHelper.getInt(userIdKey);
+
+    final queryParams = requestModel
+        .toJson()
+        .entries
+        .where((e) => e.value != null)
+        .map((e) => "${e.key}=${Uri.encodeComponent(e.value.toString())}")
+        .join("&");
+
     final path =
-        "$userDetailsEndPoint/$userId$favouriteCitiesPath$ortDetailEndPoint";
+        "$userDetailsEndPoint$favouriteCitiesPath$ortDetailEndPoint?$queryParams";
     String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
     final headers = {'Authorization': 'Bearer $token'};
     final apiHelper = ref.read(apiHelperProvider);

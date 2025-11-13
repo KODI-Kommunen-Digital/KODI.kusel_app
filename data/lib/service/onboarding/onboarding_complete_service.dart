@@ -21,9 +21,8 @@ class OnboardingCompleteService {
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
 
-    final userId = sharedPreferenceHelper.getInt(userIdKey);
     final path =
-        "$userDetailsEndPoint/$userId$onboardingCompleteEndpoint";
+        "$userDetailsEndPoint$onboardingCompleteEndpoint";
     final apiHelper = ref.read(apiHelperProvider);
     String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
 

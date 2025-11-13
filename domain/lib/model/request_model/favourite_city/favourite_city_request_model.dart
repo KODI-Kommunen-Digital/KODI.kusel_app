@@ -2,17 +2,30 @@ import 'package:core/base_model.dart';
 
 class GetFavouriteCitiesRequestModel
     implements BaseModel<GetFavouriteCitiesRequestModel> {
-  final int? userId;
+  String translate;
+  int? pageNo;
+  int? pageSize;
 
-  GetFavouriteCitiesRequestModel({required this.userId});
+  GetFavouriteCitiesRequestModel(
+      {required this.translate, this.pageSize, this.pageNo});
 
   @override
   GetFavouriteCitiesRequestModel fromJson(Map<String, dynamic> json) {
-    return GetFavouriteCitiesRequestModel(userId: json['userId']);
+// TODO: implement fromJson
+    throw UnimplementedError();
   }
 
   @override
   Map<String, dynamic> toJson() {
-    return {'userId': userId};
+    Map<String, dynamic> data = {};
+
+    data = {
+      "translate": translate,
+      "pageNo": pageNo,
+      "pageSize": pageSize
+    };
+    data.removeWhere(
+        (key, value) => value == null || (value is String && value.isEmpty));
+    return data;
   }
 }

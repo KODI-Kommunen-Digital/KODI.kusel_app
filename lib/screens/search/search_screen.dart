@@ -126,16 +126,19 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                       iconHeight: 20.w,
                       textColor: Theme.of(context).textTheme.labelLarge?.color),
                   16.verticalSpace,
-                  Divider(height: 1.h),
+                  Divider(thickness: 1.h),
                   16.verticalSpace,
                   SearchWidget(
                     verticalDirection: VerticalDirection.up,
                     onItemClick: (listing) {
-                      ref.read(dashboardScreenProvider.notifier).onScreenNavigation();
+                      ref
+                          .read(dashboardScreenProvider.notifier)
+                          .onScreenNavigation();
                       ref.read(navigationProvider).navigateUsingPath(
                           context: context,
                           path: eventDetailScreenPath,
-                          params: EventDetailScreenParams(event: listing));
+                          params: EventDetailScreenParams(
+                              eventId: listing.id ?? 0));
                       ref
                           .read(searchScreenProvider.notifier)
                           .loadSavedListings();
@@ -161,7 +164,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                             .sortSuggestionList(search, list);
                         return sortedList;
                       },
-                    isPaddingEnabled: true,
+                    isPaddingEnabled: false,
                   ),
                   16.verticalSpace,
                   Visibility(
@@ -189,9 +192,11 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                               context: context,
                               path: eventDetailScreenPath,
                               params: EventDetailScreenParams(
-                                  event: ref
-                                      .watch(searchScreenProvider)
-                                      .searchedList[index]));
+                                  eventId: ref
+                                          .watch(searchScreenProvider)
+                                          .searchedList[index]
+                                          .id ??
+                                      0));
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),

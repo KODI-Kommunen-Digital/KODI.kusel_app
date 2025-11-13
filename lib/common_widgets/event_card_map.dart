@@ -49,7 +49,7 @@ class _LocationCardWidgetState extends ConsumerState<EventCardMap> {
           ref.read(navigationProvider).navigateUsingPath(
               context: context,
               path: eventDetailScreenPath,
-              params: EventDetailScreenParams(event: widget.event));
+              params: EventDetailScreenParams(eventId: widget.event.id??0));
         },
         child: Container(
           decoration: BoxDecoration(

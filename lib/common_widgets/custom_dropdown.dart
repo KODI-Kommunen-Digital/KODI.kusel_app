@@ -40,6 +40,12 @@
                       color: Theme.of(context).dividerColor, width: 0.7)),
           child: DropdownButtonHideUnderline(
             child: DropdownButton<String>(
+              style: TextStyle(
+                fontSize:  16.sp,
+                fontFamily: "Montserrat",
+                fontWeight:  FontWeight.w400,
+                color: Theme.of(context).textTheme.displayMedium!.color
+              ),
               icon: Icon(
                 Icons.keyboard_arrow_down_outlined,
                 color: Theme.of(context).primaryColor,
@@ -50,10 +56,10 @@
                   color: Theme.of(context).hintColor,
                   fontSize: 12,
                 ),
-              ): textRegularPoppins(
+              ): textRegularMontserrat(
                 text: widget.hintText,
                 color: Theme.of(context).hintColor,
-                fontSize: 12,
+                fontSize: 14,
               ),
               value: widget.items.contains(widget.selectedItem)
                   ? widget.selectedItem
@@ -62,12 +68,13 @@
               items: widget.items.map((String item) {
                 return DropdownMenuItem<String>(
                   value: item,
-                  child: Text(item),
+                  child: textRegularMontserrat(text:item,fontSize: 12),
                 );
               }).toList(),
               onChanged: (String? newValue) {
                 widget.onSelected(newValue);
               },
+
             ),
           ),
         ),

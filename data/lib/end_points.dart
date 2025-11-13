@@ -6,11 +6,12 @@ const exploreEndpoint = "/categories";
 const signUpEndPoint = "/users/register";
 const forgotPasswordEndPoint = "/users/forgotPassword";
 const listingsEndPoint = "/listings";
+const recommendationsListingEndPoint = "/listings/recommend";
 const searchEndPoint = "$listingsEndPoint/search";
 const subCategoriesEndPoint = "/subcategories";
-String gatFavoritesEndpoint(String userId) =>"/users/$userId/favorites/";
-String deleteFavoritesEndpoint(String userId, String listingId) =>"/users/$userId/favorites/$listingId";
-String gatFavoritesListingEndpoint(String userId) =>"/users/$userId/favorites/listings";
+const String getFavoritesEndpoint = "/users/favorites/";
+String deleteFavoritesEndpoint(String listingId) =>"/users/favorites/$listingId";
+const getFavoritesListingEndpoint = "/users/favorites/listings";
 const userDetailsEndPoint = "/users";
 const uploadImageEndPoint = "/imageUpload";
 const fetchUserOwnDataEndPoint = "/me";
@@ -21,13 +22,14 @@ const onboardingCompleteEndpoint = "/onboardingComplete";
 const onboardingDetailEndPoint = "/onboardingDetail";
 const feedbackEndpoint = "/feedbacks";
 const municipalPartyDetailEndPoint = "/virtualTownhall/getMunicipalityById";
+const resetPasswordEndPoint='/users/change-password';
 
 // WEATHER API
 const weatherEndPoint = "/thirdParty/weather";
 const weatherApiKey="2ead327db48b49f28e6134655242706";
 
 // FILTER API
-const getFilterEndPoint = "";
+const getFilterEndPoint = "/filter/filter-list";
 
 // VIRTUAL TOWN HALL
 const virtualTownHallEndPoint = "/virtualTownhall";
@@ -51,6 +53,8 @@ const deleteAccountEndPoint = "/users";
 // DIGIFIT API
 const digifitInformationEndPoint = "/digifit";
 
+const digifitFavEndPoint = "/digifit/favoriteEquipments";
+
 const digifitOverviewEndPoint = "/digifit/user-equipment-stats";
 
 const digifitExerciseDetailsEndPoint = "/digifit/exercise-details";
@@ -67,5 +71,15 @@ const guestUserLoginEndPoint = "/users/guest/login";
 
 const localDigifitBulkTrackingEndPoint = "/digifit/bulk-trackers";
 
+const userScoreEndPoint = "/users/user-points";
+
+const getLegalPolicyEndPoint = "/moreInfo/legal";
+
+const getPOICoordinatesEndPoint ="/listings/poiCoordinate";
+
 // BRAIN TEASERS API
-const brainTeasersGameListEndPoint = "/digifit/games-list";
+const brainTeaserGameListEndPoint = "/digifit/games-list";
+const brainTeaserGameDetailsEndPoint = "/digifit/game";
+const brainTeaserGamesEndPoint = "/digifit/game-steps";
+const brainTeaserGameDetailsTrackerEndPoint = "/digifit/games-tracker";
+

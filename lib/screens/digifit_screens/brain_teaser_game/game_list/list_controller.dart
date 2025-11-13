@@ -4,8 +4,8 @@ import 'package:domain/model/response_model/digifit/brain_teaser_game/list_respo
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:domain/usecase/digifit/brain_teaser_game/list_usecase.dart';
-import '../../../locale/localization_manager.dart';
-import '../../../providers/refresh_token_provider.dart';
+import '../../../../locale/localization_manager.dart';
+import '../../../../providers/refresh_token_provider.dart';
 import 'list_state.dart';
 
 final brainTeaserGameListControllerProvider = StateNotifierProvider.autoDispose<
@@ -33,7 +33,6 @@ class BrainTeaserGameListController
 
   Future<void> fetchBrainTeaserGameList() async {
     state = state.copyWith(isLoading: true);
-    debugPrint('print of this code is ${state.isLoading}');
 
     try {
       final isTokenExpired = tokenStatus.isAccessTokenExpired();
