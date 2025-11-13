@@ -1,6 +1,7 @@
 import 'package:domain/model/response_model/explore_details/explore_details_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:kusel/common_widgets/device_helper.dart';
+import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,6 +19,7 @@ import 'package:kusel/screens/virtual_town_hall/virtual_town_hall_state.dart';
 import 'package:kusel/utility/url_launcher_utility.dart';
 
 import '../../common_widgets/common_background_clipper_widget.dart';
+import '../../common_widgets/custom_progress_bar.dart';
 import '../../common_widgets/event_list_section_widget.dart';
 import '../../common_widgets/highlights_card.dart';
 import '../../common_widgets/location_const.dart';
@@ -65,19 +67,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
             child: Stack(
               children: [
                 _buildBody(context),
-                if (isLoading)
-                  Center(
-                      child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                    height: 100.h,
-                    width: 100.w,
-                    child: const Center(
-                      child: CircularProgressIndicator(),
-                    ),
-                  )),
+              if (isLoading) CustomProgressBar(),
               ],
             ),
           ),
@@ -104,7 +94,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                   heading: AppLocalizations.of(context).news,
                   maxListLimit: 5,
                   buttonText: AppLocalizations.of(context).all_news,
-                  buttonIconPath: imagePath['map_icon'] ?? "",
+                  buttonIconPath: imagePath['news_icon'] ?? "",
                   isLoading: false,
                   onButtonTap: () {
                     ref.read(navigationProvider).navigateUsingPath(
@@ -229,7 +219,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
         SizedBox(
           height: 250.h,
           child: CommonBackgroundClipperWidget(
-            clipperType: DownstreamCurveClipper(),
+            clipperType: UpstreamWaveClipper(),
             imageUrl: imagePath['background_image'] ?? "",
             height: 210.h,
             blurredBackground: true,
@@ -250,7 +240,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
           ),
         ),
         Positioned(
-          top: 120.h,
+          top: 100.h,
           left: 0.w,
           right: 0.w,
           child: Container(

@@ -60,11 +60,13 @@ class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
         children: [
           CommonBackgroundClipperWidget(
             clipperType: UpstreamWaveClipper(),
-            height: 130.h,
+            height: 110.h,
             imageUrl: imagePath['home_screen_background'] ?? '',
             isStaticImage: true,
             isBackArrowEnabled: true,
-            headingText: AppLocalizations.of(context).search_result,
+            headingText: (widget.searchResultScreenParameter.searchType == SearchType.nearBy)
+                ? AppLocalizations.of(context).search_result
+                : AppLocalizations.of(context).recommendations,
           ),
 
           if(!searchResultScreenState.loading)

@@ -29,3 +29,4 @@ const lightThemeLabelSmallColor = Color(0xFFE2EBF7);
 const lightThemeLabelMediumColor = Color(0xFF6972A8);
 const lightThemeLabelLargeColor = Color(0xFF283583);
 const lightThemeCardDarkColor = Color(0xFFEAEBF3);
+const lightThemeDisableTextColor = Color(0x4D283583);

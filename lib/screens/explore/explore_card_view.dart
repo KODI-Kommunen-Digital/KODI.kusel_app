@@ -24,15 +24,15 @@ class ExploreGridCardView extends ConsumerStatefulWidget {
 class _CommonEventCardState extends ConsumerState<ExploreGridCardView> {
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onTap,
-      child: SizedBox(
-        height: 100.h,
-        child: Card(
-          color: Colors.white,
-          margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
-          elevation: 0,
+    return SizedBox(
+      height: 100.h,
+      child: Card(
+        color: Colors.white,
+        margin: EdgeInsets.symmetric(horizontal: 5.w, vertical: 4.h),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
+        elevation: 0,
+        child: InkWell(
+          onTap: widget.onTap,
           child: Column(
             children: [
               Container(

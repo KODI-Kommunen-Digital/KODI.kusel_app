@@ -8,6 +8,7 @@ class CommonMoreInfoCard extends ConsumerStatefulWidget {
   final String title;
   final String phoneNumber;
   final String? description;
+  final bool? isStrikeThrough;
   final Function()? onTap;
 
   const CommonMoreInfoCard({
@@ -15,7 +16,8 @@ class CommonMoreInfoCard extends ConsumerStatefulWidget {
     required this.title,
     required this.phoneNumber,
     this.description,
-    this.onTap
+    this.onTap,
+    this.isStrikeThrough
   });
 
   @override
@@ -49,6 +51,7 @@ class _CommonMoreInfoCardState extends ConsumerState<CommonMoreInfoCard> {
         10.verticalSpace,
         CommonPhoneNumberCard(
           phoneNumber: widget.phoneNumber,
+            isStrikeThrough : widget.isStrikeThrough
         ),
       ],
     );

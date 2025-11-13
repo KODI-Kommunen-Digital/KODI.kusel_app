@@ -1,10 +1,13 @@
 import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
+import 'package:domain/model/response_model/filter/get_filter_response_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/usecase/listings/listings_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/locale/localization_manager.dart';
+import 'package:kusel/screens/new_filter_screen/new_filter_screen_state.dart';
+import 'package:kusel/utility/kusel_date_utils.dart';
 
 import 'all_event_screen_state.dart';
 
@@ -20,25 +23,52 @@ class AllEventScreenController extends StateNotifier<AllEventScreenState> {
   SignInStatusController signInStatusController;
   LocaleManagerController localeManagerController;
 
-  AllEventScreenController(
-      {required this.listingsUseCase,
-      required this.signInStatusController,
-      required this.localeManagerController})
-      : super(AllEventScreenState.empty());
+  AllEventScreenController({
+    required this.listingsUseCase,
+    required this.signInStatusController,
+    required this.localeManagerController,
+  }) : super(AllEventScreenState.empty());
 
-  Future<void> getEventsList(int pageNumber) async {
+  Future<void> getListing(
+    int pageNumber,
+  ) async {
     try {
-      if(pageNumber>1){
+      if (pageNumber > 1) {
         state = state.copyWith(isMoreListLoading: true);
       } else {
-        state = state.copyWith(isLoading: true);
+        state = state.copyWith(isLoading: true, listingList: []);
       }
       Locale currentLocale = localeManagerController.getSelectedLocale();
 
+      String categoryId = "";
+
+      for (int item in state.selectedCategoryIdList) {
+        categoryId = "$categoryId$item,";
+      }
+
+      String? startDate =
+          KuselDateUtils.checkDatesAreSame(state.startDate, defaultDate)
+              ? null
+              : KuselDateUtils.formatDateInFormatYYYYMMDD(
+                  state.startDate.toString());
+
+      String? endDate = KuselDateUtils.checkDatesAreSame(
+              state.endDate, defaultDate)
+          ? null
+          : KuselDateUtils.formatDateInFormatYYYYMMDD(state.endDate.toString());
+
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
-             categoryId: "3",
+              startAfterDate: startDate,
+              endBeforeDate: endDate,
+              categoryId: categoryId.isEmpty
+                  ? null
+                  : categoryId.substring(0, categoryId.length - 1),
+              cityId: state.selectedCityId == 0
+                  ? null
+                  : state.selectedCityId.toString(),
               sortByStartDate: true,
+              radius: state.radius == 0 ? null : state.radius.toInt(),
               translate:
                   "${currentLocale.languageCode}-${currentLocale.countryCode}",
               pageNo: pageNumber);
@@ -56,7 +86,8 @@ class AllEventScreenController extends StateNotifier<AllEventScreenState> {
           var eventsList = (r as GetAllListingsResponseModel).data;
           bool isLoadMoreButtonEnabled;
           List<Listing> existingEventList = state.listingList;
-          if(eventsList!=null && eventsList.isNotEmpty){
+
+          if (eventsList != null && eventsList.isNotEmpty) {
             existingEventList.addAll(eventsList);
             isLoadMoreButtonEnabled = true;
           } else {
@@ -70,6 +101,8 @@ class AllEventScreenController extends StateNotifier<AllEventScreenState> {
               isMoreListLoading: false,
               currentPageNo: pageNumber,
               isLoadMoreButtonEnabled: isLoadMoreButtonEnabled);
+
+          numberOfFiltersApplied();
         },
       );
     } catch (error) {
@@ -102,8 +135,8 @@ class AllEventScreenController extends StateNotifier<AllEventScreenState> {
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
               sortByStartDate: true,
-              translate: "${currentLocale.languageCode}-${currentLocale.countryCode}"
-          );
+              translate:
+                  "${currentLocale.languageCode}-${currentLocale.countryCode}");
       if (startAfterDate != null) {
         getAllListingsRequestModel.startAfterDate = startAfterDate;
       }
@@ -157,9 +190,57 @@ class AllEventScreenController extends StateNotifier<AllEventScreenState> {
     }
     state = state.copyWith(listingList: list);
   }
+
   void onLoadMoreList(int currPageNo) async {
     int currPageNo = state.currentPageNo;
-    currPageNo = currPageNo+1;
-    await getEventsList(currPageNo);
+    currPageNo = currPageNo + 1;
+    await getListing(currPageNo);
   }
+
+  applyNewFilterValues(
+      List<String> categoryNameList,
+      int cityId,
+      String cityName,
+      double radius,
+      DateTime startDate,
+      DateTime endDate,
+      List<int> categoryIdList) async {
+    state = state.copyWith(
+        selectedCategoryNameList: categoryNameList,
+        selectedCityName: cityName,
+        selectedCityId: cityId,
+        radius: radius,
+        startDate: startDate,
+        endDate: endDate,
+        selectedCategoryIdList: categoryIdList);
+  }
+
+
+  void numberOfFiltersApplied()
+  {
+    int len = 0;
+
+    if(state.selectedCategoryIdList.isNotEmpty)
+      {
+        len+=state.selectedCategoryIdList.length;
+      }
+
+    if(state.selectedCityId !=0)
+      {
+        len+=1;
+      }
+
+    if(!KuselDateUtils.checkDatesAreSame(state.startDate, defaultDate))
+      {
+        len+=1;
+      }
+
+    if(state.radius!=0)
+      {
+        len+=1;
+      }
+
+    state = state.copyWith(numberOfFiltersApplied: len);
+  }
+
 }

@@ -136,7 +136,6 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
 
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
-            categoryId: "3",
               sortByStartDate: true,
               translate:
                   "${currentLocale.languageCode}-${currentLocale.countryCode}");
@@ -305,7 +304,7 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
 
   _getDetails(int? userId) async {
     try {
-      UserDetailRequestModel requestModel = UserDetailRequestModel(id: userId);
+      UserDetailRequestModel requestModel = UserDetailRequestModel();
       UserDetailResponseModel responseModel = UserDetailResponseModel();
       final result = await userDetailUseCase.call(requestModel, responseModel);
 
@@ -431,9 +430,8 @@ class HomeScreenProvider extends StateNotifier<HomeScreenState> {
         final response = tokenStatus.isAccessTokenExpired();
 
         if (response) {
-          final userId = sharedPreferenceHelper.getInt(userIdKey);
           RefreshTokenRequestModel requestModel =
-              RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+              RefreshTokenRequestModel();
           RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
           final refreshResponse =

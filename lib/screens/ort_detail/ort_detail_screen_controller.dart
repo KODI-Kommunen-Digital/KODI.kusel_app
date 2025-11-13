@@ -61,9 +61,8 @@ class OrtDetailScreenController extends StateNotifier<OrtDetailScreenState> {
       Locale currentLocale = localeManagerController.getSelectedLocale();
 
       if (response && status) {
-        final userId = sharedPreferenceHelper.getInt(userIdKey);
         RefreshTokenRequestModel requestModel =
-            RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+            RefreshTokenRequestModel();
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
         final refreshResponse =

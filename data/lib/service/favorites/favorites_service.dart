@@ -20,12 +20,18 @@ class FavoritesService {
       BaseModel requestModel, BaseModel responseModel) async {
     final apiHelper = ref.read(apiHelperProvider);
 
-
-    final userId = requestModel.toJson()["userId"];
     String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
     final headers = {'Authorization': 'Bearer $token'};
+
+    final queryParams = requestModel
+        .toJson()
+        .entries
+        .where((e) => e.value != null)
+        .map((e) => "${e.key}=${Uri.encodeComponent(e.value.toString())}")
+        .join("&");
+
     final path =
-        "${gatFavoritesListingEndpoint(userId)}?translate=${requestModel.toJson()["translate"]}";
+        "$getFavoritesListingEndpoint?$queryParams";
 
     final result = await apiHelper.getRequest(
         path: path, create: () => responseModel, headers: headers);
@@ -36,13 +42,12 @@ class FavoritesService {
   Future<Either<Exception, BaseModel>> addFavorite(
       BaseModel requestModel, BaseModel responseModel) async {
     final apiHelper = ref.read(apiHelperProvider);
-    final userId = requestModel.toJson()["userId"];
 
     String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
     final headers = {'Authorization': 'Bearer $token'};
 
     final result = await apiHelper.postRequest(
-        path: gatFavoritesEndpoint(userId),
+        path: getFavoritesEndpoint,
         create: () => responseModel,
         headers: headers,
         body: requestModel.toJson());
@@ -53,13 +58,12 @@ class FavoritesService {
   Future<Either<Exception, BaseModel>> deleteFavorite(
       BaseModel requestModel, BaseModel responseModel) async {
     final apiHelper = ref.read(apiHelperProvider);
-    final userId = requestModel.toJson()["userId"];
     final listingId = requestModel.toJson()["id"];
     String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
     final headers = {'Authorization': 'Bearer $token'};
 
     final result = await apiHelper.delete(
-        path: deleteFavoritesEndpoint(userId.toString(), listingId.toString()),
+        path: deleteFavoritesEndpoint(listingId.toString()),
         headers: headers,
         create: () => responseModel);
 

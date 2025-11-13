@@ -1,4 +1,5 @@
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
+import 'package:domain/model/response_model/poi_coordinates/poi_coordinates_response_model.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
 
 import 'bottom_sheet_selected_ui_type.dart';
@@ -20,6 +21,7 @@ class LocationScreenState {
   bool isLoadMoreButtonEnabled;
   Map<int, bool> fetchedCategoryMap;
   Map<int, List<Listing>> categoryEventLists;
+  List<PoiCoordinateItem> poiCoordinatesItemList;
 
   LocationScreenState(
       this.allEventList,
@@ -38,7 +40,7 @@ class LocationScreenState {
       this.isLoadMoreButtonEnabled,
       this.fetchedCategoryMap,
       this.categoryEventLists,
-      );
+      this.poiCoordinatesItemList);
 
   factory LocationScreenState.empty() {
     return LocationScreenState(
@@ -57,7 +59,8 @@ class LocationScreenState {
         false,
         true,
         {},
-        {});
+        {},
+        []);
   }
 
   LocationScreenState copyWith(
@@ -78,9 +81,9 @@ class LocationScreenState {
       int? currentPageNo,
       bool? isMoreListLoading,
       bool? isLoadMoreButtonEnabled,
-        Map<int, bool>? fetchedCategoryMap,
-        Map<int, List<Listing>>? categoryEventLists
-      }) {
+      Map<int, bool>? fetchedCategoryMap,
+      Map<int, List<Listing>>? categoryEventLists,
+      List<PoiCoordinateItem>? poiCoordinatesItemList}) {
     return LocationScreenState(
         allEventList ?? this.allEventList,
         allEventCategoryWiseList ?? this.allEventCategoryWiseList,
@@ -97,7 +100,7 @@ class LocationScreenState {
         isMoreListLoading ?? this.isMoreListLoading,
         isLoadMoreButtonEnabled ?? this.isLoadMoreButtonEnabled,
         fetchedCategoryMap ?? this.fetchedCategoryMap,
-        categoryEventLists ?? this.categoryEventLists
-    );
+        categoryEventLists ?? this.categoryEventLists,
+        poiCoordinatesItemList ?? this.poiCoordinatesItemList);
   }
 }

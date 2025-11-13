@@ -18,7 +18,7 @@ class RefreshTokenService {
 
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
-    final path = "/users/${requestModel.toJson()['userId']}/refresh";
+    final path = "/users/refresh";
     final refreshToken = sharedPreferenceHelper.getString(refreshTokenKey)??'';
 
     final body = {
