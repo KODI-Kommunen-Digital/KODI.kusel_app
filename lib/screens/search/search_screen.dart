@@ -131,11 +131,14 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                   SearchWidget(
                     verticalDirection: VerticalDirection.up,
                     onItemClick: (listing) {
-                      ref.read(dashboardScreenProvider.notifier).onScreenNavigation();
+                      ref
+                          .read(dashboardScreenProvider.notifier)
+                          .onScreenNavigation();
                       ref.read(navigationProvider).navigateUsingPath(
                           context: context,
                           path: eventDetailScreenPath,
-                          params: EventDetailScreenParams(event: listing));
+                          params: EventDetailScreenParams(
+                              eventId: listing.id ?? 0));
                       ref
                           .read(searchScreenProvider.notifier)
                           .loadSavedListings();
@@ -189,9 +192,11 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
                               context: context,
                               path: eventDetailScreenPath,
                               params: EventDetailScreenParams(
-                                  event: ref
-                                      .watch(searchScreenProvider)
-                                      .searchedList[index]));
+                                  eventId: ref
+                                          .watch(searchScreenProvider)
+                                          .searchedList[index]
+                                          .id ??
+                                      0));
                         },
                         child: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8.0),

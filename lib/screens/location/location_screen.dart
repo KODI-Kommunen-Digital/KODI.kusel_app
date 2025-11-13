@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/location_const.dart';
+import 'package:kusel/navigation/navigation.dart';
+import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/location/bottom_sheet_screens/selected_filter_screen.dart';
 import 'package:kusel/screens/location/location_screen_state.dart';
 import 'package:latlong2/latlong.dart';
@@ -29,7 +32,10 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
   void initState() {
     _innerScrollController.addListener(_handleScroll);
     Future.microtask(() {
-      ref.read(locationScreenProvider.notifier).isUserLoggedIn();
+      final controller = ref.read(locationScreenProvider.notifier);
+
+      controller.isUserLoggedIn();
+      controller.getPoiCoordinates();
     });
     super.initState();
   }
@@ -37,9 +43,12 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
   void _handleScroll() {
     if (_innerScrollController.hasClients) {
       final offset = _innerScrollController.offset;
-      final isAtTop = offset <= _innerScrollController.position.minScrollExtent + 1;
+      final isAtTop =
+          offset <= _innerScrollController.position.minScrollExtent + 1;
       final currentDragStatus =
-          ref.read(locationScreenProvider).isSlidingUpPanelDragAllowed;
+          ref
+              .read(locationScreenProvider)
+              .isSlidingUpPanelDragAllowed;
       if (currentDragStatus != isAtTop) {
         ref
             .read(locationScreenProvider.notifier)
@@ -52,55 +61,64 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildBody(context),
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      backgroundColor: Theme
+          .of(context)
+          .scaffoldBackgroundColor,
     );
   }
 
   _buildBody(BuildContext context) {
+    final state = ref.watch(locationScreenProvider);
+    final controller = ref.read(locationScreenProvider.notifier);
+
     return SafeArea(
       child: SlidingUpPanel(
         isDraggable:
-            ref.watch(locationScreenProvider).isSlidingUpPanelDragAllowed,
+        ref
+            .watch(locationScreenProvider)
+            .isSlidingUpPanelDragAllowed,
         minHeight: 200.h,
-        maxHeight: _getMaxHeight(ref.watch(locationScreenProvider).bottomSheetSelectedUIType),
+        maxHeight: _getMaxHeight(
+            ref
+                .watch(locationScreenProvider)
+                .bottomSheetSelectedUIType),
         defaultPanelState: PanelState.CLOSED,
         borderRadius: BorderRadius.vertical(top: Radius.circular(40.r)),
-        controller: ref.read(locationScreenProvider).panelController,
+        controller: ref
+            .read(locationScreenProvider)
+            .panelController,
         body: Stack(
           children: [
             CustomFlutterMap(
               latitude: EventLatLong.kusel.latitude,
               longitude: EventLatLong.kusel.longitude,
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width,
+              height: MediaQuery
+                  .of(context)
+                  .size
+                  .height,
               initialZoom: 12.0,
               onMapTap: () {},
-              markersList: ref
-                  .watch(locationScreenProvider)
-                  .allEventList
+              markersList: state.poiCoordinatesItemList
                   .where((value) =>
-                      value.latitude != null && value.longitude != null)
+              value.latitude != null && value.longitude != null)
                   .map((value) {
                 final lat = value.latitude!;
                 final long = value.longitude!;
                 final categoryId = value.categoryId;
-                final categoryName = value.categoryName;
+                final categoryName = '';
                 return Marker(
                   width: 35.w,
                   height: 35.h,
                   point: LatLng(lat, long),
                   child: InkWell(
                     onTap: () {
-                      ref
-                          .read(locationScreenProvider.notifier)
-                          .setEventItem(value);
-                      ref
-                          .read(locationScreenProvider.notifier)
-                          .updateCategoryId(categoryId, categoryName);
-                      ref
-                          .read(locationScreenProvider.notifier)
-                          .updateBottomSheetSelectedUIType(
-                              BottomSheetSelectedUIType.eventDetail);
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: eventDetailScreenPath, context: context,
+                      params: EventDetailScreenParams(eventId: value.id??0));
                     },
                     child: CustomMapMarker(categoryId: categoryId),
                   ),
@@ -116,12 +134,15 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
                 color: Colors.transparent,
                 child: AnimatedSwitcher(
                   duration: const Duration(milliseconds: 250),
-                  transitionBuilder: (child, animation) => FadeTransition(
-                    opacity: animation,
-                    child: child,
-                  ),
+                  transitionBuilder: (child, animation) =>
+                      FadeTransition(
+                        opacity: animation,
+                        child: child,
+                      ),
                   child: getBottomSheetUI(
-                    ref.watch(locationScreenProvider).bottomSheetSelectedUIType,
+                    ref
+                        .watch(locationScreenProvider)
+                        .bottomSheetSelectedUIType,
                   ),
                 ),
               ));
@@ -130,16 +151,15 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
     );
   }
 
-  getBottomSheetUI(
-    BottomSheetSelectedUIType type,
-  ) {
+  getBottomSheetUI(BottomSheetSelectedUIType type,) {
     late Widget widget;
     LocationScreenState locationScreenState = ref.watch(locationScreenProvider);
     switch (type) {
       case BottomSheetSelectedUIType.eventList:
         widget = SelectedFilterScreen(
           selectedFilterScreenParams: SelectedFilterScreenParams(
-              categoryId: locationScreenState.selectedCategoryId ?? 0), scrollController: _innerScrollController,
+              categoryId: locationScreenState.selectedCategoryId ?? 0),
+          scrollController: _innerScrollController,
         );
         break;
       case BottomSheetSelectedUIType.eventDetail:
@@ -158,11 +178,12 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
 double _getMaxHeight(BottomSheetSelectedUIType type) {
   switch (type) {
     case BottomSheetSelectedUIType.allEvent:
-    return 400.h;
+      return 400.h;
 
     case BottomSheetSelectedUIType.eventDetail:
       return 600.h;
 
     case BottomSheetSelectedUIType.eventList:
-      return 600.h; }
+      return 600.h;
+  }
 }
