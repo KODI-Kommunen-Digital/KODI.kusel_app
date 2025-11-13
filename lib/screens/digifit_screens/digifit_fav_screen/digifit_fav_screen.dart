@@ -102,7 +102,7 @@ class _DigifitFavScreenState extends ConsumerState<DigifitFavScreen> {
                       final station = state.equipmentList[index];
                       return Padding(
                         padding: EdgeInsets.only(
-                            bottom: 10.h, left: 12.w, right: 12.w),
+                            bottom: 5.h, left: 12.w, right: 12.w),
                         child: DigifitTextImageCard(
                           onCardTap: () {},
                           imageUrl: station.machineImageUrls ?? '',

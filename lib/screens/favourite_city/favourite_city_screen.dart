@@ -98,7 +98,7 @@ class _FavouriteCityScreenState extends ConsumerState<FavouriteCityScreen> {
                     final item = state.cityList[index];
                     return Padding(
                       padding:
-                          EdgeInsets.symmetric(vertical: 5.h, horizontal: 12.w),
+                          EdgeInsets.symmetric(vertical: 2.h, horizontal: 12.w),
                       child: ImageTextCardWidget(
                         onTap: () {
                           ref.read(navigationProvider).navigateUsingPath(

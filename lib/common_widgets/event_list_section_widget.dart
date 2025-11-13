@@ -36,6 +36,7 @@ class EventsListSectionWidget extends ConsumerStatefulWidget {
   final bool isMoreListLoading;
   final int pageSize;
   ScrollController? scrollController;
+  void Function(int)? onCardTap;
 
   EventsListSectionWidget(
       {super.key,
@@ -57,7 +58,8 @@ class EventsListSectionWidget extends ConsumerStatefulWidget {
       this.onLoadMoreTap,
       this.isMoreListLoading = false,
       this.pageSize = 9,
-        this.scrollController
+        this.scrollController,
+        this.onCardTap
       });
 
   @override
@@ -196,7 +198,7 @@ class _EventsListSectionWidgetState
                                   path: eventDetailScreenPath,
                                   params:
                                       EventDetailScreenParams(
-                                          event: item,
+                                          eventId: item.id??0,
                                     onFavClick: (){
                                       widget.onFavClickCallback!();
                                     },
