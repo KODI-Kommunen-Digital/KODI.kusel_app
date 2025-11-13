@@ -1,12 +1,12 @@
 import 'package:core/base_model.dart';
 
 class UserDetailResponseModel implements BaseModel<UserDetailResponseModel> {
-   String? status;
-   UserData? data;
+  String? status;
+  UserData? data;
 
   UserDetailResponseModel({
-     this.status,
-     this.data,
+    this.status,
+    this.data,
   });
 
   @override
@@ -19,7 +19,10 @@ class UserDetailResponseModel implements BaseModel<UserDetailResponseModel> {
 
   @override
   Map<String, dynamic> toJson() {
-    return {};
+    return {
+      "status": status,
+      "data": data?.toJson(),
+    };
   }
 }
 
@@ -36,6 +39,10 @@ class UserData implements BaseModel<UserData> {
   String? lastname;
   int? roleId;
 
+  String? address;
+  Place? place;
+  List<UserDetailInterest>? interests;
+
   UserData({
     this.id,
     this.username,
@@ -48,6 +55,9 @@ class UserData implements BaseModel<UserData> {
     this.firstname,
     this.lastname,
     this.roleId,
+    this.address,
+    this.place,
+    this.interests,
   });
 
   @override
@@ -64,6 +74,14 @@ class UserData implements BaseModel<UserData> {
       firstname: json['firstname'],
       lastname: json['lastname'],
       roleId: json['roleId'],
+      address: json['address'],
+
+      place: json['place'] != null ? Place().fromJson(json['place']) : null,
+
+      interests: json['interests'] != null
+          ? List<UserDetailInterest>.from(
+          json['interests'].map((x) => UserDetailInterest().fromJson(x)))
+          : null,
     );
   }
 
@@ -81,6 +99,55 @@ class UserData implements BaseModel<UserData> {
       'firstname': firstname,
       'lastname': lastname,
       'roleId': roleId,
+      'address': address,
+      'place': place?.toJson(),
+      'interests': interests?.map((e) => e.toJson()).toList(),
+    };
+  }
+}
+
+class Place implements BaseModel<Place> {
+  int? id;
+  String? name;
+
+  Place({this.id, this.name});
+
+  @override
+  Place fromJson(Map<String, dynamic> json) {
+    return Place(
+      id: json['id'],
+      name: json['name'],
+    );
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
+    };
+  }
+}
+
+class UserDetailInterest implements BaseModel<UserDetailInterest> {
+  int? id;
+  String? name;
+
+  UserDetailInterest({this.id, this.name});
+
+  @override
+  UserDetailInterest fromJson(Map<String, dynamic> json) {
+    return UserDetailInterest(
+      id: json['id'],
+      name: json['name'],
+    );
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'name': name,
     };
   }
 }

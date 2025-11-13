@@ -59,12 +59,11 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:
-          (ref.watch(tourismScreenControllerProvider).isRecommendationLoading)
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : _buildBody(context),
+      body: (ref.watch(tourismScreenControllerProvider).isRecommendationLoading)
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : _buildBody(context),
     );
   }
 
@@ -72,8 +71,8 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
     final state = ref.watch(tourismScreenControllerProvider);
     return SafeArea(
       child: RefreshIndicator(
-        onRefresh: () async{
-          await  ref
+        onRefresh: () async {
+          await ref
               .read(tourismScreenControllerProvider.notifier)
               .getRecommendationListing();
           ref.read(tourismScreenControllerProvider.notifier).getAllEvents();
@@ -81,159 +80,178 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
 
           ref.read(tourismScreenControllerProvider.notifier).isUserLoggedIn();
         },
-        child: Stack(
-          children: [
-            NotificationListener<OverscrollIndicatorNotification>(
-              onNotification: (overscroll) {
-                overscroll.disallowIndicator();
-                return true;
-              },
-              child: SingleChildScrollView(
-                physics: const ClampingScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CommonBackgroundClipperWidget(
-                      clipperType: UpstreamWaveClipper(),
-                      imageUrl: imagePath['background_image'] ?? "",
-                      headingText: AppLocalizations.of(context).tourism_and_leisure,
-                      height: 130.h,
-                      blurredBackground: true,
-                      isBackArrowEnabled: false,
-                      isStaticImage: true,
+        child: NotificationListener<OverscrollIndicatorNotification>(
+          onNotification: (overscroll) {
+            overscroll.disallowIndicator();
+            return true;
+          },
+          child: SingleChildScrollView(
+            physics: const ClampingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CommonBackgroundClipperWidget(
+                  clipperType: UpstreamWaveClipper(),
+                  imageUrl: imagePath['background_image'] ?? "",
+                  height: 105.h,
+                  blurredBackground: true,
+                  isStaticImage: true,
+                  customWidget1: Positioned(
+                    left: 10,
+                    right: 10,
+                    top: 40,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: IconButton(
+                            onPressed: () {
+                              ref
+                                  .read(navigationProvider)
+                                  .removeTopPage(context: context);
+                            },
+                            icon: Icon(
+                              size: DeviceHelper.isMobile(context)
+                                  ? null
+                                  : 12.h.w,
+                              color: Theme.of(context).primaryColor,
+                              Icons.arrow_back,
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 9,
+                          child: textBoldPoppins(
+                            color:
+                                Theme.of(context).textTheme.labelLarge?.color,
+                            fontSize: 20,
+                            text: AppLocalizations.of(context)
+                                .tourism_and_leisure,
+                          ),
+                        ),
+                      ],
                     ),
-                    _buildRecommendation(context),
-                    32.verticalSpace,
-                    _buildLocationWidget(context),
-                    16.verticalSpace,
-                    if (state.nearByList.isNotEmpty)
-                      EventsListSectionWidget(
-                        context: context,
-                        eventsList: state.nearByList,
-                        heading: AppLocalizations.of(context).near_you,
-                        maxListLimit: 5,
-                        buttonText:
-                            AppLocalizations.of(context).show_all_events,
-                        buttonIconPath: imagePath['map_icon'] ?? "",
-                        isLoading: false,
-                        onButtonTap: () {
-                          final searchRadius = SearchRadius.radius.value;
-                          ref.read(navigationProvider).navigateUsingPath(
-                              path: selectedEventListScreenPath,
-                              context: context,
-                              params: SelectedEventListScreenParameter(
-                                  listHeading:
-                                      AppLocalizations.of(context).near_you,
-                                  centerLongitude: state.long,
-                                  centerLatitude: state.lat,
-                                  radius: searchRadius,
-                                  onFavChange: () {
-                                    ref
-                                        .read(tourismScreenControllerProvider
-                                            .notifier)
-                                        .getNearByListing();
-                                  }));
-                        },
-                        onHeadingTap: () {
-                          final searchRadius = SearchRadius.radius.value;
-                          ref.read(navigationProvider).navigateUsingPath(
-                              path: selectedEventListScreenPath,
-                              context: context,
-                              params: SelectedEventListScreenParameter(
-                                  listHeading:
-                                      AppLocalizations.of(context).near_you,
-                                  centerLongitude: state.long,
-                                  centerLatitude: state.lat,
-                                  radius: searchRadius,
-                                  onFavChange: () {
-                                    ref
-                                        .read(tourismScreenControllerProvider
-                                            .notifier)
-                                        .getNearByListing();
-                                  }));
-                        },
-                        isFavVisible: true,
-                        onSuccess: (bool isFav, int? id) {
-                          ref
-                              .read(tourismScreenControllerProvider.notifier)
-                              .updateNearByIsFav(isFav, id);
-                        },
-                        onFavClickCallback: () {
-                          ref
-                              .read(tourismScreenControllerProvider.notifier)
-                              .getNearByListing();
-                        },
-                      ),
-                    LocalSvgImageTextServiceCard(
-                      onTap: () => ref.read(navigationProvider).navigateUsingPath(
-                          path: webViewPagePath,
-                          params: WebViewParams(
-                              url:
-                                  "https://www.pfaelzerbergland.de/de/aktiv-in-der-natur/wandern"),
-                          context: context),
-                      imageUrl: 'tourism_service_image',
-                      text: AppLocalizations.of(context).hiking_trails,
-                      description:
-                          AppLocalizations.of(context).discover_kusel_on_foot,
-                    ),
-                    if (state.allEventList.isNotEmpty)
-                      EventsListSectionWidget(
-                        context: context,
-                        eventsList: state.allEventList,
-                        heading: AppLocalizations.of(context).all_events,
-                        maxListLimit: 5,
-                        isLoading: false,
-                        onHeadingTap: () {
-                          ref.read(navigationProvider).navigateUsingPath(
-                              path: selectedEventListScreenPath,
-                              context: context,
-                              params: SelectedEventListScreenParameter(
-                                  listHeading:
-                                      AppLocalizations.of(context).all_events,
-                                  categoryId: ListingCategoryId.event.eventId,
-                                  onFavChange: () {
-                                    ref
-                                        .read(tourismScreenControllerProvider
-                                            .notifier)
-                                        .getAllEvents();
-                                  }));
-                        },
-                        isFavVisible: true,
-                        onSuccess: (bool isFav, int? id) {
-                          ref
-                              .read(tourismScreenControllerProvider.notifier)
-                              .updateEventIsFav(isFav, id);
-                        },
-                        onFavClickCallback: () {
-                          ref
-                              .read(tourismScreenControllerProvider.notifier)
-                              .getAllEvents();
-                        },
-                      ),
-                    22.verticalSpace,
-                    FeedbackCardWidget(
-                        height: 270.h,
-                        onTap: () {
-                          ref.read(navigationProvider).navigateUsingPath(
-                              path: feedbackScreenPath, context: context);
-                        })
-                  ],
+                  ),
                 ),
-              ),
+                _buildRecommendation(context),
+                32.verticalSpace,
+                _buildLocationWidget(context),
+                16.verticalSpace,
+                if (state.nearByList.isNotEmpty)
+                  EventsListSectionWidget(
+                    context: context,
+                    eventsList: state.nearByList,
+                    heading: AppLocalizations.of(context).near_you,
+                    maxListLimit: 5,
+                    buttonText: AppLocalizations.of(context).show_all_events,
+                    buttonIconPath: imagePath['map_icon'] ?? "",
+                    isLoading: false,
+                    onButtonTap: () {
+                      final searchRadius = SearchRadius.radius.value;
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: selectedEventListScreenPath,
+                          context: context,
+                          params: SelectedEventListScreenParameter(
+                              listHeading:
+                                  AppLocalizations.of(context).near_you,
+                              centerLongitude: state.long,
+                              centerLatitude: state.lat,
+                              categoryId: 3,
+                              radius: searchRadius,
+                              onFavChange: () {
+                                ref
+                                    .read(tourismScreenControllerProvider
+                                        .notifier)
+                                    .getNearByListing();
+                              }));
+                    },
+                    onHeadingTap: () {
+                      final searchRadius = SearchRadius.radius.value;
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: selectedEventListScreenPath,
+                          context: context,
+                          params: SelectedEventListScreenParameter(
+                              categoryId: 3,
+                              listHeading:
+                                  AppLocalizations.of(context).near_you,
+                              centerLongitude: state.long,
+                              centerLatitude: state.lat,
+                              radius: searchRadius,
+                              onFavChange: () {
+                                ref
+                                    .read(tourismScreenControllerProvider
+                                        .notifier)
+                                    .getNearByListing();
+                              }));
+                    },
+                    isFavVisible: true,
+                    onSuccess: (bool isFav, int? id) {
+                      ref
+                          .read(tourismScreenControllerProvider.notifier)
+                          .updateNearByIsFav(isFav, id);
+                    },
+                    onFavClickCallback: () {
+                      ref
+                          .read(tourismScreenControllerProvider.notifier)
+                          .getNearByListing();
+                    },
+                  ),
+                LocalSvgImageTextServiceCard(
+                  onTap: () => ref.read(navigationProvider).navigateUsingPath(
+                      path: webViewPagePath,
+                      params: WebViewParams(
+                          url:
+                              "https://www.pfaelzerbergland.de/de/aktiv-in-der-natur/wandern"),
+                      context: context),
+                  imageUrl: 'tourism_service_image',
+                  text: AppLocalizations.of(context).hiking_trails,
+                  description:
+                      AppLocalizations.of(context).discover_kusel_on_foot,
+                ),
+                if (state.allEventList.isNotEmpty)
+                  EventsListSectionWidget(
+                    context: context,
+                    eventsList: state.allEventList,
+                    heading: AppLocalizations.of(context).all_events,
+                    maxListLimit: 5,
+                    isLoading: false,
+                    onHeadingTap: () {
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: selectedEventListScreenPath,
+                          context: context,
+                          params: SelectedEventListScreenParameter(
+                              listHeading:
+                                  AppLocalizations.of(context).all_events,
+                              categoryId: ListingCategoryId.event.eventId,
+                              onFavChange: () {
+                                ref
+                                    .read(tourismScreenControllerProvider
+                                        .notifier)
+                                    .getAllEvents();
+                              }));
+                    },
+                    isFavVisible: true,
+                    onSuccess: (bool isFav, int? id) {
+                      ref
+                          .read(tourismScreenControllerProvider.notifier)
+                          .updateEventIsFav(isFav, id);
+                    },
+                    onFavClickCallback: () {
+                      ref
+                          .read(tourismScreenControllerProvider.notifier)
+                          .getAllEvents();
+                    },
+                  ),
+                22.verticalSpace,
+                FeedbackCardWidget(
+                    height: 270.h,
+                    onTap: () {
+                      ref.read(navigationProvider).navigateUsingPath(
+                          path: feedbackScreenPath, context: context);
+                    })
+              ],
             ),
-            Positioned(
-              top: 26.h,
-              left: 12.w,
-              child: IconButton(
-                  onPressed: () {
-                    ref.read(navigationProvider).removeTopPage(context: context);
-                  },
-                  icon: Icon(
-                      size: DeviceHelper.isMobile(context) ? null : 12.h.w,
-                      color: Theme.of(context).primaryColor,
-                      Icons.arrow_back)),
-            )
-          ],
+          ),
         ),
       ),
     );
@@ -243,80 +261,123 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
     return Consumer(
       builder: (context, ref, _) {
         final state = ref.watch(tourismScreenControllerProvider);
+        final recommendationList = state.recommendationList;
+
+        int currentIndex = state.highlightCount;
+
         return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
           child: Column(
             children: [
-              32.verticalSpace,
-              CommonTextArrowWidget(
-                text: AppLocalizations.of(context).recommendations,
-                onTap: () {
-                  ref.read(navigationProvider).navigateUsingPath(
-                      path: allEventScreenPath,
-                      context: context,
-                      params: AllEventScreenParam(onFavChange: () {
-                        ref
-                            .read(tourismScreenControllerProvider.notifier)
-                            .getRecommendationListing();
-                      }));
-                },
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.w),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CommonTextArrowWidget(
+                      text: AppLocalizations.of(context).recommendations,
+                      onTap: () {
+                        ref.read(navigationProvider).navigateUsingPath(
+                          path: allEventScreenPath,
+                          context: context,
+                          params: AllEventScreenParam(onFavChange: () {
+                            ref
+                                .read(tourismScreenControllerProvider.notifier)
+                                .getRecommendationListing();
+                          }),
+                        );
+                      },
+                    ),
+                    if (recommendationList.isNotEmpty)
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(
+                            recommendationList.length,
+                                (index) => Icon(
+                              Icons.circle,
+                              size: currentIndex == index ? 11 : 8,
+                              color: currentIndex == index
+                                  ? Theme.of(context).primaryColor
+                                  : Theme.of(context)
+                                  .primaryColor
+                                  .withAlpha(130),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
               ),
-              16.verticalSpace,
-              SizedBox(
-                height: DeviceHelper.isMobile(context) ? 315.h : 340.h,
-                width: MediaQuery.of(context).size.width,
-                child: ListView.builder(
-                    shrinkWrap: true,
+              20.verticalSpace,
+              // Content area similar to PageView in customPageViewer
+              if (recommendationList.isEmpty)
+                const SizedBox.shrink()
+              else
+                SizedBox(
+                  height: DeviceHelper.isMobile(context) ? 315.h : 340.h,
+                  child: PageView.builder(
+                    controller: PageController(
+                        viewportFraction:
+                        317.w / MediaQuery.of(context).size.width * .9),
                     scrollDirection: Axis.horizontal,
-                    itemCount: (state.recommendationList.isNotEmpty)
-                        ? min(state.recommendationList.length, 5)
-                        : 0,
+                    padEnds: false,
+                    itemCount:
+                    min(recommendationList.length, 5), // keep your original limit
                     itemBuilder: (context, index) {
-                      final item = state.recommendationList[index];
+                      final item = recommendationList[index];
 
                       return Padding(
-                        padding: EdgeInsets.only(right: 16.w),
+                        padding: EdgeInsets.symmetric(horizontal: 6.w),
                         child: HighlightsCard(
-                            date: item.startDate,
-                            cardWidth: 280.w,
-                            sourceId: item.sourceId ?? 3,
-                            imageUrl: item.logo ?? "",
-                            heading: item.title ?? "",
-                            description: item.description ?? "",
-                            isFavourite: item.isFavorite ?? false,
-                            onPress: () {
-                              ref.read(navigationProvider).navigateUsingPath(
-                                  path: eventDetailScreenPath,
-                                  context: context,
-                                  params: EventDetailScreenParams(
-                                      event: item,
-                                      onFavClick: () {
-                                        ref
-                                            .read(
-                                                tourismScreenControllerProvider
-                                                    .notifier)
-                                            .getRecommendationListing();
-                                      }));
-                            },
-                            onFavouriteIconClick: () {
-                              ref
-                                  .watch(favoritesProvider.notifier)
-                                  .toggleFavorite(item,
-                                  success: ({required bool isFavorite}) {
-                                    ref
-                                        .read(tourismScreenControllerProvider.notifier)
-                                        .updateRecommendationIsFav
-                                      (
-                                        isFavorite, item.id);
-                                  }, error: ({required String message}) {
-                                    showErrorToast(
-                                        message: message, context: context);
-                                  });
-                            },
-                            isFavouriteVisible: true),
+                          date: item.startDate,
+                          cardWidth: 280.w,
+                          sourceId: item.sourceId ?? 3,
+                          imageUrl: item.logo ?? "",
+                          heading: item.title ?? "",
+                          description: item.description ?? "",
+                          isFavourite: item.isFavorite ?? false,
+                          isFavouriteVisible: true,
+                          onPress: () {
+                            ref.read(navigationProvider).navigateUsingPath(
+                              path: eventDetailScreenPath,
+                              context: context,
+                              params: EventDetailScreenParams(
+                                eventId: item.id ?? 0,
+                                onFavClick: () {
+                                  ref
+                                      .read(
+                                      tourismScreenControllerProvider.notifier)
+                                      .getRecommendationListing();
+                                },
+                              ),
+                            );
+                          },
+                          onFavouriteIconClick: () {
+                            ref
+                                .watch(favoritesProvider.notifier)
+                                .toggleFavorite(item,
+                                success: ({required bool isFavorite}) {
+                                  ref
+                                      .read(
+                                      tourismScreenControllerProvider.notifier)
+                                      .updateRecommendationIsFav(
+                                      isFavorite, item.id);
+                                }, error: ({required String message}) {
+                                  showErrorToast(
+                                      message: message, context: context);
+                                });
+                          },
+                        ),
                       );
-                    }),
-              )
+                    },
+                    onPageChanged: (index) {
+                      ref
+                          .read(tourismScreenControllerProvider.notifier)
+                          .updateCardIndex(index);                    },
+                  ),
+                ),
             ],
           ),
         );
@@ -339,7 +400,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
           child: Column(
             children: [
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                padding: EdgeInsets.only(left: 10.w, right: 20.w),
                 width: double.infinity,
                 height: 50.h,
                 decoration: BoxDecoration(
@@ -352,7 +413,11 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.location_on_outlined),
+                        Icon(
+                          Icons.location_on_outlined,
+                          size: 20.h.w,
+                          color: Theme.of(context).primaryColor,
+                        ),
                         10.horizontalSpace,
                         textRegularPoppins(
                             text: AppLocalizations.of(context).near_you,

@@ -1,8 +1,10 @@
 import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:data/service/location_service/location_service.dart';
 import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
+import 'package:domain/model/request_model/listings/recommendations_request_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/usecase/listings/listings_usecase.dart';
+import 'package:domain/usecase/listings/recommendations_usecase.dart';
 import 'package:domain/usecase/search/search_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,6 +22,7 @@ final searchResultScreenProvider = StateNotifierProvider.autoDispose<
     (ref) => SearchResultScreenProvider(
         listingsUseCase: ref.read(listingsUseCaseProvider),
         searchUseCase: ref.read(searchUseCaseProvider),
+        recommendationsUseCase: ref.read(recommendationUseCaseProvider),
         signInStatusController: ref.read(signInStatusProvider.notifier),
         localeManagerController: ref.read(localeManagerProvider.notifier)));
 
@@ -29,12 +32,14 @@ class SearchResultScreenProvider
       {required this.listingsUseCase,
       required this.searchUseCase,
       required this.signInStatusController,
-      required this.localeManagerController})
+      required this.localeManagerController,
+      required this.recommendationsUseCase})
       : super(SearchResultScreenState.empty());
   ListingsUseCase listingsUseCase;
   SearchUseCase searchUseCase;
   SignInStatusController signInStatusController;
   LocaleManagerController localeManagerController;
+  RecommendationsUseCase recommendationsUseCase;
 
   Future<void> getNearbyList() async {
     try {
@@ -53,8 +58,13 @@ class SearchResultScreenProvider
 
       GetAllListingsRequestModel getAllListingsRequestModel =
           GetAllListingsRequestModel(
-              radius: radius, centerLatitude: lat, centerLongitude: long,
-              translate: "${currentLocale.languageCode}-${currentLocale.countryCode}");
+              sortByStartDate: true,
+              categoryId: "3",
+              radius: radius,
+              centerLatitude: lat,
+              centerLongitude: long,
+              translate:
+                  "${currentLocale.languageCode}-${currentLocale.countryCode}");
       GetAllListingsResponseModel getAllListingsResponseModel =
           GetAllListingsResponseModel();
       final result = await listingsUseCase.call(
@@ -105,16 +115,14 @@ class SearchResultScreenProvider
 
       Locale currentLocale = localeManagerController.getSelectedLocale();
 
-
-      GetAllListingsRequestModel getAllListingsRequestModel =
-          GetAllListingsRequestModel(
-              sortByStartDate: true,
+      RecommendationsRequestModel recommendationsRequestModel =
+          RecommendationsRequestModel(
               translate:
                   "${currentLocale.languageCode}-${currentLocale.countryCode}");
       GetAllListingsResponseModel getAllListingsResponseModel =
           GetAllListingsResponseModel();
-      final result = await listingsUseCase.call(
-          getAllListingsRequestModel, getAllListingsResponseModel);
+      final result = await recommendationsUseCase.call(
+          recommendationsRequestModel, getAllListingsResponseModel);
       result.fold(
         (l) {
           state = state.copyWith(loading: false, error: l.toString());

@@ -511,7 +511,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                               context: context,
                               path: eventDetailScreenPath,
                               params: EventDetailScreenParams(
-                                  event: state.highlightsList[index]));
+                                  eventId: state.highlightsList[index].id??0));
                         },
                         child: Row(
                           children: [
@@ -564,7 +564,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                       ref.read(navigationProvider).navigateUsingPath(
                             context: context,
                             path: eventDetailScreenPath,
-                            params: EventDetailScreenParams(event: listing),
+                            params: EventDetailScreenParams(eventId: listing.id??0),
                           );
                     },
                     onFavouriteIconClick: () {

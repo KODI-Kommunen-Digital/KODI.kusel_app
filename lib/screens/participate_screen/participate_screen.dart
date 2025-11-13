@@ -112,12 +112,12 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
               text: state.participateData?.title ?? "_",
               textOverflow: TextOverflow.visible,
               textAlign: TextAlign.left,
-              fontSize: 16),
+              fontSize: 18),
           10.verticalSpace,
           textBoldMontserrat(
               color: Theme.of(context).textTheme.bodyLarge?.color,
               textAlign: TextAlign.start,
-              fontSize: 12,
+              fontSize: 13,
               text: AppLocalizations.of(context).develop_kusel_together_text,
               textOverflow: TextOverflow.visible),
           10.verticalSpace,
@@ -125,7 +125,7 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
               textAlign: TextAlign.start,
               text: state.participateData?.description ?? "_",
               textOverflow: TextOverflow.visible),
-          8.verticalSpace,
+          12.verticalSpace,
           CustomButton(
               onPressed: () => ref.read(navigationProvider).navigateUsingPath(
                   path: webViewPagePath,
@@ -154,7 +154,7 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
                 textAlign: TextAlign.start,
                 fontSize: 14),
           ),
-          10.verticalSpace,
+          12.verticalSpace,
           if (state.participateData != null &&
               state.participateData!.servicesOffered!.isNotEmpty)
             ListView.builder(

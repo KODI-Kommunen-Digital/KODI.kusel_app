@@ -138,7 +138,7 @@ class _CommonBackgroundClipperWidgetState
                               : 0,
                       child: textBoldPoppins(
                           color: Theme.of(context).textTheme.labelLarge?.color,
-                          fontSize: 19,
+                          fontSize: 20,
                           text: widget.headingText ?? ''),
                     ),
                   if(widget.filterWidget!=null)

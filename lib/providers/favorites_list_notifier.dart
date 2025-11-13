@@ -50,10 +50,9 @@ class FavoritesListNotifier extends StateNotifier<List<Listing>> {
       final response = tokenStatus.isAccessTokenExpired();
 
       if (response) {
-        final userId = sharedPreferenceHelper.getInt(userIdKey);
 
         RefreshTokenRequestModel requestModel =
-            RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+            RefreshTokenRequestModel();
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
         final response =
@@ -74,8 +73,6 @@ class FavoritesListNotifier extends StateNotifier<List<Listing>> {
               AddFavoritesRequestModel(
                   cityId: item.cityId.toString(),
                   listingId: item.id.toString(),
-                  userId: sharedPreferenceHelper.getInt(userIdKey).toString() ??
-                      "",
                   translate:
                   "${currentLocale.languageCode}-${currentLocale.countryCode}"
               );
@@ -98,9 +95,7 @@ class FavoritesListNotifier extends StateNotifier<List<Listing>> {
         AddFavoritesRequestModel getFavoritesRequestModel =
             AddFavoritesRequestModel(
                 cityId: item.cityId.toString(),
-                listingId: item.id.toString(),
-                userId:
-                    sharedPreferenceHelper.getInt(userIdKey).toString() ?? "");
+                listingId: item.id.toString());
 
         GetFavoritesResponseModel getFavoritesResponseModel =
             GetFavoritesResponseModel();
@@ -129,10 +124,9 @@ class FavoritesListNotifier extends StateNotifier<List<Listing>> {
       final response = tokenStatus.isAccessTokenExpired();
 
       if (response) {
-        final userId = sharedPreferenceHelper.getInt(userIdKey);
 
         RefreshTokenRequestModel requestModel =
-            RefreshTokenRequestModel(userId: userId?.toString() ?? "");
+            RefreshTokenRequestModel();
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
         final response =
@@ -149,7 +143,7 @@ class FavoritesListNotifier extends StateNotifier<List<Listing>> {
 
           DeleteFavoritesRequestModel getFavoritesRequestModel =
               DeleteFavoritesRequestModel(
-                  id: id, userId: sharedPreferenceHelper.getInt(userIdKey));
+                  id: id);
           GetFavoritesResponseModel getFavoritesResponseModel =
               GetFavoritesResponseModel();
           final result = await deleteFavoriteUsecase.call(
@@ -167,7 +161,7 @@ class FavoritesListNotifier extends StateNotifier<List<Listing>> {
       } else {
         DeleteFavoritesRequestModel getFavoritesRequestModel =
             DeleteFavoritesRequestModel(
-                id: id, userId: sharedPreferenceHelper.getInt(userIdKey));
+                id: id);
         GetFavoritesResponseModel getFavoritesResponseModel =
             GetFavoritesResponseModel();
         final result = await deleteFavoriteUsecase.call(

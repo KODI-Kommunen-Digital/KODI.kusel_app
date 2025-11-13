@@ -37,8 +37,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
       if (notifier.isOnboardingDone()) {
         notifier.getOnboardingDetails();
-      } else if (notifier.isOfflineOnboardingDone()) {
-        notifier.getOnboardingOfflineData();
       }
     });
 
@@ -206,13 +204,14 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           if(selectedPageIndex == 4)
             CustomButton(
               onPressed: ()async{
-                if (state.isLoggedIn) {
-                  stateNotifier.submitUserInterests();
-                }
-                ref.read(navigationProvider).navigateUsingPath(
-                  path: onboardingLoadingPagePath,
-                  context: context,
-                );
+                 await  stateNotifier.submitUserInterests(
+                     (){
+                       ref.read(navigationProvider).navigateUsingPath(
+                         path: onboardingLoadingPagePath,
+                         context: context,
+                       );
+                     }
+                 );
               },
               text: (selectedPageIndex == 0)
                   ? AppLocalizations.of(context).lets_get_started
@@ -232,7 +231,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   child: textSemiBoldMontserrat(
                     color: Theme.of(context).textTheme.bodyLarge?.color,
                     fontWeight: FontWeight.w600,
-                    fontSize: 16,
+                    fontSize: 14,
                     text: AppLocalizations.of(context).another_time,
                   ),
                 )

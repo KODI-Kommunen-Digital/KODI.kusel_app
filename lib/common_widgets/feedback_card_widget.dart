@@ -40,7 +40,7 @@ class _FeedbackCardWidgetState extends State<FeedbackCardWidget> {
                       textBoldPoppins(
                         fontWeight: FontWeight.w600,
                         text: AppLocalizations.of(context).feedback_heading,
-                        fontSize: 13,
+                        fontSize: 15,
                         color: Colors.white,
                         textOverflow: TextOverflow.visible,
                         textAlign: TextAlign.start,
