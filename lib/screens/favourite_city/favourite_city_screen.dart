@@ -25,63 +25,80 @@ class FavouriteCityScreen extends ConsumerStatefulWidget {
 }
 
 class _FavouriteCityScreenState extends ConsumerState<FavouriteCityScreen> {
+  late ScrollController _scrollController;
+
   @override
   void initState() {
+    _scrollController = ScrollController();
+
     Future.microtask(() {
-      ref.read(favouriteCityScreenProvider.notifier).fetchFavouriteCities();
+      final state = ref.watch(favouriteCityScreenProvider);
+      final controller = ref.read(favouriteCityScreenProvider.notifier);
+
+      controller.fetchFavouriteCities(state.pageNumber);
     });
+    _scrollController.addListener(_onScroll);
+
     super.initState();
+  }
+
+  void _onScroll() {
+    final controller = ref.read(favouriteCityScreenProvider.notifier);
+    final state = ref.watch(favouriteCityScreenProvider);
+
+    if (_scrollController.hasClients) {
+      if (_scrollController.position.pixels ==
+              _scrollController.position.maxScrollExtent &&
+          !state.isNextPageLoading) {
+        controller.fetchLoadMoreFavouriteCities((state.pageNumber + 1));
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(favouriteCityScreenProvider);
+
     return Scaffold(
-      backgroundColor: Theme
-          .of(context)
-          .scaffoldBackgroundColor,
-      body: _buildBody(context),
-    ).loaderDialog(context, ref
-        .watch(favouriteCityScreenProvider)
-        .isLoading);
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: state.isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : _buildBody(context),
+    );
   }
 
   Widget _buildBody(BuildContext context) {
+    final state = ref.watch(favouriteCityScreenProvider);
+    final controller = ref.read(favouriteCityScreenProvider.notifier);
+
     return SafeArea(
       child: SingleChildScrollView(
+        controller: _scrollController,
         physics: ClampingScrollPhysics(),
         child: Column(
           children: [
             CommonBackgroundClipperWidget(
                 clipperType: UpstreamWaveClipper(),
                 imageUrl: imagePath['background_image'] ?? "",
-                headingText: AppLocalizations
-                    .of(context)
-                    .favourite_places,
+                headingText: AppLocalizations.of(context).favourite_places,
                 height: 120.h,
                 blurredBackground: true,
                 isBackArrowEnabled: true,
-                isStaticImage: true
-            ),
-            if(!ref
-                .watch(favouriteCityScreenProvider)
-                .isLoading && ref
-                .watch(favouriteCityScreenProvider)
-                .cityList
-                .isNotEmpty)
+                isStaticImage: true),
+
+            if(!state.isLoading)
+              state.cityList.isNotEmpty?
               ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: ref
-                      .read(favouriteCityScreenProvider)
-                      .cityList
-                      .length,
+                  itemCount: state.cityList.length,
                   itemBuilder: (context, index) {
-                    final item = ref
-                        .read(favouriteCityScreenProvider)
-                        .cityList[index];
+                    final item = state.cityList[index];
                     return Padding(
                       padding:
-                      EdgeInsets.symmetric(vertical: 5.h, horizontal: 12.w),
+                          EdgeInsets.symmetric(vertical: 2.h, horizontal: 12.w),
                       child: ImageTextCardWidget(
                         onTap: () {
                           ref.read(navigationProvider).navigateUsingPath(
@@ -90,12 +107,8 @@ class _FavouriteCityScreenState extends ConsumerState<FavouriteCityScreen> {
                               params: OrtDetailScreenParams(
                                   ortId: item.id.toString(),
                                   onFavSuccess: (isFav, id) {
-                                    ref
-                                        .read(favouriteCityScreenProvider
-                                            .notifier)
-                                        .fetchFavouriteCities();
-                                  }
-                              ));
+                                    controller.removeFav(id);
+                                  }));
                         },
                         imageUrl: item.image ??
                             'https://images.unsplash.com/photo-1584713503693-bb386ec95cf2?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
@@ -108,31 +121,24 @@ class _FavouriteCityScreenState extends ConsumerState<FavouriteCityScreen> {
                               .watch(favouriteCitiesNotifier.notifier)
                               .removeFavorite(
                             item.id ?? 0,
-                                ({required bool isFavorite}) {
+                            ({required bool isFavorite}) {
                               ref
                                   .read(favouriteCityScreenProvider.notifier)
-                                  .fetchFavouriteCities();
+                                  .removeFav(item.id);
                             },
-                                ({required String message}) {
+                            ({required String message}) {
                               showErrorToast(
                                   message: message, context: context);
                             },
                           );
-                        },),
+                        },
+                      ),
                     );
-                  }),
-
-            if(!ref
-                .watch(favouriteCityScreenProvider)
-                .isLoading && ref
-                .watch(favouriteCityScreenProvider)
-                .cityList
-                .isEmpty)
-              Center(
+                  }):Center(
                 child: textHeadingMontserrat(
-                    text: AppLocalizations.of(context).no_data,
-                    fontSize: 18),
-              )
+                    text: AppLocalizations.of(context).no_data, fontSize: 18),
+              ),
+            if (state.isNextPageLoading) CircularProgressIndicator()
           ],
         ),
       ),

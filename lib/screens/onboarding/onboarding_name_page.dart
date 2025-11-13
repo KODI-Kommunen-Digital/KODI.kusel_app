@@ -47,11 +47,11 @@ class _OnboardingStartPageState extends ConsumerState<OnBoardingNamePage> {
             65.verticalSpace,
             textBoldPoppins(
                 text: AppLocalizations.of(context).what_may_i_call_you,
-                fontSize: 18,
+                fontSize: 20,
                 color: Theme.of(context).textTheme.bodyLarge?.color),
-            20.verticalSpace,
+            25.verticalSpace,
             Padding(
-              padding: EdgeInsets.only(left: 8.w),
+              padding: EdgeInsets.only(left: 12.w),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: textRegularPoppins(
@@ -66,19 +66,40 @@ class _OnboardingStartPageState extends ConsumerState<OnBoardingNamePage> {
             KuselTextField(
               textEditingController: nameEditingController,
               validator: (value) {
-                return validateField(
-                  value,
-                  "${AppLocalizations.of(context).name} ${AppLocalizations.of(context).is_required}",
-                );
-              },
-              onChanged: (value){
-                if(value.isNotEmpty )
-                  {
-                    ref.read(onboardingScreenProvider.notifier).updateIsNameScreenButtonVisibility(true);
-                  }
-                  else{
-                  ref.read(onboardingScreenProvider.notifier).updateIsNameScreenButtonVisibility(false);
+                if (value == null || value.trim().isEmpty) {
+                  return "${AppLocalizations.of(context).name} ${AppLocalizations.of(context).is_required}";
+                }
 
+                final cleanedValue = value.trim().replaceAll(RegExp(r'\s{2,}'), ' ');
+
+                if (!RegExp(r'^[A-Za-z]+(?: [A-Za-z]+)*$').hasMatch(cleanedValue)) {
+                  return "Only alphabets and single spaces are allowed";
+                }
+
+                if (cleanedValue.length < 3) {
+                  return "Name must be at least 3 characters long";
+                }
+
+                return null;
+              },
+              onChanged: (value) {
+                final cleanedValue = value
+                    .replaceAll(RegExp(r'[^A-Za-z\s]'), '')
+                    .replaceAll(RegExp(r'\s{2,}'), ' ');
+
+                if (value != cleanedValue) {
+                  nameEditingController.value = TextEditingValue(
+                    text: cleanedValue,
+                    selection: TextSelection.collapsed(offset: cleanedValue.length),
+                  );
+                }
+
+                if (cleanedValue.trim().isNotEmpty) {
+                  ref.read(onboardingScreenProvider.notifier)
+                      .updateIsNameScreenButtonVisibility(true);
+                } else {
+                  ref.read(onboardingScreenProvider.notifier)
+                      .updateIsNameScreenButtonVisibility(false);
                 }
               },
               maxLines: 1,

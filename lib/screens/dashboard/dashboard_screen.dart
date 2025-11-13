@@ -92,12 +92,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       icon: DeviceHelper.isMobile(context) ? Padding(
                         padding: EdgeInsets.only(top: 3.h),
                         child: SizedBox(
-                          height: 13.h,
-                          width: 20.w,
+                          height: 14.h,
+                          width: 21.w,
                           child: Center(
                             child: ImageUtil.loadSvgImage(
-                              height: 13.h,
-                              width: 13.w,
+                              height: 20.h,
+                              width: 20.w,
                               imageUrl: imagePath['discover_icon'] ?? "",
                               context: context,
                               color: selectedIndex == 1

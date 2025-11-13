@@ -3,9 +3,9 @@ import 'package:core/base_model.dart';
 class DeleteAccountRequestModel
     implements BaseModel<DeleteAccountRequestModel> {
   String token;
-  String id;
+  String? id;
 
-  DeleteAccountRequestModel({required this.id, required this.token});
+  DeleteAccountRequestModel({this.id, required this.token});
 
   @override
   DeleteAccountRequestModel fromJson(Map<String, dynamic> json) {

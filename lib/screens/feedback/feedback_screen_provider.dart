@@ -60,4 +60,9 @@ class FeedbackScreenProvider extends StateNotifier<FeedbackScreenState> {
     bool onError =  !value;
     state = state.copyWith(isChecked: value, onError: onError);
   }
+
+  updateTitle(String title)
+  {
+    state = state.copyWith(title: title);
+  }
 }

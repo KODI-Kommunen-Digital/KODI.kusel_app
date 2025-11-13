@@ -61,7 +61,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get description => 'Beschreibung';
 
   @override
-  String get submit => 'Senden';
+  String get submit => 'Absenden';
 
   @override
   String get forgot => 'Passwort vergessen';
@@ -613,10 +613,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get trophies => 'Trophäen';
 
   @override
-  String get brain_teasers => 'Denksportaufgaben';
+  String get brain_teasers => 'Denksportaufga­ben';
 
   @override
-  String get points_and_trophy => 'Punkte & Trophäen';
+  String get points_and_trophy => 'Punkte & ­ Trophäen';
 
   @override
   String get show_course => 'Parcours anzeigen';
@@ -787,4 +787,197 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get new_municipality => 'Verbandsgemeinde';
+
+  @override
+  String get filter => 'Filter';
+
+  @override
+  String get all => 'Alle';
+
+  @override
+  String get category => 'Kategorie';
+
+  @override
+  String get location_and_distance => 'Ort und Entfernung';
+
+  @override
+  String get location_distance => 'Ort/Entfernung';
+
+  @override
+  String get maximum_characters => 'Maximal 300 Zeichen erlaubt.';
+
+  @override
+  String get regarding => 'Betreff';
+
+  @override
+  String get feedback_about_app => 'Feedback zur App';
+
+  @override
+  String get infrastructure_and_public_space =>
+      'Infrastruktur & öffentlicher Raum';
+
+  @override
+  String get transportation_and_mobility => 'Verkehr & Mobilität';
+
+  @override
+  String get cleanliness_and_environment => 'Sauberkeit & Umwelt';
+
+  @override
+  String get digital_services_and_app_functionality =>
+      'Digitale Dienste & App-Funktion';
+
+  @override
+  String get disruptions_and_damage => 'Störungen & Schäden';
+
+  @override
+  String get citizen_services_and_administration =>
+      'Bürgerservice & Verwaltung';
+
+  @override
+  String get general_feedback => 'Allgemeines Feedback';
+
+  @override
+  String get games_stamps_desc => 'Diese Stempel kannst du hier sammeln';
+
+  @override
+  String get stamps_achievements => 'Meine Errungenschaften';
+
+  @override
+  String get choose_level => 'Wähle ein Level';
+
+  @override
+  String get more_games => 'Weitere Spiele';
+
+  @override
+  String get try_again => 'Versuchs nochmal';
+
+  @override
+  String get abort_game => 'BoldiFinder-Spiel abbrechen?';
+
+  @override
+  String get abort_game_desc =>
+      'Das aktuelle Spiel ist noch nicht abgeschlossen. Möchten Sie es wirklich abbrechen und von vorne beginnen?';
+
+  @override
+  String get level_complete => 'Level abgeschlossen!';
+
+  @override
+  String get level_complete_desc =>
+      'Um zum nächsten Level zu gelangen, klicken Sie bitte auf OK, um zurückzukehren.';
+
+  @override
+  String get all_level_complete =>
+      'Alle Level sind abgeschlossen. Bitte klicken Sie auf OK, um zurückzukehren.';
+
+  @override
+  String get successful_game_title => 'Super!';
+
+  @override
+  String get successful_game_desc_for_level_1 => 'Bist du bereit für Level 2?';
+
+  @override
+  String get successful_game_desc_for_level_2 => 'Bist du bereit für Level 3?';
+
+  @override
+  String get successful_game_desc_for_level_3 =>
+      'Alle Level sind abgeschlossen';
+
+  @override
+  String get error_game_title => 'Leider falsch';
+
+  @override
+  String get error_game_des => 'Versuche es gleich nochmal!';
+
+  @override
+  String get contact => 'Kontakt';
+
+  @override
+  String get profile_setting => 'Profileinstellungen';
+
+  @override
+  String get new_password => 'Neues Passwort';
+
+  @override
+  String get confirm_new_password => 'Neues Passwort bestätigen';
+
+  @override
+  String get at_least_8_character => 'mindestens 8 Zeichen';
+
+  @override
+  String get contains_letters_and_numbers => 'enthält Buchstaben und Zahlen';
+
+  @override
+  String get contains_upper_case_and_lower_case =>
+      'enthält Groß- und Kleinbuchstaben';
+
+  @override
+  String get contains_special_character => 'enthält Sonderzeichen';
+
+  @override
+  String get current_password => 'Aktuelles Passwort';
+
+  @override
+  String get update_password => 'Passwort aktualisieren';
+
+  @override
+  String get field_cannot_be_empty => 'Feld darf nicht leer sein';
+
+  @override
+  String get password_is_not_same_as_new_password =>
+      'Passwort ist nicht dasselbe wie das neue Passwort';
+
+  @override
+  String get reset_password_success =>
+      'Das Passwort wurde erfolgreich zurückgesetzt.';
+
+  @override
+  String get abort_math_hunt_game => 'Mathe-Spiel abbrechen?';
+
+  @override
+  String get math_hunt_game_desc => 'Bereit zum Kopfrechnen?';
+
+  @override
+  String get flip_catch_desc => 'Bereit für den Flip-Catch';
+
+  @override
+  String get abort_flip_catch => 'Flip Catch abbrechen?';
+
+  @override
+  String get my_profile => 'Mein Profil';
+
+  @override
+  String get my_fav => 'Meine Favoriten';
+
+  @override
+  String get rubber_stamp => 'Stempel';
+
+  @override
+  String get treasure_pass => 'Schätzepass';
+
+  @override
+  String get data_protection_information => 'Datenschutzhinweise';
+
+  @override
+  String get app_version => 'App-Version';
+
+  @override
+  String get mobile => 'Telefonnummer';
+
+  @override
+  String get optional => 'optional';
+
+  @override
+  String get address => 'Adresse';
+
+  @override
+  String get change_password => 'Passwort ändern';
+
+  @override
+  String get edit_interest_profile => 'Interessenprofil bearbeiten';
+
+  @override
+  String get location_sharing => 'Standortfreigabe';
+
+  @override
+  String get an => 'An';
 }

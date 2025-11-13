@@ -57,14 +57,13 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                 child: ImageUtil.loadNetworkImage(
                     memCacheHeight: 400,
                     memCacheWidth: 500,
-                    height: 75.h,
-                    width: 80.w,
+                    height: 65.h,
+                    width: 73.w,
                     imageUrl: imageLoaderUtility(
                         image: widget.imageUrl, sourceId: widget.sourceId),
                     context: context),
               ),
-              const SizedBox(width: 8),
-
+              SizedBox(width: 11.w.h),
               // Texts
               Expanded(
                 child: Column(
@@ -72,6 +71,8 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                   children: [
                     textRegularMontserrat(
                         text: KuselDateUtils.formatDate(widget.date),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
                         color: Theme
                             .of(context)
                             .textTheme
@@ -81,7 +82,9 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                     const SizedBox(height: 4),
                     textSemiBoldMontserrat(text: widget.title,
                     textOverflow: TextOverflow.visible,
-                    textAlign: TextAlign.start),
+                    fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        textAlign: TextAlign.start),
                     const SizedBox(height: 2),
                     textRegularMontserrat(
                         text: widget.location,
@@ -90,13 +93,15 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                             .textTheme
                             .labelMedium
                             ?.color,
-                    textAlign: TextAlign.start),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                        textAlign: TextAlign.start),
                   ],
                 ),
               ),
               Visibility(
                 visible: widget.isFavouriteVisible,
-                child: InkWell(
+                child: GestureDetector(
                   onTap: widget.onFavorite,
                   child: Icon(
                     size: DeviceHelper.isMobile(context) ? null : 12.h.w,

@@ -7,10 +7,12 @@ import 'package:url_launcher/url_launcher.dart';
 
 class CommonPhoneNumberCard extends ConsumerStatefulWidget {
   final String phoneNumber;
+  final bool? isStrikeThrough;
 
   const CommonPhoneNumberCard({
     super.key,
     required this.phoneNumber,
+    this.isStrikeThrough
   });
 
   @override
@@ -54,7 +56,10 @@ class _CommonPhoneNumberCardState extends ConsumerState<CommonPhoneNumberCard> {
               textBoldMontserrat(
                 text: widget.phoneNumber,
                 color: Theme.of(context).textTheme.bodyLarge?.color,
-              ),
+                  decoration: (widget.isStrikeThrough != null &&
+                          widget.isStrikeThrough!)
+                      ? TextDecoration.underline
+                      : null),
             ],
           ),
         ),
