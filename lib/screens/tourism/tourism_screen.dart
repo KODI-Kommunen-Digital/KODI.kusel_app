@@ -59,12 +59,11 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:
-          (ref.watch(tourismScreenControllerProvider).isRecommendationLoading)
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : _buildBody(context),
+      body: (ref.watch(tourismScreenControllerProvider).isRecommendationLoading)
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : _buildBody(context),
     );
   }
 
@@ -345,7 +344,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                               path: eventDetailScreenPath,
                               context: context,
                               params: EventDetailScreenParams(
-                                event: item,
+                                eventId: item.id ?? 0,
                                 onFavClick: () {
                                   ref
                                       .read(

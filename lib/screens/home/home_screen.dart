@@ -41,6 +41,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   late final Upgrader upgrader;
+
   @override
   void initState() {
     Future.microtask(() async {
@@ -53,35 +54,36 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     Upgrader.clearSavedSettings();
     super.initState();
   }
+
   @override
   void dispose() {
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return UpgradeAlert(
         upgrader: upgrader,
-      showIgnore: false,
-      showLater: true,
-      dialogStyle: UpgradeDialogStyle.cupertino,
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: SafeArea(
-          child: RefreshIndicator(
-            onRefresh: () async {
-              final networkStatus = await ref
-                  .read(networkStatusProvider.notifier)
-                  .checkNetworkStatus();
-              if (networkStatus) {
-                await ref.read(homeScreenProvider.notifier).refresh();
-              }
-            },
-            child: SizedBox(
-                height: MediaQuery.of(context).size.height, child: buildUi()),
+        showIgnore: false,
+        showLater: true,
+        dialogStyle: UpgradeDialogStyle.cupertino,
+        child: Scaffold(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          body: SafeArea(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                final networkStatus = await ref
+                    .read(networkStatusProvider.notifier)
+                    .checkNetworkStatus();
+                if (networkStatus) {
+                  await ref.read(homeScreenProvider.notifier).refresh();
+                }
+              },
+              child: SizedBox(
+                  height: MediaQuery.of(context).size.height, child: buildUi()),
+            ),
           ),
-        ),
-      )
-    );
+        ));
   }
 
   Widget buildUi() {
@@ -159,8 +161,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ref.read(navigationProvider).navigateUsingPath(
                                 context: context,
                                 path: eventDetailScreenPath,
-                                params:
-                                EventDetailScreenParams(event: listing));
+                                params: EventDetailScreenParams(
+                                    eventId: listing.id ?? 0));
                           },
                           searchController: ref.watch(searchProvider),
                           hintText:
@@ -216,81 +218,55 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                                 .notifier)
                                             .onScreenNavigation();
                                         ref
-                                          .read(navigationProvider)
-                                          .navigateUsingPath(
-                                              context: context,
-                                              path: signInScreenPath);
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(30.r),
-                                          border: Border.all(
-                                              width: 2.w,
-                                              color: Theme.of(context)
-                                                  .primaryColor)),
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 8.w, vertical: 5.h),
-                                      child: textBoldPoppins(
-                                          text: AppLocalizations.of(context)
-                                              .log_in_sign_up,
-                                          fontSize: 12,
-                                          color: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium
-                                              ?.color),
+                                            .read(navigationProvider)
+                                            .navigateUsingPath(
+                                                context: context,
+                                                path: signInScreenPath);
+                                      },
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(30.r),
+                                            border: Border.all(
+                                                width: 2.w,
+                                                color: Theme.of(context)
+                                                    .primaryColor)),
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 8.w, vertical: 5.h),
+                                        child: textBoldPoppins(
+                                            text: AppLocalizations.of(context)
+                                                .log_in_sign_up,
+                                            fontSize: 12,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyMedium
+                                                ?.color),
+                                      ),
                                     ),
-                                  ),
-                          ],
-                        ),
-                      ))),
-            ),
-            customPageViewer(isLoading),
-            20.verticalSpace,
-            WeatherWidget(
-              weatherResponseModel:
-                  ref.watch(homeScreenProvider).weatherResponseModel,
-            ),
-            10.horizontalSpace,
-            if (ref.watch(homeScreenProvider).nearbyEventsList.isNotEmpty)
-              EventsListSectionWidget
-                (
-                context: context,
-                eventsList: state.nearbyEventsList,
-                heading: AppLocalizations.of(context).near_you,
-                maxListLimit: 3,
-                buttonText: AppLocalizations.of(context).show_all_events,
-                buttonIconPath: imagePath['map_icon'] ?? "",
-                isLoading: isLoading,
-                onButtonTap: () {
-                  ref
+                            ],
+                          ),
+                        ))),
+              ),
+              customPageViewer(isLoading),
+              20.verticalSpace,
+              WeatherWidget(
+                weatherResponseModel:
+                    ref.watch(homeScreenProvider).weatherResponseModel,
+              ),
+              10.horizontalSpace,
+              if (ref.watch(homeScreenProvider).nearbyEventsList.isNotEmpty)
+                EventsListSectionWidget(
+                  context: context,
+                  eventsList: state.nearbyEventsList,
+                  heading: AppLocalizations.of(context).near_you,
+                  maxListLimit: 3,
+                  buttonText: AppLocalizations.of(context).show_all_events,
+                  buttonIconPath: imagePath['map_icon'] ?? "",
+                  isLoading: isLoading,
+                  onButtonTap: () {
+                    ref
                         .read(dashboardScreenProvider.notifier)
                         .onScreenNavigation();
-                    ref.read(navigationProvider).navigateUsingPath(
-                        path: selectedEventListScreenPath,
-                        context: context,
-                        params: SelectedEventListScreenParameter(
-                          radius: 1,
-                          centerLatitude: EventLatLong.kusel.latitude,
-                          centerLongitude: EventLatLong.kusel.longitude,
-                          categoryId: 3,
-                            listHeading:
-                            AppLocalizations.of(context).near_you,
-                          onFavChange: () {
-                            ref
-                                .read(homeScreenProvider.notifier)
-                                .getNearbyEvents();
-                          },
-                        ),
-                      );
-                },
-                onFavClickCallback: () {
-                  ref.read(homeScreenProvider.notifier).getNearbyEvents();
-                },
-                onHeadingTap: () {
-                  ref
-                      .read(dashboardScreenProvider.notifier)
-                      .onScreenNavigation();
                     ref.read(navigationProvider).navigateUsingPath(
                           path: selectedEventListScreenPath,
                           context: context,
@@ -299,8 +275,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             centerLatitude: EventLatLong.kusel.latitude,
                             centerLongitude: EventLatLong.kusel.longitude,
                             categoryId: 3,
-                              listHeading:
-                              AppLocalizations.of(context).near_you,
+                            listHeading: AppLocalizations.of(context).near_you,
                             onFavChange: () {
                               ref
                                   .read(homeScreenProvider.notifier)
@@ -309,117 +284,142 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           ),
                         );
                   },
-                isFavVisible: true,
-                onSuccess: (bool isFav, int? id) {
-                  ref
-                      .read(homeScreenProvider.notifier)
-                      .setIsFavoriteNearBy(isFav, id);
-                },
-              ),
-            10.horizontalSpace,
-            if (state.newsList != null && state.newsList!.isNotEmpty)
-              EventsListSectionWidget(
-                context: context,
-                eventsList: state.newsList ?? [],
-                heading: AppLocalizations.of(context).news,
-                maxListLimit: 5,
-                buttonText: AppLocalizations.of(context).all_news,
-                buttonIconPath: imagePath['map_icon'] ?? "",
-                isLoading: false,
-                onButtonTap: () {
-                  ref
-                      .read(dashboardScreenProvider.notifier)
-                      .onScreenNavigation();
-                  ref.read(navigationProvider).navigateUsingPath(
-                      path: selectedEventListScreenPath,
-                      context: context,
-                      params: SelectedEventListScreenParameter(
-                          cityId: 1,
-                          listHeading: AppLocalizations.of(context).news,
-                          categoryId: ListingCategoryId.news.eventId,
-                          onFavChange: () {
-                            ref.read(homeScreenProvider.notifier).getNews();
-                          }));
-                },
-                onFavClickCallback: () {
-                  ref.read(homeScreenProvider.notifier).getNews();
-                },
-                onHeadingTap: () {
-                  ref
-                      .read(dashboardScreenProvider.notifier)
-                      .onScreenNavigation();
-                  ref.read(navigationProvider).navigateUsingPath(
-                      path: selectedEventListScreenPath,
-                      context: context,
-                      params: SelectedEventListScreenParameter(
-                          cityId: 1,
-                          listHeading: AppLocalizations.of(context).news,
-                          categoryId: ListingCategoryId.news.eventId,
-                          onFavChange: () {
-                            ref.read(homeScreenProvider.notifier).getNews();
-                          }));
-                },
-                isFavVisible: true,
-                onSuccess: (bool isFav, int? id) {
-                  ref
-                      .read(homeScreenProvider.notifier)
-                      .updateNewsIsFav(isFav, id);
-                },
-              ),
-            if (ref.watch(homeScreenProvider).eventsList.isNotEmpty)
-              EventsListSectionWidget(
-                context: context,
-                eventsList: state.eventsList,
-                heading: AppLocalizations.of(context).home_screen_today_event,
-                maxListLimit: 3,
-                buttonText: AppLocalizations.of(context).all_events,
-                buttonIconPath: imagePath['calendar'] ?? "",
-                isLoading: isLoading,
-                onButtonTap: () {
-                  ref
-                      .read(dashboardScreenProvider.notifier)
-                      .onScreenNavigation();
-                  ref.read(navigationProvider).navigateUsingPath(
-                      path: allEventScreenPath,
-                      context: context,
-                      params: AllEventScreenParam(onFavChange: () {
-                        ref.read(homeScreenProvider.notifier).getEvents();
-                      }));
-                },
-                onFavClickCallback: () {
-                  ref.read(homeScreenProvider.notifier).getEvents();
-                },
+                  onFavClickCallback: () {
+                    ref.read(homeScreenProvider.notifier).getNearbyEvents();
+                  },
                   onHeadingTap: () {
                     ref
                         .read(dashboardScreenProvider.notifier)
                         .onScreenNavigation();
                     ref.read(navigationProvider).navigateUsingPath(
-                      path: allEventScreenPath,
-                      context: context,
-                      params: AllEventScreenParam(onFavChange: () {
-                        ref.read(homeScreenProvider.notifier).getEvents();
-                      }));
-                },
-                onSuccess: (isFav, eventId) {
+                          path: selectedEventListScreenPath,
+                          context: context,
+                          params: SelectedEventListScreenParameter(
+                            radius: 1,
+                            centerLatitude: EventLatLong.kusel.latitude,
+                            centerLongitude: EventLatLong.kusel.longitude,
+                            categoryId: 3,
+                            listHeading: AppLocalizations.of(context).near_you,
+                            onFavChange: () {
+                              ref
+                                  .read(homeScreenProvider.notifier)
+                                  .getNearbyEvents();
+                            },
+                          ),
+                        );
+                  },
+                  isFavVisible: true,
+                  onSuccess: (bool isFav, int? id) {
+                    ref
+                        .read(homeScreenProvider.notifier)
+                        .setIsFavoriteNearBy(isFav, id);
+                  },
+                ),
+              10.horizontalSpace,
+              if (state.newsList != null && state.newsList!.isNotEmpty)
+                EventsListSectionWidget(
+                  context: context,
+                  eventsList: state.newsList ?? [],
+                  heading: AppLocalizations.of(context).news,
+                  maxListLimit: 5,
+                  buttonText: AppLocalizations.of(context).all_news,
+                  buttonIconPath: imagePath['map_icon'] ?? "",
+                  isLoading: false,
+                  onButtonTap: () {
+                    ref
+                        .read(dashboardScreenProvider.notifier)
+                        .onScreenNavigation();
+                    ref.read(navigationProvider).navigateUsingPath(
+                        path: selectedEventListScreenPath,
+                        context: context,
+                        params: SelectedEventListScreenParameter(
+                            cityId: 1,
+                            listHeading: AppLocalizations.of(context).news,
+                            categoryId: ListingCategoryId.news.eventId,
+                            onFavChange: () {
+                              ref.read(homeScreenProvider.notifier).getNews();
+                            }));
+                  },
+                  onFavClickCallback: () {
+                    ref.read(homeScreenProvider.notifier).getNews();
+                  },
+                  onHeadingTap: () {
+                    ref
+                        .read(dashboardScreenProvider.notifier)
+                        .onScreenNavigation();
+                    ref.read(navigationProvider).navigateUsingPath(
+                        path: selectedEventListScreenPath,
+                        context: context,
+                        params: SelectedEventListScreenParameter(
+                            cityId: 1,
+                            listHeading: AppLocalizations.of(context).news,
+                            categoryId: ListingCategoryId.news.eventId,
+                            onFavChange: () {
+                              ref.read(homeScreenProvider.notifier).getNews();
+                            }));
+                  },
+                  isFavVisible: true,
+                  onSuccess: (bool isFav, int? id) {
+                    ref
+                        .read(homeScreenProvider.notifier)
+                        .updateNewsIsFav(isFav, id);
+                  },
+                ),
+              if (ref.watch(homeScreenProvider).eventsList.isNotEmpty)
+                EventsListSectionWidget(
+                  context: context,
+                  eventsList: state.eventsList,
+                  heading: AppLocalizations.of(context).home_screen_today_event,
+                  maxListLimit: 3,
+                  buttonText: AppLocalizations.of(context).all_events,
+                  buttonIconPath: imagePath['calendar'] ?? "",
+                  isLoading: isLoading,
+                  onButtonTap: () {
+                    ref
+                        .read(dashboardScreenProvider.notifier)
+                        .onScreenNavigation();
+                    ref.read(navigationProvider).navigateUsingPath(
+                        path: allEventScreenPath,
+                        context: context,
+                        params: AllEventScreenParam(onFavChange: () {
+                          ref.read(homeScreenProvider.notifier).getEvents();
+                        }));
+                  },
+                  onFavClickCallback: () {
+                    ref.read(homeScreenProvider.notifier).getEvents();
+                  },
+                  onHeadingTap: () {
+                    ref
+                        .read(dashboardScreenProvider.notifier)
+                        .onScreenNavigation();
+                    ref.read(navigationProvider).navigateUsingPath(
+                        path: allEventScreenPath,
+                        context: context,
+                        params: AllEventScreenParam(onFavChange: () {
+                          ref.read(homeScreenProvider.notifier).getEvents();
+                        }));
+                  },
+                  onSuccess: (isFav, eventId) {
+                    ref
+                        .read(homeScreenProvider.notifier)
+                        .setIsFavoriteEvent(isFav, eventId);
+                  },
+                  isFavVisible: true,
+                ),
+              FeedbackCardWidget(
+                height: 270.h,
+                onTap: () {
                   ref
-                      .read(homeScreenProvider.notifier)
-                      .setIsFavoriteEvent(isFav, eventId);
+                      .read(dashboardScreenProvider.notifier)
+                      .onScreenNavigation();
+                  ref.read(navigationProvider).navigateUsingPath(
+                      path: '$homeScreenPath/$subShellFeedbackScreenPath',
+                      context: context);
                 },
-                isFavVisible: true,
               ),
-            FeedbackCardWidget(
-              height: 270.h,
-              onTap: () {
-                ref
-                    .read(dashboardScreenProvider.notifier)
-                    .onScreenNavigation();
-                ref.read(navigationProvider).navigateUsingPath(
-                    path: '$homeScreenPath/$subShellFeedbackScreenPath', context: context);
-              },
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
@@ -479,7 +479,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     context: context,
                                     path: eventDetailScreenPath,
                                     params: EventDetailScreenParams(
-                                        event: state.highlightsList[index]));
+                                        eventId:
+                                            state.highlightsList[index].id ??
+                                                0));
                               },
                               child: Row(
                                 children: [
@@ -534,7 +536,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   context: context,
                                   path: eventDetailScreenPath,
                                   params: EventDetailScreenParams(
-                                    event: listing,
+                                    eventId: listing.id ?? 0,
                                     onFavClick: () {
                                       ref
                                           .read(homeScreenProvider.notifier)

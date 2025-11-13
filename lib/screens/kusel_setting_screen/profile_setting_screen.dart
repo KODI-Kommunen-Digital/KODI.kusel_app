@@ -10,6 +10,7 @@ import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/toast_message.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/screens/kusel_setting_screen/kusel_setting_screen_controller.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../common_widgets/kusel_text_field.dart';
@@ -27,7 +28,7 @@ class ProfileSettingScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen>
-    with WidgetsBindingObserver{
+    with WidgetsBindingObserver {
   TextEditingController userNameTextEditingController = TextEditingController();
   TextEditingController emailTextEditingController = TextEditingController();
   TextEditingController phoneNumberTextEditingController =
@@ -58,7 +59,6 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen>
     });
 
     WidgetsBinding.instance.addObserver(this);
-
   }
 
   @override
@@ -71,7 +71,8 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      ref.read(kuselSettingScreenProvider.notifier)
+      ref
+          .read(kuselSettingScreenProvider.notifier)
           .getLocationPermissionStatus();
     }
   }
@@ -193,7 +194,9 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen>
                             context: context,
                             snackBarAlignment: Alignment.topCenter);
                       }, onError: (message) {
-                        showErrorToast(message: message, context: context,
+                        showErrorToast(
+                            message: message,
+                            context: context,
                             snackBarAlignment: Alignment.topCenter);
                       });
                     },
@@ -425,7 +428,14 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen>
                   value: state.isLocationPermissionGranted,
                   activeColor: Theme.of(context).indicatorColor,
                   onChanged: (value) async {
-                    await controller.requestOrHandleLocationPermission(value);
+                    final res = await controller
+                        .requestOrHandleLocationPermission(value);
+
+                    if (!res) {
+                      Future.microtask(() {
+                        openAppSettings();
+                      });
+                    }
                   }),
             ])
           ],
