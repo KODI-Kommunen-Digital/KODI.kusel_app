@@ -52,7 +52,7 @@ class FavoritesListScreenController
   LocaleManagerController localeManagerController;
   SignInStatusController signInStatusController;
 
-  Future<void> getFavoritesList(int pageNumber, {int? pageSize}) async {
+  Future<void> getFavoritesList(int pageNumber, {int? pageSize=19}) async {
     try {
       state = state.copyWith(loading: true, error: "");
 
@@ -218,14 +218,9 @@ class FavoritesListScreenController
     }
   }
 
-  void removeFavorite(bool isFavorite, int? id) {
+  void removeFavorite(int? id) {
     if (id == null) return;
 
-    // for (var listing in state.eventsList) {
-    //   if (listing.id == id) {
-    //     listing.isFavorite = isFavorite;
-    //   }
-    // }
     final updatedList =
         state.eventsList.where((listing) => listing.id != id).toList();
     state = state.copyWith(
