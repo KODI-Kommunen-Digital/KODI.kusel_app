@@ -167,12 +167,12 @@ class _ExploreScreenState extends ConsumerState<FavoritesListScreen> {
                       onSuccess: (bool isFav, int? id) {
                         ref
                             .read(favoritesListScreenProvider.notifier)
-                            .removeFavorite(isFav, id);
+                            .removeFavorite( id);
                       },
                       onFavClickCallback: () {
-                        // ref
-                        //     .read(favoritesListScreenProvider.notifier)
-                        //     .getFavoritesList();
+                        ref
+                            .read(favoritesListScreenProvider.notifier)
+                            .getFavoritesList(1);
                       },
                     ),
             if (state.isPaginationLoading) CircularProgressIndicator()
