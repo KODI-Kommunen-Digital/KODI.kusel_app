@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:kusel/app_router.dart';
 import 'package:kusel/screens/digifit_screens/brain_teaser_game/all_games/math_hunt/math_hunt_screen.dart';
 
 import '../all_games/boldi_finder/boldi_finder_screen.dart';
+import '../all_games/digit_dash/digit_dash_screen.dart';
 import '../all_games/flip_catch/flip_catch_screen.dart';
 import '../all_games/params/all_game_params.dart';
+import '../all_games/pictures_game/pictures_game_screen.dart';
 import 'enum/game_type.dart';
 
 class GameRegistry {
@@ -18,10 +19,9 @@ class GameRegistry {
     GameType.matheJagd: (params) => MathHuntScreen(
           mathHuntGameParams: params,
         ),
-    GameType.digitDash: (params) =>
-        _buildPlaceholder(GameType.digitDash, params),
+    GameType.digitDash: (params) => DigitDashScreen(digitDashParams: params),
     GameType.bilderSpiel: (params) =>
-        _buildPlaceholder(GameType.bilderSpiel, params),
+        PicturesGameScreen(picturesGameParams: params),
   };
 
   static String getGameRoutePath(int gameId) {

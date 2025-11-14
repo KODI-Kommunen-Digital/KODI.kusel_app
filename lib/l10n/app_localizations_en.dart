@@ -972,4 +972,40 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get an => 'To';
+
+  @override
+  String get digit_dash_game_desc => 'Ready for DigitDash?';
+
+  @override
+  String get abort_digit_dash => 'Abort Digit Dash?';
+
+  @override
+  String get digit_dash_dialog_title => 'note';
+
+  @override
+  String get digit_dash_dialog_forbidden_desc =>
+      'The following numbers are forbidden! You must NOT touch them, but skip them. Remember them well!';
+
+  @override
+  String get digit_dash_dialog_target_desc_odd =>
+      'Only tap the ODD numbers in order!';
+
+  @override
+  String get digit_dash_dialog_target_desc_even =>
+      'Only tap the EVEN numbers in order!';
+
+  @override
+  String get understood => 'understood';
+
+  @override
+  String get odd_blue => 'ODD_BLUE';
+
+  @override
+  String get even_red => 'EVEN_RED';
+
+  @override
+  String get select_image => 'Select Missing Image';
+
+  @override
+  String get abort_pictures_game => 'Abort Picture\'s Game';
 }

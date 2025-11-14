@@ -1975,6 +1975,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'To'**
   String get an;
+
+  /// No description provided for @digit_dash_game_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready for DigitDash?'**
+  String get digit_dash_game_desc;
+
+  /// No description provided for @abort_digit_dash.
+  ///
+  /// In en, this message translates to:
+  /// **'Abort Digit Dash?'**
+  String get abort_digit_dash;
+
+  /// No description provided for @digit_dash_dialog_title.
+  ///
+  /// In en, this message translates to:
+  /// **'note'**
+  String get digit_dash_dialog_title;
+
+  /// No description provided for @digit_dash_dialog_forbidden_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'The following numbers are forbidden! You must NOT touch them, but skip them. Remember them well!'**
+  String get digit_dash_dialog_forbidden_desc;
+
+  /// No description provided for @digit_dash_dialog_target_desc_odd.
+  ///
+  /// In en, this message translates to:
+  /// **'Only tap the ODD numbers in order!'**
+  String get digit_dash_dialog_target_desc_odd;
+
+  /// No description provided for @digit_dash_dialog_target_desc_even.
+  ///
+  /// In en, this message translates to:
+  /// **'Only tap the EVEN numbers in order!'**
+  String get digit_dash_dialog_target_desc_even;
+
+  /// No description provided for @understood.
+  ///
+  /// In en, this message translates to:
+  /// **'understood'**
+  String get understood;
+
+  /// No description provided for @odd_blue.
+  ///
+  /// In en, this message translates to:
+  /// **'ODD_BLUE'**
+  String get odd_blue;
+
+  /// No description provided for @even_red.
+  ///
+  /// In en, this message translates to:
+  /// **'EVEN_RED'**
+  String get even_red;
+
+  /// No description provided for @select_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Missing Image'**
+  String get select_image;
+
+  /// No description provided for @abort_pictures_game.
+  ///
+  /// In en, this message translates to:
+  /// **'Abort Picture\'s Game'**
+  String get abort_pictures_game;
 }
 
 class _AppLocalizationsDelegate

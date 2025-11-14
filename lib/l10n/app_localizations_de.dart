@@ -980,4 +980,40 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get an => 'An';
+
+  @override
+  String get digit_dash_game_desc => 'Bereit für DigitDash?';
+
+  @override
+  String get abort_digit_dash => 'Digital-Dash abbrechen?';
+
+  @override
+  String get digit_dash_dialog_title => 'Hinweis';
+
+  @override
+  String get digit_dash_dialog_forbidden_desc =>
+      'Die folgenden Zahlen sind verboten! Diese darfst du NICHT antippen, sondern musst sie überspringen. Merke sie Dir gut!';
+
+  @override
+  String get digit_dash_dialog_target_desc_odd =>
+      'Tippe nur die ungeraden Zahlen der Reihe nach an!';
+
+  @override
+  String get digit_dash_dialog_target_desc_even =>
+      'Tippe nur die geraden Zahlen der Reihe nach an!';
+
+  @override
+  String get understood => 'Verstanden';
+
+  @override
+  String get odd_blue => 'SELTSAM_BLAU';
+
+  @override
+  String get even_red => 'GERADE_ROT';
+
+  @override
+  String get select_image => 'Fehlendes Bild auswählen';
+
+  @override
+  String get abort_pictures_game => 'Spiel von Picture abbrechen?';
 }
