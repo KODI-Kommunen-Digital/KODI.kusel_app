@@ -45,6 +45,15 @@ class ImageUtil {
     );
   }
 
+  // ADD THIS NEW METHOD - just returns the processed URL string
+  static String getProcessedImageUrl({
+    required String imageUrl,
+    required int sourceId,
+  }) {
+    return imageLoaderUtility(image: imageUrl, sourceId: sourceId);
+  }
+
+
   static Widget loadBase64Image(
       {required Uint8List bytes,
       required BuildContext context,

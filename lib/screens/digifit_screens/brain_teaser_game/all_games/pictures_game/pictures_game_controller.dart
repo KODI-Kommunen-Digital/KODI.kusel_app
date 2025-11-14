@@ -1,0 +1,805 @@
+import 'dart:async';
+import 'package:core/token_status.dart';
+import 'package:domain/model/request_model/digifit/brain_teaser_game/all_game_request_model.dart';
+import 'package:domain/model/request_model/digifit/brain_teaser_game/game_details_tracker_request_model.dart';
+import 'package:domain/model/response_model/digifit/brain_teaser_game/game_details_tracker_response_model.dart';
+import 'package:domain/model/response_model/digifit/brain_teaser_game/pictures_game_response_model.dart';
+import 'package:domain/usecase/digifit/brain_teaser_game/all_game_usecase.dart';
+import 'package:domain/usecase/digifit/brain_teaser_game/game_details_tracker_usecase.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:riverpod/riverpod.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart'; // ✅ ADD THIS
+
+import '../../../../../common_widgets/image_utility.dart';
+import '../../../../../locale/localization_manager.dart';
+import '../../../../../providers/refresh_token_provider.dart';
+import '../../enum/game_session_status.dart';
+import 'pictures_game_state.dart';
+
+final picturesGameControllerProvider = StateNotifierProvider.autoDispose
+    .family<PicturesGameController, PicturesGameState, int>(
+  (ref, levelId) => PicturesGameController(
+    brainTeaserGamesUseCase: ref.read(brainTeaserGamesUseCaseProvider),
+    tokenStatus: ref.read(tokenStatusProvider),
+    refreshTokenProvider: ref.read(refreshTokenProvider),
+    levelId: levelId,
+    localeManagerController: ref.read(
+      localeManagerProvider.notifier,
+    ),
+    brainTeaserGameDetailsTrackingUseCase:
+        ref.read(brainTeaserGameDetailsTrackingUseCaseProvider),
+  ),
+);
+
+class PicturesGameController extends StateNotifier<PicturesGameState> {
+  final BrainTeaserGamesUseCase brainTeaserGamesUseCase;
+  final TokenStatus tokenStatus;
+  final RefreshTokenProvider refreshTokenProvider;
+  final int levelId;
+  final LocaleManagerController localeManagerController;
+  final BrainTeaserGameDetailsTrackingUseCase
+      brainTeaserGameDetailsTrackingUseCase;
+
+  Timer? _memorizePairTimer;
+  Timer? _level3Timer;
+  Timer? _gameTimer;
+
+  PicturesGameController({
+    required this.brainTeaserGamesUseCase,
+    required this.tokenStatus,
+    required this.refreshTokenProvider,
+    required this.levelId,
+    required this.localeManagerController,
+    required this.brainTeaserGameDetailsTrackingUseCase,
+  }) : super(PicturesGameState.empty());
+
+  @override
+  void dispose() {
+    _memorizePairTimer?.cancel();
+    _level3Timer?.cancel();
+    _gameTimer?.cancel();
+    super.dispose();
+  }
+
+  void pauseGameTimer() {
+    if (!mounted) return;
+    state = state.copyWith(isTimerPaused: true);
+  }
+
+  void resumeGameTimer() {
+    if (!mounted) return;
+    state = state.copyWith(isTimerPaused: false);
+  }
+
+  void _stopGameTimer() {
+    _gameTimer?.cancel();
+    _gameTimer = null;
+  }
+
+  void _startGameTimer() {
+    _gameTimer?.cancel();
+
+    _gameTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+
+      if (state.isTimerPaused) {
+        return;
+      }
+
+      final newTime = state.timerSeconds - 1;
+
+      if (newTime <= 0) {
+        timer.cancel();
+
+        state = state.copyWith(
+          timerSeconds: 0,
+          isGamePlayEnabled: false,
+          isLoading: true,
+        );
+
+        trackGameProgress(
+          GameStageConstant.abort,
+          onSuccess: () {
+            if (mounted) {
+              state = state.copyWith(
+                isLoading: false,
+                showResult: true,
+                gameStage: GameStageConstant.abort,
+                timerSeconds: 0,
+              );
+            }
+          },
+        );
+      } else {
+        state = state.copyWith(timerSeconds: newTime);
+      }
+    });
+  }
+
+  Future<void> fetchGameData({
+    required int gameId,
+    required int levelId,
+  }) async {
+    if (!mounted) return;
+
+    state = state.copyWith(isLoading: true);
+
+    try {
+      await _executeWithTokenValidation(
+        onExecute: () => _fetchPicturesGame(gameId, levelId),
+        onError: () {
+          if (mounted) {
+            state = state.copyWith(isLoading: false);
+          }
+        },
+      );
+    } catch (e) {
+      _handleError('fetchGameData', e);
+    }
+  }
+
+  Future<void> restartGame(int gameId, int levelId) async {
+    if (!mounted) return;
+
+    _memorizePairTimer?.cancel();
+    _level3Timer?.cancel();
+    _stopGameTimer();
+    state = state.resetToInitial();
+    await fetchGameData(gameId: gameId, levelId: levelId);
+  }
+
+  Future<void> startGame() async {
+    if (!mounted) return;
+
+    if (state.isLevel3) {
+      debugPrint('Level 3: Starting game - switching to display images');
+
+      state = state.copyWith(
+        gameStage: GameStageConstant.progress,
+        isGamePlayEnabled: false,
+      );
+
+      _level3Timer?.cancel();
+      _level3Timer = Timer(const Duration(seconds: 3), () {
+        if (!mounted) return;
+        debugPrint('Level 3: 5 seconds elapsed, showing dialog');
+
+        state = state.copyWith(
+          showLevel3Dialog: true,
+          level3TimerComplete: true,
+        );
+      });
+    } else if (state.isLevel2) {
+      if (!state.memorizationComplete) {
+        debugPrint('Memorization not complete yet, cannot start');
+        return;
+      }
+
+      debugPrint('Start button clicked - moving to check phase');
+      _memorizePairTimer?.cancel();
+      _startGameTimer();
+      _startCheckPhase();
+    } else {
+      if (!state.canStartGame) return;
+
+      state = state.copyWith(
+        gameStage: GameStageConstant.progress,
+        isGamePlayEnabled: true,
+        revealedCells: [],
+        showResult: false,
+        clearFirstSelection: true,
+        clearResult: true,
+      );
+
+      _startGameTimer();
+    }
+  }
+
+  Future<void> handleLevel3ImageSelection(int selectedImageId) async {
+    if (!mounted || !state.isLevel3) return;
+
+    debugPrint('Level 3: User selected image ID: $selectedImageId');
+
+    final missingImageList = state.gameData?.missingImageList ?? [];
+    if (missingImageList.isEmpty) return;
+
+    final missingImageId = missingImageList.first.id;
+    debugPrint('Level 3: Missing image ID: $missingImageId');
+
+    state = state.copyWith(
+      showLevel3Dialog: false,
+      selectedImageId: selectedImageId,
+    );
+
+    final isMatch = selectedImageId.toString() == missingImageId.toString();
+    debugPrint('Level 3: Match result: $isMatch');
+
+    final missingRow = state.missingImageRow;
+    final missingCol = state.missingImageCol;
+
+    debugPrint(
+        'Level 3: Missing cell position: row=$missingRow, col=$missingCol');
+
+    if (isMatch) {
+      debugPrint('Level 3: Correct answer!');
+
+      if (missingRow != null && missingCol != null) {
+        final displayList = state.gameData?.displayImagesList ?? [];
+        final List<RevealedCell> allRevealedCells = [];
+
+        for (int i = 0; i < displayList.length; i++) {
+          final displayImage = displayList[i];
+          final row = i ~/ state.columns;
+          final col = i % state.columns;
+
+          if (row == missingRow && col == missingCol) {
+            continue;
+          }
+
+          if (displayImage.image != null &&
+              displayImage.image!.isNotEmpty &&
+              displayImage.image != 'admin/games/picturegame/empty.png') {
+            allRevealedCells.add(
+              RevealedCell(
+                row: row,
+                col: col,
+                imageId: displayImage.id.toString(),
+              ),
+            );
+          }
+        }
+
+        allRevealedCells.add(
+          RevealedCell(
+            row: missingRow,
+            col: missingCol,
+            imageId: selectedImageId.toString(),
+          ),
+        );
+
+        debugPrint('Level 3: Total revealed cells: ${allRevealedCells.length}');
+
+        state = state.copyWith(
+          revealedCells: allRevealedCells,
+          level3Completed: true,
+        );
+
+        await Future.delayed(const Duration(milliseconds: 300));
+
+        await trackGameProgress(
+          GameStageConstant.complete,
+          onSuccess: () {
+            if (mounted) {
+              state = state.copyWith(
+                showResult: true,
+                isAnswerCorrect: true,
+                gameStage: GameStageConstant.complete,
+              );
+            }
+          },
+        );
+      }
+    } else {
+      final displayList = state.gameData?.displayImagesList ?? [];
+      final List<RevealedCell> displayRevealedCells = [];
+
+      for (int i = 0; i < displayList.length; i++) {
+        final displayImage = displayList[i];
+        final row = i ~/ state.columns;
+        final col = i % state.columns;
+
+        if (row == missingRow && col == missingCol) {
+          continue;
+        }
+
+        if (displayImage.image != null &&
+            displayImage.image!.isNotEmpty &&
+            displayImage.image != 'admin/games/picturegame/empty.png') {
+          displayRevealedCells.add(
+            RevealedCell(
+              row: row,
+              col: col,
+              imageId: displayImage.id.toString(),
+            ),
+          );
+        }
+      }
+
+      await trackGameProgress(
+        GameStageConstant.abort,
+        onSuccess: () {
+          if (mounted) {
+            state = state.copyWith(
+              showResult: true,
+              isAnswerCorrect: false,
+              gameStage: GameStageConstant.abort,
+              wrongRow: missingRow,
+              wrongCol: missingCol,
+              revealedCells: displayRevealedCells,
+            );
+          }
+        },
+      );
+    }
+  }
+
+  Future<void> _preloadAllPairImages() async {
+    final memorizePairs = state.gameData?.memorizePairs ?? [];
+    final cacheManager = DefaultCacheManager();
+
+    // Set loading = true
+    state = state.copyWith(isLoading: true);
+
+    try {
+
+      for (var pair in memorizePairs) {
+        if (pair.image1 != null && pair.image1!.isNotEmpty) {
+          final url1 = ImageUtil.getProcessedImageUrl(
+            imageUrl: pair.image1!,
+            sourceId: 1,
+          );
+          await cacheManager.getSingleFile(url1);
+        }
+        if (pair.image2 != null && pair.image2!.isNotEmpty) {
+          final url2 = ImageUtil.getProcessedImageUrl(
+            imageUrl: pair.image2!,
+            sourceId: 1,
+          );
+          await cacheManager.getSingleFile(url2);
+        }
+      }
+
+    } catch (e) {
+    } finally {
+      // ✅ Loading complete
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> _startMemorizePhase() async {
+    if (!mounted) return;
+
+    final memorizePairs = state.gameData?.memorizePairs ?? [];
+    if (memorizePairs.isEmpty) return;
+
+    debugPrint('Starting memorize phase with ${memorizePairs.length} pairs');
+
+    state = state.copyWith(
+      gameStage: GameStageConstant.initial,
+      gamePhase: GamePhase.memorize,
+      currentPairIndex: 0,
+      showMemorizePair: true,
+      showCheckPair: false,
+      isGamePlayEnabled: false,
+    );
+
+    _showNextMemorizePair();
+  }
+
+  void _showNextMemorizePair() {
+    if (!mounted) return;
+
+    final memorizePairs = state.gameData?.memorizePairs ?? [];
+    final currentIndex = state.currentPairIndex;
+
+    if (currentIndex >= memorizePairs.length) {
+      debugPrint('All memorize pairs shown, waiting for Start button');
+      _memorizePairTimer?.cancel();
+      state = state.copyWith(
+        showMemorizePair: true,
+        currentPairIndex: memorizePairs.length - 1,
+        memorizationComplete: true,
+      );
+      return;
+    }
+
+    debugPrint(
+        'Showing memorize pair ${currentIndex + 1}/${memorizePairs.length}');
+
+    state = state.copyWith(
+      showMemorizePair: true,
+      currentPairIndex: currentIndex,
+    );
+
+    _memorizePairTimer?.cancel();
+    _memorizePairTimer = Timer(const Duration(seconds: 2), () {
+      if (!mounted) return;
+
+      state = state.copyWith(
+        currentPairIndex: currentIndex + 1,
+      );
+
+      _showNextMemorizePair();
+    });
+  }
+
+  void _startCheckPhase() {
+    if (!mounted) return;
+
+    debugPrint('Starting check phase');
+
+    state = state.copyWith(
+      gameStage: GameStageConstant.progress,
+      gamePhase: GamePhase.check,
+      currentPairIndex: 0,
+      showMemorizePair: false,
+      showCheckPair: true,
+      isGamePlayEnabled: true,
+    );
+  }
+
+  Future<void> handleUserAnswer(bool userAnswer) async {
+    if (!mounted || !state.canPlayGame || !state.isCheckPhase) return;
+
+    final checkPairs = state.gameData?.checkPairs ?? [];
+    final currentIndex = state.currentPairIndex;
+
+    if (currentIndex >= checkPairs.length) return;
+
+    final currentPair = checkPairs[currentIndex];
+    final isCorrect = currentPair.isCorrect ?? false;
+
+    debugPrint('User answered: $userAnswer, Correct answer: $isCorrect');
+
+    state = state.copyWith(isGamePlayEnabled: false);
+
+    if (userAnswer == isCorrect) {
+      final nextIndex = currentIndex + 1;
+
+      if (nextIndex >= checkPairs.length) {
+        debugPrint('All check pairs completed successfully!');
+
+        await trackGameProgress(
+          GameStageConstant.complete,
+          onSuccess: () {
+            if (mounted) {
+              state = state.copyWith(
+                showResult: true,
+                isAnswerCorrect: true,
+                gameStage: GameStageConstant.complete,
+                showCheckPair: false,
+              );
+            }
+          },
+        );
+      } else {
+        debugPrint('Correct! Moving to next check pair: $nextIndex');
+
+        await Future.delayed(const Duration(milliseconds: 300));
+
+        if (mounted) {
+          state = state.copyWith(
+            currentPairIndex: nextIndex,
+            isGamePlayEnabled: true,
+          );
+        }
+      }
+    } else {
+      debugPrint('Wrong answer! Game aborted.');
+
+      await trackGameProgress(
+        GameStageConstant.abort,
+        onSuccess: () {
+          if (mounted) {
+            state = state.copyWith(
+              showResult: true,
+              isAnswerCorrect: false,
+              gameStage: GameStageConstant.abort,
+            );
+          }
+        },
+      );
+    }
+  }
+
+  Future<void> handleCellTap(int row, int col) async {
+    if (!mounted || !state.canPlayGame || state.isLevel2 || state.isLevel3)
+      return;
+
+    debugPrint('Cell tapped: row=$row, col=$col');
+
+    if (state.isCellRevealed(row, col)) {
+      debugPrint('Cell already revealed, ignoring tap');
+      return;
+    }
+
+    final pictureGrid = state.gameData?.pictureGrid ?? [];
+    if (pictureGrid.isEmpty) return;
+
+    final index = row * state.columns + col;
+    if (index >= pictureGrid.length) return;
+
+    final tappedImageId = pictureGrid[index].id?.toString() ?? '';
+    debugPrint('Tapped image ID: $tappedImageId');
+
+    if (!state.hasFirstSelection) {
+      debugPrint('First selection made');
+
+      final updatedRevealed = List<RevealedCell>.from(state.revealedCells);
+      updatedRevealed.add(RevealedCell(
+        row: row,
+        col: col,
+        imageId: tappedImageId,
+      ));
+
+      state = state.copyWith(
+        firstSelectedRow: row,
+        firstSelectedCol: col,
+        firstSelectedImageId: tappedImageId,
+        revealedCells: updatedRevealed,
+      );
+      return;
+    }
+
+    final firstImageId = state.firstSelectedImageId ?? '';
+    final isMatch = firstImageId == tappedImageId;
+
+    debugPrint('Second selection made. Match: $isMatch');
+
+    if (isMatch) {
+      final updatedRevealed = List<RevealedCell>.from(state.revealedCells);
+      updatedRevealed.add(RevealedCell(
+        row: row,
+        col: col,
+        imageId: tappedImageId,
+      ));
+
+      state = state.copyWith(
+        revealedCells: updatedRevealed,
+        clearFirstSelection: true,
+      );
+
+      final totalCells = state.rows * state.columns;
+      if (updatedRevealed.length == totalCells) {
+        _stopGameTimer();
+
+        await trackGameProgress(
+          GameStageConstant.complete,
+          onSuccess: () {
+            if (mounted) {
+              state = state.copyWith(
+                showResult: true,
+                isAnswerCorrect: true,
+                gameStage: GameStageConstant.complete,
+                isGamePlayEnabled: false,
+              );
+            }
+          },
+        );
+      }
+    } else {
+      final updatedRevealed = List<RevealedCell>.from(state.revealedCells);
+      updatedRevealed.add(RevealedCell(
+        row: row,
+        col: col,
+        imageId: tappedImageId,
+      ));
+
+      state = state.copyWith(
+        revealedCells: updatedRevealed,
+        isGamePlayEnabled: false,
+      );
+
+      await Future.delayed(const Duration(milliseconds: 500));
+
+      _stopGameTimer();
+      state = state.copyWith(isLoading: true);
+
+      await trackGameProgress(
+        GameStageConstant.abort,
+        onSuccess: () {
+          if (mounted) {
+            state = state.copyWith(
+              showResult: true,
+              isAnswerCorrect: false,
+              wrongRow: state.firstSelectedRow,
+              wrongCol: state.firstSelectedCol,
+              wrongRow2: row,
+              wrongCol2: col,
+              gameStage: GameStageConstant.abort,
+              isLoading: false,
+            );
+          }
+        },
+      );
+    }
+  }
+
+  Future<void> trackGameProgress(
+    GameStageConstant gameStage, {
+    VoidCallback? onSuccess,
+  }) async {
+    if (!mounted) return;
+
+    final sessionId = state.sessionId;
+    if (sessionId == null) return;
+
+    try {
+      state = state.copyWith(isLoading: true);
+
+      await _executeWithTokenValidation(
+        onExecute: () => _trackGameDetails(sessionId, gameStage, onSuccess),
+        onError: () {
+          if (mounted) {
+            state = state.copyWith(isLoading: false);
+          }
+        },
+      );
+    } catch (e) {
+      _handleError('trackGameProgress', e);
+    }
+  }
+
+  Future<void> _executeWithTokenValidation({
+    required Future<void> Function() onExecute,
+    required VoidCallback onError,
+  }) async {
+    final isTokenExpired = tokenStatus.isAccessTokenExpired();
+
+    if (isTokenExpired) {
+      await refreshTokenProvider.getNewToken(
+        onError: onError,
+        onSuccess: onExecute,
+      );
+    } else {
+      await onExecute();
+    }
+  }
+
+  Future<void> _fetchPicturesGame(int gameId, int levelId) async {
+    if (!mounted) return;
+
+    try {
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
+      final requestModel = AllGamesRequestModel(
+          gameId: gameId,
+          levelId: levelId,
+          translate:
+              "${currentLocale.languageCode}-${currentLocale.countryCode}");
+
+      final result = await brainTeaserGamesUseCase.call(
+        requestModel,
+        PicturesGameResponseModel(),
+      );
+
+      result.fold(
+        (error) {
+          if (mounted) {
+            state = state.copyWith(
+              isLoading: false,
+              errorMessage: error.toString(),
+            );
+          }
+        },
+        (response) async {
+          if (!mounted) return;
+
+          final data = (response as PicturesGameResponseModel).data;
+
+          int rows = 4;
+          int columns = 3;
+
+          final isLevel3 = data?.allImagesList != null &&
+              data!.allImagesList!.isNotEmpty &&
+              data.displayImagesList != null &&
+              data.displayImagesList!.isNotEmpty &&
+              data.missingImageList != null &&
+              data.missingImageList!.isNotEmpty;
+
+          if (isLevel3) {
+            rows = 4;
+            columns = 4;
+            debugPrint('Level 3 detected: Using 4x4 grid');
+          }
+
+          final isLevel2 =
+              data?.memorizePairs != null && data!.memorizePairs!.isNotEmpty;
+
+          final timerValue = data?.timer ?? 60;
+
+          int? cachedRow;
+          int? cachedCol;
+          if (isLevel3 && data?.displayImagesList != null) {
+            final displayList = data!.displayImagesList!;
+            for (int i = 0; i < displayList.length; i++) {
+              final img = displayList[i].image;
+              if (img == null ||
+                  img.isEmpty ||
+                  img == 'admin/games/picturegame/empty.png') {
+                cachedRow = i ~/ columns;
+                cachedCol = i % columns;
+                debugPrint(
+                    'Cached missing cell position: row=$cachedRow, col=$cachedCol');
+                break;
+              }
+            }
+          }
+
+          state = state.copyWith(
+            isLoading: false,
+            gameData: data,
+            gameStage: GameStageConstant.initial,
+            rows: rows,
+            columns: columns,
+            timerSeconds: timerValue,
+            maxTimerSeconds: timerValue,
+            gamePhase: GamePhase.memorize,
+            currentPairIndex: 0,
+            showMemorizePair: isLevel2 ? true : false,
+            showCheckPair: false,
+            showLevel3Dialog: false,
+            level3TimerComplete: false,
+            level3Completed: false,
+            cachedMissingRow: cachedRow,
+            cachedMissingCol: cachedCol,
+          );
+
+          if (isLevel2) {
+            await _preloadAllPairImages();
+
+            await Future.delayed(const Duration(milliseconds: 300));
+
+            if (mounted) {
+              _startMemorizePhase();
+            }
+          }
+        },
+      );
+    } catch (e) {
+      _handleError('_fetchPicturesGame', e);
+    }
+  }
+
+  Future<void> _trackGameDetails(
+    int sessionId,
+    GameStageConstant gameStage,
+    VoidCallback? onSuccess,
+  ) async {
+    if (!mounted) return;
+
+    try {
+      final requestModel = GamesTrackerRequestModel(
+        sessionId: sessionId,
+        activityStatus: gameStage.name,
+      );
+
+      final result = await brainTeaserGameDetailsTrackingUseCase.call(
+        requestModel,
+        GamesTrackerResponseModel(),
+      );
+
+      result.fold(
+        (error) {
+          if (mounted) {
+            state = state.copyWith(
+              isLoading: false,
+              errorMessage: error.toString(),
+            );
+          }
+        },
+        (response) {
+          if (mounted) {
+            state = state.copyWith(isLoading: false);
+          }
+          onSuccess?.call();
+        },
+      );
+    } catch (e) {
+      _handleError('_trackGameDetails', e);
+    }
+  }
+
+  void _handleError(String methodName, dynamic error) {
+    if (!mounted) return;
+
+    debugPrint('Error in $methodName: $error');
+    state = state.copyWith(
+      isLoading: false,
+      errorMessage: error.toString(),
+    );
+  }
+}
