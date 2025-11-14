@@ -35,11 +35,13 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
   @override
   void initState() {
     Future.microtask(() {
-      final currentPageNumber = ref.read(allEventScreenProvider).currentPageNo;
-      ref.read(allEventScreenProvider.notifier).getListing(currentPageNumber);
+      final state = ref.watch(allEventScreenProvider);
+      final controller = ref.read(allEventScreenProvider.notifier);
+
+      controller.getListing(state.currentPageNo);
       ref.read(filterScreenProvider.notifier).onReset();
       ref.read(datePickerProvider.notifier).resetDates();
-      ref.read(allEventScreenProvider.notifier).isUserLoggedIn();
+      controller.isUserLoggedIn();
     });
     super.initState();
   }
@@ -49,11 +51,14 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
     final currentPageNumber = ref.read(allEventScreenProvider).currentPageNo;
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: SafeArea(child: _buildBody(context, currentPageNumber)),
+      body: SafeArea(child: _buildBody(context)),
     ).loaderDialog(context, ref.watch(allEventScreenProvider).isLoading);
   }
 
-  Widget _buildBody(BuildContext context, int currentPageNumber) {
+  Widget _buildBody(BuildContext context) {
+    final controller = ref.read(allEventScreenProvider.notifier);
+    final state = ref.watch(allEventScreenProvider);
+
     return Stack(
       children: [
         NotificationListener<OverscrollIndicatorNotification>(
@@ -67,154 +72,32 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
               children: [
                 CommonBackgroundClipperWidget(
                   clipperType: UpstreamWaveClipper(),
-                  height: 130.h,
+                  height: 110.h,
                   headingTextLeftMargin: 20,
                   imageUrl: imagePath['home_screen_background'] ?? '',
                   isStaticImage: true,
                   isBackArrowEnabled: false,
                   headingText: AppLocalizations.of(context).events,
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 12.w),
-                  width: MediaQuery.of(context).size.width,
-                  alignment: Alignment.centerRight,
-                  child: GestureDetector(
-                    onTap: () {
-                      final state = ref.read(allEventScreenProvider);
-
-                      ref
-                          .read(navigationProvider)
-                          .navigateUsingPath(
-                              path: newFilterScreenPath,
-                              context: context,
-                              params: NewFilterScreenParams(
-                                  selectedCityId: state.selectedCityId,
-                                  selectedCityName: state.selectedCityName,
-                                  radius: state.radius,
-                                  startDate: state.startDate,
-                                  endDate: state.endDate,
-                                  selectedCategoryName:
-                                      List.from(state.selectedCategoryNameList),
-                                  selectedCategoryId:
-                                      List.from(state.selectedCategoryIdList)))
-                          .then((value) async {
-                        if (value != null) {
-                          final res = value as NewFilterScreenParams;
-
-                          await ref
-                              .read(allEventScreenProvider.notifier)
-                              .applyNewFilterValues(
-                                  res.selectedCategoryName,
-                                  res.selectedCityId,
-                                  res.selectedCityName,
-                                  res.radius,
-                                  res.startDate,
-                                  res.endDate,
-                                  res.selectedCategoryId);
-
-                          await ref
-                              .read(allEventScreenProvider.notifier)
-                              .getListing(1);
-                        }
-                      });
-                    },
-                    child: Badge(
-                      backgroundColor: Colors.transparent,
-                      alignment: Alignment.topCenter,
-                      isLabelVisible: ref
-                              .watch(allEventScreenProvider)
-                              .numberOfFiltersApplied !=
-                          0,
-                      label: Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 4.w, vertical: 4.h),
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Theme.of(context).indicatorColor,
-                            border: Border.all(
-                                color:
-                                    Theme.of(context).colorScheme.secondary)),
-                        child: Center(
-                          child: textBoldMontserrat(
-                              text: ref
-                                  .watch(allEventScreenProvider)
-                                  .numberOfFiltersApplied
-                                  .toString(),
-                              fontSize: 14),
-                        ),
-                      ),
-                      child: ImageUtil.loadLocalSvgImage(
-                          imageUrl: 'filter_button',
-                          context: context,
-                          height: 35.h,
-                          width: 35.w),
-                    ),
-                  ),
-                ),
+                _buildFilter(context),
                 8.verticalSpace,
-                if (ref
-                    .watch(allEventScreenProvider)
-                    .selectedCategoryNameList
-                    .isNotEmpty)
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Wrap(
+                if (state.selectedCategoryNameList.isNotEmpty)
+                  Padding(
+                    padding:  EdgeInsets.symmetric(horizontal: 16.w,vertical: 8.h),
+                    child: Align(
+                      alignment: Alignment.topLeft,
+                      child: Wrap(
+                        alignment: WrapAlignment.start,
+                        runAlignment: WrapAlignment.start,
                         spacing: 8.w,
                         runSpacing: 6.h,
-                        children: ref
-                            .watch(allEventScreenProvider)
-                            .selectedCategoryNameList
-                            .map((value) {
+                        children: state.selectedCategoryNameList.map((value) {
                           return _buildChip(value);
                         }).toList(),
                       ),
-                      8.verticalSpace,
-                    ],
+                    ),
                   ),
-                if (!ref.watch(allEventScreenProvider).isLoading)
-                  ref.watch(allEventScreenProvider).listingList.isEmpty
-                      ? Center(
-                          child: textHeadingMontserrat(
-                              text: AppLocalizations.of(context).no_data),
-                        )
-                      : EventsListSectionWidget(
-                          eventsList:
-                              ref.watch(allEventScreenProvider).listingList,
-                          heading: null,
-                          maxListLimit: ref
-                              .watch(allEventScreenProvider)
-                              .listingList
-                              .length,
-                          buttonText: null,
-                          buttonIconPath: null,
-                          isLoading: false,
-                          onButtonTap: () {},
-                          context: context,
-                          isFavVisible: true,
-                          onHeadingTap: () {},
-                          onSuccess: (bool isFav, int? id) {
-                            ref
-                                .read(allEventScreenProvider.notifier)
-                                .updateIsFav(isFav, id);
-                            widget.allEventScreenParam.onFavChange();
-                          },
-                          onFavClickCallback: () {
-                            ref
-                                .read(allEventScreenProvider.notifier)
-                                .getListing(currentPageNumber);
-                          },
-                          isMultiplePagesList: ref
-                              .read(allEventScreenProvider)
-                              .isLoadMoreButtonEnabled,
-                          onLoadMoreTap: () {
-                            ref
-                                .read(allEventScreenProvider.notifier)
-                                .onLoadMoreList(currentPageNumber);
-                          },
-                          isMoreListLoading: ref
-                              .watch(allEventScreenProvider)
-                              .isMoreListLoading),
+                if (!state.isLoading) _buildList(context)
               ],
             ),
           ),
@@ -249,5 +132,113 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
           fontSize: 13,
           color: Theme.of(context).textTheme.displayMedium!.color),
     );
+  }
+
+  _buildFilter(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 12.w),
+      width: MediaQuery.of(context).size.width,
+      alignment: Alignment.centerRight,
+      child: GestureDetector(
+        onTap: () {
+          final state = ref.read(allEventScreenProvider);
+
+          ref
+              .read(navigationProvider)
+              .navigateUsingPath(
+                  path: newFilterScreenPath,
+                  context: context,
+                  params: NewFilterScreenParams(
+                      selectedCityId: state.selectedCityId,
+                      selectedCityName: state.selectedCityName,
+                      radius: state.radius,
+                      startDate: state.startDate,
+                      endDate: state.endDate,
+                      selectedCategoryName:
+                          List.from(state.selectedCategoryNameList),
+                      selectedCategoryId:
+                          List.from(state.selectedCategoryIdList)))
+              .then((value) async {
+            if (value != null) {
+              final res = value as NewFilterScreenParams;
+
+              await ref
+                  .read(allEventScreenProvider.notifier)
+                  .applyNewFilterValues(
+                      res.selectedCategoryName,
+                      res.selectedCityId,
+                      res.selectedCityName,
+                      res.radius,
+                      res.startDate,
+                      res.endDate,
+                      res.selectedCategoryId);
+
+              await ref.read(allEventScreenProvider.notifier).getListing(1);
+            }
+          });
+        },
+        child: Badge(
+          backgroundColor: Colors.transparent,
+          alignment: Alignment.topCenter,
+          isLabelVisible:
+              ref.watch(allEventScreenProvider).numberOfFiltersApplied != 0,
+          label: Container(
+            padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
+            decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Theme.of(context).indicatorColor,
+                border:
+                    Border.all(color: Theme.of(context).colorScheme.secondary)),
+            child: Center(
+              child: textBoldMontserrat(
+                  text: ref
+                      .watch(allEventScreenProvider)
+                      .numberOfFiltersApplied
+                      .toString(),
+                  fontSize: 14),
+            ),
+          ),
+          child: ImageUtil.loadLocalSvgImage(
+              imageUrl: 'filter_button',
+              context: context,
+              height: 35.h,
+              width: 35.w),
+        ),
+      ),
+    );
+  }
+
+  _buildList(BuildContext context) {
+    final controller = ref.read(allEventScreenProvider.notifier);
+    final state = ref.watch(allEventScreenProvider);
+
+    return (state.listingList.isEmpty)
+        ? Center(
+            child: textHeadingMontserrat(
+                text: AppLocalizations.of(context).no_data),
+          )
+        : EventsListSectionWidget(
+            eventsList: state.listingList,
+            heading: null,
+            maxListLimit: state.listingList.length,
+            buttonText: null,
+            buttonIconPath: null,
+            isLoading: false,
+            onButtonTap: () {},
+            context: context,
+            isFavVisible: true,
+            onHeadingTap: () {},
+            onSuccess: (bool isFav, int? id) {
+              controller.updateIsFav(isFav, id);
+              widget.allEventScreenParam.onFavChange();
+            },
+            onFavClickCallback: () {
+              controller.getListing(state.currentPageNo);
+            },
+            isMultiplePagesList: state.isLoadMoreButtonEnabled,
+            onLoadMoreTap: () {
+              controller.onLoadMoreList(state.currentPageNo);
+            },
+            isMoreListLoading: state.isMoreListLoading);
   }
 }

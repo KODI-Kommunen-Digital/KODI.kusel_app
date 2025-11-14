@@ -65,17 +65,9 @@ class _NewFilterScreenState extends ConsumerState<NewFilterScreen> {
       onPopInvokedWithResult: (value, _) {},
       child: Scaffold(
           appBar: _buildAppBar(context),
-          body: SingleChildScrollView(
-            child: Stack(
-              children: [
-                _buildBody(context),
-                if (ref.watch(newFilterScreenControllerProvider).isLoading)
-                  Center(
-                    child: CircularProgressIndicator(),
-                  )
-              ],
-            ),
-          )),
+          body: ref.watch(newFilterScreenControllerProvider).isLoading?Center(
+            child: CircularProgressIndicator(),
+          ):_buildBody(context)),
     );
   }
 
@@ -111,120 +103,132 @@ class _NewFilterScreenState extends ConsumerState<NewFilterScreen> {
   }
 
   _buildBody(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          32.verticalSpace,
-          textRegularMontserrat(text: AppLocalizations.of(context).period),
-          4.verticalSpace,
-          KuselTextField(
-            onTap: () async {
-              await showCommonDateRangeDialog(
-                context: context,
-                startDate: KuselDateUtils.checkDatesAreSame(
-                        ref.read(newFilterScreenControllerProvider).startDate,
-                        defaultDate)
-                    ? null
-                    : ref.read(newFilterScreenControllerProvider).startDate,
-                endDate: KuselDateUtils.checkDatesAreSame(
-                        ref.read(newFilterScreenControllerProvider).endDate,
-                        defaultDate)
-                    ? null
-                    : ref.read(newFilterScreenControllerProvider).endDate,
-                onDateChanged: (result) {
-                  debugPrint("Date range changed: $result");
+    return SingleChildScrollView(
+      physics: ClampingScrollPhysics(),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        child: Column(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                32.verticalSpace,
+                Padding(
+                  padding:  EdgeInsets.only(left:6.w),
+                  child: textRegularMontserrat(text: AppLocalizations.of(context).period,
+                  fontStyle: FontStyle.italic),
+                ),
+                4.verticalSpace,
+                KuselTextField(
+                  onTap: () async {
+                    await showCommonDateRangeDialog(
+                      context: context,
+                      startDate: KuselDateUtils.checkDatesAreSame(
+                              ref.read(newFilterScreenControllerProvider).startDate,
+                              defaultDate)
+                          ? null
+                          : ref.read(newFilterScreenControllerProvider).startDate,
+                      endDate: KuselDateUtils.checkDatesAreSame(
+                              ref.read(newFilterScreenControllerProvider).endDate,
+                              defaultDate)
+                          ? null
+                          : ref.read(newFilterScreenControllerProvider).endDate,
+                      onDateChanged: (result) {
+                        debugPrint("Date range changed: $result");
 
-                  if (result.isNotEmpty) {
-                    periodTextEditingController.text = "";
-                    DateTime startDate = result[0] ?? defaultDate;
-                    DateTime endDate = (result.length > 1 && result[1] != null)
-                        ? result[1]!
-                        : defaultDate;
+                        if (result.isNotEmpty) {
+                          periodTextEditingController.text = "";
+                          DateTime startDate = result[0] ?? defaultDate;
+                          DateTime endDate = (result.length > 1 && result[1] != null)
+                              ? result[1]!
+                              : defaultDate;
 
-                    if (!KuselDateUtils.checkDatesAreSame(
-                        startDate, defaultDate)) {
-                      periodTextEditingController.text =
-                          KuselDateUtils.formatDateInFormatYYYYMMDD(
-                              startDate.toString());
-                    }
+                          if (!KuselDateUtils.checkDatesAreSame(
+                              startDate, defaultDate)) {
+                            periodTextEditingController.text =
+                                KuselDateUtils.formatDateInFormatYYYYMMDD(
+                                    startDate.toString());
+                          }
 
-                    if (!KuselDateUtils.checkDatesAreSame(
-                        endDate, defaultDate)) {
-                      periodTextEditingController.text =
-                          "${periodTextEditingController.text} ${AppLocalizations.of(context).to} ${KuselDateUtils.formatDateInFormatYYYYMMDD(endDate.toString())}";
-                    }
+                          if (!KuselDateUtils.checkDatesAreSame(
+                              endDate, defaultDate)) {
+                            periodTextEditingController.text =
+                                "${periodTextEditingController.text} ${AppLocalizations.of(context).to} ${KuselDateUtils.formatDateInFormatYYYYMMDD(endDate.toString())}";
+                          }
 
-                    ref
-                        .read(newFilterScreenControllerProvider.notifier)
-                        .updateStartEndDate(startDate, endDate);
-                  }
-                },
-              );
-            },
-            readOnly: true,
-            textEditingController: periodTextEditingController,
-            suffixIcon: Padding(
-              padding:  EdgeInsets.only(right: 16.w),
-              child: Icon(
-                Icons.calendar_month,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-            ),
-          ),
-          16.verticalSpace,
-          Divider(
-            thickness: 2,
-          ),
-          16.verticalSpace,
-          _buildCategory(context),
-          8.verticalSpace,
-          _buildLocationAndDistance(context),
-          200.verticalSpace,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              SizedBox(
-                  width: 150.w,
-                  child: CustomButton(
-                    onPressed: () {
-                      ref.read(navigationProvider).removeTopPageAndReturnValue(
-                          context: context, result: null);
-                    },
-                    isOutLined: true,
-                    text: AppLocalizations.of(context).cancel,
-                    textColor: Theme.of(context).colorScheme.secondary,
-                  )),
-              SizedBox(
-                  width: 150.w,
-                  child: CustomButton(
-                      icon: "assets/png/check.png",
-                      iconHeight: 20.h,
-                      iconWidth: 20.w,
-                      onPressed: () {
-                        final state =
-                            ref.read(newFilterScreenControllerProvider);
-
-                        ref
-                            .read(navigationProvider)
-                            .removeTopPageAndReturnValue(
-                                context: context,
-                                result: NewFilterScreenParams(
-                                    selectedCityId: state.selectedCityId,
-                                    selectedCityName: state.selectedCityName,
-                                    radius: state.sliderValue,
-                                    startDate: state.startDate,
-                                    endDate: state.endDate,
-                                    selectedCategoryName:
-                                        List.from(state.selectedCategoryName),
-                                    selectedCategoryId:
-                                        List.from(state.selectedCategoryId)));
+                          ref
+                              .read(newFilterScreenControllerProvider.notifier)
+                              .updateStartEndDate(startDate, endDate);
+                        }
                       },
-                      text: AppLocalizations.of(context).apply))
-            ],
-          )
-        ],
+                    );
+                  },
+                  readOnly: true,
+                  hintText: AppLocalizations.of(context).today,
+                  textEditingController: periodTextEditingController,
+                  suffixIcon: Padding(
+                    padding:  EdgeInsets.only(right: 16.w),
+                    child: Icon(
+                      Icons.calendar_month,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                ),
+                16.verticalSpace,
+                Divider(
+                  thickness: 2,
+                ),
+                16.verticalSpace,
+                _buildCategory(context),
+                8.verticalSpace,
+                _buildLocationAndDistance(context),
+              ],
+            ),
+            240.verticalSpace,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SizedBox(
+                    width: 150.w,
+                    child: CustomButton(
+                      onPressed: () {
+                        ref.read(navigationProvider).removeTopPageAndReturnValue(
+                            context: context, result: null);
+                      },
+                      isOutLined: true,
+                      text: AppLocalizations.of(context).cancel,
+                      textColor: Theme.of(context).colorScheme.secondary,
+                    )),
+                SizedBox(
+                    width: 150.w,
+                    child: CustomButton(
+                        icon: "assets/png/check.png",
+                        iconHeight: 20.h,
+                        iconWidth: 20.w,
+                        onPressed: () {
+                          final state =
+                          ref.read(newFilterScreenControllerProvider);
+
+                          ref
+                              .read(navigationProvider)
+                              .removeTopPageAndReturnValue(
+                              context: context,
+                              result: NewFilterScreenParams(
+                                  selectedCityId: state.selectedCityId,
+                                  selectedCityName: state.selectedCityName,
+                                  radius: state.sliderValue,
+                                  startDate: state.startDate,
+                                  endDate: state.endDate,
+                                  selectedCategoryName:
+                                  List.from(state.selectedCategoryName),
+                                  selectedCategoryId:
+                                  List.from(state.selectedCategoryId)));
+                        },
+                        text: AppLocalizations.of(context).apply))
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

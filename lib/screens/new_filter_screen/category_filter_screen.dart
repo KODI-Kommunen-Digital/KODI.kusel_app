@@ -63,82 +63,85 @@ class _CategoryFilterScreenState extends ConsumerState<CategoryFilterScreen> {
     final theme = Theme.of(context);
     final appLoc = AppLocalizations.of(context);
 
-    return Column(
-      children: [
-        Container(
-          height: 400.h,
-          margin: EdgeInsets.symmetric(vertical: 32.h, horizontal: 16.w),
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20.r),
-            color: theme.canvasColor,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _SelectableRow(
-                label: appLoc.all,
-                isSelected: controller.tempCategoryIdList.isEmpty,
-                onTap: () => controllerNotifier.updateCategoryAllValue(),
-              ),
-              const Divider(thickness: 2),
-              if (controller.categoryList.isNotEmpty)
-                Expanded(
-                  child: ListView.separated(
-                    itemCount: controller.categoryList.length,
-                    separatorBuilder: (_, __) => SizedBox(height: 4.h),
-                    itemBuilder: (context, index) {
-                      final category = controller.categoryList[index];
-                      return _SelectableRow(
-                        label: category.name ?? '',
-                        isSelected:
-                            controller.tempCategoryIdList.contains(category.id)
-                                ? true
-                                : false,
-                        onTap: () => controllerNotifier
-                            .updateSelectedCategoryList(category),
-                      );
-                    },
-                  ),
+    return SafeArea(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            height: 400.h,
+            margin: EdgeInsets.symmetric(vertical: 32.h, horizontal: 16.w),
+            padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20.r),
+              color: theme.canvasColor,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _SelectableRow(
+                  label: appLoc.all,
+                  isSelected: controller.tempCategoryIdList.isEmpty,
+                  onTap: () => controllerNotifier.updateCategoryAllValue(),
                 ),
-            ],
+                const Divider(thickness: 2),
+                if (controller.categoryList.isNotEmpty)
+                  Expanded(
+                    child: ListView.separated(
+                      itemCount: controller.categoryList.length,
+                      separatorBuilder: (_, __) => SizedBox(height: 4.h),
+                      itemBuilder: (context, index) {
+                        final category = controller.categoryList[index];
+                        return _SelectableRow(
+                          label: category.name ?? '',
+                          isSelected:
+                              controller.tempCategoryIdList.contains(category.id)
+                                  ? true
+                                  : false,
+                          onTap: () => controllerNotifier
+                              .updateSelectedCategoryList(category),
+                        );
+                      },
+                    ),
+                  ),
+              ],
+            ),
           ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            SizedBox(
-                width: 150.w,
-                child: CustomButton(
-                  onPressed: () {
-                    ref
-                        .read(navigationProvider)
-                        .removeTopPage(context: context);
-                  },
-                  isOutLined: true,
-                  text: AppLocalizations.of(context).cancel,
-                  textColor: Theme.of(context).colorScheme.secondary,
-                )),
-            SizedBox(
-                width: 150.w,
-                child: CustomButton(
-                    icon: "assets/png/check.png",
-                    iconHeight: 20.h,
-                    iconWidth: 20.w,
-                    onPressed: () async {
-                      final controller =
-                          ref.read(newFilterScreenControllerProvider.notifier);
-
-                      await controller.assignCategoryValues();
-
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SizedBox(
+                  width: 150.w,
+                  child: CustomButton(
+                    onPressed: () {
                       ref
                           .read(navigationProvider)
                           .removeTopPage(context: context);
                     },
-                    text: AppLocalizations.of(context).apply))
-          ],
-        )
-      ],
+                    isOutLined: true,
+                    text: AppLocalizations.of(context).cancel,
+                    textColor: Theme.of(context).colorScheme.secondary,
+                  )),
+              SizedBox(
+                  width: 150.w,
+                  child: CustomButton(
+                      icon: "assets/png/check.png",
+                      iconHeight: 20.h,
+                      iconWidth: 20.w,
+                      onPressed: () async {
+                        final controller =
+                            ref.read(newFilterScreenControllerProvider.notifier);
+      
+                        await controller.assignCategoryValues();
+      
+                        ref
+                            .read(navigationProvider)
+                            .removeTopPage(context: context);
+                      },
+                      text: AppLocalizations.of(context).apply))
+            ],
+          )
+        ],
+      ),
     );
   }
 }
