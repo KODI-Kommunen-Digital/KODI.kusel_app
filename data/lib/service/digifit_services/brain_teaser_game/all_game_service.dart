@@ -23,11 +23,13 @@ class BrainTeaserGamesService {
     final apiHelper = ref.read(apiHelperProvider);
     String token = sharedPreferenceHelper.getString(tokenKey) ?? '';
     final headers = {'Authorization': 'Bearer $token'};
+    final params = requestModel.toJson();
 
     final gameId = requestModel.toJson()['gameId'];
     final levelId = requestModel.toJson()['levelId'];
 
-    final path = "$brainTeaserGamesEndPoint/$gameId/$levelId";
+    final path =
+        "$brainTeaserGamesEndPoint/$gameId/$levelId?translate=${params["translate"]}";
 
     final result = await apiHelper.getRequest(
         path: path, create: () => responseModel, headers: headers);

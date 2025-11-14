@@ -8,6 +8,7 @@ import 'package:domain/usecase/digifit/brain_teaser_game/game_details_tracker_us
 import 'package:flutter/cupertino.dart';
 import 'package:riverpod/riverpod.dart';
 
+import '../../../../../locale/localization_manager.dart';
 import '../../../../../providers/refresh_token_provider.dart';
 import '../../enum/game_session_status.dart';
 import 'math_hunt_state.dart';
@@ -21,6 +22,9 @@ final brainTeaserGameMathHuntControllerProvider =
             tokenStatus: ref.read(tokenStatusProvider),
             refreshTokenProvider: ref.read(refreshTokenProvider),
             levelId: levelId,
+            localeManagerController: ref.read(
+              localeManagerProvider.notifier,
+            ),
             brainTeaserGameDetailsTrackingUseCase:
                 ref.read(brainTeaserGameDetailsTrackingUseCaseProvider)));
 
@@ -30,6 +34,7 @@ class BrainTeaserGameMathHuntController
   final TokenStatus tokenStatus;
   final RefreshTokenProvider refreshTokenProvider;
   int levelId;
+  final LocaleManagerController localeManagerController;
   final BrainTeaserGameDetailsTrackingUseCase
       brainTeaserGameDetailsTrackingUseCase;
 
@@ -41,6 +46,7 @@ class BrainTeaserGameMathHuntController
     required this.refreshTokenProvider,
     required this.tokenStatus,
     required this.levelId,
+    required this.localeManagerController,
     required this.brainTeaserGameDetailsTrackingUseCase,
   }) : super(BrainTeaserGameMathHuntState.empty());
 
@@ -77,8 +83,13 @@ class BrainTeaserGameMathHuntController
     VoidCallback? onSuccess,
   ) async {
     try {
-      final requestModel =
-          AllGamesRequestModel(gameId: gameId, levelId: levelId);
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
+      final requestModel = AllGamesRequestModel(
+          gameId: gameId,
+          levelId: levelId,
+          translate:
+              "${currentLocale.languageCode}-${currentLocale.countryCode}");
       final responseModel = MathHuntResponseModel();
 
       final result = await brainTeaserGameMathHuntUseCase.call(
