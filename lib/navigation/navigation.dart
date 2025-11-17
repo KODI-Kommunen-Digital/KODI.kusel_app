@@ -37,6 +37,10 @@ class Navigator {
     nav.Navigator.pop(context);
   }
 
+  removePictureDialog({required BuildContext context}) async {
+    nav.Navigator.of(context, rootNavigator: true).pop();
+  }
+
   popUnTill({required BuildContext context,required String path})
   {
     path = _createFullPathForExploreSubScreen(path: path);

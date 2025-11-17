@@ -98,7 +98,7 @@ class CloudComponent extends PositionComponent with HasGameRef {
     textPainter.layout(maxWidth: size.x * 0.85);
 
     final textOffset = Offset(
-      -textPainter.width / 2,
+      -textPainter.width / 2 - 8,
       -textPainter.height / 2,
     );
 

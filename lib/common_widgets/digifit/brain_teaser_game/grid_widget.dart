@@ -31,15 +31,10 @@ class CommonGridWidget extends FlameGame {
   }
 
   void _buildGridCards() {
-
-    debugPrint('here the rows and colu is the ${params.rows} and ${params.columns}');
-
     for (int row = 0; row < params.rows; row++) {
       for (int column = 0; column < params.columns; column++) {
         final x = column * params.tileWidth + params.tileWidth / 2;
         final y = row * params.tileHeight + params.tileHeight / 2;
-
-        debugPrint('here the rows and ....... colu is the ${x} adnt he ${y}');
 
         final card = GridCardComponent(
           params: params,
