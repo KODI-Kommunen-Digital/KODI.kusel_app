@@ -77,46 +77,62 @@ class BoldiWithSpeechCard extends PositionComponent with HasGameRef {
   void render(Canvas canvas) {
     super.render(canvas);
 
-    // White card background
     final rRect = RRect.fromRectAndRadius(
       Rect.fromLTWH(0, 0, size.x, size.y),
       const Radius.circular(24),
     );
 
-    // Draw white background
     final bgPaint = Paint()..color = Colors.white;
     canvas.drawRRect(rRect, bgPaint);
 
-    // Draw grey border
     final borderPaint = Paint()
       ..color = Colors.grey.shade400
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
     canvas.drawRRect(rRect, borderPaint);
 
-    // Boldi sprite — increased height and flush right & bottom
+    canvas.save();
+    canvas.clipRRect(rRect);
+
     if (boldiSprite != null) {
-      final boldiRect = Rect.fromLTWH(
-        size.x * 0.55,
-        0, // start from top
-        size.x * 0.45,
-        size.y, // fill full height
+      canvas.save();
+
+      final boldiWidth = (size.x * 0.45) * 1.2;
+
+      final boldiX = size.x - boldiWidth;
+
+      final spriteAspectRatio = boldiSprite!.srcSize.x / boldiSprite!.srcSize.y;
+      final boldiHeight = (boldiWidth / spriteAspectRatio) * 1.5;
+
+      final boldiY = size.y - boldiHeight;
+
+      canvas.translate(boldiX, boldiY);
+      boldiSprite!.render(
+        canvas,
+        size: Vector2(boldiWidth, boldiHeight),
       );
-      boldiSprite!.renderRect(canvas, boldiRect);
+      canvas.restore();
     }
 
-    // Speech bubble image — increased size
     if (bubbleSprite != null) {
-      final bubbleRect = Rect.fromLTWH(
-        12, // left padding
-        20, // top padding
-        200, // increased width
-        100, // increased height
-      );
-      bubbleSprite!.renderRect(canvas, bubbleRect);
+      canvas.save();
 
-      // Draw text inside the bubble
-      final textWidget = textSemiBoldPoppins(
+      final bubbleX = 16.0;
+      final bubbleY = 24.0;
+      final bubbleWidth = 160.0;
+
+      final spriteAspectRatio =
+          bubbleSprite!.srcSize.x / bubbleSprite!.srcSize.y;
+      final bubbleHeight = bubbleWidth / spriteAspectRatio;
+
+      canvas.translate(bubbleX, bubbleY);
+      bubbleSprite!.render(
+        canvas,
+        size: Vector2(bubbleWidth, bubbleHeight),
+      );
+      canvas.restore();
+
+      final textWidget = textSemiBoldMontserrat(
         text: text,
         fontSize: 16,
         color: textColor,
@@ -130,12 +146,14 @@ class BoldiWithSpeechCard extends PositionComponent with HasGameRef {
         textDirection: TextDirection.ltr,
       );
 
-      textPainter.layout(maxWidth: bubbleRect.width - 10);
+      textPainter.layout(maxWidth: bubbleWidth - 32);
       final offset = Offset(
-        bubbleRect.left + (bubbleRect.width - textPainter.width) / 2,
-        bubbleRect.top + (bubbleRect.height - textPainter.height) / 2,
+        bubbleX + (bubbleWidth - textPainter.width) / 2,
+        bubbleY + (bubbleHeight - textPainter.height) / 2 - 4,
       );
       textPainter.paint(canvas, offset);
     }
+
+    canvas.restore();
   }
 }

@@ -61,8 +61,8 @@ class _BrainTeaserGameListScreenState
                       imageUrl: imagePath['home_screen_background'] ?? '',
                       isStaticImage: true),
                   Positioned(
-                      top: 50.h,
-                      left: 10.r,
+                      top: 40.h,
+                      left: 4.r,
                       child: _buildHeadingArrowSection()),
                   Padding(
                     padding: EdgeInsets.only(top: 125.h),

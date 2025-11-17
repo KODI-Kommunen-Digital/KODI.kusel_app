@@ -30,13 +30,10 @@ class GameStatusCardWidget extends ConsumerWidget {
               ? Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 4.h),
-                      child: Icon(
-                        Icons.check,
-                        color: Theme.of(context).disabledColor,
-                        size: 20.sp,
-                      ),
+                    Icon(
+                      Icons.check,
+                      color: Theme.of(context).disabledColor,
+                      size: 22.sp,
                     ),
                     SizedBox(width: 12.w),
                     Expanded(
@@ -67,13 +64,10 @@ class GameStatusCardWidget extends ConsumerWidget {
               : Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 4.h),
-                      child: Icon(
-                        Icons.close,
-                        color: Colors.white,
-                        size: 20.sp,
-                      ),
+                    Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: 22.sp,
                     ),
                     SizedBox(width: 12.w),
                     Expanded(

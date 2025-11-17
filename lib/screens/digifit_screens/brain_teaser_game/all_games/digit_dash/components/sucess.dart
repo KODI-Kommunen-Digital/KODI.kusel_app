@@ -3,7 +3,6 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
-/// Game that shows only green border for correct answers
 class SuccessBorderOverlayGame extends FlameGame {
   final int row;
   final int column;
@@ -20,7 +19,7 @@ class SuccessBorderOverlayGame extends FlameGame {
     required this.gridHeight,
     required this.tileWidth,
     required this.tileHeight,
-    this.borderColor = const Color(0xFF8BC34A), // Green color
+    this.borderColor = const Color(0xFF8BC34A),
   });
 
   @override
@@ -33,11 +32,9 @@ class SuccessBorderOverlayGame extends FlameGame {
     camera.viewfinder.visibleGameSize = Vector2(gridWidth, gridHeight);
     camera.viewfinder.position = Vector2(gridWidth / 2, gridHeight / 2);
 
-    // Calculate position
     final x = column * tileWidth + tileWidth / 2;
     final y = row * tileHeight + tileHeight / 2;
 
-    // Add border overlay component
     add(
       SuccessBorderOverlayComponent(
         position: Vector2(x, y),
@@ -77,13 +74,11 @@ class SuccessBorderOverlayComponent extends PositionComponent {
 
     final rect = size.toRect();
 
-    // Draw only green border (no background fill)
     final borderPaint = Paint()
       ..color = borderColor
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 3.0; // Thicker border for visibility
+      ..strokeWidth = 3.0;
 
-    // Check if this tile needs rounded corners
     final borderRadius = _getBorderRadius();
 
     if (borderRadius != null) {

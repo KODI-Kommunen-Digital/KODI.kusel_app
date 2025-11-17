@@ -322,5 +322,8 @@
   "odd_blue": "ODD_BLUE",
   "even_red": "EVEN_RED",
   "select_image": "Select Missing Image",
-  "abort_pictures_game": "Abort Picture's Game"
+  "abort_pictures_game": "Abort Picture's Game",
+  "details_scanner": "Scanner",
+  "correct_answer": "Correct",
+  "wrong_answer": "Wrong"
 }

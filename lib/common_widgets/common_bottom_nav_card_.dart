@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/device_helper.dart';
+import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/images_path.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/enum/digifit_exercise_session_status_enum.dart';
 
 import '../l10n/app_localizations.dart';
@@ -17,6 +19,8 @@ class CommonBottomNavCard extends ConsumerStatefulWidget {
   final VoidCallback? onSessionTap;
   GameStageConstant? gameDetailsStageConstant;
   final VoidCallback? onGameStageConstantTap;
+  bool? isScannerVisible;
+  final VoidCallback? onScannerTap;
 
   CommonBottomNavCard(
       {super.key,
@@ -27,7 +31,9 @@ class CommonBottomNavCard extends ConsumerStatefulWidget {
       this.sessionStage,
       this.onSessionTap,
       this.gameDetailsStageConstant,
-      this.onGameStageConstantTap});
+      this.onGameStageConstantTap,
+      this.isScannerVisible,
+      this.onScannerTap});
 
   @override
   ConsumerState<CommonBottomNavCard> createState() =>
@@ -193,21 +199,69 @@ class _CommonBottomNavCardState extends ConsumerState<CommonBottomNavCard> {
                       borderRadius: BorderRadius.circular(24.r),
                     ),
                     child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 12.w, vertical: 5.h),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 12.w, vertical: 11.h),
                       child: Row(
                         children: [
-                          Icon(
-                            icon,
-                            color: Colors.white,
-                            size: 18.h.w,
-                          ),
+                          widget.gameDetailsStageConstant ==
+                                  GameStageConstant.abort
+                              ? Transform.scale(
+                            scaleX: -1,
+                            child: Transform.rotate(
+                              angle: -1.5708, // Try positive 90 degrees with the flip
+                              child: Icon(
+                                icon,
+                                color: Colors.white,
+                                size: 18.h.w,
+                              ),
+                            ),
+                          )
+                              : Icon(
+                                  icon,
+                                  color: Colors.white,
+                                  size: 18.h.w,
+                                ),
                           8.horizontalSpace,
                           textBoldMontserrat(
                             text: buttonText,
                             color: Colors.white,
                             textOverflow: TextOverflow.visible,
-                            fontSize: 13,
+                            fontSize: 16,
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: widget.isScannerVisible ?? false,
+                child: GestureDetector(
+                  onTap: widget.onScannerTap,
+                  child: Card(
+                    color: Theme.of(context).primaryColor,
+                    elevation: 1,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24.r),
+                    ),
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 14.w, vertical: 7.h),
+                      child: Row(
+                        children: [
+                          ImageUtil.loadAssetImage(
+                            imageUrl: imagePath['scanner_image'] ?? '',
+                            height: 20.h,
+                            width: 20.w,
+                            fit: BoxFit.contain,
+                            context: context,
+                          ),
+                          8.horizontalSpace,
+                          textBoldMontserrat(
+                            text: AppLocalizations.of(context).details_scanner,
+                            color: Colors.white,
+                            textOverflow: TextOverflow.visible,
+                            fontSize: 16,
                           )
                         ],
                       ),
