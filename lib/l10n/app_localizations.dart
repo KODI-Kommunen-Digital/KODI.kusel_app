@@ -2041,6 +2041,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Abort Picture\'s Game'**
   String get abort_pictures_game;
+
+  /// No description provided for @details_scanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanner'**
+  String get details_scanner;
+
+  /// No description provided for @correct_answer.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct'**
+  String get correct_answer;
+
+  /// No description provided for @wrong_answer.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong'**
+  String get wrong_answer;
 }
 
 class _AppLocalizationsDelegate

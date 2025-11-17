@@ -1,4 +1,3 @@
-
 import 'dart:ui' as ui;
 import 'dart:math';
 import 'package:flame/camera.dart';
@@ -32,7 +31,6 @@ class DigitDashGridOverlayGame extends FlameGame {
 
     _buildGridCards();
 
-    // Add grid lines overlay with timer
     add(DigitDashGridLinesComponent(
       gridParams: gridParams,
     ));
@@ -133,7 +131,6 @@ class DigitDashCard extends PositionComponent
 
   late TextComponent numberText;
 
-  // Store previous state to detect changes
   int? _lastNumber;
   bool _lastMarkedCorrect = false;
   bool _lastMarkedWrong = false;
@@ -218,7 +215,6 @@ class DigitDashCard extends PositionComponent
       _lastMarkedWrong = isMarkedWrong;
       _lastSelected = isSelected;
       _lastAnswerCorrect = isAnswerCorrect;
-      // The render method will be called automatically
     }
   }
 
@@ -228,7 +224,6 @@ class DigitDashCard extends PositionComponent
 
     final rect = size.toRect();
 
-    // Draw base white background
     final whiteFillPaint = Paint()
       ..color = Colors.white
       ..style = PaintingStyle.fill;
@@ -261,10 +256,8 @@ class DigitDashCard extends PositionComponent
     final fillRRect =
         RRect.fromRectAndRadius(paddedRect, const Radius.circular(8.0));
 
-    Color fillColor =
-        const Color(0xFFAADB40).withOpacity(0.75); // default green
+    Color fillColor = const Color(0xFFAADB40).withOpacity(0.75);
 
-    // Apply Level 2 specific behavior (levelId 11)
     if (levelId == 11) {
       final condition = targetCondition
               ?.toLowerCase()
@@ -272,9 +265,9 @@ class DigitDashCard extends PositionComponent
               .replaceAll('-', '_') ??
           '';
       if (condition.contains('odd')) {
-        fillColor = const Color(0xFF4A90E2).withOpacity(0.8); // blue
+        fillColor = const Color(0xFF4A90E2).withOpacity(0.8);
       } else if (condition.contains('even')) {
-        fillColor = const Color(0xFFD0021B).withOpacity(0.8); // red
+        fillColor = const Color(0xFFD0021B).withOpacity(0.8);
       }
     }
 
@@ -312,7 +305,6 @@ class DigitDashCard extends PositionComponent
   }
 }
 
-/// Component to draw grid lines with timer line on border
 class DigitDashGridLinesComponent extends Component {
   final DigitDashGridParams gridParams;
 
@@ -327,24 +319,20 @@ class DigitDashGridLinesComponent extends Component {
     final outerRRect =
         RRect.fromRectAndRadius(outerRect, Radius.circular(radius));
 
-    // Get current time values from gridParams
     final currentTime = gridParams.currentTime;
     final maxTime = gridParams.maxTime;
 
-    // Calculate progress (1.0 = full time, 0.0 = no time)
     final progress = maxTime > 0 ? currentTime / maxTime : 0.0;
 
-    // Determine timer color based on time remaining
     Color timerColor;
     if (progress > 0.5) {
-      timerColor = const Color(0xFF4CAF50); // Green
+      timerColor = const Color(0xFF4CAF50);
     } else if (progress > 0.16) {
-      timerColor = const Color(0xFFFF9800); // Orange
+      timerColor = const Color(0xFFFF9800);
     } else {
-      timerColor = const Color(0xFFC92120); // Red
+      timerColor = const Color(0xFFC92120);
     }
 
-    // Draw static grey border first
     final greyBorderPaint = Paint()
       ..color = Colors.grey.shade300
       ..style = PaintingStyle.stroke
@@ -354,22 +342,45 @@ class DigitDashGridLinesComponent extends Component {
     // Draw timer line that travels around the border
     _drawTimerLine(canvas, outerRect, radius, progress, timerColor);
 
-    // Draw inner grid lines
+    _drawInnerGridLines(canvas, radius);
+  }
+
+  void _drawInnerGridLines(Canvas canvas, double radius) {
     final innerPaint = Paint()
       ..color = gridParams.borderColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 
-    // Vertical lines
     for (int col = 1; col < gridParams.columns; col++) {
       final x = col * gridParams.tileWidth;
-      canvas.drawLine(Offset(x, 0), Offset(x, gridParams.height), innerPaint);
+
+      final topStartY =
+          (x < radius || x > gridParams.width - radius) ? radius : 0.0;
+      final bottomEndY = (x < radius || x > gridParams.width - radius)
+          ? gridParams.height - radius
+          : gridParams.height;
+
+      canvas.drawLine(
+        Offset(x, topStartY),
+        Offset(x, bottomEndY),
+        innerPaint,
+      );
     }
 
-    // Horizontal lines
     for (int row = 1; row < gridParams.rows; row++) {
       final y = row * gridParams.tileHeight;
-      canvas.drawLine(Offset(0, y), Offset(gridParams.width, y), innerPaint);
+
+      final leftStartX =
+          (y < radius || y > gridParams.height - radius) ? radius : 0.0;
+      final rightEndX = (y < radius || y > gridParams.height - radius)
+          ? gridParams.width - radius
+          : gridParams.width;
+
+      canvas.drawLine(
+        Offset(leftStartX, y),
+        Offset(rightEndX, y),
+        innerPaint,
+      );
     }
   }
 
@@ -378,23 +389,27 @@ class DigitDashGridLinesComponent extends Component {
     final width = rect.width;
     final height = rect.height;
 
-    // Calculate perimeter (accounting for rounded corners)
     final cornerCircumference = 2 * pi * radius;
-    final totalPerimeter = (width - 2 * radius) * 2 + // top and bottom
-        (height - 2 * radius) * 2 + // left and right
-        cornerCircumference; // all four corners
+    final totalPerimeter = (width - 2 * radius) * 2 +
+        (height - 2 * radius) * 2 +
+        cornerCircumference;
 
-    // Calculate how far along the perimeter the timer has traveled
-    final traveledDistance =
-        totalPerimeter * (1 - progress); // Reverse so it depletes
+    final traveledDistance = totalPerimeter * (1 - progress);
 
     final timerPaint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4.0
-      ..strokeCap = StrokeCap.round;
+      ..strokeCap = StrokeCap.butt;
 
-    // Create path for the timer line
+    if (progress <= 0.001) {
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(rect, Radius.circular(radius)),
+        timerPaint,
+      );
+      return;
+    }
+
     final path = Path();
 
     // Start from top-left corner
@@ -529,7 +544,14 @@ class DigitDashGridLinesComponent extends Component {
       return;
     }
 
-    // Draw complete path if we've traveled the full perimeter
+    path.arcTo(
+      Rect.fromLTWH(0, 0, 2 * radius, 2 * radius),
+      pi,
+      pi / 2,
+      false,
+    );
+    path.lineTo(radius, 0);
+
     canvas.drawPath(path, timerPaint);
   }
 }

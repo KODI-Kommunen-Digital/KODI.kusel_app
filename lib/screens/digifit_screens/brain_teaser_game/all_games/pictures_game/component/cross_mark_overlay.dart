@@ -4,7 +4,6 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
-/// Game to display cross marks on wrong matched cells with light red background
 class CrossMarkOverlayGame extends FlameGame {
   final int wrongRow1;
   final int wrongCol1;
@@ -36,7 +35,6 @@ class CrossMarkOverlayGame extends FlameGame {
       resolution: Vector2(gridWidth, gridHeight),
     );
 
-    // Add cross mark for first wrong cell
     final component1 = CrossMarkComponent(
       row: wrongRow1,
       column: wrongCol1,
@@ -45,7 +43,6 @@ class CrossMarkOverlayGame extends FlameGame {
     );
     add(component1);
 
-    // Add cross mark for second wrong cell (if different from first)
     if (wrongRow2 != wrongRow1 || wrongCol2 != wrongCol1) {
       final component2 = CrossMarkComponent(
         row: wrongRow2,
@@ -58,7 +55,6 @@ class CrossMarkOverlayGame extends FlameGame {
   }
 }
 
-/// Component to display a small red cross mark with light red background on a cell
 class CrossMarkComponent extends PositionComponent {
   final int row;
   final int column;
@@ -79,7 +75,6 @@ class CrossMarkComponent extends PositionComponent {
 
     position = Vector2(x, y);
 
-    // Use same padding as other overlays
     const padding = 3.0;
     size = Vector2(tileWidth - padding, tileHeight - padding);
     anchor = Anchor.center;
@@ -89,71 +84,29 @@ class CrossMarkComponent extends PositionComponent {
   void render(Canvas canvas) {
     final rect = size.toRect();
 
-    // Draw light red background without rounded corners
     final backgroundPaint = Paint()
-      ..color = const Color(0xFFE01709).withOpacity(0.4) // Light red background
+      ..color = const Color(0xFFE01709).withOpacity(0.4)
       ..style = PaintingStyle.fill;
 
     canvas.drawRect(rect, backgroundPaint);
 
-    // Draw smaller red cross on the image
-    const crossPadding = 44.0; // Padding to make cross smaller
+    const crossPadding = 44.0;
     final crossPaint = Paint()
       ..color = Colors.white
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3
       ..strokeCap = StrokeCap.round;
 
-    // Draw diagonal line from top-left to bottom-right
     canvas.drawLine(
       Offset(rect.left + crossPadding, rect.top + crossPadding),
       Offset(rect.right - crossPadding, rect.bottom - crossPadding),
       crossPaint,
     );
 
-    // Draw diagonal line from top-right to bottom-left
     canvas.drawLine(
       Offset(rect.right - crossPadding, rect.top + crossPadding),
       Offset(rect.left + crossPadding, rect.bottom - crossPadding),
       crossPaint,
     );
   }
-
-// @override
-// void render(Canvas canvas) {
-//   final rect = size.toRect();
-//
-//   // Draw light red background with rounded corners
-//   final backgroundPaint = Paint()
-//     ..color = const Color(0xFFE01709).withOpacity(0.4) // Light red background
-//     ..style = PaintingStyle.fill;
-//
-//   final rrect = RRect.fromRectAndRadius(
-//     rect,
-//     const Radius.circular(8.0),
-//   );
-//   canvas.drawRRect(rrect, backgroundPaint);
-//
-//   // Draw smaller red cross on the image
-//   const crossPadding = 44.0; // Increased padding to make cross smaller
-//   final crossPaint = Paint()
-//     ..color = Colors.white
-//     ..style = PaintingStyle.stroke
-//     ..strokeWidth = 3
-//     ..strokeCap = StrokeCap.round;
-//
-//   // Draw diagonal line from top-left to bottom-right
-//   canvas.drawLine(
-//     Offset(rect.left + crossPadding, rect.top + crossPadding),
-//     Offset(rect.right - crossPadding, rect.bottom - crossPadding),
-//     crossPaint,
-//   );
-//
-//   // Draw diagonal line from top-right to bottom-left
-//   canvas.drawLine(
-//     Offset(rect.right - crossPadding, rect.top + crossPadding),
-//     Offset(rect.left + crossPadding, rect.bottom - crossPadding),
-//     crossPaint,
-//   );
-// }
 }

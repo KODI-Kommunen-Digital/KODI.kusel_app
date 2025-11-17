@@ -1008,4 +1008,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get abort_pictures_game => 'Abort Picture\'s Game';
+
+  @override
+  String get details_scanner => 'Scanner';
+
+  @override
+  String get correct_answer => 'Correct';
+
+  @override
+  String get wrong_answer => 'Wrong';
 }

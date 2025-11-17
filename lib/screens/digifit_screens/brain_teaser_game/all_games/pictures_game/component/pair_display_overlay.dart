@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 
-/// Game to display ONLY image pairs (no card, no buttons)
 class PairDisplayGame extends FlameGame {
   final String image1Url;
   final String image2Url;
@@ -15,7 +14,7 @@ class PairDisplayGame extends FlameGame {
   final double height;
   final int sourceId;
   final BaseCacheManager? cacheManager;
-  final bool showButtons; // Kept for compatibility but not used
+  final bool showButtons;
 
   PairDisplayGame({
     required this.image1Url,
@@ -49,7 +48,6 @@ class PairDisplayGame extends FlameGame {
   }
 }
 
-/// Component to display ONLY pair of images (transparent background)
 class PairDisplayComponent extends PositionComponent with HasGameRef {
   final String image1Url;
   final String image2Url;
@@ -119,7 +117,6 @@ class PairDisplayComponent extends PositionComponent with HasGameRef {
       _isLoading = false;
       _hasError = false;
     } catch (e) {
-      print('Error loading pair images: $e');
       _isLoading = false;
       _hasError = true;
     }
@@ -127,8 +124,6 @@ class PairDisplayComponent extends PositionComponent with HasGameRef {
 
   @override
   void render(Canvas canvas) {
-    // NO CARD BACKGROUND - Flutter handles that now!
-
     if (_isLoading) {
       _renderLoading(canvas);
       return;
@@ -168,7 +163,6 @@ class PairDisplayComponent extends PositionComponent with HasGameRef {
   }
 
   void _renderImages(Canvas canvas) {
-    // Calculate dimensions for side-by-side images
     final imageWidth = (size.x - imageSpacing) / 2 + 10;
     final imageHeight = size.y;
 

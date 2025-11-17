@@ -10,7 +10,6 @@ class PicturesGameState {
   final int timerSeconds;
   final String? errorMessage;
 
-  // Game play state
   final bool isGamePlayEnabled;
   final List<RevealedCell> revealedCells;
 
@@ -37,7 +36,6 @@ class PicturesGameState {
   final int? cachedMissingRow;
   final int? cachedMissingCol;
 
-  // Result state
   final bool showResult;
   final bool? isAnswerCorrect;
   final int? wrongRow;
@@ -47,6 +45,8 @@ class PicturesGameState {
 
   final int maxTimerSeconds;
   final bool isTimerPaused;
+
+  final bool isImageLoading;
 
   PicturesGameState({
     required this.isLoading,
@@ -81,6 +81,7 @@ class PicturesGameState {
     this.wrongCol2,
     required this.maxTimerSeconds,
     required this.isTimerPaused,
+    required this.isImageLoading,
   });
 
   factory PicturesGameState.empty() {
@@ -104,6 +105,7 @@ class PicturesGameState {
       showResult: false,
       maxTimerSeconds: 60,
       isTimerPaused: false,
+      isImageLoading: false,
     );
   }
 
@@ -132,11 +134,11 @@ class PicturesGameState {
 
   bool get isLevel3 =>
       gameData?.allImagesList != null &&
-          gameData!.allImagesList!.isNotEmpty &&
-          gameData?.displayImagesList != null &&
-          gameData!.displayImagesList!.isNotEmpty &&
-          gameData?.missingImageList != null &&
-          gameData!.missingImageList!.isNotEmpty;
+      gameData!.allImagesList!.isNotEmpty &&
+      gameData?.displayImagesList != null &&
+      gameData!.displayImagesList!.isNotEmpty &&
+      gameData?.missingImageList != null &&
+      gameData!.missingImageList!.isNotEmpty;
 
   int? get missingImageRow {
     if (cachedMissingRow != null) return cachedMissingRow;
@@ -220,6 +222,7 @@ class PicturesGameState {
     bool clearUserAnswer = false,
     int? maxTimerSeconds,
     bool? isTimerPaused,
+    bool? isImageLoading,
   }) {
     return PicturesGameState(
       isLoading: isLoading ?? this.isLoading,
@@ -254,13 +257,14 @@ class PicturesGameState {
       cachedMissingCol: cachedMissingCol ?? this.cachedMissingCol,
       showResult: showResult ?? this.showResult,
       isAnswerCorrect:
-      clearResult ? null : (isAnswerCorrect ?? this.isAnswerCorrect),
+          clearResult ? null : (isAnswerCorrect ?? this.isAnswerCorrect),
       wrongRow: clearResult ? null : (wrongRow ?? this.wrongRow),
       wrongCol: clearResult ? null : (wrongCol ?? this.wrongCol),
       wrongRow2: clearResult ? null : (wrongRow2 ?? this.wrongRow2),
       wrongCol2: clearResult ? null : (wrongCol2 ?? this.wrongCol2),
       maxTimerSeconds: maxTimerSeconds ?? this.maxTimerSeconds,
       isTimerPaused: isTimerPaused ?? this.isTimerPaused,
+      isImageLoading: isImageLoading ?? this.isImageLoading,
     );
   }
 
@@ -285,6 +289,7 @@ class PicturesGameState {
       showResult: false,
       maxTimerSeconds: maxTimerSeconds,
       isTimerPaused: false,
+      isImageLoading: false,
     );
   }
 }

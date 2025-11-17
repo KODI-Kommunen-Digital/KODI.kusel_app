@@ -326,5 +326,8 @@
   "select_image": "Select Missing Image",
   "abort_pictures_game": "Abort Picture's Game",
   "select_image": "Fehlendes Bild auswählen",
-  "abort_pictures_game": "Spiel von Picture abbrechen?"
+  "abort_pictures_game": "Spiel von Picture abbrechen?",
+  "details_scanner": "Scannen",
+  "correct_answer": "Richtig",
+  "wrong_answer": "Falsch"
 }

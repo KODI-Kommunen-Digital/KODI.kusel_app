@@ -84,7 +84,7 @@ class BrainTeaserGameDigitDashController
       }
 
       if (state.isTimerPaused) {
-        return; // Don't decrement when paused
+        return;
       }
 
       final newTime = state.timerSecond - 1;
@@ -299,10 +299,8 @@ class BrainTeaserGameDigitDashController
         (index) => initialNumber + index,
       );
 
-      // Shuffle numbers for randomness
       numbers.shuffle(Random());
 
-      // Generate random rotation angles for each cell
       final List<double> possibleRotations = [
         0,
         pi / 4,
@@ -314,15 +312,20 @@ class BrainTeaserGameDigitDashController
 
       List<double> gridAngles = List.generate(
         totalSize,
-        (index) =>
-            possibleRotations[Random().nextInt(possibleRotations.length)],
+        (index) {
+          final number = numbers[index];
+
+          if (number == 6 || number == 9) {
+            return 0.0;
+          }
+
+          return possibleRotations[Random().nextInt(possibleRotations.length)];
+        },
       );
 
-      // Initialize marked arrays
       List<bool> markedCorrect = List.filled(totalSize, false);
       List<bool> markedWrong = List.filled(totalSize, false);
 
-      // Setup initial state
       state = state.copyWith(
         gameStageConstant: GameStageConstant.progress,
         showBoldiWithCloud: false,
@@ -335,7 +338,6 @@ class BrainTeaserGameDigitDashController
         totalGridSize: totalSize,
       );
 
-      // Adjust starting expected number for Level 11
       if (levelId == 11) {
         final cond = state.targetCondition?.toLowerCase() ?? '';
         int expected = state.currentExpectedNumber;
@@ -349,13 +351,11 @@ class BrainTeaserGameDigitDashController
         state = state.copyWith(currentExpectedNumber: expected);
       }
 
-      // Show grid and enable gameplay
       state = state.copyWith(
         showGrid: true,
         isGamePlayEnabled: true,
       );
 
-      // Start the countdown timer
       _startGameTimer();
     } catch (e) {
       _handleError('startGame', e);
@@ -376,14 +376,9 @@ class BrainTeaserGameDigitDashController
 
     bool isCorrect = false;
 
-
-    // Level 1: Sequential order
     if (levelId == 10) {
       isCorrect = selectedNumber == state.currentExpectedNumber;
-    }
-
-    // Level 2: Sequential odd/even check
-    else if (levelId == 11) {
+    } else if (levelId == 11) {
       final condition = state.targetCondition
               ?.toLowerCase()
               .replaceAll(' ', '_')
@@ -404,33 +399,30 @@ class BrainTeaserGameDigitDashController
 
       isCorrect = matchesCondition && selectedNumber == currentExpected;
 
-
       if (isCorrect) {
         state = state.copyWith(currentExpectedNumber: nextExpected);
       }
-    }
-
-    // Level 3: Sequential + forbidden
-    else if (levelId == 12) {
+    } else if (levelId == 12) {
       final forbidden = state.forbiddenNumbers;
       final currentExpected = state.currentExpectedNumber;
       final selected = selectedNumber;
 
-      int nextExpected = currentExpected + 1;
-      while (forbidden.contains(nextExpected)) {
-        nextExpected++;
+      int validExpected = currentExpected;
+      while (forbidden.contains(validExpected)) {
+        validExpected++;
       }
 
-      final isCurrentValid = !forbidden.contains(currentExpected);
-      isCorrect = isCurrentValid && selected == currentExpected;
-
+      isCorrect = selected == validExpected && !forbidden.contains(selected);
 
       if (isCorrect) {
+        int nextExpected = validExpected + 1;
+        while (forbidden.contains(nextExpected)) {
+          nextExpected++;
+        }
         state = state.copyWith(currentExpectedNumber: nextExpected);
       }
     }
 
-    // Update marking arrays
     List<bool> newMarkedCorrect = List.from(state.markedCorrect!);
     List<bool> newMarkedWrong = List.from(state.markedWrong!);
 
@@ -440,7 +432,6 @@ class BrainTeaserGameDigitDashController
       newMarkedWrong[selectedIndex] = true;
     }
 
-    // Temporarily disable input & set selection/feedback
     state = state.copyWith(
       isGamePlayEnabled: false,
       selectedIndex: selectedIndex,
@@ -449,7 +440,6 @@ class BrainTeaserGameDigitDashController
       markedWrong: newMarkedWrong,
     );
 
-    // Small visual delay
     await Future.delayed(const Duration(milliseconds: 500));
     if (!mounted) {
       _isProcessingTap = false;
@@ -457,19 +447,17 @@ class BrainTeaserGameDigitDashController
     }
 
     if (isCorrect) {
-      // For Level 10 advance expected number
       if (levelId == 10) {
         state = state.copyWith(
           currentExpectedNumber: state.currentExpectedNumber + 1,
         );
       }
 
-      // Check completion
       final maxNumber =
           (state.gridNumbers?.reduce((a, b) => a! > b! ? a : b)) ?? 0;
 
       if (state.currentExpectedNumber > maxNumber) {
-        _stopGameTimer(); // Stop timer on completion
+        _stopGameTimer();
         state = state.copyWith(isLoading: true);
         await trackGameProgress(
           GameStageConstant.complete,
@@ -484,12 +472,10 @@ class BrainTeaserGameDigitDashController
           },
         );
       } else {
-        // Continue play
         state = state.copyWith(clearSelection: true, isGamePlayEnabled: true);
       }
     } else {
-      // Wrong answer
-      _stopGameTimer(); // Stop timer on wrong answer
+      _stopGameTimer();
       state = state.copyWith(isLoading: true);
       await trackGameProgress(
         GameStageConstant.abort,
