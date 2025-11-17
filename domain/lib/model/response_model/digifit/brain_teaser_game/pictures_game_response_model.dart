@@ -25,6 +25,8 @@ class PicturesGameResponseModel extends BaseModel<PicturesGameResponseModel> {
 
 class PicturesGameData extends BaseModel<PicturesGameData> {
   final int? sourceId;
+  final PictureGameGrid? grid;
+  final String? subDescription;
   final List<PictureGrid>? pictureGrid;
   final List<MemorizePair>? memorizePairs;
   final List<CheckPair>? checkPairs;
@@ -43,21 +45,22 @@ class PicturesGameData extends BaseModel<PicturesGameData> {
   final int? sessionId;
   final int? activityId;
 
-  PicturesGameData({
-    this.sourceId,
-    this.pictureGrid,
-    this.memorizePairs,
-    this.checkPairs,
-    this.allImages,
-    this.displayImages,
-    this.missingImage,
-    this.allImagesList,
-    this.displayImagesList,
-    this.missingImageList,
-    this.timer,
-    this.sessionId,
-    this.activityId,
-  });
+  PicturesGameData(
+      {this.sourceId,
+      this.pictureGrid,
+      this.memorizePairs,
+      this.checkPairs,
+      this.allImages,
+      this.displayImages,
+      this.missingImage,
+      this.allImagesList,
+      this.displayImagesList,
+      this.missingImageList,
+      this.timer,
+      this.sessionId,
+      this.activityId,
+      this.subDescription,
+      this.grid});
 
   @override
   PicturesGameData fromJson(Map<String, dynamic> json) {
@@ -67,6 +70,7 @@ class PicturesGameData extends BaseModel<PicturesGameData> {
     final allImagesRaw = json['allImages'];
     final displayImagesRaw = json['displayImages'];
     final missingImageRaw = json['missingImage'];
+    final gridRaw = json['grid'];
 
     return PicturesGameData(
       sourceId: json['sourceId'],
@@ -87,7 +91,7 @@ class PicturesGameData extends BaseModel<PicturesGameData> {
       displayImages: displayImagesRaw is List
           ? displayImagesRaw.map((e) => e.toString()).toList()
           : null,
-      missingImage: missingImageRaw != null ? missingImageRaw.toString() : null,
+      missingImage: missingImageRaw?.toString(),
 
       // ✅ new (object based)
       allImagesList: allImagesRaw is List
@@ -103,6 +107,10 @@ class PicturesGameData extends BaseModel<PicturesGameData> {
       timer: json['timer'],
       sessionId: json['sessionId'],
       activityId: json['activityId'],
+      subDescription: json['subDescription'],
+      grid: gridRaw is Map<String, dynamic>
+          ? PictureGameGrid.fromJson(gridRaw)
+          : PictureGameGrid(row: 0, col: 0),
     );
   }
 
@@ -121,6 +129,7 @@ class PicturesGameData extends BaseModel<PicturesGameData> {
         'timer': timer,
         'sessionId': sessionId,
         'activityId': activityId,
+        'subDescription': subDescription,
       };
 }
 
@@ -216,4 +225,28 @@ class ImageWithId extends BaseModel<ImageWithId> {
         'id': id,
         'image': image,
       };
+}
+
+class PictureGameGrid {
+  final int row;
+  final int col;
+
+  PictureGameGrid({
+    required this.row,
+    required this.col,
+  });
+
+  factory PictureGameGrid.fromJson(Map<String, dynamic> json) {
+    return PictureGameGrid(
+      row: json['row'] is int ? json['row'] : 0,
+      col: json['col'] is int ? json['col'] : 0,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'row': row,
+      'col': col,
+    };
+  }
 }

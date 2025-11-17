@@ -1016,4 +1016,13 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get abort_pictures_game => 'Spiel von Picture abbrechen?';
+
+  @override
+  String get details_scanner => 'Scannen';
+
+  @override
+  String get correct_answer => 'Richtig';
+
+  @override
+  String get wrong_answer => 'Falsch';
 }

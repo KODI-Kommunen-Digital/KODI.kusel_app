@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flame/game.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -5,11 +7,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 
+import '../../../../../app_router.dart';
 import '../../../../../common_widgets/common_background_clipper_widget.dart';
 import '../../../../../common_widgets/common_bottom_nav_card_.dart';
 import '../../../../../common_widgets/common_html_widget.dart';
 import '../../../../../common_widgets/device_helper.dart';
+import '../../../../../common_widgets/digifit/brain_teaser_game/blur_dialog_wrapper.dart';
 import '../../../../../common_widgets/digifit/brain_teaser_game/game_status_card.dart';
+import '../../../../../common_widgets/feedback_card_widget.dart';
 import '../../../../../common_widgets/text_styles.dart';
 import '../../../../../common_widgets/upstream_wave_clipper.dart';
 import '../../../../../images_path.dart';
@@ -41,11 +46,10 @@ class _DigitDashScreenState extends ConsumerState<DigitDashScreen> {
   final GlobalKey _gridKey = GlobalKey();
   final GlobalKey _boldiKey = GlobalKey();
 
-  // Track when we need to recreate the game
   int? _lastRows;
   int? _lastCols;
   int? _lastLevelId;
-  int? _lastInitialNumber; // ← Add this to track initial number changes
+  int? _lastInitialNumber;
 
   @override
   void initState() {
@@ -84,13 +88,12 @@ class _DigitDashScreenState extends ConsumerState<DigitDashScreen> {
     final tileWidth = gridWidth / columns;
     final tileHeight = gridHeight / rows;
 
-    // Only recreate the game if grid dimensions or level changes
     final shouldRecreateGame = _gridOverlayGame == null ||
         _lastRows != rows ||
         _lastCols != columns ||
         _lastLevelId != widget.digitDashParams?.levelId ||
-        _lastInitialNumber != state.initialNumber || // ← Add this
-        (state.gridNumbers?.isEmpty ?? true); // ← Add this
+        _lastInitialNumber != state.initialNumber ||
+        (state.gridNumbers?.isEmpty ?? true);
 
     if (shouldRecreateGame) {
       _gridOverlayGame = DigitDashGridOverlayGame(
@@ -122,9 +125,8 @@ class _DigitDashScreenState extends ConsumerState<DigitDashScreen> {
       _lastRows = rows;
       _lastCols = columns;
       _lastLevelId = widget.digitDashParams?.levelId;
-      _lastInitialNumber = state.initialNumber; // ← Store initial number
+      _lastInitialNumber = state.initialNumber;
     } else if (_gridOverlayGame != null) {
-      // Update only the dynamic properties without recreating
       _gridOverlayGame!.gridParams.currentTime = state.timerSecond;
       _gridOverlayGame!.gridParams.gridNumbers = state.gridNumbers;
       _gridOverlayGame!.gridParams.gridAngles = state.gridAngles;
@@ -191,14 +193,22 @@ class _DigitDashScreenState extends ConsumerState<DigitDashScreen> {
                             padding: const EdgeInsets.only(
                               left: 20,
                               right: 20,
-                              bottom: 80,
+                              bottom: 30,
                             ),
                             child: CommonHtmlWidget(
                               fontSize: 16,
-                              data: widget.digitDashParams?.desc ?? '',
+                              data: state.digitDashData?.subDescription ?? '',
                             ),
                           ),
-                          state.showResult ? 80.verticalSpace : 1.verticalSpace
+                          20.verticalSpace,
+                          if (!state.isLoading)
+                            FeedbackCardWidget(
+                              height: 270.h,
+                              onTap: () {
+                                ref.read(navigationProvider).navigateUsingPath(
+                                    path: feedbackScreenPath, context: context);
+                              },
+                            ),
                         ],
                       ),
                     ],
@@ -286,7 +296,6 @@ class _DigitDashScreenState extends ConsumerState<DigitDashScreen> {
   }) {
     return Stack(
       children: [
-        // Boldi with Cloud overlay
         if (state.showBoldiWithCloud && _boldiCloudGame != null)
           Center(
             child: GameWidget(
@@ -294,8 +303,6 @@ class _DigitDashScreenState extends ConsumerState<DigitDashScreen> {
               game: _boldiCloudGame!,
             ),
           ),
-
-        // Grid overlay with timer - Use static key to prevent recreation
         if (state.showGrid && _gridOverlayGame != null)
           GameWidget(
             key: _gridKey,
@@ -322,7 +329,6 @@ class _DigitDashScreenState extends ConsumerState<DigitDashScreen> {
 
     switch (state.gameStageConstant) {
       case GameStageConstant.initial:
-        // Show dialog for Level 2 or Level 3 before starting
         if (widget.digitDashParams?.levelId == 11) {
           await _showLevel2Dialog(context);
         } else if (widget.digitDashParams?.levelId == 12) {
@@ -350,284 +356,6 @@ class _DigitDashScreenState extends ConsumerState<DigitDashScreen> {
       default:
         break;
     }
-  }
-
-  Future<void> _showLevel2Dialog(BuildContext context) async {
-    if (!mounted) return;
-
-    final state = ref.read(
-      brainTeaserGameDigitDashControllerProvider(
-        widget.digitDashParams?.levelId ?? 1,
-      ),
-    );
-
-    final controller = ref.read(
-      brainTeaserGameDigitDashControllerProvider(
-        widget.digitDashParams?.levelId ?? 1,
-      ).notifier,
-    );
-
-    final conditionText = state.targetCondition?.toLowerCase() ?? '';
-    String displayText = '';
-    Color highlightColor = Colors.black;
-
-    if (conditionText.contains('odd')) {
-      displayText =
-          AppLocalizations.of(context).digit_dash_dialog_target_desc_odd;
-      highlightColor = const Color(0xFF264579); // blue for odd
-    } else if (conditionText.contains('even')) {
-      displayText =
-          AppLocalizations.of(context).digit_dash_dialog_target_desc_even;
-      highlightColor = const Color(0xFFC92120); // red for even
-    } else {
-      displayText = 'Folge der speziellen Regel für dieses Level!';
-    }
-
-    await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) {
-        return Dialog(
-          insetPadding: EdgeInsets.symmetric(horizontal: 24.w),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.r),
-          ),
-          backgroundColor: const Color(0xFFE7EEF8),
-          child: Padding(
-            padding: EdgeInsets.all(20.w),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      textSemiBoldPoppins(
-                          text: AppLocalizations.of(context)
-                              .digit_dash_dialog_title,
-                          fontSize: 22.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).primaryColor),
-                      GestureDetector(
-                        onTap: () {
-                          ref
-                              .read(navigationProvider)
-                              .removeDialog(context: context);
-                        },
-                        child: Icon(
-                          size: DeviceHelper.isMobile(context) ? null : 12.h.w,
-                          Icons.close,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 26.h),
-                textSemiBoldPoppins(
-                  text: displayText,
-                  textAlign: TextAlign.left,
-                  fontSize: 16.sp,
-                  textOverflow: TextOverflow.visible,
-                  fontWeight: FontWeight.w500,
-                  color: Theme.of(context).primaryColor,
-                ),
-                SizedBox(height: 20.h),
-                Center(
-                  child: Container(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8.r),
-                      border: Border.all(color: highlightColor, width: 2),
-                    ),
-                    child: Text(
-                      conditionText.contains('odd')
-                          ? AppLocalizations.of(context).odd_blue
-                          : conditionText.contains('even')
-                              ? AppLocalizations.of(context).even_red
-                              : conditionText.toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.bold,
-                        color: highlightColor,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 24.h),
-                SizedBox(
-                  width: double.infinity,
-                  child: CupertinoButton(
-                    borderRadius: BorderRadius.circular(30.r),
-                    color: const Color(0xFF264579),
-                    padding: EdgeInsets.symmetric(vertical: 12.h),
-                    onPressed: () async {
-                      if (!mounted) return;
-                      ref
-                          .read(navigationProvider)
-                          .removeDialog(context: context);
-                      if (!mounted) return;
-                      await controller.startGame();
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.check, color: Colors.white, size: 18),
-                        SizedBox(width: 6.w),
-                        textSemiBoldPoppins(
-                          text: AppLocalizations.of(context).understood,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16.sp,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Future<void> _showLevel3ForbiddenDialog(BuildContext context) async {
-    if (!mounted) return;
-
-    final state = ref.read(
-      brainTeaserGameDigitDashControllerProvider(
-        widget.digitDashParams?.levelId ?? 1,
-      ),
-    );
-
-    final controller = ref.read(
-      brainTeaserGameDigitDashControllerProvider(
-        widget.digitDashParams?.levelId ?? 1,
-      ).notifier,
-    );
-
-    final forbiddenNumbers = state.forbiddenNumbers;
-
-    await showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (ctx) {
-        return Dialog(
-          insetPadding: EdgeInsets.symmetric(horizontal: 24.w),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16.r),
-          ),
-          backgroundColor: const Color(0xFFE7EEF8),
-          child: Padding(
-            padding: EdgeInsets.all(20.w),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 8.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      textSemiBoldPoppins(
-                          text: AppLocalizations.of(context)
-                              .digit_dash_dialog_title,
-                          fontSize: 22.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Theme.of(context).primaryColor),
-                      GestureDetector(
-                        onTap: () {
-                          ref
-                              .read(navigationProvider)
-                              .removeDialog(context: context);
-                        },
-                        child: Icon(
-                          size: DeviceHelper.isMobile(context) ? null : 12.h.w,
-                          Icons.close,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 26.h),
-                textRegularPoppins(
-                  text: AppLocalizations.of(context)
-                      .digit_dash_dialog_forbidden_desc,
-                  textAlign: TextAlign.left,
-                  fontSize: 14.sp,
-                  textOverflow: TextOverflow.visible,
-                  fontWeight: FontWeight.w500,
-                  color: Theme.of(context).primaryColor,
-                ),
-                SizedBox(height: 20.h),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 10.w),
-                  child: Center(
-                    child: Wrap(
-                      spacing: 12.w,
-                      runSpacing: 10.h,
-                      alignment: WrapAlignment.center,
-                      children: forbiddenNumbers.map((num) {
-                        return Container(
-                          width: 40.w,
-                          height: 40.w,
-                          alignment: Alignment.center,
-                          child: Text(
-                            num.toString(),
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 22.sp,
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xFF264579),
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 24.h),
-                SizedBox(
-                  width: double.infinity,
-                  child: CupertinoButton(
-                    borderRadius: BorderRadius.circular(30.r),
-                    color: const Color(0xFF264579),
-                    padding: EdgeInsets.symmetric(vertical: 12.h),
-                    onPressed: () async {
-                      if (!mounted) return;
-                      ref
-                          .read(navigationProvider)
-                          .removeDialog(context: context);
-                      if (!mounted) return;
-                      await controller.startGame();
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.check, color: Colors.white, size: 18),
-                        SizedBox(width: 6.w),
-                        textSemiBoldPoppins(
-                          text: AppLocalizations.of(context).understood,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16.sp,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
   }
 
   Future<void> _handleBackNavigation(BuildContext context) async {
@@ -808,6 +536,268 @@ class _DigitDashScreenState extends ConsumerState<DigitDashScreen> {
       ).notifier,
     );
     controller.checkAnswer(index);
+  }
+
+  Future<void> _showLevel2Dialog(BuildContext context) async {
+    if (!mounted) return;
+
+    final state = ref.read(
+      brainTeaserGameDigitDashControllerProvider(
+        widget.digitDashParams?.levelId ?? 1,
+      ),
+    );
+
+    final controller = ref.read(
+      brainTeaserGameDigitDashControllerProvider(
+        widget.digitDashParams?.levelId ?? 1,
+      ).notifier,
+    );
+
+    final conditionText = state.targetCondition?.toLowerCase() ?? '';
+    String displayText = '';
+    Color highlightColor = Colors.black;
+
+    if (conditionText.contains('odd')) {
+      displayText =
+          AppLocalizations.of(context).digit_dash_dialog_target_desc_odd;
+      highlightColor = const Color(0xFF264579);
+    } else if (conditionText.contains('even')) {
+      displayText =
+          AppLocalizations.of(context).digit_dash_dialog_target_desc_even;
+      highlightColor = const Color(0xFFC92120);
+    } else {
+      displayText = 'Folge der speziellen Regel für dieses Level!';
+    }
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) {
+        return BlurDialogWrapper(
+          child: Dialog(
+            insetPadding: EdgeInsets.symmetric(horizontal: 24.w),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            backgroundColor: const Color(0xFFE7EEF8),
+            child: Padding(
+              padding: EdgeInsets.all(20.w),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        textSemiBoldPoppins(
+                            text: AppLocalizations.of(context)
+                                .digit_dash_dialog_title,
+                            fontSize: 22.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).primaryColor),
+                        GestureDetector(
+                          onTap: () {
+                            ref
+                                .read(navigationProvider)
+                                .removeDialog(context: context);
+                          },
+                          child: Icon(
+                            size:
+                                DeviceHelper.isMobile(context) ? null : 12.h.w,
+                            Icons.close,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 26.h),
+                  textSemiBoldPoppins(
+                    text: displayText,
+                    textAlign: TextAlign.left,
+                    fontSize: 16.sp,
+                    textOverflow: TextOverflow.visible,
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  SizedBox(height: 20.h),
+                  SizedBox(
+                    width: double.infinity,
+                    child: CupertinoButton(
+                      borderRadius: BorderRadius.circular(30.r),
+                      color: const Color(0xFF264579),
+                      padding: EdgeInsets.symmetric(vertical: 12.h),
+                      onPressed: () async {
+                        if (!mounted) return;
+                        ref
+                            .read(navigationProvider)
+                            .removeDialog(context: context);
+                        if (!mounted) return;
+                        await controller.startGame();
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.check,
+                              color: Colors.white, size: 18),
+                          SizedBox(width: 6.w),
+                          textSemiBoldPoppins(
+                            text: AppLocalizations.of(context).understood,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16.sp,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Future<void> _showLevel3ForbiddenDialog(BuildContext context) async {
+    if (!mounted) return;
+
+    final state = ref.read(
+      brainTeaserGameDigitDashControllerProvider(
+        widget.digitDashParams?.levelId ?? 1,
+      ),
+    );
+
+    final controller = ref.read(
+      brainTeaserGameDigitDashControllerProvider(
+        widget.digitDashParams?.levelId ?? 1,
+      ).notifier,
+    );
+
+    final forbiddenNumbers = state.forbiddenNumbers;
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) {
+        return BlurDialogWrapper(
+          child: Dialog(
+            insetPadding: EdgeInsets.symmetric(horizontal: 24.w),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            backgroundColor: const Color(0xFFE7EEF8),
+            child: Padding(
+              padding: EdgeInsets.all(20.w),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        textSemiBoldPoppins(
+                            text: AppLocalizations.of(context)
+                                .digit_dash_dialog_title,
+                            fontSize: 22.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).primaryColor),
+                        GestureDetector(
+                          onTap: () {
+                            ref
+                                .read(navigationProvider)
+                                .removeDialog(context: context);
+                          },
+                          child: Icon(
+                            size:
+                                DeviceHelper.isMobile(context) ? null : 12.h.w,
+                            Icons.close,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 26.h),
+                  textRegularPoppins(
+                    text: AppLocalizations.of(context)
+                        .digit_dash_dialog_forbidden_desc,
+                    textAlign: TextAlign.left,
+                    fontSize: 14.sp,
+                    textOverflow: TextOverflow.visible,
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  SizedBox(height: 20.h),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10.w),
+                    child: Center(
+                      child: Wrap(
+                        spacing: 12.w,
+                        runSpacing: 10.h,
+                        alignment: WrapAlignment.center,
+                        children: forbiddenNumbers.map((number) {
+                          return Container(
+                            width: 40.w,
+                            height: 40.w,
+                            alignment: Alignment.center,
+                            child: Text(
+                              number.toString(),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontSize: 22.sp,
+                                fontWeight: FontWeight.bold,
+                                color: const Color(0xFF264579),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 24.h),
+                  SizedBox(
+                    width: double.infinity,
+                    child: CupertinoButton(
+                      borderRadius: BorderRadius.circular(30.r),
+                      color: const Color(0xFF264579),
+                      padding: EdgeInsets.symmetric(vertical: 12.h),
+                      onPressed: () async {
+                        if (!mounted) return;
+                        ref
+                            .read(navigationProvider)
+                            .removeDialog(context: context);
+                        if (!mounted) return;
+                        await controller.startGame();
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.check,
+                              color: Colors.white, size: 18),
+                          SizedBox(width: 6.w),
+                          textSemiBoldPoppins(
+                            text: AppLocalizations.of(context).understood,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16.sp,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override

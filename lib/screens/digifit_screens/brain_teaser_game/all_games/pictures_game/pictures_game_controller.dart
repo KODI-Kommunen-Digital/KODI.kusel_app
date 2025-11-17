@@ -8,7 +8,7 @@ import 'package:domain/usecase/digifit/brain_teaser_game/all_game_usecase.dart';
 import 'package:domain/usecase/digifit/brain_teaser_game/game_details_tracker_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:riverpod/riverpod.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart'; // ✅ ADD THIS
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 import '../../../../../common_widgets/image_utility.dart';
 import '../../../../../locale/localization_manager.dart';
@@ -44,6 +44,9 @@ class PicturesGameController extends StateNotifier<PicturesGameState> {
   Timer? _level3Timer;
   Timer? _gameTimer;
 
+  final Set<String> _preloadedUrls = {};
+  bool _isPreloadingInBackground = false;
+
   PicturesGameController({
     required this.brainTeaserGamesUseCase,
     required this.tokenStatus,
@@ -58,6 +61,7 @@ class PicturesGameController extends StateNotifier<PicturesGameState> {
     _memorizePairTimer?.cancel();
     _level3Timer?.cancel();
     _gameTimer?.cancel();
+    _preloadedUrls.clear();
     super.dispose();
   }
 
@@ -97,7 +101,6 @@ class PicturesGameController extends StateNotifier<PicturesGameState> {
         state = state.copyWith(
           timerSeconds: 0,
           isGamePlayEnabled: false,
-          isLoading: true,
         );
 
         trackGameProgress(
@@ -155,30 +158,19 @@ class PicturesGameController extends StateNotifier<PicturesGameState> {
     if (!mounted) return;
 
     if (state.isLevel3) {
-      debugPrint('Level 3: Starting game - switching to display images');
-
       state = state.copyWith(
         gameStage: GameStageConstant.progress,
-        isGamePlayEnabled: false,
+        isGamePlayEnabled: true,
+        showLevel3Dialog: false,
+        level3TimerComplete: false,
       );
 
       _level3Timer?.cancel();
-      _level3Timer = Timer(const Duration(seconds: 3), () {
-        if (!mounted) return;
-        debugPrint('Level 3: 5 seconds elapsed, showing dialog');
-
-        state = state.copyWith(
-          showLevel3Dialog: true,
-          level3TimerComplete: true,
-        );
-      });
     } else if (state.isLevel2) {
       if (!state.memorizationComplete) {
-        debugPrint('Memorization not complete yet, cannot start');
         return;
       }
 
-      debugPrint('Start button clicked - moving to check phase');
       _memorizePairTimer?.cancel();
       _startGameTimer();
       _startCheckPhase();
@@ -198,34 +190,33 @@ class PicturesGameController extends StateNotifier<PicturesGameState> {
     }
   }
 
+  Future<void> handleLevel3GridTap() async {
+    if (!mounted || !state.isLevel3 || !state.isGameInProgress) return;
+
+    state = state.copyWith(
+      showLevel3Dialog: true,
+      level3TimerComplete: true,
+    );
+  }
+
   Future<void> handleLevel3ImageSelection(int selectedImageId) async {
     if (!mounted || !state.isLevel3) return;
-
-    debugPrint('Level 3: User selected image ID: $selectedImageId');
 
     final missingImageList = state.gameData?.missingImageList ?? [];
     if (missingImageList.isEmpty) return;
 
     final missingImageId = missingImageList.first.id;
-    debugPrint('Level 3: Missing image ID: $missingImageId');
 
     state = state.copyWith(
-      showLevel3Dialog: false,
       selectedImageId: selectedImageId,
     );
 
     final isMatch = selectedImageId.toString() == missingImageId.toString();
-    debugPrint('Level 3: Match result: $isMatch');
 
     final missingRow = state.missingImageRow;
     final missingCol = state.missingImageCol;
 
-    debugPrint(
-        'Level 3: Missing cell position: row=$missingRow, col=$missingCol');
-
     if (isMatch) {
-      debugPrint('Level 3: Correct answer!');
-
       if (missingRow != null && missingCol != null) {
         final displayList = state.gameData?.displayImagesList ?? [];
         final List<RevealedCell> allRevealedCells = [];
@@ -259,8 +250,6 @@ class PicturesGameController extends StateNotifier<PicturesGameState> {
             imageId: selectedImageId.toString(),
           ),
         );
-
-        debugPrint('Level 3: Total revealed cells: ${allRevealedCells.length}');
 
         state = state.copyWith(
           revealedCells: allRevealedCells,
@@ -328,35 +317,99 @@ class PicturesGameController extends StateNotifier<PicturesGameState> {
 
   Future<void> _preloadAllPairImages() async {
     final memorizePairs = state.gameData?.memorizePairs ?? [];
+    final checkPairs = state.gameData?.checkPairs ?? [];
     final cacheManager = DefaultCacheManager();
 
-    // Set loading = true
-    state = state.copyWith(isLoading: true);
+    if (memorizePairs.isEmpty) return;
 
     try {
+      state = state.copyWith(isLoading: true);
 
-      for (var pair in memorizePairs) {
-        if (pair.image1 != null && pair.image1!.isNotEmpty) {
-          final url1 = ImageUtil.getProcessedImageUrl(
-            imageUrl: pair.image1!,
-            sourceId: 1,
-          );
+      final initialPairsToLoad = memorizePairs.take(2).toList();
+
+      for (var pair in initialPairsToLoad) {
+        await _preloadPairImages(pair, cacheManager);
+      }
+
+      state = state.copyWith(isLoading: false);
+
+      if (memorizePairs.length > 2 || checkPairs.isNotEmpty) {
+        _preloadRemainingImagesInBackground(
+          memorizePairs,
+          checkPairs,
+          cacheManager,
+        );
+      }
+    } catch (e) {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> _preloadPairImages(
+    dynamic pair,
+    DefaultCacheManager cacheManager,
+  ) async {
+    try {
+      if (pair.image1 != null && pair.image1!.isNotEmpty) {
+        final url1 = ImageUtil.getProcessedImageUrl(
+          imageUrl: pair.image1!,
+          sourceId: 1,
+        );
+
+        if (!_preloadedUrls.contains(url1)) {
           await cacheManager.getSingleFile(url1);
-        }
-        if (pair.image2 != null && pair.image2!.isNotEmpty) {
-          final url2 = ImageUtil.getProcessedImageUrl(
-            imageUrl: pair.image2!,
-            sourceId: 1,
-          );
-          await cacheManager.getSingleFile(url2);
+          _preloadedUrls.add(url1);
         }
       }
 
+      if (pair.image2 != null && pair.image2!.isNotEmpty) {
+        final url2 = ImageUtil.getProcessedImageUrl(
+          imageUrl: pair.image2!,
+          sourceId: 1,
+        );
+
+        if (!_preloadedUrls.contains(url2)) {
+          await cacheManager.getSingleFile(url2);
+          _preloadedUrls.add(url2);
+        }
+      }
     } catch (e) {
-    } finally {
-      // ✅ Loading complete
-      state = state.copyWith(isLoading: false);
+      debugPrint('Error loading pair: $e');
     }
+  }
+
+  void _preloadRemainingImagesInBackground(
+    List<dynamic> memorizePairs,
+    List<dynamic> checkPairs,
+    DefaultCacheManager cacheManager,
+  ) {
+    if (_isPreloadingInBackground) return;
+
+    _isPreloadingInBackground = true;
+
+    Future.microtask(() async {
+      try {
+        if (memorizePairs.length > 2) {
+          final remainingMemorizePairs = memorizePairs.skip(2).toList();
+
+          for (var pair in remainingMemorizePairs) {
+            if (!mounted) break;
+            await _preloadPairImages(pair, cacheManager);
+          }
+        }
+
+        if (checkPairs.isNotEmpty) {
+          for (var pair in checkPairs) {
+            if (!mounted) break;
+            await _preloadPairImages(pair, cacheManager);
+          }
+        }
+      } catch (e) {
+        debugPrint('Error in background preloading: $e');
+      } finally {
+        _isPreloadingInBackground = false;
+      }
+    });
   }
 
   Future<void> _startMemorizePhase() async {
@@ -364,8 +417,6 @@ class PicturesGameController extends StateNotifier<PicturesGameState> {
 
     final memorizePairs = state.gameData?.memorizePairs ?? [];
     if (memorizePairs.isEmpty) return;
-
-    debugPrint('Starting memorize phase with ${memorizePairs.length} pairs');
 
     state = state.copyWith(
       gameStage: GameStageConstant.initial,
@@ -386,7 +437,6 @@ class PicturesGameController extends StateNotifier<PicturesGameState> {
     final currentIndex = state.currentPairIndex;
 
     if (currentIndex >= memorizePairs.length) {
-      debugPrint('All memorize pairs shown, waiting for Start button');
       _memorizePairTimer?.cancel();
       state = state.copyWith(
         showMemorizePair: true,
@@ -395,9 +445,6 @@ class PicturesGameController extends StateNotifier<PicturesGameState> {
       );
       return;
     }
-
-    debugPrint(
-        'Showing memorize pair ${currentIndex + 1}/${memorizePairs.length}');
 
     state = state.copyWith(
       showMemorizePair: true,
@@ -418,8 +465,6 @@ class PicturesGameController extends StateNotifier<PicturesGameState> {
 
   void _startCheckPhase() {
     if (!mounted) return;
-
-    debugPrint('Starting check phase');
 
     state = state.copyWith(
       gameStage: GameStageConstant.progress,
@@ -442,15 +487,13 @@ class PicturesGameController extends StateNotifier<PicturesGameState> {
     final currentPair = checkPairs[currentIndex];
     final isCorrect = currentPair.isCorrect ?? false;
 
-    debugPrint('User answered: $userAnswer, Correct answer: $isCorrect');
-
     state = state.copyWith(isGamePlayEnabled: false);
 
     if (userAnswer == isCorrect) {
       final nextIndex = currentIndex + 1;
 
       if (nextIndex >= checkPairs.length) {
-        debugPrint('All check pairs completed successfully!');
+        _stopGameTimer();
 
         await trackGameProgress(
           GameStageConstant.complete,
@@ -460,14 +503,12 @@ class PicturesGameController extends StateNotifier<PicturesGameState> {
                 showResult: true,
                 isAnswerCorrect: true,
                 gameStage: GameStageConstant.complete,
-                showCheckPair: false,
+                showCheckPair: true,
               );
             }
           },
         );
       } else {
-        debugPrint('Correct! Moving to next check pair: $nextIndex');
-
         await Future.delayed(const Duration(milliseconds: 300));
 
         if (mounted) {
@@ -478,7 +519,7 @@ class PicturesGameController extends StateNotifier<PicturesGameState> {
         }
       }
     } else {
-      debugPrint('Wrong answer! Game aborted.');
+      _stopGameTimer();
 
       await trackGameProgress(
         GameStageConstant.abort,
@@ -496,13 +537,29 @@ class PicturesGameController extends StateNotifier<PicturesGameState> {
   }
 
   Future<void> handleCellTap(int row, int col) async {
-    if (!mounted || !state.canPlayGame || state.isLevel2 || state.isLevel3)
+    if (!mounted) {
       return;
+    }
 
-    debugPrint('Cell tapped: row=$row, col=$col');
+    if (state.isLevel3) {
+      final missingRow = state.missingImageRow;
+      final missingCol = state.missingImageCol;
+
+      if (row == missingRow && col == missingCol) {
+        await handleLevel3GridTap();
+      }
+      return;
+    }
+
+    if (state.isLevel2) {
+      return;
+    }
+
+    if (!state.canPlayGame) {
+      return;
+    }
 
     if (state.isCellRevealed(row, col)) {
-      debugPrint('Cell already revealed, ignoring tap');
       return;
     }
 
@@ -513,11 +570,8 @@ class PicturesGameController extends StateNotifier<PicturesGameState> {
     if (index >= pictureGrid.length) return;
 
     final tappedImageId = pictureGrid[index].id?.toString() ?? '';
-    debugPrint('Tapped image ID: $tappedImageId');
 
     if (!state.hasFirstSelection) {
-      debugPrint('First selection made');
-
       final updatedRevealed = List<RevealedCell>.from(state.revealedCells);
       updatedRevealed.add(RevealedCell(
         row: row,
@@ -536,8 +590,6 @@ class PicturesGameController extends StateNotifier<PicturesGameState> {
 
     final firstImageId = state.firstSelectedImageId ?? '';
     final isMatch = firstImageId == tappedImageId;
-
-    debugPrint('Second selection made. Match: $isMatch');
 
     if (isMatch) {
       final updatedRevealed = List<RevealedCell>.from(state.revealedCells);
@@ -680,21 +732,12 @@ class PicturesGameController extends StateNotifier<PicturesGameState> {
 
           final data = (response as PicturesGameResponseModel).data;
 
-          int rows = 4;
-          int columns = 3;
-
           final isLevel3 = data?.allImagesList != null &&
               data!.allImagesList!.isNotEmpty &&
               data.displayImagesList != null &&
               data.displayImagesList!.isNotEmpty &&
               data.missingImageList != null &&
               data.missingImageList!.isNotEmpty;
-
-          if (isLevel3) {
-            rows = 4;
-            columns = 4;
-            debugPrint('Level 3 detected: Using 4x4 grid');
-          }
 
           final isLevel2 =
               data?.memorizePairs != null && data!.memorizePairs!.isNotEmpty;
@@ -703,17 +746,18 @@ class PicturesGameController extends StateNotifier<PicturesGameState> {
 
           int? cachedRow;
           int? cachedCol;
-          if (isLevel3 && data?.displayImagesList != null) {
-            final displayList = data!.displayImagesList!;
+          if (isLevel3 && data.displayImagesList != null) {
+            final displayList = data.displayImagesList!;
+            final gridRows = data.grid?.row ?? 0;
+            final gridCols = data.grid?.col ?? 0;
+
             for (int i = 0; i < displayList.length; i++) {
               final img = displayList[i].image;
               if (img == null ||
                   img.isEmpty ||
                   img == 'admin/games/picturegame/empty.png') {
-                cachedRow = i ~/ columns;
-                cachedCol = i % columns;
-                debugPrint(
-                    'Cached missing cell position: row=$cachedRow, col=$cachedCol');
+                cachedRow = i ~/ gridCols;
+                cachedCol = i % gridCols;
                 break;
               }
             }
@@ -723,8 +767,8 @@ class PicturesGameController extends StateNotifier<PicturesGameState> {
             isLoading: false,
             gameData: data,
             gameStage: GameStageConstant.initial,
-            rows: rows,
-            columns: columns,
+            rows: data?.grid?.row,
+            columns: data?.grid?.col,
             timerSeconds: timerValue,
             maxTimerSeconds: timerValue,
             gamePhase: GamePhase.memorize,

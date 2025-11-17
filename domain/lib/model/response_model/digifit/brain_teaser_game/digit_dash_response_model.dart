@@ -27,6 +27,7 @@ class DigitDashResponseModel extends BaseModel<DigitDashResponseModel> {
 }
 
 class DigitDashData {
+  final String? subDescription;
   final DigitDashGrid grid;
   final int initial;
   final String? targetCondition;
@@ -43,6 +44,7 @@ class DigitDashData {
     required this.timer,
     required this.sessionId,
     required this.activityId,
+    this.subDescription,
   });
 
   factory DigitDashData.fromJson(Map<String, dynamic> json) {
@@ -72,6 +74,8 @@ class DigitDashData {
       timer: json['timer'] is int ? json['timer'] : 0,
       sessionId: json['sessionId'] is int ? json['sessionId'] : 0,
       activityId: json['activityId'] is int ? json['activityId'] : 0,
+      subDescription:
+          json['subDescription'] is String ? json['subDescription'] : null,
     );
   }
 
@@ -84,6 +88,7 @@ class DigitDashData {
       'timer': timer,
       'sessionId': sessionId,
       'activityId': activityId,
+      'subDescription': subDescription,
     };
   }
 }

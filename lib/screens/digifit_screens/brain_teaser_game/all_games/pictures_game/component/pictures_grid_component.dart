@@ -7,11 +7,10 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// Common Grid Widget with Timer
-class CommonGridWidgets extends FlameGame {
-  final CommonGridParamss params;
+class PicturesGridWidget extends FlameGame {
+  final PicturesGridParams params;
 
-  CommonGridWidgets({required this.params});
+  PicturesGridWidget({required this.params});
 
   @override
   ui.Color backgroundColor() => Colors.transparent;
@@ -30,8 +29,7 @@ class CommonGridWidgets extends FlameGame {
 
     _buildGridCells();
 
-    // Add grid lines overlay with timer
-    add(CommonGridLinesComponent(
+    add(PicturesGridLinesComponent(
       params: params,
     ));
   }
@@ -42,7 +40,7 @@ class CommonGridWidgets extends FlameGame {
         final x = col * params.tileWidth + params.tileWidth / 2;
         final y = row * params.tileHeight + params.tileHeight / 2;
 
-        final cell = CommonGridCell(
+        final cell = PicturesGridCell(
           position: Vector2(x, y),
           size: Vector2(params.tileWidth, params.tileHeight),
           borderRadius: _getBorderRadius(row, col),
@@ -76,15 +74,17 @@ class CommonGridWidgets extends FlameGame {
   }
 }
 
-class CommonGridCell extends PositionComponent
-    with TapCallbacks, HasGameReference<CommonGridWidgets> {
+class PicturesGridCell extends PositionComponent
+    with TapCallbacks, HasGameReference<PicturesGridWidget> {
   BorderRadius? borderRadius;
   int row;
   int col;
   Function(int, int)? onTap;
-  final CommonGridParamss params;
+  final PicturesGridParams params;
 
-  CommonGridCell({
+  double _loaderRotation = 0.0;
+
+  PicturesGridCell({
     required super.position,
     required super.size,
     this.borderRadius,
@@ -97,21 +97,89 @@ class CommonGridCell extends PositionComponent
   }
 
   @override
+  void update(double dt) {
+    super.update(dt);
+
+    if (params.isImageLoading) {
+      _loaderRotation += dt * 3.0;
+      if (_loaderRotation > 2 * pi) {
+        _loaderRotation -= 2 * pi;
+      }
+    }
+  }
+
+  @override
   void render(Canvas canvas) {
     super.render(canvas);
 
     final rect = size.toRect();
 
-    // Draw base white background
     final whiteFillPaint = Paint()
       ..color = Colors.white
       ..style = PaintingStyle.fill;
 
+    RRect? rRect;
+
     if (borderRadius != null) {
-      canvas.drawRRect(borderRadius!.toRRect(rect), whiteFillPaint);
+      rRect = borderRadius!.toRRect(rect);
+      canvas.drawRRect(rRect, whiteFillPaint);
     } else {
       canvas.drawRect(rect, whiteFillPaint);
     }
+
+    if (params.isImageLoading) {
+      _drawLoader(canvas, rect);
+    }
+  }
+
+  void _drawLoader(Canvas canvas, Rect rect) {
+    final centerX = rect.width / 2;
+    final centerY = rect.height / 2;
+
+    // Loader size - 20% of cell size
+    final loaderRadius = min(rect.width, rect.height) * 0.15;
+
+    canvas.save();
+
+    // Move to center and rotate
+    canvas.translate(centerX, centerY);
+    canvas.rotate(_loaderRotation);
+
+    // Draw circular loader (arc)
+    final loaderPaint = Paint()
+      ..color = Colors.grey.shade400
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.5
+      ..strokeCap = StrokeCap.round;
+
+    final loaderRect = Rect.fromCircle(
+      center: Offset.zero,
+      radius: loaderRadius,
+    );
+
+    canvas.drawArc(
+      loaderRect,
+      0,
+      3 * pi / 2,
+      false,
+      loaderPaint,
+    );
+
+    final dotAngle = 3 * pi / 2;
+    final dotX = loaderRadius * cos(dotAngle);
+    final dotY = loaderRadius * sin(dotAngle);
+
+    final dotPaint = Paint()
+      ..color = Colors.grey.shade400
+      ..style = PaintingStyle.fill;
+
+    canvas.drawCircle(
+      Offset(dotX, dotY),
+      3.0,
+      dotPaint,
+    );
+
+    canvas.restore();
   }
 
   @override
@@ -120,10 +188,10 @@ class CommonGridCell extends PositionComponent
   }
 }
 
-class CommonGridLinesComponent extends Component {
-  final CommonGridParamss params;
+class PicturesGridLinesComponent extends Component {
+  final PicturesGridParams params;
 
-  CommonGridLinesComponent({
+  PicturesGridLinesComponent({
     required this.params,
   });
 
@@ -132,50 +200,43 @@ class CommonGridLinesComponent extends Component {
     final radius = 16.r;
     final outerRect = Rect.fromLTWH(0, 0, params.width, params.height);
     final outerRRect =
-    RRect.fromRectAndRadius(outerRect, Radius.circular(radius));
+        RRect.fromRectAndRadius(outerRect, Radius.circular(radius));
 
-    // Draw static grey border first
     final greyBorderPaint = Paint()
       ..color = Colors.grey.shade300
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4.0;
     canvas.drawRRect(outerRRect, greyBorderPaint);
 
-    // ✅ CRITICAL: Only draw timer if showTimer is true
     if (params.showTimer) {
       final currentTime = params.currentTime;
       final maxTime = params.maxTime;
-      final showTimerLine = currentTime < maxTime && currentTime >= 0;
 
-      if (showTimerLine) {
-        final progress = maxTime > 0 ? currentTime / maxTime : 0.0;
+      final progress =
+          maxTime > 0 ? (currentTime / maxTime).clamp(0.0, 1.0) : 0.0;
 
-        Color timerColor;
-        if (progress > 0.5) {
-          timerColor = const Color(0xFF4CAF50); // Green
-        } else if (progress > 0.16) {
-          timerColor = const Color(0xFFFF9800); // Orange
-        } else {
-          timerColor = const Color(0xFFC92120); // Red
-        }
-
-        _drawTimerLine(canvas, outerRect, radius, progress, timerColor);
+      Color timerColor;
+      if (progress > 0.5) {
+        timerColor = const Color(0xFF4CAF50);
+      } else if (progress > 0.16) {
+        timerColor = const Color(0xFFFF9800);
+      } else {
+        timerColor = const Color(0xFFC92120);
       }
+
+      _drawTimerLine(canvas, outerRect, radius, progress, timerColor);
     }
 
-    // Draw inner grid lines
     final innerPaint = Paint()
       ..color = params.borderColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
 
-    // Vertical lines
     for (int col = 1; col < params.columns; col++) {
       final x = col * params.tileWidth;
       canvas.drawLine(Offset(x, 0), Offset(x, params.height), innerPaint);
     }
 
-    // Horizontal lines
     for (int row = 1; row < params.rows; row++) {
       final y = row * params.tileHeight;
       canvas.drawLine(Offset(0, y), Offset(params.width, y), innerPaint);
@@ -184,7 +245,6 @@ class CommonGridLinesComponent extends Component {
 
   void _drawTimerLine(
       Canvas canvas, Rect rect, double radius, double progress, Color color) {
-    // ... existing _drawTimerLine code (no changes needed)
     final width = rect.width;
     final height = rect.height;
 
@@ -199,14 +259,21 @@ class CommonGridLinesComponent extends Component {
       ..color = color
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4.0
-      ..strokeCap = StrokeCap.round;
+      ..strokeCap = StrokeCap.butt;
+
+    if (progress <= 0.001) {
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(rect, Radius.circular(radius)),
+        timerPaint,
+      );
+      return;
+    }
 
     final path = Path();
     path.moveTo(radius, 0);
 
     double accumulatedDistance = 0;
 
-    // Top edge
     final topEdgeLength = width - 2 * radius;
     if (traveledDistance <= accumulatedDistance + topEdgeLength) {
       final lineEnd = traveledDistance - accumulatedDistance;
@@ -217,7 +284,6 @@ class CommonGridLinesComponent extends Component {
     path.lineTo(width - radius, 0);
     accumulatedDistance += topEdgeLength;
 
-    // Top-right corner
     final topRightArcLength = cornerCircumference / 4;
     if (traveledDistance <= accumulatedDistance + topRightArcLength) {
       final arcProgress =
@@ -239,7 +305,6 @@ class CommonGridLinesComponent extends Component {
     );
     accumulatedDistance += topRightArcLength;
 
-    // Right edge
     final rightEdgeLength = height - 2 * radius;
     if (traveledDistance <= accumulatedDistance + rightEdgeLength) {
       final lineEnd = traveledDistance - accumulatedDistance;
@@ -250,7 +315,6 @@ class CommonGridLinesComponent extends Component {
     path.lineTo(width, height - radius);
     accumulatedDistance += rightEdgeLength;
 
-    // Bottom-right corner
     final bottomRightArcLength = cornerCircumference / 4;
     if (traveledDistance <= accumulatedDistance + bottomRightArcLength) {
       final arcProgress =
@@ -274,7 +338,6 @@ class CommonGridLinesComponent extends Component {
     );
     accumulatedDistance += bottomRightArcLength;
 
-    // Bottom edge
     final bottomEdgeLength = width - 2 * radius;
     if (traveledDistance <= accumulatedDistance + bottomEdgeLength) {
       final lineEnd = traveledDistance - accumulatedDistance;
@@ -285,7 +348,6 @@ class CommonGridLinesComponent extends Component {
     path.lineTo(radius, height);
     accumulatedDistance += bottomEdgeLength;
 
-    // Bottom-left corner
     final bottomLeftArcLength = cornerCircumference / 4;
     if (traveledDistance <= accumulatedDistance + bottomLeftArcLength) {
       final arcProgress =
@@ -307,7 +369,6 @@ class CommonGridLinesComponent extends Component {
     );
     accumulatedDistance += bottomLeftArcLength;
 
-    // Left edge
     final leftEdgeLength = height - 2 * radius;
     if (traveledDistance <= accumulatedDistance + leftEdgeLength) {
       final lineEnd = traveledDistance - accumulatedDistance;
@@ -318,7 +379,6 @@ class CommonGridLinesComponent extends Component {
     path.lineTo(0, radius);
     accumulatedDistance += leftEdgeLength;
 
-    // Top-left corner
     final topLeftArcLength = cornerCircumference / 4;
     if (traveledDistance <= accumulatedDistance + topLeftArcLength) {
       final arcProgress =
@@ -333,10 +393,19 @@ class CommonGridLinesComponent extends Component {
       return;
     }
 
+    path.arcTo(
+      Rect.fromLTWH(0, 0, 2 * radius, 2 * radius),
+      pi,
+      pi / 2,
+      false,
+    );
+    path.lineTo(radius, 0);
+
     canvas.drawPath(path, timerPaint);
   }
 }
-class CommonGridParamss {
+
+class PicturesGridParams {
   final double width;
   final double height;
   final double tileHeight;
@@ -349,8 +418,9 @@ class CommonGridParamss {
   int currentTime;
   final int maxTime;
   final bool showTimer;
+  final bool isImageLoading;
 
-  CommonGridParamss({
+  PicturesGridParams({
     required this.width,
     required this.height,
     required this.tileHeight,
@@ -363,6 +433,6 @@ class CommonGridParamss {
     this.currentTime = 60,
     this.maxTime = 60,
     this.showTimer = true,
+    this.isImageLoading = false,
   });
 }
-

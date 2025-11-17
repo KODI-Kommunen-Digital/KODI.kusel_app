@@ -27,6 +27,7 @@ class FlipCatchResponseModel extends BaseModel<FlipCatchResponseModel> {
 }
 
 class FlipCatchData {
+  final String? subDescription;
   final List<String> targetWords;
   final List<String> originalText;
   final int timer;
@@ -39,6 +40,7 @@ class FlipCatchData {
     required this.timer,
     required this.sessionId,
     required this.activityId,
+    this.subDescription,
   });
 
   factory FlipCatchData.fromJson(Map<String, dynamic> json) {
@@ -52,6 +54,7 @@ class FlipCatchData {
       timer: json['timer'] ?? 0,
       sessionId: json['sessionId'] ?? 0,
       activityId: json['activityId'] ?? 0,
+      subDescription: json['subDescription'] ?? '',
     );
   }
 
@@ -62,6 +65,7 @@ class FlipCatchData {
       'timer': timer,
       'sessionId': sessionId,
       'activityId': activityId,
+      'subDescription': subDescription,
     };
   }
 }
