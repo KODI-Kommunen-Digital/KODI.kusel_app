@@ -26,7 +26,7 @@ class _CustomSelectionButtonState extends ConsumerState<CustomSelectionButton> {
         padding: EdgeInsets.symmetric(horizontal :12.w, vertical: 10.h),
         decoration: BoxDecoration(
             color: widget.isSelected
-                ? Theme.of(context).textTheme.labelMedium?.color
+                ? Theme.of(context).indicatorColor
                 : Theme.of(context).colorScheme.onPrimary,
             borderRadius: BorderRadius.circular(50.r)
         ),
@@ -35,7 +35,7 @@ class _CustomSelectionButtonState extends ConsumerState<CustomSelectionButton> {
             fontSize: 13,
             fontWeight: FontWeight.w600,
             color: widget.isSelected
-                ? Theme.of(context).textTheme.labelSmall?.color
+                ? Theme.of(context).primaryColor
                 : Theme.of(context).textTheme.labelMedium?.color),
       ),
     );

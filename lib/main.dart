@@ -70,6 +70,15 @@ class _MyAppState extends ConsumerState<MyApp> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+
+
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        systemNavigationBarColor: Colors.white,     // bottom bar color
+        systemNavigationBarIconBrightness: Brightness.dark, // icon color
+      ),
+    );
+
     return ScreenUtilInit(
       designSize: Size(360, 690),
       builder: (context, child) {
