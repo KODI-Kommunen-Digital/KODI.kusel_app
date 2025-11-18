@@ -96,7 +96,7 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
           height: 320.h,
           child: CommonBackgroundClipperWidget(
             clipperType: DownstreamCurveClipper(),
-            imageUrl: imagePath['background_image'] ?? "",
+            imageUrl: imagePath['digifit_overview_image'] ?? "",
             height: 280.h,
             blurredBackground: true,
             isBackArrowEnabled: true,

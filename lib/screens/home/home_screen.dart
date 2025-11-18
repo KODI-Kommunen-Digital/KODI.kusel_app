@@ -318,6 +318,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               10.horizontalSpace,
               if (state.newsList != null && state.newsList!.isNotEmpty)
                 EventsListSectionWidget(
+                  boxFit: BoxFit.cover,
                   context: context,
                   eventsList: state.newsList ?? [],
                   heading: AppLocalizations.of(context).news,

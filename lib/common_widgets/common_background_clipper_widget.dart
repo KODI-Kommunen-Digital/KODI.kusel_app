@@ -28,24 +28,23 @@ class CommonBackgroundClipperWidget extends ConsumerStatefulWidget {
   final BoxFit? imageFit;
   final double? headingTextLeftMargin;
 
-  const CommonBackgroundClipperWidget({
-    super.key,
-    required this.clipperType,
-    required this.imageUrl,
-    required this.isStaticImage,
-    this.isBackArrowEnabled,
-    this.sourceId,
-    this.blurredBackground,
-    this.customWidget1,
-    this.customWidget2,
-    this.customWidget3,
-    this.headingText,
-    this.height,
-    this.isLoading,
-    this.filterWidget,
-    this.imageFit,
-    this.headingTextLeftMargin
-  });
+  const CommonBackgroundClipperWidget(
+      {super.key,
+      required this.clipperType,
+      required this.imageUrl,
+      required this.isStaticImage,
+      this.isBackArrowEnabled,
+      this.sourceId,
+      this.blurredBackground,
+      this.customWidget1,
+      this.customWidget2,
+      this.customWidget3,
+      this.headingText,
+      this.height,
+      this.isLoading,
+      this.filterWidget,
+      this.imageFit,
+      this.headingTextLeftMargin});
 
   @override
   ConsumerState<CommonBackgroundClipperWidget> createState() =>
@@ -75,6 +74,7 @@ class _CommonBackgroundClipperWidgetState
                               fit: widget.imageFit ?? BoxFit.cover,
                             )
                           : ImageUtil.loadNetworkImage(
+                              fit: widget.imageFit ?? BoxFit.cover,
                               imageUrl: widget.imageUrl,
                               context: context,
                               sourceId: widget.sourceId,
@@ -92,20 +92,20 @@ class _CommonBackgroundClipperWidgetState
                             ),
                     ),
                   ),
-                  if(widget.blurredBackground ?? false)
-                  Positioned.fill(
-                    child: ClipPath(
-                      clipper: widget.clipperType,
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
-                        child: Container(
-                          color: Theme.of(context)
-                              .cardColor
-                              .withValues(alpha: 0.4),
+                  if (widget.blurredBackground ?? false)
+                    Positioned.fill(
+                      child: ClipPath(
+                        clipper: widget.clipperType,
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 2, sigmaY: 0),
+                          child: Container(
+                            color: Theme.of(context)
+                                .cardColor
+                                .withValues(alpha: 0.4),
+                          ),
                         ),
                       ),
                     ),
-                  ),
                 ],
               ),
         Positioned(
@@ -119,7 +119,10 @@ class _CommonBackgroundClipperWidgetState
                 children: [
                   if (widget.isBackArrowEnabled ?? false)
                     Expanded(
-                      flex: (widget.headingText != null && widget.filterWidget!=null) ? 1 : 0,
+                      flex: (widget.headingText != null &&
+                              widget.filterWidget != null)
+                          ? 1
+                          : 0,
                       child: ArrowBackWidget(
                         onTap: () {
                           ref
@@ -141,7 +144,7 @@ class _CommonBackgroundClipperWidgetState
                           fontSize: 20,
                           text: widget.headingText ?? ''),
                     ),
-                  if(widget.filterWidget!=null)
+                  if (widget.filterWidget != null)
                     Expanded(
                       flex: 3,
                       child: widget.filterWidget!,

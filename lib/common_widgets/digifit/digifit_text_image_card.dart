@@ -82,7 +82,7 @@ class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
                                 context: context);
                           }
                         },
-                        height: 75.h,
+                        height: 80.h,
                         width: 80.w,
                         imageUrl: widget.imageUrl,
                         sourceId: widget.sourceId,

@@ -71,7 +71,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
           ),
           Positioned(
             top: 30.h,
-            left: 12.h,
+            left: 12.w,
             child: ArrowBackWidget(
               onTap: () {
                 ref.read(navigationProvider).removeTopPage(context: context);
@@ -130,7 +130,8 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
           textBoldPoppins(
               text: AppLocalizations.of(context).our_offers,
               textAlign: TextAlign.start,
-              fontSize: 14),
+              color: Theme.of(context).textTheme.bodyLarge?.color,
+              fontSize: 20),
           14.verticalSpace,
           if (state.mobilityData != null &&
               state.mobilityData!.servicesOffered!.isNotEmpty)

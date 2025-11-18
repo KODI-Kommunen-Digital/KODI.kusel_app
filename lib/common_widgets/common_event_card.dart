@@ -18,19 +18,21 @@ class CommonEventCard extends ConsumerStatefulWidget {
   final VoidCallback? onCardTap;
   final VoidCallback? onFavorite;
   final int sourceId;
+  final BoxFit? boxFit;
 
-  const CommonEventCard({
-    Key? key,
-    required this.imageUrl,
-    required this.date,
-    required this.title,
-    required this.location,
-    required this.isFavouriteVisible,
-    required this.isFavorite,
-    required this.sourceId,
-    this.onCardTap,
-    this.onFavorite,
-  }) : super(key: key);
+  const CommonEventCard(
+      {Key? key,
+      required this.imageUrl,
+      required this.date,
+      required this.title,
+      required this.location,
+      required this.isFavouriteVisible,
+      required this.isFavorite,
+      required this.sourceId,
+      this.onCardTap,
+      this.onFavorite,
+      this.boxFit})
+      : super(key: key);
 
   @override
   ConsumerState<CommonEventCard> createState() => _CommonEventCardState();
@@ -55,6 +57,7 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: ImageUtil.loadNetworkImage(
+                    fit: widget.boxFit ?? BoxFit.fill,
                     memCacheHeight: 400,
                     memCacheWidth: 500,
                     height: 65.h,
@@ -64,7 +67,6 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                     context: context),
               ),
               SizedBox(width: 11.w.h),
-              // Texts
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,26 +75,19 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                         text: KuselDateUtils.formatDate(widget.date),
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: Theme
-                            .of(context)
-                            .textTheme
-                            .labelMedium
-                            ?.color,
-                    textAlign: TextAlign.start),
+                        color: Theme.of(context).textTheme.labelMedium?.color,
+                        textAlign: TextAlign.start),
                     const SizedBox(height: 4),
-                    textSemiBoldMontserrat(text: widget.title,
-                    textOverflow: TextOverflow.visible,
-                    fontSize: 13,
+                    textSemiBoldMontserrat(
+                        text: widget.title,
+                        textOverflow: TextOverflow.visible,
+                        fontSize: 13,
                         fontWeight: FontWeight.w600,
                         textAlign: TextAlign.start),
                     const SizedBox(height: 2),
                     textRegularMontserrat(
                         text: widget.location,
-                        color: Theme
-                            .of(context)
-                            .textTheme
-                            .labelMedium
-                            ?.color,
+                        color: Theme.of(context).textTheme.labelMedium?.color,
                         fontWeight: FontWeight.w600,
                         fontSize: 12,
                         textAlign: TextAlign.start),
@@ -121,7 +116,6 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
     );
   }
 }
-
 
 Widget eventCartShimmerEffect() {
   return ListTile(

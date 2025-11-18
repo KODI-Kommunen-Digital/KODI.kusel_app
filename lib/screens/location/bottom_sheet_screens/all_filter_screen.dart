@@ -51,7 +51,7 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
             width: 100.w,
             padding: EdgeInsets.only(left: 8.w, right: 18.w, bottom: 40.h),
             decoration: BoxDecoration(
-              color: Theme.of(context).textTheme.labelMedium!.color,
+              color: Theme.of(context).hintColor,
               borderRadius: BorderRadius.circular(10.r),
             ),
           ),

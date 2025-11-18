@@ -32,7 +32,7 @@ class TourismScreenState {
       List<Listing>? recommendationList,
       double? lat,
       double? long,
-      bool? isRecommendationLoading,
+      bool?  isRecommendationLoading,
       bool? isUserLoggedIn,
       int? highlightCount
       }) {
