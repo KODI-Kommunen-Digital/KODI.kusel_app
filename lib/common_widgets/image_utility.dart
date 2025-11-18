@@ -27,6 +27,7 @@ class ImageUtil {
       child: CachedNetworkImage(
         fit: fit ?? BoxFit.cover,
         height: height,
+        filterQuality: FilterQuality.high,
         width: width,
         imageUrl: imageLoaderUtility(image: imageUrl, sourceId: sourceId ?? 3),
         memCacheHeight: memCacheHeight ?? 600,

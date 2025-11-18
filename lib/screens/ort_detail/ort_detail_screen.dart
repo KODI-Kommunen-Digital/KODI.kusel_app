@@ -249,7 +249,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                 },
               ),
             if(ref.watch(ortDetailScreenControllerProvider).ortDetailDataModel?.mayorName!=null)
-            _buildMayorCard(),
+            // _buildMayorCard(),
             LocalSvgImageTextServiceCard(
               onTap: () => ref.read(navigationProvider).navigateUsingPath(
                   path: webViewPagePath,
@@ -372,8 +372,8 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                 BoxDecoration(shape: BoxShape.circle, color: Colors.white),
             child: (state.ortDetailDataModel?.image != null)
                 ? ImageUtil.loadNetworkImage(
-                     memCacheWidth: 100,
-                    memCacheHeight: 100,
+                     memCacheWidth: 130,
+                    memCacheHeight: 130,
                     imageUrl: state.ortDetailDataModel!.image!,
                     sourceId: 1,
                     fit: BoxFit.contain,
@@ -451,7 +451,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
     return Consumer(builder: (context, ref, _) {
       final state = ref.watch(ortDetailScreenControllerProvider);
       return Padding(
-        padding: EdgeInsets.only(left: 16),
+        padding: EdgeInsets.only(left: 16, right: 16),
         child: CustomButton(
             onPressed: () => ref.read(navigationProvider).navigateUsingPath(
                 path: webViewPagePath,
