@@ -250,7 +250,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                                 context: context, path: homeScreenPath);
                           } else {
                             ref.read(navigationProvider).removeAllAndNavigate(
-                                context: context, path: onboardingScreenPath);
+                                context: context, path: onboardingStartPagePath);
                           }
                         },
                         error: (message) {

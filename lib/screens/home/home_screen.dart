@@ -248,7 +248,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         ))),
               ),
               customPageViewer(isLoading),
-              20.verticalSpace,
+              5.verticalSpace,
               WeatherWidget(
                 weatherResponseModel:
                     ref.watch(homeScreenProvider).weatherResponseModel,
@@ -432,7 +432,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
       child: Column(
         children: [
-          40.verticalSpace,
+          10.verticalSpace,
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 8.w),
             child: isLoading
@@ -562,6 +562,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                           },
                           isFavouriteVisible: true,
                           sourceId: listing.sourceId!,
+                          imageFit: BoxFit.cover,
                         ),
                       );
                     },
