@@ -52,7 +52,7 @@ class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
         color: Colors.white,
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
-        elevation: 4,
+        elevation: 2,
         child: Stack(
           children: [
             Padding(
@@ -95,14 +95,17 @@ class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
                       children: [
                         textRegularMontserrat(
                             text: widget.heading,
-                            fontSize: 9,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
                             color:
                                 Theme.of(context).textTheme.labelMedium?.color),
                         4.verticalSpace,
                         textSemiBoldMontserrat(
                             text: widget.title,
                             textAlign: TextAlign.start,
+                            fontWeight: FontWeight.w600,
                             fontSize: 16,
+                            color: Theme.of(context).textTheme.bodyLarge?.color,
                             textOverflow: TextOverflow.visible),
                         4.verticalSpace,
                         Visibility(

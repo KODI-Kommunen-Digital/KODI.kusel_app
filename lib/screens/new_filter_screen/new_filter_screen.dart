@@ -45,14 +45,14 @@ class _NewFilterScreenState extends ConsumerState<NewFilterScreen> {
       if (!KuselDateUtils.checkDatesAreSame(
           widget.params.startDate, defaultDate)) {
         periodTextEditingController.text =
-            KuselDateUtils.formatDateInFormatYYYYMMDD(
+            KuselDateUtils.formatDateInFormatDDMMYYYY(
                 widget.params.startDate.toString());
 
         if (!KuselDateUtils.checkDatesAreSame(
             widget.params.endDate, defaultDate)) {
           final toLabel = AppLocalizations.of(context).to;
           periodTextEditingController.text =
-              "${periodTextEditingController.text} $toLabel ${KuselDateUtils.formatDateInFormatYYYYMMDD(widget.params.endDate.toString())}";
+              "${periodTextEditingController.text} $toLabel ${KuselDateUtils.formatDateInFormatDDMMYYYY(widget.params.endDate.toString())}";
         }
       }
     });
@@ -146,14 +146,15 @@ class _NewFilterScreenState extends ConsumerState<NewFilterScreen> {
                     if (!KuselDateUtils.checkDatesAreSame(
                         startDate, defaultDate)) {
                       periodTextEditingController.text =
-                          KuselDateUtils.formatDateInFormatYYYYMMDD(
+                          KuselDateUtils.formatDateInFormatDDMMYYYY(
+                              // Changed here
                               startDate.toString());
                     }
 
                     if (!KuselDateUtils.checkDatesAreSame(
                         endDate, defaultDate)) {
                       periodTextEditingController.text =
-                          "${periodTextEditingController.text} ${AppLocalizations.of(context).to} ${KuselDateUtils.formatDateInFormatYYYYMMDD(endDate.toString())}";
+                          "${periodTextEditingController.text} ${AppLocalizations.of(context).to} ${KuselDateUtils.formatDateInFormatDDMMYYYY(endDate.toString())}"; // Changed here
                     }
 
                     ref
@@ -166,7 +167,7 @@ class _NewFilterScreenState extends ConsumerState<NewFilterScreen> {
             readOnly: true,
             textEditingController: periodTextEditingController,
             suffixIcon: Padding(
-              padding:  EdgeInsets.only(right: 16.w),
+              padding: EdgeInsets.only(right: 16.w),
               child: Icon(
                 Icons.calendar_month,
                 color: Theme.of(context).colorScheme.primary,
@@ -318,19 +319,18 @@ class _NewFilterScreenState extends ConsumerState<NewFilterScreen> {
   Widget _buildChip(String label, {bool isExtra = false}) {
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: isExtra ? 16.w : 16.w, // Increase horizontal padding for +N chip
+        horizontal: isExtra ? 16.w : 16.w,
+        // Increase horizontal padding for +N chip
         vertical: 8.h,
       ),
       decoration: BoxDecoration(
-        color: isExtra
-            ? Colors.transparent
-            : const Color(0xFFAADB40),
+        color: isExtra ? Colors.transparent : const Color(0xFFAADB40),
         borderRadius: BorderRadius.circular(20.r),
         border: isExtra
             ? Border.all(
-          color: const Color(0xFFAADB40),
-          width: 1.5,
-        )
+                color: const Color(0xFFAADB40),
+                width: 1.5,
+              )
             : null,
       ),
       child: textRegularMontserrat(

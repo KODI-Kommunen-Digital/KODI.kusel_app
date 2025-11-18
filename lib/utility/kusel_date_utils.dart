@@ -51,6 +51,17 @@ class KuselDateUtils {
     }
   }
 
+  // Add this new method for UI display
+  static String formatDateInFormatDDMMYYYY(String inputDate) {
+    try {
+      final DateTime parsedDate = DateTime.parse(inputDate);
+      final DateFormat formatter = DateFormat('dd-MM-yyyy');
+      return formatter.format(parsedDate);
+    } catch (e) {
+      return inputDate;
+    }
+  }
+
   static String formatDateTime(String inputDate) {
     try {
       final DateTime parsedDate = DateTime.parse(inputDate);
