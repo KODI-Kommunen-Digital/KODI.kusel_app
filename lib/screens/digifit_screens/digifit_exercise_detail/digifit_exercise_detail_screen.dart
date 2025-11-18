@@ -28,6 +28,7 @@ import '../../../common_widgets/digifit/digifit_text_image_card.dart';
 import '../../../common_widgets/text_styles.dart';
 import '../../../common_widgets/toast_message.dart';
 import '../../../navigation/navigation.dart';
+import '../../../theme_manager/colors.dart';
 import 'digifit_exercise_details_controller.dart';
 import 'enum/digifit_exercise_session_status_enum.dart';
 
@@ -250,13 +251,13 @@ class _DigifitExerciseDetailScreenState
 
   _isCompletedCard() {
     return Card(
-      color: Theme.of(context).canvasColor,
+      color: lightThemeHighlightGreenColor,
       elevation: 1,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.r),
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 5.h),
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
         child: Row(
           children: [
             Icon(
@@ -265,11 +266,12 @@ class _DigifitExerciseDetailScreenState
               size: 18.h.w,
             ),
             8.horizontalSpace,
-            textBoldMontserrat(
-                text: AppLocalizations.of(context).complete,
-                color: Theme.of(context).primaryColor,
+            textSemiBoldMontserrat(
+                text: AppLocalizations.of(context).digifit_completed_top,
+                color: Colors.black,
+                fontWeight: FontWeight.w600,
                 textOverflow: TextOverflow.visible,
-                fontSize: 13)
+                fontSize: 16)
           ],
         ),
       ),
@@ -288,107 +290,115 @@ class _DigifitExerciseDetailScreenState
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 13.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          DigifitVideoPlayerWidget(
-            equipmentId: equipmentId,
-            videoUrl: digifitExerciseDetailsState
-                    .digifitExerciseEquipmentModel?.machineVideoUrl ??
-                '',
-            sourceId: digifitExerciseDetailsState
-                    .digifitExerciseEquipmentModel?.sourceId ??
-                0,
-            startTimer: () {
-              startTimer();
-              // ref
-              //     .read(digifitExerciseDetailsControllerProvider(equipmentId)
-              //         .notifier)
-              //     .updatedAt();
-            },
-            pauseTimer: () {
-              pauseTimer();
-            },
-          ),
-          ((ref
-                              .watch(digifitExerciseDetailsControllerProvider(
-                                  equipmentId))
-                              .isScannerVisible ==
-                          false &&
-                      !ref
-                          .watch(digifitExerciseDetailsControllerProvider(
-                              equipmentId))
-                          .isReadyToSubmitSet) &&
-                  ((ref
-                                  .watch(
-                                      digifitExerciseDetailsControllerProvider(
-                                          equipmentId))
-                                  .digifitExerciseEquipmentModel
-                                  ?.userProgress
-                                  .isCompleted !=
-                              null &&
-                          !ref
-                              .watch(digifitExerciseDetailsControllerProvider(
-                                  equipmentId))
-                              .digifitExerciseEquipmentModel!
-                              .userProgress
-                              .isCompleted) ||
-                      ref
-                              .watch(digifitExerciseDetailsControllerProvider(
-                                  equipmentId))
-                              .digifitExerciseEquipmentModel
-                              ?.userProgress
-                              .isCompleted ==
-                          true))
-              ? 30.verticalSpace
-              : 60.verticalSpace,
-          textBoldPoppins(
-              text: digifitExerciseDetailsState
-                      .digifitExerciseEquipmentModel?.name ??
+      child: Padding(
+        padding: const EdgeInsets.only(left: 4.0, right: 4.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            DigifitVideoPlayerWidget(
+              equipmentId: equipmentId,
+              videoUrl: digifitExerciseDetailsState
+                      .digifitExerciseEquipmentModel?.machineVideoUrl ??
                   '',
-              fontSize: 15,
-              textOverflow: TextOverflow.visible,
-              color: Theme.of(context).textTheme.bodyLarge?.color,
-              textAlign: TextAlign.start),
-          8.verticalSpace,
-          CommonHtmlWidget(data: description, fontSize: 16.sp),
-          12.verticalSpace,
-          textBoldPoppins(
-              text: AppLocalizations.of(context).digifit_recommended_exercise,
-              color: Theme.of(context).textTheme.bodyLarge?.color,
-              fontSize: 13),
-          8.verticalSpace,
-          textRegularMontserrat(
-              text: digifitExerciseDetailsState
-                      .digifitExerciseEquipmentModel?.recommendation.sets ??
-                  '',
-              textOverflow: TextOverflow.visible,
-              color: Theme.of(context).textTheme.bodyLarge?.color,
-              textAlign: TextAlign.start),
-          textRegularMontserrat(
-              text: digifitExerciseDetailsState.digifitExerciseEquipmentModel
-                      ?.recommendation.repetitions ??
-                  '',
-              color: Theme.of(context).textTheme.bodyLarge?.color,
-              textOverflow: TextOverflow.visible,
-              textAlign: TextAlign.start),
-          Visibility(
-            visible: ref
-                .watch(digifitExerciseDetailsControllerProvider(equipmentId))
-                .isScannerVisible,
-            child: _buildScanner(context),
-          ),
-          20.verticalSpace,
-          if (digifitExerciseDetailsState
-                  .digifitExerciseRelatedEquipmentsModel.isNotEmpty &&
-              digifitExerciseDetailsState.isNetworkAvailable)
-            _buildCourseDetailSection(
-                isButtonVisible: false,
-                relatedEquipments: digifitExerciseDetailsState
-                    .digifitExerciseRelatedEquipmentsModel),
-        ],
+              sourceId: digifitExerciseDetailsState
+                      .digifitExerciseEquipmentModel?.sourceId ??
+                  0,
+              startTimer: () {
+                startTimer();
+              },
+              pauseTimer: () {
+                pauseTimer();
+              },
+            ),
+            SizedBox(
+              height: _calculateSpacingAfterVideo(equipmentId),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 6.0),
+              child: textBoldPoppins(
+                  text: digifitExerciseDetailsState
+                          .digifitExerciseEquipmentModel?.name ??
+                      '',
+                  fontSize: 16,
+                  textOverflow: TextOverflow.visible,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                  textAlign: TextAlign.start),
+            ),
+            8.verticalSpace,
+            Padding(
+              padding: const EdgeInsets.only(left: 6.0),
+              child: CommonHtmlWidget(data: description, fontSize: 16.sp),
+            ),
+            12.verticalSpace,
+            Padding(
+              padding: const EdgeInsets.only(left: 6.0),
+              child: textBoldPoppins(
+                  text:
+                      AppLocalizations.of(context).digifit_recommended_exercise,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                  fontSize: 16),
+            ),
+            8.verticalSpace,
+            Padding(
+              padding: const EdgeInsets.only(left: 6.0),
+              child: textRegularMontserrat(
+                  text: digifitExerciseDetailsState
+                          .digifitExerciseEquipmentModel?.recommendation.sets ??
+                      '',
+                  textOverflow: TextOverflow.visible,
+                  fontSize: 16,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                  textAlign: TextAlign.start),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 6.0),
+              child: textRegularMontserrat(
+                  text: digifitExerciseDetailsState
+                          .digifitExerciseEquipmentModel
+                          ?.recommendation
+                          .repetitions ??
+                      '',
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                  textOverflow: TextOverflow.visible,
+                  textAlign: TextAlign.start),
+            ),
+            Visibility(
+              visible: ref
+                  .watch(digifitExerciseDetailsControllerProvider(equipmentId))
+                  .isScannerVisible,
+              child: _buildScanner(context),
+            ),
+            20.verticalSpace,
+            if (digifitExerciseDetailsState
+                    .digifitExerciseRelatedEquipmentsModel.isNotEmpty &&
+                digifitExerciseDetailsState.isNetworkAvailable)
+              _buildCourseDetailSection(
+                  isButtonVisible: false,
+                  relatedEquipments: digifitExerciseDetailsState
+                      .digifitExerciseRelatedEquipmentsModel),
+          ],
+        ),
       ),
     );
+  }
+
+  double _calculateSpacingAfterVideo(int equipmentId) {
+    final controller =
+        ref.watch(digifitExerciseDetailsControllerProvider(equipmentId));
+
+    bool isScannerVisible = controller.isScannerVisible;
+    bool isReadyToSubmitSet = controller.isReadyToSubmitSet;
+    bool isCompleted =
+        controller.digifitExerciseEquipmentModel?.userProgress.isCompleted ??
+            false;
+
+    if (!isScannerVisible && !isReadyToSubmitSet && isCompleted) {
+      return 140.h;
+    } else if (!isScannerVisible && !isReadyToSubmitSet && !isCompleted) {
+      return 30.h;
+    } else {
+      return 60.h;
+    }
   }
 
   _buildCourseDetailSection(
@@ -409,7 +419,7 @@ class _DigifitExerciseDetailScreenState
         textRegularPoppins(
             text: AppLocalizations.of(context)
                 .digifit_exercise_details_open_station,
-            fontSize: 16,
+            fontSize: 18,
             fontWeight: FontWeight.w600,
             textOverflow: TextOverflow.visible,
             color: Theme.of(context).textTheme.bodyLarge?.color,
