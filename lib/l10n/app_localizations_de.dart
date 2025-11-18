@@ -282,7 +282,7 @@ class AppLocalizationsDe extends AppLocalizations {
       '! Für was interessierst du dich im Landkreis?';
 
   @override
-  String get complete => 'Abschließend';
+  String get complete => 'Abschließen';
 
   @override
   String get preparing_the_app_text =>
@@ -1025,4 +1025,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get wrong_answer => 'Falsch';
+
+  @override
+  String get digifit_completed_top => 'Abgeschlossen';
 }

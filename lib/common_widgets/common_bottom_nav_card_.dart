@@ -86,7 +86,7 @@ class _CommonBottomNavCardState extends ConsumerState<CommonBottomNavCard> {
         case ExerciseStageConstant.initial:
           buttonText = AppLocalizations.of(context)
               .digifit_exercise_details_start_session;
-          icon = Icons.flag_outlined;
+          icon = Icons.play_circle_outline;
           break;
 
         case ExerciseStageConstant.start:
@@ -167,7 +167,7 @@ class _CommonBottomNavCardState extends ConsumerState<CommonBottomNavCard> {
                     ),
                     child: Padding(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 12.w, vertical: 5.h),
+                          EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
                       child: Row(
                         children: [
                           Icon(
@@ -180,7 +180,7 @@ class _CommonBottomNavCardState extends ConsumerState<CommonBottomNavCard> {
                             text: buttonText,
                             color: Colors.white,
                             textOverflow: TextOverflow.visible,
-                            fontSize: 13,
+                            fontSize: 16,
                           )
                         ],
                       ),

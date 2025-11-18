@@ -1017,4 +1017,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get wrong_answer => 'Wrong';
+
+  @override
+  String get digifit_completed_top => 'completed';
 }
