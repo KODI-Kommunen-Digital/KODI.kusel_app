@@ -50,14 +50,7 @@ class _CityDetailLocationWidgetState
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(15.r),
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(context).primaryColor.withValues(alpha: 0.46),
-              offset: Offset(0, 4),
-              blurRadius: 24,
-            ),
-          ]),
+          borderRadius: BorderRadius.circular(15.r)),
       child: Column(
         children: [
           Padding(

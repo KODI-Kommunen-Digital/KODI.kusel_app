@@ -28,7 +28,7 @@ class _DigifitStatusWidgetState extends ConsumerState<DigifitOptionsCard> {
         onTap: widget.onCardTap,
         child: Card(
           color: Theme.of(context).canvasColor,
-          elevation: 3,
+          elevation: 2,
           shape:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
           child: Padding(

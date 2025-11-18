@@ -124,6 +124,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                   'https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg',
               sourceId: state.eventDetails.sourceId,
               isBackArrowEnabled: false,
+              imageFit: BoxFit.fill,
               isStaticImage: false),
           _buildEventsUi(state),
           if (state.recommendList.isNotEmpty) _buildRecommendation(context),
@@ -322,13 +323,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
         decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.onPrimary,
             borderRadius: BorderRadius.circular(20.r),
-            boxShadow: [
-              BoxShadow(
-                color: Theme.of(context).primaryColor.withValues(alpha: 0.46),
-                offset: Offset(0, 4),
-                blurRadius: 8,
-              ),
-            ]),
+          ),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 8.h),
           child: Row(

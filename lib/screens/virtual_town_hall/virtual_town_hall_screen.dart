@@ -89,6 +89,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
               _customPageViewer(municipalityList: state.municipalitiesList ?? []),
               if (state.newsList != null && state.newsList!.isNotEmpty)
                 EventsListSectionWidget(
+                  boxFit: BoxFit.cover,
                   context: context,
                   eventsList: state.newsList ?? [],
                   heading: AppLocalizations.of(context).news,

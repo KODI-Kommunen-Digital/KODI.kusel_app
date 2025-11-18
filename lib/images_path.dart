@@ -111,6 +111,7 @@ Map<String, String> _pngImagePath = {
 
 Map<String, String> _jpegImagePath = {
   "highlight_card_image": "assets/jpg/highlight_card_image.jpg",
+  "digifit_overview_image": "assets/jpg/digifit_overview_image.jpg"
 };
 
 Map<String, String> _svgCategoryIconImagePath = {

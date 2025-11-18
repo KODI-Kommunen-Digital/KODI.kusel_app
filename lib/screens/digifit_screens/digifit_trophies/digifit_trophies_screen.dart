@@ -64,7 +64,7 @@ class _DigifitTrophiesScreenState extends ConsumerState<DigifitTrophiesScreen> {
                   children: [
                     // Background
                     CommonBackgroundClipperWidget(
-                      height: 200.h,
+                      height: 110.h,
                       clipperType: UpstreamWaveClipper(),
                       imageUrl: imagePath['home_screen_background'] ?? '',
                       isStaticImage: true,
