@@ -22,148 +22,145 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    return SizedBox(
-      height: 260.h,
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      height: 270.h,
       width: width,
-      child: Card(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-        elevation: 0,
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            Positioned(
-              bottom: 15.h,
-              child: Container(
-                padding: EdgeInsets.only(left: 30.w),
-                width: 270.w,
-                height: 231.h,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(topRight: Radius.circular(16.r), bottomRight: Radius.circular(16.r))
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  // Align content to left
-                  children: [
-                    Text(
-                      "${widget.weatherResponseModel?.forecast?.forecastday?[0].day?.maxtempC ?? ""}\u00B0",
-                      style: TextStyle(
-                        fontFamily: "Montserrat",
-                        fontWeight: FontWeight.w500,
-                        fontSize: 64,
-                        color: Theme.of(context).textTheme.labelMedium?.color,
-                      ),
-                      overflow: TextOverflow.ellipsis,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Positioned(
+            bottom: 15.h,
+            left: 0,
+            child: Container(
+              padding: EdgeInsets.only(left: 50.w, top: 10.h),
+              width: 270.w,
+              height: 200.h,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(topRight: Radius.circular(16.r), bottomRight: Radius.circular(16.r))
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                // Align content to left
+                children: [
+                  Text(
+                    "${widget.weatherResponseModel?.forecast?.forecastday?[0].day?.maxtempC ?? ""}\u00B0",
+                    style: TextStyle(
+                      fontFamily: "Montserrat",
+                      fontWeight: FontWeight.w500,
+                      fontSize: 64,
+                      color: Theme.of(context).textTheme.labelMedium?.color,
                     ),
-                    textBoldMontserrat(
-                        text:
-                            widget.weatherResponseModel?.location?.name ?? ""),
-                    SizedBox(
-                      height: 32.h,
-                      width: (width * .4).w,
-                      child: Divider(
-                        thickness: 1,
-                        color: Theme.of(context).textTheme.labelMedium?.color,
-                      ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  textBoldMontserrat(
+                      text:
+                      widget.weatherResponseModel?.location?.name ?? ""),
+                  SizedBox(
+                    height: 32.h,
+                    width: (width * .4).w,
+                    child: Divider(
+                      thickness: 1,
+                      color: Theme.of(context).textTheme.labelMedium?.color,
                     ),
-                    16.horizontalSpace,
-                    // 3-Day Forecast
-                    SizedBox(
-                      width: (width * .4).w,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _DayWeather(
-                              day: getDayFromDate(
-                                  context,
-                                  widget.weatherResponseModel?.forecast
-                                          ?.forecastday?[0].date ??
-                                      DateTime.now().toString()),
-                              icon: imagePath[getWeatherIcon(widget
-                                          .weatherResponseModel
-                                          ?.forecast
-                                          ?.forecastday?[0]
-                                          .day
-                                          ?.condition
-                                          ?.code ??
-                                      1000)] ??
-                                  '',
-                              temp:
-                                  "${widget.weatherResponseModel?.forecast?.forecastday?[0].day?.maxtempC ?? ""}\u00B0"),
-                          _DayWeather(
-                              day: getDayFromDate(
-                                  context,
-                                  widget.weatherResponseModel?.forecast
-                                          ?.forecastday?[1].date ??
-                                      DateTime.now().toString()),
-                              icon: imagePath[getWeatherIcon(widget
-                                          .weatherResponseModel
-                                          ?.forecast
-                                          ?.forecastday?[1]
-                                          .day
-                                          ?.condition
-                                          ?.code ??
-                                      1000)] ??
-                                  '',
-                              temp:
-                                  "${widget.weatherResponseModel?.forecast?.forecastday?[1].day?.maxtempC ?? ""}\u00B0"),
-                          _DayWeather(
-                              day: getDayFromDate(
-                                  context,
-                                  widget.weatherResponseModel?.forecast
-                                          ?.forecastday?[2].date ??
-                                      DateTime.now().toString()),
-                              icon: imagePath[getWeatherIcon(widget
-                                          .weatherResponseModel
-                                          ?.forecast
-                                          ?.forecastday?[2]
-                                          .day
-                                          ?.condition
-                                          ?.code ??
-                                      1000)] ??
-                                  '',
-                              temp:
-                                  "${widget.weatherResponseModel?.forecast?.forecastday?[2].day?.maxtempC ?? ""}\u00B0"),
-                        ],
-                      ),
+                  ),
+                  12.verticalSpace,
+                  // 3-Day Forecast
+                  SizedBox(
+                    width: (width * .4).w,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _DayWeather(
+                            day: getDayFromDate(
+                                context,
+                                widget.weatherResponseModel?.forecast
+                                    ?.forecastday?[0].date ??
+                                    DateTime.now().toString()),
+                            icon: imagePath[getWeatherIcon(widget
+                                .weatherResponseModel
+                                ?.forecast
+                                ?.forecastday?[0]
+                                .day
+                                ?.condition
+                                ?.code ??
+                                1000)] ??
+                                '',
+                            temp:
+                            "${widget.weatherResponseModel?.forecast?.forecastday?[0].day?.maxtempC ?? ""}\u00B0"),
+                        _DayWeather(
+                            day: getDayFromDate(
+                                context,
+                                widget.weatherResponseModel?.forecast
+                                    ?.forecastday?[1].date ??
+                                    DateTime.now().toString()),
+                            icon: imagePath[getWeatherIcon(widget
+                                .weatherResponseModel
+                                ?.forecast
+                                ?.forecastday?[1]
+                                .day
+                                ?.condition
+                                ?.code ??
+                                1000)] ??
+                                '',
+                            temp:
+                            "${widget.weatherResponseModel?.forecast?.forecastday?[1].day?.maxtempC ?? ""}\u00B0"),
+                        _DayWeather(
+                            day: getDayFromDate(
+                                context,
+                                widget.weatherResponseModel?.forecast
+                                    ?.forecastday?[2].date ??
+                                    DateTime.now().toString()),
+                            icon: imagePath[getWeatherIcon(widget
+                                .weatherResponseModel
+                                ?.forecast
+                                ?.forecastday?[2]
+                                .day
+                                ?.condition
+                                ?.code ??
+                                1000)] ??
+                                '',
+                            temp:
+                            "${widget.weatherResponseModel?.forecast?.forecastday?[2].day?.maxtempC ?? ""}\u00B0"),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-            Visibility(
-              visible:
-                  widget.weatherResponseModel?.current?.condition?.code == 1000,
-              child: Positioned(
-                  right: 42.w,
-                  bottom: 128.h,
-                  child: SizedBox(
-                    width: 169.w,
-                    height: 160.h,
-                    child: Image.asset(
-                      imagePath["sun_weather_image"] ?? "",
-                      fit: BoxFit.contain,
-                    ),
-                  )),
-            ),
-            Positioned(
-              right: 6.w,
-              bottom: 3.h,
-              child: SizedBox(
-                width: 143.w,
-                height: 166.h,
-                child: Image.asset(
-                  imagePath[getWeatherImageAsset(widget
-                              .weatherResponseModel?.current?.condition?.code ??
-                          0)] ??
-                      "",
-                  fit: BoxFit.contain,
-                ),
+          ),
+          Visibility(
+            visible:
+            widget.weatherResponseModel?.current?.condition?.code == 1000,
+            child: Positioned(
+                right: 42.w,
+                bottom: 128.h,
+                child: SizedBox(
+                  width: 169.w,
+                  height: 160.h,
+                  child: Image.asset(
+                    imagePath["sun_weather_image"] ?? "",
+                    fit: BoxFit.contain,
+                  ),
+                )),
+          ),
+          Positioned(
+            right: 6.w,
+            bottom: 3.h,
+            child: SizedBox(
+              width: 143.w,
+              height: 166.h,
+              child: Image.asset(
+                imagePath[getWeatherImageAsset(widget
+                    .weatherResponseModel?.current?.condition?.code ??
+                    0)] ??
+                    "",
+                fit: BoxFit.contain,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

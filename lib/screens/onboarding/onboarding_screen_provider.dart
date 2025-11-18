@@ -99,7 +99,6 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   Future<void> initialCall() async {
     state = state.copyWith(isLoading: true);
     isLoggedIn();
-    initializerPageController();
     await Future.wait([
       updateCurrentCity(),
       fetchCities(),
@@ -108,11 +107,11 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     state = state.copyWith(isLoading: false);
   }
 
-  void initializerPageController() {
-    pageController = PageController(
-      initialPage: state.selectedPageIndex,
-    );
-  }
+  // void initializerPageController() {
+  //   pageController = PageController(
+  //     initialPage: state.selectedPageIndex,
+  //   );
+  // }
 
   void updateErrorMsgStatus(bool value) {
     state = state.copyWith(isErrorMsgVisible: value);
@@ -143,6 +142,14 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
       state = state.copyWith(userCurrentCity: userCurrentCity);
     } catch (error) {
       debugPrint('fetch city exception : $error');
+    }
+  }
+
+  Future<void> updateSelectedCity() async {
+    String cityName = state.resident ?? '';
+    int cityId = getCityIdByName(state.cityDetailsMap, cityName) ?? 0;
+    if (cityId != 0) {
+      await sharedPreferenceHelper.setInt(selectedCityIdKey, cityId);
     }
   }
 
@@ -467,65 +474,65 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     return null;
   }
 
-  Future<void> nextPage() async {
-    if (pageController.hasClients) {
-      final nextPage = state.selectedPageIndex + 1;
-      debugPrint("current page == ${state.selectedPageIndex}");
-      if (nextPage < 5) {
-        if (nextPage == 3) {
-          String cityName = state.resident ?? '';
-          int cityId = getCityIdByName(state.cityDetailsMap, cityName) ?? 0;
-          if (cityId != 0) {
-            await sharedPreferenceHelper.setInt(selectedCityIdKey, cityId);
-          }
-        }
+  // Future<void> nextPage() async {
+  //   if (pageController.hasClients) {
+  //     final nextPage = state.selectedPageIndex + 1;
+  //     debugPrint("current page == ${state.selectedPageIndex}");
+  //     if (nextPage < 5) {
+  //       if (nextPage == 3) {
+  //         String cityName = state.resident ?? '';
+  //         int cityId = getCityIdByName(state.cityDetailsMap, cityName) ?? 0;
+  //         if (cityId != 0) {
+  //           await sharedPreferenceHelper.setInt(selectedCityIdKey, cityId);
+  //         }
+  //       }
+  //
+  //       pageController.animateToPage(
+  //         nextPage,
+  //         duration: const Duration(milliseconds: 400),
+  //         curve: Curves.easeInOut,
+  //       );
+  //     }
+  //   }
+  // }
 
-        pageController.animateToPage(
-          nextPage,
-          duration: const Duration(milliseconds: 400),
-          curve: Curves.easeInOut,
-        );
-      }
-    }
-  }
+  // void onBackPress() {
+  //   if (pageController.hasClients) {
+  //     final previousPage = state.selectedPageIndex - 1;
+  //     if (previousPage >= 0) {
+  //       pageController.animateToPage(
+  //         previousPage,
+  //         duration: const Duration(milliseconds: 400),
+  //         curve: Curves.easeInOut,
+  //       );
+  //     }
+  //   }
+  // }
 
-  void onBackPress() {
-    if (pageController.hasClients) {
-      final previousPage = state.selectedPageIndex - 1;
-      if (previousPage >= 0) {
-        pageController.animateToPage(
-          previousPage,
-          duration: const Duration(milliseconds: 400),
-          curve: Curves.easeInOut,
-        );
-      }
-    }
-  }
+  // void onSkipPress(VoidCallback onLastSkipPress) {
+  //   if (!pageController.hasClients) return;
+  //   final currentPage = state.selectedPageIndex;
+  //   final nextPage = currentPage + 1;
+  //   if (currentPage == 4) {
+  //     onLastSkipPress();
+  //   } else if (currentPage == 2) {
+  //     pageController.animateToPage(
+  //       nextPage,
+  //       duration: const Duration(milliseconds: 400),
+  //       curve: Curves.easeInOut,
+  //     );
+  //   } else if (nextPage < 5) {
+  //     pageController.animateToPage(
+  //       nextPage,
+  //       duration: const Duration(milliseconds: 400),
+  //       curve: Curves.easeInOut,
+  //     );
+  //   }
+  // }
 
-  void onSkipPress(VoidCallback onLastSkipPress) {
-    if (!pageController.hasClients) return;
-    final currentPage = state.selectedPageIndex;
-    final nextPage = currentPage + 1;
-    if (currentPage == 4) {
-      onLastSkipPress();
-    } else if (currentPage == 2) {
-      pageController.animateToPage(
-        nextPage,
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeInOut,
-      );
-    } else if (nextPage < 5) {
-      pageController.animateToPage(
-        nextPage,
-        duration: const Duration(milliseconds: 400),
-        curve: Curves.easeInOut,
-      );
-    }
-  }
-
-  void updateSelectedPageIndex(int index) {
-    state = state.copyWith(selectedPageIndex: index);
-  }
+  // void updateSelectedPageIndex(int index) {
+  //   state = state.copyWith(selectedPageIndex: index);
+  // }
 
   Future<void> startLoadingTimer(Function() callBack) async {
       await updateOnboardingSuccess();
