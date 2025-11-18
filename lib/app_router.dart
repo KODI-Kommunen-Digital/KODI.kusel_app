@@ -52,7 +52,11 @@ import 'package:kusel/screens/new_filter_screen/new_filter_screen_params.dart';
 import 'package:kusel/screens/no_network/network_status_screen.dart';
 import 'package:kusel/screens/onboarding/onboarding_finish_page.dart';
 import 'package:kusel/screens/onboarding/onboarding_loading_page.dart';
-import 'package:kusel/screens/onboarding/onboarding_screen.dart';
+import 'package:kusel/screens/onboarding/onboarding_name_page.dart';
+import 'package:kusel/screens/onboarding/onboarding_option_page.dart';
+import 'package:kusel/screens/onboarding/onboarding_preferences_page.dart';
+import 'package:kusel/screens/onboarding/onboarding_start_page.dart';
+import 'package:kusel/screens/onboarding/onboarding_type_page.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen_params.dart';
 import 'package:kusel/screens/participate_screen/participate_screen.dart';
@@ -88,9 +92,13 @@ const subCategoryScreenPath = "/subCategoryPath";
 const selectedEventListScreenPath = "/eventListScreenPath";
 const filterScreenPath = "/filterScreenPath";
 const searchResultScreenPath = "/searchResultScreenPath";
-const onboardingScreenPath = "/onboardingScreenPath";
 const onboardingLoadingPagePath = "/onboardingLoadingPagePath";
 const onboardingFinishPagePath = "/onboardingFinishPagePath";
+const onboardingStartPagePath = "/onboardingStartPagePath";
+const onboardingNamePagePath = "/onboardingNamePagePath";
+const onboardingOptionPagePath = "/onboardingOptionPagePath";
+const onboardingTypePagePath = "/onboardingTypePagePath";
+const onboardingPreferencesPagePath = "/onboardingPreferencesPagePath";
 const profileScreenPath = "/profileScreenPath";
 const favoritesListScreenPath = "/favoritesListScreenPath";
 const favouriteCityScreenPath = "/favouriteCityScreenPath";
@@ -187,13 +195,30 @@ List<RouteBase> goRouteList = [
       builder: (_, state) => SearchResultScreen(
           searchResultScreenParameter:
               state.extra as SearchResultScreenParameter)),
-  GoRoute(path: onboardingScreenPath, builder: (_, __) => OnboardingScreen()),
   GoRoute(
       path: onboardingLoadingPagePath,
       builder: (_, __) => OnboardingLoadingPage()),
   GoRoute(
       path: onboardingFinishPagePath,
       builder: (_, __) => OnboardingFinishPage()),
+
+  GoRoute(
+      path: onboardingStartPagePath, builder: (_, __) => OnboardingStartPage()),
+
+  GoRoute(
+      path: onboardingNamePagePath, builder: (_, __) => OnBoardingNamePage()),
+
+  GoRoute(
+      path: onboardingOptionPagePath,
+      builder: (_, __) => OnboardingOptionPage()),
+
+  GoRoute(
+      path: onboardingTypePagePath, builder: (_, __) => OnboardingTypePage()),
+
+  GoRoute(
+      path: onboardingPreferencesPagePath,
+      builder: (_, __) => OnBoardingPreferencesPage()),
+
   GoRoute(path: profileScreenPath, builder: (_, __) => ProfileScreen()),
   GoRoute(
       path: favoritesListScreenPath, builder: (_, __) => FavoritesListScreen()),

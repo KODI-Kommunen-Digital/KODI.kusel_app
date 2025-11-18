@@ -326,7 +326,7 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
               context: context,
               onTap: () {
                 ref.read(navigationProvider).navigateUsingPath(
-                    path: onboardingScreenPath, context: context);
+                    path: onboardingStartPagePath, context: context);
               },
               title: AppLocalizations.of(context).edit_onboarding_details,
               hasTopRadius: false,

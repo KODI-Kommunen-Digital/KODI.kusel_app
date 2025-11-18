@@ -371,7 +371,7 @@ class SearchStringWidgetState extends ConsumerState<SearchStringWidget> {
                       constraints: BoxConstraints(
                           maxHeight: 250.h, maxWidth: double.infinity),
                       decoration: BoxDecoration(
-                          color: Theme.of(context).scaffoldBackgroundColor,
+                          color: Theme.of(context).canvasColor,
                           borderRadius: BorderRadius.circular(10.r)),
                       child: widgetChild,
                     );
