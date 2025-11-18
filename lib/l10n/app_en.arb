@@ -325,5 +325,6 @@
   "abort_pictures_game": "Abort Picture's Game",
   "details_scanner": "Scanner",
   "correct_answer": "Correct",
-  "wrong_answer": "Wrong"
+  "wrong_answer": "Wrong",
+  "digifit_completed_top": "completed"
 }
