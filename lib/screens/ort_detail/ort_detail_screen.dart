@@ -198,6 +198,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
               ),
             if (state.newsList != null && state.newsList!.isNotEmpty)
               EventsListSectionWidget(
+                boxFit: BoxFit.cover,
                 context: context,
                 eventsList: state.newsList ?? [],
                 heading: AppLocalizations.of(context).news,
@@ -420,6 +421,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                   color: Theme.of(context).textTheme.bodyLarge?.color,
                   textAlign: TextAlign.start,
                   fontSize: 14,
+                  fontWeight: FontWeight.w600,
                   text: state.ortDetailDataModel?.subtitle ?? "",
                   textOverflow: TextOverflow.visible)
             ],
@@ -437,7 +439,8 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
         padding: EdgeInsets.symmetric(horizontal: 12.h),
         child: textRegularMontserrat(
             text: state.ortDetailDataModel?.description ?? "",
-            fontSize: 12,
+            fontSize: 14,
+            color: Theme.of(context).primaryColor,
             textAlign: TextAlign.start,
             maxLines: 50),
       );

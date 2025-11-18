@@ -200,6 +200,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
           12.verticalSpace,
           if (ref.watch(municipalDetailControllerProvider).newsList.isNotEmpty)
             EventsListSectionWidget(
+              boxFit: BoxFit.cover,
               context: context,
               eventsList: state.newsList,
               heading: AppLocalizations.of(context).news,

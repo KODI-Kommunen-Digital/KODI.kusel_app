@@ -1,8 +1,10 @@
 import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:domain/model/request_model/listings/get_all_listings_request_model.dart';
+import 'package:domain/model/request_model/listings/recommendations_request_model.dart';
 import 'package:domain/model/response_model/filter/get_filter_response_model.dart';
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:domain/usecase/listings/listings_usecase.dart';
+import 'package:domain/usecase/listings/recommendations_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/locale/localization_manager.dart';
@@ -16,17 +18,20 @@ final allEventScreenProvider = StateNotifierProvider.autoDispose<
     (ref) => AllEventScreenController(
         listingsUseCase: ref.read(listingsUseCaseProvider),
         signInStatusController: ref.read(signInStatusProvider.notifier),
+        recommendationsUseCase: ref.read(recommendationUseCaseProvider),
         localeManagerController: ref.read(localeManagerProvider.notifier)));
 
 class AllEventScreenController extends StateNotifier<AllEventScreenState> {
   ListingsUseCase listingsUseCase;
   SignInStatusController signInStatusController;
   LocaleManagerController localeManagerController;
+  RecommendationsUseCase recommendationsUseCase;
 
   AllEventScreenController({
     required this.listingsUseCase,
     required this.signInStatusController,
     required this.localeManagerController,
+    required this.recommendationsUseCase,
   }) : super(AllEventScreenState.empty());
 
   Future<void> getListing(
@@ -197,6 +202,10 @@ class AllEventScreenController extends StateNotifier<AllEventScreenState> {
     await getListing(currPageNo);
   }
 
+  updateCardIndex(int index) {
+    state = state.copyWith(highlightCount: index);
+  }
+
   applyNewFilterValues(
       List<String> categoryNameList,
       int cityId,
@@ -215,32 +224,54 @@ class AllEventScreenController extends StateNotifier<AllEventScreenState> {
         selectedCategoryIdList: categoryIdList);
   }
 
+  getRecommendationListing() async {
+    try {
+      state = state.copyWith(isLoading: true);
 
-  void numberOfFiltersApplied()
-  {
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
+      GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
+      RecommendationsRequestModel requestModel = RecommendationsRequestModel(
+          translate:
+              "${currentLocale.languageCode}-${currentLocale.countryCode}");
+
+      final response =
+          await recommendationsUseCase.call(requestModel, responseModel);
+
+      response.fold((left) {
+        state = state.copyWith(isLoading: false);
+        debugPrint(
+            " getRecommendationListing fold exception : ${left.toString()}");
+      }, (right) {
+        final r = right as GetAllListingsResponseModel;
+
+        state = state.copyWith(recommendationList: r.data, isLoading: false);
+      });
+    } catch (error) {
+      state = state.copyWith(isLoading: false);
+      debugPrint(" getRecommendationListing exception:$error");
+    }
+  }
+
+  void numberOfFiltersApplied() {
     int len = 0;
 
-    if(state.selectedCategoryIdList.isNotEmpty)
-      {
-        len+=state.selectedCategoryIdList.length;
-      }
+    if (state.selectedCategoryIdList.isNotEmpty) {
+      len += state.selectedCategoryIdList.length;
+    }
 
-    if(state.selectedCityId !=0)
-      {
-        len+=1;
-      }
+    if (state.selectedCityId != 0) {
+      len += 1;
+    }
 
-    if(!KuselDateUtils.checkDatesAreSame(state.startDate, defaultDate))
-      {
-        len+=1;
-      }
+    if (!KuselDateUtils.checkDatesAreSame(state.startDate, defaultDate)) {
+      len += 1;
+    }
 
-    if(state.radius!=0)
-      {
-        len+=1;
-      }
+    if (state.radius != 0) {
+      len += 1;
+    }
 
     state = state.copyWith(numberOfFiltersApplied: len);
   }
-
 }

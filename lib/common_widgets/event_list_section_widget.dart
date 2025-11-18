@@ -37,6 +37,7 @@ class EventsListSectionWidget extends ConsumerStatefulWidget {
   final int pageSize;
   ScrollController? scrollController;
   void Function(int)? onCardTap;
+  final BoxFit? boxFit;
 
   EventsListSectionWidget(
       {super.key,
@@ -58,9 +59,9 @@ class EventsListSectionWidget extends ConsumerStatefulWidget {
       this.onLoadMoreTap,
       this.isMoreListLoading = false,
       this.pageSize = 9,
-        this.scrollController,
-        this.onCardTap
-      });
+      this.scrollController,
+      this.onCardTap,
+      this.boxFit});
 
   @override
   ConsumerState<EventsListSectionWidget> createState() =>
@@ -163,6 +164,7 @@ class _EventsListSectionWidgetState
                           ),
                         ),
                       ),
+                    10.verticalSpace,
                     ListView.builder(
                       shrinkWrap: widget.shrinkWrap ?? true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -173,6 +175,7 @@ class _EventsListSectionWidgetState
                         final item = widget.eventsList[index];
 
                         return CommonEventCard(
+                          boxFit: widget.boxFit,
                           isFavorite: item.isFavorite ?? false,
                           onFavorite: () {
                             ref
@@ -196,10 +199,9 @@ class _EventsListSectionWidgetState
                             ref.read(navigationProvider).navigateUsingPath(
                                   context: context,
                                   path: eventDetailScreenPath,
-                                  params:
-                                      EventDetailScreenParams(
-                                          eventId: item.id??0,
-                                    onFavClick: (){
+                                  params: EventDetailScreenParams(
+                                    eventId: item.id ?? 0,
+                                    onFavClick: () {
                                       widget.onFavClickCallback!();
                                     },
                                   ),
@@ -210,22 +212,24 @@ class _EventsListSectionWidgetState
                         );
                       },
                     ),
-                    if (widget.isMultiplePagesList && widget.eventsList.length >= widget.pageSize)
+                    if (widget.isMultiplePagesList &&
+                        widget.eventsList.length >= widget.pageSize)
                       widget.isMoreListLoading
                           ? Padding(
                               padding: EdgeInsets.all(15.h.w),
                               child: Center(child: CircularProgressIndicator()),
                             )
                           : Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(12.h.w),
-                              child: CustomButton(
+                              child: Padding(
+                                padding: EdgeInsets.all(12.h.w),
+                                child: CustomButton(
                                   onPressed: widget.onLoadMoreTap ?? () {},
-                                  text: AppLocalizations.of(context).digifit_trophies_load_more,
-                                width: 150.w,
+                                  text: AppLocalizations.of(context)
+                                      .digifit_trophies_load_more,
+                                  width: 150.w,
                                 ),
+                              ),
                             ),
-                          ),
                     if (widget.buttonText != null)
                       Padding(
                         padding: EdgeInsets.symmetric(

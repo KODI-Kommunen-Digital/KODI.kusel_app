@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as nav;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
@@ -32,8 +33,8 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
-      physics: ClampingScrollPhysics()
-      ,child: _buildFilterScreenUi(context)),
+          physics: ClampingScrollPhysics(),
+          child: _buildFilterScreenUi(context)),
     );
   }
 
@@ -173,7 +174,8 @@ class _FilterScreenState extends ConsumerState<FilterScreen> {
       children: [
         _buildLabel(context, AppLocalizations.of(context).period),
         CustomDropdown(
-          hintText: "${AppLocalizations.of(context).select} ${AppLocalizations.of(context).period}",
+          hintText:
+              "${AppLocalizations.of(context).select} ${AppLocalizations.of(context).period}",
           items: timeIntervalMap.values.toList(),
           selectedItem: state.periodValue ?? '',
           onSelected: (String? newValue) {

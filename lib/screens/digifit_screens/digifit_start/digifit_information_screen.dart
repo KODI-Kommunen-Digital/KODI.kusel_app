@@ -277,11 +277,14 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
         20.verticalSpace,
         Row(
           children: [
-            textRegularPoppins(
-                text: parcoursModel.name ?? '',
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).textTheme.bodyLarge?.color),
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0),
+              child: textRegularPoppins(
+                  text: parcoursModel.name ?? '',
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).textTheme.bodyLarge?.color),
+            ),
             12.horizontalSpace,
             ImageUtil.loadSvgImage(
                 imageUrl: imagePath['arrow_icon'] ?? "",
@@ -321,10 +324,10 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
             }
           },
         ),
-        10.verticalSpace,
+        6.verticalSpace,
         ListView.builder(
             physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true, // need to check
+            shrinkWrap: true,
             itemCount: parcoursModel.stations?.length ?? 0,
             itemBuilder: (context, index) {
               final station = parcoursModel.stations![index];

@@ -55,9 +55,6 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
     );
   }
 
-
-
-
   _buildBody(BuildContext context) {
     return SingleChildScrollView(
       physics: ClampingScrollPhysics(),
@@ -120,7 +117,7 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
   _buildSettingCard(BuildContext context) {
     final state = ref.watch(kuselSettingScreenProvider);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      padding: EdgeInsets.symmetric(horizontal: 12.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
