@@ -223,7 +223,7 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
               title: AppLocalizations.of(context).digifit_open_exercise,
               stationList: availableStation,
             ),
-          20.verticalSpace,
+          18.verticalSpace,
           if (completedStation.isNotEmpty)
             _buildCompleteCourseDetailSection(
                 title: AppLocalizations.of(context).digifit_completed_exercise,
@@ -362,11 +362,14 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
         20.verticalSpace,
         Row(
           children: [
-            textRegularPoppins(
-                text: title,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).textTheme.bodyLarge?.color),
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0),
+              child: textRegularPoppins(
+                  text: title,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).textTheme.bodyLarge?.color),
+            ),
             12.horizontalSpace,
           ],
         ),
