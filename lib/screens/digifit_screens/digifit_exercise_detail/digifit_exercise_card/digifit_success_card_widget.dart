@@ -16,8 +16,15 @@ class SuccessCardWidget extends ConsumerWidget {
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 14.h),
       decoration: BoxDecoration(
         color: lightThemeHighlightGreenColor,
-        border: Border.all(color: Theme.of(context).indicatorColor, width: 1),
-        borderRadius: BorderRadius.all(Radius.circular(16.r)),
+        border: Border(
+          left: BorderSide(color: const Color(0xFF88AF33), width: 1),
+          right: BorderSide(color: const Color(0xFF88AF33), width: 1),
+          bottom: BorderSide(color: const Color(0xFF88AF33), width: 1),
+          top: BorderSide(color: const Color(0xFF88AF33), width: 1),
+        ),
+        borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(16.r),
+            bottomRight: Radius.circular(16.r)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,17 +39,18 @@ class SuccessCardWidget extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                textBoldPoppins(
+                textSemiBoldMontserrat(
                   text: AppLocalizations.of(context).digifit_success_card_title,
                   fontSize: 16.sp,
-                  color: Colors.black87,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
                 SizedBox(height: 8.h),
                 textRegularMontserrat(
                   text: AppLocalizations.of(context).digifit_success_card_desp,
                   textAlign: TextAlign.start,
                   textOverflow: TextOverflow.visible,
-                  color: Colors.black,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
               ],
             ),

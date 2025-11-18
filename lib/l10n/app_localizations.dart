@@ -2059,6 +2059,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Wrong'**
   String get wrong_answer;
+
+  /// No description provided for @digifit_completed_top.
+  ///
+  /// In en, this message translates to:
+  /// **'completed'**
+  String get digifit_completed_top;
 }
 
 class _AppLocalizationsDelegate
