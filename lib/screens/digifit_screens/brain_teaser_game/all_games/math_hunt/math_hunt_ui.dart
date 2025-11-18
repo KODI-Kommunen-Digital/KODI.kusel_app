@@ -35,8 +35,8 @@ class MathGameUI extends FlameGame with TapCallbacks {
     final characterImage = await images.load("assets/png/math_hunt_boldi.png");
     characterSprite = SpriteComponent.fromImage(
       characterImage,
-      position: Vector2(size.x * 0.72, size.y * 0.38),
-      size: Vector2(size.x * 0.55, size.y * 0.8),
+      position: Vector2(size.x * 0.74, size.y * 0.38),
+      size: Vector2(size.x * 0.58, size.y * 0.96),
     );
     characterSprite.anchor = Anchor.center;
     await add(characterSprite);

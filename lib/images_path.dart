@@ -106,7 +106,8 @@ Map<String, String> _pngImagePath = {
   "digit_dash_boldi_image": "assets/png/boldi_digit_dash.png",
   "digit_dash_cloud_image": "assets/png/cloud_digit_dash_image.png",
   "placeholder_image_pictures_game": "assets/png/place_holder_image_pictures_game.png",
-  "scanner_image": "assets/png/scanner_image.png"
+  "scanner_image": "assets/png/scanner_image.png",
+  "arrow_right": "assets/png/arrow_right.png",
 };
 
 Map<String, String> _jpegImagePath = {

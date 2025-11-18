@@ -117,13 +117,13 @@ class BoldiSpriteComponent extends SpriteComponent with HasGameRef {
 
     final gameSize = gameRef.size;
     position = Vector2(
-      gameSize.x * 0.72,
+      gameSize.x * 0.74,
       gameSize.y * 0.38,
     );
 
     size = Vector2(
-      gameSize.x * 0.55,
-      gameSize.y * 0.8,
+      gameSize.x * 0.58,
+      gameSize.y * 0.78,
     );
   }
 }

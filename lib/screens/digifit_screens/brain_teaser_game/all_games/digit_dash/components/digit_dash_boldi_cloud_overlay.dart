@@ -97,12 +97,12 @@ class BoldiWithSpeechCard extends PositionComponent with HasGameRef {
     if (boldiSprite != null) {
       canvas.save();
 
-      final boldiWidth = (size.x * 0.45) * 1.2;
+      final boldiWidth = (size.x * 0.45) * 1.16;
 
       final boldiX = size.x - boldiWidth;
 
       final spriteAspectRatio = boldiSprite!.srcSize.x / boldiSprite!.srcSize.y;
-      final boldiHeight = (boldiWidth / spriteAspectRatio) * 1.5;
+      final boldiHeight = (boldiWidth / spriteAspectRatio) * 1.3;
 
       final boldiY = size.y - boldiHeight;
 
