@@ -2316,7 +2316,8 @@ class _PicturesGameScreenState extends ConsumerState<PicturesGameScreen> {
     if (!mounted) return;
 
     final levelId = widget.picturesGameParams?.levelId ?? 13;
-    String text = (levelId == 13)
+        String text = ((levelId) == 13 ||
+            (widget.picturesGameParams?.levelId ?? 1) == 14)
         ? AppLocalizations.of(context).level_complete_desc
         : AppLocalizations.of(context).all_level_complete;
 

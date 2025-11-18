@@ -523,8 +523,8 @@ class _FlipCatchScannerState extends ConsumerState<FlipCatchScreen> {
   Future<void> _showCompletionDialog(BuildContext context) async {
     if (!mounted) return;
 
-    String text = ((widget.flipCatchParams?.levelId ?? 1) == 1 ||
-            (widget.flipCatchParams?.levelId ?? 1) == 2)
+    String text = ((widget.flipCatchParams?.levelId ?? 4) == 4 ||
+            (widget.flipCatchParams?.levelId ?? 4) == 5)
         ? AppLocalizations.of(context).level_complete_desc
         : AppLocalizations.of(context).all_level_complete;
 

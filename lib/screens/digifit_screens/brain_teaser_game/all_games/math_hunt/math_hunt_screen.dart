@@ -137,14 +137,7 @@ class _MathHuntScreenState extends ConsumerState<MathHuntScreen> {
                               fontSize: 16,
                             ),
                           ),
-                          if (state.showResult) 10.verticalSpace,
-                          Positioned(
-                            child: GameStatusCardWidget(
-                                isStatus: state.isAnswerCorrect ?? false,
-                                description: _getGameStatusDescription(
-                                    widget.mathHuntGameParams?.levelId ?? 1)),
-                          ),
-                          10.verticalSpace,
+                          20.verticalSpace,
                           if (!state.isLoading)
                             FeedbackCardWidget(
                               height: 270.h,
@@ -171,6 +164,17 @@ class _MathHuntScreenState extends ConsumerState<MathHuntScreen> {
                   onGameStageConstantTap: _handleBottomNavTap,
                 ),
               ),
+              if (state.showResult)
+                Positioned(
+                  bottom: 80.h,
+                  left: 0,
+                  right: 0,
+                  child: GameStatusCardWidget(
+                    isStatus: state.isAnswerCorrect ?? false,
+                    description: _getGameStatusDescription(
+                        widget.mathHuntGameParams?.levelId ?? 1),
+                  ),
+                ),
             ],
           ),
         ),
@@ -307,8 +311,8 @@ class _MathHuntScreenState extends ConsumerState<MathHuntScreen> {
   Future<void> _showCompleteDialog(BuildContext context) async {
     if (!mounted) return;
 
-    String text = ((widget.mathHuntGameParams?.levelId ?? 1) == 1 ||
-            (widget.mathHuntGameParams?.levelId ?? 1) == 2)
+    String text = ((widget.mathHuntGameParams?.levelId ?? 7) == 7 ||
+            (widget.mathHuntGameParams?.levelId ?? 1) == 8)
         ? AppLocalizations.of(context).level_complete_desc
         : AppLocalizations.of(context).all_level_complete;
 

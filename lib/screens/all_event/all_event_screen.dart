@@ -84,84 +84,99 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                   headingText: AppLocalizations.of(context).events,
                 ),
                 _buildRecommendation(context),
+                10.verticalSpace,
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12.w),
                   width: MediaQuery.of(context).size.width,
                   alignment: Alignment.centerRight,
-                  child: GestureDetector(
-                    onTap: () {
-                      final state = ref.read(allEventScreenProvider);
-
-                      ref
-                          .read(navigationProvider)
-                          .navigateUsingPath(
-                              path: newFilterScreenPath,
-                              context: context,
-                              params: NewFilterScreenParams(
-                                  selectedCityId: state.selectedCityId,
-                                  selectedCityName: state.selectedCityName,
-                                  radius: state.radius,
-                                  startDate: state.startDate,
-                                  endDate: state.endDate,
-                                  selectedCategoryName:
-                                      List.from(state.selectedCategoryNameList),
-                                  selectedCategoryId:
-                                      List.from(state.selectedCategoryIdList)))
-                          .then((value) async {
-                        if (value != null) {
-                          final res = value as NewFilterScreenParams;
-
-                          await ref
-                              .read(allEventScreenProvider.notifier)
-                              .applyNewFilterValues(
-                                  res.selectedCategoryName,
-                                  res.selectedCityId,
-                                  res.selectedCityName,
-                                  res.radius,
-                                  res.startDate,
-                                  res.endDate,
-                                  res.selectedCategoryId);
-
-                          await ref
-                              .read(allEventScreenProvider.notifier)
-                              .getListing(1);
-                        }
-                      });
-                    },
-                    child: Badge(
-                      backgroundColor: Colors.transparent,
-                      alignment: Alignment.topCenter,
-                      isLabelVisible: ref
-                              .watch(allEventScreenProvider)
-                              .numberOfFiltersApplied !=
-                          0,
-                      label: Container(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: 4.w, vertical: 4.h),
-                        decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Theme.of(context).indicatorColor,
-                            border: Border.all(
-                                color:
-                                    Theme.of(context).colorScheme.secondary)),
-                        child: Center(
-                          child: textBoldMontserrat(
-                              text: ref
-                                  .watch(allEventScreenProvider)
-                                  .numberOfFiltersApplied
-                                  .toString(),
-                              fontSize: 14),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: textSemiBoldPoppins(
+                          text: AppLocalizations.of(context).all_events,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                      child: ImageUtil.loadLocalSvgImage(
-                          imageUrl: 'filter_button',
-                          context: context,
-                          height: 35.h,
-                          width: 35.w),
-                    ),
+                      GestureDetector(
+                        onTap: () {
+                          final state = ref.read(allEventScreenProvider);
+
+                          ref
+                              .read(navigationProvider)
+                              .navigateUsingPath(
+                                  path: newFilterScreenPath,
+                                  context: context,
+                                  params: NewFilterScreenParams(
+                                      selectedCityId: state.selectedCityId,
+                                      selectedCityName: state.selectedCityName,
+                                      radius: state.radius,
+                                      startDate: state.startDate,
+                                      endDate: state.endDate,
+                                      selectedCategoryName: List.from(
+                                          state.selectedCategoryNameList),
+                                      selectedCategoryId: List.from(
+                                          state.selectedCategoryIdList)))
+                              .then((value) async {
+                            if (value != null) {
+                              final res = value as NewFilterScreenParams;
+
+                              await ref
+                                  .read(allEventScreenProvider.notifier)
+                                  .applyNewFilterValues(
+                                      res.selectedCategoryName,
+                                      res.selectedCityId,
+                                      res.selectedCityName,
+                                      res.radius,
+                                      res.startDate,
+                                      res.endDate,
+                                      res.selectedCategoryId);
+
+                              await ref
+                                  .read(allEventScreenProvider.notifier)
+                                  .getListing(1);
+                            }
+                          });
+                        },
+                        child: Badge(
+                          backgroundColor: Colors.transparent,
+                          alignment: Alignment.topCenter,
+                          isLabelVisible: ref
+                                  .watch(allEventScreenProvider)
+                                  .numberOfFiltersApplied !=
+                              0,
+                          label: Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 4.w, vertical: 4.h),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Theme.of(context).indicatorColor,
+                                border: Border.all(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .secondary)),
+                            child: Center(
+                              child: textBoldMontserrat(
+                                  text: ref
+                                      .watch(allEventScreenProvider)
+                                      .numberOfFiltersApplied
+                                      .toString(),
+                                  fontSize: 14),
+                            ),
+                          ),
+                          child: ImageUtil.loadLocalSvgImage(
+                              imageUrl: 'filter_button',
+                              context: context,
+                              height: 35.h,
+                              width: 35.w),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                8.verticalSpace,
+                4.verticalSpace,
                 if (ref
                     .watch(allEventScreenProvider)
                     .selectedCategoryNameList
@@ -345,7 +360,7 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                                     success: ({required bool isFavorite}) {
                               ref
                                   .read(allEventScreenProvider.notifier)
-                                  .updateIsFav(isFavorite, item.id);
+                                  .updateRecommendationIsFav(isFavorite, item.id);
                             }, error: ({required String message}) {
                               showErrorToast(
                                   message: message, context: context);
@@ -370,19 +385,23 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
 
   Widget _buildChip(String label, {bool isExtra = false}) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: isExtra ? 16.w : 16.w,
+        vertical: 8.h,
+      ),
       decoration: BoxDecoration(
-        color: isExtra
-            ? Theme.of(context).indicatorColor.withOpacity(0.2)
-            : Theme.of(context).indicatorColor.withOpacity(0.8),
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(
-          color: Theme.of(context).indicatorColor,
-        ),
+        color: isExtra ? Colors.transparent : const Color(0xFFAADB40),
+        borderRadius: BorderRadius.circular(20.r),
+        border: isExtra
+            ? Border.all(
+                color: const Color(0xFFAADB40),
+                width: 1.5,
+              )
+            : null,
       ),
       child: textRegularMontserrat(
           text: label,
-          fontSize: 13,
+          fontSize: 15,
           color: Theme.of(context).textTheme.displayMedium!.color),
     );
   }
