@@ -291,14 +291,14 @@ class _NewFilterScreenState extends ConsumerState<NewFilterScreen> {
                   if (chipList.isNotEmpty)
                     Wrap(
                       spacing: 8.w,
-                      runSpacing: 6.h,
+                      runSpacing: 8.h,
                       children: [
-                        // Take first 4 chips
-                        ...chipList.take(4).map((item) => _buildChip(item)),
+                        // Take first 3 chips
+                        ...chipList.take(3).map((item) => _buildChip(item)),
 
                         // If more than 4, show +N chip
-                        if (chipList.length > 4)
-                          _buildChip('+${chipList.length - 4}', isExtra: true),
+                        if (chipList.length > 3)
+                          _buildChip('+${chipList.length - 3}', isExtra: true),
                       ],
                     ),
                 ],
@@ -317,19 +317,25 @@ class _NewFilterScreenState extends ConsumerState<NewFilterScreen> {
 // Helper chip builder
   Widget _buildChip(String label, {bool isExtra = false}) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: isExtra ? 16.w : 16.w, // Increase horizontal padding for +N chip
+        vertical: 8.h,
+      ),
       decoration: BoxDecoration(
         color: isExtra
-            ? Theme.of(context).indicatorColor.withOpacity(0.2)
-            : Theme.of(context).indicatorColor.withOpacity(0.8),
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(
-          color: Theme.of(context).indicatorColor,
-        ),
+            ? Colors.transparent
+            : const Color(0xFFAADB40),
+        borderRadius: BorderRadius.circular(20.r),
+        border: isExtra
+            ? Border.all(
+          color: const Color(0xFFAADB40),
+          width: 1.5,
+        )
+            : null,
       ),
       child: textRegularMontserrat(
           text: label,
-          fontSize: 13,
+          fontSize: 15,
           color: Theme.of(context).textTheme.displayMedium!.color),
     );
   }

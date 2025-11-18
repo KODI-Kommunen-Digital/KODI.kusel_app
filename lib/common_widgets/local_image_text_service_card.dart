@@ -34,7 +34,7 @@ class _LocalSvgImageTextServiceCardState
     return Padding(
       padding:  EdgeInsets.symmetric(horizontal: 8.w),
       child: Card(
-        elevation: 2,
+        elevation: 1,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.r),
         ),

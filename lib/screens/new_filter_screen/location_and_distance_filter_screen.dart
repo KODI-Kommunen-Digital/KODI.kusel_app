@@ -23,8 +23,10 @@ class _LocationAndDistanceFilterScreenState
     extends ConsumerState<LocationAndDistanceFilterScreen> {
   @override
   void initState() {
-    Future.microtask((){
-      ref.read(newFilterScreenControllerProvider.notifier).assignLocationAndDistanceTemporaryValues();
+    Future.microtask(() {
+      ref
+          .read(newFilterScreenControllerProvider.notifier)
+          .assignLocationAndDistanceTemporaryValues();
     });
     super.initState();
   }
@@ -78,8 +80,8 @@ class _LocationAndDistanceFilterScreenState
                           iconHeight: 20.h,
                           iconWidth: 20.w,
                           onPressed: () async {
-                            final controller =
-                            ref.read(newFilterScreenControllerProvider.notifier);
+                            final controller = ref.read(
+                                newFilterScreenControllerProvider.notifier);
 
                             await controller.assignLocationAndDistanceValues();
 
@@ -100,7 +102,6 @@ class _LocationAndDistanceFilterScreenState
 }
 
 class _RadiusUI extends ConsumerWidget {
-
   const _RadiusUI({Key? key}) : super(key: key);
 
   @override
@@ -124,8 +125,7 @@ class _RadiusUI extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Flexible(
-                flex: 7,
+              Expanded(
                 child: (controller.tempSelectedCityId == 0)
                     ? Container(
                         height: 10.h,
@@ -134,33 +134,38 @@ class _RadiusUI extends ConsumerWidget {
                           borderRadius: BorderRadius.circular(20.r),
                         ),
                       )
-                    : Slider(
-                        value: controller.tempSliderValue,
-                        inactiveColor:
-                            Theme.of(context).indicatorColor.withOpacity(0.2),
-                        thumbColor: Theme.of(context).colorScheme.secondary,
-                        min: 0,
-                        max: 100,
-                        divisions: 100,
-                        activeColor: Theme.of(context).indicatorColor,
-                        label: controller.tempSliderValue.round().toString(),
-                        onChanged: (double value) {
-                          controllerNotifier.updateSliderValue(value);
-                        },
+                    : SliderTheme(
+                        data: SliderThemeData(
+                          activeTrackColor: Theme.of(context).indicatorColor,
+                          inactiveTrackColor:
+                              Theme.of(context).indicatorColor.withOpacity(0.2),
+                          thumbColor: Theme.of(context).colorScheme.primary,
+                          thumbShape: const RoundSliderThumbShape(
+                            enabledThumbRadius: 20.0,
+                          ),
+                          overlayColor: Colors.transparent,
+                          overlayShape: const RoundSliderOverlayShape(
+                            overlayRadius: 0.0,
+                          ),
+                          trackHeight: 8.0,
+                        ),
+                        child: Slider(
+                          value: controller.tempSliderValue,
+                          min: 0,
+                          max: 100,
+                          divisions: 100,
+                          onChanged: (double value) {
+                            controllerNotifier.updateSliderValue(value);
+                          },
+                        ),
                       ),
               ),
-              5.horizontalSpace,
-              Flexible(
-                flex: 2,
-                child: Padding(
-                  padding: EdgeInsets.only(left: 10.w),
-                  child: textBoldMontserrat(
-                    text: "${controller.tempSliderValue.round()} km",
-                    fontWeight: FontWeight.w600,
-                    fontSize: 14,
-                  ),
-                ),
-              )
+              SizedBox(width: 10.w),
+              textBoldMontserrat(
+                text: "${controller.tempSliderValue.round()} km",
+                fontWeight: FontWeight.w600,
+                fontSize: 14,
+              ),
             ],
           ),
         ],
@@ -170,7 +175,6 @@ class _RadiusUI extends ConsumerWidget {
 }
 
 class _CityList extends ConsumerWidget {
-
   const _CityList({Key? key}) : super(key: key);
 
   @override
