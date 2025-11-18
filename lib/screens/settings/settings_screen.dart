@@ -227,7 +227,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 ),
                 onTap: () {
                   ref.read(navigationProvider).navigateUsingPath(
-                      path: onboardingScreenPath, context: context);
+                      path: onboardingStartPagePath, context: context);
                 },
               ),
             ],
