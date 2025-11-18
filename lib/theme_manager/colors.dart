@@ -6,6 +6,7 @@ const lightThemeOnPrimaryColor = Color(0xFFFFFFFF);
 const lightThemeScaffoldBackgroundColor = Color(0xFFE2EBF7);
 const lightThemeIndicatorColor = Color(0xFF88AF33);
 const lightThemeHighlightGreenColor = Color(0xFFB4DC2E);
+const smallIconColor = Color(0xFF668326);
 const lightThemeCanvasColor = Color(0xFFFFFFFF);
 const lightThemeCardColor = Color.fromARGB(255, 234, 235, 243);
 const lightThemeDividerColor = Color(0xFFBFC2DA);

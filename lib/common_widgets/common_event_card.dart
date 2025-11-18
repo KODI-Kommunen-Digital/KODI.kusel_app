@@ -99,11 +99,12 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                   ],
                 ),
               ),
+              SizedBox(width: 11.w.h),
               Visibility(
                 visible: widget.isFavouriteVisible,
-                child: GestureDetector(
-                  onTap: widget.onFavorite,
-                  child: Icon(
+                child: IconButton(
+                  onPressed: widget.onFavorite,
+                  icon: Icon(
                     size: DeviceHelper.isMobile(context) ? null : 12.h.w,
                     widget.isFavorite
                         ? Icons.favorite_sharp
@@ -114,6 +115,7 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                   ),
                 ),
               ),
+              SizedBox(width: 7.w.h),
             ],
           ),
         ),

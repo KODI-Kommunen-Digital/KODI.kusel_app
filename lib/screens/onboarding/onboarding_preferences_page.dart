@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -7,7 +9,11 @@ import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/screens/onboarding/onboarding_screen_provider.dart';
 
+import '../../app_router.dart';
+import '../../common_widgets/custom_button_widget.dart';
 import '../../common_widgets/interests_grid_card_view.dart';
+import '../../images_path.dart';
+import '../../navigation/navigation.dart';
 
 class OnBoardingPreferencesPage extends ConsumerStatefulWidget {
   const OnBoardingPreferencesPage({super.key});
@@ -20,31 +26,24 @@ class OnBoardingPreferencesPage extends ConsumerStatefulWidget {
 class _OnBoardingPreferencesPageState extends ConsumerState<OnBoardingPreferencesPage> {
 
   @override
+  void initState() {
+    Future.microtask(() async {
+      if (!mounted) return;
+      final notifier = ref.read(onboardingScreenProvider.notifier);
+      await notifier.getInterests();
+    });
+     super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     String userName  = ref.read(onboardingScreenProvider).userFirstName ?? '';
     String displayMsg =
-        "${AppLocalizations.of(context).complete} $userName${AppLocalizations.of(context).what_interest_you}";
+        "${AppLocalizations.of(context).almost_there} $userName${AppLocalizations.of(context).what_interest_you}";
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 18.h),
-          child: Column(
-            children: [
-              65.verticalSpace,
-              textBoldPoppins(
-                  text: displayMsg,
-                  fontSize: 20,
-                  textOverflow: TextOverflow.visible,
-                  color: Theme.of(context).textTheme.bodyLarge?.color),
-              20.verticalSpace,
-              categoryView(context),
-              120.verticalSpace
-            ],
-          ),
-        ),
-      ),
-    );
+      body: _buildDashboardUi(displayMsg),
+    ).loaderDialog(context, ref.watch(onboardingScreenProvider).isLoading);
   }
 
   categoryView(BuildContext context) {
@@ -72,6 +71,156 @@ class _OnBoardingPreferencesPageState extends ConsumerState<OnBoardingPreference
             ),
           );
         });
+  }
+
+  Widget _buildBottomUi() {
+    final stateNotifier = ref.read(onboardingScreenProvider.notifier);
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 18.h),
+      child: Column(
+        children: [
+          CustomButton(
+            onPressed: () async {
+              await stateNotifier.submitUserInterests(() {
+                ref.read(navigationProvider).navigateUsingPath(
+                      path: onboardingLoadingPagePath,
+                      context: context,
+                    );
+              });
+            },
+            text: AppLocalizations.of(context).complete,
+          ),
+          18.verticalSpace,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  ref.read(navigationProvider).removeTopPage(context: context);
+                },
+                child: textBoldPoppins(
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                  fontSize: 11,
+                  text: AppLocalizations.of(context).back,
+                ),
+              ),
+              8.horizontalSpace,
+              GestureDetector(
+                onTap: () {
+                  ref.read(navigationProvider).removeAllAndNavigate(
+                      context: context, path: onboardingLoadingPagePath);
+                },
+                child: textBoldPoppins(
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                  fontSize: 11,
+                  text: AppLocalizations.of(context).skip,
+                ),
+              )
+            ],
+          ),
+          18.verticalSpace,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 3.w),
+                child: Icon(
+                  Icons.circle,
+                  size: 8,
+                  color: Theme.of(context).primaryColor.withAlpha(130),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 3.w),
+                child: Icon(
+                  Icons.circle,
+                  size: 8,
+                  color: Theme.of(context).primaryColor.withAlpha(130),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 3.w),
+                child: Icon(
+                  Icons.circle,
+                  size: 8,
+                  color: Theme.of(context).primaryColor.withAlpha(130),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 3.w),
+                child: Icon(
+                  Icons.circle,
+                  size: 8,
+                  color: Theme.of(context).primaryColor.withAlpha(130),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 3.w),
+                child: Icon(
+                  Icons.circle,
+                  size: 11,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+            ],
+          ),
+          12.verticalSpace,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDashboardUi(String displayMsg) {
+    return Container(
+      decoration: BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage(imagePath['onboarding_background'] ?? ''),
+          fit: BoxFit.cover,
+        ),
+      ),
+      child: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 18.h),
+              child: Column(
+                children: [
+                  65.verticalSpace,
+                  textBoldPoppins(
+                      text: displayMsg,
+                      fontSize: 20,
+                      textOverflow: TextOverflow.visible,
+                      color: Theme.of(context).textTheme.bodyLarge?.color),
+                  20.verticalSpace,
+                  categoryView(context),
+                  120.verticalSpace
+                ],
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 1,
+            right: 1,
+            child: ClipRRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                child: Container(
+                  height: 140.h,
+                  color: Colors.white.withOpacity(0.3),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 10,
+            left: 0,
+            right: 0,
+            child: _buildBottomUi(),
+          ),
+        ],
+      ),
+    );
   }
 
 }

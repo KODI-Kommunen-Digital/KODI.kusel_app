@@ -9,6 +9,7 @@ import 'package:kusel/images_path.dart';
 import '../app_router.dart';
 import '../navigation/navigation.dart';
 import '../screens/full_image/full_image_screen.dart';
+import '../theme_manager/colors.dart';
 
 class NetworkImageTextServiceCard extends ConsumerStatefulWidget {
   final Function() onTap;
@@ -31,7 +32,7 @@ class _IconTextWidgetCardState extends ConsumerState<NetworkImageTextServiceCard
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 2,
+      elevation: 1,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.r),
       ),
@@ -75,12 +76,16 @@ class _IconTextWidgetCardState extends ConsumerState<NetworkImageTextServiceCard
                           text: widget.text,
                           textOverflow: TextOverflow.visible,
                           textAlign: TextAlign.start,
+                          fontSize: 13,
                           color: Theme.of(context).textTheme.bodyLarge?.color),
                     ),
+                    4.verticalSpace,
                     if(widget.description != null)
                         textRegularMontserrat(
                             text: widget.description ?? '',
-                            fontSize: 11,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: lightThemeLabelMediumColor,
                             textOverflow: TextOverflow.visible,
                             textAlign: TextAlign.start)
                   ],
