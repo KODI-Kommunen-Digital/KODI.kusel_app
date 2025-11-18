@@ -196,6 +196,16 @@ class AllEventScreenController extends StateNotifier<AllEventScreenState> {
     state = state.copyWith(listingList: list);
   }
 
+  updateRecommendationIsFav(bool isFav, int? eventId) {
+    final list = state.recommendationList;
+    for (var listing in list) {
+      if (listing.id == eventId) {
+        listing.isFavorite = isFav;
+      }
+    }
+    state = state.copyWith(recommendationList: list);
+  }
+
   void onLoadMoreList(int currPageNo) async {
     int currPageNo = state.currentPageNo;
     currPageNo = currPageNo + 1;

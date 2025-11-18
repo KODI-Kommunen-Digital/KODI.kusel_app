@@ -140,10 +140,10 @@ class _DigifitTrophiesScreenState extends ConsumerState<DigifitTrophiesScreen> {
               size: DeviceHelper.isMobile(context) ? null : 12.h.w,
               Icons.arrow_back, color: Theme.of(context).primaryColor),
         ),
-        16.horizontalSpace,
+        10.horizontalSpace,
         textBoldPoppins(
-          color: Theme.of(context).textTheme.labelLarge?.color,
-          fontSize: 20,
+          color: Theme.of(context).textTheme.bodyLarge?.color,
+          fontSize: 24,
           text: AppLocalizations.of(context).points_and_trophy,
         ),
       ],
@@ -264,10 +264,13 @@ class _DigifitTrophiesScreenState extends ConsumerState<DigifitTrophiesScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            textBoldMontserrat(
-                text: sectionTitle,
-                fontSize: 16,
-                color: Theme.of(context).textTheme.bodyLarge?.color),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: textBoldMontserrat(
+                  text: sectionTitle,
+                  fontSize: 16,
+                  color: Theme.of(context).textTheme.bodyLarge?.color),
+            ),
             12.horizontalSpace,
             if (subtitle != null) textRegularMontserrat(text: subtitle),
           ],

@@ -142,7 +142,8 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
         ),
         16.horizontalSpace,
         textBoldPoppins(
-          fontSize: 20,
+          color: Theme.of(context).textTheme.bodyLarge?.color,
+          fontSize: 24,
           text: AppLocalizations.of(context).digifit_parcours,
         ),
       ],
@@ -279,9 +280,9 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 10.0),
-              child: textRegularPoppins(
+              child: textSemiBoldPoppins(
                   text: parcoursModel.name ?? '',
-                  fontSize: 16,
+                  fontSize: 18,
                   fontWeight: FontWeight.w600,
                   color: Theme.of(context).textTheme.bodyLarge?.color),
             ),
@@ -324,7 +325,7 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
             }
           },
         ),
-        6.verticalSpace,
+        2.verticalSpace,
         ListView.builder(
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
@@ -332,7 +333,7 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
             itemBuilder: (context, index) {
               final station = parcoursModel.stations![index];
               return Padding(
-                padding: EdgeInsets.only(bottom: 5.h),
+                padding: EdgeInsets.only(bottom: 2.h),
                 child: DigifitTextImageCard(
                   imageUrl: station.machineImageUrl ?? '',
                   heading: station.muscleGroups ?? '',
@@ -394,6 +395,8 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
         Visibility(
           visible: isButtonVisible ?? true,
           child: CustomButton(
+            height: 48,
+            textSize: 16,
               onPressed: () {
                 final value =
                     ref.read(networkStatusProvider).isNetworkAvailable;
@@ -425,7 +428,8 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                 }
               },
               text: AppLocalizations.of(context).show_course),
-        )
+        ),
+        10.verticalSpace
       ],
     );
   }

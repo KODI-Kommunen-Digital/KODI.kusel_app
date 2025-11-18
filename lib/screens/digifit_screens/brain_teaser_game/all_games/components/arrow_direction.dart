@@ -53,6 +53,7 @@ class ArrowOverlayGame extends FlameGame {
 
   @override
   Future<void> onLoad() async {
+    images.prefix = '';
     camera.viewport = FixedResolutionViewport(
       resolution: Vector2(gridWidth, gridHeight),
     );
@@ -118,12 +119,27 @@ class ArrowComponent extends PositionComponent {
   double _progress = 0.0;
   double _elapsedTime = 0.0;
 
+  SpriteComponent? _arrowSprite;
+
   ArrowComponent({
     required this.direction,
     required this.gridViewUIParams,
     this.durationSeconds = 3,
   }) {
     anchor = Anchor.center;
+  }
+
+  double _getRotationAngle() {
+    switch (direction) {
+      case ArrowDirection.right:
+        return 0;
+      case ArrowDirection.down:
+        return pi / 2;
+      case ArrowDirection.left:
+        return pi;
+      case ArrowDirection.up:
+        return 3 * pi / 2;
+    }
   }
 
   @override
@@ -141,6 +157,17 @@ class ArrowComponent extends PositionComponent {
     final componentSize = minTileDimension * 0.75;
 
     size = Vector2(componentSize, componentSize);
+
+    final sprite = await Sprite.load('assets/png/arrow_right.png');
+    _arrowSprite = SpriteComponent(
+      sprite: sprite,
+      size: Vector2(componentSize * 0.7, componentSize * 0.7),
+      anchor: Anchor.center,
+      position: Vector2(componentSize / 2, componentSize / 2),
+      angle: _getRotationAngle(),
+    );
+
+    add(_arrowSprite!);
   }
 
   @override
@@ -183,55 +210,5 @@ class ArrowComponent extends PositionComponent {
       false,
       progressPaint,
     );
-
-    final arrowPaint = Paint()
-      ..color = gridViewUIParams.arrowColor
-      ..strokeWidth = strokeWidth * 0.6
-      ..style = PaintingStyle.stroke;
-
-    canvas.save();
-    canvas.translate(center.dx, center.dy);
-
-    final arrowSize = radius * 0.5;
-    final arrowHeadSize = radius * 0.33;
-
-    final path = Path();
-    switch (direction) {
-      case ArrowDirection.left:
-        path.moveTo(-arrowSize, 0);
-        path.lineTo(-arrowSize + arrowHeadSize, -arrowHeadSize);
-        path.moveTo(-arrowSize, 0);
-        path.lineTo(-arrowSize + arrowHeadSize, arrowHeadSize);
-        path.moveTo(-arrowSize, 0);
-        path.lineTo(arrowSize, 0);
-        break;
-      case ArrowDirection.right:
-        path.moveTo(arrowSize, 0);
-        path.lineTo(arrowSize - arrowHeadSize, -arrowHeadSize);
-        path.moveTo(arrowSize, 0);
-        path.lineTo(arrowSize - arrowHeadSize, arrowHeadSize);
-        path.moveTo(arrowSize, 0);
-        path.lineTo(-arrowSize, 0);
-        break;
-      case ArrowDirection.up:
-        path.moveTo(0, -arrowSize);
-        path.lineTo(-arrowHeadSize, -arrowSize + arrowHeadSize);
-        path.moveTo(0, -arrowSize);
-        path.lineTo(arrowHeadSize, -arrowSize + arrowHeadSize);
-        path.moveTo(0, -arrowSize);
-        path.lineTo(0, arrowSize);
-        break;
-      case ArrowDirection.down:
-        path.moveTo(0, arrowSize);
-        path.lineTo(-arrowHeadSize, arrowSize - arrowHeadSize);
-        path.moveTo(0, arrowSize);
-        path.lineTo(arrowHeadSize, arrowSize - arrowHeadSize);
-        path.moveTo(0, arrowSize);
-        path.lineTo(0, -arrowSize);
-        break;
-    }
-
-    canvas.drawPath(path, arrowPaint);
-    canvas.restore();
   }
 }
