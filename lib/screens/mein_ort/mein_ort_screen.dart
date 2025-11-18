@@ -18,6 +18,7 @@ import '../../common_widgets/common_event_card.dart';
 import '../../common_widgets/custom_button_widget.dart';
 import '../../common_widgets/custom_progress_bar.dart';
 import '../../common_widgets/custom_shimmer_widget.dart';
+import '../../common_widgets/device_helper.dart';
 import '../../common_widgets/highlights_card.dart';
 import '../../common_widgets/image_utility.dart';
 import '../../common_widgets/text_styles.dart';
@@ -54,15 +55,6 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
         children: [
           _buildBody(context),
           if (isLoading) CustomProgressBar(),
-          Positioned(
-            top: 13.h,
-            left: 5.w,
-            child: IconButton(
-                onPressed: () {
-                  ref.read(navigationProvider).removeTopPage(context: context);
-                },
-                icon: Icon(Icons.arrow_back)),
-          )
         ],
       ),
     ));
@@ -93,35 +85,34 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
               itemBuilder: (context, index) {
                 final municipality = state.municipalityList[index];
                 return cityListWidget(
-                    municipality.topFiveCities ?? [],
-                    municipality.name ?? '',
-                    5,
-                    AppLocalizations.of(context).show_all_places,
-                    imagePath['calendar'] ?? "",
-                    isLoading,
-                    0,
-                    0,
-                    municipality.id??0,
-                    () {
-                  ref.read(navigationProvider).navigateUsingPath(
-                      path: allMunicipalityScreenPath,
-                      context: context,
-                      params: MunicipalityScreenParams(
-                          municipalityId: municipality.id ?? 0,
-                        onFavUpdate: (isFav, cityId){
-                            _updateCityList(isFav, cityId, municipality.id??0);
-                        }
-                      ));
-                },
+                  municipality.topFiveCities ?? [],
+                  municipality.name ?? '',
+                  5,
+                  AppLocalizations.of(context).show_all_places,
+                  imagePath['calendar'] ?? "",
+                  isLoading,
+                  0,
+                  0,
+                  municipality.id ?? 0,
+                  () {
+                    ref.read(navigationProvider).navigateUsingPath(
+                        path: allMunicipalityScreenPath,
+                        context: context,
+                        params: MunicipalityScreenParams(
+                            municipalityId: municipality.id ?? 0,
+                            onFavUpdate: (isFav, cityId) {
+                              _updateCityList(
+                                  isFav, cityId, municipality.id ?? 0);
+                            }));
+                  },
                 );
               }),
           FeedbackCardWidget(
               height: 270.h,
               onTap: () {
-            ref
-                .read(navigationProvider)
-                .navigateUsingPath(path: feedbackScreenPath, context: context);
-          })
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: feedbackScreenPath, context: context);
+              })
         ],
       ),
     );
@@ -139,11 +130,22 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
             blurredBackground: true,
             isStaticImage: true,
             customWidget1: Positioned(
-              left: 40.w,
+              left: 0.w,
               top: 20.h,
               child: Row(
                 children: [
                   16.horizontalSpace,
+                  IconButton(
+                      onPressed: () {
+                        ref
+                            .read(navigationProvider)
+                            .removeTopPage(context: context);
+                      },
+                      icon: Icon(
+                          size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                          color: Theme.of(context).primaryColor,
+                          Icons.arrow_back)),
+                  12.horizontalSpace,
                   textBoldPoppins(
                       color: Theme.of(context).textTheme.labelLarge?.color,
                       fontSize: 18,
@@ -254,64 +256,65 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                 overscroll.disallowIndicator();
                 return true;
               },
-            child: PageView.builder(
-              controller: PageController(
-                  viewportFraction: 317.w / MediaQuery.of(context).size.width),
-              scrollDirection: Axis.horizontal,
-              padEnds: false,
-              itemCount: municipalityList.length,
-              itemBuilder: (context, index) {
-                final municipality = municipalityList[index];
-                return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 6.h.w),
-                  child: HighlightsCard(
-                    imageUrl:
-                        municipality.mapImage ?? "https://picsum.photos/200",
-                    heading: municipality.name ?? "",
-                    errorImagePath: imagePath['kusel_map_image'],
-                    onPress: () {
-                      ref.read(navigationProvider).navigateUsingPath(
-                            context: context,
-                            path: municipalDetailScreenPath,
-                            params: MunicipalDetailScreenParams(
-                                municipalId: municipality.id.toString(),
-                              onFavUpdate: (isFav, id, isMunicipal){
-                                  if(isMunicipal ?? false){
-                                    _updateMunicipalityList(isFav, id??0);
-                                  } else {
-                                    _updateCityList(isFav, id ?? 0,municipality.id??0);
-                                  }
-                              }
-                            ),
-                          );
-                    },
-                    isFavourite: municipality.isFavorite ?? false,
-                    onFavouriteIconClick: () {
-                      ref
-                          .watch(favouriteCitiesNotifier.notifier)
-                          .toggleFavorite(
-                            isFavourite: municipality.isFavorite,
-                            id: municipality.id,
-                            success: ({required bool isFavorite}) {
-                              _updateMunicipalityList(
-                                  isFavorite, municipality.id ?? 0);
-                            },
-                        error: ({required String message}) {
-                          showErrorToast(
-                              message: message, context: context);
-                        },
-                      );
-                    },
-                    isFavouriteVisible: true,
-                    sourceId: 1,
-                    imageFit: BoxFit.contain,
-                    description: '',
-                  ),
-                );
-              },
-              onPageChanged: (index) {
-                ref.read(meinOrtProvider.notifier).updateCardIndex(index);
-              },
+              child: PageView.builder(
+                controller: PageController(
+                    viewportFraction:
+                        317.w / MediaQuery.of(context).size.width),
+                scrollDirection: Axis.horizontal,
+                padEnds: false,
+                itemCount: municipalityList.length,
+                itemBuilder: (context, index) {
+                  final municipality = municipalityList[index];
+                  return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 6.h.w),
+                    child: HighlightsCard(
+                      imageUrl:
+                          municipality.mapImage ?? "https://picsum.photos/200",
+                      heading: municipality.name ?? "",
+                      errorImagePath: imagePath['kusel_map_image'],
+                      onPress: () {
+                        ref.read(navigationProvider).navigateUsingPath(
+                              context: context,
+                              path: municipalDetailScreenPath,
+                              params: MunicipalDetailScreenParams(
+                                  municipalId: municipality.id.toString(),
+                                  onFavUpdate: (isFav, id, isMunicipal) {
+                                    if (isMunicipal ?? false) {
+                                      _updateMunicipalityList(isFav, id ?? 0);
+                                    } else {
+                                      _updateCityList(
+                                          isFav, id ?? 0, municipality.id ?? 0);
+                                    }
+                                  }),
+                            );
+                      },
+                      isFavourite: municipality.isFavorite ?? false,
+                      onFavouriteIconClick: () {
+                        ref
+                            .watch(favouriteCitiesNotifier.notifier)
+                            .toggleFavorite(
+                              isFavourite: municipality.isFavorite,
+                              id: municipality.id,
+                              success: ({required bool isFavorite}) {
+                                _updateMunicipalityList(
+                                    isFavorite, municipality.id ?? 0);
+                              },
+                              error: ({required String message}) {
+                                showErrorToast(
+                                    message: message, context: context);
+                              },
+                            );
+                      },
+                      isFavouriteVisible: true,
+                      sourceId: 1,
+                      imageFit: BoxFit.contain,
+                      description: '',
+                    ),
+                  );
+                },
+                onPageChanged: (index) {
+                  ref.read(meinOrtProvider.notifier).updateCardIndex(index);
+                },
               ),
             ),
           ),
@@ -395,28 +398,27 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                     ref.read(navigationProvider).navigateUsingPath(
                         path: ortDetailScreenPath,
                         context: context,
-                        params:
-                            OrtDetailScreenParams(ortId: city.id!.toString(),
-                                onFavSuccess: (isFav,id){
-                                  _updateCityList(isFav??false, id??0, municipalityId??0);
-                                }));
+                        params: OrtDetailScreenParams(
+                            ortId: city.id!.toString(),
+                            onFavSuccess: (isFav, id) {
+                              _updateCityList(
+                                  isFav ?? false, id ?? 0, municipalityId ?? 0);
+                            }));
                   },
                   isFavourite: city.isFavorite,
                   isFavouriteVisible: true,
                   onFavoriteTap: () {
-                    ref
-                        .watch(favouriteCitiesNotifier.notifier)
-                        .toggleFavorite(
-                      isFavourite : city.isFavorite, id : city.id,
-                      success: ({required bool isFavorite}) {
+                    ref.watch(favouriteCitiesNotifier.notifier).toggleFavorite(
+                          isFavourite: city.isFavorite,
+                          id: city.id,
+                          success: ({required bool isFavorite}) {
                             _updateCityList(
                                 isFavorite, city.id!, municipalityId ?? 0);
                           },
-                      error: ({required String message}) {
-                        showErrorToast(
-                            message: message, context: context);
-                      },
-                    );
+                          error: ({required String message}) {
+                            showErrorToast(message: message, context: context);
+                          },
+                        );
                   },
                 ),
               );
@@ -464,8 +466,6 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
   }
 
   _updateMunicipalityList(bool isFav, int cityId) {
-    ref
-        .read(meinOrtProvider.notifier)
-        .setIsFavoriteMunicipality(isFav, cityId);
+    ref.read(meinOrtProvider.notifier).setIsFavoriteMunicipality(isFav, cityId);
   }
 }
