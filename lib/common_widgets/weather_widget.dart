@@ -35,7 +35,7 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
             child: Container(
               padding: EdgeInsets.only(left: 50.w, top: 10.h),
               width: 270.w,
-              height: 200.h,
+              height: 220.h,
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(topRight: Radius.circular(16.r), bottomRight: Radius.circular(16.r))
@@ -126,6 +126,7 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
                       ],
                     ),
                   ),
+                  10.verticalSpace
                 ],
               ),
             ),
