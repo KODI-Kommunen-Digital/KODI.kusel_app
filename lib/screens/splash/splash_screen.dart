@@ -34,7 +34,7 @@ class _State extends ConsumerState<SplashScreen> {
           if (isOnboardingDone) {
             path = homeScreenPath;
           } else {
-            path = onboardingScreenPath;
+            path = onboardingStartPagePath;
           }
           ref.read(navigationProvider).removeAllAndNavigate(
                 context: context,

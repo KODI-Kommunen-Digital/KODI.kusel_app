@@ -248,7 +248,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                 },
               ),
             if(ref.watch(ortDetailScreenControllerProvider).ortDetailDataModel?.mayorName!=null)
-            _buildMayorCard(),
+            // _buildMayorCard(),
             LocalSvgImageTextServiceCard(
               onTap: () => ref.read(navigationProvider).navigateUsingPath(
                   path: webViewPagePath,

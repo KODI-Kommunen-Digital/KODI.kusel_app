@@ -85,7 +85,41 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                       top: 8, bottom: 0, left: 16, right: 16),
                   items: [
                     DotNavigationBarItem(
-                      icon: const Icon(Icons.home_filled),
+                      icon: DeviceHelper.isMobile(context) ? Padding(
+                        padding: EdgeInsets.only(top: 3.h, left: 3),
+                        child: SizedBox(
+                          height: 14.h,
+                          width: 16.w,
+                          child: Center(
+                            child: ImageUtil.loadSvgImage(
+                              height: 14.h,
+                              width: 16.w,
+                              imageUrl: imagePath['home_vector'] ?? "",
+                              context: context,
+                              color: selectedIndex == 0
+                                  ? Theme.of(context).indicatorColor
+                                  : Theme.of(context).colorScheme.onPrimary,
+                            ),
+                          ),
+                        ),
+                      ): Padding(
+                        padding: EdgeInsets.only(top: 1.h),
+                        child: SizedBox(
+                          height: 12.h,
+                          width: 12.w,
+                          child: Center(
+                            child: ImageUtil.loadSvgImage(
+                              height: 10.h,
+                              width: 10.w,
+                              imageUrl: imagePath['home_vector'] ?? "",
+                              context: context,
+                              color: selectedIndex == 0
+                                  ? Theme.of(context).indicatorColor
+                                  : Theme.of(context).colorScheme.onPrimary,
+                            ),
+                          ),
+                        ),
+                      ),
                       selectedColor: Theme.of(context).indicatorColor,
                     ),
                     DotNavigationBarItem(

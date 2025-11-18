@@ -77,138 +77,122 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
   Widget _buildBody(BuildContext context) {
     final state = ref.read(virtualTownHallProvider);
     final isLoading = ref.watch(virtualTownHallProvider).loading;
-    return Stack(
-      children: [
-        SingleChildScrollView(
-          physics: ClampingScrollPhysics(),
-          child: Column(
-            children: [
-              _buildClipper(),
-              _buildTownHallDetailsUi(state),
-              _buildServicesList(onlineServicesList: state.onlineServiceList ?? []),
-              _customPageViewer(municipalityList: state.municipalitiesList ?? []),
-              if (state.newsList != null && state.newsList!.isNotEmpty)
-                EventsListSectionWidget(
-                  context: context,
-                  eventsList: state.newsList ?? [],
-                  heading: AppLocalizations.of(context).news,
-                  maxListLimit: 5,
-                  buttonText: AppLocalizations.of(context).all_news,
-                  buttonIconPath: imagePath['news_icon'] ?? "",
-                  isLoading: false,
-                  onButtonTap: () {
-                    ref.read(navigationProvider).navigateUsingPath(
-                        path: selectedEventListScreenPath,
-                        context: context,
-                        params: SelectedEventListScreenParameter(
-                            cityId: 1,
-                            listHeading: AppLocalizations.of(context).news,
-                            categoryId: ListingCategoryId.news.eventId,
-                            onFavChange: () {
-                              ref
-                                  .read(virtualTownHallProvider.notifier)
-                                  .getNewsUsingCityId(cityId: "1");
-                            }));
-                  },
-                  onHeadingTap: () {
-                    ref.read(navigationProvider).navigateUsingPath(
-                        path: selectedEventListScreenPath,
-                        context: context,
-                        params: SelectedEventListScreenParameter(
-                            cityId: 1,
-                            listHeading: AppLocalizations.of(context).news,
-                            categoryId: ListingCategoryId.news.eventId,
-                            onFavChange: () {
-                              ref
-                                  .read(virtualTownHallProvider.notifier)
-                                  .getNewsUsingCityId(cityId: "1");
-                            }));
-                  },
-                  onFavClickCallback: () {
-                    ref
-                        .read(virtualTownHallProvider.notifier)
-                        .getVirtualTownHallDetails();
-                  },
-                  isFavVisible: true,
-                  onSuccess: (bool isFav, int? id) {
-                    ref
-                        .read(virtualTownHallProvider.notifier)
-                        .updateNewsIsFav(isFav, id);
-                  },
-                ),
-              if (state.eventList != null && state.eventList!.isNotEmpty)
-                EventsListSectionWidget(
-                  context: context,
-                  eventsList: state.eventList ?? [],
-                  heading: AppLocalizations.of(context).current_events,
-                  maxListLimit: 5,
-                  buttonText: AppLocalizations.of(context).all_events,
-                  buttonIconPath: imagePath['calendar'] ?? "",
-                  isLoading: false,
-                  onButtonTap: () {
-                    ref.read(navigationProvider).navigateUsingPath(
-                        path: selectedEventListScreenPath,
-                        context: context,
-                        params: SelectedEventListScreenParameter(
-                            cityId: 1,
-                            listHeading: AppLocalizations.of(context).events,
-                            categoryId: ListingCategoryId.event.eventId,
-                            onFavChange: () {
-                              ref
-                                  .read(virtualTownHallProvider.notifier)
-                                  .getEventsUsingCityId(cityId: "1");
-                            }
-                            ));
-                  },
-                  onHeadingTap: () {
-                    ref.read(navigationProvider).navigateUsingPath(
-                        path: selectedEventListScreenPath,
-                        context: context,
-                        params: SelectedEventListScreenParameter(
-                            cityId: 1,
-                            listHeading: AppLocalizations.of(context).events,
-                            categoryId: ListingCategoryId.event.eventId,
-                            onFavChange: () {
-                              ref
-                                  .read(virtualTownHallProvider.notifier)
-                                  .getEventsUsingCityId(cityId: "1");
-                            }));
-                  },
-                  isFavVisible: true,
-                  onSuccess: (bool isFav, int? id) {
-                    ref
-                        .read(virtualTownHallProvider.notifier)
-                        .updateEventIsFav(isFav, id);
-                  },
-                  onFavClickCallback: () {
-                    ref
-                        .read(virtualTownHallProvider.notifier)
-                        .getVirtualTownHallDetails();
-                  },
-                ),
-              FeedbackCardWidget(
-                  height: 270.h,
-                  onTap: () {
-                ref
-                    .read(navigationProvider)
-                    .navigateUsingPath(path: feedbackScreenPath, context: context);
-              })
-            ],
-          ),
-        ),
-        Positioned(
-          top: 12.h,
-          left: 5.w,
-          child: IconButton(
-              onPressed: () {
-                ref.read(navigationProvider).removeTopPage(context: context);
+    return SingleChildScrollView(
+      physics: ClampingScrollPhysics(),
+      child: Column(
+        children: [
+          _buildClipper(),
+          _buildTownHallDetailsUi(state),
+          _buildServicesList(onlineServicesList: state.onlineServiceList ?? []),
+          _customPageViewer(municipalityList: state.municipalitiesList ?? []),
+          if (state.newsList != null && state.newsList!.isNotEmpty)
+            EventsListSectionWidget(
+              context: context,
+              eventsList: state.newsList ?? [],
+              heading: AppLocalizations.of(context).news,
+              maxListLimit: 5,
+              buttonText: AppLocalizations.of(context).all_news,
+              buttonIconPath: imagePath['news_icon'] ?? "",
+              isLoading: false,
+              onButtonTap: () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: selectedEventListScreenPath,
+                    context: context,
+                    params: SelectedEventListScreenParameter(
+                        cityId: 1,
+                        listHeading: AppLocalizations.of(context).news,
+                        categoryId: ListingCategoryId.news.eventId,
+                        onFavChange: () {
+                          ref
+                              .read(virtualTownHallProvider.notifier)
+                              .getNewsUsingCityId(cityId: "1");
+                        }));
               },
-              icon: Icon(
-                  size: DeviceHelper.isMobile(context) ? null : 12.h.w,
-                  color: Theme.of(context).primaryColor,
-                  Icons.arrow_back)),
-        )
-      ],
+              onHeadingTap: () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: selectedEventListScreenPath,
+                    context: context,
+                    params: SelectedEventListScreenParameter(
+                        cityId: 1,
+                        listHeading: AppLocalizations.of(context).news,
+                        categoryId: ListingCategoryId.news.eventId,
+                        onFavChange: () {
+                          ref
+                              .read(virtualTownHallProvider.notifier)
+                              .getNewsUsingCityId(cityId: "1");
+                        }));
+              },
+              onFavClickCallback: () {
+                ref
+                    .read(virtualTownHallProvider.notifier)
+                    .getVirtualTownHallDetails();
+              },
+              isFavVisible: true,
+              onSuccess: (bool isFav, int? id) {
+                ref
+                    .read(virtualTownHallProvider.notifier)
+                    .updateNewsIsFav(isFav, id);
+              },
+            ),
+          if (state.eventList != null && state.eventList!.isNotEmpty)
+            EventsListSectionWidget(
+              context: context,
+              eventsList: state.eventList ?? [],
+              heading: AppLocalizations.of(context).current_events,
+              maxListLimit: 5,
+              buttonText: AppLocalizations.of(context).all_events,
+              buttonIconPath: imagePath['calendar'] ?? "",
+              isLoading: false,
+              onButtonTap: () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: selectedEventListScreenPath,
+                    context: context,
+                    params: SelectedEventListScreenParameter(
+                        cityId: 1,
+                        listHeading: AppLocalizations.of(context).events,
+                        categoryId: ListingCategoryId.event.eventId,
+                        onFavChange: () {
+                          ref
+                              .read(virtualTownHallProvider.notifier)
+                              .getEventsUsingCityId(cityId: "1");
+                        }
+                        ));
+              },
+              onHeadingTap: () {
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: selectedEventListScreenPath,
+                    context: context,
+                    params: SelectedEventListScreenParameter(
+                        cityId: 1,
+                        listHeading: AppLocalizations.of(context).events,
+                        categoryId: ListingCategoryId.event.eventId,
+                        onFavChange: () {
+                          ref
+                              .read(virtualTownHallProvider.notifier)
+                              .getEventsUsingCityId(cityId: "1");
+                        }));
+              },
+              isFavVisible: true,
+              onSuccess: (bool isFav, int? id) {
+                ref
+                    .read(virtualTownHallProvider.notifier)
+                    .updateEventIsFav(isFav, id);
+              },
+              onFavClickCallback: () {
+                ref
+                    .read(virtualTownHallProvider.notifier)
+                    .getVirtualTownHallDetails();
+              },
+            ),
+          FeedbackCardWidget(
+              height: 270.h,
+              onTap: () {
+            ref
+                .read(navigationProvider)
+                .navigateUsingPath(path: feedbackScreenPath, context: context);
+          })
+        ],
+      ),
     );
   }
 
@@ -225,11 +209,20 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
             blurredBackground: true,
             isStaticImage: true,
             customWidget1: Positioned(
-              left: 40.w,
+              left: 0.w,
               top: 20.h,
               child: Row(
                 children: [
                   16.horizontalSpace,
+                  IconButton(
+                    onPressed: () {
+                      ref.read(navigationProvider).removeTopPage(context: context);
+                    },
+                    icon: Icon(
+                        size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                        color: Theme.of(context).primaryColor,
+                        Icons.arrow_back)),
+                  12.horizontalSpace,
                   textBoldPoppins(
                       color: Theme.of(context).textTheme.labelLarge?.color,
                       fontSize: 18,

@@ -147,8 +147,9 @@ class _CustomFlutterMapState extends ConsumerState<CustomFlutterMap> {
         initialCenter: LatLng(widget.latitude, widget.longitude),
         initialZoom: widget.initialZoom,
         interactionOptions: InteractionOptions(
-            flags: InteractiveFlag.pinchZoom |
-                InteractiveFlag.drag |
+            flags:
+            // InteractiveFlag.pinchZoom |
+            //     InteractiveFlag.drag |
                 InteractiveFlag.flingAnimation |
                 InteractiveFlag.doubleTapZoom |
                 InteractiveFlag.scrollWheelZoom),

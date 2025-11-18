@@ -53,7 +53,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
                     clipperType: DownstreamCurveClipper(),
                     imageUrl: state.mobilityData?.imageUrl ??
                         'https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg',
-                    isBackArrowEnabled: false,
+                    isBackArrowEnabled: true,
                     isStaticImage: false),
                 _buildMobilityDescription(),
                 // _buildReadMoreSection(),
@@ -67,15 +67,6 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
                           path: feedbackScreenPath, context: context);
                     })
               ],
-            ),
-          ),
-          Positioned(
-            top: 30.h,
-            left: 12.h,
-            child: ArrowBackWidget(
-              onTap: () {
-                ref.read(navigationProvider).removeTopPage(context: context);
-              },
             ),
           ),
         ],
