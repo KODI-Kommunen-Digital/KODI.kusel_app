@@ -109,15 +109,6 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                       );
                 },
               )),
-          Positioned(
-            top: 30.h,
-            left: 12.h,
-            child: ArrowBackWidget(
-              onTap: () {
-                ref.read(navigationProvider).removeTopPage(context: context);
-              },
-            ),
-          ),
         ],
       ),
     ));
@@ -277,7 +268,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
             clipperType: DownstreamCurveClipper(),
             imageUrl: imagePath['city_background_image'] ?? "",
             height: 210.h,
-            isBackArrowEnabled: false,
+            isBackArrowEnabled: true,
             isStaticImage: true,
           ),
         ),

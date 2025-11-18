@@ -81,7 +81,6 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                   child: GestureDetector(
                     onTap: () {
                       final state = ref.read(allEventScreenProvider);
-
                       ref
                           .read(navigationProvider)
                           .navigateUsingPath(
