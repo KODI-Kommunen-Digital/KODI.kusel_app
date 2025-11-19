@@ -51,11 +51,17 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
 
     return Scaffold(
         body: SafeArea(
-      child: Stack(
-        children: [
-          _buildBody(context),
-          if (isLoading) CustomProgressBar(),
-        ],
+      child: RefreshIndicator(
+        onRefresh: () async {
+          ref.read(meinOrtProvider.notifier).getMeinOrtDetails();
+          ref.read(meinOrtProvider.notifier).isUserLoggedIn();
+        },
+        child: Stack(
+          children: [
+            _buildBody(context),
+            if (isLoading) CustomProgressBar(),
+          ],
+        ),
       ),
     ));
   }
@@ -190,7 +196,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
     MeinOrtState state = ref.watch(meinOrtProvider);
     int currentIndex = state.highlightCount;
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+      padding: EdgeInsets.only(left: 16.w, top: 10.h, bottom: 10.h),
       child: Column(
         children: [
           20.verticalSpace,

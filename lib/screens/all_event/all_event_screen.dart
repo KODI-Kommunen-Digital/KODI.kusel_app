@@ -7,17 +7,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
 import 'package:kusel/common_widgets/date_picker/date_picker_provider.dart';
-import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/screens/all_event/all_event_screen_controller.dart';
 import 'package:kusel/screens/all_event/all_event_screen_param.dart';
-import 'package:kusel/screens/fliter_screen/filter_screen.dart';
 import 'package:kusel/screens/fliter_screen/filter_screen_controller.dart';
 import 'package:kusel/screens/new_filter_screen/new_filter_screen_params.dart';
+import 'package:kusel/theme_manager/colors.dart';
 
-import '../../common_widgets/arrow_back_widget.dart';
 import '../../common_widgets/common_text_arrow_widget.dart';
 import '../../common_widgets/device_helper.dart';
 import '../../common_widgets/event_list_section_widget.dart';
+import '../../common_widgets/feedback_card_widget.dart';
 import '../../common_widgets/highlights_card.dart';
 import '../../common_widgets/image_utility.dart';
 import '../../common_widgets/text_styles.dart';
@@ -57,12 +56,17 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
   Widget build(BuildContext context) {
     final currentPageNumber = ref.read(allEventScreenProvider).currentPageNo;
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: SafeArea(child: _buildBody(context, currentPageNumber)),
-    ).loaderDialog(context, ref.watch(allEventScreenProvider).isLoading);
+      body: (ref.watch(allEventScreenProvider).isLoading)
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : _buildBody(context, currentPageNumber),
+    );
   }
 
   Widget _buildBody(BuildContext context, int currentPageNumber) {
+    final state = ref.watch(allEventScreenProvider);
+
     return Stack(
       children: [
         NotificationListener<OverscrollIndicatorNotification>(
@@ -76,12 +80,12 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
               children: [
                 CommonBackgroundClipperWidget(
                   clipperType: UpstreamWaveClipper(),
-                  height: 130.h,
-                  headingTextLeftMargin: 20,
+                  height: 110.h,
+                  headingTextLeftMargin: 10,
                   imageUrl: imagePath['home_screen_background'] ?? '',
                   isStaticImage: true,
-                  isBackArrowEnabled: false,
-                  headingText: AppLocalizations.of(context).events,
+                  isBackArrowEnabled: true,
+                  headingText: AppLocalizations.of(context).event_text,
                 ),
                 _buildRecommendation(context),
                 10.verticalSpace,
@@ -95,10 +99,11 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                       Padding(
                         padding: const EdgeInsets.only(left: 10.0),
                         child: textSemiBoldPoppins(
-                          text: AppLocalizations.of(context).all_events,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                        ),
+                            text: AppLocalizations.of(context).events,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color:
+                                Theme.of(context).textTheme.bodyLarge!.color),
                       ),
                       GestureDetector(
                         onTap: () {
@@ -152,13 +157,14 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                                 horizontal: 4.w, vertical: 4.h),
                             decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: Theme.of(context).indicatorColor,
+                                color: lightThemeHighlightGreenColor,
                                 border: Border.all(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .secondary)),
+                                    color:
+                                        Theme.of(context).colorScheme.primary)),
                             child: Center(
-                              child: textBoldMontserrat(
+                              child: textSemiBoldMontserrat(
+                                  color: Theme.of(context).primaryColor,
+                                  fontWeight: FontWeight.w600,
                                   text: ref
                                       .watch(allEventScreenProvider)
                                       .numberOfFiltersApplied
@@ -176,81 +182,74 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                     ],
                   ),
                 ),
-                4.verticalSpace,
-                if (ref
-                    .watch(allEventScreenProvider)
-                    .selectedCategoryNameList
-                    .isNotEmpty)
+                if (state.selectedCategoryNameList.isNotEmpty) ...[
+                  16.verticalSpace,
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Wrap(
-                        spacing: 8.w,
-                        runSpacing: 6.h,
-                        children: ref
-                            .watch(allEventScreenProvider)
-                            .selectedCategoryNameList
-                            .map((value) {
-                          return _buildChip(value);
-                        }).toList(),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 24.0),
+                        child: Wrap(
+                          spacing: 8.w,
+                          runSpacing: 6.h,
+                          children: state.selectedCategoryNameList
+                              .map((value) => _buildChip(value))
+                              .toList(),
+                        ),
                       ),
                       8.verticalSpace,
                     ],
                   ),
-                if (!ref.watch(allEventScreenProvider).isLoading)
-                  ref.watch(allEventScreenProvider).listingList.isEmpty
-                      ? Center(
-                          child: textHeadingMontserrat(
-                              text: AppLocalizations.of(context).no_data),
-                        )
-                      : EventsListSectionWidget(
-                          eventsList:
-                              ref.watch(allEventScreenProvider).listingList,
-                          heading: null,
-                          maxListLimit: ref
-                              .watch(allEventScreenProvider)
-                              .listingList
-                              .length,
-                          buttonText: null,
-                          buttonIconPath: null,
-                          isLoading: false,
-                          onButtonTap: () {},
-                          context: context,
-                          isFavVisible: true,
-                          onHeadingTap: () {},
-                          onSuccess: (bool isFav, int? id) {
-                            ref
-                                .read(allEventScreenProvider.notifier)
-                                .updateIsFav(isFav, id);
-                            widget.allEventScreenParam.onFavChange();
-                          },
-                          onFavClickCallback: () {
-                            ref
-                                .read(allEventScreenProvider.notifier)
-                                .getListing(currentPageNumber);
-                          },
-                          isMultiplePagesList: ref
-                              .read(allEventScreenProvider)
-                              .isLoadMoreButtonEnabled,
-                          onLoadMoreTap: () {
-                            ref
-                                .read(allEventScreenProvider.notifier)
-                                .onLoadMoreList(currentPageNumber);
-                          },
-                          isMoreListLoading: ref
-                              .watch(allEventScreenProvider)
-                              .isMoreListLoading),
+                ],
+                if (state.isLoading)
+                  const Center(child: CircularProgressIndicator())
+                else if (state.listingList.isEmpty)
+                  Center(
+                    child: textHeadingMontserrat(
+                      text: AppLocalizations.of(context).no_data,
+                    ),
+                  )
+                else
+                  EventsListSectionWidget(
+                    eventsList: state.listingList,
+                    heading: null,
+                    maxListLimit: state.listingList.length,
+                    buttonText: null,
+                    buttonIconPath: null,
+                    isLoading: false,
+                    onButtonTap: () {},
+                    context: context,
+                    isFavVisible: true,
+                    onHeadingTap: () {},
+                    onSuccess: (bool isFav, int? id) {
+                      ref
+                          .read(allEventScreenProvider.notifier)
+                          .updateIsFav(isFav, id);
+                      widget.allEventScreenParam.onFavChange();
+                    },
+                    onFavClickCallback: () {
+                      ref
+                          .read(allEventScreenProvider.notifier)
+                          .getListing(currentPageNumber);
+                    },
+                    isMultiplePagesList: state.isLoadMoreButtonEnabled,
+                    onLoadMoreTap: () {
+                      ref
+                          .read(allEventScreenProvider.notifier)
+                          .onLoadMoreList(currentPageNumber);
+                    },
+                    isMoreListLoading: state.isMoreListLoading,
+                  ),
+                20.verticalSpace,
+                FeedbackCardWidget(
+                  height: 240.h,
+                  onTap: () {
+                    ref.read(navigationProvider).navigateUsingPath(
+                        path: feedbackScreenPath, context: context);
+                  },
+                ),
               ],
             ),
-          ),
-        ),
-        Positioned(
-          top: 30.h,
-          left: 5.h,
-          child: ArrowBackWidget(
-            onTap: () {
-              ref.read(navigationProvider).removeTopPage(context: context);
-            },
           ),
         ),
       ],
@@ -266,7 +265,7 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
         int currentIndex = state.highlightCount;
 
         return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+          padding: EdgeInsets.only(left: 16.w, top: 10.h, bottom: 10.h),
           child: Column(
             children: [
               Padding(
@@ -360,7 +359,8 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                                     success: ({required bool isFavorite}) {
                               ref
                                   .read(allEventScreenProvider.notifier)
-                                  .updateRecommendationIsFav(isFavorite, item.id);
+                                  .updateRecommendationIsFav(
+                                      isFavorite, item.id);
                             }, error: ({required String message}) {
                               showErrorToast(
                                   message: message, context: context);

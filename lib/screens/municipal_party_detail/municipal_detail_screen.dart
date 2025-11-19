@@ -70,46 +70,66 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
 
     return Scaffold(
         body: SafeArea(
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          Positioned.fill(child: _buildBody(context)),
-          if (isLoading) CustomProgressBar(),
-          Positioned(
-              bottom: 16.h,
-              left: 16.w,
-              right: 16.w,
-              child: CommonBottomNavCard(
-                onBackPress: () {
-                  ref.read(navigationProvider).removeTopPage(context: context);
-                },
-                isFavVisible:
-                    true,
-                isFav: state.municipalPartyDetailDataModel?.isFavorite ?? false,
-                onFavChange: () {
-                  ref.watch(favouriteCitiesNotifier.notifier).toggleFavorite(
-                        isFavourite:
-                            state.municipalPartyDetailDataModel?.isFavorite,
-                        id: state.municipalPartyDetailDataModel?.id,
-                        success: ({required bool isFavorite}) {
-                          _updateMunicipalFavStatus(isFavorite,
-                              state.municipalPartyDetailDataModel?.id ?? 0);
+      child: RefreshIndicator(
+        onRefresh: () async {
+          final id = widget.municipalDetailScreenParams.municipalId;
 
-                          if (widget.municipalDetailScreenParams.onFavUpdate !=
-                              null) {
-                            widget.municipalDetailScreenParams.onFavUpdate!(
-                                isFavorite,
-                                state.municipalPartyDetailDataModel?.id ?? 0,
-                                true);
-                          }
-                        },
-                        error: ({required String message}) {
-                          showErrorToast(message: message, context: context);
-                        },
-                      );
-                },
-              )),
-        ],
+          ref
+              .read(municipalDetailControllerProvider.notifier)
+              .getMunicipalPartyDetailUsingId(id: id);
+          ref
+              .read(municipalDetailControllerProvider.notifier)
+              .getEventsUsingCityId(municipalId: id);
+          ref
+              .read(municipalDetailControllerProvider.notifier)
+              .getNewsUsingCityId(municipalId: id);
+
+          ref.read(municipalDetailControllerProvider.notifier).isUserLoggedIn();
+        },
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Positioned.fill(child: _buildBody(context)),
+            if (isLoading) CustomProgressBar(),
+            Positioned(
+                bottom: 16.h,
+                left: 16.w,
+                right: 16.w,
+                child: CommonBottomNavCard(
+                  onBackPress: () {
+                    ref
+                        .read(navigationProvider)
+                        .removeTopPage(context: context);
+                  },
+                  isFavVisible: true,
+                  isFav:
+                      state.municipalPartyDetailDataModel?.isFavorite ?? false,
+                  onFavChange: () {
+                    ref.watch(favouriteCitiesNotifier.notifier).toggleFavorite(
+                          isFavourite:
+                              state.municipalPartyDetailDataModel?.isFavorite,
+                          id: state.municipalPartyDetailDataModel?.id,
+                          success: ({required bool isFavorite}) {
+                            _updateMunicipalFavStatus(isFavorite,
+                                state.municipalPartyDetailDataModel?.id ?? 0);
+
+                            if (widget
+                                    .municipalDetailScreenParams.onFavUpdate !=
+                                null) {
+                              widget.municipalDetailScreenParams.onFavUpdate!(
+                                  isFavorite,
+                                  state.municipalPartyDetailDataModel?.id ?? 0,
+                                  true);
+                            }
+                          },
+                          error: ({required String message}) {
+                            showErrorToast(message: message, context: context);
+                          },
+                        );
+                  },
+                )),
+          ],
+        ),
       ),
     ));
   }
@@ -285,8 +305,8 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                 BoxDecoration(shape: BoxShape.circle, color: Colors.white),
             child: (state.municipalPartyDetailDataModel?.image != null)
                 ? ImageUtil.loadNetworkImage(
-                    memCacheWidth: 100,
-                    memCacheHeight: 100,
+                    memCacheWidth: 300,
+                    memCacheHeight: 300,
                     imageUrl: state.municipalPartyDetailDataModel!.image!,
                     sourceId: 1,
                     fit: BoxFit.contain,
@@ -302,9 +322,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                           context: context);
                     },
                   )
-                : Center(
-                    child:  CircularProgressIndicator()
-                  ),
+                : Center(child: CircularProgressIndicator()),
           ),
         )
       ],
@@ -340,9 +358,9 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                     "${AppLocalizations.of(context).new_municipality} ${state.municipalPartyDetailDataModel?.name ?? ""} ",
                 color: Theme.of(context).textTheme.bodyLarge?.color,
                 fontSize: 18,
-            textAlign: TextAlign.start,
-            fontWeight: FontWeight.w500,
-            textOverflow: TextOverflow.visible)
+                textAlign: TextAlign.start,
+                fontWeight: FontWeight.w500,
+                textOverflow: TextOverflow.visible)
           ],
         ),
       );

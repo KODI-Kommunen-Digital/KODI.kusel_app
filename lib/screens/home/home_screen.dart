@@ -103,116 +103,122 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         },
         child: SingleChildScrollView(
           physics: ClampingScrollPhysics(),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            CommonBackgroundClipperWidget(
-              clipperType: UpstreamWaveClipper(),
-              imageUrl: imagePath['home_screen_background'] ?? '',
-              isStaticImage: true,
-              height: 265.h,
-              customWidget1: Positioned(
-                top: 65.h,
-                left: 20.w,
-                right: 20.w,
-                child: Column(
-                  children: [
-                    Visibility(
-                        visible: !ref
-                            .watch(homeScreenProvider)
-                            .isSignInButtonVisible,
-                        child: isLoading
-                            ? CustomShimmerWidget.rectangular(
-                                height: 20.h,
-                                width: 150.w,
-                                shapeBorder: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12.r)))
-                            : textBoldPoppins(
-                                fontSize: 21,
-                                color: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge
-                                    ?.color,
-                                textAlign: TextAlign.center,
-                                text: "Hey ${ref.watch(homeScreenProvider).userName}",
-                              )),
-                    isLoading ? 10.verticalSpace : 0.verticalSpace,
-                    isLoading
-                        ? CustomShimmerWidget.rectangular(
-                            height: 20.h,
-                            width: 200.w,
-                            shapeBorder: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.r)))
-                        : textBoldPoppins(
-                            fontSize: 21,
-                            color: Theme.of(context).textTheme.bodyLarge?.color,
-                            textAlign: TextAlign.center,
-                            textOverflow: TextOverflow.visible,
-                            text: AppLocalizations.of(context)
-                                .today_its_going_to_be,
-                          ),
-                    32.verticalSpace,
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SearchWidget(
-                          onItemClick: (listing) {
-                            ref.read(dashboardScreenProvider.notifier).onScreenNavigation();
-                            ref.read(navigationProvider).navigateUsingPath(
-                                context: context,
-                                path: eventDetailScreenPath,
-                                params: EventDetailScreenParams(
-                                    eventId: listing.id ?? 0));
-                          },
-                          searchController: ref.watch(searchProvider),
-                          hintText:
-                          AppLocalizations.of(context).enter_search_term,
-                          suggestionCallback: (search) async {
-                            List<Listing>? list;
-                            if (search.isEmpty) return [];
-                            try {
-                              list = await ref
-                                  .read(homeScreenProvider.notifier)
-                                  .searchList(
-                                  searchText: search,
-                                  success: () {},
-                                  error: (err) {});
-                            } catch (e) {
-                              return [];
-                            }
-                            final sortedList = ref
-                                .watch(homeScreenProvider.notifier)
-                                .sortSuggestionList(search, list);
-                            return sortedList;
-                          },
-                          isPaddingEnabled: false,
-                        )
-                      ],
-                    )
-                  ],
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              CommonBackgroundClipperWidget(
+                clipperType: UpstreamWaveClipper(),
+                imageUrl: imagePath['home_screen_background'] ?? '',
+                isStaticImage: true,
+                height: 265.h,
+                customWidget1: Positioned(
+                  top: 65.h,
+                  left: 20.w,
+                  right: 20.w,
+                  child: Column(
+                    children: [
+                      Visibility(
+                          visible: !ref
+                              .watch(homeScreenProvider)
+                              .isSignInButtonVisible,
+                          child: isLoading
+                              ? CustomShimmerWidget.rectangular(
+                                  height: 20.h,
+                                  width: 150.w,
+                                  shapeBorder: RoundedRectangleBorder(
+                                      borderRadius:
+                                          BorderRadius.circular(12.r)))
+                              : textBoldPoppins(
+                                  fontSize: 21,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.color,
+                                  textAlign: TextAlign.center,
+                                  text:
+                                      "Hey ${ref.watch(homeScreenProvider).userName}",
+                                )),
+                      isLoading ? 10.verticalSpace : 0.verticalSpace,
+                      isLoading
+                          ? CustomShimmerWidget.rectangular(
+                              height: 20.h,
+                              width: 200.w,
+                              shapeBorder: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.r)))
+                          : textBoldPoppins(
+                              fontSize: 21,
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge?.color,
+                              textAlign: TextAlign.center,
+                              textOverflow: TextOverflow.visible,
+                              text: AppLocalizations.of(context)
+                                  .today_its_going_to_be,
+                            ),
+                      32.verticalSpace,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SearchWidget(
+                            onItemClick: (listing) {
+                              ref
+                                  .read(dashboardScreenProvider.notifier)
+                                  .onScreenNavigation();
+                              ref.read(navigationProvider).navigateUsingPath(
+                                  context: context,
+                                  path: eventDetailScreenPath,
+                                  params: EventDetailScreenParams(
+                                      eventId: listing.id ?? 0));
+                            },
+                            searchController: ref.watch(searchProvider),
+                            hintText:
+                                AppLocalizations.of(context).enter_search_term,
+                            suggestionCallback: (search) async {
+                              List<Listing>? list;
+                              if (search.isEmpty) return [];
+                              try {
+                                list = await ref
+                                    .read(homeScreenProvider.notifier)
+                                    .searchList(
+                                        searchText: search,
+                                        success: () {},
+                                        error: (err) {});
+                              } catch (e) {
+                                return [];
+                              }
+                              final sortedList = ref
+                                  .watch(homeScreenProvider.notifier)
+                                  .sortSuggestionList(search, list);
+                              return sortedList;
+                            },
+                            isPaddingEnabled: false,
+                          )
+                        ],
+                      )
+                    ],
+                  ),
                 ),
-              ),
-              customWidget2: Visibility(
-                  visible: ref.watch(homeScreenProvider).isSignInButtonVisible,
-                  child: Positioned(
-                      left: 15.w,
-                      right: 15.w,
-                      top: 30.h,
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            isLoading
-                                ? CustomShimmerWidget.circular(
-                                    width: 120.w,
-                                    height: 30.h,
-                                    shapeBorder: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(30.r)),
-                                  )
-                                : GestureDetector(
-                                    onTap: () {
+                customWidget2: Visibility(
+                    visible:
+                        ref.watch(homeScreenProvider).isSignInButtonVisible,
+                    child: Positioned(
+                        left: 15.w,
+                        right: 15.w,
+                        top: 30.h,
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              isLoading
+                                  ? CustomShimmerWidget.circular(
+                                      width: 120.w,
+                                      height: 30.h,
+                                      shapeBorder: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(30.r)),
+                                    )
+                                  : GestureDetector(
+                                      onTap: () {
                                         ref
                                             .read(dashboardScreenProvider
                                                 .notifier)
@@ -429,7 +435,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     HomeScreenState state = ref.watch(homeScreenProvider);
     int currentIndex = state.highlightCount;
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+      padding: EdgeInsets.only(left: 10.w, top: 10.h, bottom: 10.h),
       child: Column(
         children: [
           10.verticalSpace,

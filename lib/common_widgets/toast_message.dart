@@ -38,7 +38,7 @@ showErrorToast(
     description: textRegularPoppins(
         text: message,
         color: Theme.of(context).textTheme.labelSmall?.color,
-        maxLines: 2,
+        maxLines: 4,
         textOverflow: TextOverflow.visible,
         textAlign: TextAlign.start),
     toastAlignment: snackBarAlignment ?? Alignment.bottomCenter,

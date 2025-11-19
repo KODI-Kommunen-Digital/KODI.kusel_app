@@ -14,6 +14,7 @@ import 'package:kusel/screens/new_filter_screen/new_filter_screen_state.dart';
 import 'package:kusel/utility/kusel_date_utils.dart';
 
 import '../../common_widgets/calendar_dialog.dart';
+import '../../common_widgets/device_helper.dart';
 import '../../common_widgets/text_styles.dart';
 
 class NewFilterScreen extends ConsumerStatefulWidget {
@@ -61,52 +62,65 @@ class _NewFilterScreenState extends ConsumerState<NewFilterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = ref.watch(newFilterScreenControllerProvider);
+
     return PopScope(
       onPopInvokedWithResult: (value, _) {},
       child: Scaffold(
-          appBar: _buildAppBar(context),
-          body: SingleChildScrollView(
-            child: Stack(
-              children: [
-                _buildBody(context),
-                if (ref.watch(newFilterScreenControllerProvider).isLoading)
-                  Center(
-                    child: CircularProgressIndicator(),
-                  )
-              ],
-            ),
-          )),
+        body: controller.isLoading
+            ? Center(
+                child: CircularProgressIndicator(),
+              )
+            : Column(
+                children: [
+                  _buildAppBar(context),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: _buildBody(context),
+                    ),
+                  ),
+                ],
+              ),
+      ),
     );
   }
 
   _buildAppBar(BuildContext context) {
-    return AppBar(
-      elevation: 0,
-      centerTitle: false,
-      backgroundColor: Theme.of(context).colorScheme.onSecondary,
-      leading: IconButton(
-          onPressed: () {
-            ref
-                .read(navigationProvider)
-                .removeTopPageAndReturnValue(context: context, result: null);
-          },
-          icon: Icon(
-            Icons.arrow_back,
-            color: Theme.of(context).shadowColor,
-          )),
-      title: textBoldPoppins(
-          text: AppLocalizations.of(context).filter, fontSize: 20),
-      actions: [
-        TextButton(
-          onPressed: () {
-            ref.read(newFilterScreenControllerProvider.notifier).reset();
-            periodTextEditingController.text = "";
-          },
-          child: textBoldMontserrat(
-              text: AppLocalizations.of(context).reset,
-              color: Theme.of(context).colorScheme.secondary),
-        )
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(left: 6.0, right: 6.0, top: 20.0),
+      child: AppBar(
+        elevation: 0,
+        centerTitle: false,
+        backgroundColor: Theme.of(context).colorScheme.onSecondary,
+        leading: IconButton(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            onPressed: () {
+              ref
+                  .read(navigationProvider)
+                  .removeTopPageAndReturnValue(context: context, result: null);
+            },
+            icon: Icon(
+                size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                Icons.arrow_back,
+                color: Theme.of(context).primaryColor)),
+        title: textSemiBoldPoppins(
+            text: AppLocalizations.of(context).filter,
+            fontSize: 22,
+            color: Theme.of(context).textTheme.bodyLarge!.color,
+            fontWeight: FontWeight.w600),
+        actions: [
+          TextButton(
+            onPressed: () {
+              ref.read(newFilterScreenControllerProvider.notifier).reset();
+              periodTextEditingController.text = "";
+            },
+            child: textBoldMontserrat(
+                text: AppLocalizations.of(context).reset,
+                color: Theme.of(context).colorScheme.secondary),
+          )
+        ],
+      ),
     );
   }
 
@@ -116,10 +130,24 @@ class _NewFilterScreenState extends ConsumerState<NewFilterScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          32.verticalSpace,
-          textRegularMontserrat(text: AppLocalizations.of(context).period),
+          22.verticalSpace,
+          Padding(
+            padding: EdgeInsets.only(left: 12.w),
+            child: textRegularMontserrat(
+              text: AppLocalizations.of(context).period,
+              fontSize: 14,
+              fontStyle: FontStyle.italic,
+              color: Theme.of(context)
+                  .textTheme
+                  .displayMedium!
+                  .color
+                  ?.withOpacity(0.9),
+            ),
+          ),
           4.verticalSpace,
           KuselTextField(
+            hintText: AppLocalizations.of(context).today,
+            enableBorderColor: Theme.of(context).dividerColor,
             onTap: () async {
               await showCommonDateRangeDialog(
                 context: context,
@@ -169,37 +197,39 @@ class _NewFilterScreenState extends ConsumerState<NewFilterScreen> {
             suffixIcon: Padding(
               padding: EdgeInsets.only(right: 16.w),
               child: Icon(
-                Icons.calendar_month,
+                Icons.calendar_month_outlined,
                 color: Theme.of(context).colorScheme.primary,
               ),
             ),
           ),
-          16.verticalSpace,
+          12.verticalSpace,
           Divider(
-            thickness: 2,
+            thickness: 1,
           ),
-          16.verticalSpace,
+          12.verticalSpace,
           _buildCategory(context),
           8.verticalSpace,
           _buildLocationAndDistance(context),
-          200.verticalSpace,
+          185.verticalSpace,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               SizedBox(
                   width: 150.w,
                   child: CustomButton(
+                    textSize: 16,
                     onPressed: () {
                       ref.read(navigationProvider).removeTopPageAndReturnValue(
                           context: context, result: null);
                     },
                     isOutLined: true,
-                    text: AppLocalizations.of(context).cancel,
-                    textColor: Theme.of(context).colorScheme.secondary,
+                    text: AppLocalizations.of(context).digifit_abort,
+                    textColor: Theme.of(context).primaryColor,
                   )),
               SizedBox(
                   width: 150.w,
                   child: CustomButton(
+                      textSize: 16,
                       icon: "assets/png/check.png",
                       iconHeight: 20.h,
                       iconWidth: 20.w,
@@ -268,7 +298,7 @@ class _NewFilterScreenState extends ConsumerState<NewFilterScreen> {
         width: double.infinity,
         decoration: BoxDecoration(
           color: Theme.of(context).canvasColor,
-          borderRadius: BorderRadius.circular(20.r),
+          borderRadius: BorderRadius.circular(18.r),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -277,16 +307,18 @@ class _NewFilterScreenState extends ConsumerState<NewFilterScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  textBoldMontserrat(text: tileTitle, fontSize: 16),
+                  textBoldMontserrat(
+                      text: tileTitle,
+                      fontSize: 16,
+                      color: Theme.of(context).textTheme.bodyLarge!.color),
                   8.verticalSpace,
 
                   // When no cities are selected
                   if (chipList.isEmpty)
                     textSemiBoldMontserrat(
-                      text: AppLocalizations.of(context).all,
-                      fontSize: 14,
-                      color: const Color.fromRGBO(105, 114, 168, 1),
-                    ),
+                        text: AppLocalizations.of(context).all,
+                        fontSize: 14,
+                        color: const Color(0xFF6972A8)),
 
                   // When chips exist
                   if (chipList.isNotEmpty)
@@ -297,7 +329,7 @@ class _NewFilterScreenState extends ConsumerState<NewFilterScreen> {
                         // Take first 3 chips
                         ...chipList.take(3).map((item) => _buildChip(item)),
 
-                        // If more than 4, show +N chip
+                        // If more than 3, show +N chip
                         if (chipList.length > 3)
                           _buildChip('+${chipList.length - 3}', isExtra: true),
                       ],
@@ -306,9 +338,9 @@ class _NewFilterScreenState extends ConsumerState<NewFilterScreen> {
               ),
             ),
             Icon(
-              Icons.arrow_forward,
-              color: Theme.of(context).colorScheme.secondary,
-            ),
+                size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                Icons.arrow_forward,
+                color: Theme.of(context).primaryColor),
           ],
         ),
       ),
@@ -370,9 +402,9 @@ class _NewFilterScreenState extends ConsumerState<NewFilterScreen> {
               ],
             ),
             Icon(
-              Icons.arrow_forward,
-              color: Theme.of(context).colorScheme.secondary,
-            )
+                size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                Icons.arrow_forward,
+                color: Theme.of(context).primaryColor)
           ],
         ),
       ),

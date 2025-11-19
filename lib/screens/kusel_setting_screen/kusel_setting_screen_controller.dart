@@ -26,6 +26,7 @@ import 'package:kusel/screens/kusel_setting_screen/kusel_setting_state.dart';
 import 'package:domain/usecase/user_score/user_score_usecase.dart';
 import 'package:kusel/screens/kusel_setting_screen/poilcy_type.dart';
 import 'package:permission_handler/permission_handler.dart';
+import '../../common_widgets/translate_message.dart';
 import '../../locale/locale_constant.dart';
 import 'package:domain/model/response_model/user_score/user_score_response_model.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -46,6 +47,7 @@ final kuselSettingScreenProvider =
             getLegalPolicyUseCase: ref.read(getLegalPolicyUseCaseProvider),
             homeScreenProvider: ref.read(homeScreenProvider.notifier),
             userDetailUseCase: ref.read(userDetailUseCaseProvider),
+            translateErrorMessage: ref.read(translateErrorMessageProvider),
             editUserDetailUseCase: ref.read(editUserDetailUseCaseProvider)));
 
 class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
@@ -61,6 +63,7 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
   HomeScreenProvider homeScreenProvider;
   UserDetailUseCase userDetailUseCase;
   EditUserDetailUseCase editUserDetailUseCase;
+  TranslateErrorMessage translateErrorMessage;
 
   KuselSettingScreenController(
       {required this.localeManagerController,
@@ -74,7 +77,8 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
       required this.getLegalPolicyUseCase,
       required this.homeScreenProvider,
       required this.userDetailUseCase,
-      required this.editUserDetailUseCase})
+      required this.editUserDetailUseCase,
+      required this.translateErrorMessage})
       : super(KuselSettingState.empty());
 
   void fetchCurrentLanguage() {
@@ -210,11 +214,14 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
 
     final result = await deleteAccountUseCase.call(requestModel, responseModel);
 
-    result.fold((left) {
+    result.fold((left) async {
       debugPrint('delete account fold exception = $left');
+      final text =
+          await translateErrorMessage.translateErrorMessage(left.toString());
+
       state = state.copyWith(isProfilePageLoading: false);
 
-      onError(left.toString());
+      onError(text);
     }, (right) async {
       final res = right as DeleteAccountResponseModel;
 
@@ -386,9 +393,11 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
       final result =
           await editUserDetailUseCase.call(requestModel, responseModel);
 
-      result.fold((l) {
+      result.fold((l) async {
         debugPrint('edit user detail fold exception : $l');
-        onError(l.toString());
+        final text =
+            await translateErrorMessage.translateErrorMessage(l.toString());
+        onError(text);
       }, (r) {
         state = state.copyWith(
             initialName: state.name,

@@ -7,24 +7,29 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/screens/feedback/feedback_screen_state.dart';
 
+import '../../common_widgets/translate_message.dart';
+
 final feedbackScreenProvider = StateNotifierProvider.autoDispose<
         FeedbackScreenProvider, FeedbackScreenState>(
     (ref) => FeedbackScreenProvider(
         feedBackUseCase: ref.read(feedBackUseCaseProvider),
-      sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider)
-    ));
+        translateErrorMessage: ref.read(translateErrorMessageProvider),
+        sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider)));
 
 class FeedbackScreenProvider extends StateNotifier<FeedbackScreenState> {
   FeedBackUseCase feedBackUseCase;
   SharedPreferenceHelper sharedPreferenceHelper;
+  TranslateErrorMessage translateErrorMessage;
 
   final TextEditingController titleEditingController = TextEditingController();
   final TextEditingController descriptionEditingController =
       TextEditingController();
-  final TextEditingController emailEditingController =
-  TextEditingController();
+  final TextEditingController emailEditingController = TextEditingController();
 
-  FeedbackScreenProvider({required this.feedBackUseCase, required this.sharedPreferenceHelper})
+  FeedbackScreenProvider(
+      {required this.feedBackUseCase,
+      required this.sharedPreferenceHelper,
+      required this.translateErrorMessage})
       : super(FeedbackScreenState.empty());
 
   Future<void> sendFeedback(
@@ -37,12 +42,17 @@ class FeedbackScreenProvider extends StateNotifier<FeedbackScreenState> {
       String? language = sharedPreferenceHelper.getString(languageKey);
       state = state.copyWith(loading: true);
       FeedBackRequestModel requestModel = FeedBackRequestModel(
-          userEmail: email, title: title, description: description, language: language ?? 'en');
+          userEmail: email,
+          title: title,
+          description: description,
+          language: language ?? 'en');
       FeedBackResponseModel responseModel = FeedBackResponseModel();
       final r = await feedBackUseCase.call(requestModel, responseModel);
-      r.fold((l) {
+      r.fold((l) async {
         debugPrint('Feedback fold exception : $l');
-        onError(l.toString());
+        final text =
+            await translateErrorMessage.translateErrorMessage(l.toString());
+        onError(text);
         state = state.copyWith(loading: false);
       }, (r) async {
         final result = r as FeedBackResponseModel;
@@ -57,12 +67,11 @@ class FeedbackScreenProvider extends StateNotifier<FeedbackScreenState> {
   }
 
   void updateCheckBox(bool value) {
-    bool onError =  !value;
+    bool onError = !value;
     state = state.copyWith(isChecked: value, onError: onError);
   }
 
-  updateTitle(String title)
-  {
+  updateTitle(String title) {
     state = state.copyWith(title: title);
   }
 }

@@ -1,16 +1,13 @@
 import 'package:core/base_model.dart';
 
-class GetFilterRequestModel implements BaseModel<GetFilterRequestModel>{
-  @override
-  GetFilterRequestModel fromJson(Map<String, dynamic> json) {
-    // TODO: implement fromJson
-    throw UnimplementedError();
-  }
+class GetFilterRequestModel implements BaseModel<GetFilterRequestModel> {
+  String? translate;
+
+  GetFilterRequestModel({this.translate});
 
   @override
-  Map<String, dynamic> toJson() {
-    // TODO: implement toJson
-    throw UnimplementedError();
-  }
+  GetFilterRequestModel fromJson(Map<String, dynamic> json) => this;
 
+  @override
+  Map<String, dynamic> toJson() => {'translate': translate};
 }

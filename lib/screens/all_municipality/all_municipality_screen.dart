@@ -43,7 +43,15 @@ class _AllMunicipalityScreenState extends ConsumerState<AllMunicipalityScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: SafeArea(child: _buildBody(context)),
+      body: SafeArea(
+          child: RefreshIndicator(
+              onRefresh: () async {
+                ref
+                    .read(allMunicipalityScreenProvider.notifier)
+                    .getAllCitiesByMunicipalityId(
+                        widget.municipalityScreenParams.municipalityId);
+              },
+              child: _buildBody(context))),
     ).loaderDialog(context, ref.watch(allMunicipalityScreenProvider).isLoading);
   }
 
