@@ -116,6 +116,7 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
     localeManagerController.updateSelectedLocale(Locale(languageCode, region));
 
     state = state.copyWith(selectedLanguage: selectedLanguage);
+    checkForChanges();
   }
 
   isUserLoggedIn() async {
@@ -258,6 +259,17 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
     }
   }
 
+  void checkForChanges() {
+    final hasChanges = state.name != state.initialName ||
+        state.email != state.initialEmail ||
+        state.mobileNumber != state.initialMobileNumber ||
+        state.address != state.initialAddress ||
+        state.selectedLanguage != state.initialLanguage ||
+        state.isLocationPermissionGranted != state.initialLocationPermission;
+
+    state = state.copyWith(hasChanges: hasChanges);
+  }
+
   getUserDetail() async {
     try {
       state = state.copyWith(isProfilePageLoading: true);
@@ -302,7 +314,13 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
               name: result.data?.username ?? '',
               email: result.data?.email ?? '',
               address: result.data?.address ?? '',
-              mobileNumber: result.data?.phoneNumber ?? '');
+              mobileNumber: result.data?.phoneNumber ?? '',
+              initialEmail: result.data?.email,
+              initialAddress: result.data?.address,
+              initialMobileNumber: result.data?.phoneNumber,
+              initialLanguage: state.selectedLanguage,
+              initialLocationPermission: state.isLocationPermissionGranted,
+              hasChanges: false);
         }
       });
     } catch (error) {
@@ -312,18 +330,22 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
 
   updateName(String value) {
     state = state.copyWith(name: value);
+    checkForChanges();
   }
 
   updateEmail(String value) {
     state = state.copyWith(email: value);
+    checkForChanges();
   }
 
   updatePhoneNumber(String value) {
     state = state.copyWith(mobileNumber: value);
+    checkForChanges();
   }
 
   updateAddress(String value) {
     state = state.copyWith(address: value);
+    checkForChanges();
   }
 
   updateUserDetails(
@@ -368,6 +390,14 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
         debugPrint('edit user detail fold exception : $l');
         onError(l.toString());
       }, (r) {
+        state = state.copyWith(
+            initialName: state.name,
+            initialEmail: state.email,
+            initialMobileNumber: state.mobileNumber,
+            initialAddress: state.address,
+            initialLanguage: state.selectedLanguage,
+            initialLocationPermission: state.isLocationPermissionGranted,
+            hasChanges: false);
         onSuccess();
       });
     } catch (error) {
@@ -376,21 +406,22 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
   }
 
   Future<void> getLocationPermissionStatus() async {
+    try {
+      PermissionStatus status;
 
-   try{
-     PermissionStatus status;
+      if (Platform.isIOS) {
+        status = await Permission.locationWhenInUse.status;
+      } else {
+        status = await Permission.location.status;
+      }
 
-     if (Platform.isIOS) {
-       status = await Permission.locationWhenInUse.status;
-     } else {
-       status = await Permission.location.status;
-     }
+      final isGranted = status.isGranted || status.isLimited;
 
-     final isGranted = status.isGranted || status.isLimited;
-
-     state = state.copyWith(isLocationPermissionGranted: isGranted);
-   }catch(error)
-    {
+      state = state.copyWith(isLocationPermissionGranted: isGranted);
+      if (state.initialName.isNotEmpty || state.initialEmail.isNotEmpty) {
+        checkForChanges();
+      }
+    } catch (error) {
       debugPrint('exception getLocationPermissionStatus: $error');
     }
   }
@@ -398,36 +429,25 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
   Future<bool> requestOrHandleLocationPermission(bool value) async {
     try {
       if (!value) {
+        state = state.copyWith(isLocationPermissionGranted: false);
         return false;
       }
 
-      PermissionStatus status;
+      PermissionStatus status = Platform.isIOS
+          ? await Permission.locationWhenInUse.request()
+          : await Permission.location.request();
 
-      if (Platform.isIOS) {
-        status = await Permission.locationWhenInUse.request();
-      } else {
-        status = await Permission.location.request();
-      }
-
-      final currentStatus = Platform.isIOS
-          ? await Permission.locationWhenInUse.status
-          : await Permission.location.status;
-
-      if (currentStatus.isGranted || currentStatus.isLimited) {
+      if (status.isGranted || status.isLimited) {
         state = state.copyWith(isLocationPermissionGranted: true);
         return true;
       }
 
-      if (currentStatus.isPermanentlyDenied || currentStatus.isDenied) {
-        return false; // UI decides what to do next
-      }
-
+      // Permission denied permanently or temporarily
       state = state.copyWith(isLocationPermissionGranted: false);
       return false;
     } catch (error) {
-      debugPrint('Exception requestOrHandleLocationPermission : $error ');
+      debugPrint('Exception requestOrHandleLocationPermission : $error');
       return false;
     }
   }
-
 }

@@ -170,7 +170,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               22.verticalSpace,
               _buildLabel(context, AppLocalizations.of(context).password),
               KuselTextField(
-                maxLines: 1,
                 textEditingController: passwordTextEditingController,
                 inputFormatters: [
                   FilteringTextInputFormatter.deny(RegExp(r'\s')), // Prevent spaces
