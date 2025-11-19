@@ -44,6 +44,7 @@ class _OnboardingStartPageState extends ConsumerState<OnBoardingNamePage> {
   Widget build(BuildContext context) {
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: _buildDashboardUi(),
     ).loaderDialog(context, ref.watch(onboardingScreenProvider).isLoading);
   }

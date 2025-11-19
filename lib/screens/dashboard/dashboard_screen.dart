@@ -41,6 +41,7 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     int selectedIndex = ref.watch(dashboardScreenProvider).selectedIndex;
+
     return PopScope(
       canPop: ref.watch(dashboardScreenProvider).canPop,
       onPopInvokedWithResult: (didPop, _) async {
@@ -94,8 +95,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             child: ImageUtil.loadSvgImage(
                               height: 14.h,
                               width: 16.w,
-                              imageUrl: imagePath['home_vector'] ?? "",
-                              context: context,
+                                    imageUrl: selectedIndex == 0
+                                        ? imagePath['home_vector'] ?? ""
+                                        : imagePath['home_hollow_icon'] ?? "",
+                                    context: context,
                               color: selectedIndex == 0
                                   ? Theme.of(context).indicatorColor
                                   : Theme.of(context).colorScheme.onPrimary,
@@ -111,8 +114,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             child: ImageUtil.loadSvgImage(
                               height: 10.h,
                               width: 10.w,
-                              imageUrl: imagePath['home_vector'] ?? "",
-                              context: context,
+                                    imageUrl: selectedIndex == 0
+                                        ? imagePath['home_vector'] ?? ""
+                                        : imagePath['home_hollow_icon'] ?? "",
+                                    context: context,
                               color: selectedIndex == 0
                                   ? Theme.of(context).indicatorColor
                                   : Theme.of(context).colorScheme.onPrimary,
@@ -130,10 +135,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           width: 21.w,
                           child: Center(
                             child: ImageUtil.loadSvgImage(
-                              height: 20.h,
-                              width: 20.w,
-                              imageUrl: imagePath['discover_icon'] ?? "",
-                              context: context,
+                              height: selectedIndex == 1 ? 20.h : 13.h,
+                              width: selectedIndex == 1 ? 20.w : 12.w,
+                                    imageUrl: selectedIndex == 1
+                                        ? imagePath['discover_icon'] ?? ""
+                                        : imagePath['explore_hollow_icon'] ??
+                                            "",
+                                    context: context,
                               color: selectedIndex == 1
                                   ? Theme.of(context).indicatorColor
                                   : Theme.of(context).colorScheme.onPrimary,
@@ -147,10 +155,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                           width: 12.w,
                           child: Center(
                             child: ImageUtil.loadSvgImage(
-                              height: 10.h,
-                              width: 10.w,
-                              imageUrl: imagePath['discover_icon'] ?? "",
-                              context: context,
+                              height: selectedIndex == 1 ? 10.h : 8.h,
+                              width: selectedIndex == 1 ? 10.w : 8.w,
+                                    imageUrl: selectedIndex == 1
+                                        ? imagePath['discover_icon'] ?? ""
+                                        : imagePath['explore_hollow_icon'] ??
+                                            "",
+                                    context: context,
                               color: selectedIndex == 1
                                   ? Theme.of(context).indicatorColor
                                   : Theme.of(context).colorScheme.onPrimary,
