@@ -59,55 +59,67 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
-        child: Stack(
-          children: [
-            _buildBody(context, state),
-          if (isLoading) CustomProgressBar(),
-            Positioned(
-              top: 30,
-              left: 20,
-              child: ArrowBackWidget(
-                onTap: () {
-                  ref.read(navigationProvider).removeTopPage(context: context);
-                },
-              ),
-            ),
-            Positioned(
-                bottom: 16.h,
-                left: 16.w,
-                right: 16.w,
-                child: CommonBottomNavCard(
-                  onBackPress: () {
+        child: RefreshIndicator(
+          onRefresh: () async {
+            final controller = ref.read(
+                eventDetailScreenProvider(widget.eventScreenParams.eventId)
+                    .notifier);
+
+            controller.getEventDetails(widget.eventScreenParams.eventId);
+            controller.getRecommendedList();
+          },
+          child: Stack(
+            children: [
+              _buildBody(context, state),
+              if (isLoading) CustomProgressBar(),
+              Positioned(
+                top: 30,
+                left: 20,
+                child: ArrowBackWidget(
+                  onTap: () {
                     ref
                         .read(navigationProvider)
                         .removeTopPage(context: context);
                   },
-                  isFavVisible: true,
-                  isFav: state.isFavourite,
-                  onFavChange: () {
-                    ref
-                        .watch(favoritesProvider.notifier)
-                        .toggleFavorite(state.eventDetails,
-                            success: ({required bool isFavorite}) {
-                      state.eventDetails.isFavorite = isFavorite;
+                ),
+              ),
+              Positioned(
+                  bottom: 16.h,
+                  left: 16.w,
+                  right: 16.w,
+                  child: CommonBottomNavCard(
+                    onBackPress: () {
                       ref
-                          .read(eventDetailScreenProvider(
-                                  state.eventDetails.id ?? 0)
-                              .notifier)
-                          .toggleFav();
+                          .read(navigationProvider)
+                          .removeTopPage(context: context);
+                    },
+                    isFavVisible: true,
+                    isFav: state.isFavourite,
+                    onFavChange: () {
                       ref
-                          .read(homeScreenProvider.notifier)
-                          .setIsFavoriteHighlight(
-                              isFavorite, state.eventDetails.id);
-                      if (widget.eventScreenParams.onFavClick != null) {
-                        widget.eventScreenParams.onFavClick!();
-                      }
-                    }, error: ({required String message}) {
-                      showErrorToast(message: message, context: context);
-                    });
-                  },
-                )),
-          ],
+                          .watch(favoritesProvider.notifier)
+                          .toggleFavorite(state.eventDetails,
+                              success: ({required bool isFavorite}) {
+                        state.eventDetails.isFavorite = isFavorite;
+                        ref
+                            .read(eventDetailScreenProvider(
+                                    state.eventDetails.id ?? 0)
+                                .notifier)
+                            .toggleFav();
+                        ref
+                            .read(homeScreenProvider.notifier)
+                            .setIsFavoriteHighlight(
+                                isFavorite, state.eventDetails.id);
+                        if (widget.eventScreenParams.onFavClick != null) {
+                          widget.eventScreenParams.onFavClick!();
+                        }
+                      }, error: ({required String message}) {
+                        showErrorToast(message: message, context: context);
+                      });
+                    },
+                  )),
+            ],
+          ),
         ),
       ),
     );
@@ -321,9 +333,9 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.all(12.h.w),
         decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.onPrimary,
-            borderRadius: BorderRadius.circular(20.r),
-          ),
+          color: Theme.of(context).colorScheme.onPrimary,
+          borderRadius: BorderRadius.circular(20.r),
+        ),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 8.h),
           child: Row(

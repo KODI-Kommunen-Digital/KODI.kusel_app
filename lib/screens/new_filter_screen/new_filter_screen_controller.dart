@@ -9,15 +9,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/screens/new_filter_screen/new_filter_screen_state.dart';
 
+import '../../locale/localization_manager.dart';
+
 final newFilterScreenControllerProvider = StateNotifierProvider.autoDispose<
         NewFilterScreenController, NewFilterScreenState>(
     (ref) => NewFilterScreenController(
-        getFilterUseCase: ref.read(getFilterUseCaseProvider)));
+        getFilterUseCase: ref.read(getFilterUseCaseProvider),
+        localeManagerController: ref.read(localeManagerProvider.notifier)));
 
 class NewFilterScreenController extends StateNotifier<NewFilterScreenState> {
   GetFilterUseCase getFilterUseCase;
+  LocaleManagerController localeManagerController;
 
-  NewFilterScreenController({required this.getFilterUseCase})
+  NewFilterScreenController(
+      {required this.getFilterUseCase, required this.localeManagerController})
       : super(NewFilterScreenState.empty());
 
   updateSelectedCity(int cityId, String cityName) {
@@ -75,7 +80,11 @@ class NewFilterScreenController extends StateNotifier<NewFilterScreenState> {
       required DateTime startDate}) async {
     try {
       state = state.copyWith(isLoading: true);
-      GetFilterRequestModel requestModel = GetFilterRequestModel();
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
+      GetFilterRequestModel requestModel = GetFilterRequestModel(
+          translate:
+              "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
       GetFilterResponseModel responseModel = GetFilterResponseModel();
 
