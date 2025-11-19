@@ -45,14 +45,27 @@ class _ExploreScreenState extends ConsumerState<SelectedEventListScreen> {
     final currentPageNumber =
         ref.watch(selectedEventListScreenProvider).currentPageNo;
     final SelectedEventListScreenState categoryScreenState =
-    ref.watch(selectedEventListScreenProvider);
+        ref.watch(selectedEventListScreenProvider);
     return Scaffold(
-      backgroundColor: Theme
-          .of(context)
-          .scaffoldBackgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: categoryScreenState.loading
           ? const Center(child: CircularProgressIndicator())
-          : SafeArea(child: _buildBody(categoryScreenState, context, currentPageNumber)),
+          : SafeArea(
+              child: RefreshIndicator(
+                  onRefresh: () async {
+                    final currentPageNumber =
+                        ref.read(selectedEventListScreenProvider).currentPageNo;
+                    ref
+                        .read(selectedEventListScreenProvider.notifier)
+                        .getEventsList(
+                            widget.eventListScreenParameter, currentPageNumber);
+
+                    ref
+                        .read(selectedEventListScreenProvider.notifier)
+                        .isUserLoggedIn();
+                  },
+                  child: _buildBody(
+                      categoryScreenState, context, currentPageNumber))),
     );
   }
 
@@ -68,15 +81,16 @@ class _ExploreScreenState extends ConsumerState<SelectedEventListScreen> {
             imageUrl: imagePath['home_screen_background'] ?? '',
             isStaticImage: true,
             isBackArrowEnabled: false,
-            customWidget1:
-            Positioned(
+            customWidget1: Positioned(
               top: 28.h,
               left: 5.w,
               child: Row(
                 children: [
                   IconButton(
                       onPressed: () {
-                        ref.read(navigationProvider).removeTopPage(context: context);
+                        ref
+                            .read(navigationProvider)
+                            .removeTopPage(context: context);
                       },
                       icon: Icon(
                           size: DeviceHelper.isMobile(context) ? null : 12.h.w,
@@ -91,23 +105,15 @@ class _ExploreScreenState extends ConsumerState<SelectedEventListScreen> {
               ),
             ),
           ),
-          if (!ref
-              .watch(selectedEventListScreenProvider)
-              .loading)
-            ref
-                .watch(selectedEventListScreenProvider)
-                .eventsList
-                .isEmpty
+          if (!ref.watch(selectedEventListScreenProvider).loading)
+            ref.watch(selectedEventListScreenProvider).eventsList.isEmpty
                 ? Center(
-              child: textHeadingMontserrat(
-                  text: AppLocalizations
-                      .of(context)
-                      .no_data),
-            )
+                    child: textHeadingMontserrat(
+                        text: AppLocalizations.of(context).no_data),
+                  )
                 : EventsListSectionWidget(
-                    eventsList: ref
-                        .watch(selectedEventListScreenProvider)
-                        .eventsList,
+                    eventsList:
+                        ref.watch(selectedEventListScreenProvider).eventsList,
                     heading: null,
                     maxListLimit: ref
                         .watch(selectedEventListScreenProvider)
@@ -123,8 +129,8 @@ class _ExploreScreenState extends ConsumerState<SelectedEventListScreen> {
                     onFavClickCallback: () {
                       ref
                           .read(selectedEventListScreenProvider.notifier)
-                          .getEventsList(
-                              widget.eventListScreenParameter, currentPageNumber);
+                          .getEventsList(widget.eventListScreenParameter,
+                              currentPageNumber);
                     },
                     onSuccess: (bool isFav, int? id) {
                       ref

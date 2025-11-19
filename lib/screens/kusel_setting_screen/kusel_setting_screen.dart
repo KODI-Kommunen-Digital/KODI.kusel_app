@@ -95,7 +95,7 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
                 height: 190.h,
                 width: 180.w,
                 child: ImageUtil.loadAssetImage(
-                    imageUrl: imagePath["onboarding_logo"] ?? '',
+                    imageUrl: imagePath["setting_boldi"] ?? '',
                     context: context,
                     fit: BoxFit.contain),
               ))

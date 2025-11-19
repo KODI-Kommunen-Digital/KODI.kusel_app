@@ -92,48 +92,42 @@ class _CustomFlutterMapState extends ConsumerState<CustomFlutterMap> {
           //     ],
           //   ),
           // ),
-          DeviceHelper.isMobile(context)
-              ? Positioned(
-                  top: 30.h,
-                  right: 7.w,
-                  child: FloatingActionButton(
-                    mini: true,
-                    heroTag: "recenter",
-                    onPressed: _resetMap,
-                    backgroundColor: Theme.of(context).canvasColor,
-                    child: Icon(
-                      Icons.my_location,
-                      color: Theme.of(context).primaryColor,
-                      size: 16.h.w,
-                    ),
-                  ),
-                )
-              : Positioned(
-                  top: 80.h,
-                  right: 10.w,
-                  child: GestureDetector(
-                    onTap: _resetMap,
-                    child: Material(
-                      elevation: 4,
-                      shape: const CircleBorder(),
-                      color: Theme.of(context).canvasColor,
-                      child: Container(
-                        width: 40.h,
-                        // Or any size you prefer
-                        height: 40.h,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          Icons.my_location,
-                          color: Theme.of(context).primaryColor,
-                          size: 12.h.w,
-                        ),
-                      ),
-                    ),
-                  ),
-                )
+          // DeviceHelper.isMobile(context)
+          //     ? Positioned(
+          //         top: 30.h,
+          //         right: 7.w,
+          //         child: Icon(
+          //           Icons.my_location,
+          //           color: Theme.of(context).primaryColor,
+          //           size: 16.h.w,
+          //         ),
+          //       )
+          //     : Positioned(
+          //         top: 80.h,
+          //         right: 10.w,
+          //         child: GestureDetector(
+          //           onTap: _resetMap,
+          //           child: Material(
+          //             elevation: 4,
+          //             shape: const CircleBorder(),
+          //             color: Theme.of(context).canvasColor,
+          //             child: Container(
+          //               width: 40.h,
+          //               // Or any size you prefer
+          //               height: 40.h,
+          //               alignment: Alignment.center,
+          //               decoration: BoxDecoration(
+          //                 shape: BoxShape.circle,
+          //               ),
+          //               child: Icon(
+          //                 Icons.my_location,
+          //                 color: Theme.of(context).primaryColor,
+          //                 size: 12.h.w,
+          //               ),
+          //             ),
+          //           ),
+          //         ),
+          //       )
         ],
       ),
     );
@@ -148,11 +142,11 @@ class _CustomFlutterMapState extends ConsumerState<CustomFlutterMap> {
         initialZoom: widget.initialZoom,
         interactionOptions: InteractionOptions(
             flags:
-            // InteractiveFlag.pinchZoom |
-            //     InteractiveFlag.drag |
+                // InteractiveFlag.pinchZoom |
+                //     InteractiveFlag.drag |
                 InteractiveFlag.flingAnimation |
-                InteractiveFlag.doubleTapZoom |
-                InteractiveFlag.scrollWheelZoom),
+                    InteractiveFlag.doubleTapZoom |
+                    InteractiveFlag.scrollWheelZoom),
       ),
       children: [
         TileLayer(
@@ -184,5 +178,4 @@ class _CustomFlutterMapState extends ConsumerState<CustomFlutterMap> {
       _mapController.move(newLatLng, widget.initialZoom);
     }
   }
-
 }

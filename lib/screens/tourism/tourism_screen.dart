@@ -93,11 +93,11 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                 CommonBackgroundClipperWidget(
                   clipperType: UpstreamWaveClipper(),
                   imageUrl: imagePath['background_image'] ?? "",
-                  height: 105.h,
+                  height: 120.h,
                   blurredBackground: true,
                   isStaticImage: true,
                   customWidget1: Positioned(
-                    left: 10,
+                    left: 20,
                     right: 10,
                     top: 40,
                     child: Row(
@@ -121,12 +121,15 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                         ),
                         Expanded(
                           flex: 9,
-                          child: textBoldPoppins(
-                            color:
-                                Theme.of(context).textTheme.labelLarge?.color,
-                            fontSize: 20,
-                            text: AppLocalizations.of(context)
-                                .tourism_and_leisure,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 32.0),
+                            child: textBoldPoppins(
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge?.color,
+                              fontSize: 20,
+                              text: AppLocalizations.of(context)
+                                  .tourism_and_leisure,
+                            ),
                           ),
                         ),
                       ],
@@ -268,7 +271,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
         int currentIndex = state.highlightCount;
 
         return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+          padding: EdgeInsets.only(left: 16.w, top: 10.h, bottom: 10.h),
           child: Column(
             children: [
               Padding(
