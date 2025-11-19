@@ -87,7 +87,7 @@ class _CommonEventCardState extends ConsumerState<InterestsGridCardView> {
                 decoration: BoxDecoration(
                     color: Theme.of(context).indicatorColor
                 ),
-                child: Icon(Icons.check_outlined, color: smallIconColor, size: 15.h.w,),
+                child: Icon(Icons.check_outlined, color: smallIconColor, size: 11.h.w,),
               ),
             ),
           ),

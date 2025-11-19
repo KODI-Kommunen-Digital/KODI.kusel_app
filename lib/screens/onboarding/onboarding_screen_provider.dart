@@ -41,7 +41,7 @@ import 'package:kusel/screens/onboarding/onboarding_screen_state.dart';
 import '../../common_widgets/city_type_constant.dart';
 import '../../common_widgets/get_current_location.dart';
 
-final onboardingScreenProvider = StateNotifierProvider.autoDispose<
+final onboardingScreenProvider = StateNotifierProvider<
         OnboardingScreenController, OnboardingScreenState>(
     (ref) => OnboardingScreenController(
         onboardingUserTypeUseCase: ref.read(onboardingUserTypeUseCaseProvider),
