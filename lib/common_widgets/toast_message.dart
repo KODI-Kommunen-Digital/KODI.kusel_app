@@ -8,7 +8,8 @@ showSuccessToast(
     required BuildContext context,
     Alignment? snackBarAlignment,
     void Function()? onCLose}) {
-  MotionToast(onClose: onCLose,
+  MotionToast(
+    onClose: onCLose,
     primaryColor: Theme.of(context).colorScheme.onSurface.withValues(alpha: .3),
     description: textRegularPoppins(
         text: message,
@@ -23,7 +24,7 @@ showSuccessToast(
     width: 350.w,
     height: 100.h,
     margin: EdgeInsets.only(
-      top: 30.h,
+      bottom: 50.h,
     ),
   ).show(context);
 }

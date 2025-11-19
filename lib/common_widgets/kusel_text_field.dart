@@ -88,7 +88,8 @@ class _KuselTextFieldState extends ConsumerState<KuselTextField> {
       onFieldSubmitted: widget.onFieldSubmitted,
       inputFormatters: widget.inputFormatters,
       obscureText: widget.obscureText ?? false,
-      maxLines: widget.maxLines,
+      maxLines: (widget.obscureText ?? false) ? 1 : widget.maxLines, // ✅ Fix
+      minLines: (widget.obscureText ?? false) ? 1 : null, // ✅ Add
       validator: widget.validator,
       enabled: widget.enable ?? true,
       readOnly: widget.readOnly ?? false,
@@ -105,6 +106,7 @@ class _KuselTextFieldState extends ConsumerState<KuselTextField> {
         color: Theme.of(context).textTheme.displayMedium!.color!,
       ),
       decoration: InputDecoration(
+          errorMaxLines: 3, // ✅ Add this
           prefixIconConstraints: BoxConstraints(
             maxHeight: 44.h,
             maxWidth: 44.w
@@ -149,9 +151,10 @@ class _KuselTextFieldState extends ConsumerState<KuselTextField> {
             fontWeight: FontWeight.w400,
             overflow: TextOverflow.visible,
             fontSize: 11,
+            height: 1.3, // ✅ Add line height
           ),
           hintStyle: TextStyle(
-            fontSize:  14.sp,
+            fontSize:  16.sp,
             fontFamily: "Montserrat",
             fontWeight:  FontWeight.w400,
             color: Theme.of(context).textTheme.displayMedium!.color!.withOpacity(0.5),

@@ -13,6 +13,7 @@ import 'package:kusel/screens/kusel_setting_screen/kusel_setting_screen_controll
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../common_widgets/common_background_clipper_widget.dart';
+import '../../common_widgets/device_helper.dart';
 import '../../common_widgets/kusel_text_field.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
@@ -124,12 +125,11 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen>
                   ? null
                   : textSemiBoldMontserrat(
                       text: state.selectedOrt,
-                      fontSize: 12,
+                      fontSize: 14,
                       color: Theme.of(context)
-                          .textTheme
-                          .displayMedium!
-                          .color!
-                          .withOpacity(0.5))),
+                          .colorScheme
+                          .secondary
+                          .withOpacity(0.8))),
           6.verticalSpace,
           _buildArrowContainer(context,
               AppLocalizations.of(context).edit_interest_profile, () {},
@@ -139,14 +139,14 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen>
                       spacing: 8.w,
                       runSpacing: 6.h,
                       children: [
-                        // Take first 4 chips
+                        // Take first 3 chips
                         ...state.listOfUserInterest
-                            .take(4)
+                            .take(3)
                             .map((item) => _buildChip(item.name!)),
 
-                        // If more than 4, show +N chip
-                        if (state.listOfUserInterest.length > 4)
-                          _buildChip('+${state.listOfUserInterest.length - 4}',
+                        // If more than 3, show +N chip
+                        if (state.listOfUserInterest.length > 3)
+                          _buildChip('+${state.listOfUserInterest.length - 3}',
                               isExtra: true),
                       ],
                     )),
@@ -181,12 +181,13 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen>
           ),
           34.verticalSpace,
           Visibility(
-            visible: state.isUserLoggedIn,
+            visible: state.isUserLoggedIn && state.hasChanges,
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: SizedBox(
                 width: double.infinity,
                 child: CustomButton(
+                    textSize: 16,
                     onPressed: () async {
                       await controller.updateUserDetails(onSuccess: () {
                         showSuccessToast(
@@ -216,23 +217,29 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen>
         CommonBackgroundClipperWidget(
             clipperType: UpstreamWaveClipper(),
             imageUrl: imagePath['background_image'] ?? "",
-            height: 100.h,
+            height: 110.h,
             blurredBackground: true,
             isBackArrowEnabled: false,
             isStaticImage: true),
         Positioned(
           top: 30.h,
-          left: 16.w,
+          left: 12.w,
           child: Row(
             children: [
               IconButton(
                 onPressed: () {
                   ref.read(navigationProvider).removeTopPage(context: context);
                 },
-                icon: const Icon(Icons.arrow_back),
+                icon: Icon(
+                  size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                  Icons.arrow_back,
+                  color: Theme.of(context).primaryColor,
+                ),
               ),
               8.horizontalSpace,
-              textBoldPoppins(
+              textSemiBoldPoppins(
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).textTheme.bodyLarge!.color,
                   text: AppLocalizations.of(context).profile_setting,
                   fontSize: 20),
             ],
@@ -278,7 +285,7 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen>
             16.verticalSpace,
             //MOBILE
             _buildTextFieldHeadingText(
-                "${AppLocalizations.of(context).mobile}(${AppLocalizations.of(context).optional})"),
+                "${AppLocalizations.of(context).mobile} (${AppLocalizations.of(context).optional})"),
             6.verticalSpace,
             _buildTextFormField(
                 textInputType: TextInputType.number,
@@ -292,7 +299,7 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen>
 
             16.verticalSpace,
             _buildTextFieldHeadingText(
-                "${AppLocalizations.of(context).address}(${AppLocalizations.of(context).optional})"),
+                "${AppLocalizations.of(context).address} (${AppLocalizations.of(context).optional})"),
             6.verticalSpace,
             _buildTextFormField(
                 controller: addressTextEditingController,
@@ -306,10 +313,14 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen>
 
   _buildTextFieldHeadingText(String text) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      padding: EdgeInsets.symmetric(horizontal: 22.w),
       child: textRegularMontserrat(
           text: text,
-          color: Theme.of(context).textTheme.displayMedium!.color,
+          color: Theme.of(context)
+              .textTheme
+              .displayMedium!
+              .color
+              ?.withOpacity(0.9),
           fontSize: 14,
           fontStyle: FontStyle.italic),
     );
@@ -330,6 +341,7 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen>
         hintText: hintText,
         textEditingController: controller,
         onChanged: onChanged,
+        enableBorderColor: Theme.of(context).dividerColor,
         maxLines: 1,
         validator: validator,
       ),
@@ -356,9 +368,9 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen>
                     children: [
                       textBoldMontserrat(
                           text: label,
-                          fontSize: 14,
+                          fontSize: 16,
                           color: labelColor ??
-                              Theme.of(context).textTheme.displayMedium!.color),
+                              Theme.of(context).textTheme.bodyLarge!.color),
                       5.verticalSpace,
                       if (subChild != null) subChild,
                     ],
@@ -376,19 +388,23 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen>
 
   Widget _buildChip(String label, {bool isExtra = false}) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: isExtra ? 16.w : 16.w,
+        vertical: 8.h,
+      ),
       decoration: BoxDecoration(
-        color: isExtra
-            ? Theme.of(context).indicatorColor.withOpacity(0.2)
-            : Theme.of(context).indicatorColor.withOpacity(0.8),
-        borderRadius: BorderRadius.circular(12.r),
-        border: Border.all(
-          color: Theme.of(context).indicatorColor,
-        ),
+        color: isExtra ? Colors.transparent : const Color(0xFFAADB40),
+        borderRadius: BorderRadius.circular(20.r),
+        border: isExtra
+            ? Border.all(
+                color: const Color(0xFFAADB40),
+                width: 1.5,
+              )
+            : null,
       ),
       child: textRegularMontserrat(
           text: label,
-          fontSize: 12,
+          fontSize: 15,
           color: Theme.of(context).textTheme.displayMedium!.color),
     );
   }

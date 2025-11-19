@@ -9,6 +9,7 @@ import 'package:kusel/common_widgets/toast_message.dart';
 import 'package:kusel/screens/reset_password/reset_password_controller.dart';
 
 import '../../common_widgets/common_background_clipper_widget.dart';
+import '../../common_widgets/device_helper.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
 import '../../images_path.dart';
@@ -56,7 +57,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             _buildHeader(context),
-            8.verticalSpace,
+            1.verticalSpace,
             _buildHeadingText(
                 context, AppLocalizations.of(context).current_password),
             8.verticalSpace,
@@ -81,7 +82,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                 controller.showCurrentPassword(false);
               },
             ),
-            32.verticalSpace,
+            30.verticalSpace,
             _buildHeadingText(
                 context, AppLocalizations.of(context).new_password),
             8.verticalSpace,
@@ -125,7 +126,6 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                 AppLocalizations.of(context).contains_special_character,
                 state.isSpecialCharacterComplete),
             32.verticalSpace,
-            8.verticalSpace,
             _buildHeadingText(
                 context, AppLocalizations.of(context).confirm_new_password),
             8.verticalSpace,
@@ -160,6 +160,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
               child: SizedBox(
                 width: double.infinity,
                 child: CustomButton(
+                  textSize: 16,
                   onPressed: state.showButton
                       ? () {
                           controller.resetPassword(
@@ -168,16 +169,13 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                                 message: AppLocalizations.of(context)
                                     .reset_password_success,
                                 context: context,
-                            onCLose: (){
-                            });
+                                onCLose: () {});
 
-                            ref.read(navigationProvider).removeTopPage(context: context);
-
-
+                            ref
+                                .read(navigationProvider)
+                                .removeTopPage(context: context);
                           }, (message) {
-                            showErrorToast(
-                                message: message,
-                                context: context);
+                            showErrorToast(message: message, context: context);
                           });
                         }
                       : null,
@@ -198,25 +196,31 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
         CommonBackgroundClipperWidget(
             clipperType: UpstreamWaveClipper(),
             imageUrl: imagePath['background_image'] ?? "",
-            height: 100.h,
+            height: 110.h,
             blurredBackground: true,
             isBackArrowEnabled: false,
             isStaticImage: true),
         Positioned(
           top: 30.h,
-          left: 16.w,
+          left: 12.w,
           child: Row(
             children: [
               IconButton(
                 onPressed: () {
                   ref.read(navigationProvider).removeTopPage(context: context);
                 },
-                icon: const Icon(Icons.arrow_back),
+                icon: Icon(
+                  size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                  Icons.arrow_back,
+                  color: Theme.of(context).primaryColor,
+                ),
               ),
               8.horizontalSpace,
-              textBoldPoppins(
+              textSemiBoldPoppins(
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).textTheme.bodyLarge!.color,
                   text: AppLocalizations.of(context).profile_setting,
-                  fontSize: 24),
+                  fontSize: 20),
             ],
           ),
         ),
@@ -226,13 +230,16 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
 
   _buildHeadingText(BuildContext context, String label) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 14.w),
-      child: textRegularMontserrat(
-          text: label,
-          fontStyle: FontStyle.italic,
-          fontSize: 14,
-          color: Theme.of(context).textTheme.displayMedium!.color),
-    );
+        padding: EdgeInsets.symmetric(horizontal: 28.w),
+        child: textRegularMontserrat(
+            text: label,
+            fontStyle: FontStyle.italic,
+            fontSize: 15,
+            color: Theme.of(context)
+                .textTheme
+                .displayMedium!
+                .color
+                ?.withOpacity(0.8)));
   }
 
   _buildTextFormField({
@@ -247,6 +254,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w),
       child: KuselTextField(
+        enableBorderColor: Theme.of(context).dividerColor,
         hintText: hintText,
         textEditingController: controller,
         prefixIcon: ImageUtil.loadLocalSvgImage(
@@ -259,7 +267,11 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                 child: Padding(
                   padding: EdgeInsets.only(right: 10.w),
                   child: ImageUtil.loadSvgImage(
-                      imageUrl: imagePath['eye_open']!, context: context),
+                      height: 20.h,
+                      width: 20.w,
+                      imageUrl: imagePath['eye_open']!,
+                      context: context,
+                      color: Theme.of(context).primaryColor),
                 ),
               )
             : GestureDetector(
@@ -267,7 +279,11 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                 child: Padding(
                   padding: EdgeInsets.only(right: 10.w),
                   child: ImageUtil.loadSvgImage(
-                      imageUrl: imagePath['eye_closed']!, context: context),
+                      height: 20.h,
+                      width: 20.w,
+                      imageUrl: imagePath['eye_closed']!,
+                      context: context,
+                      color: Theme.of(context).primaryColor),
                 ),
               ),
         obscureText: !showPassword,
@@ -278,20 +294,20 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
 
   _buildPasswordValidationText(String label, bool isChecked) {
     return Padding(
-      padding: EdgeInsets.only(left: 20.w),
+      padding: EdgeInsets.only(left: 28.w),
       child: Row(
         children: [
           if (!isChecked)
             SizedBox(
-              height: 15.h,
-              width: 15.w,
+              height: 20.h,
+              width: 20.w,
               child: ImageUtil.loadLocalSvgImage(
                   imageUrl: 'circular_check_outline', context: context),
             ),
           if (isChecked)
             SizedBox(
-              height: 15.h,
-              width: 15.w,
+              height: 20.h,
+              width: 20.w,
               child: ImageUtil.loadLocalSvgImage(
                   imageUrl: 'circular_check_filled', context: context),
             ),
@@ -299,13 +315,14 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
           if (isChecked)
             textSemiBoldMontserrat(
                 text: label,
-                color: Theme.of(context).colorScheme.secondary,
-                fontSize: 12),
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).textTheme.bodyLarge!.color,
+                fontSize: 15),
           if (!isChecked)
             textRegularMontserrat(
                 text: label,
                 color: Theme.of(context).colorScheme.secondary,
-                fontSize: 12)
+                fontSize: 15)
         ],
       ),
     );
