@@ -80,7 +80,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get category_heading => 'Was gibt’s zu entdecken';
 
   @override
-  String get change_language => 'Sprache ändern';
+  String get change_language => 'Sprache';
 
   @override
   String get logout => 'Abmelden';
@@ -584,7 +584,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get favourite_places => 'Lieblingsorte';
 
   @override
-  String get delete_account => 'Konto löschen';
+  String get delete_account => 'Account löschen';
 
   @override
   String get success_delete_account_message =>
@@ -898,7 +898,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get new_password => 'Neues Passwort';
 
   @override
-  String get confirm_new_password => 'Neues Passwort bestätigen';
+  String get confirm_new_password => 'Neues Passwort';
 
   @override
   String get at_least_8_character => 'mindestens 8 Zeichen';
@@ -1028,4 +1028,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get digifit_completed_top => 'Abgeschlossen';
+
+  @override
+  String get feedback_message => 'Nachricht';
 }

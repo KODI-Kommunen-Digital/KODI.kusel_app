@@ -19,111 +19,117 @@ class CustomButton extends StatelessWidget {
   final double? textSize;
   final Color? borderColor;
 
-  const CustomButton(
-      {super.key,
-        required this.onPressed,
-        required this.text,
-        this.height,
-        this.width,
-        this.iconHeight,
-        this.iconWidth,
-        this.icon,
-        this.isOutLined = false,
-        this.buttonColor,
-        this.textColor,
-        this.textSize,
-        this.borderColor,
-     });
+  const CustomButton({
+    super.key,
+    required this.onPressed,
+    required this.text,
+    this.height,
+    this.width,
+    this.iconHeight,
+    this.iconWidth,
+    this.icon,
+    this.isOutLined = false,
+    this.buttonColor,
+    this.textColor,
+    this.textSize,
+    this.borderColor,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final isDisabled = onPressed == null;
     return SizedBox(
         width: width ?? MediaQuery.of(context).size.width,
         height: height ?? 36.h,
         child: isOutLined
             ? OutlinedButton(
-          style: OutlinedButton.styleFrom(
-            side: BorderSide(
-              color: Theme.of(context).primaryColor,
-              width: 1,
-            ),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50),
-            ),
-          ),
-          onPressed: onPressed,
-          child: FittedBox(
-            child: icon != null
-                ? Row(
-              children: [
-                Image.asset(
-                  icon ?? "",
-                  width: iconWidth,
-                  height: iconHeight,
+                style: OutlinedButton.styleFrom(
+                  side: BorderSide(
+                    color: Theme.of(context).primaryColor,
+                    width: 1,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50),
+                  ),
                 ),
-                SizedBox(width: 12),
-                textRegularPoppins(
-                  fontSize: textSize,
-                  color: textColor ?? Theme.of(context).textTheme.labelSmall?.color,
-                  text: text,
+                onPressed: onPressed,
+                child: FittedBox(
+                  child: icon != null
+                      ? Row(
+                          children: [
+                            Image.asset(
+                              icon ?? "",
+                              width: iconWidth,
+                              height: iconHeight,
+                            ),
+                            SizedBox(width: 12),
+                            textRegularPoppins(
+                              fontSize: textSize,
+                              color: textColor ??
+                                  Theme.of(context).textTheme.labelSmall?.color,
+                              text: text,
+                            ),
+                          ],
+                        )
+                      : textRegularPoppins(
+                          fontSize: textSize,
+                          fontWeight: FontWeight.w600,
+                          color: textColor ??
+                              Theme.of(context).textTheme.labelSmall?.color,
+                          text: text,
+                        ),
                 ),
-              ],
-            )
-                : textRegularPoppins(
-              fontSize: textSize,
-              fontWeight: FontWeight.w600,
-              color: textColor ?? Theme.of(context).textTheme.labelSmall?.color,
-              text: text,
-            ),
-          ),
-        )
+              )
             : ElevatedButton(
-          onPressed: (onPressed == null)?null:() {
-            FocusManager.instance.primaryFocus?.unfocus();
-            onPressed!();
-          },
-          style: ButtonStyle(
-            shape: WidgetStateProperty.all(
-              RoundedRectangleBorder(
-                // side: BorderSide(
-                //     color: borderColor ?? Theme.of(context).primaryColor,
-                //     width: 2
-                // ),
-                borderRadius: BorderRadius.circular(50),
-              ),
-            ),
-            backgroundColor: WidgetStateProperty.resolveWith<Color>((states) {
-              if (states.contains(WidgetState.disabled)) {
-                return const Color(0x4D283583);
-              }
-              return buttonColor ?? Theme.of(context).primaryColor;
-            }),
-          ),
-          child: FittedBox(
-            child: icon != null
-                ? Row(
-              children: [
-                Image.asset(
-                  icon ?? "",
-                  width: iconWidth,
-                  height: iconHeight,
+                onPressed: (onPressed == null)
+                    ? null
+                    : () {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        onPressed!();
+                      },
+                style: ButtonStyle(
+                  shape: WidgetStateProperty.all(
+                    RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
+                  backgroundColor:
+                      WidgetStateProperty.resolveWith<Color>((states) {
+                    if (states.contains(WidgetState.disabled)) {
+                      return const Color(0x4D283583);
+                    }
+                    return buttonColor ?? Theme.of(context).primaryColor;
+                  }),
                 ),
-                SizedBox(width: 12),
-                textHeadingMontserrat(
-                  fontSize: textSize ?? 14,
-                  fontWeight: FontWeight.w600,
-                  color: textColor ?? Theme.of(context).textTheme.labelSmall?.color,
-                  text: text,
+                child: FittedBox(
+                  child: icon != null
+                      ? Row(
+                          children: [
+                            Image.asset(
+                              icon ?? "",
+                              width: iconWidth,
+                              height: iconHeight,
+                            ),
+                            SizedBox(width: 12),
+                            textHeadingMontserrat(
+                              fontSize: textSize ?? 14,
+                              fontWeight: FontWeight.w600,
+                              color: isDisabled
+                                  ? Theme.of(context).textTheme.titleSmall!.color
+                                  : (textColor ?? Colors.white),
+                              text: text,
+                            ),
+                          ],
+                        )
+                      : textHeadingMontserrat(
+                          fontSize: textSize ?? 14,
+                          fontWeight: FontWeight.w600,
+                          color: isDisabled
+                              ? Theme.of(context).textTheme.titleSmall!.color
+                              : (textColor ?? Colors.white),
+                          text: text,
+                        ),
                 ),
-              ],
-            )
-                : textHeadingMontserrat(
-              fontSize: textSize ?? 14,
-              fontWeight: FontWeight.w600,
-              color: textColor ?? Theme.of(context).textTheme.labelSmall?.color,
-              text: text,
-            ),
-          ),
-        ));
+              ));
   }
 }

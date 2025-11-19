@@ -9,14 +9,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:domain/usecase/reset_password/reset_password_usecase.dart';
 import 'package:domain/model/response_model/reset_password/reset_password_response_model.dart';
 
+import '../../common_widgets/translate_message.dart';
+
 final resetPasswordControllerProvider = StateNotifierProvider.autoDispose<
-    ResetPasswordController, ResetPasswordState>(
-  (ref) => ResetPasswordController(
-      sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
-      resetPasswordUseCase: ref.read(resetPasswordUseCaseProvider),
-      tokenStatus: ref.read(tokenStatusProvider),
-      refreshTokenProvider: ref.read(refreshTokenProvider),
-      signInStatusController: ref.read(signInStatusProvider.notifier)),
+    ResetPasswordController,
+    ResetPasswordState>(
+      (ref) =>
+      ResetPasswordController(
+          sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
+          resetPasswordUseCase: ref.read(resetPasswordUseCaseProvider),
+          tokenStatus: ref.read(tokenStatusProvider),
+          refreshTokenProvider: ref.read(refreshTokenProvider),
+          translateErrorMessage: ref.watch(translateErrorMessageProvider),
+          signInStatusController: ref.read(signInStatusProvider.notifier)),
 );
 
 class ResetPasswordController extends StateNotifier<ResetPasswordState> {
@@ -25,13 +30,16 @@ class ResetPasswordController extends StateNotifier<ResetPasswordState> {
   SignInStatusController signInStatusController;
   TokenStatus tokenStatus;
   RefreshTokenProvider refreshTokenProvider;
+  TranslateErrorMessage translateErrorMessage;
 
-  ResetPasswordController(
-      {required this.sharedPreferenceHelper,
-      required this.resetPasswordUseCase,
-      required this.refreshTokenProvider,
-      required this.tokenStatus,
-      required this.signInStatusController})
+
+  ResetPasswordController({required this.sharedPreferenceHelper,
+    required this.resetPasswordUseCase,
+    required this.refreshTokenProvider,
+    required this.tokenStatus,
+    required this.signInStatusController,
+    required this.translateErrorMessage
+  })
       : super(ResetPasswordState.empty());
 
   Future<void> newPasswordValidation(String value) async {
@@ -45,7 +53,7 @@ class ResetPasswordController extends StateNotifier<ResetPasswordState> {
         isAtLeast8CharacterComplete: hasMinLength,
         isHaveNumberComplete: hasDigit.hasMatch(value),
         isLowerCaseUpperCaseComplete:
-            hasUppercase.hasMatch(value) && hasLowercase.hasMatch(value),
+        hasUppercase.hasMatch(value) && hasLowercase.hasMatch(value),
         isSpecialCharacterComplete: hasSpecialChar.hasMatch(value));
   }
 
@@ -61,8 +69,8 @@ class ResetPasswordController extends StateNotifier<ResetPasswordState> {
     state = state.copyWith(showConfirmNewPassword: value);
   }
 
-  void isFormValid(
-      String currentPassword, String newPassword, String confirmNewPassword) {
+  void isFormValid(String currentPassword, String newPassword,
+      String confirmNewPassword) {
     final result = currentPassword.isNotEmpty &&
         newPassword.isNotEmpty &&
         confirmNewPassword.isNotEmpty &&
@@ -100,11 +108,13 @@ class ResetPasswordController extends StateNotifier<ResetPasswordState> {
       ResetPasswordResponseModel responseModel = ResetPasswordResponseModel();
 
       final response =
-          await resetPasswordUseCase.call(requestModel, responseModel);
+      await resetPasswordUseCase.call(requestModel, responseModel);
 
-      response.fold((l) {
+      response.fold((l) async {
+        final errorText =
+        await translateErrorMessage.translateErrorMessage(l.toString());
+        onError(errorText);
         debugPrint('reset password fold exception : $l');
-        onError(l.toString());
         state = state.copyWith(isLoading: false);
       }, (r) {
         state = state.copyWith(isLoading: false);

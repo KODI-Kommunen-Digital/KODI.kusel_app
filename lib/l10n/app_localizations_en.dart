@@ -80,7 +80,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get category_heading => 'What is there to discover';
 
   @override
-  String get change_language => 'Change Language';
+  String get change_language => 'language';
 
   @override
   String get logout => 'Logout';
@@ -891,7 +891,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get new_password => 'New Password';
 
   @override
-  String get confirm_new_password => 'Confirm new password';
+  String get confirm_new_password => 'New password';
 
   @override
   String get at_least_8_character => 'at least 8 characters';
@@ -1020,4 +1020,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get digifit_completed_top => 'completed';
+
+  @override
+  String get feedback_message => 'message';
 }

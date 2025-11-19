@@ -62,26 +62,6 @@ class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: ImageUtil.loadNetworkImage(
-                        onImageTap: () {
-                          bool value = ref
-                              .read(networkStatusProvider)
-                              .isNetworkAvailable;
-                          if (value) {
-                            ref.read(navigationProvider).navigateUsingPath(
-                                path: fullImageScreenPath,
-                                params: FullImageScreenParams(
-                                    imageUrL: widget.imageUrl,
-                                    sourceId: widget.sourceId),
-                                context: context);
-                          } else {
-                            ref.read(navigationProvider).navigateUsingPath(
-                                path: offlineFullImageScreenPath,
-                                params: FullImageScreenParams(
-                                    imageUrL: widget.imageUrl,
-                                    sourceId: widget.sourceId),
-                                context: context);
-                          }
-                        },
                         height: 80.h,
                         width: 80.w,
                         imageUrl: widget.imageUrl,
@@ -122,9 +102,9 @@ class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
                   ),
                   Visibility(
                     visible: widget.isFavouriteVisible,
-                    child: InkWell(
-                      onTap: widget.onFavorite,
-                      child: Icon(
+                    child: IconButton(
+                      onPressed: widget.onFavorite,
+                      icon: Icon(
                         size: DeviceHelper.isMobile(context) ? null : 12.h.w,
                         widget.isFavorite
                             ? Icons.favorite_sharp
