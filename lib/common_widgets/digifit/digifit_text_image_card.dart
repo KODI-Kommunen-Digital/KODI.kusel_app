@@ -127,6 +127,7 @@ class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
                   child: Container(
                     height: 32.h,
                     width: 40.w,
+
                     decoration: BoxDecoration(
                         color: Theme.of(context).indicatorColor,
                         borderRadius: BorderRadius.only(
