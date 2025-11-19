@@ -239,7 +239,7 @@ abstract class AppLocalizations {
   /// No description provided for @change_language.
   ///
   /// In en, this message translates to:
-  /// **'Change Language'**
+  /// **'language'**
   String get change_language;
 
   /// No description provided for @logout.
@@ -1817,7 +1817,7 @@ abstract class AppLocalizations {
   /// No description provided for @confirm_new_password.
   ///
   /// In en, this message translates to:
-  /// **'Confirm new password'**
+  /// **'New password'**
   String get confirm_new_password;
 
   /// No description provided for @at_least_8_character.
@@ -2065,6 +2065,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'completed'**
   String get digifit_completed_top;
+
+  /// No description provided for @feedback_message.
+  ///
+  /// In en, this message translates to:
+  /// **'message'**
+  String get feedback_message;
 }
 
 class _AppLocalizationsDelegate

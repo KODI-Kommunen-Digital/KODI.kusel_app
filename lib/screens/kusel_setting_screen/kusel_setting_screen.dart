@@ -109,15 +109,15 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
       padding: EdgeInsets.only(left: 16.w),
       child: textBoldPoppins(
           text: label,
-          color: Theme.of(context).textTheme.displayMedium!.color,
-          fontSize: 20),
+          color: Theme.of(context).textTheme.bodyLarge!.color,
+          fontSize: 24),
     );
   }
 
   _buildSettingCard(BuildContext context) {
     final state = ref.watch(kuselSettingScreenProvider);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 12.w),
+      padding: EdgeInsets.symmetric(horizontal: 14.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -180,17 +180,17 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
           children: [
             Container(
               padding: EdgeInsets.symmetric(vertical: 4.h),
-              height: 100.h,
+              height: 110.h,
               width: double.infinity,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.r),
-                  color: Color.fromRGBO(234, 235, 243, 1)),
+                color: Theme.of(context).cardTheme.color),
               child: Column(
                 children: [
                   textSemiBoldPoppins(
                       text: numericValue,
-                      color: Theme.of(context).colorScheme.secondary,
-                      fontSize: 44),
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 58),
                   textRegularPoppins(
                       text: numericValueHeading,
                       color: Theme.of(context).colorScheme.secondary,
@@ -199,10 +199,13 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
               ),
             ),
             16.verticalSpace,
-            textRegularMontserrat(
-                text: tileTitle,
-                color: Theme.of(context).textTheme.displayMedium!.color,
-                fontSize: 12)
+            Padding(
+              padding: const EdgeInsets.only(right: 28.0),
+              child: textRegularMontserrat(
+                  text: tileTitle,
+                  color: Theme.of(context).textTheme.displayMedium!.color,
+                  fontSize: 12),
+            )
           ],
         ),
       ),
@@ -227,7 +230,7 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.r),
-                    color: Color.fromRGBO(234, 235, 243, 1)),
+                    color: Theme.of(context).cardTheme.color,),
                 child: ImageUtil.loadLocalSvgImage(
                     imageUrl: imagePath,
                     context: context,
@@ -434,10 +437,11 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            textBoldMontserrat(
+            textSemiBoldMontserrat(
                 text: title,
-                color: Theme.of(context).textTheme.displayMedium!.color,
-                fontSize: 14),
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).textTheme.bodyLarge!.color,
+                fontSize: 16),
             SizedBox(
               height: 20.h,
               width: 20.w,

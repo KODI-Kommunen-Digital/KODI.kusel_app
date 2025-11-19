@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/locale/locale_constant.dart';
 import 'package:kusel/locale/localization_manager.dart';
