@@ -24,15 +24,18 @@ class OnBoardingPreferencesPage extends ConsumerStatefulWidget {
 }
 
 class _OnBoardingPreferencesPageState extends ConsumerState<OnBoardingPreferencesPage> {
-
   @override
   void initState() {
     Future.microtask(() async {
       if (!mounted) return;
       final notifier = ref.read(onboardingScreenProvider.notifier);
-      await notifier.getInterests();
+
+      final state = ref.read(onboardingScreenProvider);
+      if (state.interests.isEmpty) {
+        await notifier.getInterests();
+      }
     });
-     super.initState();
+    super.initState();
   }
 
   @override
@@ -193,7 +196,7 @@ class _OnBoardingPreferencesPageState extends ConsumerState<OnBoardingPreference
                       color: Theme.of(context).textTheme.bodyLarge?.color),
                   20.verticalSpace,
                   categoryView(context),
-                  120.verticalSpace
+                  128.verticalSpace
                 ],
               ),
             ),
