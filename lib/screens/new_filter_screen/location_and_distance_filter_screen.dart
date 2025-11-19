@@ -5,11 +5,11 @@ import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/new_filter_screen/new_filter_screen_controller.dart';
 import '../../common_widgets/custom_button_widget.dart';
+import '../../common_widgets/device_helper.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../l10n/app_localizations.dart';
 
 class LocationAndDistanceFilterScreen extends ConsumerStatefulWidget {
-
   const LocationAndDistanceFilterScreen({
     super.key,
   });
@@ -42,11 +42,26 @@ class _LocationAndDistanceFilterScreenState
         centerTitle: false,
         backgroundColor: theme.colorScheme.onSecondary,
         leading: IconButton(
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
           onPressed: () =>
               ref.read(navigationProvider).removeTopPage(context: context),
-          icon: Icon(Icons.arrow_back, color: theme.shadowColor),
+          icon: Padding(
+            padding: const EdgeInsets.only(left: 6.0, right: 6.0, top: 26.0),
+            child: Icon(
+                size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                Icons.arrow_back,
+                color: Theme.of(context).primaryColor),
+          ),
         ),
-        title: textBoldPoppins(text: appLoc.location_distance, fontSize: 18),
+        title: Padding(
+          padding: const EdgeInsets.only(left: 6.0, right: 6.0, top: 30.0),
+          child: textSemiBoldPoppins(
+              text: appLoc.location_distance,
+              fontSize: 22,
+              color: Theme.of(context).textTheme.bodyLarge!.color,
+              fontWeight: FontWeight.w600),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -64,18 +79,20 @@ class _LocationAndDistanceFilterScreenState
                   SizedBox(
                       width: 150.w,
                       child: CustomButton(
+                        textSize: 16,
                         onPressed: () {
                           ref
                               .read(navigationProvider)
                               .removeTopPage(context: context);
                         },
                         isOutLined: true,
-                        text: AppLocalizations.of(context).cancel,
-                        textColor: Theme.of(context).colorScheme.secondary,
+                        text: AppLocalizations.of(context).digifit_abort,
+                        textColor: Theme.of(context).primaryColor,
                       )),
                   SizedBox(
                       width: 150.w,
                       child: CustomButton(
+                          textSize: 16,
                           icon: "assets/png/check.png",
                           iconHeight: 20.h,
                           iconWidth: 20.w,
@@ -110,9 +127,10 @@ class _RadiusUI extends ConsumerWidget {
     final controllerNotifier =
         ref.read(newFilterScreenControllerProvider.notifier);
     final appLoc = AppLocalizations.of(context);
+    final isSliderEnabled = controller.tempSelectedCityId != 0;
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.r),
         color: Theme.of(context).canvasColor,
@@ -120,17 +138,25 @@ class _RadiusUI extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          textSemiBoldMontserrat(text: appLoc.perimeter, fontSize: 14),
-          16.verticalSpace,
+          textBoldMontserrat(
+            text: appLoc.perimeter,
+            fontWeight: FontWeight.w600,
+            fontSize: 14,
+            color: isSliderEnabled
+                ? Theme.of(context).textTheme.bodyLarge?.color
+                : Theme.of(context).primaryColor.withOpacity(0.4),
+          ),
+          12.verticalSpace,
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
-                child: (controller.tempSelectedCityId == 0)
+                child: !isSliderEnabled
                     ? Container(
-                        height: 10.h,
+                        height: 7.h,
                         decoration: BoxDecoration(
-                          color: Theme.of(context).shadowColor.withOpacity(0.1),
+                          color:
+                              Theme.of(context).primaryColor.withOpacity(0.5),
                           borderRadius: BorderRadius.circular(20.r),
                         ),
                       )
@@ -165,6 +191,9 @@ class _RadiusUI extends ConsumerWidget {
                 text: "${controller.tempSliderValue.round()} km",
                 fontWeight: FontWeight.w600,
                 fontSize: 14,
+                color: isSliderEnabled
+                    ? Theme.of(context).primaryColor
+                    : Theme.of(context).primaryColor.withOpacity(0.4),
               ),
             ],
           ),
@@ -187,7 +216,7 @@ class _CityList extends ConsumerWidget {
 
     return Container(
       height: 400.h,
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+      padding: EdgeInsets.symmetric(vertical: 12.h),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20.r),
         color: theme.canvasColor,
@@ -200,10 +229,16 @@ class _CityList extends ConsumerWidget {
             isSelected: controller.tempSelectedCityId == 0,
             onTap: () => controllerNotifier.updateLocationAndDistanceAllValue(),
           ),
-          const Divider(thickness: 2),
+          const Divider(
+            thickness: 1,
+            indent: 0,
+            endIndent: 0,
+            height: 1,
+          ),
           if (controller.cityList.isNotEmpty)
             Expanded(
               child: ListView.separated(
+                padding: EdgeInsets.symmetric(horizontal: 12.w),
                 itemCount: controller.cityList.length,
                 separatorBuilder: (_, __) => SizedBox(height: 4.h),
                 itemBuilder: (context, index) {
@@ -249,7 +284,7 @@ class _SelectableRow extends StatelessWidget {
               width: 35.w,
               child: isSelected
                   ? ImageUtil.loadLocalSvgImage(
-                      height: 30.h,
+                      height: 35.h,
                       width: 35.w,
                       imageUrl: "correct",
                       context: context,
@@ -257,7 +292,7 @@ class _SelectableRow extends StatelessWidget {
                   : null,
             ),
             16.horizontalSpace,
-            textBoldMontserrat(text: label, fontSize: 14),
+            textBoldMontserrat(text: label, fontSize: 15),
           ],
         ),
       ),

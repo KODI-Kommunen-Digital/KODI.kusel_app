@@ -67,7 +67,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
             child: Stack(
               children: [
                 _buildBody(context),
-              if (isLoading) CustomProgressBar(),
+                if (isLoading) CustomProgressBar(),
               ],
             ),
           ),
@@ -156,8 +156,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                           ref
                               .read(virtualTownHallProvider.notifier)
                               .getEventsUsingCityId(cityId: "1");
-                        }
-                        ));
+                        }));
               },
               onHeadingTap: () {
                 ref.read(navigationProvider).navigateUsingPath(
@@ -188,10 +187,9 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
           FeedbackCardWidget(
               height: 270.h,
               onTap: () {
-            ref
-                .read(navigationProvider)
-                .navigateUsingPath(path: feedbackScreenPath, context: context);
-          })
+                ref.read(navigationProvider).navigateUsingPath(
+                    path: feedbackScreenPath, context: context);
+              })
         ],
       ),
     );
@@ -216,13 +214,15 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                 children: [
                   16.horizontalSpace,
                   IconButton(
-                    onPressed: () {
-                      ref.read(navigationProvider).removeTopPage(context: context);
-                    },
-                    icon: Icon(
-                        size: DeviceHelper.isMobile(context) ? null : 12.h.w,
-                        color: Theme.of(context).primaryColor,
-                        Icons.arrow_back)),
+                      onPressed: () {
+                        ref
+                            .read(navigationProvider)
+                            .removeTopPage(context: context);
+                      },
+                      icon: Icon(
+                          size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                          color: Theme.of(context).primaryColor,
+                          Icons.arrow_back)),
                   12.horizontalSpace,
                   textBoldPoppins(
                       color: Theme.of(context).textTheme.labelLarge?.color,
@@ -275,7 +275,9 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
           Container(
             padding: EdgeInsets.only(left: 6.w),
             child: textBoldPoppins(
-                text: "${AppLocalizations.of(context).district} ${state.cityName}" ?? "",
+                text:
+                    "${AppLocalizations.of(context).district} ${state.cityName}" ??
+                        "",
                 color: Theme.of(context).textTheme.bodyLarge?.color,
                 fontSize: 16),
           ),
@@ -328,7 +330,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
     VirtualTownHallState state = ref.watch(virtualTownHallProvider);
     int currentIndex = state.highlightCount;
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+      padding: EdgeInsets.only(left: 16.w, top: 10.h, bottom: 10.h),
       child: Column(
         children: [
           20.verticalSpace,
@@ -393,61 +395,61 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                 overscroll.disallowIndicator();
                 return true;
               },
-            child: PageView.builder(
-              controller: PageController(
-                  viewportFraction: 317.w / MediaQuery.of(context).size.width),
-              scrollDirection: Axis.horizontal,
-              padEnds: false,
-              itemCount: municipalityList.length,
-              itemBuilder: (context, index) {
-                final municipality = municipalityList[index];
-                return Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 6.h.w),
-                  child: HighlightsCard(
-                    imageUrl:
-                        municipality.mapImage ?? "https://picsum.photos/200",
-                    heading: municipality.name ?? "",
-                    description: "",
-                    errorImagePath: imagePath['kusel_map_image'],
-                    onPress: () {
-                      ref.read(navigationProvider).navigateUsingPath(
-                            context: context,
-                            path: municipalDetailScreenPath,
-                            params: MunicipalDetailScreenParams(
-                                municipalId: municipality.id!.toString(),
-                                onFavUpdate: (isFav, id, isMunicipal){
-                                  _updateList(isFav, id ?? 0);
-                                }
-                            ),
-                          );
-                    },
-                    isFavourite: municipality.isFavorite ?? false,
-                    onFavouriteIconClick: () {
-                      ref
-                          .watch(favouriteCitiesNotifier.notifier)
-                          .toggleFavorite(
-                        isFavourite : municipality.isFavorite,
-                        id : municipality.id,
-                        success: ({required bool isFavorite}) {
-                          _updateList(isFavorite, municipality.id ?? 0);
-                        },
-                        error: ({required String message}) {
-                          showErrorToast(
-                              message: message, context: context);
-                        },
-                      );
-                    },
-                    isFavouriteVisible: true,
-                    sourceId: 1,
-                    imageFit: BoxFit.contain,
-                  ),
-                );
-              },
-              onPageChanged: (index) {
-                ref
-                    .read(virtualTownHallProvider.notifier)
-                    .updateCardIndex(index);
-              },
+              child: PageView.builder(
+                controller: PageController(
+                    viewportFraction:
+                        317.w / MediaQuery.of(context).size.width),
+                scrollDirection: Axis.horizontal,
+                padEnds: false,
+                itemCount: municipalityList.length,
+                itemBuilder: (context, index) {
+                  final municipality = municipalityList[index];
+                  return Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 6.h.w),
+                    child: HighlightsCard(
+                      imageUrl:
+                          municipality.mapImage ?? "https://picsum.photos/200",
+                      heading: municipality.name ?? "",
+                      description: "",
+                      errorImagePath: imagePath['kusel_map_image'],
+                      onPress: () {
+                        ref.read(navigationProvider).navigateUsingPath(
+                              context: context,
+                              path: municipalDetailScreenPath,
+                              params: MunicipalDetailScreenParams(
+                                  municipalId: municipality.id!.toString(),
+                                  onFavUpdate: (isFav, id, isMunicipal) {
+                                    _updateList(isFav, id ?? 0);
+                                  }),
+                            );
+                      },
+                      isFavourite: municipality.isFavorite ?? false,
+                      onFavouriteIconClick: () {
+                        ref
+                            .watch(favouriteCitiesNotifier.notifier)
+                            .toggleFavorite(
+                              isFavourite: municipality.isFavorite,
+                              id: municipality.id,
+                              success: ({required bool isFavorite}) {
+                                _updateList(isFavorite, municipality.id ?? 0);
+                              },
+                              error: ({required String message}) {
+                                showErrorToast(
+                                    message: message, context: context);
+                              },
+                            );
+                      },
+                      isFavouriteVisible: true,
+                      sourceId: 1,
+                      imageFit: BoxFit.contain,
+                    ),
+                  );
+                },
+                onPageChanged: (index) {
+                  ref
+                      .read(virtualTownHallProvider.notifier)
+                      .updateCardIndex(index);
+                },
               ),
             ),
           ),

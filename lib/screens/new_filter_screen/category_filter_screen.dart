@@ -5,6 +5,7 @@ import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/new_filter_screen/new_filter_screen_controller.dart';
 
 import '../../common_widgets/custom_button_widget.dart';
+import '../../common_widgets/device_helper.dart';
 import '../../common_widgets/image_utility.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../l10n/app_localizations.dart';
@@ -44,15 +45,26 @@ class _CategoryFilterScreenState extends ConsumerState<CategoryFilterScreen> {
       centerTitle: false,
       backgroundColor: Theme.of(context).colorScheme.onSecondary,
       leading: IconButton(
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
           onPressed: () {
             ref.read(navigationProvider).removeTopPage(context: context);
           },
-          icon: Icon(
-            Icons.arrow_back,
-            color: Theme.of(context).shadowColor,
+          icon: Padding(
+            padding: const EdgeInsets.only(left: 6.0, right: 6.0, top: 26.0),
+            child: Icon(
+                size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                Icons.arrow_back,
+                color: Theme.of(context).primaryColor),
           )),
-      title: textBoldPoppins(
-          text: AppLocalizations.of(context).category, fontSize: 20),
+      title: Padding(
+        padding: const EdgeInsets.only(left: 6.0, right: 6.0, top: 30.0),
+        child: textSemiBoldPoppins(
+            text: AppLocalizations.of(context).category,
+            fontSize: 22,
+            color: Theme.of(context).textTheme.bodyLarge!.color,
+            fontWeight: FontWeight.w600),
+      ),
     );
   }
 
@@ -68,23 +80,32 @@ class _CategoryFilterScreenState extends ConsumerState<CategoryFilterScreen> {
         Container(
           height: 400.h,
           margin: EdgeInsets.symmetric(vertical: 32.h, horizontal: 16.w),
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 12.h),
+          padding: EdgeInsets.symmetric(vertical: 12.h),
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20.r),
+            borderRadius: BorderRadius.circular(18.r),
             color: theme.canvasColor,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _SelectableRow(
-                label: appLoc.all,
-                isSelected: controller.tempCategoryIdList.isEmpty,
-                onTap: () => controllerNotifier.updateCategoryAllValue(),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12.w),
+                child: _SelectableRow(
+                  label: appLoc.all,
+                  isSelected: controller.tempCategoryIdList.isEmpty,
+                  onTap: () => controllerNotifier.updateCategoryAllValue(),
+                ),
               ),
-              const Divider(thickness: 2),
+              const Divider(
+                thickness: 1,
+                indent: 0,
+                endIndent: 0,
+                height: 1,
+              ),
               if (controller.categoryList.isNotEmpty)
                 Expanded(
                   child: ListView.separated(
+                    padding: EdgeInsets.symmetric(horizontal: 12.w),
                     itemCount: controller.categoryList.length,
                     separatorBuilder: (_, __) => SizedBox(height: 4.h),
                     itemBuilder: (context, index) {
@@ -110,18 +131,20 @@ class _CategoryFilterScreenState extends ConsumerState<CategoryFilterScreen> {
             SizedBox(
                 width: 150.w,
                 child: CustomButton(
+                  textSize: 16,
                   onPressed: () {
                     ref
                         .read(navigationProvider)
                         .removeTopPage(context: context);
                   },
                   isOutLined: true,
-                  text: AppLocalizations.of(context).cancel,
-                  textColor: Theme.of(context).colorScheme.secondary,
+                  text: AppLocalizations.of(context).digifit_abort,
+                  textColor: Theme.of(context).primaryColor,
                 )),
             SizedBox(
                 width: 150.w,
                 child: CustomButton(
+                    textSize: 16,
                     icon: "assets/png/check.png",
                     iconHeight: 20.h,
                     iconWidth: 20.w,
@@ -167,7 +190,7 @@ class _SelectableRow extends StatelessWidget {
               width: 35.w,
               child: isSelected
                   ? ImageUtil.loadLocalSvgImage(
-                      height: 30.h,
+                      height: 35.h,
                       width: 35.w,
                       imageUrl: "correct",
                       context: context,
@@ -175,7 +198,7 @@ class _SelectableRow extends StatelessWidget {
                   : null,
             ),
             16.horizontalSpace,
-            textBoldMontserrat(text: label, fontSize: 14),
+            textBoldMontserrat(text: label, fontSize: 15),
           ],
         ),
       ),

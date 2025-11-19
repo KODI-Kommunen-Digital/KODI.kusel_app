@@ -111,6 +111,7 @@ Map<String, String> _pngImagePath = {
   "placeholder_image_pictures_game": "assets/png/place_holder_image_pictures_game.png",
   "scanner_image": "assets/png/scanner_image.png",
   "arrow_right": "assets/png/arrow_right.png",
+  "setting_boldi": "assets/png/setting_boldi.png",
 };
 
 Map<String, String> _jpegImagePath = {
