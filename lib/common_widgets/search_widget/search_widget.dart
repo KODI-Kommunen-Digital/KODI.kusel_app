@@ -193,6 +193,7 @@ class SearchStringWidget extends ConsumerStatefulWidget {
   final TextEditingController searchController;
   final FutureOr<List<String>?> Function(String) suggestionCallback;
   final Function(String) onItemClick;
+  final Function(String)? onFieldSubmitted;
   final VerticalDirection? verticalDirection;
   final bool isPaddingEnabled;
 
@@ -201,6 +202,7 @@ class SearchStringWidget extends ConsumerStatefulWidget {
     required this.searchController,
     required this.suggestionCallback,
     required this.onItemClick,
+    this.onFieldSubmitted,
     this.verticalDirection,
     required this.isPaddingEnabled,
   });
@@ -211,17 +213,32 @@ class SearchStringWidget extends ConsumerStatefulWidget {
 
 class SearchStringWidgetState extends ConsumerState<SearchStringWidget> {
   final SuggestionsController<String> _suggestionsController =
-      SuggestionsController<String>();
+  SuggestionsController<String>();
   final FocusNode _focusNode = FocusNode();
   String _lastSelectedValue = '';
   bool _showSuggestions = false;
   bool _hasResults = false;
+  List<String> _currentFilteredSuggestions = [];
+  bool _hasFocus = false; // Track focus state
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(_onFocusChange);
+  }
 
   @override
   void dispose() {
+    _focusNode.removeListener(_onFocusChange);
     _suggestionsController.dispose();
     _focusNode.dispose();
     super.dispose();
+  }
+
+  void _onFocusChange() {
+    setState(() {
+      _hasFocus = _focusNode.hasFocus;
+    });
   }
 
   void closeSuggestions() {
@@ -245,155 +262,195 @@ class SearchStringWidgetState extends ConsumerState<SearchStringWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 40.h,
-      width: 350.w,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.onPrimary,
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(30.r),
-        border: Border.all(width: 1, color: Theme.of(context).dividerColor),
+        border: Border.all(
+          width: 1.5.h.w,
+          color: _hasFocus
+              ? Theme.of(context).indicatorColor
+              : Colors.transparent,
+        ),
       ),
-      child: Center(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 14.0.w),
-          child: Row(
-            children: [
-              Expanded(
-                child: TypeAheadField<String>(
-                  controller: widget.searchController,
-                  focusNode: _focusNode,
-                  suggestionsController: _suggestionsController,
-                  hideOnEmpty: true,
-                  hideOnUnfocus: false,
-                  hideOnSelect: true,
-                  hideWithKeyboard: false,
-                  direction: widget.verticalDirection ?? VerticalDirection.down,
-                  debounceDuration: Duration(milliseconds: 300),
-                  suggestionsCallback: (pattern) async {
-                    final results = await widget.suggestionCallback(pattern);
+      child: Padding(
+        padding: EdgeInsets.all(1.h.w),
+        child: Center(
+          child: Container(
+            height: 40.h,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.onPrimary,
+              borderRadius: BorderRadius.circular(30.r),
+              border: Border.all(
+                  width: 1,
+                  color: Theme.of(context).dividerColor
+              ),
+            ),
+            child: Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 14.0.w),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TypeAheadField<String>(
+                        controller: widget.searchController,
+                        focusNode: _focusNode,
+                        suggestionsController: _suggestionsController,
+                        hideOnEmpty: true,
+                        hideOnUnfocus: false,
+                        hideOnSelect: true,
+                        hideWithKeyboard: false,
+                        direction: widget.verticalDirection ?? VerticalDirection.down,
+                        debounceDuration: Duration(milliseconds: 300),
+                        suggestionsCallback: (pattern) async {
+                          final results = await widget.suggestionCallback(pattern);
 
-                    setState(() {
-                      _showSuggestions = results != null && results.isNotEmpty;
-                      _hasResults = _showSuggestions;
-                    });
+                          if (results == null || results.isEmpty) {
+                            setState(() {
+                              _currentFilteredSuggestions = [];
+                              _showSuggestions = false;
+                              _hasResults = false;
+                            });
+                            return [];
+                          }
 
-                    if (results == null || results.isEmpty) return [];
+                          final lowerPattern = pattern.toLowerCase().trim();
+                          List<String> filteredResults;
 
-                    final lowerPattern = pattern.toLowerCase().trim();
-                    if (lowerPattern.isEmpty) return results;
+                          if (lowerPattern.isEmpty) {
+                            filteredResults = results;
+                          } else {
+                            final startsWith = <String>[];
+                            final contains = <String>[];
+                            for (final item in results) {
+                              if (item.toLowerCase().startsWith(lowerPattern)) {
+                                startsWith.add(item);
+                              } else if (item.toLowerCase().contains(lowerPattern)) {
+                                contains.add(item);
+                              }
+                            }
+                            filteredResults = [...startsWith, ...contains];
+                          }
+                          setState(() {
+                            _currentFilteredSuggestions = filteredResults;
+                            _showSuggestions = filteredResults.isNotEmpty;
+                            _hasResults = _showSuggestions;
+                          });
 
-                    final startsWith = <String>[];
-                    final contains = <String>[];
-                    for (final item in results) {
-                      if (item.toLowerCase().startsWith(lowerPattern)) {
-                        startsWith.add(item);
-                      } else if (item.toLowerCase().contains(lowerPattern)) {
-                        contains.add(item);
-                      }
-                    }
-                    return [...startsWith, ...contains];
-                  },
-                  itemBuilder: (context, suggestion) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 2, vertical: 2),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
-                        title: Text(suggestion,
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.black87,
-                                fontFamily: "Poppins")),
-                        trailing: Icon(Icons.arrow_forward_ios, size: 18),
-                      ),
-                    );
-                  },
-                  onSelected: (suggestion) {
-                    _lastSelectedValue = suggestion;
-                    widget.onItemClick(suggestion);
-                    setState(() {
-                      _showSuggestions = false;
-                      _hasResults = false;
-                    });
-                    _suggestionsController.close();
-                    _focusNode.unfocus();
-                  },
-                  builder: (context, controller, focusNode) {
-                    return TextField(
-                      controller: controller,
-                      focusNode: focusNode,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: widget.searchController.text.isEmpty
-                            ? 'Search...'
-                            : null,
-                        hintStyle: TextStyle(
-                            fontSize: 12.sp,
-                            fontFamily: "Poppins",
-                            fontStyle: FontStyle.italic,
-                            color: Theme.of(context).hintColor),
-                      ),
-                      onChanged: (value) {
-                        if (value.isEmpty) {
+                          return filteredResults;
+                        },
+                        itemBuilder: (context, suggestion) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 2, vertical: 2),
+                            child: ListTile(
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
+                              title: Text(suggestion,
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                      fontFamily: "Poppins")),
+                              trailing: Icon(Icons.arrow_forward_ios, size: 18),
+                            ),
+                          );
+                        },
+                        onSelected: (suggestion) {
+                          _lastSelectedValue = suggestion;
+                          widget.onItemClick(suggestion);
                           setState(() {
                             _showSuggestions = false;
                             _hasResults = false;
                           });
-                        }
-                      },
-                      onSubmitted: (value) {
-                        _focusNode.unfocus();
+                          _suggestionsController.close();
+                          _focusNode.unfocus(); // This will trigger _onFocusChange and remove the border
+                        },
+                        builder: (context, controller, focusNode) {
+                          return TextField(
+                            controller: controller,
+                            focusNode: focusNode,
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: widget.searchController.text.isEmpty
+                                  ? 'Search...'
+                                  : null,
+                              hintStyle: TextStyle(
+                                  fontSize: 12.sp,
+                                  fontFamily: "Poppins",
+                                  fontStyle: FontStyle.italic,
+                                  color: Theme.of(context).hintColor),
+                            ),
+                            onChanged: (value) {
+                              if (value.isEmpty) {
+                                setState(() {
+                                  _showSuggestions = false;
+                                  _hasResults = false;
+                                });
+                              }
+                            },
+                            onSubmitted: (value) {
+                              if (_currentFilteredSuggestions.length == 1) {
+                                final firstSuggestion = _currentFilteredSuggestions.first;
+                                widget.searchController.text = firstSuggestion;
+                                widget.onItemClick(firstSuggestion);
+                                widget.onFieldSubmitted?.call(firstSuggestion);
 
-                        if (value.isEmpty) {
-                          // If nothing typed, open full suggestion list
-                          setState(() {
-                            _showSuggestions = true;
-                            _hasResults = true;
-                          });
-                          _suggestionsController.refresh();
+                                setState(() {
+                                  _showSuggestions = false;
+                                  _hasResults = false;
+                                });
+                                _suggestionsController.close();
+                                _focusNode.unfocus(); // Remove focus
+                              } else {
+                                setState(() {
+                                  _showSuggestions = false;
+                                  _hasResults = false;
+                                });
+                                _suggestionsController.close();
+                                _focusNode.unfocus();
+
+                                if (value.trim().isNotEmpty && _currentFilteredSuggestions.length > 1) {
+                                }
+                              }
+                            },
+                          );
+                        },
+                        decorationBuilder: (context, widgetChild) {
+                          if (!_showSuggestions || !_hasResults)
+                            return SizedBox.shrink();
+                          return Container(
+                            padding: widget.isPaddingEnabled
+                                ? EdgeInsets.symmetric(
+                                vertical: 10.h, horizontal: 5.w)
+                                : null,
+                            constraints: BoxConstraints(
+                                maxHeight: 250.h, maxWidth: double.infinity),
+                            decoration: BoxDecoration(
+                                color: Theme.of(context).scaffoldBackgroundColor,
+                                borderRadius: BorderRadius.circular(10.r)),
+                            child: widgetChild,
+                          );
+                        },
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _showSuggestions = !_showSuggestions;
+                        });
+                        if (_showSuggestions) {
+                          openSuggestions();
                         } else {
-                          // If something typed, show filtered suggestions
-                          setState(() {
-                            _showSuggestions = _hasResults;
-                          });
+                          _suggestionsController.close();
                         }
                       },
-                    );
-                  },
-                  decorationBuilder: (context, widgetChild) {
-                    if (!_showSuggestions || !_hasResults)
-                      return SizedBox.shrink();
-                    return Container(
-                      padding: widget.isPaddingEnabled
-                          ? EdgeInsets.symmetric(
-                              vertical: 10.h, horizontal: 5.w)
-                          : null,
-                      constraints: BoxConstraints(
-                          maxHeight: 250.h, maxWidth: double.infinity),
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).canvasColor,
-                          borderRadius: BorderRadius.circular(10.r)),
-                      child: widgetChild,
-                    );
-                  },
+                      child: Icon(Icons.keyboard_arrow_down,
+                          color: Theme.of(context).iconTheme.color ?? Colors.grey,
+                          size: 24),
+                    ),
+                  ],
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _showSuggestions = !_showSuggestions;
-                  });
-                  if (_showSuggestions) {
-                    openSuggestions();
-                  } else {
-                    _suggestionsController.close();
-                  }
-                },
-                child: Icon(Icons.keyboard_arrow_down,
-                    color: Theme.of(context).iconTheme.color ?? Colors.grey,
-                    size: 24),
-              ),
-            ],
+            ),
           ),
         ),
       ),

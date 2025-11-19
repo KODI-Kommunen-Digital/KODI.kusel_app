@@ -8,6 +8,8 @@ Map<String, String> imagePath = {
 Map<String, String> _svgImagePath = {
   "discover_icon": "assets/svg/discover_icon.svg",
   "home_vector": "assets/svg/home_vector.svg",
+  "home_hollow_icon": "assets/svg/home_hollow_icon.svg",
+  "explore_hollow_icon": "assets/svg/explore_hollow_icon.svg",
   "location_icon": "assets/svg/location_icon.svg",
   "arrow_icon": "assets/svg/arrow_icon.svg",
   "search_icon": "assets/svg/search_icon.svg",
