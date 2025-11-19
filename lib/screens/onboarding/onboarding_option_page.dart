@@ -46,6 +46,7 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Padding(
         padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 18.h),
         child: SizedBox(
@@ -111,7 +112,7 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
                 ),
               ),
             ),
-            _dropDownResidence(),
+            ResidenceSearchWidget(),
             20.verticalSpace,
             Divider(
               height: 3.h,
@@ -426,5 +427,85 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
         12.verticalSpace,
       ],
     );
+  }
+}
+class ResidenceSearchWidget extends ConsumerStatefulWidget {
+  const ResidenceSearchWidget({super.key});
+
+  @override
+  ConsumerState<ResidenceSearchWidget> createState() => _ResidenceSearchWidgetState();
+}
+
+class _ResidenceSearchWidgetState extends ConsumerState<ResidenceSearchWidget> {
+  final TextEditingController _searchController = TextEditingController();
+  final GlobalKey<SearchStringWidgetState> _searchWidgetKey = GlobalKey();
+  bool _isInitialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeFromState();
+  }
+
+  void _initializeFromState() {
+    final state = ref.read(onboardingScreenProvider);
+    if (state.resident != null && state.resident!.isNotEmpty && !_isInitialized) {
+      _searchController.text = state.resident!;
+      _isInitialized = true;
+    }
+  }
+
+  @override
+  void didUpdateWidget(ResidenceSearchWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _initializeFromState();
+  }
+
+  void _updateResidence(String selected) {
+    final stateNotifier = ref.read(onboardingScreenProvider.notifier);
+    _searchController.text = selected;
+    stateNotifier.updateUserType(selected);
+    stateNotifier.isAllOptionFieldsCompleted();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(onboardingScreenProvider);
+
+    return NotificationListener<OverscrollIndicatorNotification>(
+      onNotification: (overscroll) {
+        overscroll.disallowIndicator();
+        return true;
+      },
+      child: SearchStringWidget(
+        key: _searchWidgetKey,
+        searchController: _searchController,
+        isPaddingEnabled: true,
+        suggestionCallback: (pattern) async {
+          final list = state.residenceList;
+          if (list.isEmpty) return [];
+
+          if (pattern.trim().isEmpty) {
+            return list;
+          }
+
+          return list
+              .where((e) => e.toLowerCase().contains(pattern.toLowerCase()))
+              .toList();
+        },
+        onItemClick: _updateResidence,
+        onFieldSubmitted: (value) {
+          if (value.trim().isNotEmpty) {
+            _updateResidence(value);
+          }
+        },
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 }
