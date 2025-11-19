@@ -38,11 +38,11 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
               height: 220.h,
               decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.only(topRight: Radius.circular(16.r), bottomRight: Radius.circular(16.r))
-              ),
+                  borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(16.r),
+                      bottomRight: Radius.circular(16.r))),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                // Align content to left
                 children: [
                   Text(
                     "${widget.weatherResponseModel?.forecast?.forecastday?[0].day?.maxtempC ?? ""}\u00B0",
@@ -55,22 +55,21 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   textBoldMontserrat(
-                      text:
-                      widget.weatherResponseModel?.location?.name ?? ""),
+                      text: widget.weatherResponseModel?.location?.name ?? ""),
                   SizedBox(
-                    height: 32.h,
-                    width: (width * .4).w,
+                    height: 28.h,
+                    width: (width * .5).w,
                     child: Divider(
                       thickness: 1,
                       color: Theme.of(context).textTheme.labelMedium?.color,
                     ),
                   ),
-                  12.verticalSpace,
+                  8.verticalSpace,
                   // 3-Day Forecast
                   SizedBox(
                     width: (width * .4).w,
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         _DayWeather(
                             day: getDayFromDate(
@@ -192,10 +191,8 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
 
   String getWeatherImageAsset(int weatherCode) {
     if (weatherCode == 1000) {
-      // Sunny
       return 'boldi_new_sunny_image';
     } else if ([1003, 1006, 1009, 1030, 1135, 1147].contains(weatherCode)) {
-      // Cloudy, fog, mist
       return 'spring_image';
     } else if ([
       1063,
@@ -214,7 +211,6 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
       1273,
       1276
     ].contains(weatherCode)) {
-      // Rain
       return 'rain_image';
     } else if ([
       1066,
@@ -242,10 +238,8 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
       1279,
       1282
     ].contains(weatherCode)) {
-      // Snow or sleet
       return 'cold_image';
     } else {
-      // Default fallback
       return 'dino';
     }
   }
@@ -253,9 +247,9 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
 
 String getWeatherIcon(int weatherCode) {
   if (weatherCode == 1000) {
-    return 'sunny_icon'; // Sunny
+    return 'sunny_icon';
   } else if ([1003, 1006, 1009, 1030, 1135, 1147].contains(weatherCode)) {
-    return 'partly_cloudy_icon'; // Cloudy
+    return 'partly_cloudy_icon';
   } else if ([
     1063,
     1150,
@@ -273,7 +267,7 @@ String getWeatherIcon(int weatherCode) {
     1273,
     1276
   ].contains(weatherCode)) {
-    return 'rainy_icon'; // Rain
+    return 'rainy_icon';
   } else if ([
     1066,
     1069,
@@ -300,9 +294,9 @@ String getWeatherIcon(int weatherCode) {
     1279,
     1282
   ].contains(weatherCode)) {
-    return 'snow_icon'; // Snow
+    return 'snow_icon';
   } else {
-    return 'sunny_icon'; // Default
+    return 'sunny_icon';
   }
 }
 
@@ -321,13 +315,14 @@ class _DayWeather extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         textRegularMontserrat(
             text: day, color: Theme.of(context).textTheme.labelMedium?.color),
-        4.horizontalSpace,
+        6.verticalSpace,
         ImageUtil.loadSvgImage(
             imageUrl: icon, context: context, height: 28, width: 28),
-        4.horizontalSpace,
+        6.verticalSpace,
         textRegularMontserrat(
             text: temp, color: Theme.of(context).textTheme.labelMedium?.color),
       ],
