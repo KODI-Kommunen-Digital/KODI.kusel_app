@@ -226,7 +226,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                   12.horizontalSpace,
                   textBoldPoppins(
                       color: Theme.of(context).textTheme.labelLarge?.color,
-                      fontSize: 18,
+                      fontSize: 19,
                       text: AppLocalizations.of(context).virtual_town_hall),
                 ],
               ),
@@ -237,29 +237,33 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
           top: 100.h,
           left: 0.w,
           right: 0.w,
-          child: Container(
-            height: 120.h,
-            width: 70.w,
-            padding: EdgeInsets.all(25.w),
-            decoration:
-                BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-            child: (imageUrl != null)
-                ? ImageUtil.loadNetworkImage(
-                    onImageTap: () => ref
-                        .read(navigationProvider)
-                        .navigateUsingPath(
-                            params: FullImageScreenParams(
-                                imageUrL: imageUrl ?? '', sourceId: 1),
-                            path: fullImageScreenPath,
-                            context: context),
-                    imageUrl: imageUrl ?? '',
-                    sourceId: 1,
-                    fit: BoxFit.contain,
-                    svgErrorImagePath:
-                        imagePath['virtual_town_hall_map_image']!,
-                    context: context,
-                  )
-                : Center(child: CircularProgressIndicator()),
+          child: Card(
+            elevation: 8,
+            shape: CircleBorder(),
+            child: Container(
+              height: 120.h,
+              width: 70.w,
+              padding: EdgeInsets.all(25.w),
+              decoration:
+                  BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+              child: (imageUrl != null)
+                  ? ImageUtil.loadNetworkImage(
+                      onImageTap: () => ref
+                          .read(navigationProvider)
+                          .navigateUsingPath(
+                              params: FullImageScreenParams(
+                                  imageUrL: imageUrl ?? '', sourceId: 1),
+                              path: fullImageScreenPath,
+                              context: context),
+                      imageUrl: imageUrl ?? '',
+                      sourceId: 1,
+                      fit: BoxFit.contain,
+                      svgErrorImagePath:
+                          imagePath['virtual_town_hall_map_image']!,
+                      context: context,
+                    )
+                  : Center(child: CircularProgressIndicator()),
+            ),
           ),
         ),
       ],
@@ -268,7 +272,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
 
   Widget _buildTownHallDetailsUi(VirtualTownHallState state) {
     return Padding(
-      padding: EdgeInsets.all(12.h.w),
+      padding: EdgeInsets.only(left :12.w, right: 12.w, bottom: 12.w, top: 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

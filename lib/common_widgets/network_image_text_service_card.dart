@@ -39,13 +39,15 @@ class _IconTextWidgetCardState extends ConsumerState<NetworkImageTextServiceCard
       child: GestureDetector(
         onTap: widget.onTap,
         child: Container(
+          height: 75.h,
           padding:
-              EdgeInsets.only(left: 2.w, right: 14.w, top: 20.h, bottom: 20.h),
+              EdgeInsets.only(left: 2.w, right: 14.w, top: 5.h, bottom: 5.h),
           decoration: BoxDecoration(
               color: Theme.of(context).canvasColor,
               borderRadius: BorderRadius.circular(15.r)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
                 flex: 3,
@@ -77,7 +79,7 @@ class _IconTextWidgetCardState extends ConsumerState<NetworkImageTextServiceCard
                           fontWeight: FontWeight.w600,
                           textOverflow: TextOverflow.visible,
                           textAlign: TextAlign.start,
-                          fontSize: 16,
+                          fontSize: 14,
                           color: Theme.of(context).textTheme.bodyLarge?.color),
                     ),
                     4.verticalSpace,
@@ -88,6 +90,7 @@ class _IconTextWidgetCardState extends ConsumerState<NetworkImageTextServiceCard
                             fontWeight: FontWeight.w600,
                             color: lightThemeLabelMediumColor,
                             textOverflow: TextOverflow.visible,
+                            maxLines: 2,
                             textAlign: TextAlign.start)
                   ],
                 ),

@@ -88,12 +88,13 @@ class _ImageTextCardWidgetState extends ConsumerState<ImageTextCardWidget> {
                 ),
               ),
               Expanded(
-                  flex: 6,
+                  flex: 7,
                   child: Padding(
                     padding: EdgeInsets.only(left: 30.w),
                     child: textRegularMontserrat(
                         textAlign: TextAlign.start,
                         text: text ?? '',
+                        fontWeight: FontWeight.w600,
                         textOverflow: TextOverflow.visible,
                         fontSize: 14),
                   )),
