@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:kusel/app_router.dart';
+import 'package:kusel/common_widgets/custom_progress_bar.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -56,12 +57,31 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
   Widget build(BuildContext context) {
     final currentPageNumber = ref.read(allEventScreenProvider).currentPageNo;
     return Scaffold(
-      body: (ref.watch(allEventScreenProvider).isLoading)
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : _buildBody(context, currentPageNumber),
-    );
+        backgroundColor: Theme.of(context).colorScheme.onSecondary,
+        body: SafeArea(
+          child: RefreshIndicator(
+            onRefresh: () async {
+              ref
+                  .read(allEventScreenProvider.notifier)
+                  .getRecommendationListing();
+              final currentPageNumber =
+                  ref.read(allEventScreenProvider).currentPageNo;
+              ref
+                  .read(allEventScreenProvider.notifier)
+                  .getListing(currentPageNumber);
+              ref.read(filterScreenProvider.notifier).onReset();
+              ref.read(datePickerProvider.notifier).resetDates();
+              ref.read(allEventScreenProvider.notifier).isUserLoggedIn();
+            },
+            child: Stack(
+              children: [
+                _buildBody(context, currentPageNumber),
+                if (ref.watch(allEventScreenProvider).isLoading)
+                  CustomProgressBar()
+              ],
+            ),
+          ),
+        ));
   }
 
   Widget _buildBody(BuildContext context, int currentPageNumber) {
@@ -78,14 +98,42 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
             physics: ClampingScrollPhysics(),
             child: Column(
               children: [
-                CommonBackgroundClipperWidget(
-                  clipperType: UpstreamWaveClipper(),
+                SizedBox(
                   height: 110.h,
-                  headingTextLeftMargin: 10,
-                  imageUrl: imagePath['home_screen_background'] ?? '',
-                  isStaticImage: true,
-                  isBackArrowEnabled: true,
-                  headingText: AppLocalizations.of(context).event_text,
+                  child: CommonBackgroundClipperWidget(
+                    clipperType: UpstreamWaveClipper(),
+                    imageUrl: imagePath['home_screen_background'] ?? "",
+                    height: 110.h,
+                    blurredBackground: true,
+                    isStaticImage: true,
+                    customWidget1: Positioned(
+                      left: 0.w,
+                      top: 28.h,
+                      child: Row(
+                        children: [
+                          18.horizontalSpace,
+                          IconButton(
+                              onPressed: () {
+                                ref
+                                    .read(navigationProvider)
+                                    .removeTopPage(context: context);
+                              },
+                              icon: Icon(
+                                  size: DeviceHelper.isMobile(context)
+                                      ? null
+                                      : 12.h.w,
+                                  color: Theme.of(context).primaryColor,
+                                  Icons.arrow_back)),
+                          8.horizontalSpace,
+                          textBoldPoppins(
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge?.color,
+                              fontSize: 22,
+                              text: AppLocalizations.of(context).event_text),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
                 _buildRecommendation(context),
                 10.verticalSpace,
@@ -99,7 +147,8 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                       Padding(
                         padding: const EdgeInsets.only(left: 10.0),
                         child: textSemiBoldPoppins(
-                            text: AppLocalizations.of(context).events,
+                            text:
+                                AppLocalizations.of(context).all_events_filter,
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
                             color:
@@ -274,7 +323,8 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CommonTextArrowWidget(
-                      text: AppLocalizations.of(context).recommendations,
+                      fontSize: 18,
+                      text: AppLocalizations.of(context).our_recommendations,
                       onTap: () {
                         ref.read(navigationProvider).navigateUsingPath(
                               path: allEventScreenPath,

@@ -128,7 +128,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                     .read(virtualTownHallProvider.notifier)
                     .getVirtualTownHallDetails();
               },
-              isFavVisible: true,
+              isFavVisible: false,
               onSuccess: (bool isFav, int? id) {
                 ref
                     .read(virtualTownHallProvider.notifier)
@@ -139,7 +139,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
             EventsListSectionWidget(
               context: context,
               eventsList: state.eventList ?? [],
-              heading: AppLocalizations.of(context).current_events,
+              heading: AppLocalizations.of(context).event_text,
               maxListLimit: 5,
               buttonText: AppLocalizations.of(context).all_events,
               buttonIconPath: imagePath['calendar'] ?? "",

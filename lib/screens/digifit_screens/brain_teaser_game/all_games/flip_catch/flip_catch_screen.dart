@@ -214,7 +214,7 @@ class _FlipCatchScannerState extends ConsumerState<FlipCatchScreen> {
                               data: state.flipCatchData?.subDescription ?? '',
                             ),
                           ),
-                          20.verticalSpace,
+                          10.verticalSpace,
                           if (!state.isLoading)
                             FeedbackCardWidget(
                               height: 270.h,
@@ -344,7 +344,7 @@ class _FlipCatchScannerState extends ConsumerState<FlipCatchScreen> {
                 isCorrect: state.isAnswerCorrect,
                 correctIndex: state.correctWordIndex,
                 isEnabled: state.isGamePlayEnabled,
-                ccompletedIndices: state.completedTargetIndices,
+                completedIndices: state.completedTargetIndices,
                 currentTargetIndex: state.currentTargetIndex ?? 0,
                 textColor: Theme.of(context).textTheme.bodyLarge?.color,
               ),

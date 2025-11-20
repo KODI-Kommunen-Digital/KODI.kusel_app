@@ -129,7 +129,7 @@ class _MathHuntScreenState extends ConsumerState<MathHuntScreen> {
                             padding: const EdgeInsets.only(
                               left: 20,
                               right: 20,
-                              bottom: 80,
+                              bottom: 30,
                             ),
                             child: CommonHtmlWidget(
                               data:
@@ -137,7 +137,7 @@ class _MathHuntScreenState extends ConsumerState<MathHuntScreen> {
                               fontSize: 16,
                             ),
                           ),
-                          20.verticalSpace,
+                          10.verticalSpace,
                           if (!state.isLoading)
                             FeedbackCardWidget(
                               height: 270.h,

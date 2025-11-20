@@ -83,7 +83,7 @@ class _ExploreScreenState extends ConsumerState<SelectedEventListScreen> {
             isBackArrowEnabled: false,
             customWidget1: Positioned(
               top: 28.h,
-              left: 5.w,
+              left: 15.w,
               child: Row(
                 children: [
                   IconButton(

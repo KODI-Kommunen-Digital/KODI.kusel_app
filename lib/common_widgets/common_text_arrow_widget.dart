@@ -7,8 +7,9 @@ import 'image_utility.dart';
 class CommonTextArrowWidget extends StatelessWidget {
   String text;
   void Function()? onTap;
+  final double? fontSize;
 
-  CommonTextArrowWidget({super.key, required this.text, this.onTap});
+  CommonTextArrowWidget({super.key, required this.text, this.onTap, this.fontSize});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +26,7 @@ class CommonTextArrowWidget extends StatelessWidget {
         children: [
           textRegularPoppins(
               text: text,
-              fontSize: 16,
+              fontSize: fontSize ?? 16,
               fontWeight: FontWeight.w600,
               color: Theme.of(context).textTheme.bodyLarge?.color),
           12.horizontalSpace,

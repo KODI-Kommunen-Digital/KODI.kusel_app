@@ -60,8 +60,8 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                     fit: widget.boxFit ?? BoxFit.fill,
                     memCacheHeight: 400,
                     memCacheWidth: 500,
-                    height: 65.h,
-                    width: 73.w,
+                    height: 75.h,
+                    width: 83.w,
                     imageUrl: imageLoaderUtility(
                         image: widget.imageUrl, sourceId: widget.sourceId),
                     context: context),
@@ -71,26 +71,28 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const SizedBox(height: 8),
                     textRegularMontserrat(
                         text: KuselDateUtils.formatDate(widget.date),
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).textTheme.labelMedium?.color,
                         textAlign: TextAlign.start),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 6),
                     textSemiBoldMontserrat(
                         text: widget.title,
                         textOverflow: TextOverflow.visible,
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
                         textAlign: TextAlign.start),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: 4),
                     textRegularMontserrat(
                         text: widget.location,
                         color: Theme.of(context).textTheme.labelMedium?.color,
                         fontWeight: FontWeight.w600,
                         fontSize: 12,
                         textAlign: TextAlign.start),
+                    const SizedBox(height: 4),
                   ],
                 ),
               ),

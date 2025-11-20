@@ -113,13 +113,13 @@ class _CommonBottomNavCardState extends ConsumerState<CommonBottomNavCard> {
 
     return Container(
       width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      padding: EdgeInsets.only(left:16.w,right: 4.w),
       height: 50.h,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30.r),
           color: Theme.of(context).colorScheme.secondary),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(
             height: 48.h,
@@ -133,7 +133,9 @@ class _CommonBottomNavCardState extends ConsumerState<CommonBottomNavCard> {
               ),
             ),
           ),
+          const Spacer(),
           Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Visibility(
                 visible: widget.isFavVisible,
@@ -154,7 +156,10 @@ class _CommonBottomNavCardState extends ConsumerState<CommonBottomNavCard> {
                   ),
                 ),
               ),
-              10.horizontalSpace,
+              Visibility(
+                visible: widget.isFavVisible,
+                child: SizedBox(width: 10.w),
+              ),
               Visibility(
                 visible: widget.sessionStage != null,
                 child: GestureDetector(
@@ -167,8 +172,9 @@ class _CommonBottomNavCardState extends ConsumerState<CommonBottomNavCard> {
                     ),
                     child: Padding(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                          EdgeInsets.symmetric(horizontal: 12.w, vertical: 9.h),
                       child: Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
                             icon,
@@ -200,22 +206,23 @@ class _CommonBottomNavCardState extends ConsumerState<CommonBottomNavCard> {
                     ),
                     child: Padding(
                       padding: EdgeInsets.symmetric(
-                          horizontal: 12.w, vertical: 11.h),
+                          horizontal: 12.w, vertical: 9.h),
                       child: Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           widget.gameDetailsStageConstant ==
                                   GameStageConstant.abort
                               ? Transform.scale(
-                            scaleX: -1,
-                            child: Transform.rotate(
-                              angle: -1.5708, // Try positive 90 degrees with the flip
-                              child: Icon(
-                                icon,
-                                color: Colors.white,
-                                size: 18.h.w,
-                              ),
-                            ),
-                          )
+                                  scaleX: -1,
+                                  child: Transform.rotate(
+                                    angle: -1.5708,
+                                    child: Icon(
+                                      icon,
+                                      color: Colors.white,
+                                      size: 18.h.w,
+                                    ),
+                                  ),
+                                )
                               : Icon(
                                   icon,
                                   color: Colors.white,
@@ -246,8 +253,9 @@ class _CommonBottomNavCardState extends ConsumerState<CommonBottomNavCard> {
                     ),
                     child: Padding(
                       padding:
-                          EdgeInsets.symmetric(horizontal: 14.w, vertical: 7.h),
+                          EdgeInsets.symmetric(horizontal: 14.w, vertical: 9.h),
                       child: Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
                           ImageUtil.loadAssetImage(
                             imageUrl: imagePath['scanner_image'] ?? '',

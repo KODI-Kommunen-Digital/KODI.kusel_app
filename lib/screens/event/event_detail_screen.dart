@@ -74,17 +74,6 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
               _buildBody(context, state),
               if (isLoading) CustomProgressBar(),
               Positioned(
-                top: 30,
-                left: 20,
-                child: ArrowBackWidget(
-                  onTap: () {
-                    ref
-                        .read(navigationProvider)
-                        .removeTopPage(context: context);
-                  },
-                ),
-              ),
-              Positioned(
                   bottom: 16.h,
                   left: 16.w,
                   right: 16.w,
@@ -136,7 +125,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
               imageUrl: state.eventDetails.logo ??
                   'https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg',
               sourceId: state.eventDetails.sourceId,
-              isBackArrowEnabled: false,
+              isBackArrowEnabled: true,
               imageFit: BoxFit.fill,
               isStaticImage: false),
           _buildEventsUi(state),
@@ -552,10 +541,11 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
           Padding(
             padding: EdgeInsets.only(left: 20.w),
             child: textBoldPoppins(
-                text: AppLocalizations.of(context).recommendations,
+                text: AppLocalizations.of(context).our_recommendations,
                 fontSize: 16,
                 color: Theme.of(context).textTheme.bodyLarge?.color),
           ),
+          4.verticalSpace,
           ListView(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
