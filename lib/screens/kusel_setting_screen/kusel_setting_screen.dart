@@ -132,9 +132,9 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
                   () {}),
               _buildTextSettingCard(
                   context,
-                  AppLocalizations.of(context).rubber_stamp,
-                  state.totalStamp.toString(),
                   AppLocalizations.of(context).treasure_pass,
+                  state.totalStamp.toString(),
+                  AppLocalizations.of(context).rubber_stamp,
                   () {}),
             ],
           ),
@@ -200,7 +200,7 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
             ),
             16.verticalSpace,
             Padding(
-              padding: const EdgeInsets.only(right: 28.0),
+              padding: const EdgeInsets.only(right: 34.0),
               child: textRegularMontserrat(
                   text: tileTitle,
                   color: Theme.of(context).textTheme.displayMedium!.color,
@@ -236,11 +236,14 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
                     context: context,
                     fit: BoxFit.contain)),
             16.verticalSpace,
-            textRegularMontserrat(
-                text: tileTitle,
-                color: Theme.of(context).textTheme.displayMedium!.color,
-                fontSize: 12,
-                textOverflow: TextOverflow.visible)
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: textRegularMontserrat(
+                  text: tileTitle,
+                  color: Theme.of(context).textTheme.displayMedium!.color,
+                  fontSize: 12,
+                  textOverflow: TextOverflow.visible),
+            )
           ],
         ),
       ),

@@ -35,7 +35,7 @@ class _CustomSelectionButtonState extends ConsumerState<CustomSelectionButton> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            textRegularPoppins(
+            textSemiBoldMontserrat(
                 text: widget.text,
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
