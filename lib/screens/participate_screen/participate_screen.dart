@@ -58,7 +58,7 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
                     clipperType: DownstreamCurveClipper(),
                     imageUrl: state.participateData?.imageUrl ??
                         'https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg',
-                    isBackArrowEnabled: false,
+                    isBackArrowEnabled: true,
                     isStaticImage: false),
                 _buildParticipateDescription(),
                 _buildParticipateList(),
@@ -84,15 +84,6 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
                       .navigateUsingPath(path: feedbackScreenPath, context: context);
                 })
               ],
-            ),
-          ),
-          Positioned(
-            top: 30.h,
-            left: 12.h,
-            child: ArrowBackWidget(
-              onTap: () {
-                ref.read(navigationProvider).removeTopPage(context: context);
-              },
             ),
           ),
         ],

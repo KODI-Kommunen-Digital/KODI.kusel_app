@@ -47,12 +47,9 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Padding(
-        padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 18.h),
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: _buildDashboardUi(),
-        ),
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: _buildDashboardUi(),
       ),
     ).loaderDialog(context, ref.watch(onboardingScreenProvider).isLoading);
   }
@@ -65,18 +62,21 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
           fit: BoxFit.cover,
         ),
       ),
-      child: Stack(
-        children: [
-          ref.read(onboardingScreenProvider).isResident
-              ? _buildResidentUi()
-              : _buildTouristUi(),
-          Positioned(
-            bottom: 10,
-            left: 0,
-            right: 0,
-            child: _buildBottomUi(),
-          ),
-        ],
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 18.h),
+        child: Stack(
+          children: [
+            ref.read(onboardingScreenProvider).isResident
+                ? _buildResidentUi()
+                : _buildTouristUi(),
+            Positioned(
+              bottom: 10,
+              left: 0,
+              right: 0,
+              child: _buildBottomUi(),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -306,7 +306,7 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingOptionPage> {
       child: SearchStringWidget(
         key: _searchWidgetKey,
         searchController: _searchController,
-        isPaddingEnabled: true,
+        isPaddingEnabled: false,
         suggestionCallback: (pattern) async {
           final list = state.residenceList;
           if (list.isEmpty) return [];
@@ -480,7 +480,7 @@ class _ResidenceSearchWidgetState extends ConsumerState<ResidenceSearchWidget> {
       child: SearchStringWidget(
         key: _searchWidgetKey,
         searchController: _searchController,
-        isPaddingEnabled: true,
+        isPaddingEnabled: false,
         suggestionCallback: (pattern) async {
           final list = state.residenceList;
           if (list.isEmpty) return [];

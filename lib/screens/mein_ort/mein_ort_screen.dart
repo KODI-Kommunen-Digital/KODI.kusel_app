@@ -199,7 +199,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
       padding: EdgeInsets.only(left: 16.w, top: 10.h, bottom: 10.h),
       child: Column(
         children: [
-          20.verticalSpace,
+          15.verticalSpace,
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 8.w),
             child: Row(
@@ -212,7 +212,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
                       child: textRegularPoppins(
                           text: AppLocalizations.of(context)
                               .associated_municipalities,
-                          fontSize: 16,
+                          fontSize: 15,
                           fontWeight: FontWeight.w600,
                           color: Theme.of(context).textTheme.bodyLarge?.color),
                     ),
@@ -387,6 +387,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
               ),
             ),
           ),
+          15.verticalSpace,
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),

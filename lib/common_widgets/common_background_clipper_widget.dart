@@ -124,6 +124,7 @@ class _CommonBackgroundClipperWidgetState
                           ? 1
                           : 0,
                       child: ArrowBackWidget(
+                        size: 15.h.w,
                         onTap: () {
                           ref
                               .read(navigationProvider)
