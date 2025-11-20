@@ -36,19 +36,20 @@ import 'package:domain/usecase/user_detail/user_detail_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/providers/guest_user_login_provider.dart';
+import 'package:kusel/providers/refresh_token_provider.dart';
 import 'package:kusel/screens/onboarding/onboarding_screen_state.dart';
 
 import '../../common_widgets/city_type_constant.dart';
 import '../../common_widgets/get_current_location.dart';
 
 final onboardingScreenProvider = StateNotifierProvider<
-        OnboardingScreenController, OnboardingScreenState>(
-    (ref) => OnboardingScreenController(
+    OnboardingScreenController, OnboardingScreenState>(
+        (ref) => OnboardingScreenController(
         onboardingUserTypeUseCase: ref.read(onboardingUserTypeUseCaseProvider),
         onboardingUserDemographicsUseCase:
-            ref.read(onboardingUserDemographicsUseCaseProvider),
+        ref.read(onboardingUserDemographicsUseCaseProvider),
         onboardingUserInterestsUseCase:
-            ref.read(onboardingUserInterestsUseCaseProvider),
+        ref.read(onboardingUserInterestsUseCaseProvider),
         getCityDetailsUseCase: ref.read(getCityDetailsUseCaseProvider),
         getInterestsUseCase: ref.read(getInterestsUseCaseProvider),
         onboardingCompleteUseCase: ref.read(onboardingCompleteUseCaseProvider),
@@ -59,24 +60,26 @@ final onboardingScreenProvider = StateNotifierProvider<
         signInStatusController: ref.read(signInStatusProvider.notifier),
         editUserDetailUseCase: ref.read(editUserDetailUseCaseProvider),
         userDetailUseCase: ref.read(userDetailUseCaseProvider),
-        guestUserLogin: ref.read(guestUserLoginProvider)));
+        guestUserLogin: ref.read(guestUserLoginProvider),
+        refreshTokenProvider: ref.read(refreshTokenProvider)));
 
 class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   OnboardingScreenController(
       {required this.onboardingUserTypeUseCase,
-      required this.onboardingUserDemographicsUseCase,
-      required this.onboardingUserInterestsUseCase,
-      required this.getCityDetailsUseCase,
-      required this.getInterestsUseCase,
-      required this.onboardingCompleteUseCase,
-      required this.onboardingDetailsUseCase,
-      required this.tokenStatus,
-      required this.refreshTokenUseCase,
-      required this.sharedPreferenceHelper,
-      required this.signInStatusController,
-      required this.editUserDetailUseCase,
-      required this.userDetailUseCase,
-      required this.guestUserLogin})
+        required this.onboardingUserDemographicsUseCase,
+        required this.onboardingUserInterestsUseCase,
+        required this.getCityDetailsUseCase,
+        required this.getInterestsUseCase,
+        required this.onboardingCompleteUseCase,
+        required this.onboardingDetailsUseCase,
+        required this.tokenStatus,
+        required this.refreshTokenUseCase,
+        required this.sharedPreferenceHelper,
+        required this.signInStatusController,
+        required this.editUserDetailUseCase,
+        required this.userDetailUseCase,
+        required this.guestUserLogin,
+        required this.refreshTokenProvider})
       : super(OnboardingScreenState.empty());
   OnboardingUserTypeUseCase onboardingUserTypeUseCase;
   OnboardingUserDemographicsUseCase onboardingUserDemographicsUseCase;
@@ -95,6 +98,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   EditUserDetailUseCase editUserDetailUseCase;
   UserDetailUseCase userDetailUseCase;
   GuestUserLogin guestUserLogin;
+  RefreshTokenProvider refreshTokenProvider;
 
   Future<void> initialCall() async {
     state = state.copyWith(isLoading: true);
@@ -194,7 +198,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
           hasForum: false, type: CityTypeConstant.city.name);
       GetCityDetailsResponseModel responseModel = GetCityDetailsResponseModel();
       final result =
-          await getCityDetailsUseCase.call(requestModel, responseModel);
+      await getCityDetailsUseCase.call(requestModel, responseModel);
 
       result.fold((l) {
         debugPrint('get city details fold exception : $l');
@@ -227,7 +231,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
           RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
           RefreshTokenRequestModel requestModel = RefreshTokenRequestModel();
           final result =
-              await refreshTokenUseCase.call(requestModel, responseModel);
+          await refreshTokenUseCase.call(requestModel, responseModel);
           result.fold((l) {
             state = state.copyWith(loading: false);
           }, (right) async {
@@ -238,9 +242,9 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
                 refreshTokenKey, res.data?.refreshToken ?? "");
 
             OnboardingUserTypeRequestModel onboardingUserTypeRequestModel =
-                OnboardingUserTypeRequestModel(userType: userType);
+            OnboardingUserTypeRequestModel(userType: userType);
             OnboardingUserTypeResponseModel onboardingUserTypeResponseModel =
-                OnboardingUserTypeResponseModel();
+            OnboardingUserTypeResponseModel();
             final r = await onboardingUserTypeUseCase.call(
                 onboardingUserTypeRequestModel,
                 onboardingUserTypeResponseModel);
@@ -252,9 +256,9 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
           });
         } else {
           OnboardingUserTypeRequestModel onboardingUserTypeRequestModel =
-              OnboardingUserTypeRequestModel(userType: userType);
+          OnboardingUserTypeRequestModel(userType: userType);
           OnboardingUserTypeResponseModel onboardingUserTypeResponseModel =
-              OnboardingUserTypeResponseModel();
+          OnboardingUserTypeResponseModel();
           final r = await onboardingUserTypeUseCase.call(
               onboardingUserTypeRequestModel, onboardingUserTypeResponseModel);
           r.fold((l) {
@@ -273,8 +277,8 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     String maritalStatus = state.isSingle
         ? "alone"
         : state.isForTwo
-            ? "married"
-            : "with_family";
+        ? "married"
+        : "with_family";
     final accommodationPreference = <String>[
       if (state.isWithDog) "dog",
       if (state.isBarrierearm) "low_barrier",
@@ -291,7 +295,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
         RefreshTokenRequestModel requestModel = RefreshTokenRequestModel();
         final result =
-            await refreshTokenUseCase.call(requestModel, responseModel);
+        await refreshTokenUseCase.call(requestModel, responseModel);
         result.fold((l) {
           state = state.copyWith(loading: false);
         }, (right) async {
@@ -301,14 +305,14 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
           sharedPreferenceHelper.setString(
               refreshTokenKey, res.data?.refreshToken ?? "");
           OnboardingUserDemographicsRequestModel
-              onboardingUserDemographicsRequestModel =
-              OnboardingUserDemographicsRequestModel(
-                  maritalStatus: maritalStatus,
-                  accommodationPreference: accommodationPreference,
-                  cityId: cityId);
+          onboardingUserDemographicsRequestModel =
+          OnboardingUserDemographicsRequestModel(
+              maritalStatus: maritalStatus,
+              accommodationPreference: accommodationPreference,
+              cityId: cityId);
           OnboardingUserDemographicsResponseModel
-              onboardingUserDemographicsResponseModel =
-              OnboardingUserDemographicsResponseModel();
+          onboardingUserDemographicsResponseModel =
+          OnboardingUserDemographicsResponseModel();
           final r = await onboardingUserDemographicsUseCase.call(
               onboardingUserDemographicsRequestModel,
               onboardingUserDemographicsResponseModel);
@@ -321,14 +325,14 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
         });
       } else {
         OnboardingUserDemographicsRequestModel
-            onboardingUserDemographicsRequestModel =
-            OnboardingUserDemographicsRequestModel(
-                maritalStatus: maritalStatus,
-                accommodationPreference: accommodationPreference,
-                cityId: cityId);
+        onboardingUserDemographicsRequestModel =
+        OnboardingUserDemographicsRequestModel(
+            maritalStatus: maritalStatus,
+            accommodationPreference: accommodationPreference,
+            cityId: cityId);
         OnboardingUserDemographicsResponseModel
-            onboardingUserDemographicsResponseModel =
-            OnboardingUserDemographicsResponseModel();
+        onboardingUserDemographicsResponseModel =
+        OnboardingUserDemographicsResponseModel();
         final r = await onboardingUserDemographicsUseCase.call(
             onboardingUserDemographicsRequestModel,
             onboardingUserDemographicsResponseModel);
@@ -345,61 +349,45 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
 
   Future<void> submitUserInterests(void Function() onSuccess) async {
     try {
+      final response = tokenStatus.isAccessTokenExpired();
+      if (response) {
+        await refreshTokenProvider.getNewToken(
+            onError: () {},
+            onSuccess: () {
+              _submitUserInterests(onSuccess);
+            });
+      } else {
+        _submitUserInterests(onSuccess);
+      }
+    } catch (error) {
+      debugPrint('update onboarding user interests exception : $error');
+    }
+  }
+
+  _submitUserInterests(void Function() onSuccess) async {
+    try {
       Map<int, bool> interestSMap = state.interestsMap;
       List<int> interestIds = interestSMap.entries
           .where((interest) => interest.value)
           .map((interest) => interest.key)
           .toList();
 
-      final response = tokenStatus.isAccessTokenExpired();
-      if (response) {
-        RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
-        RefreshTokenRequestModel requestModel = RefreshTokenRequestModel();
-        final result =
-            await refreshTokenUseCase.call(requestModel, responseModel);
-        result.fold((l) {
-          state = state.copyWith(loading: false);
-        }, (right) async {
-          final res = right as RefreshTokenResponseModel;
-          sharedPreferenceHelper.setString(
-              tokenKey, res.data?.accessToken ?? "");
-          sharedPreferenceHelper.setString(
-              refreshTokenKey, res.data?.refreshToken ?? "");
-
-          OnboardingUserInterestsRequestModel
-              onboardingUserInterestsRequestModel =
-              OnboardingUserInterestsRequestModel(interestIds: interestIds);
-          OnboardingUserInterestsResponseModel
-              onboardingUserInterestsResponseModel =
-              OnboardingUserInterestsResponseModel();
-          final r = await onboardingUserInterestsUseCase.call(
-              onboardingUserInterestsRequestModel,
-              onboardingUserInterestsResponseModel);
-          r.fold((l) {
-            debugPrint('update onboarding user interests fold exception : $l');
-          }, (r) async {
-            final result = r as OnboardingUserInterestsResponseModel;
-          });
-        });
-      } else {
-        OnboardingUserInterestsRequestModel
-            onboardingUserInterestsRequestModel =
-            OnboardingUserInterestsRequestModel(interestIds: interestIds);
-        OnboardingUserInterestsResponseModel
-            onboardingUserInterestsResponseModel =
-            OnboardingUserInterestsResponseModel();
-        final r = await onboardingUserInterestsUseCase.call(
-            onboardingUserInterestsRequestModel,
-            onboardingUserInterestsResponseModel);
-        r.fold((l) {
-          debugPrint('update onboarding user interests fold exception : $l');
-        }, (r) async {
-          final result = r as OnboardingUserInterestsResponseModel;
-          onSuccess();
-        });
-      }
+      OnboardingUserInterestsRequestModel onboardingUserInterestsRequestModel =
+      OnboardingUserInterestsRequestModel(interestIds: interestIds);
+      OnboardingUserInterestsResponseModel
+      onboardingUserInterestsResponseModel =
+      OnboardingUserInterestsResponseModel();
+      final r = await onboardingUserInterestsUseCase.call(
+          onboardingUserInterestsRequestModel,
+          onboardingUserInterestsResponseModel);
+      r.fold((l) {
+        debugPrint('update onboarding user interests fold exception : $l');
+      }, (r) async {
+        final result = r as OnboardingUserInterestsResponseModel;
+        onSuccess();
+      });
     } catch (error) {
-      debugPrint('update onboarding user interests exception : $error');
+      rethrow;
     }
   }
 
@@ -411,7 +399,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
         RefreshTokenRequestModel requestModel = RefreshTokenRequestModel();
         final result =
-            await refreshTokenUseCase.call(requestModel, responseModel);
+        await refreshTokenUseCase.call(requestModel, responseModel);
         result.fold((l) {
           state = state.copyWith(loading: false);
         }, (right) async {
@@ -422,9 +410,9 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
               refreshTokenKey, res.data?.refreshToken ?? "");
           EmptyRequest requestModel = EmptyRequest();
           OnboardingCompleteResponseModel responseModel =
-              OnboardingCompleteResponseModel();
+          OnboardingCompleteResponseModel();
           final r =
-              await onboardingCompleteUseCase.call(requestModel, responseModel);
+          await onboardingCompleteUseCase.call(requestModel, responseModel);
           r.fold((l) {
             debugPrint('onboarding complete fold exception : $l');
           }, (r) async {
@@ -434,9 +422,9 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
       } else {
         EmptyRequest requestModel = EmptyRequest();
         OnboardingCompleteResponseModel responseModel =
-            OnboardingCompleteResponseModel();
+        OnboardingCompleteResponseModel();
         final r =
-            await onboardingCompleteUseCase.call(requestModel, responseModel);
+        await onboardingCompleteUseCase.call(requestModel, responseModel);
         r.fold((l) {
           debugPrint('onboarding complete fold exception : $l');
         }, (r) async {
@@ -450,7 +438,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
 
   bool isAllOptionFieldsCompleted() {
     bool martialStatusFilled =
-        (!state.isSingle && !state.isForTwo && !state.isWithFamily);
+    (!state.isSingle && !state.isForTwo && !state.isWithFamily);
     return martialStatusFilled;
   }
 
@@ -535,19 +523,18 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   // }
 
   Future<void> startLoadingTimer(Function() callBack) async {
-      await updateOnboardingSuccess();
+    await updateOnboardingSuccess();
     Future.delayed(const Duration(seconds: 2), () {
       callBack();
     });
   }
-
 
   Future<void> getInterests() async {
     try {
       EmptyRequest requestModel = EmptyRequest();
       GetInterestsResponseModel responseModel = GetInterestsResponseModel();
       final result =
-          await getInterestsUseCase.call(requestModel, responseModel);
+      await getInterestsUseCase.call(requestModel, responseModel);
 
       result.fold((l) {
         debugPrint('get interests fold exception : $l');
@@ -579,15 +566,15 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
         final refreshResponse =
-            await refreshTokenUseCase.call(requestModel, responseModel);
+        await refreshTokenUseCase.call(requestModel, responseModel);
 
         bool refreshSuccess = await refreshResponse.fold(
-          (left) {
+              (left) {
             debugPrint(
                 'refresh token onboarding details fold exception : $left');
             return false;
           },
-          (right) async {
+              (right) async {
             final res = right as RefreshTokenResponseModel;
             sharedPreferenceHelper.setString(
                 tokenKey, res.data?.accessToken ?? "");
@@ -605,9 +592,9 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
 
       EmptyRequest requestModel = EmptyRequest();
       OnboardingDetailsResponseModel responseModel =
-          OnboardingDetailsResponseModel();
+      OnboardingDetailsResponseModel();
       final result =
-          await onboardingDetailsUseCase.call(requestModel, responseModel);
+      await onboardingDetailsUseCase.call(requestModel, responseModel);
 
       result.fold((l) {
         debugPrint('get onboarding details fold exception : $l');
@@ -651,11 +638,11 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
         onboardingData.maritalStatus!.isNotEmpty) {
       state = switch (onboardingData.maritalStatus) {
         "alone" =>
-          state.copyWith(isSingle: true, isForTwo: false, isWithFamily: false),
+            state.copyWith(isSingle: true, isForTwo: false, isWithFamily: false),
         "married" =>
-          state.copyWith(isForTwo: true, isSingle: false, isWithFamily: false),
+            state.copyWith(isForTwo: true, isSingle: false, isWithFamily: false),
         "with_family" =>
-          state.copyWith(isWithFamily: true, isSingle: false, isForTwo: false),
+            state.copyWith(isWithFamily: true, isSingle: false, isForTwo: false),
         _ => state,
       };
       debugPrint('Loaded marital status: ${onboardingData.maritalStatus}');
@@ -718,13 +705,9 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
 
   Future<void> isLoggedIn() async {
     final status = await signInStatusController.isUserLoggedIn();
-    final isGuestUserAvailable = sharedPreferenceHelper.getInt(
-        userIdKey)!=null;
-
-    if(!status && isGuestUserAvailable)
-      {
-        await guestUserLogin.getGuestUserToken();
-      }
+    if (!status) {
+      await guestUserLogin.getGuestUserToken();
+    }
 
     state = state.copyWith(isLoggedIn: status);
   }
@@ -736,22 +719,22 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
 
   Future<void> editUserName(
       {required void Function() onSuccess,
-      required void Function(String msg) onError}) async {
+        required void Function(String msg) onError}) async {
     final response = tokenStatus.isAccessTokenExpired();
     if (response) {
       RefreshTokenRequestModel requestModel = RefreshTokenRequestModel();
       RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
       final refreshResponse =
-          await refreshTokenUseCase.call(requestModel, responseModel);
+      await refreshTokenUseCase.call(requestModel, responseModel);
 
       bool refreshSuccess = await refreshResponse.fold(
-        (left) {
+            (left) {
           debugPrint(
               'refresh token edit profile details fold exception : $left');
           return false;
         },
-        (right) async {
+            (right) async {
           final res = right as RefreshTokenResponseModel;
           sharedPreferenceHelper.setString(
               tokenKey, res.data?.accessToken ?? "");
@@ -768,12 +751,12 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
     }
 
     EditUserDetailRequestModel editUserDetailRequestModel =
-        EditUserDetailRequestModel();
+    EditUserDetailRequestModel();
     editUserDetailRequestModel.firstname = state.userFirstName;
 
     try {
       EditUserDetailsResponseModel editUserDetailsResponseModel =
-          EditUserDetailsResponseModel();
+      EditUserDetailsResponseModel();
       final result = await editUserDetailUseCase.call(
           editUserDetailRequestModel, editUserDetailsResponseModel);
       result.fold((l) {
@@ -800,7 +783,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
         RefreshTokenRequestModel requestModel = RefreshTokenRequestModel();
         final result =
-            await refreshTokenUseCase.call(requestModel, responseModel);
+        await refreshTokenUseCase.call(requestModel, responseModel);
 
         result.fold((l) {
           state = state.copyWith(loading: false);
@@ -814,7 +797,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
           UserDetailRequestModel requestModel = UserDetailRequestModel();
           UserDetailResponseModel responseModel = UserDetailResponseModel();
           final result =
-              await userDetailUseCase.call(requestModel, responseModel);
+          await userDetailUseCase.call(requestModel, responseModel);
           result.fold((l) {
             debugPrint('get user details fold exception : $l');
           }, (r) async {
@@ -829,7 +812,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
         UserDetailRequestModel requestModel = UserDetailRequestModel();
         UserDetailResponseModel responseModel = UserDetailResponseModel();
         final result =
-            await userDetailUseCase.call(requestModel, responseModel);
+        await userDetailUseCase.call(requestModel, responseModel);
 
         result.fold((l) {
           debugPrint('get user details fold exception : $l');
