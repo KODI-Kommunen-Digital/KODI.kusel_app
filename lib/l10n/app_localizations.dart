@@ -2083,6 +2083,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Name must be at least 3 characters long'**
   String get name_char_allowed_msg;
+
+  /// No description provided for @feedback_setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback'**
+  String get feedback_setting;
+
+  /// No description provided for @all_events_filter.
+  ///
+  /// In en, this message translates to:
+  /// **'All events'**
+  String get all_events_filter;
+
+  /// No description provided for @our_recommendations.
+  ///
+  /// In en, this message translates to:
+  /// **'Our Recommendations'**
+  String get our_recommendations;
 }
 
 class _AppLocalizationsDelegate

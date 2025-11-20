@@ -85,7 +85,7 @@ class WordTimerComponent extends PositionComponent with HasGameRef {
     const horizontalPaddingInside = 20.0;
     const verticalPaddingTop = 60.0;
     const verticalPaddingBottom = 60.0;
-    const topMargin = 20.0;
+    const topMargin = 9.0;
     const circleRadius = 35.0;
     const horizontalScreenPadding = 14.0;
     const extraCardHeight = 20.0;
@@ -194,7 +194,7 @@ class WordTimerComponent extends PositionComponent with HasGameRef {
     final totalContentHeight =
         textPainter.height + spaceBetweenTextAndCircle + (circleRadius * 2);
 
-    final topOffset = (size.y - totalContentHeight) / 2;
+    final topOffset = (size.y - totalContentHeight) / 2 + 10;
 
     final textOffset = Offset((size.x - textPainter.width) / 2, topOffset);
     textPainter.paint(canvas, textOffset);
@@ -206,13 +206,13 @@ class WordTimerComponent extends PositionComponent with HasGameRef {
     final circleBgPaint = Paint()
       ..color = const Color(0xFFEAEBF3)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 8;
+      ..strokeWidth = 9;
     canvas.drawCircle(center, circleRadius, circleBgPaint);
 
     final progressPaint = Paint()
       ..color = timerColor
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 8
+      ..strokeWidth = 4
       ..strokeCap = StrokeCap.round;
     canvas.drawArc(
       Rect.fromCircle(center: center, radius: circleRadius),

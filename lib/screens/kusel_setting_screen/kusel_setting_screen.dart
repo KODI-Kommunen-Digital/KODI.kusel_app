@@ -320,7 +320,7 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
                     path: '$kuselSettingScreenPath/$subShellFeedbackScreenPath',
                     context: context);
               },
-              title: AppLocalizations.of(context).feedback,
+              title: AppLocalizations.of(context).feedback_setting,
               hasTopRadius: false,
               hasBottomRadius: false,
               borderRadius: borderRadius),

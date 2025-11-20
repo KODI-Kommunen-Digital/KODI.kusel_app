@@ -77,14 +77,14 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
   _buildMobilityDescription() {
     final state = ref.watch(mobilityScreenProvider);
     return Padding(
-      padding: EdgeInsets.all(12.h.w),
+      padding: EdgeInsets.all(16.h.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           textBoldPoppins(
               color: Theme.of(context).textTheme.bodyLarge?.color,
               text: state.mobilityData?.title ?? "_",
-              fontSize: 18),
+              fontSize: 20),
           10.verticalSpace,
           textRegularMontserrat(
               textAlign: TextAlign.start,
@@ -118,11 +118,14 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          textBoldPoppins(
-              text: AppLocalizations.of(context).our_offers,
-              textAlign: TextAlign.start,
-              color: Theme.of(context).textTheme.bodyLarge?.color,
-              fontSize: 16),
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: textBoldPoppins(
+                text: AppLocalizations.of(context).our_offers,
+                textAlign: TextAlign.start,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
+                fontSize: 16),
+          ),
           14.verticalSpace,
           if (state.mobilityData != null &&
               state.mobilityData!.servicesOffered!.isNotEmpty)
@@ -185,11 +188,14 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           20.verticalSpace,
-          textBoldPoppins(
-            textAlign: TextAlign.start,
-            color: Theme.of(context).textTheme.bodyLarge?.color,
-            text: AppLocalizations.of(context).your_contact_persons,
-            fontSize: 14,
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: textBoldPoppins(
+              textAlign: TextAlign.start,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
+              text: AppLocalizations.of(context).your_contact_persons,
+              fontSize: 14,
+            ),
           ),
           15.verticalSpace,
           if (state.mobilityData != null &&

@@ -85,8 +85,8 @@ class _DigifitVideoPlayerWidgetState
               left: 0.w,
               right: 0.w,
               child: Material(
-                elevation: 0,
-                color: Colors.transparent,  // <-- YE ADD KARO
+                elevation: 6,
+                color: Colors.transparent,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(16.r),
                   topRight: Radius.circular(16.r),

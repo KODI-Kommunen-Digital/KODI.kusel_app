@@ -333,5 +333,8 @@
   "digifit_completed_top": "Abgeschlossen",
   "feedback_message": "Nachricht",
   "name_char_validation_msg": "Es sind nur Buchstaben und einzelne Leerzeichen zulässig.",
-  "name_char_allowed_msg": "Der Name muss mindestens 3 Zeichen lang sein."
+  "name_char_allowed_msg": "Der Name muss mindestens 3 Zeichen lang sein.",
+  "feedback_setting": "Feedback",
+  "all_events_filter": "Alle Veranstaltungen",
+  "our_recommendations": "Unsere Empfehlungen"
 }
