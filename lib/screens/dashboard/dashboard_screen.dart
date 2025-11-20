@@ -186,8 +186,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             height: 14.h,
                             width: 15.w,
                             fit: BoxFit.contain,
-                            imageUrl: imagePath['location_icon'] ?? "",
-                            color: selectedIndex == 3
+                                  imageUrl: selectedIndex == 3
+                                      ? imagePath['location_icon_selected'] ??
+                                          ""
+                                      : imagePath['location_icon'] ?? "",
+                                  color: selectedIndex == 3
                                 ? Theme.of(context).indicatorColor
                                 : Theme.of(context).colorScheme.onPrimary,
                           ),
@@ -202,7 +205,10 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                             height: 11.h,
                             width: 12.w,
                             fit: BoxFit.contain,
-                            imageUrl: imagePath['location_icon'] ?? "",
+                            imageUrl: selectedIndex == 3
+                                ? imagePath['location_icon_selected'] ??
+                                ""
+                                : imagePath['location_icon'] ?? "",
                             color: selectedIndex == 3
                                 ? Theme.of(context).indicatorColor
                                 : Theme.of(context).colorScheme.onPrimary,
