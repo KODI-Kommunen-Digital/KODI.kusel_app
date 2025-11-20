@@ -58,6 +58,7 @@ class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
             Padding(
               padding: EdgeInsets.all(5.h.w),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start, // Add this
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
@@ -70,48 +71,59 @@ class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
                   ),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        textRegularMontserrat(
-                            text: widget.heading,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
-                            color:
-                                Theme.of(context).textTheme.labelMedium?.color),
-                        4.verticalSpace,
-                        textSemiBoldMontserrat(
-                            text: widget.title,
-                            textAlign: TextAlign.start,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                            color: Theme.of(context).textTheme.bodyLarge?.color,
-                            textOverflow: TextOverflow.visible),
-                        4.verticalSpace,
-                        Visibility(
-                          visible: (widget.description != null),
-                          child: textRegularMontserrat(
-                              text: widget.description ?? '',
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 8.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          textRegularMontserrat(
+                              text: widget.heading,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
                               color: Theme.of(context)
                                   .textTheme
                                   .labelMedium
                                   ?.color),
-                        ),
-                      ],
+                          4.verticalSpace,
+                          textSemiBoldMontserrat(
+                              text: widget.title,
+                              textAlign: TextAlign.start,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge?.color,
+                              textOverflow: TextOverflow.visible),
+                          4.verticalSpace,
+                          Visibility(
+                            visible: (widget.description != null),
+                            child: textRegularMontserrat(
+                                text: widget.description ?? '',
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .labelMedium
+                                    ?.color),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  Visibility(
-                    visible: widget.isFavouriteVisible,
-                    child: IconButton(
-                      onPressed: widget.onFavorite,
-                      icon: Icon(
-                        size: DeviceHelper.isMobile(context) ? null : 12.h.w,
-                        widget.isFavorite
-                            ? Icons.favorite_sharp
-                            : Icons.favorite_border,
-                        color: !widget.isFavorite
-                            ? Theme.of(context).primaryColor
-                            : Theme.of(context).colorScheme.onTertiaryFixed,
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Visibility(
+                      visible: widget.isFavouriteVisible,
+                      child: IconButton(
+                        onPressed: widget.onFavorite,
+                        icon: Icon(
+                          size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                          widget.isFavorite
+                              ? Icons.favorite_sharp
+                              : Icons.favorite_border,
+                          color: !widget.isFavorite
+                              ? Theme.of(context).primaryColor
+                              : Theme.of(context).colorScheme.onTertiaryFixed,
+                        ),
                       ),
                     ),
                   ),
@@ -127,7 +139,6 @@ class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
                   child: Container(
                     height: 32.h,
                     width: 40.w,
-
                     decoration: BoxDecoration(
                         color: Theme.of(context).indicatorColor,
                         borderRadius: BorderRadius.only(

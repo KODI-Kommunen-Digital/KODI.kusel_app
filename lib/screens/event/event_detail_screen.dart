@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
 import 'package:kusel/common_widgets/custom_shimmer_widget.dart';
@@ -410,58 +411,108 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
   }
 
   Widget _buildExpandedTile(EventDetailScreenState state) {
+    final start = DateTime.tryParse(state.eventDetails.startDate ?? "");
+    final end = DateTime.tryParse(state.eventDetails.endDate ?? "");
+
+    if (start == null || end == null) {
+      return SizedBox.shrink();
+    }
+
+    // TODO: Remove this temporary logic for translating weekdays on the frontend.
+    // This is only a quick fix for now, which is why it is handled in the FE.
+
+    List<DateTime> allDates = [];
+    DateTime curr = start;
+    while (!curr.isAfter(end)) {
+      allDates.add(curr);
+      curr = curr.add(const Duration(days: 1));
+    }
+
+    DateTime now = DateTime.now();
+    List<DateTime> upcoming = allDates.where((d) {
+      int idx = allDates.indexOf(d);
+      if (idx == 0) return false;
+      return !d.isBefore(DateTime(now.year, now.month, now.day));
+    }).toList();
+
+    if (start.year == end.year &&
+        start.month == end.month &&
+        start.day == end.day) {
+      return SizedBox.shrink();
+    }
+
+    if (upcoming.isEmpty) {
+      return SizedBox.shrink();
+    }
+
+    final lang = Localizations.localeOf(context).languageCode;
+
+    String localizedWeekDay(DateTime date) {
+      String englishDay = DateFormat('EEEE', 'en').format(date);
+
+      const germanMap = {
+        'Monday': 'Montag',
+        'Tuesday': 'Dienstag',
+        'Wednesday': 'Mittwoch',
+        'Thursday': 'Donnerstag',
+        'Friday': 'Freitag',
+        'Saturday': 'Samstag',
+        'Sunday': 'Sonntag',
+      };
+
+      if (lang == "de") {
+        return germanMap[englishDay] ?? englishDay;
+      }
+
+      return englishDay;
+    }
+
     return ExpansionTile(
       tilePadding: EdgeInsets.zero,
       iconColor: Theme.of(context).primaryColor,
       visualDensity: VisualDensity.compact,
       expandedCrossAxisAlignment: CrossAxisAlignment.start,
       childrenPadding: EdgeInsets.zero,
-      title: textRegularPoppins(
+      title: Align(
+        alignment: Alignment.centerLeft,
+        child: textRegularPoppins(
           text: AppLocalizations.of(context).read_more,
           color: Theme.of(context).textTheme.bodyLarge?.color,
-          textAlign: TextAlign.start,
-          decoration: TextDecoration.underline),
+          decoration: TextDecoration.underline,
+        ),
+      ),
       children: [
         textBoldPoppins(
-            text: AppLocalizations.of(context).next_dates,
-            color: Theme.of(context).textTheme.bodyLarge?.color),
+          text: AppLocalizations.of(context).next_dates,
+          color: Theme.of(context).textTheme.bodyLarge?.color,
+        ),
         10.verticalSpace,
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: 6.h),
-          child: Row(
-            children: [
-              ImageUtil.loadSvgImage(
-                  imageUrl: imagePath['calendar_icon'] ?? '', context: context),
-              8.horizontalSpace,
-              textRegularMontserrat(
-                text:
-                    "${AppLocalizations.of(context).saturday}, ${KuselDateUtils.formatDate(ref.read(eventDetailScreenProvider(widget.eventScreenParams.eventId)).eventDetails.startDate ?? '')} \n${AppLocalizations.of(context).from} 6:30 - 22:00 ${AppLocalizations.of(context).clock}",
-                textOverflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.start,
-                color: Theme.of(context).textTheme.bodyLarge?.color,
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            vertical: 6.h,
-          ),
-          child: Row(
-            children: [
-              ImageUtil.loadSvgImage(
-                  imageUrl: imagePath['calendar_icon'] ?? '', context: context),
-              8.horizontalSpace,
-              textRegularMontserrat(
-                text:
-                    "${AppLocalizations.of(context).saturday}, ${KuselDateUtils.formatDate(ref.read(eventDetailScreenProvider(widget.eventScreenParams.eventId)).eventDetails.endDate ?? '')} \n${AppLocalizations.of(context).from} 6:30 - 22:00 ${AppLocalizations.of(context).clock}",
-                textOverflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.start,
-                color: Theme.of(context).textTheme.bodyLarge?.color,
-              ),
-            ],
-          ),
-        ),
+        ...upcoming.map((d) {
+          final dayName = localizedWeekDay(d);
+          final dateText = DateFormat('dd.MM.yyyy').format(d);
+          final fromText = AppLocalizations.of(context).from;
+          final clockText = AppLocalizations.of(context).clock;
+
+          return Padding(
+            padding: EdgeInsets.symmetric(vertical: 6.h),
+            child: Row(
+              children: [
+                ImageUtil.loadSvgImage(
+                  imageUrl: imagePath['calendar_icon'] ?? '',
+                  context: context,
+                ),
+                8.horizontalSpace,
+                textRegularMontserrat(
+                  text:
+                      "$dayName, $dateText\n$fromText ${DateFormat('HH:mm').format(start)} - ${DateFormat('HH:mm').format(end)} $clockText",
+                  textOverflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.start,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
+              ],
+            ),
+          );
+        }).toList(),
       ],
     );
   }
@@ -510,6 +561,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
             physics: NeverScrollableScrollPhysics(),
             children: state.recommendList.map((item) {
               return CommonEventCard(
+                boxFit: BoxFit.fill,
                 isFavorite: item.isFavorite ?? false,
                 imageUrl: item.logo ?? "",
                 date: item.startDate ?? "",
