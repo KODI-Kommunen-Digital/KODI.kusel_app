@@ -1023,4 +1023,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get feedback_message => 'message';
+
+  @override
+  String get name_char_validation_msg =>
+      'Only alphabets and single spaces are allowed';
+
+  @override
+  String get name_char_allowed_msg => 'Name must be at least 3 characters long';
 }

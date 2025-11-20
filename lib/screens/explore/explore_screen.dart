@@ -53,7 +53,7 @@ class _ExploreScreenState extends ConsumerState<ExploreScreen> {
                 clipperType: UpstreamWaveClipper(),
                 imageUrl: imagePath['background_image'] ?? "",
                 headingText: AppLocalizations.of(context).category_heading,
-                height: 110.h,
+                height: 105.h,
                 blurredBackground: true,
                 isStaticImage: true,
               ),

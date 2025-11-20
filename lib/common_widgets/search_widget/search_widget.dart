@@ -12,6 +12,7 @@ import 'package:kusel/common_widgets/device_helper.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/images_path.dart';
 
+import '../../l10n/app_localizations.dart';
 import '../../utility/kusel_date_utils.dart';
 import '../image_utility.dart';
 
@@ -38,10 +39,27 @@ class SearchWidget extends ConsumerStatefulWidget {
 
 class _SearchWidgetState extends ConsumerState<SearchWidget> {
   final FocusNode _focusNode = FocusNode();
+  final TextEditingController _internalController = TextEditingController();
+  bool _isItemSelected = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Sync with external controller if needed
+    _internalController.addListener(_syncWithExternalController);
+  }
+
+  void _syncWithExternalController() {
+    if (!_isItemSelected) {
+      widget.searchController.text = _internalController.text;
+    }
+  }
 
   @override
   void dispose() {
     _focusNode.dispose();
+    _internalController.removeListener(_syncWithExternalController);
+    _internalController.dispose();
     super.dispose();
   }
 
@@ -68,34 +86,37 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
               Expanded(
                 child: TypeAheadField<Listing>(
                   hideOnEmpty: true,
-                  hideOnUnfocus: false,
+                  hideOnUnfocus: false, // Keep this as false
                   hideOnSelect: true,
                   hideWithKeyboard: false,
                   direction: widget.verticalDirection ?? VerticalDirection.down,
                   debounceDuration: Duration(milliseconds: 1000),
-                  controller: widget.searchController,
+                  controller: _internalController, // Use internal controller
                   suggestionsCallback: widget.suggestionCallback,
                   decorationBuilder: (context, widget) {
-                    return Container(
-                      padding: super.widget.isPaddingEnabled
-                          ? EdgeInsets.symmetric(
-                              vertical: 10.h, horizontal: 5.w)
-                          : null,
-                      constraints: BoxConstraints(
-                          maxHeight: 250.h,
-                          maxWidth: double
-                              .infinity // Set max height here as per your UI
-                          ),
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                          borderRadius: BorderRadius.circular(10.r)),
-                      child: widget,
+                    return Card(
+                      elevation: 6,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.r)),
+                      child: Container(
+                        padding: super.widget.isPaddingEnabled
+                            ? EdgeInsets.symmetric(
+                            vertical: 10.h, horizontal: 5.w)
+                            : null,
+                        constraints: BoxConstraints(
+                            maxHeight: 250.h,
+                            maxWidth: double.infinity
+                        ),
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).canvasColor,
+                            borderRadius: BorderRadius.circular(6.r)),
+                        child: widget,
+                      ),
                     );
                   },
                   builder: (context, controller, focusNode) {
                     return TextField(
                       controller: controller,
-                      focusNode: focusNode, // Add this
+                      focusNode: _focusNode,
                       decoration: InputDecoration(
                           hintText: widget.hintText,
                           border: InputBorder.none,
@@ -105,51 +126,60 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                               fontWeight: FontWeight.w400,
                               color: Theme.of(context).hintColor,
                               fontStyle: FontStyle.italic)),
+                      onTap: () {
+                        // Ensure suggestions show on tap
+                        _isItemSelected = false;
+                      },
                       onSubmitted: (value) {
                         FocusScope.of(context).unfocus();
                       },
                     );
                   },
                   itemBuilder: (context, event) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 2.0, vertical: 2.0),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 8.0, vertical: 4.0),
-                        title: Align(
-                          alignment: Alignment.centerLeft,
-                          child: textRegularPoppins(
-                            text: event.title ?? "",
-                            fontSize: 16,
-                            color: Colors.black87,
-                            textAlign:
-                                TextAlign.start, // Ensure text is left-aligned
-                          ),
-                        ),
-                        subtitle: Padding(
-                          padding: const EdgeInsets.only(top: 4.0),
-                          child: Align(
+                    return Column(
+                      children: [
+                        ListTile(
+                          title: Align(
                             alignment: Alignment.centerLeft,
                             child: textRegularPoppins(
-                              text: KuselDateUtils.formatDate(
-                                  event.startDate ?? ""),
-                              fontSize: 14,
-                              color: Colors.grey[600],
-                              textAlign: TextAlign
-                                  .start, // Ensure text is left-aligned
+                              text: event.title ?? "",
+                              fontSize: 16,
+                              color: Theme.of(context).primaryColor,
+                              textAlign: TextAlign.start,
                             ),
                           ),
+                          subtitle: Padding(
+                            padding: const EdgeInsets.only(top: 4.0),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: textRegularPoppins(
+                                text: KuselDateUtils.formatDate(
+                                    event.startDate ?? ""),
+                                fontSize: 14,
+                                color: Colors.grey[600],
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
+                          ),
+                          trailing: Icon(
+                            color: Theme.of(context).primaryColor,
+                            Icons.arrow_forward_ios,
+                            size: 18,
+                          ),
                         ),
-                        trailing: Icon(
-                          Icons.arrow_forward_ios,
-                          size: 18,
+                        Divider(
+                          height: 1,
+                          thickness: 1,
+                          color: Theme.of(context).primaryColor,
                         ),
-                      ),
+                        2.verticalSpace
+                      ],
                     );
                   },
                   onSelected: (listing) {
+                    _isItemSelected = true;
                     widget.searchController.clear();
+                    _internalController.clear();
                     FocusScope.of(context).unfocus();
                     saveListingToPrefs(listing);
                     widget.onItemClick(listing);
@@ -165,7 +195,7 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
 
   saveListingToPrefs(Listing newListing) {
     final existingJson =
-        ref.read(sharedPreferenceHelperProvider).getString(searchListKey);
+    ref.read(sharedPreferenceHelperProvider).getString(searchListKey);
 
     List<Listing> currentListings = [];
     if (existingJson != null && existingJson.isNotEmpty) {
@@ -179,13 +209,12 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
       currentListings.removeAt(0);
     }
     final updatedJson =
-        jsonEncode(currentListings.map((e) => e.toJson()).toList());
+    jsonEncode(currentListings.map((e) => e.toJson()).toList());
     ref
         .read(sharedPreferenceHelperProvider)
         .setString(searchListKey, updatedJson);
   }
 }
-
 // TODO: This search widget is for the dropdown when sending a string.
 // TODO:- Currently using setState, but will be refactored for a better implementation.
 
@@ -287,7 +316,7 @@ class SearchStringWidgetState extends ConsumerState<SearchStringWidget> {
             ),
             child: Center(
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 14.0.w),
+                padding: EdgeInsets.only(left: 12.0.w, right: 0.w),
                 child: Row(
                   children: [
                     Expanded(
@@ -339,19 +368,24 @@ class SearchStringWidgetState extends ConsumerState<SearchStringWidget> {
                           return filteredResults;
                         },
                         itemBuilder: (context, suggestion) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 2, vertical: 2),
-                            child: ListTile(
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 4),
-                              title: Text(suggestion,
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black87,
-                                      fontFamily: "Poppins")),
-                              trailing: Icon(Icons.arrow_forward_ios, size: 18),
-                            ),
+                          return Column(
+                            children: [
+                              ListTile(
+                                title: textRegularPoppins(text: suggestion,
+                                        fontSize: 15,
+                          textAlign: TextAlign.left,
+                                        color: Theme.of(context).primaryColor),
+                                trailing: Icon(Icons.arrow_forward_ios,
+                                    size: 18,
+                                  color: Theme.of(context).primaryColor, // Blue text color
+                                ), // Blue icon color
+                              ),
+                              Divider(
+                                height: 1,
+                                thickness: 1,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                            ],
                           );
                         },
                         onSelected: (suggestion) {
@@ -362,7 +396,7 @@ class SearchStringWidgetState extends ConsumerState<SearchStringWidget> {
                             _hasResults = false;
                           });
                           _suggestionsController.close();
-                          _focusNode.unfocus(); // This will trigger _onFocusChange and remove the border
+                          _focusNode.unfocus();
                         },
                         builder: (context, controller, focusNode) {
                           return TextField(
@@ -371,7 +405,7 @@ class SearchStringWidgetState extends ConsumerState<SearchStringWidget> {
                             decoration: InputDecoration(
                               border: InputBorder.none,
                               hintText: widget.searchController.text.isEmpty
-                                  ? 'Search...'
+                                  ? '${AppLocalizations.of(context).search}...'
                                   : null,
                               hintStyle: TextStyle(
                                   fontSize: 12.sp,
@@ -399,7 +433,7 @@ class SearchStringWidgetState extends ConsumerState<SearchStringWidget> {
                                   _hasResults = false;
                                 });
                                 _suggestionsController.close();
-                                _focusNode.unfocus(); // Remove focus
+                                _focusNode.unfocus();
                               } else {
                                 setState(() {
                                   _showSuggestions = false;
@@ -417,17 +451,21 @@ class SearchStringWidgetState extends ConsumerState<SearchStringWidget> {
                         decorationBuilder: (context, widgetChild) {
                           if (!_showSuggestions || !_hasResults)
                             return SizedBox.shrink();
-                          return Container(
-                            padding: widget.isPaddingEnabled
-                                ? EdgeInsets.symmetric(
-                                vertical: 10.h, horizontal: 5.w)
-                                : null,
-                            constraints: BoxConstraints(
-                                maxHeight: 250.h, maxWidth: double.infinity),
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).scaffoldBackgroundColor,
-                                borderRadius: BorderRadius.circular(10.r)),
-                            child: widgetChild,
+                          return Card(
+                            elevation: 6,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.r)),
+                            child: Container(
+                              padding: widget.isPaddingEnabled
+                                  ? EdgeInsets.symmetric(
+                                  vertical: 10.h, horizontal: 5.w)
+                                  : null,
+                              constraints: BoxConstraints(
+                                  maxHeight: 250.h, maxWidth: double.infinity),
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).canvasColor,
+                                  borderRadius: BorderRadius.circular(6.r),),
+                              child: widgetChild,
+                            ),
                           );
                         },
                       ),

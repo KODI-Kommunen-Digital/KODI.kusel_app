@@ -718,8 +718,10 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
 
   Future<void> isLoggedIn() async {
     final status = await signInStatusController.isUserLoggedIn();
+    final isGuestUserAvailable = sharedPreferenceHelper.getInt(
+        userIdKey)!=null;
 
-    if(!status)
+    if(!status && isGuestUserAvailable)
       {
         await guestUserLogin.getGuestUserToken();
       }
