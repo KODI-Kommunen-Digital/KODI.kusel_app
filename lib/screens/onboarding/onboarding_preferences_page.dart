@@ -39,6 +39,11 @@ class _OnBoardingPreferencesPageState extends ConsumerState<OnBoardingPreference
   }
 
   @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     String userName  = ref.read(onboardingScreenProvider).userFirstName ?? '';
     String displayMsg =
@@ -85,7 +90,7 @@ class _OnBoardingPreferencesPageState extends ConsumerState<OnBoardingPreference
           CustomButton(
             onPressed: () async {
               await stateNotifier.submitUserInterests(() {
-                ref.read(navigationProvider).navigateUsingPath(
+                ref.read(navigationProvider).removeAllAndNavigate(
                       path: onboardingLoadingPagePath,
                       context: context,
                     );
