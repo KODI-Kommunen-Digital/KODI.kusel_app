@@ -26,12 +26,12 @@ class SearchWidget extends ConsumerStatefulWidget {
 
   SearchWidget(
       {super.key,
-      required this.hintText,
-      required this.searchController,
-      required this.suggestionCallback,
-      required this.onItemClick,
-      this.verticalDirection,
-      required this.isPaddingEnabled});
+        required this.hintText,
+        required this.searchController,
+        required this.suggestionCallback,
+        required this.onItemClick,
+        this.verticalDirection,
+        required this.isPaddingEnabled});
 
   @override
   ConsumerState<SearchWidget> createState() => _SearchWidgetState();
@@ -39,27 +39,10 @@ class SearchWidget extends ConsumerStatefulWidget {
 
 class _SearchWidgetState extends ConsumerState<SearchWidget> {
   final FocusNode _focusNode = FocusNode();
-  final TextEditingController _internalController = TextEditingController();
-  bool _isItemSelected = false;
-
-  @override
-  void initState() {
-    super.initState();
-    // Sync with external controller if needed
-    _internalController.addListener(_syncWithExternalController);
-  }
-
-  void _syncWithExternalController() {
-    if (!_isItemSelected) {
-      widget.searchController.text = _internalController.text;
-    }
-  }
 
   @override
   void dispose() {
     _focusNode.dispose();
-    _internalController.removeListener(_syncWithExternalController);
-    _internalController.dispose();
     super.dispose();
   }
 
@@ -86,37 +69,34 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
               Expanded(
                 child: TypeAheadField<Listing>(
                   hideOnEmpty: true,
-                  hideOnUnfocus: false, // Keep this as false
+                  hideOnUnfocus: false,
                   hideOnSelect: true,
                   hideWithKeyboard: false,
                   direction: widget.verticalDirection ?? VerticalDirection.down,
                   debounceDuration: Duration(milliseconds: 1000),
-                  controller: _internalController, // Use internal controller
+                  controller: widget.searchController,
                   suggestionsCallback: widget.suggestionCallback,
                   decorationBuilder: (context, widget) {
-                    return Card(
-                      elevation: 6,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.r)),
-                      child: Container(
-                        padding: super.widget.isPaddingEnabled
-                            ? EdgeInsets.symmetric(
-                            vertical: 10.h, horizontal: 5.w)
-                            : null,
-                        constraints: BoxConstraints(
-                            maxHeight: 250.h,
-                            maxWidth: double.infinity
-                        ),
-                        decoration: BoxDecoration(
-                            color: Theme.of(context).canvasColor,
-                            borderRadius: BorderRadius.circular(6.r)),
-                        child: widget,
+                    return Container(
+                      padding: super.widget.isPaddingEnabled
+                          ? EdgeInsets.symmetric(
+                          vertical: 10.h, horizontal: 5.w)
+                          : null,
+                      constraints: BoxConstraints(
+                          maxHeight: 250.h,
+                          maxWidth: double
+                              .infinity // Set max height here as per your UI
                       ),
+                      decoration: BoxDecoration(
+                          color: Theme.of(context).scaffoldBackgroundColor,
+                          borderRadius: BorderRadius.circular(10.r)),
+                      child: widget,
                     );
                   },
                   builder: (context, controller, focusNode) {
                     return TextField(
                       controller: controller,
-                      focusNode: _focusNode,
+                      focusNode: focusNode, // Add this
                       decoration: InputDecoration(
                           hintText: widget.hintText,
                           border: InputBorder.none,
@@ -126,60 +106,51 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                               fontWeight: FontWeight.w400,
                               color: Theme.of(context).hintColor,
                               fontStyle: FontStyle.italic)),
-                      onTap: () {
-                        // Ensure suggestions show on tap
-                        _isItemSelected = false;
-                      },
                       onSubmitted: (value) {
                         FocusScope.of(context).unfocus();
                       },
                     );
                   },
                   itemBuilder: (context, event) {
-                    return Column(
-                      children: [
-                        ListTile(
-                          title: Align(
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 2.0, vertical: 2.0),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 4.0),
+                        title: Align(
+                          alignment: Alignment.centerLeft,
+                          child: textRegularPoppins(
+                            text: event.title ?? "",
+                            fontSize: 16,
+                            color: Colors.black87,
+                            textAlign:
+                            TextAlign.start, // Ensure text is left-aligned
+                          ),
+                        ),
+                        subtitle: Padding(
+                          padding: const EdgeInsets.only(top: 4.0),
+                          child: Align(
                             alignment: Alignment.centerLeft,
                             child: textRegularPoppins(
-                              text: event.title ?? "",
-                              fontSize: 16,
-                              color: Theme.of(context).primaryColor,
-                              textAlign: TextAlign.start,
+                              text: KuselDateUtils.formatDate(
+                                  event.startDate ?? ""),
+                              fontSize: 14,
+                              color: Colors.grey[600],
+                              textAlign: TextAlign
+                                  .start, // Ensure text is left-aligned
                             ),
                           ),
-                          subtitle: Padding(
-                            padding: const EdgeInsets.only(top: 4.0),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: textRegularPoppins(
-                                text: KuselDateUtils.formatDate(
-                                    event.startDate ?? ""),
-                                fontSize: 14,
-                                color: Colors.grey[600],
-                                textAlign: TextAlign.start,
-                              ),
-                            ),
-                          ),
-                          trailing: Icon(
-                            color: Theme.of(context).primaryColor,
-                            Icons.arrow_forward_ios,
-                            size: 18,
-                          ),
                         ),
-                        Divider(
-                          height: 1,
-                          thickness: 1,
-                          color: Theme.of(context).primaryColor,
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 18,
                         ),
-                        2.verticalSpace
-                      ],
+                      ),
                     );
                   },
                   onSelected: (listing) {
-                    _isItemSelected = true;
                     widget.searchController.clear();
-                    _internalController.clear();
                     FocusScope.of(context).unfocus();
                     saveListingToPrefs(listing);
                     widget.onItemClick(listing);
@@ -215,6 +186,7 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
         .setString(searchListKey, updatedJson);
   }
 }
+
 // TODO: This search widget is for the dropdown when sending a string.
 // TODO:- Currently using setState, but will be refactored for a better implementation.
 
