@@ -55,41 +55,43 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
               borderRadius: BorderRadius.circular(10.r),
             ),
           ),
-          10.verticalSpace,
-          SearchWidget(
-            onItemClick: (listing) {
-              ref.read(locationScreenProvider.notifier).setEventItem(listing);
-              ref
-                  .read(locationScreenProvider.notifier)
-                  .updateBottomSheetSelectedUIType(
-                  BottomSheetSelectedUIType.eventDetail);
-            },
-            searchController: TextEditingController(),
-            hintText: AppLocalizations.of(context).enter_search_term,
-            suggestionCallback: (search) async {
-              List<Listing>? list;
-              if (search.isEmpty) return [];
-              try {
-                list = await ref.read(locationScreenProvider.notifier).searchList(
-                    searchText: search, success: () {}, error: (err) {});
-              } catch (e) {
-                return [];
-              }
-              final sortedList = ref
-                  .watch(locationScreenProvider.notifier)
-                  .sortSuggestionList(search, list);
-              return sortedList;
-            },
-            isPaddingEnabled: true,
+          15.verticalSpace,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 14.w),
+            child: SearchWidget(
+              onItemClick: (listing) {
+                ref.read(locationScreenProvider.notifier).setEventItem(listing);
+                ref
+                    .read(locationScreenProvider.notifier)
+                    .updateBottomSheetSelectedUIType(
+                    BottomSheetSelectedUIType.eventDetail);
+              },
+              searchController: TextEditingController(),
+              hintText: AppLocalizations.of(context).enter_search_term,
+              suggestionCallback: (search) async {
+                List<Listing>? list;
+                if (search.isEmpty) return [];
+                try {
+                  list = await ref.read(locationScreenProvider.notifier).searchList(
+                      searchText: search, success: () {}, error: (err) {});
+                } catch (e) {
+                  return [];
+                }
+                final sortedList = ref
+                    .watch(locationScreenProvider.notifier)
+                    .sortSuggestionList(search, list);
+                return sortedList;
+              },
+              isPaddingEnabled: true,
+            ),
           ),
-
           20.verticalSpace,
           GridView.builder(
             shrinkWrap: true,
             itemCount: staticFilterCategoryList(context).length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
-              mainAxisExtent: 110.h,
+              mainAxisExtent: 90.h,
               crossAxisSpacing: 6.h,
               mainAxisSpacing: 15.h,
             ),
@@ -125,7 +127,7 @@ class _AllFilterScreenState extends ConsumerState<AllFilterScreen> {
             shape: const CircleBorder(),
             color: Theme.of(context).colorScheme.onPrimary, // background color
             child: Padding(
-              padding: EdgeInsets.all(20),
+              padding: EdgeInsets.all(17),
               child: SizedBox(
                 height: 20.h,
                 width: 20.w,

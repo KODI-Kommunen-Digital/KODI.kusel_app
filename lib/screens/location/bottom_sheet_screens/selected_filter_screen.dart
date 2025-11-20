@@ -126,39 +126,44 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
             ],
           ),
           15.verticalSpace,
-          SearchWidget(
-            onItemClick: (listing) {
-              ref.read(locationScreenProvider.notifier).setEventItem(listing);
-              ref
-                  .read(locationScreenProvider.notifier)
-                  .updateBottomSheetSelectedUIType(
-                      BottomSheetSelectedUIType.eventDetail);
-            },
-            searchController: ref.watch(searchProvider),
-            hintText: AppLocalizations.of(context).enter_search_term,
-            suggestionCallback: (search) async {
-              List<Listing>? list;
-              if (search.isEmpty) return [];
-              try {
-                list = await ref
-                    .read(locationScreenProvider.notifier)
-                    .searchList(
-                        searchText: search, success: () {}, error: (err) {});
-              } catch (e) {
-                return [];
-              }
-              final sortedList = ref
-                  .watch(locationScreenProvider.notifier)
-                  .sortSuggestionList(search, list);
-              return sortedList;
-            },
-            isPaddingEnabled: true,
-          ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            child: SearchWidget(
+              onItemClick: (listing) {
+                ref.read(locationScreenProvider.notifier).setEventItem(listing);
+                ref
+                    .read(locationScreenProvider.notifier)
+                    .updateBottomSheetSelectedUIType(
+                        BottomSheetSelectedUIType.eventDetail);
+              },
+              searchController: ref.watch(searchProvider),
+              hintText: AppLocalizations.of(context).enter_search_term,
+              suggestionCallback: (search) async {
+                List<Listing>? list;
+                if (search.isEmpty) return [];
+                try {
+                  list = await ref
+                      .read(locationScreenProvider.notifier)
+                      .searchList(
+                          searchText: search, success: () {}, error: (err) {});
+                } catch (e) {
+                  return [];
+                }
+                final sortedList = ref
+                    .watch(locationScreenProvider.notifier)
+                    .sortSuggestionList(search, list);
+                return sortedList;
+              },
+              isPaddingEnabled: true,
+            ),
+          ),
+          18.verticalSpace,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 14.w),
             child: Align(
               alignment: Alignment.centerLeft,
               child: textSemiBoldPoppins(
+                fontWeight: FontWeight.w600,
                   text:
                       "${widget.selectedFilterScreenParams.categoryId == 100 ? AppLocalizations.of(context).map_fav : state.selectedCategoryName}",
                   fontSize: 16),
