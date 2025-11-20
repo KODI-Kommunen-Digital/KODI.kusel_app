@@ -97,11 +97,11 @@ class _OnboardingStartPageState extends ConsumerState<OnBoardingNamePage> {
 
                     if (!RegExp(r'^[A-Za-z]+(?: [A-Za-z]+)*$')
                         .hasMatch(cleanedValue)) {
-                      return "Only alphabets and single spaces are allowed";
+                      return AppLocalizations.of(context).name_char_validation_msg;
                     }
 
                     if (cleanedValue.length < 3) {
-                      return "Name must be at least 3 characters long";
+                      return AppLocalizations.of(context).name_char_allowed_msg;
                     }
 
                     return null;

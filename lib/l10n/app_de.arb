@@ -331,5 +331,7 @@
   "correct_answer": "Richtig",
   "wrong_answer": "Falsch",
   "digifit_completed_top": "Abgeschlossen",
-  "feedback_message": "Nachricht"
+  "feedback_message": "Nachricht",
+  "name_char_validation_msg": "Es sind nur Buchstaben und einzelne Leerzeichen zulässig.",
+  "name_char_allowed_msg": "Der Name muss mindestens 3 Zeichen lang sein."
 }

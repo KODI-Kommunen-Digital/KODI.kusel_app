@@ -122,7 +122,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
               text: AppLocalizations.of(context).our_offers,
               textAlign: TextAlign.start,
               color: Theme.of(context).textTheme.bodyLarge?.color,
-              fontSize: 20),
+              fontSize: 16),
           14.verticalSpace,
           if (state.mobilityData != null &&
               state.mobilityData!.servicesOffered!.isNotEmpty)

@@ -2071,6 +2071,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'message'**
   String get feedback_message;
+
+  /// No description provided for @name_char_validation_msg.
+  ///
+  /// In en, this message translates to:
+  /// **'Only alphabets and single spaces are allowed'**
+  String get name_char_validation_msg;
+
+  /// No description provided for @name_char_allowed_msg.
+  ///
+  /// In en, this message translates to:
+  /// **'Name must be at least 3 characters long'**
+  String get name_char_allowed_msg;
 }
 
 class _AppLocalizationsDelegate

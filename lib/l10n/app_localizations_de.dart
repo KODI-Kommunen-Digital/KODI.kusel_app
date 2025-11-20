@@ -1031,4 +1031,12 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get feedback_message => 'Nachricht';
+
+  @override
+  String get name_char_validation_msg =>
+      'Es sind nur Buchstaben und einzelne Leerzeichen zulässig.';
+
+  @override
+  String get name_char_allowed_msg =>
+      'Der Name muss mindestens 3 Zeichen lang sein.';
 }

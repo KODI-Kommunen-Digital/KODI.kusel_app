@@ -148,9 +148,9 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
           _buildServicesList(context),
           12.verticalSpace,
           _buildLocationCard(),
-          22.verticalSpace,
+          25.verticalSpace,
           _buildPlacesOfTheCommunity(context),
-          12.verticalSpace,
+          18.verticalSpace,
           if (ref.watch(municipalDetailControllerProvider).eventList.isNotEmpty)
             EventsListSectionWidget(
               context: context,
@@ -297,32 +297,38 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
           top: 105.h,
           left: 0.w,
           right: 0.w,
-          child: Container(
-            height: 120.h,
-            width: 70.w,
-            padding: EdgeInsets.all(25.w),
-            decoration:
-                BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-            child: (state.municipalPartyDetailDataModel?.image != null)
-                ? ImageUtil.loadNetworkImage(
-                    memCacheWidth: 300,
-                    memCacheHeight: 300,
-                    imageUrl: state.municipalPartyDetailDataModel!.image!,
-                    sourceId: 1,
-                    fit: BoxFit.contain,
-                    svgErrorImagePath: imagePath['crest']!,
-                    context: context,
-                    onImageTap: () {
-                      ref.read(navigationProvider).navigateUsingPath(
-                          path: fullImageScreenPath,
-                          params: FullImageScreenParams(
-                              imageUrL:
-                                  state.municipalPartyDetailDataModel!.image!,
-                              sourceId: 1),
-                          context: context);
-                    },
-                  )
-                : Center(child: CircularProgressIndicator()),
+          child: Card(
+            elevation: 8,
+            shape: CircleBorder(),
+            child: Container(
+              height: 110.h,
+              width: 100.w,
+              padding: EdgeInsets.all(26.w),
+              decoration:
+                  BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+              child: (state.municipalPartyDetailDataModel?.image != null)
+                  ? ImageUtil.loadNetworkImage(
+                      memCacheWidth: 300,
+                      memCacheHeight: 300,
+                      imageUrl: state.municipalPartyDetailDataModel!.image!,
+                      sourceId: 1,
+                      fit: BoxFit.contain,
+                      svgErrorImagePath: imagePath['crest']!,
+                      context: context,
+                      onImageTap: () {
+                        ref.read(navigationProvider).navigateUsingPath(
+                            path: fullImageScreenPath,
+                            params: FullImageScreenParams(
+                                imageUrL:
+                                    state.municipalPartyDetailDataModel!.image!,
+                                sourceId: 1),
+                            context: context);
+                      },
+                    )
+                  : Center(
+                      child:  CircularProgressIndicator()
+                    ),
+            ),
           ),
         )
       ],
@@ -349,6 +355,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                 textAlign: TextAlign.start,
                 textOverflow: TextOverflow.ellipsis,
                 fontWeight: FontWeight.w500,
+                fontSize: 13,
                 color: Theme.of(context).textTheme.bodyLarge?.color,
                 text: state.municipalPartyDetailDataModel?.description ??
                     "Die Verbandsgemeinde Kusel-Altenglan ist eine Gebietskörperschaft im Landkreis Kusel  in Rheinland-Pfalz. Sie ist zum 1. Januar 2018 aus dem freiwilligen Zusammenschluss der  Verbandsgemeinden Altenglan und Kusel entstanden. Ihr gehören die Stadt Kusel sowie 33 weitere Ortsgemeinden an, der Verwaltungssitz ist in Kusel."),
@@ -357,10 +364,10 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                 text:
                     "${AppLocalizations.of(context).new_municipality} ${state.municipalPartyDetailDataModel?.name ?? ""} ",
                 color: Theme.of(context).textTheme.bodyLarge?.color,
-                fontSize: 18,
-                textAlign: TextAlign.start,
-                fontWeight: FontWeight.w500,
-                textOverflow: TextOverflow.visible)
+                fontSize: 16,
+            textAlign: TextAlign.start,
+            fontWeight: FontWeight.w600,
+            textOverflow: TextOverflow.visible)
           ],
         ),
       );
