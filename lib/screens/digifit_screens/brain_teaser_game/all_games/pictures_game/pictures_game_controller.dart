@@ -38,7 +38,7 @@ class PicturesGameController extends StateNotifier<PicturesGameState> {
   final int levelId;
   final LocaleManagerController localeManagerController;
   final BrainTeaserGameDetailsTrackingUseCase
-      brainTeaserGameDetailsTrackingUseCase;
+  brainTeaserGameDetailsTrackingUseCase;
 
   Timer? _memorizePairTimer;
   Timer? _level3Timer;
@@ -190,14 +190,17 @@ class PicturesGameController extends StateNotifier<PicturesGameState> {
     }
   }
 
+
   Future<void> handleLevel3GridTap() async {
     if (!mounted || !state.isLevel3 || !state.isGameInProgress) return;
 
     state = state.copyWith(
       showLevel3Dialog: true,
       level3TimerComplete: true,
+      isLoading: false,
     );
   }
+
 
   Future<void> handleLevel3ImageSelection(int selectedImageId) async {
     if (!mounted || !state.isLevel3) return;
@@ -209,6 +212,7 @@ class PicturesGameController extends StateNotifier<PicturesGameState> {
 
     state = state.copyWith(
       selectedImageId: selectedImageId,
+      showLevel3Dialog: false,
     );
 
     final isMatch = selectedImageId.toString() == missingImageId.toString();
@@ -254,22 +258,23 @@ class PicturesGameController extends StateNotifier<PicturesGameState> {
         state = state.copyWith(
           revealedCells: allRevealedCells,
           level3Completed: true,
+          isLoading: false,
+          showResult: false,
         );
 
-        await Future.delayed(const Duration(milliseconds: 300));
+        await Future.delayed(const Duration(milliseconds: 500));
 
-        await trackGameProgress(
-          GameStageConstant.complete,
-          onSuccess: () {
-            if (mounted) {
-              state = state.copyWith(
-                showResult: true,
-                isAnswerCorrect: true,
-                gameStage: GameStageConstant.complete,
-              );
-            }
-          },
-        );
+        if (mounted) {
+          state = state.copyWith(
+            showResult: true,
+            isAnswerCorrect: true,
+            gameStage: GameStageConstant.complete,
+          );
+        }
+
+        if (mounted) {
+          _trackLevel3SuccessBackground();
+        }
       }
     } else {
       final displayList = state.gameData?.displayImagesList ?? [];
@@ -297,23 +302,103 @@ class PicturesGameController extends StateNotifier<PicturesGameState> {
         }
       }
 
-      await trackGameProgress(
-        GameStageConstant.abort,
-        onSuccess: () {
-          if (mounted) {
-            state = state.copyWith(
-              showResult: true,
-              isAnswerCorrect: false,
-              gameStage: GameStageConstant.abort,
-              wrongRow: missingRow,
-              wrongCol: missingCol,
-              revealedCells: displayRevealedCells,
-            );
-          }
-        },
+      state = state.copyWith(
+        revealedCells: displayRevealedCells,
+        isAnswerCorrect: false,
+        wrongRow: missingRow,
+        wrongCol: missingCol,
+        isLoading: false,
+        showResult: false,
       );
+
+      await Future.delayed(const Duration(milliseconds: 1500));
+
+      if (mounted) {
+        state = state.copyWith(
+          showResult: true,
+          gameStage: GameStageConstant.abort,
+          isLoading: false,
+        );
+      }
+
+      if (mounted) {
+        _trackLevel3WrongAnswerBackground();
+      }
     }
   }
+
+  Future<void> _trackLevel3SuccessBackground() async {
+    if (!mounted) return;
+
+    final sessionId = state.sessionId;
+    if (sessionId == null) return;
+
+    try {
+      await _executeWithTokenValidation(
+        onExecute: () =>
+            _trackGameDetailsQuiet(
+              sessionId,
+              GameStageConstant.complete,
+            ),
+        onError: () {
+          debugPrint('Background tracking error');
+        },
+      );
+    } catch (e) {
+      debugPrint('Error in _trackLevel3SuccessBackground: $e');
+    }
+  }
+
+  Future<void> _trackLevel3WrongAnswerBackground() async {
+    if (!mounted) return;
+
+    final sessionId = state.sessionId;
+    if (sessionId == null) return;
+
+    try {
+      await _executeWithTokenValidation(
+        onExecute: () =>
+            _trackGameDetailsQuiet(
+              sessionId,
+              GameStageConstant.abort,
+            ),
+        onError: () {
+          debugPrint('Background tracking error');
+        },
+      );
+    } catch (e) {
+      debugPrint('Error in _trackLevel3WrongAnswerBackground: $e');
+    }
+  }
+
+  Future<void> _trackGameDetailsQuiet(int sessionId,
+      GameStageConstant gameStage,) async {
+    if (!mounted) return;
+
+    try {
+      final requestModel = GamesTrackerRequestModel(
+        sessionId: sessionId,
+        activityStatus: gameStage.name,
+      );
+
+      final result = await brainTeaserGameDetailsTrackingUseCase.call(
+        requestModel,
+        GamesTrackerResponseModel(),
+      );
+
+      result.fold(
+            (error) {
+          debugPrint('Tracking error: $error');
+        },
+            (response) {
+          debugPrint('Tracking success');
+        },
+      );
+    } catch (e) {
+      debugPrint('Error in _trackGameDetailsQuiet: $e');
+    }
+  }
+
 
   Future<void> _preloadAllPairImages() async {
     final memorizePairs = state.gameData?.memorizePairs ?? [];
