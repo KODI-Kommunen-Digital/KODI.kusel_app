@@ -86,7 +86,7 @@ class _CommonBottomNavCardState extends ConsumerState<CommonBottomNavCard> {
         case ExerciseStageConstant.initial:
           buttonText = AppLocalizations.of(context)
               .digifit_exercise_details_start_session;
-          icon = Icons.play_circle_outline;
+          icon = Icons.flag_outlined;
           break;
 
         case ExerciseStageConstant.start:
