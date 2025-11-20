@@ -117,7 +117,7 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingStartPage> {
             child: textSemiBoldMontserrat(
               color: Theme.of(context).textTheme.bodyLarge?.color,
               fontWeight: FontWeight.w600,
-              fontSize: 14,
+              fontSize: 16,
               text: AppLocalizations.of(context).another_time,
             ),
           ),

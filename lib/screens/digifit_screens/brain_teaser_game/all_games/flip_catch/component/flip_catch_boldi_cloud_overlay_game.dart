@@ -61,7 +61,7 @@ class CloudComponent extends PositionComponent with HasGameRef {
       gameSize.y * 0.50,
     );
 
-    size = Vector2(148, 114);
+    size = Vector2(158, 124);
 
     _isInitialized = true;
   }

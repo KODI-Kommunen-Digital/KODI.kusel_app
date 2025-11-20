@@ -136,16 +136,13 @@ class PicturesGridCell extends PositionComponent
     final centerX = rect.width / 2;
     final centerY = rect.height / 2;
 
-    // Loader size - 20% of cell size
     final loaderRadius = min(rect.width, rect.height) * 0.15;
 
     canvas.save();
 
-    // Move to center and rotate
     canvas.translate(centerX, centerY);
     canvas.rotate(_loaderRotation);
 
-    // Draw circular loader (arc)
     final loaderPaint = Paint()
       ..color = Colors.grey.shade400
       ..style = PaintingStyle.stroke

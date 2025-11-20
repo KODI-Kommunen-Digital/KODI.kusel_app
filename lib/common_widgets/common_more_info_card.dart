@@ -32,12 +32,15 @@ class _CommonMoreInfoCardState extends ConsumerState<CommonMoreInfoCard> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         5.verticalSpace,
-        textBoldPoppins(
-          color: Theme.of(context).textTheme.bodyLarge?.color,
-          text: widget.title,
-          textOverflow: TextOverflow.visible,
-          textAlign: TextAlign.left,
-          fontSize: 14,
+        Padding(
+          padding: const EdgeInsets.only(left: 8.0),
+          child: textBoldPoppins(
+            color: Theme.of(context).textTheme.bodyLarge?.color,
+            text: widget.title,
+            textOverflow: TextOverflow.visible,
+            textAlign: TextAlign.left,
+            fontSize: 14,
+          ),
         ),
         8.verticalSpace,
         if (widget.description != null)

@@ -122,7 +122,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                         Expanded(
                           flex: 9,
                           child: Padding(
-                            padding: const EdgeInsets.only(right: 32.0),
+                            padding: const EdgeInsets.only(right: 38.0),
                             child: textBoldPoppins(
                               color:
                                   Theme.of(context).textTheme.bodyLarge?.color,
@@ -139,7 +139,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                 _buildRecommendation(context),
                 32.verticalSpace,
                 _buildLocationWidget(context),
-                16.verticalSpace,
+                22.verticalSpace,
                 if (state.nearByList.isNotEmpty)
                   EventsListSectionWidget(
                     context: context,
@@ -199,7 +199,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                           .getNearByListing();
                     },
                   ),
-                8.verticalSpace,
+                4.verticalSpace,
                 LocalSvgImageTextServiceCard(
                   onTap: () => ref.read(navigationProvider).navigateUsingPath(
                       path: webViewPagePath,
@@ -212,12 +212,12 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                   description:
                       AppLocalizations.of(context).discover_kusel_on_foot,
                 ),
-                30.verticalSpace,
+                20.verticalSpace,
                 if (state.allEventList.isNotEmpty)
                   EventsListSectionWidget(
                     context: context,
                     eventsList: state.allEventList,
-                    heading: AppLocalizations.of(context).all_events,
+                    heading: AppLocalizations.of(context).event_text,
                     maxListLimit: 5,
                     isLoading: false,
                     onHeadingTap: () {
@@ -280,7 +280,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CommonTextArrowWidget(
-                      text: AppLocalizations.of(context).recommendations,
+                      text: AppLocalizations.of(context).our_recommendations,
                       onTap: () {
                         ref.read(navigationProvider).navigateUsingPath(
                               path: allEventScreenPath,

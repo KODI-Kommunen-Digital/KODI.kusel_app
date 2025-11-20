@@ -534,7 +534,7 @@ class _PicturesGameScreenState extends ConsumerState<PicturesGameScreen> {
                       tileHeight, rows, columns),
                 10.verticalSpace,
                 _buildDescription(state),
-                20.verticalSpace,
+                10.verticalSpace,
                 if (!state.isLoading) _buildFeedbackCard(),
               ],
             ),

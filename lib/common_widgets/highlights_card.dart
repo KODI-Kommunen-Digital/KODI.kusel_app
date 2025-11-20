@@ -55,7 +55,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
       child: Container(
         width: widget.cardWidth,
         height: widget.cardHeight,
-        padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 8.w),
+        padding: EdgeInsets.only(top: 10.h, bottom: 10.h, left: 8.w, right: 8.w,),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(25.r),
@@ -92,7 +92,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                   ),
                   if (widget.isFavouriteVisible)
                     Positioned(
-                      top: 8.h,
+                      top: 6.h,
                       right: 8.w,
                       child: InkWell(
                         onTap: widget.onFavouriteIconClick,
@@ -104,7 +104,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                             shape: BoxShape.circle,
                           ),
                           child: Icon(
-                            size: 15.h.w,
+                            size: 25.h.w,
                             widget.isFavourite
                                 ? Icons.favorite_sharp
                                 : Icons.favorite_border_sharp,
