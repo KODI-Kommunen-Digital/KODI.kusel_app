@@ -49,7 +49,7 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 40.h,
+      height: 36.h,
       width: 350.w,
       decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.onPrimary,
@@ -69,28 +69,32 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
               Expanded(
                 child: TypeAheadField<Listing>(
                   hideOnEmpty: true,
-                  hideOnUnfocus: false,
+                  hideOnUnfocus: true,
                   hideOnSelect: true,
                   hideWithKeyboard: false,
                   direction: widget.verticalDirection ?? VerticalDirection.down,
                   debounceDuration: Duration(milliseconds: 1000),
                   controller: widget.searchController,
                   suggestionsCallback: widget.suggestionCallback,
+
                   decorationBuilder: (context, widget) {
-                    return Container(
-                      padding: super.widget.isPaddingEnabled
-                          ? EdgeInsets.symmetric(
-                          vertical: 10.h, horizontal: 5.w)
-                          : null,
-                      constraints: BoxConstraints(
-                          maxHeight: 250.h,
-                          maxWidth: double
-                              .infinity // Set max height here as per your UI
+                    return Padding(
+                      padding: EdgeInsets.only(top: 8.h),
+                      child: Container(
+                        padding: super.widget.isPaddingEnabled
+                            ? EdgeInsets.symmetric(
+                            vertical: 10.h, horizontal: 5.w)
+                            : null,
+                        constraints: BoxConstraints(
+                            maxHeight: 250.h,
+                            maxWidth: double
+                                .infinity // Set max height here as per your UI
+                        ),
+                        decoration: BoxDecoration(
+                            color: Theme.of(context).scaffoldBackgroundColor,
+                            borderRadius: BorderRadius.circular(10.r)),
+                        child: widget,
                       ),
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                          borderRadius: BorderRadius.circular(10.r)),
-                      child: widget,
                     );
                   },
                   builder: (context, controller, focusNode) {
@@ -98,10 +102,12 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                       controller: controller,
                       focusNode: focusNode, // Add this
                       decoration: InputDecoration(
+                        contentPadding: EdgeInsets.zero,
+                          isDense: true,
                           hintText: widget.hintText,
                           border: InputBorder.none,
                           hintStyle: TextStyle(
-                              fontSize: 12.sp,
+                              fontSize: 14,
                               fontFamily: "Poppins",
                               fontWeight: FontWeight.w400,
                               color: Theme.of(context).hintColor,

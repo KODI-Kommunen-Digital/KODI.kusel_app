@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -60,7 +62,25 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildBody(context),
+      body: Stack(
+        children: [
+          _buildBody(context),
+          Positioned(
+            bottom: 0,
+            left: 1,
+            right: 1,
+            child: ClipRRect(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+                child: Container(
+                  height: 80.h,
+                  color: Colors.white.withOpacity(0.2),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
       backgroundColor: Theme
           .of(context)
           .scaffoldBackgroundColor,
@@ -77,7 +97,7 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
         ref
             .watch(locationScreenProvider)
             .isSlidingUpPanelDragAllowed,
-        minHeight: 200.h,
+        minHeight: 245.h,
         maxHeight: _getMaxHeight(
             ref
                 .watch(locationScreenProvider)
@@ -178,7 +198,7 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
 double _getMaxHeight(BottomSheetSelectedUIType type) {
   switch (type) {
     case BottomSheetSelectedUIType.allEvent:
-      return 400.h;
+      return 365.h;
 
     case BottomSheetSelectedUIType.eventDetail:
       return 600.h;
