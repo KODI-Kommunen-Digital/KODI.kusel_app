@@ -57,7 +57,8 @@ Map<String, String> _svgImagePath = {
   "setting_header_image":"assets/svg/setting_header_image.svg",
   "setting_profile":"assets/svg/setting_profile.svg",
   "my_fav":"assets/svg/my_fav.svg",
-  "forward_arrow":"assets/svg/forward_arrow.svg"
+  "forward_arrow":"assets/svg/forward_arrow.svg",
+  "location_icon_selected":"assets/svg/location_icon_selected.svg"
 };
 
 Map<String, String> _pngImagePath = {
