@@ -329,5 +329,8 @@
   "digifit_completed_top": "completed",
   "feedback_message": "message",
   "name_char_validation_msg": "Only alphabets and single spaces are allowed",
-  "name_char_allowed_msg": "Name must be at least 3 characters long"
+  "name_char_allowed_msg": "Name must be at least 3 characters long",
+  "feedback_setting": "Feedback",
+  "all_events_filter": "All events",
+  "our_recommendations": "Our Recommendations"
 }

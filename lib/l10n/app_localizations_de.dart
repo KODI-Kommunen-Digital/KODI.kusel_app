@@ -1039,4 +1039,13 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get name_char_allowed_msg =>
       'Der Name muss mindestens 3 Zeichen lang sein.';
+
+  @override
+  String get feedback_setting => 'Feedback';
+
+  @override
+  String get all_events_filter => 'Alle Veranstaltungen';
+
+  @override
+  String get our_recommendations => 'Unsere Empfehlungen';
 }

@@ -200,7 +200,7 @@ class _DigitDashScreenState extends ConsumerState<DigitDashScreen> {
                               data: state.digitDashData?.subDescription ?? '',
                             ),
                           ),
-                          20.verticalSpace,
+                          10.verticalSpace,
                           if (!state.isLoading)
                             FeedbackCardWidget(
                               height: 270.h,

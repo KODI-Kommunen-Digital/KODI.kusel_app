@@ -155,7 +155,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
             EventsListSectionWidget(
               context: context,
               eventsList: state.eventList,
-              heading: AppLocalizations.of(context).events,
+              heading: AppLocalizations.of(context).event_text,
               maxListLimit: 5,
               buttonText: AppLocalizations.of(context).all_events,
               buttonIconPath: imagePath['calendar'] ?? "",
