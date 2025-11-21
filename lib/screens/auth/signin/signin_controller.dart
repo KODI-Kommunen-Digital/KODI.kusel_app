@@ -110,7 +110,11 @@ class SignInController extends StateNotifier<SignInState> {
           final userId = response.data?.userId ?? 0;
           final token = response.data?.accessToken ?? "";
           final refreshToken = response.data?.refreshToken ?? "";
-          final isOnboardingComplete = response.data?.isOnBoarded ?? false;
+          bool isGuestOnboardingDone =
+              sharedPreferenceHelper.getBool(onboardingKey) ?? false;
+          final isOnboardingComplete = isGuestOnboardingDone
+              ? true
+              : response.data?.isOnBoarded ?? false;
 
           await sharedPreferenceHelper.setString(refreshTokenKey, refreshToken);
           await sharedPreferenceHelper.setString(tokenKey, token);

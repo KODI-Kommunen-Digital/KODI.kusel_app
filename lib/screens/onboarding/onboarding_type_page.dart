@@ -113,9 +113,7 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingTypePage> {
               stateNotifier.updateErrorMsgStatus(true);
             } else {
               stateNotifier.updateErrorMsgStatus(false);
-              if (state.isLoggedIn) {
-                stateNotifier.submitUserType();
-              }
+              stateNotifier.submitUserType();
               ref.read(navigationProvider).navigateUsingPath(
                   path: onboardingOptionPagePath, context: context);
             }

@@ -42,7 +42,7 @@ import 'package:kusel/screens/onboarding/onboarding_screen_state.dart';
 import '../../common_widgets/city_type_constant.dart';
 import '../../common_widgets/get_current_location.dart';
 
-final onboardingScreenProvider = StateNotifierProvider<
+final onboardingScreenProvider = StateNotifierProvider.autoDispose<
     OnboardingScreenController, OnboardingScreenState>(
         (ref) => OnboardingScreenController(
         onboardingUserTypeUseCase: ref.read(onboardingUserTypeUseCaseProvider),
@@ -706,10 +706,11 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   Future<void> isLoggedIn() async {
     final status = await signInStatusController.isUserLoggedIn();
     if (!status) {
-      await guestUserLogin.getGuestUserToken();
+      bool isTokenAvailable = sharedPreferenceHelper.getString(tokenKey)!=null;
+      if(!isTokenAvailable){
+        await guestUserLogin.getGuestUserToken();
+      }
     }
-
-    state = state.copyWith(isLoggedIn: status);
   }
 
   void updateFirstName(String value) {
