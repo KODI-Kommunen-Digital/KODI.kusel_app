@@ -18,22 +18,23 @@ class CustomButton extends StatelessWidget {
   final Color? textColor;
   final double? textSize;
   final Color? borderColor;
+  final bool? searchScreen;
 
-  const CustomButton({
-    super.key,
-    required this.onPressed,
-    required this.text,
-    this.height,
-    this.width,
-    this.iconHeight,
-    this.iconWidth,
-    this.icon,
-    this.isOutLined = false,
-    this.buttonColor,
-    this.textColor,
-    this.textSize,
-    this.borderColor,
-  });
+  const CustomButton(
+      {super.key,
+      required this.onPressed,
+      required this.text,
+      this.height,
+      this.width,
+      this.iconHeight,
+      this.iconWidth,
+      this.icon,
+      this.isOutLined = false,
+      this.buttonColor,
+      this.textColor,
+      this.textSize,
+      this.borderColor,
+      this.searchScreen});
 
   @override
   Widget build(BuildContext context) {
@@ -63,12 +64,26 @@ class CustomButton extends StatelessWidget {
                               height: iconHeight,
                             ),
                             SizedBox(width: 12),
-                            textRegularPoppins(
-                              fontSize: textSize,
-                              color: textColor ??
-                                  Theme.of(context).textTheme.labelSmall?.color,
-                              text: text,
-                            ),
+                            searchScreen == false
+                                ? textRegularPoppins(
+                                    fontSize: textSize,
+                                    color: textColor ??
+                                        Theme.of(context)
+                                            .textTheme
+                                            .labelSmall
+                                            ?.color,
+                                    text: text,
+                                  )
+                                : textBoldPoppins(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: textSize,
+                                    color: textColor ??
+                                        Theme.of(context)
+                                            .textTheme
+                                            .bodyLarge
+                                            ?.color,
+                                    text: text,
+                                  )
                           ],
                         )
                       : textRegularPoppins(
@@ -111,11 +126,14 @@ class CustomButton extends StatelessWidget {
                               height: iconHeight,
                             ),
                             SizedBox(width: 12),
-                            textHeadingMontserrat(
+                            textBoldPoppins(
                               fontSize: textSize ?? 14,
                               fontWeight: FontWeight.w600,
                               color: isDisabled
-                                  ? Theme.of(context).textTheme.titleSmall!.color
+                                  ? Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .color
                                   : (textColor ?? Colors.white),
                               text: text,
                             ),

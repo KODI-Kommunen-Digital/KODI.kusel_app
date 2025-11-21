@@ -91,11 +91,13 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
               child: Column(
                 children: [
                   8.verticalSpace,
-                  textSemiBoldPoppins(
+                  textBoldPoppins(
+                    color: Theme.of(context).textTheme.bodyLarge!.color,
                       text: AppLocalizations.of(context).search_heading,
-                      fontSize: 16),
+                      fontSize: 18),
                   16.verticalSpace,
                   CustomButton(
+                    searchScreen: true,
                     onPressed: () {
                       ref.read(navigationProvider).navigateUsingPath(
                           path: searchResultScreenPath,
