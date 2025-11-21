@@ -10,6 +10,7 @@ import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/new_filter_screen/new_filter_screen_params.dart';
 
 import '../../common_widgets/common_background_clipper_widget.dart';
+import '../../common_widgets/device_helper.dart';
 import '../../common_widgets/event_list_section_widget.dart';
 import '../../common_widgets/image_utility.dart';
 import '../../images_path.dart';
@@ -79,8 +80,32 @@ class _ExploreScreenState extends ConsumerState<FavoritesListScreen> {
               height: 130.h,
               imageUrl: imagePath['home_screen_background'] ?? '',
               isStaticImage: true,
-              isBackArrowEnabled: true,
-              headingText: AppLocalizations.of(context).favorites,
+              isBackArrowEnabled: false,
+              customWidget1: Positioned(
+                left: 0.w,
+                top: 20.h,
+                child: Row(
+                  children: [
+                    16.horizontalSpace,
+                    IconButton(
+                        onPressed: () {
+                          ref
+                              .read(navigationProvider)
+                              .removeTopPage(context: context);
+                        },
+                        icon: Icon(
+                            size:
+                                DeviceHelper.isMobile(context) ? null : 12.h.w,
+                            color: Theme.of(context).primaryColor,
+                            Icons.arrow_back)),
+                    12.horizontalSpace,
+                    textBoldPoppins(
+                        color: Theme.of(context).textTheme.labelLarge?.color,
+                        fontSize: 19,
+                        text: AppLocalizations.of(context).favorites),
+                  ],
+                ),
+              ),
               filterWidget: Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.w),
                 width: MediaQuery.of(context).size.width,
@@ -167,7 +192,7 @@ class _ExploreScreenState extends ConsumerState<FavoritesListScreen> {
                       onSuccess: (bool isFav, int? id) {
                         ref
                             .read(favoritesListScreenProvider.notifier)
-                            .removeFavorite( id);
+                            .removeFavorite(id);
                       },
                       onFavClickCallback: () {
                         ref
