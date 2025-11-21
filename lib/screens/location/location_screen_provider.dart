@@ -73,9 +73,14 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
     if (catId == null) return;
     if (state.categoryEventLists.containsKey(catId) && pageNumber == 1) {
       final cachedList = state.categoryEventLists[catId]!;
+      final cachedPageNo = state.categoryPageNumbers[catId] ?? 1;
+      final hasMore = state.categoryHasMore[catId] ?? false;
+
       state = state.copyWith(
         allEventCategoryWiseList: cachedList,
         isSelectedFilterScreenLoading: false,
+        currentPageNo: cachedPageNo,
+        isLoadMoreButtonEnabled: hasMore,
       );
       return;
     }
@@ -115,9 +120,18 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
         final updatedMap = {...state.categoryEventLists};
         updatedMap[catId] = updatedList;
 
+        final updatedPageNumbers = {...state.categoryPageNumbers};
+        updatedPageNumbers[catId] = pageNumber;
+
+        final updatedHasMore = {...state.categoryHasMore};
+        updatedHasMore[catId] = newEventList.isNotEmpty;
+
+
         state = state.copyWith(
           categoryEventLists: updatedMap,
           allEventCategoryWiseList: updatedList,
+          categoryPageNumbers: updatedPageNumbers,
+          categoryHasMore: updatedHasMore,
           isMoreListLoading: false,
           isSelectedFilterScreenLoading: false,
           isLoadMoreButtonEnabled: newEventList.isNotEmpty,
@@ -267,9 +281,27 @@ class LocationScreenProvider extends StateNotifier<LocationScreenState> {
   }
 
   void onLoadMoreList(String categoryId) async {
-    int currPageNo = state.currentPageNo;
+    final catId = int.tryParse(categoryId);
+    if (catId == null) return;
+
+    int currPageNo = state.categoryPageNumbers[catId] ?? state.currentPageNo;
     currPageNo = currPageNo + 1;
+
     await getAllEventListUsingCategoryId(categoryId, currPageNo);
+  }
+
+  void resetCategoryPagination(int categoryId) {
+    final updatedPageNumbers = {...state.categoryPageNumbers};
+    updatedPageNumbers.remove(categoryId);
+
+    final updatedHasMore = {...state.categoryHasMore};
+    updatedHasMore.remove(categoryId);
+
+    state = state.copyWith(
+      categoryPageNumbers: updatedPageNumbers,
+      categoryHasMore: updatedHasMore,
+      currentPageNo: 1,
+    );
   }
 
   void markCategoryAsFetched(int categoryId) {

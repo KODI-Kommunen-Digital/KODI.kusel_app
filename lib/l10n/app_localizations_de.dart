@@ -1048,4 +1048,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get our_recommendations => 'Unsere Empfehlungen';
+
+  @override
+  String get digifit_end => 'Beenden';
 }

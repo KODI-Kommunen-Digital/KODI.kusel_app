@@ -141,7 +141,7 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                   3.verticalSpace,
                   textSemiBoldMontserrat(
                       text: stripHtmlTags(widget.description),
-                      fontSize: 11,
+                      fontSize: 12,
                       fontWeight: FontWeight.w600,
                       textAlign: TextAlign.start,
                       color: Theme.of(context).textTheme.labelMedium?.color,
