@@ -8,6 +8,7 @@ import 'package:kusel/screens/digifit_screens/digifit_start/digifit_information_
 
 import '../../../app_router.dart';
 import '../../../common_widgets/common_background_clipper_widget.dart';
+import '../../../common_widgets/device_helper.dart';
 import '../../../common_widgets/digifit/digifit_text_image_card.dart';
 import '../../../common_widgets/text_styles.dart';
 import '../../../common_widgets/upstream_wave_clipper.dart';
@@ -85,13 +86,38 @@ class _DigifitFavScreenState extends ConsumerState<DigifitFavScreen> {
           mainAxisSize: MainAxisSize.max,
           children: [
             CommonBackgroundClipperWidget(
-                clipperType: UpstreamWaveClipper(),
-                imageUrl: imagePath['background_image'] ?? "",
-                headingText: AppLocalizations.of(context).digifit,
-                height: 120.h,
-                blurredBackground: true,
-                isBackArrowEnabled: true,
-                isStaticImage: true),
+              clipperType: UpstreamWaveClipper(),
+              imageUrl: imagePath['background_image'] ?? "",
+              height: 120.h,
+              blurredBackground: true,
+              isBackArrowEnabled: false,
+              isStaticImage: true,
+              customWidget1: Positioned(
+                left: 0.w,
+                top: 20.h,
+                child: Row(
+                  children: [
+                    16.horizontalSpace,
+                    IconButton(
+                        onPressed: () {
+                          ref
+                              .read(navigationProvider)
+                              .removeTopPage(context: context);
+                        },
+                        icon: Icon(
+                            size:
+                                DeviceHelper.isMobile(context) ? null : 12.h.w,
+                            color: Theme.of(context).primaryColor,
+                            Icons.arrow_back)),
+                    12.horizontalSpace,
+                    textBoldPoppins(
+                        color: Theme.of(context).textTheme.labelLarge?.color,
+                        fontSize: 19,
+                        text: AppLocalizations.of(context).digifit),
+                  ],
+                ),
+              ),
+            ),
             (state.equipmentList.isEmpty)
                 ? Center(
                     child: textHeadingMontserrat(
@@ -119,10 +145,9 @@ class _DigifitFavScreenState extends ConsumerState<DigifitFavScreen> {
                                       isFavorite: station.isFavorite,
                                       muscleGroups: station.muscleGroup,
                                     ),
-                                    locationId: station.locationId ??
-                                        0,
+                                    locationId: station.locationId ?? 0,
                                     onFavCallBack: () {
-                                     controller.getDigifitFavList(1);
+                                      controller.getDigifitFavList(1);
                                     }));
                           },
                           imageUrl: station.machineImageUrls ?? '',
