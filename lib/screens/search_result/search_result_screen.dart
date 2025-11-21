@@ -80,9 +80,9 @@ class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
                           color: Theme.of(context).primaryColor,
                           Icons.arrow_back)
                   ),
-                  12.horizontalSpace,
+                  8.horizontalSpace,
                   textBoldPoppins(
-                      color: Theme.of(context).textTheme.labelLarge?.color,
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
                       text: (widget.searchResultScreenParameter.searchType == SearchType.nearBy)

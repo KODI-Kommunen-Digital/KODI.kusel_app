@@ -2101,6 +2101,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Our Recommendations'**
   String get our_recommendations;
+
+  /// No description provided for @digifit_end.
+  ///
+  /// In en, this message translates to:
+  /// **'end'**
+  String get digifit_end;
 }
 
 class _AppLocalizationsDelegate
