@@ -52,104 +52,106 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
     return InkWell(
       onTap: widget.onPress,
       borderRadius: BorderRadius.circular(25.r),
-      child: Container(
-        width: widget.cardWidth,
-        height: widget.cardHeight,
-        padding: EdgeInsets.only(top: 10.h, bottom: 10.h, left: 8.w, right: 8.w,),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(25.r),
-          // boxShadow: [
-          //   BoxShadow(
-          //     color: Theme.of(context).primaryColor.withOpacity(0.12),
-          //     offset: const Offset(0, 4),
-          //     blurRadius: 24,
-          //   ),
-          // ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: widget.imageHeight ?? 200.h,
-              child: Stack(
-                fit: StackFit.loose,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(18.r),
-                    child: SizedBox(
-                      height: widget.imageHeight ?? 200.h,
-                      width: widget.imageWidth ?? double.infinity,
-                      child: ImageUtil.loadNetworkImage(
-                          memCacheHeight: 400,
-                          memCacheWidth: 650,
-                          imageUrl: widget.imageUrl,
-                          fit: widget.imageFit ?? BoxFit.cover,
-                          sourceId: widget.sourceId,
-                          svgErrorImagePath: widget.errorImagePath,
-                          context: context),
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 5.w),
+        child: Container(
+          width: widget.cardWidth,
+          height: widget.cardHeight,
+          padding: EdgeInsets.only(top: 10.h, bottom: 10.h, left: 8.w, right: 8.w,),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(25.r),
+            boxShadow: [
+              BoxShadow(
+                color: Theme.of(context).primaryColor.withOpacity(0.14),
+                blurRadius: 10,
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: widget.imageHeight ?? 200.h,
+                child: Stack(
+                  fit: StackFit.loose,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(18.r),
+                      child: SizedBox(
+                        height: widget.imageHeight ?? 200.h,
+                        width: widget.imageWidth ?? double.infinity,
+                        child: ImageUtil.loadNetworkImage(
+                            memCacheHeight: 400,
+                            memCacheWidth: 650,
+                            imageUrl: widget.imageUrl,
+                            fit: widget.imageFit ?? BoxFit.cover,
+                            sourceId: widget.sourceId,
+                            svgErrorImagePath: widget.errorImagePath,
+                            context: context),
+                      ),
                     ),
-                  ),
-                  if (widget.isFavouriteVisible)
-                    Positioned(
-                      top: 6.h,
-                      right: 8.w,
-                      child: InkWell(
-                        onTap: widget.onFavouriteIconClick,
-                        borderRadius: BorderRadius.circular(50.r),
-                        child: Container(
-                          padding: EdgeInsets.all(8.r),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).primaryColor,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Icon(
-                            size: 25.h.w,
-                            widget.isFavourite
-                                ? Icons.favorite_sharp
-                                : Icons.favorite_border_sharp,
-                            color:
-                                widget.isFavourite ? Colors.red : Colors.white,
+                    if (widget.isFavouriteVisible)
+                      Positioned(
+                        top: 6.h,
+                        right: 8.w,
+                        child: InkWell(
+                          onTap: widget.onFavouriteIconClick,
+                          borderRadius: BorderRadius.circular(50.r),
+                          child: Container(
+                            padding: EdgeInsets.all(8.r),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).primaryColor,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              size: 25.h.w,
+                              widget.isFavourite
+                                  ? Icons.favorite_sharp
+                                  : Icons.favorite_border_sharp,
+                              color:
+                                  widget.isFavourite ? Colors.red : Colors.white,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            10.verticalSpace,
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5.h.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  (widget.date != null)
-                      ? textSemiBoldMontserrat(
-                          color: Theme.of(context).textTheme.labelMedium?.color,
-                      fontWeight: FontWeight.w600,
-                      text: KuselDateUtils.formatDate(widget.date ?? ""),
-                          fontSize: 12)
-                      : SizedBox.shrink(),
-                  (widget.date != null) ? 5.verticalSpace : SizedBox.shrink(),
-                  textSemiBoldMontserrat(
-                      text: widget.heading,
-                      textAlign: TextAlign.start,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 11,
-                      textOverflow: TextOverflow.visible,
-                      color: Theme.of(context).textTheme.bodyLarge?.color),
-                  3.verticalSpace,
-                  textSemiBoldMontserrat(
-                      text: stripHtmlTags(widget.description),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      textAlign: TextAlign.start,
-                      color: Theme.of(context).textTheme.labelMedium?.color,
-                      maxLines: 3),
-                ],
+              10.verticalSpace,
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5.h.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    (widget.date != null)
+                        ? textSemiBoldMontserrat(
+                            color: Theme.of(context).textTheme.labelMedium?.color,
+                        fontWeight: FontWeight.w600,
+                        text: KuselDateUtils.formatDate(widget.date ?? ""),
+                            fontSize: 12)
+                        : SizedBox.shrink(),
+                    (widget.date != null) ? 5.verticalSpace : SizedBox.shrink(),
+                    textSemiBoldMontserrat(
+                        text: widget.heading,
+                        textAlign: TextAlign.start,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 11,
+                        textOverflow: TextOverflow.visible,
+                        color: Theme.of(context).textTheme.bodyLarge?.color),
+                    3.verticalSpace,
+                    textSemiBoldMontserrat(
+                        text: stripHtmlTags(widget.description),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        textAlign: TextAlign.start,
+                        color: Theme.of(context).textTheme.labelMedium?.color,
+                        maxLines: 3),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
