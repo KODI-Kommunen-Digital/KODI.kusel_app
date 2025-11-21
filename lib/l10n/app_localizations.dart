@@ -1817,7 +1817,7 @@ abstract class AppLocalizations {
   /// No description provided for @confirm_new_password.
   ///
   /// In en, this message translates to:
-  /// **'New password'**
+  /// **'Confirm new password'**
   String get confirm_new_password;
 
   /// No description provided for @at_least_8_character.
