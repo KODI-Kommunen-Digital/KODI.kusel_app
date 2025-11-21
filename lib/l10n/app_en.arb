@@ -332,5 +332,6 @@
   "name_char_allowed_msg": "Name must be at least 3 characters long",
   "feedback_setting": "Feedback",
   "all_events_filter": "All events",
-  "our_recommendations": "Our Recommendations"
+  "our_recommendations": "Our Recommendations",
+  "digifit_end": "end"
 }

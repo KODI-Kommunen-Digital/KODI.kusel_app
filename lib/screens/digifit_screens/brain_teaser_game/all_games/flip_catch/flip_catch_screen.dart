@@ -479,7 +479,7 @@ class _FlipCatchScannerState extends ConsumerState<FlipCatchScreen> {
             },
             isDefaultAction: true,
             child: textBoldPoppins(
-              text: AppLocalizations.of(context).cancel,
+              text: AppLocalizations.of(context).digifit_end,
               textOverflow: TextOverflow.visible,
               fontSize: 14,
             ),

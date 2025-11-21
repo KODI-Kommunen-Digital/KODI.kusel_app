@@ -125,7 +125,7 @@ class _WeatherWidgetState extends ConsumerState<WeatherWidget> {
                       ],
                     ),
                   ),
-                  10.verticalSpace
+                  16.verticalSpace
                 ],
               ),
             ),

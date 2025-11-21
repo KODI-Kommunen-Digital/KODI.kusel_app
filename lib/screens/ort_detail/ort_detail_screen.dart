@@ -403,7 +403,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
         final state = ref.watch(ortDetailScreenControllerProvider);
 
         return Padding(
-          padding: EdgeInsets.all(12.h.w),
+          padding: EdgeInsets.all(14.h.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -435,7 +435,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
         child: textRegularMontserrat(
             text: state.ortDetailDataModel?.description ?? "",
             fontSize: 14,
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).textTheme.bodyLarge!.color,
             textAlign: TextAlign.start,
             maxLines: 50),
       );

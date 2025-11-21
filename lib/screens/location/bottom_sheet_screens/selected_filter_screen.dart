@@ -59,10 +59,12 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
         if (!alreadyFetched) {
           debugPrint("Fetching data for categoryId $categoryId");
           locationNotifier.getAllEventListUsingCategoryId(
-              categoryId.toString(), locationState.currentPageNo);
+              categoryId.toString(), 1);
           locationNotifier.markCategoryAsFetched(categoryId);
         } else {
           debugPrint("Skipping fetch, already fetched categoryId $categoryId");
+          locationNotifier.getAllEventListUsingCategoryId(
+              categoryId.toString(), 1);
         }
       }
     });
@@ -93,7 +95,6 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
             children: [
               IconButton(
                 onPressed: () {
-                  state.currentPageNo = 0;
                   ref
                       .read(locationScreenProvider.notifier)
                       .updateBottomSheetSelectedUIType(
@@ -101,7 +102,7 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     ref
                         .read(locationScreenProvider.notifier)
-                        .updateSlidingUpPanelIsDragStatus(true); // allow drag
+                        .updateSlidingUpPanelIsDragStatus(true);
                   });
                 },
                 icon: Icon(
@@ -163,7 +164,7 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
             child: Align(
               alignment: Alignment.centerLeft,
               child: textSemiBoldPoppins(
-                fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.w600,
                   text:
                       "${widget.selectedFilterScreenParams.categoryId == 100 ? AppLocalizations.of(context).map_fav : state.selectedCategoryName}",
                   fontSize: 16),
@@ -171,7 +172,9 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
           ),
           if (ref.watch(locationScreenProvider).isSelectedFilterScreenLoading ||
               favScreenState.loading)
-            CircularProgressIndicator()
+            Expanded(
+              child: Center(child: CircularProgressIndicator()),
+            )
           else
             Expanded(
               child: SingleChildScrollView(
@@ -225,14 +228,6 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
                                 .updateIsFav(isFav, id);
                           },
                           onFavClickCallback: () {
-                            ref
-                                .read(locationScreenProvider.notifier)
-                                .getAllEventListUsingCategoryId(
-                                    widget.selectedFilterScreenParams.categoryId
-                                        .toString(),
-                                    ref
-                                        .read(locationScreenProvider)
-                                        .currentPageNo);
                           },
                           isMultiplePagesList: ref
                               .watch(locationScreenProvider)

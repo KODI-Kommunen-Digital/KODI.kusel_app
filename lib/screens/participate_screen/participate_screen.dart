@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/app_router.dart';
+import 'package:kusel/common_widgets/common_html_widget.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/downstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
@@ -105,16 +106,18 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
               textAlign: TextAlign.left,
               fontSize: 18),
           10.verticalSpace,
-          textBoldMontserrat(
+          textSemiBoldMontserrat(
               color: Theme.of(context).textTheme.bodyLarge?.color,
               textAlign: TextAlign.start,
-              fontSize: 13,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
               text: AppLocalizations.of(context).develop_kusel_together_text,
               textOverflow: TextOverflow.visible),
           10.verticalSpace,
           textRegularMontserrat(
               textAlign: TextAlign.start,
               text: state.participateData?.description ?? "_",
+              color: Theme.of(context).textTheme.bodyLarge!.color,
               textOverflow: TextOverflow.visible),
           12.verticalSpace,
           CustomButton(
@@ -184,10 +187,7 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
               textAlign: TextAlign.left,
               textOverflow: TextOverflow.visible),
           10.verticalSpace,
-          textRegularMontserrat(
-              textAlign: TextAlign.left,
-              text: description,
-              textOverflow: TextOverflow.visible)
+          CommonHtmlWidget(data: description, fontSize: 16,)
         ],
       ),
     );
