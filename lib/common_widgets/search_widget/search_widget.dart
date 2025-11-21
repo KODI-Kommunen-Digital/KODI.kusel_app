@@ -69,7 +69,7 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
               Expanded(
                 child: TypeAheadField<Listing>(
                   hideOnEmpty: true,
-                  hideOnUnfocus: true,
+                  hideOnUnfocus: false,
                   hideOnSelect: true,
                   hideWithKeyboard: false,
                   direction: widget.verticalDirection ?? VerticalDirection.down,
@@ -131,7 +131,7 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
                             fontSize: 16,
                             color: Colors.black87,
                             textAlign:
-                            TextAlign.start, // Ensure text is left-aligned
+                                TextAlign.start, // Ensure text is left-aligned
                           ),
                         ),
                         subtitle: Padding(
@@ -172,7 +172,7 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
 
   saveListingToPrefs(Listing newListing) {
     final existingJson =
-    ref.read(sharedPreferenceHelperProvider).getString(searchListKey);
+        ref.read(sharedPreferenceHelperProvider).getString(searchListKey);
 
     List<Listing> currentListings = [];
     if (existingJson != null && existingJson.isNotEmpty) {
@@ -186,7 +186,7 @@ class _SearchWidgetState extends ConsumerState<SearchWidget> {
       currentListings.removeAt(0);
     }
     final updatedJson =
-    jsonEncode(currentListings.map((e) => e.toJson()).toList());
+        jsonEncode(currentListings.map((e) => e.toJson()).toList());
     ref
         .read(sharedPreferenceHelperProvider)
         .setString(searchListKey, updatedJson);
