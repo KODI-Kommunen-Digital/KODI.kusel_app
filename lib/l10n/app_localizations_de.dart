@@ -898,7 +898,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get new_password => 'Neues Passwort';
 
   @override
-  String get confirm_new_password => 'Neues Passwort';
+  String get confirm_new_password => 'Neues Passwort bestätigen';
 
   @override
   String get at_least_8_character => 'mindestens 8 Zeichen';

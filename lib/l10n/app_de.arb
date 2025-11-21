@@ -287,7 +287,7 @@
   "contact": "Kontakt",
   "profile_setting": "Profileinstellungen",
   "new_password": "Neues Passwort",
-  "confirm_new_password": "Neues Passwort",
+  "confirm_new_password": "Neues Passwort bestätigen",
   "at_least_8_character": "mindestens 8 Zeichen",
   "contains_letters_and_numbers": "enthält Buchstaben und Zahlen",
   "contains_upper_case_and_lower_case": "enthält Groß- und Kleinbuchstaben",
