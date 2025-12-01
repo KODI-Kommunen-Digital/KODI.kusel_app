@@ -239,7 +239,7 @@ abstract class AppLocalizations {
   /// No description provided for @change_language.
   ///
   /// In en, this message translates to:
-  /// **'Change Language'**
+  /// **'language'**
   String get change_language;
 
   /// No description provided for @logout.
@@ -1975,6 +1975,138 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'To'**
   String get an;
+
+  /// No description provided for @digit_dash_game_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready for DigitDash?'**
+  String get digit_dash_game_desc;
+
+  /// No description provided for @abort_digit_dash.
+  ///
+  /// In en, this message translates to:
+  /// **'Abort Digit Dash?'**
+  String get abort_digit_dash;
+
+  /// No description provided for @digit_dash_dialog_title.
+  ///
+  /// In en, this message translates to:
+  /// **'note'**
+  String get digit_dash_dialog_title;
+
+  /// No description provided for @digit_dash_dialog_forbidden_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'The following numbers are forbidden! You must NOT touch them, but skip them. Remember them well!'**
+  String get digit_dash_dialog_forbidden_desc;
+
+  /// No description provided for @digit_dash_dialog_target_desc_odd.
+  ///
+  /// In en, this message translates to:
+  /// **'Only tap the ODD numbers in order!'**
+  String get digit_dash_dialog_target_desc_odd;
+
+  /// No description provided for @digit_dash_dialog_target_desc_even.
+  ///
+  /// In en, this message translates to:
+  /// **'Only tap the EVEN numbers in order!'**
+  String get digit_dash_dialog_target_desc_even;
+
+  /// No description provided for @understood.
+  ///
+  /// In en, this message translates to:
+  /// **'understood'**
+  String get understood;
+
+  /// No description provided for @odd_blue.
+  ///
+  /// In en, this message translates to:
+  /// **'ODD_BLUE'**
+  String get odd_blue;
+
+  /// No description provided for @even_red.
+  ///
+  /// In en, this message translates to:
+  /// **'EVEN_RED'**
+  String get even_red;
+
+  /// No description provided for @select_image.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Missing Image'**
+  String get select_image;
+
+  /// No description provided for @abort_pictures_game.
+  ///
+  /// In en, this message translates to:
+  /// **'Abort Picture\'s Game'**
+  String get abort_pictures_game;
+
+  /// No description provided for @details_scanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Scanner'**
+  String get details_scanner;
+
+  /// No description provided for @correct_answer.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct'**
+  String get correct_answer;
+
+  /// No description provided for @wrong_answer.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong'**
+  String get wrong_answer;
+
+  /// No description provided for @digifit_completed_top.
+  ///
+  /// In en, this message translates to:
+  /// **'completed'**
+  String get digifit_completed_top;
+
+  /// No description provided for @feedback_message.
+  ///
+  /// In en, this message translates to:
+  /// **'message'**
+  String get feedback_message;
+
+  /// No description provided for @name_char_validation_msg.
+  ///
+  /// In en, this message translates to:
+  /// **'Only alphabets and single spaces are allowed'**
+  String get name_char_validation_msg;
+
+  /// No description provided for @name_char_allowed_msg.
+  ///
+  /// In en, this message translates to:
+  /// **'Name must be at least 3 characters long'**
+  String get name_char_allowed_msg;
+
+  /// No description provided for @feedback_setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback'**
+  String get feedback_setting;
+
+  /// No description provided for @all_events_filter.
+  ///
+  /// In en, this message translates to:
+  /// **'All events'**
+  String get all_events_filter;
+
+  /// No description provided for @our_recommendations.
+  ///
+  /// In en, this message translates to:
+  /// **'Our Recommendations'**
+  String get our_recommendations;
+
+  /// No description provided for @digifit_end.
+  ///
+  /// In en, this message translates to:
+  /// **'end'**
+  String get digifit_end;
 }
 
 class _AppLocalizationsDelegate

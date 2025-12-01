@@ -7,6 +7,9 @@ Map<String, String> imagePath = {
 
 Map<String, String> _svgImagePath = {
   "discover_icon": "assets/svg/discover_icon.svg",
+  "home_vector": "assets/svg/home_vector.svg",
+  "home_hollow_icon": "assets/svg/home_hollow_icon.svg",
+  "explore_hollow_icon": "assets/svg/explore_hollow_icon.svg",
   "location_icon": "assets/svg/location_icon.svg",
   "arrow_icon": "assets/svg/arrow_icon.svg",
   "search_icon": "assets/svg/search_icon.svg",
@@ -54,7 +57,8 @@ Map<String, String> _svgImagePath = {
   "setting_header_image":"assets/svg/setting_header_image.svg",
   "setting_profile":"assets/svg/setting_profile.svg",
   "my_fav":"assets/svg/my_fav.svg",
-  "forward_arrow":"assets/svg/forward_arrow.svg"
+  "forward_arrow":"assets/svg/forward_arrow.svg",
+  "location_icon_selected":"assets/svg/location_icon_selected.svg"
 };
 
 Map<String, String> _pngImagePath = {
@@ -103,10 +107,17 @@ Map<String, String> _pngImagePath = {
   "cloud_image_math_hunt": "assets/png/cloud_image_math_hunt.png",
   "boldi_new_sunny_image": "assets/png/boldi_new_sunny.png",
   "math_hunt_boldi": "assets/png/math_hunt_boldi.png",
+  "digit_dash_boldi_image": "assets/png/boldi_digit_dash.png",
+  "digit_dash_cloud_image": "assets/png/cloud_digit_dash_image.png",
+  "placeholder_image_pictures_game": "assets/png/place_holder_image_pictures_game.png",
+  "scanner_image": "assets/png/scanner_image.png",
+  "arrow_right": "assets/png/arrow_right.png",
+  "setting_boldi": "assets/png/setting_boldi.png",
 };
 
 Map<String, String> _jpegImagePath = {
   "highlight_card_image": "assets/jpg/highlight_card_image.jpg",
+  "digifit_overview_image": "assets/jpg/digifit_overview_image.jpg",
 };
 
 Map<String, String> _svgCategoryIconImagePath = {

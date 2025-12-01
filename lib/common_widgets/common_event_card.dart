@@ -18,19 +18,21 @@ class CommonEventCard extends ConsumerStatefulWidget {
   final VoidCallback? onCardTap;
   final VoidCallback? onFavorite;
   final int sourceId;
+  final BoxFit? boxFit;
 
-  const CommonEventCard({
-    Key? key,
-    required this.imageUrl,
-    required this.date,
-    required this.title,
-    required this.location,
-    required this.isFavouriteVisible,
-    required this.isFavorite,
-    required this.sourceId,
-    this.onCardTap,
-    this.onFavorite,
-  }) : super(key: key);
+  const CommonEventCard(
+      {Key? key,
+      required this.imageUrl,
+      required this.date,
+      required this.title,
+      required this.location,
+      required this.isFavouriteVisible,
+      required this.isFavorite,
+      required this.sourceId,
+      this.onCardTap,
+      this.onFavorite,
+      this.boxFit})
+      : super(key: key);
 
   @override
   ConsumerState<CommonEventCard> createState() => _CommonEventCardState();
@@ -55,55 +57,51 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: ImageUtil.loadNetworkImage(
+                    fit: widget.boxFit ?? BoxFit.fill,
                     memCacheHeight: 400,
                     memCacheWidth: 500,
-                    height: 65.h,
-                    width: 73.w,
+                    height: 75.h,
+                    width: 83.w,
                     imageUrl: imageLoaderUtility(
                         image: widget.imageUrl, sourceId: widget.sourceId),
                     context: context),
               ),
               SizedBox(width: 11.w.h),
-              // Texts
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    const SizedBox(height: 8),
                     textRegularMontserrat(
                         text: KuselDateUtils.formatDate(widget.date),
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
-                        color: Theme
-                            .of(context)
-                            .textTheme
-                            .labelMedium
-                            ?.color,
-                    textAlign: TextAlign.start),
-                    const SizedBox(height: 4),
-                    textSemiBoldMontserrat(text: widget.title,
-                    textOverflow: TextOverflow.visible,
-                    fontSize: 13,
+                        color: Theme.of(context).textTheme.labelMedium?.color,
+                        textAlign: TextAlign.start),
+                    const SizedBox(height: 6),
+                    textSemiBoldMontserrat(
+                        text: widget.title,
+                        textOverflow: TextOverflow.visible,
+                        fontSize: 13,
                         fontWeight: FontWeight.w600,
                         textAlign: TextAlign.start),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: 4),
                     textRegularMontserrat(
                         text: widget.location,
-                        color: Theme
-                            .of(context)
-                            .textTheme
-                            .labelMedium
-                            ?.color,
+                        color: Theme.of(context).textTheme.labelMedium?.color,
                         fontWeight: FontWeight.w600,
                         fontSize: 12,
                         textAlign: TextAlign.start),
+                    const SizedBox(height: 4),
                   ],
                 ),
               ),
+              SizedBox(width: 11.w.h),
               Visibility(
                 visible: widget.isFavouriteVisible,
-                child: GestureDetector(
-                  onTap: widget.onFavorite,
-                  child: Icon(
+                child: IconButton(
+                  onPressed: widget.onFavorite,
+                  icon: Icon(
                     size: DeviceHelper.isMobile(context) ? null : 12.h.w,
                     widget.isFavorite
                         ? Icons.favorite_sharp
@@ -114,6 +112,7 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
                   ),
                 ),
               ),
+              SizedBox(width: 7.w.h),
             ],
           ),
         ),
@@ -121,7 +120,6 @@ class _CommonEventCardState extends ConsumerState<CommonEventCard> {
     );
   }
 }
-
 
 Widget eventCartShimmerEffect() {
   return ListTile(

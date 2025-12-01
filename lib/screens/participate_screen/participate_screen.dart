@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/app_router.dart';
+import 'package:kusel/common_widgets/common_html_widget.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/downstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
@@ -58,7 +59,7 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
                     clipperType: DownstreamCurveClipper(),
                     imageUrl: state.participateData?.imageUrl ??
                         'https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg',
-                    isBackArrowEnabled: false,
+                    isBackArrowEnabled: true,
                     isStaticImage: false),
                 _buildParticipateDescription(),
                 _buildParticipateList(),
@@ -86,15 +87,6 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
               ],
             ),
           ),
-          Positioned(
-            top: 30.h,
-            left: 12.h,
-            child: ArrowBackWidget(
-              onTap: () {
-                ref.read(navigationProvider).removeTopPage(context: context);
-              },
-            ),
-          ),
         ],
       ),
     );
@@ -114,16 +106,18 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
               textAlign: TextAlign.left,
               fontSize: 18),
           10.verticalSpace,
-          textBoldMontserrat(
+          textSemiBoldMontserrat(
               color: Theme.of(context).textTheme.bodyLarge?.color,
               textAlign: TextAlign.start,
-              fontSize: 13,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
               text: AppLocalizations.of(context).develop_kusel_together_text,
               textOverflow: TextOverflow.visible),
           10.verticalSpace,
           textRegularMontserrat(
               textAlign: TextAlign.start,
               text: state.participateData?.description ?? "_",
+              color: Theme.of(context).textTheme.bodyLarge!.color,
               textOverflow: TextOverflow.visible),
           12.verticalSpace,
           CustomButton(
@@ -193,10 +187,7 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
               textAlign: TextAlign.left,
               textOverflow: TextOverflow.visible),
           10.verticalSpace,
-          textRegularMontserrat(
-              textAlign: TextAlign.left,
-              text: description,
-              textOverflow: TextOverflow.visible)
+          CommonHtmlWidget(data: description, fontSize: 16,)
         ],
       ),
     );

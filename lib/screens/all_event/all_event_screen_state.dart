@@ -18,6 +18,8 @@ class AllEventScreenState {
   DateTime endDate;
   List<int> selectedCategoryIdList;
   int numberOfFiltersApplied;
+  List<Listing> recommendationList;
+  int highlightCount;
 
   AllEventScreenState(
       this.listingList,
@@ -34,11 +36,13 @@ class AllEventScreenState {
       this.startDate,
       this.endDate,
       this.selectedCategoryIdList,
-      this.numberOfFiltersApplied);
+      this.numberOfFiltersApplied,
+      this.recommendationList,
+      this.highlightCount);
 
   factory AllEventScreenState.empty() {
     return AllEventScreenState([], false, null, false, 1, false, true, [], 0,
-        "", 0, defaultDate, defaultDate, [], 0);
+        "", 0, defaultDate, defaultDate, [], 0, [], 0);
   }
 
   AllEventScreenState copyWith(
@@ -56,7 +60,9 @@ class AllEventScreenState {
       DateTime? startDate,
       DateTime? endDate,
       List<int>? selectedCategoryIdList,
-      int? numberOfFiltersApplied}) {
+      int? numberOfFiltersApplied,
+      List<Listing>? recommendationList,
+      int? highlightCount}) {
     return AllEventScreenState(
         listingList ?? this.listingList,
         isLoading ?? this.isLoading,
@@ -72,6 +78,8 @@ class AllEventScreenState {
         startDate ?? this.startDate,
         endDate ?? this.endDate,
         selectedCategoryIdList ?? this.selectedCategoryIdList,
-        numberOfFiltersApplied ?? this.numberOfFiltersApplied);
+        numberOfFiltersApplied ?? this.numberOfFiltersApplied,
+        recommendationList ?? this.recommendationList,
+        highlightCount ?? this.highlightCount);
   }
 }

@@ -27,6 +27,7 @@ class MathHuntResponseModel extends BaseModel<MathHuntResponseModel> {
 }
 
 class MathHuntDataModel extends BaseModel<MathHuntDataModel> {
+  final String? subDescription;
   final List<String>? problem;
   final List<String>? options;
   final int? correctAnswer;
@@ -41,6 +42,7 @@ class MathHuntDataModel extends BaseModel<MathHuntDataModel> {
     this.timer,
     this.sessionId,
     this.activityId,
+    this.subDescription,
   });
 
   @override
@@ -54,6 +56,7 @@ class MathHuntDataModel extends BaseModel<MathHuntDataModel> {
       timer: json['timer'],
       sessionId: json['sessionId'],
       activityId: json['activityId'],
+      subDescription: json['subDescription'],
     );
   }
 
@@ -65,5 +68,6 @@ class MathHuntDataModel extends BaseModel<MathHuntDataModel> {
         'timer': timer,
         'sessionId': sessionId,
         'activityId': activityId,
+        'subDescription': subDescription,
       };
 }

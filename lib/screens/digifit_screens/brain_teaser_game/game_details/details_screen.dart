@@ -1,4 +1,5 @@
 import 'package:domain/model/response_model/digifit/brain_teaser_game/details_response_model.dart';
+import 'package:domain/model/response_model/digifit/digifit_information_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,9 +17,13 @@ import '../../../../common_widgets/common_html_widget.dart';
 import '../../../../common_widgets/device_helper.dart';
 import '../../../../common_widgets/feedback_card_widget.dart';
 import '../../../../common_widgets/text_styles.dart';
+import '../../../../common_widgets/toast_message.dart';
 import '../../../../images_path.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../navigation/navigation.dart';
+import '../../../no_network/network_status_screen_provider.dart';
+import '../../digifit_exercise_detail/params/digifit_exercise_details_params.dart';
+import '../../digifit_start/digifit_information_controller.dart';
 import '../common_navigation/game_navigation_provider.dart';
 import 'details_controller.dart';
 
@@ -121,6 +126,43 @@ class _BrainTeaserGameDetailsScreenState
                 },
                 isFavVisible: false,
                 isFav: false,
+                isScannerVisible: true,
+                onScannerTap: () async {
+                  String path = digifitQRScannerScreenPath;
+
+                  final barcode = await ref
+                      .read(navigationProvider)
+                      .navigateUsingPath(path: path, context: context);
+                  if (barcode != null) {
+                    ref
+                        .read(digifitInformationControllerProvider.notifier)
+                        .getSlug(barcode, (String slugUrl) {
+                      final isNetwork =
+                          ref.read(networkStatusProvider).isNetworkAvailable;
+
+                      if (isNetwork) {
+                        ref.read(navigationProvider).navigateUsingPath(
+                            path: digifitExerciseDetailScreenPath,
+                            context: context,
+                            params: DigifitExerciseDetailsParams(
+                                station:
+                                    DigifitInformationStationModel(id: null),
+                                slug: slugUrl,
+                                onFavCallBack: () {
+                                  ref
+                                      .read(digifitInformationControllerProvider
+                                          .notifier)
+                                      .fetchDigifitInformation();
+                                }));
+                      }
+                    }, () {
+                      showErrorToast(
+                          message:
+                              AppLocalizations.of(context).something_went_wrong,
+                          context: context);
+                    });
+                  }
+                },
               ),
             ),
           ],
@@ -191,31 +233,35 @@ class _BrainTeaserGameDetailsScreenState
         children: [
           Positioned(
             top: 6.h,
-            left: 10.w,
+            left: 6.w,
             child: SizedBox(
-              height: 168.h,
-              width: 134.w,
+              height: 178.h,
+              width: 144.w,
               child: Stack(
                 alignment: Alignment.center,
                 children: [
                   ImageUtil.loadAssetImage(
                     imageUrl: imagePath['cloud_message_image'] ?? '',
-                    height: 168.h,
-                    width: 134.w,
+                    height: 178.h,
+                    width: 144.w,
                     fit: BoxFit.contain,
                     context: context,
                   ),
                   Positioned(
-                    bottom: 60.h,
-                    left: 2,
-                    right: 10,
-                    child: textSemiBoldMontserrat(
-                        text: AppLocalizations.of(context).games_stamps_desc,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                        color: Theme.of(context).textTheme.bodyLarge?.color,
-                        textAlign: TextAlign.center,
-                        textOverflow: TextOverflow.visible),
+                    top: 60.h,
+                    left: 8.w,
+                    right: 12.w,
+                    child: SizedBox(
+                      width: 120.w,
+                      child: textSemiBoldMontserrat(
+                          text: AppLocalizations.of(context).games_stamps_desc,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                          color: Theme.of(context).textTheme.bodyLarge?.color,
+                          textAlign: TextAlign.center,
+                          maxLines: 3,
+                          textOverflow: TextOverflow.ellipsis),
+                    ),
                   ),
                 ],
               ),
@@ -314,8 +360,8 @@ class _BrainTeaserGameDetailsScreenState
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         20.verticalSpace,
         textBoldPoppins(
-          color: Theme.of(context).textTheme.labelLarge?.color,
-          fontSize: 18,
+          color: Theme.of(context).primaryColor,
+          fontSize: 20,
           textAlign: TextAlign.left,
           text: AppLocalizations.of(context).choose_level,
         ),
@@ -361,7 +407,7 @@ class _BrainTeaserGameDetailsScreenState
         20.verticalSpace,
         textBoldPoppins(
           color: Theme.of(context).textTheme.labelLarge?.color,
-          fontSize: 18,
+          fontSize: 20,
           textAlign: TextAlign.left,
           text: AppLocalizations.of(context).more_games,
         ),

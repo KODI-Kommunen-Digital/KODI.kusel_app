@@ -52,37 +52,18 @@ class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
         color: Colors.white,
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
-        elevation: 4,
+        elevation: 2,
         child: Stack(
           children: [
             Padding(
               padding: EdgeInsets.all(5.h.w),
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start, // Add this
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: ImageUtil.loadNetworkImage(
-                        onImageTap: () {
-                          bool value = ref
-                              .read(networkStatusProvider)
-                              .isNetworkAvailable;
-                          if (value) {
-                            ref.read(navigationProvider).navigateUsingPath(
-                                path: fullImageScreenPath,
-                                params: FullImageScreenParams(
-                                    imageUrL: widget.imageUrl,
-                                    sourceId: widget.sourceId),
-                                context: context);
-                          } else {
-                            ref.read(navigationProvider).navigateUsingPath(
-                                path: offlineFullImageScreenPath,
-                                params: FullImageScreenParams(
-                                    imageUrL: widget.imageUrl,
-                                    sourceId: widget.sourceId),
-                                context: context);
-                          }
-                        },
-                        height: 75.h,
+                        height: 80.h,
                         width: 80.w,
                         imageUrl: widget.imageUrl,
                         sourceId: widget.sourceId,
@@ -90,45 +71,59 @@ class _CommonEventCardState extends ConsumerState<DigifitTextImageCard> {
                   ),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        textRegularMontserrat(
-                            text: widget.heading,
-                            fontSize: 9,
-                            color:
-                                Theme.of(context).textTheme.labelMedium?.color),
-                        4.verticalSpace,
-                        textSemiBoldMontserrat(
-                            text: widget.title,
-                            textAlign: TextAlign.start,
-                            fontSize: 16,
-                            textOverflow: TextOverflow.visible),
-                        4.verticalSpace,
-                        Visibility(
-                          visible: (widget.description != null),
-                          child: textRegularMontserrat(
-                              text: widget.description ?? '',
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 8.h),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          textRegularMontserrat(
+                              text: widget.heading,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
                               color: Theme.of(context)
                                   .textTheme
                                   .labelMedium
                                   ?.color),
-                        ),
-                      ],
+                          4.verticalSpace,
+                          textSemiBoldMontserrat(
+                              text: widget.title,
+                              textAlign: TextAlign.start,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge?.color,
+                              textOverflow: TextOverflow.visible),
+                          4.verticalSpace,
+                          Visibility(
+                            visible: (widget.description != null),
+                            child: textRegularMontserrat(
+                                text: widget.description ?? '',
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .labelMedium
+                                    ?.color),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                  Visibility(
-                    visible: widget.isFavouriteVisible,
-                    child: InkWell(
-                      onTap: widget.onFavorite,
-                      child: Icon(
-                        size: DeviceHelper.isMobile(context) ? null : 12.h.w,
-                        widget.isFavorite
-                            ? Icons.favorite_sharp
-                            : Icons.favorite_border,
-                        color: !widget.isFavorite
-                            ? Theme.of(context).primaryColor
-                            : Theme.of(context).colorScheme.onTertiaryFixed,
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Visibility(
+                      visible: widget.isFavouriteVisible,
+                      child: IconButton(
+                        onPressed: widget.onFavorite,
+                        icon: Icon(
+                          size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                          widget.isFavorite
+                              ? Icons.favorite_sharp
+                              : Icons.favorite_border,
+                          color: !widget.isFavorite
+                              ? Theme.of(context).primaryColor
+                              : Theme.of(context).colorScheme.onTertiaryFixed,
+                        ),
                       ),
                     ),
                   ),

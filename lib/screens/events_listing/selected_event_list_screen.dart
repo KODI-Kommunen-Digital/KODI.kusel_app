@@ -9,6 +9,7 @@ import 'package:kusel/screens/events_listing/selected_event_list_screen_paramete
 
 import '../../common_widgets/arrow_back_widget.dart';
 import '../../common_widgets/common_background_clipper_widget.dart';
+import '../../common_widgets/device_helper.dart';
 import '../../common_widgets/event_list_section_widget.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
@@ -44,100 +45,114 @@ class _ExploreScreenState extends ConsumerState<SelectedEventListScreen> {
     final currentPageNumber =
         ref.watch(selectedEventListScreenProvider).currentPageNo;
     final SelectedEventListScreenState categoryScreenState =
-    ref.watch(selectedEventListScreenProvider);
+        ref.watch(selectedEventListScreenProvider);
     return Scaffold(
-      backgroundColor: Theme
-          .of(context)
-          .scaffoldBackgroundColor,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: categoryScreenState.loading
           ? const Center(child: CircularProgressIndicator())
-          : SafeArea(child: _buildBody(categoryScreenState, context, currentPageNumber)),
+          : SafeArea(
+              child: RefreshIndicator(
+                  onRefresh: () async {
+                    final currentPageNumber =
+                        ref.read(selectedEventListScreenProvider).currentPageNo;
+                    ref
+                        .read(selectedEventListScreenProvider.notifier)
+                        .getEventsList(
+                            widget.eventListScreenParameter, currentPageNumber);
+
+                    ref
+                        .read(selectedEventListScreenProvider.notifier)
+                        .isUserLoggedIn();
+                  },
+                  child: _buildBody(
+                      categoryScreenState, context, currentPageNumber))),
     );
   }
 
   Widget _buildBody(SelectedEventListScreenState categoryScreenState,
       BuildContext context, int currentPageNumber) {
-    return Stack(
-      children: [
-        SingleChildScrollView(
-          physics: ClampingScrollPhysics(),
-          child: Column(
-            children: [
-              CommonBackgroundClipperWidget(
-                clipperType: UpstreamWaveClipper(),
-                height: 130.h,
-                imageUrl: imagePath['home_screen_background'] ?? '',
-                isStaticImage: true,
-                isBackArrowEnabled: false,
-                headingText: categoryScreenState.heading,
+    return SingleChildScrollView(
+      physics: ClampingScrollPhysics(),
+      child: Column(
+        children: [
+          CommonBackgroundClipperWidget(
+            clipperType: UpstreamWaveClipper(),
+            height: 110.h,
+            imageUrl: imagePath['home_screen_background'] ?? '',
+            isStaticImage: true,
+            isBackArrowEnabled: false,
+            customWidget1: Positioned(
+              top: 28.h,
+              left: 15.w,
+              child: Row(
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        ref
+                            .read(navigationProvider)
+                            .removeTopPage(context: context);
+                      },
+                      icon: Icon(
+                          size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                          color: Theme.of(context).primaryColor,
+                          Icons.arrow_back)),
+                  12.horizontalSpace,
+                  textBoldPoppins(
+                      color: Theme.of(context).textTheme.labelLarge?.color,
+                      fontSize: 19,
+                      text: categoryScreenState.heading ?? '')
+                ],
               ),
-              if (!ref
-                  .watch(selectedEventListScreenProvider)
-                  .loading)
-                ref
-                    .watch(selectedEventListScreenProvider)
-                    .eventsList
-                    .isEmpty
-                    ? Center(
-                  child: textHeadingMontserrat(
-                      text: AppLocalizations
-                          .of(context)
-                          .no_data),
-                )
-                    : EventsListSectionWidget(
-                        eventsList: ref
-                            .watch(selectedEventListScreenProvider)
-                            .eventsList,
-                        heading: null,
-                        maxListLimit: ref
-                            .watch(selectedEventListScreenProvider)
-                            .eventsList
-                            .length,
-                        buttonText: null,
-                        buttonIconPath: null,
-                        isLoading: false,
-                        onButtonTap: () {},
-                        context: context,
-                        isFavVisible: true,
-                        onHeadingTap: () {},
-                        onFavClickCallback: () {
-                          ref
-                              .read(selectedEventListScreenProvider.notifier)
-                              .getEventsList(
-                                  widget.eventListScreenParameter, currentPageNumber);
-                        },
-                        onSuccess: (bool isFav, int? id) {
-                          ref
-                              .read(selectedEventListScreenProvider.notifier)
-                              .updateIsFav(isFav, id);
+            ),
+          ),
+          if (!ref.watch(selectedEventListScreenProvider).loading)
+            ref.watch(selectedEventListScreenProvider).eventsList.isEmpty
+                ? Center(
+                    child: textHeadingMontserrat(
+                        text: AppLocalizations.of(context).no_data),
+                  )
+                : EventsListSectionWidget(
+                    eventsList:
+                        ref.watch(selectedEventListScreenProvider).eventsList,
+                    heading: null,
+                    maxListLimit: ref
+                        .watch(selectedEventListScreenProvider)
+                        .eventsList
+                        .length,
+                    buttonText: null,
+                    buttonIconPath: null,
+                    isLoading: false,
+                    onButtonTap: () {},
+                    context: context,
+                    isFavVisible: true,
+                    onHeadingTap: () {},
+                    onFavClickCallback: () {
+                      ref
+                          .read(selectedEventListScreenProvider.notifier)
+                          .getEventsList(widget.eventListScreenParameter,
+                              currentPageNumber);
+                    },
+                    onSuccess: (bool isFav, int? id) {
+                      ref
+                          .read(selectedEventListScreenProvider.notifier)
+                          .updateIsFav(isFav, id);
 
-                          widget.eventListScreenParameter.onFavChange();
-                        },
-                        isMultiplePagesList: ref
-                            .watch(selectedEventListScreenProvider)
-                            .isLoadMoreButtonEnabled,
-                        onLoadMoreTap: () {
-                          ref
-                              .read(selectedEventListScreenProvider.notifier)
-                              .onLoadMoreList(widget.eventListScreenParameter);
-                        },
-                        isMoreListLoading: ref
-                            .watch(selectedEventListScreenProvider)
-                            .isMoreListLoading,
-                      )
-            ],
-          ),
-        ),
-        Positioned(
-          top: 30.h,
-          left: 15.h,
-          child: ArrowBackWidget(
-            onTap: () {
-              ref.read(navigationProvider).removeTopPage(context: context);
-            },
-          ),
-        ),
-      ],
+                      widget.eventListScreenParameter.onFavChange();
+                    },
+                    isMultiplePagesList: ref
+                        .watch(selectedEventListScreenProvider)
+                        .isLoadMoreButtonEnabled,
+                    onLoadMoreTap: () {
+                      ref
+                          .read(selectedEventListScreenProvider.notifier)
+                          .onLoadMoreList(widget.eventListScreenParameter);
+                    },
+                    isMoreListLoading: ref
+                        .watch(selectedEventListScreenProvider)
+                        .isMoreListLoading,
+                  )
+        ],
+      ),
     );
   }
 }

@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:domain/usecase/digifit/brain_teaser_game/game_details_tracker_usecase.dart';
 import 'package:domain/model/request_model/digifit/brain_teaser_game/all_game_request_model.dart';
 
+import '../../../../../locale/localization_manager.dart';
 import '../../../../../providers/refresh_token_provider.dart';
 import '../../enum/game_session_status.dart';
 import 'boldi_finder_state.dart';
@@ -23,6 +24,9 @@ final brainTeaserGameBoldiFinderControllerProvider =
     tokenStatus: ref.read(tokenStatusProvider),
     refreshTokenProvider: ref.read(refreshTokenProvider),
     levelId: levelId,
+    localeManagerController: ref.read(
+      localeManagerProvider.notifier,
+    ),
     brainTeaserGameDetailsTrackingUseCase:
         ref.read(brainTeaserGameDetailsTrackingUseCaseProvider),
   ),
@@ -34,6 +38,7 @@ class BrainTeaserGameBoldiFinderController
   final TokenStatus tokenStatus;
   final RefreshTokenProvider refreshTokenProvider;
   final int levelId;
+  final LocaleManagerController localeManagerController;
   final BrainTeaserGameDetailsTrackingUseCase
       brainTeaserGameDetailsTrackingUseCase;
 
@@ -45,6 +50,7 @@ class BrainTeaserGameBoldiFinderController
     required this.tokenStatus,
     required this.refreshTokenProvider,
     required this.levelId,
+    required this.localeManagerController,
     required this.brainTeaserGameDetailsTrackingUseCase,
   }) : super(BrainTeaserGameBoldiFinderState.empty());
 
@@ -222,10 +228,13 @@ class BrainTeaserGameBoldiFinderController
     if (!mounted) return;
 
     try {
+      Locale currentLocale = localeManagerController.getSelectedLocale();
+
       final requestModel = AllGamesRequestModel(
-        gameId: gameId,
-        levelId: levelId,
-      );
+          gameId: gameId,
+          levelId: levelId,
+          translate:
+              "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
       final result = await brainTeaserGameBoldiFinderUseCase.call(
         requestModel,

@@ -9,6 +9,7 @@ import 'package:kusel/images_path.dart';
 import '../app_router.dart';
 import '../navigation/navigation.dart';
 import '../screens/full_image/full_image_screen.dart';
+import '../theme_manager/colors.dart';
 
 class NetworkImageTextServiceCard extends ConsumerStatefulWidget {
   final Function() onTap;
@@ -31,20 +32,22 @@ class _IconTextWidgetCardState extends ConsumerState<NetworkImageTextServiceCard
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 2,
+      elevation: 1,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.r),
       ),
       child: GestureDetector(
         onTap: widget.onTap,
         child: Container(
+          height: 75.h,
           padding:
-              EdgeInsets.only(left: 2.w, right: 14.w, top: 20.h, bottom: 20.h),
+              EdgeInsets.only(left: 2.w, right: 14.w, top: 5.h, bottom: 5.h),
           decoration: BoxDecoration(
               color: Theme.of(context).canvasColor,
               borderRadius: BorderRadius.circular(15.r)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
                 flex: 3,
@@ -71,17 +74,23 @@ class _IconTextWidgetCardState extends ConsumerState<NetworkImageTextServiceCard
                   children: [
                     Container(
                       padding: EdgeInsets.only(top: 8.w),
-                      child: textBoldMontserrat(
+                      child: textSemiBoldMontserrat(
                           text: widget.text,
+                          fontWeight: FontWeight.w600,
                           textOverflow: TextOverflow.visible,
                           textAlign: TextAlign.start,
+                          fontSize: 14,
                           color: Theme.of(context).textTheme.bodyLarge?.color),
                     ),
+                    4.verticalSpace,
                     if(widget.description != null)
                         textRegularMontserrat(
                             text: widget.description ?? '',
-                            fontSize: 11,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: lightThemeLabelMediumColor,
                             textOverflow: TextOverflow.visible,
+                            maxLines: 2,
                             textAlign: TextAlign.start)
                   ],
                 ),

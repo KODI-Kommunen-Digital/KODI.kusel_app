@@ -69,24 +69,26 @@ class WordTimerComponent extends PositionComponent with HasGameRef {
   bool _isStopped = false;
   bool _isPaused = false;
 
-  WordTimerComponent(
-      {required this.targetWords,
-      required this.durationSeconds,
-      required this.timerColor,
-      required this.width,
-      required this.height,
-      required this.textColor});
+  WordTimerComponent({
+    required this.targetWords,
+    required this.durationSeconds,
+    required this.timerColor,
+    required this.width,
+    required this.height,
+    required this.textColor,
+  });
 
   late RRect _containerRect;
 
   @override
   Future<void> onLoad() async {
     const horizontalPaddingInside = 20.0;
-    const verticalPaddingInside = 20.0;
-    const topMargin = 40.0;
-    const circleRadius = 50.0;
-    const spaceBelowText = 30.0;
+    const verticalPaddingTop = 60.0;
+    const verticalPaddingBottom = 60.0;
+    const topMargin = 9.0;
+    const circleRadius = 35.0;
     const horizontalScreenPadding = 14.0;
+    const extraCardHeight = 20.0;
 
     final cardWidth = width - (horizontalScreenPadding * 2);
 
@@ -108,11 +110,11 @@ class WordTimerComponent extends PositionComponent with HasGameRef {
     );
     textPainter.layout(maxWidth: cardWidth - horizontalPaddingInside * 2);
 
-    final cardHeight = verticalPaddingInside +
+    final cardHeight = verticalPaddingTop +
         textPainter.height +
-        spaceBelowText +
         (circleRadius * 2) +
-        verticalPaddingInside;
+        verticalPaddingBottom +
+        extraCardHeight;
 
     size = Vector2(cardWidth, cardHeight);
     position = Vector2(width / 2, topMargin);
@@ -153,7 +155,7 @@ class WordTimerComponent extends PositionComponent with HasGameRef {
     final effectiveDuration = durationSeconds + _totalPausedDuration;
 
     if (_elapsed > effectiveDuration) {
-      _elapsed = effectiveDuration; // cap at adjusted duration
+      _elapsed = effectiveDuration;
     }
 
     _progress =
@@ -169,8 +171,9 @@ class WordTimerComponent extends PositionComponent with HasGameRef {
       ..style = PaintingStyle.fill;
     canvas.drawRRect(_containerRect, bgPaint);
 
-    const double verticalPadding = 20.0;
     const double horizontalPaddingInside = 20.0;
+    const double circleRadius = 35.0;
+    const double spaceBetweenTextAndCircle = 30.0;
 
     final textWidget = textSemiBoldPoppins(
       text: targetWords.join('   '),
@@ -187,27 +190,32 @@ class WordTimerComponent extends PositionComponent with HasGameRef {
       textDirection: TextDirection.ltr,
     );
     textPainter.layout(maxWidth: size.x - horizontalPaddingInside * 2);
-    final textOffset =
-        Offset((size.x - textPainter.width) / 2, verticalPadding);
+
+    final totalContentHeight =
+        textPainter.height + spaceBetweenTextAndCircle + (circleRadius * 2);
+
+    final topOffset = (size.y - totalContentHeight) / 2 + 10;
+
+    final textOffset = Offset((size.x - textPainter.width) / 2, topOffset);
     textPainter.paint(canvas, textOffset);
 
-    final double circleTop = textOffset.dy + textPainter.height + 30;
-    final center = Offset(size.x / 2, circleTop + 50);
-    const double radius = 50.0;
+    final double circleTop =
+        textOffset.dy + textPainter.height + spaceBetweenTextAndCircle;
+    final center = Offset(size.x / 2, circleTop + circleRadius);
 
     final circleBgPaint = Paint()
       ..color = const Color(0xFFEAEBF3)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 8;
-    canvas.drawCircle(center, radius, circleBgPaint);
+      ..strokeWidth = 9;
+    canvas.drawCircle(center, circleRadius, circleBgPaint);
 
     final progressPaint = Paint()
       ..color = timerColor
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 8
+      ..strokeWidth = 4
       ..strokeCap = StrokeCap.round;
     canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
+      Rect.fromCircle(center: center, radius: circleRadius),
       -pi / 2,
       2 * pi * _progress,
       false,

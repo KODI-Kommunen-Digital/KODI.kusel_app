@@ -33,7 +33,7 @@ class _DigifitStatusWidgetState extends ConsumerState<DigifitStatusWidget> {
       width: MediaQuery.of(context).size.width,
       child: Card(
         color: Colors.white,
-        elevation: 6,
+        elevation: 1,
         shape:
             RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
         child: Padding(
@@ -74,8 +74,12 @@ class _DigifitStatusWidgetState extends ConsumerState<DigifitStatusWidget> {
           borderRadius: BorderRadius.circular(13.r)),
       child: Column(
         children: [
-          textSemiBoldPoppins(text: value.toString(), fontSize: 55),
-          textBoldPoppins(text: text ?? '_', color: Theme.of(context).textTheme.labelMedium?.color)
+          textSemiBoldPoppins(text: value.toString(), fontSize: 58),
+          textSemiBoldMontserrat(
+              text: text ?? '_',
+              color: Theme.of(context).textTheme.labelMedium?.color,
+              fontWeight: FontWeight.w600,
+              fontSize: 16)
         ],
       ),
     );

@@ -16,7 +16,7 @@ class _CustomMapMarkerState extends State<CustomMapMarker> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      elevation: 6,
+      elevation: 1,
       shape: CircleBorder(
         side: BorderSide(color: Theme.of(context).colorScheme.primary)
       ),

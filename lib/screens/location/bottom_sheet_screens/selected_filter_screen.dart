@@ -59,10 +59,12 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
         if (!alreadyFetched) {
           debugPrint("Fetching data for categoryId $categoryId");
           locationNotifier.getAllEventListUsingCategoryId(
-              categoryId.toString(), locationState.currentPageNo);
+              categoryId.toString(), 1);
           locationNotifier.markCategoryAsFetched(categoryId);
         } else {
           debugPrint("Skipping fetch, already fetched categoryId $categoryId");
+          locationNotifier.getAllEventListUsingCategoryId(
+              categoryId.toString(), 1);
         }
       }
     });
@@ -93,7 +95,6 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
             children: [
               IconButton(
                 onPressed: () {
-                  state.currentPageNo = 0;
                   ref
                       .read(locationScreenProvider.notifier)
                       .updateBottomSheetSelectedUIType(
@@ -101,7 +102,7 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     ref
                         .read(locationScreenProvider.notifier)
-                        .updateSlidingUpPanelIsDragStatus(true); // allow drag
+                        .updateSlidingUpPanelIsDragStatus(true);
                   });
                 },
                 icon: Icon(
@@ -126,39 +127,44 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
             ],
           ),
           15.verticalSpace,
-          SearchWidget(
-            onItemClick: (listing) {
-              ref.read(locationScreenProvider.notifier).setEventItem(listing);
-              ref
-                  .read(locationScreenProvider.notifier)
-                  .updateBottomSheetSelectedUIType(
-                      BottomSheetSelectedUIType.eventDetail);
-            },
-            searchController: ref.watch(searchProvider),
-            hintText: AppLocalizations.of(context).enter_search_term,
-            suggestionCallback: (search) async {
-              List<Listing>? list;
-              if (search.isEmpty) return [];
-              try {
-                list = await ref
-                    .read(locationScreenProvider.notifier)
-                    .searchList(
-                        searchText: search, success: () {}, error: (err) {});
-              } catch (e) {
-                return [];
-              }
-              final sortedList = ref
-                  .watch(locationScreenProvider.notifier)
-                  .sortSuggestionList(search, list);
-              return sortedList;
-            },
-            isPaddingEnabled: true,
-          ),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
+            child: SearchWidget(
+              onItemClick: (listing) {
+                ref.read(locationScreenProvider.notifier).setEventItem(listing);
+                ref
+                    .read(locationScreenProvider.notifier)
+                    .updateBottomSheetSelectedUIType(
+                        BottomSheetSelectedUIType.eventDetail);
+              },
+              searchController: ref.watch(searchProvider),
+              hintText: AppLocalizations.of(context).enter_search_term,
+              suggestionCallback: (search) async {
+                List<Listing>? list;
+                if (search.isEmpty) return [];
+                try {
+                  list = await ref
+                      .read(locationScreenProvider.notifier)
+                      .searchList(
+                          searchText: search, success: () {}, error: (err) {});
+                } catch (e) {
+                  return [];
+                }
+                final sortedList = ref
+                    .watch(locationScreenProvider.notifier)
+                    .sortSuggestionList(search, list);
+                return sortedList;
+              },
+              isPaddingEnabled: true,
+            ),
+          ),
+          18.verticalSpace,
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 14.w),
             child: Align(
               alignment: Alignment.centerLeft,
               child: textSemiBoldPoppins(
+                  fontWeight: FontWeight.w600,
                   text:
                       "${widget.selectedFilterScreenParams.categoryId == 100 ? AppLocalizations.of(context).map_fav : state.selectedCategoryName}",
                   fontSize: 16),
@@ -166,7 +172,9 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
           ),
           if (ref.watch(locationScreenProvider).isSelectedFilterScreenLoading ||
               favScreenState.loading)
-            CircularProgressIndicator()
+            Expanded(
+              child: Center(child: CircularProgressIndicator()),
+            )
           else
             Expanded(
               child: SingleChildScrollView(
@@ -187,7 +195,7 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
                           onSuccess: (bool isFav, int? id) {
                             ref
                                 .read(favoritesListScreenProvider.notifier)
-                                .removeFavorite(isFav, id);
+                                .removeFavorite(id);
                           },
                           onFavClickCallback: () {
                             ref
@@ -220,14 +228,6 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
                                 .updateIsFav(isFav, id);
                           },
                           onFavClickCallback: () {
-                            ref
-                                .read(locationScreenProvider.notifier)
-                                .getAllEventListUsingCategoryId(
-                                    widget.selectedFilterScreenParams.categoryId
-                                        .toString(),
-                                    ref
-                                        .read(locationScreenProvider)
-                                        .currentPageNo);
                           },
                           isMultiplePagesList: ref
                               .watch(locationScreenProvider)

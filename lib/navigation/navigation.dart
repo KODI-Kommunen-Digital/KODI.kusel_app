@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart' as nav;
@@ -33,8 +34,20 @@ class Navigator {
     GoRouter.of(context).pop();
   }
 
-   removeDialog({required BuildContext context})async{
+  void removeDialogWithResult<T>({
+    required BuildContext context,
+    T? result,
+  }) {
+    nav.Navigator.pop<T>(context, result);
+  }
+
+
+  removeDialog({required BuildContext context})async{
     nav.Navigator.pop(context);
+  }
+
+  removePictureDialog({required BuildContext context}) async {
+    nav.Navigator.of(context, rootNavigator: true).pop();
   }
 
   popUnTill({required BuildContext context,required String path})

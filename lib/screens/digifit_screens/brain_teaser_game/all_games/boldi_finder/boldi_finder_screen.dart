@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/screens/digifit_screens/brain_teaser_game/game_details/details_controller.dart';
 
+import '../../../../../app_router.dart';
 import '../../../../../common_widgets/common_background_clipper_widget.dart';
 import '../../../../../common_widgets/common_bottom_nav_card_.dart';
 import '../../../../../common_widgets/common_html_widget.dart';
@@ -14,6 +15,7 @@ import '../../../../../common_widgets/digifit/brain_teaser_game/common_component
 import '../../../../../common_widgets/digifit/brain_teaser_game/common_component/success_overlay_component.dart';
 import '../../../../../common_widgets/digifit/brain_teaser_game/game_status_card.dart';
 import '../../../../../common_widgets/digifit/brain_teaser_game/grid_widget.dart';
+import '../../../../../common_widgets/feedback_card_widget.dart';
 import '../../../../../common_widgets/text_styles.dart';
 import '../../../../../common_widgets/upstream_wave_clipper.dart';
 import '../../../../../images_path.dart';
@@ -98,7 +100,6 @@ class _BoldiFinderScreenState extends ConsumerState<BoldiFinderScreen> {
         ),
       );
     }
-
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, _) async {
@@ -153,13 +154,23 @@ class _BoldiFinderScreenState extends ConsumerState<BoldiFinderScreen> {
                             padding: const EdgeInsets.only(
                               left: 20,
                               right: 20,
-                              bottom: 80,
+                              bottom: 30,
                             ),
                             child: CommonHtmlWidget(
                               fontSize: 16,
-                              data: widget.boldiFinderParams?.desc ?? '',
+                              data: state.gameData?.subDescription ?? '',
                             ),
                           ),
+
+                          20.verticalSpace,
+                          if (!state.isLoading)
+                            FeedbackCardWidget(
+                              height: 270.h,
+                              onTap: () {
+                                ref.read(navigationProvider).navigateUsingPath(
+                                    path: feedbackScreenPath, context: context);
+                              },
+                            ),
                         ],
                       ),
                     ],
@@ -442,7 +453,7 @@ class _BoldiFinderScreenState extends ConsumerState<BoldiFinderScreen> {
             },
             isDefaultAction: true,
             child: textBoldPoppins(
-              text: AppLocalizations.of(context).cancel,
+              text: AppLocalizations.of(context).digifit_end,
               textOverflow: TextOverflow.visible,
               fontSize: 14,
             ),
@@ -487,7 +498,7 @@ class _BoldiFinderScreenState extends ConsumerState<BoldiFinderScreen> {
     if (!mounted) return;
 
     String text = ((widget.boldiFinderParams?.levelId ?? 1) == 1 ||
-        (widget.boldiFinderParams?.levelId ?? 1) == 2)
+            (widget.boldiFinderParams?.levelId ?? 1) == 2)
         ? AppLocalizations.of(context).level_complete_desc
         : AppLocalizations.of(context).all_level_complete;
 
@@ -503,7 +514,7 @@ class _BoldiFinderScreenState extends ConsumerState<BoldiFinderScreen> {
         content: Padding(
           padding: EdgeInsets.only(top: 8.h),
           child: textRegularPoppins(
-            text:text,
+            text: text,
             textAlign: TextAlign.center,
             textOverflow: TextOverflow.visible,
             fontSize: 12,
@@ -550,11 +561,11 @@ class _BoldiFinderScreenState extends ConsumerState<BoldiFinderScreen> {
 
   String _getGameStatusDescription(int levelId) {
     switch (levelId) {
-      case 7:
+      case 1:
         return AppLocalizations.of(context).successful_game_desc_for_level_1;
-      case 8:
+      case 2:
         return AppLocalizations.of(context).successful_game_desc_for_level_2;
-      case 9:
+      case 3:
         return AppLocalizations.of(context).successful_game_desc_for_level_3;
       default:
         return "Great effort! Keep pushing your limits.";

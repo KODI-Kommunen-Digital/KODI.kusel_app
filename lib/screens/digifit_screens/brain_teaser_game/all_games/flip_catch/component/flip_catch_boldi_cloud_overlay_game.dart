@@ -61,7 +61,7 @@ class CloudComponent extends PositionComponent with HasGameRef {
       gameSize.y * 0.50,
     );
 
-    size = Vector2(148, 114);
+    size = Vector2(158, 124);
 
     _isInitialized = true;
   }
@@ -98,7 +98,7 @@ class CloudComponent extends PositionComponent with HasGameRef {
     textPainter.layout(maxWidth: size.x * 0.85);
 
     final textOffset = Offset(
-      -textPainter.width / 2,
+      -textPainter.width / 2 - 8,
       -textPainter.height / 2,
     );
 
@@ -117,13 +117,13 @@ class BoldiSpriteComponent extends SpriteComponent with HasGameRef {
 
     final gameSize = gameRef.size;
     position = Vector2(
-      gameSize.x * 0.72,
+      gameSize.x * 0.74,
       gameSize.y * 0.38,
     );
 
     size = Vector2(
-      gameSize.x * 0.55,
-      gameSize.y * 0.8,
+      gameSize.x * 0.58,
+      gameSize.y * 0.78,
     );
   }
 }
