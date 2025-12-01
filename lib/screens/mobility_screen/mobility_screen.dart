@@ -53,7 +53,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
                     clipperType: DownstreamCurveClipper(),
                     imageUrl: state.mobilityData?.imageUrl ??
                         'https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg',
-                    isBackArrowEnabled: false,
+                    isBackArrowEnabled: true,
                     isStaticImage: false),
                 _buildMobilityDescription(),
                 // _buildReadMoreSection(),
@@ -69,15 +69,6 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
               ],
             ),
           ),
-          Positioned(
-            top: 30.h,
-            left: 12.h,
-            child: ArrowBackWidget(
-              onTap: () {
-                ref.read(navigationProvider).removeTopPage(context: context);
-              },
-            ),
-          ),
         ],
       ),
     );
@@ -86,14 +77,14 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
   _buildMobilityDescription() {
     final state = ref.watch(mobilityScreenProvider);
     return Padding(
-      padding: EdgeInsets.all(12.h.w),
+      padding: EdgeInsets.all(16.h.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           textBoldPoppins(
               color: Theme.of(context).textTheme.bodyLarge?.color,
               text: state.mobilityData?.title ?? "_",
-              fontSize: 18),
+              fontSize: 20),
           10.verticalSpace,
           textRegularMontserrat(
               textAlign: TextAlign.start,
@@ -127,10 +118,14 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          textBoldPoppins(
-              text: AppLocalizations.of(context).our_offers,
-              textAlign: TextAlign.start,
-              fontSize: 14),
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: textBoldPoppins(
+                text: AppLocalizations.of(context).our_offers,
+                textAlign: TextAlign.start,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
+                fontSize: 16),
+          ),
           14.verticalSpace,
           if (state.mobilityData != null &&
               state.mobilityData!.servicesOffered!.isNotEmpty)
@@ -193,11 +188,14 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           20.verticalSpace,
-          textBoldPoppins(
-            textAlign: TextAlign.start,
-            color: Theme.of(context).textTheme.bodyLarge?.color,
-            text: AppLocalizations.of(context).your_contact_persons,
-            fontSize: 14,
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: textBoldPoppins(
+              textAlign: TextAlign.start,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
+              text: AppLocalizations.of(context).your_contact_persons,
+              fontSize: 14,
+            ),
           ),
           15.verticalSpace,
           if (state.mobilityData != null &&

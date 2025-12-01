@@ -35,7 +35,7 @@ class DigifitFavController extends StateNotifier<DigifitFavScreenState> {
       required this.tokenStatus})
       : super(DigifitFavScreenState.empty());
 
-  getDigifitFavList(int pageNumber, {int pageSize = 9}) async {
+  getDigifitFavList(int pageNumber, {int pageSize = 19}) async {
     try {
       state = state.copyWith(isLoading: true);
 

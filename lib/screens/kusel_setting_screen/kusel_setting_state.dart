@@ -22,6 +22,13 @@ class KuselSettingState {
   String address;
 
   bool isLocationPermissionGranted;
+  String initialName;
+  String initialEmail;
+  String initialMobileNumber;
+  String initialAddress;
+  String initialLanguage;
+  bool initialLocationPermission;
+  bool hasChanges;
 
   KuselSettingState(
       this.languageList,
@@ -40,7 +47,14 @@ class KuselSettingState {
       this.email,
       this.mobileNumber,
       this.address,
-      this.isLocationPermissionGranted);
+      this.isLocationPermissionGranted,
+      this.initialName,
+      this.initialEmail,
+      this.initialMobileNumber,
+      this.initialAddress,
+      this.initialLanguage,
+      this.initialLocationPermission,
+      this.hasChanges);
 
   factory KuselSettingState.empty() {
     return KuselSettingState(
@@ -60,6 +74,13 @@ class KuselSettingState {
         '',
         '',
         '',
+        false,
+        '',
+        '',
+        '',
+        '',
+        LocaleConstant.german.displayName,
+        false,
         false);
   }
 
@@ -80,7 +101,14 @@ class KuselSettingState {
       String? email,
       String? mobileNumber,
       String? address,
-      bool? isLocationPermissionGranted}) {
+      bool? isLocationPermissionGranted,
+      String? initialName,
+      String? initialEmail,
+      String? initialMobileNumber,
+      String? initialAddress,
+      String? initialLanguage,
+      bool? initialLocationPermission,
+      bool? hasChanges}) {
     return KuselSettingState(
         languageList ?? this.languageList,
         selectedLanguage ?? this.selectedLanguage,
@@ -98,6 +126,13 @@ class KuselSettingState {
         email ?? this.email,
         mobileNumber ?? this.mobileNumber,
         address ?? this.address,
-        isLocationPermissionGranted ?? this.isLocationPermissionGranted);
+        isLocationPermissionGranted ?? this.isLocationPermissionGranted,
+        initialName ?? this.initialName,
+        initialEmail ?? this.initialEmail,
+        initialMobileNumber ?? this.initialMobileNumber,
+        initialAddress ?? this.initialAddress,
+        initialLanguage ?? this.initialLanguage,
+        initialLocationPermission ?? this.initialLocationPermission,
+        hasChanges ?? this.hasChanges);
   }
 }

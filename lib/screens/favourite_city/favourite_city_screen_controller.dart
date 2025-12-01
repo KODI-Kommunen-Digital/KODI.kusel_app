@@ -40,7 +40,7 @@ class FavouriteCityScreenController
       required this.localeManagerController})
       : super(FavouriteCityScreenState.empty());
 
-  fetchFavouriteCities(int pageNumber, {int pageSize = 9}) async {
+  fetchFavouriteCities(int pageNumber, {int pageSize = 19}) async {
     try {
 
       final status = tokenStatus.isAccessTokenExpired();

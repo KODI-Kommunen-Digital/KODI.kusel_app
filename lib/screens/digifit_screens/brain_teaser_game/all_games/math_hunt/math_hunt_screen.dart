@@ -10,8 +10,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../../app_router.dart';
 import '../../../../../common_widgets/common_background_clipper_widget.dart';
 import '../../../../../common_widgets/device_helper.dart';
+import '../../../../../common_widgets/feedback_card_widget.dart';
 import '../../../../../common_widgets/text_styles.dart';
 import '../../../../../common_widgets/upstream_wave_clipper.dart';
 import '../../../../../images_path.dart';
@@ -100,7 +102,7 @@ class _MathHuntScreenState extends ConsumerState<MathHuntScreen> {
                   child: Stack(
                     children: [
                       CommonBackgroundClipperWidget(
-                        height: 145.h,
+                        height: 140.h,
                         clipperType: UpstreamWaveClipper(),
                         imageUrl: imagePath['home_screen_background'] ?? '',
                         isStaticImage: true,
@@ -117,7 +119,7 @@ class _MathHuntScreenState extends ConsumerState<MathHuntScreen> {
                             padding:
                                 const EdgeInsets.only(right: 10.0, left: 20.0),
                             child: SizedBox(
-                              height: 240.h,
+                              height: 220.h,
                               width: double.infinity,
                               child: _buildMathHunt(state, controller),
                             ),
@@ -127,13 +129,23 @@ class _MathHuntScreenState extends ConsumerState<MathHuntScreen> {
                             padding: const EdgeInsets.only(
                               left: 20,
                               right: 20,
-                              bottom: 80,
+                              bottom: 30,
                             ),
                             child: CommonHtmlWidget(
-                              data: widget.mathHuntGameParams?.desc ?? '',
+                              data:
+                                  state.mathHuntDataModel?.subDescription ?? '',
                               fontSize: 16,
                             ),
                           ),
+                          10.verticalSpace,
+                          if (!state.isLoading)
+                            FeedbackCardWidget(
+                              height: 270.h,
+                              onTap: () {
+                                ref.read(navigationProvider).navigateUsingPath(
+                                    path: feedbackScreenPath, context: context);
+                              },
+                            ),
                         ],
                       )
                     ],
@@ -158,9 +170,10 @@ class _MathHuntScreenState extends ConsumerState<MathHuntScreen> {
                   left: 0,
                   right: 0,
                   child: GameStatusCardWidget(
-                      isStatus: state.isAnswerCorrect ?? false,
-                      description: _getGameStatusDescription(
-                          widget.mathHuntGameParams?.levelId ?? 1)),
+                    isStatus: state.isAnswerCorrect ?? false,
+                    description: _getGameStatusDescription(
+                        widget.mathHuntGameParams?.levelId ?? 1),
+                  ),
                 ),
             ],
           ),
@@ -298,8 +311,8 @@ class _MathHuntScreenState extends ConsumerState<MathHuntScreen> {
   Future<void> _showCompleteDialog(BuildContext context) async {
     if (!mounted) return;
 
-    String text = ((widget.mathHuntGameParams?.levelId ?? 1) == 1 ||
-            (widget.mathHuntGameParams?.levelId ?? 1) == 2)
+    String text = ((widget.mathHuntGameParams?.levelId ?? 7) == 7 ||
+            (widget.mathHuntGameParams?.levelId ?? 1) == 8)
         ? AppLocalizations.of(context).level_complete_desc
         : AppLocalizations.of(context).all_level_complete;
 
@@ -401,7 +414,7 @@ class _MathHuntScreenState extends ConsumerState<MathHuntScreen> {
             },
             isDefaultAction: true,
             child: textBoldPoppins(
-              text: AppLocalizations.of(context).cancel,
+              text: AppLocalizations.of(context).digifit_end,
               textOverflow: TextOverflow.visible,
               fontSize: 14,
             ),
@@ -437,9 +450,6 @@ class _MathHuntScreenState extends ConsumerState<MathHuntScreen> {
   }
 
   String _getGameStatusDescription(int levelId) {
-
-    debugPrint('here the value of this is ${levelId}');
-
     switch (levelId) {
       case 7:
         return AppLocalizations.of(context).successful_game_desc_for_level_1;

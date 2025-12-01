@@ -9,11 +9,13 @@ import 'package:kusel/screens/digifit_screens/brain_teaser_game/all_games/flip_c
 import 'package:kusel/screens/digifit_screens/brain_teaser_game/all_games/flip_catch/flip_catch_state.dart';
 import 'package:kusel/screens/digifit_screens/brain_teaser_game/game_details/details_controller.dart';
 
+import '../../../../../app_router.dart';
 import '../../../../../common_widgets/common_background_clipper_widget.dart';
 import '../../../../../common_widgets/common_bottom_nav_card_.dart';
 import '../../../../../common_widgets/common_html_widget.dart';
 import '../../../../../common_widgets/device_helper.dart';
 import '../../../../../common_widgets/digifit/brain_teaser_game/game_status_card.dart';
+import '../../../../../common_widgets/feedback_card_widget.dart';
 import '../../../../../common_widgets/text_styles.dart';
 import '../../../../../common_widgets/upstream_wave_clipper.dart';
 import '../../../../../images_path.dart';
@@ -200,19 +202,27 @@ class _FlipCatchScannerState extends ConsumerState<FlipCatchScreen> {
                         children: [
                           130.verticalSpace,
                           _buildGameStack(state),
-                          20.verticalSpace,
+                          10.verticalSpace,
                           Padding(
                             padding: const EdgeInsets.only(
                               left: 20,
                               right: 20,
-                              bottom: 80,
+                              bottom: 30,
                             ),
                             child: CommonHtmlWidget(
                               fontSize: 16,
-                              data: widget.flipCatchParams?.desc ?? '',
+                              data: state.flipCatchData?.subDescription ?? '',
                             ),
                           ),
-                          state.showResult ? 80.verticalSpace : 1.verticalSpace
+                          10.verticalSpace,
+                          if (!state.isLoading)
+                            FeedbackCardWidget(
+                              height: 270.h,
+                              onTap: () {
+                                ref.read(navigationProvider).navigateUsingPath(
+                                    path: feedbackScreenPath, context: context);
+                              },
+                            ),
                         ],
                       ),
                     ],
@@ -334,7 +344,7 @@ class _FlipCatchScannerState extends ConsumerState<FlipCatchScreen> {
                 isCorrect: state.isAnswerCorrect,
                 correctIndex: state.correctWordIndex,
                 isEnabled: state.isGamePlayEnabled,
-                ccompletedIndices: state.completedTargetIndices,
+                completedIndices: state.completedTargetIndices,
                 currentTargetIndex: state.currentTargetIndex ?? 0,
                 textColor: Theme.of(context).textTheme.bodyLarge?.color,
               ),
@@ -469,7 +479,7 @@ class _FlipCatchScannerState extends ConsumerState<FlipCatchScreen> {
             },
             isDefaultAction: true,
             child: textBoldPoppins(
-              text: AppLocalizations.of(context).cancel,
+              text: AppLocalizations.of(context).digifit_end,
               textOverflow: TextOverflow.visible,
               fontSize: 14,
             ),
@@ -513,8 +523,8 @@ class _FlipCatchScannerState extends ConsumerState<FlipCatchScreen> {
   Future<void> _showCompletionDialog(BuildContext context) async {
     if (!mounted) return;
 
-    String text = ((widget.flipCatchParams?.levelId ?? 1) == 1 ||
-            (widget.flipCatchParams?.levelId ?? 1) == 2)
+    String text = ((widget.flipCatchParams?.levelId ?? 4) == 4 ||
+            (widget.flipCatchParams?.levelId ?? 4) == 5)
         ? AppLocalizations.of(context).level_complete_desc
         : AppLocalizations.of(context).all_level_complete;
 

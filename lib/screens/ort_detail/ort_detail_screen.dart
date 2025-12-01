@@ -121,15 +121,6 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                         );
                   },
                 )),
-            Positioned(
-              top: 30.h,
-              left: 12.h,
-              child: ArrowBackWidget(
-                onTap: () {
-                  ref.read(navigationProvider).removeTopPage(context: context);
-                },
-              ),
-            ),
           ],
         ),
       ),
@@ -198,6 +189,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
               ),
             if (state.newsList != null && state.newsList!.isNotEmpty)
               EventsListSectionWidget(
+                boxFit: BoxFit.cover,
                 context: context,
                 eventsList: state.newsList ?? [],
                 heading: AppLocalizations.of(context).news,
@@ -248,7 +240,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                 },
               ),
             if(ref.watch(ortDetailScreenControllerProvider).ortDetailDataModel?.mayorName!=null)
-            _buildMayorCard(),
+            // _buildMayorCard(),
             LocalSvgImageTextServiceCard(
               onTap: () => ref.read(navigationProvider).navigateUsingPath(
                   path: webViewPagePath,
@@ -350,51 +342,55 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
     return Stack(
       children: [
         SizedBox(
-          height: 250.h,
+          height: 260.h,
           child: CommonBackgroundClipperWidget(
             clipperType: DownstreamCurveClipper(),
             imageUrl: imagePath['city_background_image'] ?? "",
-            height: 210.h,
-            isBackArrowEnabled: false,
+            height: 260.h,
+            isBackArrowEnabled: true,
             isStaticImage: true,
           ),
         ),
         Positioned(
-          top: 120.h,
+          top: 132.h,
           left: 0.w,
           right: 0.w,
-          child: Container(
-            height: 120.h,
-            width: 70.w,
-            padding: EdgeInsets.all(25.w),
-            decoration:
-                BoxDecoration(shape: BoxShape.circle, color: Colors.white),
-            child: (state.ortDetailDataModel?.image != null)
-                ? ImageUtil.loadNetworkImage(
-                     memCacheWidth: 100,
-                    memCacheHeight: 100,
-                    imageUrl: state.ortDetailDataModel!.image!,
-                    sourceId: 1,
-                    fit: BoxFit.contain,
-                    onImageTap: () {
-                      ref.read(navigationProvider).navigateUsingPath(
-                          path: fullImageScreenPath,
-                          params: FullImageScreenParams(
-                            imageUrL: state.ortDetailDataModel!.image!,
-                            sourceId: 1
-                          ),
-                          context: context);
-                    },
-                    svgErrorImagePath: imagePath['crest']!,
-                    context: context,
-                  )
-                : Center(
-                    child: Image.asset(
-                      imagePath['crest']!,
-                      height: 120.h,
-                      width: 100.w,
+          child: Card(
+            elevation: 8,
+            shape: CircleBorder(),
+            child: Container(
+              height: 120.h,
+              width: 70.w,
+              padding: EdgeInsets.all(30.w),
+              decoration:
+                  BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+              child: (state.ortDetailDataModel?.image != null)
+                  ? ImageUtil.loadNetworkImage(
+                       memCacheWidth: 130,
+                      memCacheHeight: 130,
+                      imageUrl: state.ortDetailDataModel!.image!,
+                      sourceId: 1,
+                      fit: BoxFit.contain,
+                      onImageTap: () {
+                        ref.read(navigationProvider).navigateUsingPath(
+                            path: fullImageScreenPath,
+                            params: FullImageScreenParams(
+                              imageUrL: state.ortDetailDataModel!.image!,
+                              sourceId: 1
+                            ),
+                            context: context);
+                      },
+                      svgErrorImagePath: imagePath['crest']!,
+                      context: context,
+                    )
+                  : Center(
+                      child: Image.asset(
+                        imagePath['crest']!,
+                        height: 120.h,
+                        width: 100.w,
+                      ),
                     ),
-                  ),
+            ),
           ),
         )
       ],
@@ -407,7 +403,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
         final state = ref.watch(ortDetailScreenControllerProvider);
 
         return Padding(
-          padding: EdgeInsets.all(12.h.w),
+          padding: EdgeInsets.all(14.h.w),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -420,6 +416,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                   color: Theme.of(context).textTheme.bodyLarge?.color,
                   textAlign: TextAlign.start,
                   fontSize: 14,
+                  fontWeight: FontWeight.w600,
                   text: state.ortDetailDataModel?.subtitle ?? "",
                   textOverflow: TextOverflow.visible)
             ],
@@ -437,7 +434,8 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
         padding: EdgeInsets.symmetric(horizontal: 12.h),
         child: textRegularMontserrat(
             text: state.ortDetailDataModel?.description ?? "",
-            fontSize: 12,
+            fontSize: 14,
+            color: Theme.of(context).textTheme.bodyLarge!.color,
             textAlign: TextAlign.start,
             maxLines: 50),
       );
@@ -448,7 +446,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
     return Consumer(builder: (context, ref, _) {
       final state = ref.watch(ortDetailScreenControllerProvider);
       return Padding(
-        padding: EdgeInsets.only(left: 16),
+        padding: EdgeInsets.only(left: 16, right: 16),
         child: CustomButton(
             onPressed: () => ref.read(navigationProvider).navigateUsingPath(
                 path: webViewPagePath,
@@ -472,7 +470,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
     OrtDetailScreenState state = ref.watch(ortDetailScreenControllerProvider);
     int currentIndex = state.highlightCount;
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 10.h),
+      padding: EdgeInsets.only(left: 16.w, top: 10.h, bottom: 10.h),
       child: Column(
         children: [
           40.verticalSpace,

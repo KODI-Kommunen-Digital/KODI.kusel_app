@@ -93,11 +93,11 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                 CommonBackgroundClipperWidget(
                   clipperType: UpstreamWaveClipper(),
                   imageUrl: imagePath['background_image'] ?? "",
-                  height: 105.h,
+                  height: 120.h,
                   blurredBackground: true,
                   isStaticImage: true,
                   customWidget1: Positioned(
-                    left: 10,
+                    left: 20,
                     right: 10,
                     top: 40,
                     child: Row(
@@ -121,12 +121,15 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                         ),
                         Expanded(
                           flex: 9,
-                          child: textBoldPoppins(
-                            color:
-                                Theme.of(context).textTheme.labelLarge?.color,
-                            fontSize: 20,
-                            text: AppLocalizations.of(context)
-                                .tourism_and_leisure,
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: 38.0),
+                            child: textBoldPoppins(
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge?.color,
+                              fontSize: 20,
+                              text: AppLocalizations.of(context)
+                                  .tourism_and_leisure,
+                            ),
                           ),
                         ),
                       ],
@@ -136,7 +139,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                 _buildRecommendation(context),
                 32.verticalSpace,
                 _buildLocationWidget(context),
-                16.verticalSpace,
+                22.verticalSpace,
                 if (state.nearByList.isNotEmpty)
                   EventsListSectionWidget(
                     context: context,
@@ -196,6 +199,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                           .getNearByListing();
                     },
                   ),
+                4.verticalSpace,
                 LocalSvgImageTextServiceCard(
                   onTap: () => ref.read(navigationProvider).navigateUsingPath(
                       path: webViewPagePath,
@@ -208,11 +212,12 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                   description:
                       AppLocalizations.of(context).discover_kusel_on_foot,
                 ),
+                20.verticalSpace,
                 if (state.allEventList.isNotEmpty)
                   EventsListSectionWidget(
                     context: context,
                     eventsList: state.allEventList,
-                    heading: AppLocalizations.of(context).all_events,
+                    heading: AppLocalizations.of(context).event_text,
                     maxListLimit: 5,
                     isLoading: false,
                     onHeadingTap: () {
@@ -266,7 +271,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
         int currentIndex = state.highlightCount;
 
         return Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
+          padding: EdgeInsets.only(left: 16.w, top: 10.h, bottom: 10.h),
           child: Column(
             children: [
               Padding(
@@ -275,17 +280,18 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CommonTextArrowWidget(
-                      text: AppLocalizations.of(context).recommendations,
+                      text: AppLocalizations.of(context).our_recommendations,
                       onTap: () {
                         ref.read(navigationProvider).navigateUsingPath(
-                          path: allEventScreenPath,
-                          context: context,
-                          params: AllEventScreenParam(onFavChange: () {
-                            ref
-                                .read(tourismScreenControllerProvider.notifier)
-                                .getRecommendationListing();
-                          }),
-                        );
+                              path: allEventScreenPath,
+                              context: context,
+                              params: AllEventScreenParam(onFavChange: () {
+                                ref
+                                    .read(tourismScreenControllerProvider
+                                        .notifier)
+                                    .getRecommendationListing();
+                              }),
+                            );
                       },
                     ),
                     if (recommendationList.isNotEmpty)
@@ -295,14 +301,14 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: List.generate(
                             recommendationList.length,
-                                (index) => Icon(
+                            (index) => Icon(
                               Icons.circle,
                               size: currentIndex == index ? 11 : 8,
                               color: currentIndex == index
                                   ? Theme.of(context).primaryColor
                                   : Theme.of(context)
-                                  .primaryColor
-                                  .withAlpha(130),
+                                      .primaryColor
+                                      .withAlpha(130),
                             ),
                           ),
                         ),
@@ -320,11 +326,11 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                   child: PageView.builder(
                     controller: PageController(
                         viewportFraction:
-                        317.w / MediaQuery.of(context).size.width * .9),
+                            317.w / MediaQuery.of(context).size.width * .9),
                     scrollDirection: Axis.horizontal,
                     padEnds: false,
-                    itemCount:
-                    min(recommendationList.length, 5), // keep your original limit
+                    itemCount: min(recommendationList.length, 5),
+                    // keep your original limit
                     itemBuilder: (context, index) {
                       final item = recommendationList[index];
 
@@ -341,33 +347,33 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                           isFavouriteVisible: true,
                           onPress: () {
                             ref.read(navigationProvider).navigateUsingPath(
-                              path: eventDetailScreenPath,
-                              context: context,
-                              params: EventDetailScreenParams(
-                                eventId: item.id ?? 0,
-                                onFavClick: () {
-                                  ref
-                                      .read(
-                                      tourismScreenControllerProvider.notifier)
-                                      .getRecommendationListing();
-                                },
-                              ),
-                            );
+                                  path: eventDetailScreenPath,
+                                  context: context,
+                                  params: EventDetailScreenParams(
+                                    eventId: item.id ?? 0,
+                                    onFavClick: () {
+                                      ref
+                                          .read(tourismScreenControllerProvider
+                                              .notifier)
+                                          .getRecommendationListing();
+                                    },
+                                  ),
+                                );
                           },
                           onFavouriteIconClick: () {
                             ref
                                 .watch(favoritesProvider.notifier)
                                 .toggleFavorite(item,
-                                success: ({required bool isFavorite}) {
-                                  ref
-                                      .read(
+                                    success: ({required bool isFavorite}) {
+                              ref
+                                  .read(
                                       tourismScreenControllerProvider.notifier)
-                                      .updateRecommendationIsFav(
+                                  .updateRecommendationIsFav(
                                       isFavorite, item.id);
-                                }, error: ({required String message}) {
-                                  showErrorToast(
-                                      message: message, context: context);
-                                });
+                            }, error: ({required String message}) {
+                              showErrorToast(
+                                  message: message, context: context);
+                            });
                           },
                         ),
                       );
@@ -375,7 +381,8 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                     onPageChanged: (index) {
                       ref
                           .read(tourismScreenControllerProvider.notifier)
-                          .updateCardIndex(index);                    },
+                          .updateCardIndex(index);
+                    },
                   ),
                 ),
             ],

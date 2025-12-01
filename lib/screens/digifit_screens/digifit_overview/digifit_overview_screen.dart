@@ -96,9 +96,9 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
           height: 320.h,
           child: CommonBackgroundClipperWidget(
             clipperType: DownstreamCurveClipper(),
-            imageUrl: imagePath['background_image'] ?? "",
+            imageUrl: imagePath['digifit_overview_image'] ?? "",
             height: 280.h,
-            blurredBackground: true,
+            blurredBackground: false,
             isBackArrowEnabled: true,
             isStaticImage: true,
           ),
@@ -140,13 +140,16 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          textBoldPoppins(
-            color: Theme.of(context).textTheme.labelLarge?.color,
-            fontSize: 20,
-            textAlign: TextAlign.left,
-            text: digifitOverview?.parcours?.name ?? "",
+          Padding(
+            padding: const EdgeInsets.only(left: 10.0),
+            child: textBoldPoppins(
+              color: Theme.of(context).textTheme.labelLarge?.color,
+              fontSize: 24,
+              textAlign: TextAlign.left,
+              text: digifitOverview?.parcours?.name ?? "",
+            ),
           ),
-          12.verticalSpace,
+          18.verticalSpace,
           DigifitStatusWidget(
             pointsValue: digifitOverview?.userStats?.points ?? 0,
             pointsText: AppLocalizations.of(context).points,
@@ -214,13 +217,13 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
               }
             },
           ),
-          20.verticalSpace,
+          18.verticalSpace,
           if (availableStation.isNotEmpty)
             _buildAvailableCourseDetailSection(
               title: AppLocalizations.of(context).digifit_open_exercise,
               stationList: availableStation,
             ),
-          20.verticalSpace,
+          18.verticalSpace,
           if (completedStation.isNotEmpty)
             _buildCompleteCourseDetailSection(
                 title: AppLocalizations.of(context).digifit_completed_exercise,
@@ -243,12 +246,15 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        20.verticalSpace,
-        textRegularPoppins(
-            text: title,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Theme.of(context).textTheme.bodyLarge?.color),
+        18.verticalSpace,
+        Padding(
+          padding: const EdgeInsets.only(left: 10.0),
+          child: textRegularPoppins(
+              text: title,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).textTheme.bodyLarge?.color),
+        ),
         10.verticalSpace,
         ListView.builder(
             physics: NeverScrollableScrollPhysics(),
@@ -356,11 +362,14 @@ class _DigifitOverviewScreenState extends ConsumerState<DigifitOverviewScreen> {
         20.verticalSpace,
         Row(
           children: [
-            textRegularPoppins(
-                text: title,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).textTheme.bodyLarge?.color),
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0),
+              child: textRegularPoppins(
+                  text: title,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).textTheme.bodyLarge?.color),
+            ),
             12.horizontalSpace,
           ],
         ),

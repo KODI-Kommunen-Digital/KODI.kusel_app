@@ -24,6 +24,7 @@ class BoldiFinderResponseModel extends BaseModel<BoldiFinderResponseModel> {
 }
 
 class BoldFinderDataModel extends BaseModel<BoldFinderDataModel> {
+  final String? subDescription;
   final GridModel? grid;
   final PositionModel? startPosition;
   final PositionModel? finalPosition;
@@ -33,16 +34,16 @@ class BoldFinderDataModel extends BaseModel<BoldFinderDataModel> {
   final int? sessionId;
   final int? activityId;
 
-  BoldFinderDataModel({
-    this.grid,
-    this.startPosition,
-    this.finalPosition,
-    this.steps,
-    this.totalSteps,
-    this.timer,
-    this.sessionId,
-    this.activityId,
-  });
+  BoldFinderDataModel(
+      {this.grid,
+      this.startPosition,
+      this.finalPosition,
+      this.steps,
+      this.totalSteps,
+      this.timer,
+      this.sessionId,
+      this.activityId,
+      this.subDescription});
 
   @override
   BoldFinderDataModel fromJson(Map<String, dynamic> json) {
@@ -59,6 +60,7 @@ class BoldFinderDataModel extends BaseModel<BoldFinderDataModel> {
       timer: json['timer'],
       sessionId: json['sessionId'],
       activityId: json['activityId'],
+      subDescription: json['subDescription'],
     );
   }
 
@@ -72,6 +74,7 @@ class BoldFinderDataModel extends BaseModel<BoldFinderDataModel> {
         'timer': timer,
         'sessionId': sessionId,
         'activityId': activityId,
+        'subDescription': subDescription,
       };
 }
 

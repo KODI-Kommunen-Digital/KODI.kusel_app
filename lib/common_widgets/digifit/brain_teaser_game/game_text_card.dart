@@ -90,7 +90,7 @@ class _CommonEventCardState extends ConsumerState<GameTeaserTextCard> {
                     child: Icon(
                       size: DeviceHelper.isMobile(context) ? null : 12.h.w,
                       Icons.arrow_forward,
-                      color: Theme.of(context).colorScheme.surface,
+                      color: Theme.of(context).primaryColor,
                     ),
                   ),
                   Visibility(
@@ -144,17 +144,17 @@ class _CommonEventCardState extends ConsumerState<GameTeaserTextCard> {
         children: [
           textSemiBoldMontserrat(
             text: widget.name,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
             fontSize: 16,
             color: Theme.of(context).textTheme.bodyLarge?.color,
           ),
           4.verticalSpace,
-          textRegularMontserrat(
+          textSemiBoldMontserrat(
             text: widget.subDescription,
             fontWeight: FontWeight.w500,
             textAlign: TextAlign.start,
             fontSize: 14,
-            color: Theme.of(context).textTheme.titleSmall?.color,
+            color: Theme.of(context).textTheme.labelMedium?.color,
             textOverflow: TextOverflow.visible,
           ),
           4.verticalSpace,
@@ -168,7 +168,7 @@ class _CommonEventCardState extends ConsumerState<GameTeaserTextCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          textRegularMontserrat(
+          textSemiBoldMontserrat(
             fontWeight: FontWeight.w500,
             text: widget.subDescription,
             textAlign: TextAlign.start,
@@ -181,7 +181,7 @@ class _CommonEventCardState extends ConsumerState<GameTeaserTextCard> {
           4.verticalSpace,
           textSemiBoldMontserrat(
             text: widget.name,
-            fontWeight: FontWeight.w500,
+            fontWeight: FontWeight.w600,
             color: (widget.isUnlocked == true)
                 ? Theme.of(context).textTheme.bodyLarge?.color
                 : Theme.of(context).textTheme.titleSmall?.color,

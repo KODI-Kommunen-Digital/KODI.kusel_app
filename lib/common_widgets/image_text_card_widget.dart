@@ -70,17 +70,17 @@ class _ImageTextCardWidgetState extends ConsumerState<ImageTextCardWidget> {
                   height: 50.h,
                   width: 50.w,
                   child: ImageUtil.loadNetworkImage(
-                      onImageTap: () {
-                        ref.read(navigationProvider).navigateUsingPath(
-                            path: fullImageScreenPath,
-                            params: FullImageScreenParams(
-                              imageUrL: imageLoaderUtility(
-                                  image: imageUrl ?? '', sourceId: 1),
-                              sourceId: sourceId,
-                            ),
-                            context: context);
-                      },
-                      fit: BoxFit.contain,
+                      // onImageTap: () {
+                      //   ref.read(navigationProvider).navigateUsingPath(
+                      //       path: fullImageScreenPath,
+                      //       params: FullImageScreenParams(
+                      //         imageUrL: imageLoaderUtility(
+                      //             image: imageUrl ?? '', sourceId: 1),
+                      //         sourceId: sourceId,
+                      //       ),
+                      //       context: context);
+                      // },
+                      fit: BoxFit.fill,
                       imageUrl: imageLoaderUtility(
                           image: imageUrl ?? '', sourceId: 1),
                       sourceId: sourceId,
@@ -88,12 +88,13 @@ class _ImageTextCardWidgetState extends ConsumerState<ImageTextCardWidget> {
                 ),
               ),
               Expanded(
-                  flex: 6,
+                  flex: 7,
                   child: Padding(
                     padding: EdgeInsets.only(left: 30.w),
                     child: textRegularMontserrat(
                         textAlign: TextAlign.start,
                         text: text ?? '',
+                        fontWeight: FontWeight.w600,
                         textOverflow: TextOverflow.visible,
                         fontSize: 14),
                   )),
@@ -103,9 +104,9 @@ class _ImageTextCardWidgetState extends ConsumerState<ImageTextCardWidget> {
                   alignment: Alignment.centerRight,
                   child: Visibility(
                     visible: isFavouriteVisible ?? false,
-                    child: InkWell(
-                      onTap: onFavoriteTap,
-                      child: Icon(
+                    child: IconButton(
+                      onPressed: onFavoriteTap,
+                      icon: Icon(
                         size: DeviceHelper.isMobile(context) ? null : 12.h.w,
                         (isFavourite ?? false)
                             ? Icons.favorite_sharp

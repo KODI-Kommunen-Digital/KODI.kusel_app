@@ -27,6 +27,7 @@ class ImageUtil {
       child: CachedNetworkImage(
         fit: fit ?? BoxFit.cover,
         height: height,
+        filterQuality: FilterQuality.high,
         width: width,
         imageUrl: imageLoaderUtility(image: imageUrl, sourceId: sourceId ?? 3),
         memCacheHeight: memCacheHeight ?? 600,
@@ -44,6 +45,15 @@ class ImageUtil {
       ),
     );
   }
+
+  // ADD THIS NEW METHOD - just returns the processed URL string
+  static String getProcessedImageUrl({
+    required String imageUrl,
+    required int sourceId,
+  }) {
+    return imageLoaderUtility(image: imageUrl, sourceId: sourceId);
+  }
+
 
   static Widget loadBase64Image(
       {required Uint8List bytes,

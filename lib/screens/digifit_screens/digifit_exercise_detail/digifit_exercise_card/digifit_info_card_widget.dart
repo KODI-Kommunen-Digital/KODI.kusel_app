@@ -12,11 +12,14 @@ import '../enum/digifit_exercise_session_status_enum.dart';
 class InfoCardWidget extends ConsumerStatefulWidget {
   final VoidCallback startTimer;
   final int equipmentId;
+  final bool showSuccessCard;
+
 
   const InfoCardWidget({
     super.key,
     required this.startTimer,
     required this.equipmentId,
+    this.showSuccessCard = false
   });
 
   @override
@@ -41,12 +44,16 @@ class _InfoCardWidgetState extends ConsumerState<InfoCardWidget> {
         top: 16.h,
         right: 24.w,
         bottom: 8.h,
-        left: 24.w,
+        left: 26.w,
       ),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16.r),
-      ),
+        borderRadius: widget.showSuccessCard
+            ? BorderRadius.only(
+          topLeft: Radius.circular(16.r),
+          topRight: Radius.circular(16.r),
+        )
+            : BorderRadius.circular(16.r)),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

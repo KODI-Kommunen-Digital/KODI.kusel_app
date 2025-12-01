@@ -55,9 +55,6 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
     );
   }
 
-
-
-
   _buildBody(BuildContext context) {
     return SingleChildScrollView(
       physics: ClampingScrollPhysics(),
@@ -98,7 +95,7 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
                 height: 190.h,
                 width: 180.w,
                 child: ImageUtil.loadAssetImage(
-                    imageUrl: imagePath["onboarding_logo"] ?? '',
+                    imageUrl: imagePath["setting_boldi"] ?? '',
                     context: context,
                     fit: BoxFit.contain),
               ))
@@ -112,15 +109,15 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
       padding: EdgeInsets.only(left: 16.w),
       child: textBoldPoppins(
           text: label,
-          color: Theme.of(context).textTheme.displayMedium!.color,
-          fontSize: 20),
+          color: Theme.of(context).textTheme.bodyLarge!.color,
+          fontSize: 24),
     );
   }
 
   _buildSettingCard(BuildContext context) {
     final state = ref.watch(kuselSettingScreenProvider);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      padding: EdgeInsets.symmetric(horizontal: 14.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -135,9 +132,9 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
                   () {}),
               _buildTextSettingCard(
                   context,
-                  AppLocalizations.of(context).rubber_stamp,
-                  state.totalStamp.toString(),
                   AppLocalizations.of(context).treasure_pass,
+                  state.totalStamp.toString(),
+                  AppLocalizations.of(context).rubber_stamp,
                   () {}),
             ],
           ),
@@ -183,17 +180,17 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
           children: [
             Container(
               padding: EdgeInsets.symmetric(vertical: 4.h),
-              height: 100.h,
+              height: 110.h,
               width: double.infinity,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.r),
-                  color: Color.fromRGBO(234, 235, 243, 1)),
+                color: Theme.of(context).cardTheme.color),
               child: Column(
                 children: [
                   textSemiBoldPoppins(
                       text: numericValue,
-                      color: Theme.of(context).colorScheme.secondary,
-                      fontSize: 44),
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 58),
                   textRegularPoppins(
                       text: numericValueHeading,
                       color: Theme.of(context).colorScheme.secondary,
@@ -202,10 +199,13 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
               ),
             ),
             16.verticalSpace,
-            textRegularMontserrat(
-                text: tileTitle,
-                color: Theme.of(context).textTheme.displayMedium!.color,
-                fontSize: 12)
+            Padding(
+              padding: const EdgeInsets.only(right: 34.0),
+              child: textRegularMontserrat(
+                  text: tileTitle,
+                  color: Theme.of(context).textTheme.displayMedium!.color,
+                  fontSize: 12),
+            )
           ],
         ),
       ),
@@ -230,17 +230,20 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10.r),
-                    color: Color.fromRGBO(234, 235, 243, 1)),
+                    color: Theme.of(context).cardTheme.color,),
                 child: ImageUtil.loadLocalSvgImage(
                     imageUrl: imagePath,
                     context: context,
                     fit: BoxFit.contain)),
             16.verticalSpace,
-            textRegularMontserrat(
-                text: tileTitle,
-                color: Theme.of(context).textTheme.displayMedium!.color,
-                fontSize: 12,
-                textOverflow: TextOverflow.visible)
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: textRegularMontserrat(
+                  text: tileTitle,
+                  color: Theme.of(context).textTheme.displayMedium!.color,
+                  fontSize: 12,
+                  textOverflow: TextOverflow.visible),
+            )
           ],
         ),
       ),
@@ -320,7 +323,7 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
                     path: '$kuselSettingScreenPath/$subShellFeedbackScreenPath',
                     context: context);
               },
-              title: AppLocalizations.of(context).feedback,
+              title: AppLocalizations.of(context).feedback_setting,
               hasTopRadius: false,
               hasBottomRadius: false,
               borderRadius: borderRadius),
@@ -329,7 +332,7 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
               context: context,
               onTap: () {
                 ref.read(navigationProvider).navigateUsingPath(
-                    path: onboardingScreenPath, context: context);
+                    path: onboardingStartPagePath, context: context);
               },
               title: AppLocalizations.of(context).edit_onboarding_details,
               hasTopRadius: false,
@@ -437,10 +440,11 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            textBoldMontserrat(
+            textSemiBoldMontserrat(
                 text: title,
-                color: Theme.of(context).textTheme.displayMedium!.color,
-                fontSize: 14),
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).textTheme.bodyLarge!.color,
+                fontSize: 16),
             SizedBox(
               height: 20.h,
               width: 20.w,

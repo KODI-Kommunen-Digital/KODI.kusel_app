@@ -80,7 +80,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get category_heading => 'Was gibt’s zu entdecken';
 
   @override
-  String get change_language => 'Sprache ändern';
+  String get change_language => 'Sprache';
 
   @override
   String get logout => 'Abmelden';
@@ -282,7 +282,7 @@ class AppLocalizationsDe extends AppLocalizations {
       '! Für was interessierst du dich im Landkreis?';
 
   @override
-  String get complete => 'Abschließend';
+  String get complete => 'Abschließen';
 
   @override
   String get preparing_the_app_text =>
@@ -584,7 +584,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get favourite_places => 'Lieblingsorte';
 
   @override
-  String get delete_account => 'Konto löschen';
+  String get delete_account => 'Account löschen';
 
   @override
   String get success_delete_account_message =>
@@ -980,4 +980,75 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get an => 'An';
+
+  @override
+  String get digit_dash_game_desc => 'Bereit für DigitDash?';
+
+  @override
+  String get abort_digit_dash => 'Digital-Dash abbrechen?';
+
+  @override
+  String get digit_dash_dialog_title => 'Hinweis';
+
+  @override
+  String get digit_dash_dialog_forbidden_desc =>
+      'Die folgenden Zahlen sind verboten! Diese darfst du NICHT antippen, sondern musst sie überspringen. Merke sie Dir gut!';
+
+  @override
+  String get digit_dash_dialog_target_desc_odd =>
+      'Tippe nur die ungeraden Zahlen der Reihe nach an!';
+
+  @override
+  String get digit_dash_dialog_target_desc_even =>
+      'Tippe nur die geraden Zahlen der Reihe nach an!';
+
+  @override
+  String get understood => 'Verstanden';
+
+  @override
+  String get odd_blue => 'SELTSAM_BLAU';
+
+  @override
+  String get even_red => 'GERADE_ROT';
+
+  @override
+  String get select_image => 'Fehlendes Bild auswählen';
+
+  @override
+  String get abort_pictures_game => 'Spiel von Picture abbrechen?';
+
+  @override
+  String get details_scanner => 'Scannen';
+
+  @override
+  String get correct_answer => 'Richtig';
+
+  @override
+  String get wrong_answer => 'Falsch';
+
+  @override
+  String get digifit_completed_top => 'Abgeschlossen';
+
+  @override
+  String get feedback_message => 'Nachricht';
+
+  @override
+  String get name_char_validation_msg =>
+      'Es sind nur Buchstaben und einzelne Leerzeichen zulässig.';
+
+  @override
+  String get name_char_allowed_msg =>
+      'Der Name muss mindestens 3 Zeichen lang sein.';
+
+  @override
+  String get feedback_setting => 'Feedback';
+
+  @override
+  String get all_events_filter => 'Alle Veranstaltungen';
+
+  @override
+  String get our_recommendations => 'Unsere Empfehlungen';
+
+  @override
+  String get digifit_end => 'Beenden';
 }

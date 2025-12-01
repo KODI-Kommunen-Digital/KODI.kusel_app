@@ -13,6 +13,7 @@ import 'package:kusel/screens/search_result/search_result_screen_provider.dart';
 import 'package:kusel/screens/search_result/search_result_screen_state.dart';
 
 import '../../common_widgets/common_background_clipper_widget.dart';
+import '../../common_widgets/device_helper.dart';
 import '../../common_widgets/event_list_section_widget.dart';
 import '../../common_widgets/upstream_wave_clipper.dart';
 import '../../images_path.dart';
@@ -60,13 +61,36 @@ class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
         children: [
           CommonBackgroundClipperWidget(
             clipperType: UpstreamWaveClipper(),
-            height: 110.h,
+            height: 105.h,
             imageUrl: imagePath['home_screen_background'] ?? '',
             isStaticImage: true,
-            isBackArrowEnabled: true,
-            headingText: (widget.searchResultScreenParameter.searchType == SearchType.nearBy)
-                ? AppLocalizations.of(context).search_result
-                : AppLocalizations.of(context).recommendations,
+            isBackArrowEnabled: false,
+            customWidget1: Positioned(
+              left: 0.w,
+              top: 30.h,
+              child: Row(
+                children: [
+                  16.horizontalSpace,
+                  IconButton(
+                      onPressed: () {
+                        ref.read(navigationProvider).removeTopPage(context: context);
+                      },
+                      icon: Icon(
+                          size: DeviceHelper.isMobile(context) ? null : 12.h.w,
+                          color: Theme.of(context).primaryColor,
+                          Icons.arrow_back)
+                  ),
+                  8.horizontalSpace,
+                  textBoldPoppins(
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      text: (widget.searchResultScreenParameter.searchType == SearchType.nearBy)
+                          ? AppLocalizations.of(context).search_result
+                          : AppLocalizations.of(context).recommendations,),
+                ],
+              ),
+            ),
           ),
 
           if(!searchResultScreenState.loading)

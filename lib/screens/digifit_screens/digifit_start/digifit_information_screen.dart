@@ -142,7 +142,8 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
         ),
         16.horizontalSpace,
         textBoldPoppins(
-          fontSize: 20,
+          color: Theme.of(context).textTheme.bodyLarge?.color,
+          fontSize: 24,
           text: AppLocalizations.of(context).digifit_parcours,
         ),
       ],
@@ -277,11 +278,14 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
         20.verticalSpace,
         Row(
           children: [
-            textRegularPoppins(
-                text: parcoursModel.name ?? '',
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).textTheme.bodyLarge?.color),
+            Padding(
+              padding: const EdgeInsets.only(left: 10.0),
+              child: textSemiBoldPoppins(
+                  text: parcoursModel.name ?? '',
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).textTheme.bodyLarge?.color),
+            ),
             12.horizontalSpace,
             ImageUtil.loadSvgImage(
                 imageUrl: imagePath['arrow_icon'] ?? "",
@@ -321,15 +325,15 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
             }
           },
         ),
-        10.verticalSpace,
+        2.verticalSpace,
         ListView.builder(
             physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true, // need to check
+            shrinkWrap: true,
             itemCount: parcoursModel.stations?.length ?? 0,
             itemBuilder: (context, index) {
               final station = parcoursModel.stations![index];
               return Padding(
-                padding: EdgeInsets.only(bottom: 5.h),
+                padding: EdgeInsets.only(bottom: 2.h),
                 child: DigifitTextImageCard(
                   imageUrl: station.machineImageUrl ?? '',
                   heading: station.muscleGroups ?? '',
@@ -391,6 +395,8 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
         Visibility(
           visible: isButtonVisible ?? true,
           child: CustomButton(
+            height: 48,
+            textSize: 16,
               onPressed: () {
                 final value =
                     ref.read(networkStatusProvider).isNetworkAvailable;
@@ -422,7 +428,8 @@ class _DigifitStartScreenState extends ConsumerState<DigifitInformationScreen> {
                 }
               },
               text: AppLocalizations.of(context).show_course),
-        )
+        ),
+        10.verticalSpace
       ],
     );
   }
