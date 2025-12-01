@@ -42,7 +42,6 @@ class _OnboardingStartPageState extends ConsumerState<OnBoardingNamePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: _buildDashboardUi(),
@@ -93,11 +92,12 @@ class _OnboardingStartPageState extends ConsumerState<OnBoardingNamePage> {
                     }
 
                     final cleanedValue =
-                    value.trim().replaceAll(RegExp(r'\s{2,}'), ' ');
+                        value.trim().replaceAll(RegExp(r'\s{2,}'), ' ');
 
                     if (!RegExp(r'^[A-Za-z]+(?: [A-Za-z]+)*$')
                         .hasMatch(cleanedValue)) {
-                      return AppLocalizations.of(context).name_char_validation_msg;
+                      return AppLocalizations.of(context)
+                          .name_char_validation_msg;
                     }
 
                     if (cleanedValue.length < 3) {
@@ -134,11 +134,7 @@ class _OnboardingStartPageState extends ConsumerState<OnBoardingNamePage> {
               ],
             ),
           ),
-          Positioned(
-              bottom: 10,
-              left: 0,
-              right: 0,
-              child: _buildBottomUi())
+          Positioned(bottom: 10, left: 0, right: 0, child: _buildBottomUi())
         ],
       ),
     );
@@ -189,7 +185,8 @@ class _OnboardingStartPageState extends ConsumerState<OnBoardingNamePage> {
             GestureDetector(
               onTap: () {
                 ref.read(navigationProvider).navigateUsingPath(
-                    path: onboardingTypePagePath, context: context);              },
+                    path: onboardingTypePagePath, context: context);
+              },
               child: textBoldPoppins(
                 color: Theme.of(context).textTheme.bodyLarge?.color,
                 fontSize: 11,
