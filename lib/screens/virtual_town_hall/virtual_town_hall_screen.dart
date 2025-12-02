@@ -137,6 +137,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
             ),
           if (state.eventList != null && state.eventList!.isNotEmpty)
             EventsListSectionWidget(
+              boxFit: BoxFit.fill,
               context: context,
               eventsList: state.eventList ?? [],
               heading: AppLocalizations.of(context).event_text,
