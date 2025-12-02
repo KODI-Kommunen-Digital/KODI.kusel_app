@@ -13,6 +13,9 @@ class DragSelectTextWidget extends StatefulWidget {
   final List<Map<String, int>>? completedRanges;
   final Color textColor;
 
+  final Function(String selectedText, int startIndex, int endIndex)?
+      onShowConfirmationDialog;
+
   const DragSelectTextWidget({
     Key? key,
     required this.fullText,
@@ -25,17 +28,21 @@ class DragSelectTextWidget extends StatefulWidget {
     this.isEnabled = true,
     this.completedRanges,
     required this.textColor,
+    this.onShowConfirmationDialog,
   }) : super(key: key);
 
   @override
-  State<DragSelectTextWidget> createState() => _DragSelectTextWidgetState();
+  State<DragSelectTextWidget> createState() => DragSelectTextWidgetState();
 }
 
-class _DragSelectTextWidgetState extends State<DragSelectTextWidget> {
+class DragSelectTextWidgetState extends State<DragSelectTextWidget> {
   final GlobalKey _textKey = GlobalKey();
   int? _dragStartIndex;
   int? _dragCurrentIndex;
   bool _isDragging = false;
+
+  int? _tempStartIndex;
+  int? _tempEndIndex;
 
   List<Rect> _charRects = [];
   final double _fontSize = 20.0;
@@ -44,6 +51,7 @@ class _DragSelectTextWidgetState extends State<DragSelectTextWidget> {
   static final Color _greenCorrect = Color(0xFFAADB40).withOpacity(0.75);
   static final Color _redWrong = Color(0xFFC92120).withOpacity(0.75);
   static final Color _blueDrag = Colors.blue.withOpacity(0.3);
+  static final Color _orangeTemp = Colors.orange.withOpacity(0.4);
 
   @override
   void initState() {
@@ -60,6 +68,13 @@ class _DragSelectTextWidgetState extends State<DragSelectTextWidget> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _buildCharacterRects();
       });
+    }
+
+    // Clear temp selection when widget resets
+    if (oldWidget.selectedStartIndex != null &&
+        widget.selectedStartIndex == null) {
+      _tempStartIndex = null;
+      _tempEndIndex = null;
     }
   }
 
@@ -164,8 +179,16 @@ class _DragSelectTextWidgetState extends State<DragSelectTextWidget> {
 
       if (end - start + 1 >= 2) {
         final selectedText = widget.fullText.substring(start, end + 1);
-        widget.onWordSelected(selectedText, start, end);
-      } else {}
+
+        setState(() {
+          _tempStartIndex = start;
+          _tempEndIndex = end;
+        });
+
+        if (widget.onShowConfirmationDialog != null) {
+          widget.onShowConfirmationDialog!(selectedText, start, end);
+        }
+      }
     }
 
     setState(() {
@@ -173,6 +196,16 @@ class _DragSelectTextWidgetState extends State<DragSelectTextWidget> {
       _dragStartIndex = null;
       _dragCurrentIndex = null;
     });
+  }
+
+  // Method to clear temporary selection.
+  void clearTempSelection() {
+    if (mounted) {
+      setState(() {
+        _tempStartIndex = null;
+        _tempEndIndex = null;
+      });
+    }
   }
 
   @override
@@ -205,10 +238,13 @@ class _DragSelectTextWidgetState extends State<DragSelectTextWidget> {
                 dragStartIndex: _dragStartIndex,
                 dragCurrentIndex: _dragCurrentIndex,
                 isDragging: _isDragging,
+                tempStartIndex: _tempStartIndex,
+                tempEndIndex: _tempEndIndex,
                 textColor: widget.textColor,
                 greenColor: _greenCorrect,
                 redColor: _redWrong,
                 blueColor: _blueDrag,
+                orangeColor: _orangeTemp,
               ),
               size: Size(constraints.maxWidth, constraints.maxHeight),
             );
@@ -232,10 +268,13 @@ class _DragSelectTextPainter extends CustomPainter {
   final int? dragStartIndex;
   final int? dragCurrentIndex;
   final bool isDragging;
+  final int? tempStartIndex;
+  final int? tempEndIndex;
   final Color textColor;
   final Color greenColor;
   final Color redColor;
   final Color blueColor;
+  final Color orangeColor;
 
   _DragSelectTextPainter({
     required this.fullText,
@@ -250,17 +289,19 @@ class _DragSelectTextPainter extends CustomPainter {
     this.dragStartIndex,
     this.dragCurrentIndex,
     required this.isDragging,
+    this.tempStartIndex,
+    this.tempEndIndex,
     required this.textColor,
     required this.greenColor,
     required this.redColor,
     required this.blueColor,
+    required this.orangeColor,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     if (charRects.isEmpty) return;
 
-    // Draw completed ranges with (GREEN background)
     if (completedRanges != null) {
       for (var range in completedRanges!) {
         final start = range['start'] ?? 0;
@@ -269,7 +310,11 @@ class _DragSelectTextPainter extends CustomPainter {
       }
     }
 
-    // Draw active drag selection with (BLUE background)
+    if (tempStartIndex != null && tempEndIndex != null && !isDragging) {
+      _drawTextRange(canvas, tempStartIndex!, tempEndIndex!, orangeColor,
+          isFilled: true);
+    }
+
     if (isDragging && dragStartIndex != null && dragCurrentIndex != null) {
       final start = dragStartIndex! < dragCurrentIndex!
           ? dragStartIndex!
@@ -293,7 +338,6 @@ class _DragSelectTextPainter extends CustomPainter {
       }
     }
 
-    // Draw correct answer hint with (GREEN background)
     if (isCorrect == false &&
         correctStartIndex != null &&
         correctEndIndex != null) {
@@ -380,6 +424,8 @@ class _DragSelectTextPainter extends CustomPainter {
         oldDelegate.dragStartIndex != dragStartIndex ||
         oldDelegate.dragCurrentIndex != dragCurrentIndex ||
         oldDelegate.isDragging != isDragging ||
-        oldDelegate.completedRanges != completedRanges;
+        oldDelegate.completedRanges != completedRanges ||
+        oldDelegate.tempStartIndex != tempStartIndex ||
+        oldDelegate.tempEndIndex != tempEndIndex;
   }
 }

@@ -929,7 +929,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get math_hunt_game_desc => 'Ready for some mental arithmetic?';
 
   @override
-  String get flip_catch_desc => 'Ready for Flip catch';
+  String get flip_catch_desc => 'Ready for Flip catch?';
 
   @override
   String get abort_flip_catch => 'Abort Flip Catch?';
@@ -1041,5 +1041,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get our_recommendations => 'Our Recommendations';
 
   @override
-  String get digifit_end => 'end';
+  String get digifit_end_game => 'Quit';
+
+  @override
+  String get digifit_end_exercise => 'Quit exercise';
+
+  @override
+  String get digifit_continue => 'Continue';
+
+  @override
+  String get digift_continue_exercise => 'Continue exercise';
+
+  @override
+  String get confirm_selection => 'Confirm selection';
+
+  @override
+  String get selected_text => 'Selected text:';
+
+  @override
+  String get selected_desc => 'Is this the word you want to select?';
+
+  @override
+  String get yes => 'Yes';
+
+  @override
+  String get no => 'No';
 }

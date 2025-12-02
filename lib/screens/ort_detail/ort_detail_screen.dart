@@ -148,6 +148,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                 .eventsList
                 .isNotEmpty)
               EventsListSectionWidget(
+                boxFit: BoxFit.cover,
                 context: context,
                 eventsList: state.eventsList,
                 heading: AppLocalizations.of(context).all_events,
@@ -259,6 +260,8 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                 address: 'Trierer Str. 49-51, 66869 Kusel',
                 websiteText: AppLocalizations.of(context).visit_website,
                 calendarText: state.ortDetailDataModel?.openUntil ?? "",
+                lat: state.latitude,
+                long: state.longitude,
               ),
             ),
             20.verticalSpace,

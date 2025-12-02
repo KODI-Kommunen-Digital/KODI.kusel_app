@@ -1889,7 +1889,7 @@ abstract class AppLocalizations {
   /// No description provided for @flip_catch_desc.
   ///
   /// In en, this message translates to:
-  /// **'Ready for Flip catch'**
+  /// **'Ready for Flip catch?'**
   String get flip_catch_desc;
 
   /// No description provided for @abort_flip_catch.
@@ -2102,11 +2102,59 @@ abstract class AppLocalizations {
   /// **'Our Recommendations'**
   String get our_recommendations;
 
-  /// No description provided for @digifit_end.
+  /// No description provided for @digifit_end_game.
   ///
   /// In en, this message translates to:
-  /// **'end'**
-  String get digifit_end;
+  /// **'Quit'**
+  String get digifit_end_game;
+
+  /// No description provided for @digifit_end_exercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Quit exercise'**
+  String get digifit_end_exercise;
+
+  /// No description provided for @digifit_continue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get digifit_continue;
+
+  /// No description provided for @digift_continue_exercise.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue exercise'**
+  String get digift_continue_exercise;
+
+  /// No description provided for @confirm_selection.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm selection'**
+  String get confirm_selection;
+
+  /// No description provided for @selected_text.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected text:'**
+  String get selected_text;
+
+  /// No description provided for @selected_desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Is this the word you want to select?'**
+  String get selected_desc;
+
+  /// No description provided for @yes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yes;
+
+  /// No description provided for @no.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get no;
 }
 
 class _AppLocalizationsDelegate

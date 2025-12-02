@@ -7,6 +7,7 @@ import 'package:kusel/common_widgets/device_helper.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/utility/kusel_date_utils.dart';
+
 class HighlightsCard extends ConsumerStatefulWidget {
   final String imageUrl;
   final String? date;
@@ -57,7 +58,12 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
         child: Container(
           width: widget.cardWidth,
           height: widget.cardHeight,
-          padding: EdgeInsets.only(top: 10.h, bottom: 10.h, left: 8.w, right: 8.w,),
+          padding: EdgeInsets.only(
+            top: 10.h,
+            bottom: 10.h,
+            left: 8.w,
+            right: 8.w,
+          ),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(25.r),
@@ -105,12 +111,13 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                               shape: BoxShape.circle,
                             ),
                             child: Icon(
-                              size: 25.h.w,
+                              size: 22.h.w,
                               widget.isFavourite
                                   ? Icons.favorite_sharp
                                   : Icons.favorite_border_sharp,
-                              color:
-                                  widget.isFavourite ? Colors.red : Colors.white,
+                              color: widget.isFavourite
+                                  ? Colors.red
+                                  : Colors.white,
                             ),
                           ),
                         ),
@@ -126,9 +133,10 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                   children: [
                     (widget.date != null)
                         ? textSemiBoldMontserrat(
-                            color: Theme.of(context).textTheme.labelMedium?.color,
-                        fontWeight: FontWeight.w600,
-                        text: KuselDateUtils.formatDate(widget.date ?? ""),
+                            color:
+                                Theme.of(context).textTheme.labelMedium?.color,
+                            fontWeight: FontWeight.w600,
+                            text: KuselDateUtils.formatDate(widget.date ?? ""),
                             fontSize: 12)
                         : SizedBox.shrink(),
                     (widget.date != null) ? 5.verticalSpace : SizedBox.shrink(),
