@@ -42,39 +42,37 @@ class _OnboardingLoadingPageState extends ConsumerState<OnboardingLoadingPage> {
   Widget build(BuildContext context) {
     String userName = ref.read(onboardingScreenProvider).userFirstName ?? '';
     String textMsg = "${AppLocalizations.of(context).thanks} $userName!";
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        resizeToAvoidBottomInset: false,
-        body: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(imagePath['onboarding_background'] ?? ''),
-              // your image path
-              fit: BoxFit.cover, // cover the entire screen
-            ),
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      resizeToAvoidBottomInset: false,
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(imagePath['onboarding_background'] ?? ''),
+            // your image path
+            fit: BoxFit.cover, // cover the entire screen
           ),
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 18.h),
-            child: Column(
-              children: [
-                150.verticalSpace,
-                Center(
-                  child: CustomCircularProgressIndicator(),
-                ),
-                30.verticalSpace,
-                textBoldPoppins(
-                    text: textMsg,
-                    fontSize: 20,
-                    color: Theme.of(context).textTheme.bodyLarge?.color),
-                10.verticalSpace,
-                textRegularPoppins(
-                    text: AppLocalizations.of(context).preparing_the_app_text,
-                    textOverflow: TextOverflow.visible,
-                    color: Theme.of(context).textTheme.bodyLarge?.color,
-                    fontSize: 12)
-              ],
-            ),
+        ),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 15.w, horizontal: 18.h),
+          child: Column(
+            children: [
+              150.verticalSpace,
+              Center(
+                child: CustomCircularProgressIndicator(),
+              ),
+              30.verticalSpace,
+              textBoldPoppins(
+                  text: textMsg,
+                  fontSize: 20,
+                  color: Theme.of(context).textTheme.bodyLarge?.color),
+              10.verticalSpace,
+              textRegularPoppins(
+                  text: AppLocalizations.of(context).preparing_the_app_text,
+                  textOverflow: TextOverflow.visible,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                  fontSize: 12)
+            ],
           ),
         ),
       ),
