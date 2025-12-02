@@ -14,7 +14,6 @@ import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/event/event_detail_screen_state.dart';
 import 'package:kusel/utility/kusel_date_utils.dart';
 
-import '../../common_widgets/arrow_back_widget.dart';
 import '../../common_widgets/common_bottom_nav_card_.dart';
 import '../../common_widgets/common_event_card.dart';
 import '../../common_widgets/common_html_widget.dart';
@@ -210,7 +209,12 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
 
     if (!hasStart && !hasEnd) return '-';
     if (hasStart && !hasEnd) return KuselDateUtils.formatDateTime(startDate);
-    if (!hasStart && hasEnd) return KuselDateUtils.formatDateTime(endDate!);
+    if (!hasStart && hasEnd) return KuselDateUtils.formatDateTime(endDate);
+
+    // Both exist - check if they are exactly the same
+    if (startDate == endDate) {
+      return KuselDateUtils.formatDateTime(startDate!);
+    }
 
     // Both exist
     return '${KuselDateUtils.formatDateTime(startDate!)} - ${KuselDateUtils.formatDateTime(endDate!)}';
@@ -550,8 +554,12 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             children: state.recommendList.map((item) {
+              // TODO: Will remove this conditions in future to handle this in more appropriate way.
+              final boxFit = (item.categoryId == 1 || item.categoryId == 41)
+                  ? BoxFit.cover
+                  : BoxFit.fill;
               return CommonEventCard(
-                boxFit: BoxFit.fill,
+                boxFit: boxFit,
                 isFavorite: item.isFavorite ?? false,
                 imageUrl: item.logo ?? "",
                 date: item.startDate ?? "",

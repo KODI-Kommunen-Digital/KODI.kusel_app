@@ -11,6 +11,9 @@ class OrtDetailScreenState {
   List<Listing> newsList;
   int highlightCount;
 
+  double? latitude;
+  double? longitude;
+
   OrtDetailScreenState(
       this.ortDetailDataModel,
       this.isLoading,
@@ -19,21 +22,27 @@ class OrtDetailScreenState {
       this.highlightsList,
       this.eventsList,
       this.newsList,
-      this.highlightCount);
+      this.highlightCount,
+      this.latitude,
+      this.longitude);
 
   factory OrtDetailScreenState.copyWith() {
-    return OrtDetailScreenState(null, false, false, '', [], [], [], 0);
+    return OrtDetailScreenState(
+        null, false, false, '', [], [], [], 0, null, null);
   }
 
-  OrtDetailScreenState copyWith(
-      {OrtDetailDataModel? ortDetailDataModel,
-      bool? isLoading,
-      bool? isUserLoggedIn,
-      String? error,
-      List<Listing>? highlightsList,
-      List<Listing>? eventsList,
-      List<Listing>? newsList,
-      int? highlightCount}) {
+  OrtDetailScreenState copyWith({
+    OrtDetailDataModel? ortDetailDataModel,
+    bool? isLoading,
+    bool? isUserLoggedIn,
+    String? error,
+    List<Listing>? highlightsList,
+    List<Listing>? eventsList,
+    List<Listing>? newsList,
+    int? highlightCount,
+    double? latitude,
+    double? longitude,
+  }) {
     return OrtDetailScreenState(
         ortDetailDataModel ?? this.ortDetailDataModel,
         isLoading ?? this.isLoading,
@@ -42,6 +51,8 @@ class OrtDetailScreenState {
         highlightsList ?? this.highlightsList,
         eventsList ?? this.eventsList,
         newsList ?? this.newsList,
-        highlightCount ?? this.highlightCount);
+        highlightCount ?? this.highlightCount,
+        latitude ?? this.latitude,
+        longitude ?? this.longitude);
   }
 }

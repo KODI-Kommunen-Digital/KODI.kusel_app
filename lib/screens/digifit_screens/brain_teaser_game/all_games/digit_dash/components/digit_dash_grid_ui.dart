@@ -168,8 +168,13 @@ class DigitDashCard extends PositionComponent
   Future<void> onLoad() async {
     super.onLoad();
 
+    String displayText = number?.toString() ?? '';
+    if (number == 6 || number == 9) {
+      displayText = '$displayText.';
+    }
+
     final textWidget = textSemiBoldPoppins(
-      text: number?.toString() ?? '',
+      text: displayText,
       fontSize: 20,
       color: gridParams.textColor,
       fontWeight: FontWeight.w600,
@@ -178,7 +183,7 @@ class DigitDashCard extends PositionComponent
     final textStyle = textWidget.style!;
 
     numberText = TextComponent(
-      text: number?.toString() ?? '',
+      text: displayText,
       textRenderer: TextPaint(style: textStyle),
     );
 
@@ -193,7 +198,6 @@ class DigitDashCard extends PositionComponent
   void update(double dt) {
     super.update(dt);
 
-    // Update card state from gridParams
     if (index < (gridParams.markedCorrect?.length ?? 0)) {
       isMarkedCorrect = gridParams.markedCorrect![index];
     }
@@ -204,7 +208,6 @@ class DigitDashCard extends PositionComponent
     isAnswerCorrect = gridParams.isAnswerCorrect;
     isEnabled = gridParams.isEnabled;
 
-    // Check if state has changed and mark for redraw
     final stateChanged = _lastMarkedCorrect != isMarkedCorrect ||
         _lastMarkedWrong != isMarkedWrong ||
         _lastSelected != isSelected ||
@@ -234,7 +237,6 @@ class DigitDashCard extends PositionComponent
       canvas.drawRect(rect, whiteFillPaint);
     }
 
-    // Handle colored states
     if (isMarkedCorrect) {
       _drawFill(canvas, rect);
     } else if (isMarkedWrong || (isSelected && isAnswerCorrect == false)) {
@@ -339,7 +341,6 @@ class DigitDashGridLinesComponent extends Component {
       ..strokeWidth = 4.0;
     canvas.drawRRect(outerRRect, greyBorderPaint);
 
-    // Draw timer line that travels around the border
     _drawTimerLine(canvas, outerRect, radius, progress, timerColor);
 
     _drawInnerGridLines(canvas, radius);
@@ -412,12 +413,10 @@ class DigitDashGridLinesComponent extends Component {
 
     final path = Path();
 
-    // Start from top-left corner
     path.moveTo(radius, 0);
 
     double accumulatedDistance = 0;
 
-    // Top edge (left to right)
     final topEdgeLength = width - 2 * radius;
     if (traveledDistance <= accumulatedDistance + topEdgeLength) {
       final lineEnd = traveledDistance - accumulatedDistance;
@@ -428,7 +427,6 @@ class DigitDashGridLinesComponent extends Component {
     path.lineTo(width - radius, 0);
     accumulatedDistance += topEdgeLength;
 
-    // Top-right corner arc
     final topRightArcLength = cornerCircumference / 4;
     if (traveledDistance <= accumulatedDistance + topRightArcLength) {
       final arcProgress =
@@ -450,7 +448,6 @@ class DigitDashGridLinesComponent extends Component {
     );
     accumulatedDistance += topRightArcLength;
 
-    // Right edge (top to bottom)
     final rightEdgeLength = height - 2 * radius;
     if (traveledDistance <= accumulatedDistance + rightEdgeLength) {
       final lineEnd = traveledDistance - accumulatedDistance;
@@ -461,7 +458,6 @@ class DigitDashGridLinesComponent extends Component {
     path.lineTo(width, height - radius);
     accumulatedDistance += rightEdgeLength;
 
-    // Bottom-right corner arc
     final bottomRightArcLength = cornerCircumference / 4;
     if (traveledDistance <= accumulatedDistance + bottomRightArcLength) {
       final arcProgress =
@@ -485,7 +481,6 @@ class DigitDashGridLinesComponent extends Component {
     );
     accumulatedDistance += bottomRightArcLength;
 
-    // Bottom edge (right to left)
     final bottomEdgeLength = width - 2 * radius;
     if (traveledDistance <= accumulatedDistance + bottomEdgeLength) {
       final lineEnd = traveledDistance - accumulatedDistance;
@@ -496,7 +491,6 @@ class DigitDashGridLinesComponent extends Component {
     path.lineTo(radius, height);
     accumulatedDistance += bottomEdgeLength;
 
-    // Bottom-left corner arc
     final bottomLeftArcLength = cornerCircumference / 4;
     if (traveledDistance <= accumulatedDistance + bottomLeftArcLength) {
       final arcProgress =
@@ -518,7 +512,6 @@ class DigitDashGridLinesComponent extends Component {
     );
     accumulatedDistance += bottomLeftArcLength;
 
-    // Left edge (bottom to top)
     final leftEdgeLength = height - 2 * radius;
     if (traveledDistance <= accumulatedDistance + leftEdgeLength) {
       final lineEnd = traveledDistance - accumulatedDistance;
@@ -529,7 +522,6 @@ class DigitDashGridLinesComponent extends Component {
     path.lineTo(0, radius);
     accumulatedDistance += leftEdgeLength;
 
-    // Top-left corner arc
     final topLeftArcLength = cornerCircumference / 4;
     if (traveledDistance <= accumulatedDistance + topLeftArcLength) {
       final arcProgress =

@@ -1,157 +1,143 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:kusel/common_widgets/device_helper.dart';
-import 'package:kusel/common_widgets/map_widget/custom_flutter_map_provider.dart';
 import 'package:latlong2/latlong.dart';
-import 'dart:math' as math;
-
-import '../text_styles.dart';
+import 'dart:async';
 
 class CustomFlutterMap extends ConsumerStatefulWidget {
-  final double latitude;
-  final double longitude;
+  final double? latitude;
+  final double? longitude;
   final double height;
   final double width;
   final double initialZoom;
   final Function() onMapTap;
   final List<Marker> markersList;
 
-  const CustomFlutterMap(
-      {super.key,
-      required this.latitude,
-      required this.longitude,
-      required this.height,
-      required this.width,
-      required this.initialZoom,
-      required this.onMapTap,
-      required this.markersList});
+  const CustomFlutterMap({
+    super.key,
+    required this.latitude,
+    required this.longitude,
+    required this.height,
+    required this.width,
+    required this.initialZoom,
+    required this.onMapTap,
+    required this.markersList,
+  });
 
   @override
   ConsumerState<CustomFlutterMap> createState() => _CustomFlutterMapState();
 }
 
 class _CustomFlutterMapState extends ConsumerState<CustomFlutterMap> {
-  final MapController _mapController = MapController();
+  late final MapController _mapController;
   double _currentRotation = 0;
+  bool _isMapReady = false;
+
+  static const double _defaultLat = 49.5400;
+  static const double _defaultLng = 7.4000;
 
   @override
   void initState() {
     super.initState();
+    _mapController = MapController();
+
+    _initializeMap();
+
     _mapController.mapEventStream.listen((event) {
-      setState(() {
-        _currentRotation = _mapController.camera.rotation;
-      });
+      if (mounted) {
+        setState(() {
+          _currentRotation = _mapController.camera.rotation;
+        });
+      }
     });
+  }
+
+  Future<void> _initializeMap() async {
+    await Future.delayed(const Duration(milliseconds: 300));
+
+    if (mounted) {
+      setState(() {
+        _isMapReady = true;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(customFlutterMapProvider);
+    final lat = widget.latitude ?? _defaultLat;
+    final lng = widget.longitude ?? _defaultLng;
+
     return SizedBox(
       height: widget.height,
       width: widget.width,
-      child: Stack(
-        children: [
-          _customMapWidget(),
-          // Positioned(
-          //   top: 10.h,
-          //   right: 8.w,
-          //   child: Column(
-          //     children: [
-          //       textBoldPoppins(
-          //           text: "N",
-          //           fontSize: 10,
-          //           color: Theme.of(context).colorScheme.error),
-          //       InkWell(
-          //         onTap: () => _mapController.rotate(0),
-          //         child: Transform.rotate(
-          //           angle: -_currentRotation * math.pi / 180,
-          //           child: Card(
-          //             elevation: 4,
-          //             shape: const CircleBorder(),
-          //             child: Container(
-          //               padding: EdgeInsets.all(5.h.w),
-          //               decoration: BoxDecoration(
-          //                 shape: BoxShape.circle,
-          //                 color: Colors.white,
-          //                 boxShadow: [
-          //                   BoxShadow(blurRadius: 4, color: Colors.black26)
-          //                 ],
-          //               ),
-          //               child: Transform.rotate(
-          //                   angle: -10.25,
-          //                   child: Icon(Icons.explore,
-          //                       color: Theme.of(context).primaryColor,
-          //                       size: 20.h)),
-          //             ),
-          //           ),
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
-          // DeviceHelper.isMobile(context)
-          //     ? Positioned(
-          //         top: 30.h,
-          //         right: 7.w,
-          //         child: Icon(
-          //           Icons.my_location,
-          //           color: Theme.of(context).primaryColor,
-          //           size: 16.h.w,
-          //         ),
-          //       )
-          //     : Positioned(
-          //         top: 80.h,
-          //         right: 10.w,
-          //         child: GestureDetector(
-          //           onTap: _resetMap,
-          //           child: Material(
-          //             elevation: 4,
-          //             shape: const CircleBorder(),
-          //             color: Theme.of(context).canvasColor,
-          //             child: Container(
-          //               width: 40.h,
-          //               // Or any size you prefer
-          //               height: 40.h,
-          //               alignment: Alignment.center,
-          //               decoration: BoxDecoration(
-          //                 shape: BoxShape.circle,
-          //               ),
-          //               child: Icon(
-          //                 Icons.my_location,
-          //                 color: Theme.of(context).primaryColor,
-          //                 size: 12.h.w,
-          //               ),
-          //             ),
-          //           ),
-          //         ),
-          //       )
-        ],
+      child:
+          _isMapReady ? _customMapWidget(lat, lng) : _buildLoadingPlaceholder(),
+    );
+  }
+
+  Widget _buildLoadingPlaceholder() {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  Theme.of(context).primaryColor,
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'Loading map...',
+              style: TextStyle(
+                color: Colors.grey[600],
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _customMapWidget() {
+  Widget _customMapWidget(double lat, double lng) {
     return FlutterMap(
       mapController: _mapController,
       options: MapOptions(
         onTap: (tapPosition, latLong) => widget.onMapTap(),
-        initialCenter: LatLng(widget.latitude, widget.longitude),
+        initialCenter: LatLng(lat, lng),
         initialZoom: widget.initialZoom,
-        interactionOptions: InteractionOptions(
-            flags:
-                // InteractiveFlag.pinchZoom |
-                //     InteractiveFlag.drag |
-                InteractiveFlag.flingAnimation |
-                    InteractiveFlag.doubleTapZoom |
-                    InteractiveFlag.scrollWheelZoom),
+        interactionOptions: const InteractionOptions(
+          flags: InteractiveFlag.flingAnimation |
+              InteractiveFlag.doubleTapZoom |
+              InteractiveFlag.scrollWheelZoom,
+        ),
       ),
       children: [
         TileLayer(
-            urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-            userAgentPackageName: "de.landkreiskusel.app"),
+          urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+          userAgentPackageName: "de.landkreiskusel.app",
+          tileProvider: ImprovedNetworkTileProvider(),
+          keepBuffer: 3,
+          panBuffer: 1,
+          errorTileCallback: (tile, error, stackTrace) {
+            debugPrint('Tile load error: ${tile.coordinates} - $error');
+          },
+          maxNativeZoom: 19,
+          maxZoom: 19,
+          minZoom: 2,
+          tileSize: 256,
+          retinaMode: false,
+        ),
         MarkerLayer(
           markers: widget.markersList,
         ),
@@ -159,23 +145,44 @@ class _CustomFlutterMapState extends ConsumerState<CustomFlutterMap> {
     );
   }
 
-  void _resetMap() {
-    _mapController.move(
-      LatLng(widget.latitude, widget.longitude),
-      widget.initialZoom,
-    );
-    _mapController.rotate(0);
-  }
-
   @override
   void didUpdateWidget(covariant CustomFlutterMap oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    final oldLatLng = LatLng(oldWidget.latitude, oldWidget.longitude);
-    final newLatLng = LatLng(widget.latitude, widget.longitude);
+    if (!_isMapReady) return;
+
+    final oldLat = oldWidget.latitude ?? _defaultLat;
+    final oldLng = oldWidget.longitude ?? _defaultLng;
+    final newLat = widget.latitude ?? _defaultLat;
+    final newLng = widget.longitude ?? _defaultLng;
+
+    final oldLatLng = LatLng(oldLat, oldLng);
+    final newLatLng = LatLng(newLat, newLng);
 
     if (oldLatLng != newLatLng) {
       _mapController.move(newLatLng, widget.initialZoom);
     }
+  }
+
+  @override
+  void dispose() {
+    _mapController.dispose();
+    super.dispose();
+  }
+}
+
+class ImprovedNetworkTileProvider extends TileProvider {
+  ImprovedNetworkTileProvider() : super();
+
+  @override
+  ImageProvider getImage(TileCoordinates coordinates, TileLayer options) {
+    final url = getTileUrl(coordinates, options);
+
+    return NetworkImage(
+      url,
+      headers: {
+        'User-Agent': 'de.landkreiskusel.app',
+      },
+    );
   }
 }

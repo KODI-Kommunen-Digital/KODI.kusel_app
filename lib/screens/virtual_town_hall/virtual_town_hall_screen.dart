@@ -414,7 +414,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                       imageUrl:
                           municipality.mapImage ?? "https://picsum.photos/200",
                       heading: municipality.name ?? "",
-                      description: "Geneide",
+                      description: AppLocalizations.of(context).municipality,
                       errorImagePath: imagePath['kusel_map_image'],
                       onPress: () {
                         ref.read(navigationProvider).navigateUsingPath(
