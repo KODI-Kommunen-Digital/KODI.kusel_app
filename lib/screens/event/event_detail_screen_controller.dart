@@ -134,6 +134,7 @@ class EventDetailScreenController
 
       RecommendationsRequestModel recommendationsRequestModel =
           RecommendationsRequestModel(
+              categoryId: "3",
               translate:
                   "${currentLocale.languageCode}-${currentLocale.countryCode}");
       GetAllListingsResponseModel getAllListingsResponseModel =

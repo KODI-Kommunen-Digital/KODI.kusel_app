@@ -110,6 +110,7 @@ class _LocationCardWidgetState extends ConsumerState<LocationCardWidget> {
               ],
             ),
           ),
+          if(widget.websiteUrl !=null && widget.websiteUrl.isNotEmpty)
           Padding(
             padding:
                 EdgeInsets.only(top: 8.0, bottom: 12.0, left: 16, right: 16),

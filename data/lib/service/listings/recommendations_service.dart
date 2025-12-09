@@ -20,8 +20,14 @@ class RecommendationService {
 
   Future<Either<Exception, BaseModel>> call(
       BaseModel requestModel, BaseModel responseModel) async {
-    final path =
-        "$recommendationsListingEndPoint?translate=${requestModel.toJson()["translate"]}";
+    final queryParams = requestModel
+        .toJson()
+        .entries
+        .where((e) => e.value != null && e.value.toString().isNotEmpty)
+        .map((e) => "${e.key}=${Uri.encodeComponent(e.value.toString())}")
+        .join("&");
+
+    final path = "$recommendationsListingEndPoint?$queryParams";
 
     final apiHelper = ref.read(apiHelperProvider);
     String token = sharedPreferenceHelper.getString(tokenKey) ?? '';

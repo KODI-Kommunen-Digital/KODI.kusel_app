@@ -297,7 +297,7 @@
   "reset_password_success": "Password has been successfully reset",
   "abort_math_hunt_game": "Abort MathHunt Game?",
   "math_hunt_game_desc": "Ready for some mental arithmetic?",
-  "flip_catch_desc": "Ready for Flip catch?",
+  "flip_catch_desc": "Ready for Flip Catch?",
   "abort_flip_catch": "Abort Flip Catch?",
   "my_profile": "My Profile",
   "my_fav": "My favorites",
@@ -341,5 +341,6 @@
   "selected_text": "Selected text:",
   "selected_desc": "Is this the word you want to select?",
   "yes": "Yes",
-  "no": "No"
+  "no": "No",
+  "game_start_at": "The game starts at:"
 }

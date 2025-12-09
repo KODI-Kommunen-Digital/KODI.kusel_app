@@ -1889,7 +1889,7 @@ abstract class AppLocalizations {
   /// No description provided for @flip_catch_desc.
   ///
   /// In en, this message translates to:
-  /// **'Ready for Flip catch?'**
+  /// **'Ready for Flip Catch?'**
   String get flip_catch_desc;
 
   /// No description provided for @abort_flip_catch.
@@ -2155,6 +2155,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No'**
   String get no;
+
+  /// No description provided for @game_start_at.
+  ///
+  /// In en, this message translates to:
+  /// **'The game starts at:'**
+  String get game_start_at;
 }
 
 class _AppLocalizationsDelegate

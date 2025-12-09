@@ -329,7 +329,9 @@ class _DigitDashScreenState extends ConsumerState<DigitDashScreen> {
 
     switch (state.gameStageConstant) {
       case GameStageConstant.initial:
-        if (widget.digitDashParams?.levelId == 11) {
+        if (widget.digitDashParams?.levelId == 10) {
+          await _showLevel1Dialog(context);
+        } else if (widget.digitDashParams?.levelId == 11) {
           await _showLevel2Dialog(context);
         } else if (widget.digitDashParams?.levelId == 12) {
           await _showLevel3ForbiddenDialog(context);
@@ -536,6 +538,135 @@ class _DigitDashScreenState extends ConsumerState<DigitDashScreen> {
       ).notifier,
     );
     controller.checkAnswer(index);
+  }
+
+  Future<void> _showLevel1Dialog(BuildContext context) async {
+    if (!mounted) return;
+
+    final state = ref.read(
+      brainTeaserGameDigitDashControllerProvider(
+        widget.digitDashParams?.levelId ?? 1,
+      ),
+    );
+
+    final controller = ref.read(
+      brainTeaserGameDigitDashControllerProvider(
+        widget.digitDashParams?.levelId ?? 1,
+      ).notifier,
+    );
+
+    final initialNumber = state.initialNumber;
+
+    await showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) {
+        return BlurDialogWrapper(
+          child: Dialog(
+            insetPadding: EdgeInsets.symmetric(horizontal: 24.w),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            backgroundColor: const Color(0xFFE7EEF8),
+            child: Padding(
+              padding: EdgeInsets.all(20.w),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        textSemiBoldPoppins(
+                            text: AppLocalizations.of(context)
+                                .digit_dash_dialog_title,
+                            fontSize: 22.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).primaryColor),
+                        GestureDetector(
+                          onTap: () {
+                            ref
+                                .read(navigationProvider)
+                                .removeDialog(context: context);
+                          },
+                          child: Icon(
+                            size:
+                                DeviceHelper.isMobile(context) ? null : 12.h.w,
+                            Icons.close,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 26.h),
+                  textSemiBoldPoppins(
+                    text: AppLocalizations.of(context).game_start_at,
+                    textAlign: TextAlign.left,
+                    fontSize: 16.sp,
+                    textOverflow: TextOverflow.visible,
+                    fontWeight: FontWeight.w500,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  SizedBox(height: 16.h),
+                  Center(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 24.w,
+                        vertical: 12.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF264579),
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                      child: textBoldPoppins(
+                        text: initialNumber.toString() ?? "0",
+                        fontSize: 22.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20.h),
+                  SizedBox(
+                    width: double.infinity,
+                    child: CupertinoButton(
+                      borderRadius: BorderRadius.circular(30.r),
+                      color: const Color(0xFF264579),
+                      padding: EdgeInsets.symmetric(vertical: 12.h),
+                      onPressed: () async {
+                        if (!mounted) return;
+                        ref
+                            .read(navigationProvider)
+                            .removeDialog(context: context);
+                        if (!mounted) return;
+                        await controller.startGame();
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.check,
+                              color: Colors.white, size: 18),
+                          SizedBox(width: 6.w),
+                          textSemiBoldPoppins(
+                            text: AppLocalizations.of(context).understood,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16.sp,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   Future<void> _showLevel2Dialog(BuildContext context) async {

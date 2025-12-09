@@ -310,7 +310,7 @@
   "app_version": "App-Version",
   "abort_math_hunt_game": "Mathe-Spiel abbrechen?",
   "math_hunt_game_desc": "Bereit zum Kopfrechnen?",
-  "flip_catch_desc": "Bereit für den Flip-Catch?",
+  "flip_catch_desc": "Bereit für den Flip Catch?",
   "abort_flip_catch": "Flip Catch abbrechen?",
   "location_sharing": "Standortfreigabe",
   "an": "An",
@@ -345,5 +345,6 @@
   "selected_text": "Ausgewählter Text:",
   "selected_desc": "Ist dies das Wort, das du auswählen möchtest?",
   "yes": "Ja",
-  "no": "Nein"
+  "no": "Nein",
+  "game_start_at": "Das Spiel beginnt um:"
 }

@@ -929,7 +929,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get math_hunt_game_desc => 'Ready for some mental arithmetic?';
 
   @override
-  String get flip_catch_desc => 'Ready for Flip catch?';
+  String get flip_catch_desc => 'Ready for Flip Catch?';
 
   @override
   String get abort_flip_catch => 'Abort Flip Catch?';
@@ -1066,4 +1066,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get no => 'No';
+
+  @override
+  String get game_start_at => 'The game starts at:';
 }
