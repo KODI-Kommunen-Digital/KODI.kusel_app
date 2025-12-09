@@ -126,36 +126,39 @@ class _HighlightsCardState extends ConsumerState<HighlightsCard> {
                 ),
               ),
               10.verticalSpace,
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 5.h.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    (widget.date != null)
-                        ? textSemiBoldMontserrat(
-                            color:
-                                Theme.of(context).textTheme.labelMedium?.color,
-                            fontWeight: FontWeight.w600,
-                            text: KuselDateUtils.formatDate(widget.date ?? ""),
-                            fontSize: 12)
-                        : SizedBox.shrink(),
-                    (widget.date != null) ? 5.verticalSpace : SizedBox.shrink(),
-                    textSemiBoldMontserrat(
-                        text: widget.heading,
-                        textAlign: TextAlign.start,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 11,
-                        textOverflow: TextOverflow.visible,
-                        color: Theme.of(context).textTheme.bodyLarge?.color),
-                    3.verticalSpace,
-                    textSemiBoldMontserrat(
-                        text: stripHtmlTags(widget.description),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        textAlign: TextAlign.start,
-                        color: Theme.of(context).textTheme.labelMedium?.color,
-                        maxLines: 3),
-                  ],
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 5.h.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      (widget.date != null)
+                          ? textSemiBoldMontserrat(
+                              color:
+                                  Theme.of(context).textTheme.labelMedium?.color,
+                              fontWeight: FontWeight.w600,
+                              text: KuselDateUtils.formatDate(widget.date ?? ""),
+                              fontSize: 12)
+                          : SizedBox.shrink(),
+                      (widget.date != null) ? 5.verticalSpace : SizedBox.shrink(),
+                      textSemiBoldMontserrat(
+                          text: widget.heading,
+                          textAlign: TextAlign.start,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 11,
+                          textOverflow: TextOverflow.visible,
+                          color: Theme.of(context).textTheme.bodyLarge?.color),
+                      3.verticalSpace,
+                      textSemiBoldMontserrat(
+                          text: stripHtmlTags(widget.description),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                          textAlign: TextAlign.start,
+                          color: Theme.of(context).textTheme.labelMedium?.color,
+                          maxLines: 2),
+                    ],
+                  ),
                 ),
               ),
             ],

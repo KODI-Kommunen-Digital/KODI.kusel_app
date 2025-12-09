@@ -271,7 +271,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
         int currentIndex = state.highlightCount;
 
         return Padding(
-          padding: EdgeInsets.only(left: 16.w, top: 10.h, bottom: 10.h),
+          padding: EdgeInsets.only(left: 2.w, top: 10.h, bottom: 10.h),
           child: Column(
             children: [
               Padding(

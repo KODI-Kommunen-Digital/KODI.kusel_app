@@ -937,7 +937,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get math_hunt_game_desc => 'Bereit zum Kopfrechnen?';
 
   @override
-  String get flip_catch_desc => 'Bereit für den Flip-Catch?';
+  String get flip_catch_desc => 'Bereit für den Flip Catch?';
 
   @override
   String get abort_flip_catch => 'Flip Catch abbrechen?';
@@ -1075,4 +1075,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get no => 'Nein';
+
+  @override
+  String get game_start_at => 'Das Spiel beginnt um:';
 }
