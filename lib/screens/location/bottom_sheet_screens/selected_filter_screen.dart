@@ -182,6 +182,9 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
                   physics: const ClampingScrollPhysics(),
                   child: widget.selectedFilterScreenParams.categoryId == 100
                       ? EventsListSectionWidget(
+                          categoryId: widget
+                              .selectedFilterScreenParams.categoryId
+                              .toString(),
                           eventsList: favScreenState.eventsList,
                           heading: null,
                           maxListLimit: favScreenState.eventsList.length,
@@ -204,6 +207,9 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
                           },
                         )
                       : EventsListSectionWidget(
+                          categoryId: widget
+                              .selectedFilterScreenParams.categoryId
+                              .toString(),
                           shrinkWrap: true,
                           scrollController: widget.scrollController,
                           eventsList: state.categoryEventLists[widget
@@ -227,8 +233,7 @@ class _SelectedFilterScreenState extends ConsumerState<SelectedFilterScreen> {
                                 .read(locationScreenProvider.notifier)
                                 .updateIsFav(isFav, id);
                           },
-                          onFavClickCallback: () {
-                          },
+                          onFavClickCallback: () {},
                           isMultiplePagesList: ref
                               .watch(locationScreenProvider)
                               .isLoadMoreButtonEnabled,

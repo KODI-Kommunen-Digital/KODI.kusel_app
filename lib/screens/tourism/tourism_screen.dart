@@ -226,7 +226,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                           context: context,
                           params: SelectedEventListScreenParameter(
                               listHeading:
-                                  AppLocalizations.of(context).all_events,
+                                  AppLocalizations.of(context).event_text,
                               categoryId: ListingCategoryId.event.eventId,
                               onFavChange: () {
                                 ref
@@ -330,7 +330,6 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
                     scrollDirection: Axis.horizontal,
                     padEnds: false,
                     itemCount: min(recommendationList.length, 5),
-                    // keep your original limit
                     itemBuilder: (context, index) {
                       final item = recommendationList[index];
 

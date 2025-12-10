@@ -44,7 +44,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
           eventDetailScreenProvider(widget.eventScreenParams.eventId).notifier);
 
       controller.getEventDetails(widget.eventScreenParams.eventId);
-      controller.getRecommendedList();
+      controller.getRecommendedList(widget.eventScreenParams.categoryId);
     });
     super.initState();
   }
@@ -66,7 +66,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                     .notifier);
 
             controller.getEventDetails(widget.eventScreenParams.eventId);
-            controller.getRecommendedList();
+            controller.getRecommendedList(widget.eventScreenParams.categoryId);
           },
           child: Stack(
             children: [
@@ -569,7 +569,9 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                   ref.read(navigationProvider).navigateUsingPath(
                         context: context,
                         path: eventDetailScreenPath,
-                        params: EventDetailScreenParams(eventId: item.id ?? 0),
+                        params: EventDetailScreenParams(
+                            eventId: item.id ?? 0,
+                            categoryId: widget.eventScreenParams.categoryId),
                       );
                 },
                 isFavouriteVisible: true,
