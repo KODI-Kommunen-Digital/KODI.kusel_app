@@ -326,6 +326,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               10.horizontalSpace,
               if (state.newsList != null && state.newsList!.isNotEmpty)
                 EventsListSectionWidget(
+                  categoryId: "1",
                   boxFit: BoxFit.cover,
                   context: context,
                   eventsList: state.newsList ?? [],
@@ -376,6 +377,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               if (ref.watch(homeScreenProvider).eventsList.isNotEmpty)
                 EventsListSectionWidget(
+                  categoryId: "3",
                   context: context,
                   eventsList: state.eventsList,
                   heading: AppLocalizations.of(context).home_screen_today_event,
@@ -557,6 +559,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   context: context,
                                   path: eventDetailScreenPath,
                                   params: EventDetailScreenParams(
+                                    categoryId: "41",
                                     eventId: listing.id ?? 0,
                                     onFavClick: () {
                                       ref

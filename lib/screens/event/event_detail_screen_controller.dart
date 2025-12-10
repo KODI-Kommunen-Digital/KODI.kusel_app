@@ -128,13 +128,14 @@ class EventDetailScreenController
     return "No Address Found";
   }
 
-  Future<void> getRecommendedList() async {
+  Future<void> getRecommendedList(String? categoryId) async {
     try {
       Locale currentLocale = localeManagerController.getSelectedLocale();
 
+      String id = categoryId ?? "3";
       RecommendationsRequestModel recommendationsRequestModel =
           RecommendationsRequestModel(
-              categoryId: "3",
+              categoryId: id,
               translate:
                   "${currentLocale.languageCode}-${currentLocale.countryCode}");
       GetAllListingsResponseModel getAllListingsResponseModel =
@@ -200,7 +201,8 @@ class EventDetailScreenController
 
 class EventDetailScreenParams {
   int eventId;
+  String? categoryId;
   Function()? onFavClick;
 
-  EventDetailScreenParams({required this.eventId, this.onFavClick});
+  EventDetailScreenParams({required this.eventId, this.onFavClick, this.categoryId});
 }
