@@ -116,6 +116,7 @@ class _SearchResultScreenState extends ConsumerState<SearchResultScreen> {
 
       return [
         EventsListSectionWidget(
+          boxFit: BoxFit.cover,
           eventsList: items,
           heading: items.first.categoryName,
           maxListLimit: 3,

@@ -40,7 +40,11 @@ class FlipCatchScreen extends ConsumerStatefulWidget {
 }
 
 class _FlipCatchScannerState extends ConsumerState<FlipCatchScreen> {
+  final GlobalKey<DragSelectTextWidgetState> _dragSelectKey = GlobalKey();
   WordTimerOverlayGame? _wordTimerGame;
+  String? _pendingSelectedText;
+  int? _pendingStartIndex;
+  int? _pendingEndIndex;
 
   @override
   void initState() {
@@ -351,11 +355,14 @@ class _FlipCatchScannerState extends ConsumerState<FlipCatchScreen> {
             ),
           if (state.showWordList && !useWordClick)
             DragSelectTextWidget(
-              key: ValueKey(
-                  'drag_select_${state.currentTargetIndex}_${state.selectedStartIndex}_${state.isGamePlayEnabled}'),
+              key: _dragSelectKey,
               fullText: state.wordOptions[0],
-              onWordSelected: (text, start, end) =>
-                  _handleDragSelection(text, start, end),
+              onWordSelected: (text, start, end) {
+                _handleDragSelection(text, start, end);
+              },
+              onShowConfirmationDialog: (text, start, end) {
+                _showSelectionConfirmationDialog(text, start, end);
+              },
               selectedStartIndex: state.selectedStartIndex,
               selectedEndIndex: state.selectedEndIndex,
               isCorrect: state.isAnswerCorrect,
@@ -440,6 +447,116 @@ class _FlipCatchScannerState extends ConsumerState<FlipCatchScreen> {
     }
   }
 
+  Future<void> _showSelectionConfirmationDialog(
+      String selectedText, int startIndex, int endIndex) async {
+    if (!mounted) return;
+    _pendingSelectedText = selectedText;
+    _pendingStartIndex = startIndex;
+    _pendingEndIndex = endIndex;
+    await showCupertinoDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) => CupertinoAlertDialog(
+        title: textBoldPoppins(
+          text: AppLocalizations.of(context).confirm_selection,
+          textAlign: TextAlign.center,
+          fontSize: 16,
+        ),
+        content: Padding(
+          padding: EdgeInsets.only(top: 8.h),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              textRegularPoppins(
+                text: AppLocalizations.of(context).selected_text,
+                textAlign: TextAlign.center,
+                fontSize: 12,
+              ),
+              8.verticalSpace,
+              // ✅ Wrap container in ConstrainedBox + SingleChildScrollView
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: 200.h, // ✅ Maximum height
+                ),
+                child: SingleChildScrollView(
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: Colors.orange.withOpacity(0.5),
+                        width: 2,
+                      ),
+                    ),
+                    child: textSemiBoldPoppins(
+                      text: selectedText,
+                      textAlign: TextAlign.center,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      textOverflow: TextOverflow.visible,
+                      // ✅ Show all text
+                      maxLines: null, // ✅ Unlimited lines
+                    ),
+                  ),
+                ),
+              ),
+              12.verticalSpace,
+              textRegularPoppins(
+                text: AppLocalizations.of(context).selected_desc,
+                textAlign: TextAlign.center,
+                textOverflow: TextOverflow.visible,
+                fontSize: 12,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          CupertinoDialogAction(
+            onPressed: () {
+              _dragSelectKey.currentState?.clearTempSelection();
+              _pendingSelectedText = null;
+              _pendingStartIndex = null;
+              _pendingEndIndex = null;
+              if (mounted) {
+                ref.read(navigationProvider).removeDialog(context: context);
+              }
+            },
+            isDestructiveAction: true,
+            child: textBoldPoppins(
+              text: AppLocalizations.of(context).no,
+              textOverflow: TextOverflow.visible,
+              fontSize: 14,
+              color: Colors.red,
+            ),
+          ),
+          CupertinoDialogAction(
+            onPressed: () {
+              if (mounted) {
+                ref.read(navigationProvider).removeDialog(context: context);
+                if (_pendingSelectedText != null &&
+                    _pendingStartIndex != null &&
+                    _pendingEndIndex != null) {
+                  _handleDragSelection(_pendingSelectedText!,
+                      _pendingStartIndex!, _pendingEndIndex!);
+                }
+                _pendingSelectedText = null;
+                _pendingStartIndex = null;
+                _pendingEndIndex = null;
+              }
+            },
+            isDefaultAction: true,
+            child: textBoldPoppins(
+              text: AppLocalizations.of(context).yes,
+              textOverflow: TextOverflow.visible,
+              fontSize: 14,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _showAbortDialog(BuildContext context) async {
     if (!mounted) return;
 
@@ -479,7 +596,7 @@ class _FlipCatchScannerState extends ConsumerState<FlipCatchScreen> {
             },
             isDefaultAction: true,
             child: textBoldPoppins(
-              text: AppLocalizations.of(context).digifit_end,
+              text: AppLocalizations.of(context).digifit_continue,
               textOverflow: TextOverflow.visible,
               fontSize: 14,
             ),
@@ -510,7 +627,7 @@ class _FlipCatchScannerState extends ConsumerState<FlipCatchScreen> {
               );
             },
             child: textBoldPoppins(
-              text: AppLocalizations.of(context).digifit_abort,
+              text: AppLocalizations.of(context).digifit_end_game,
               textOverflow: TextOverflow.visible,
               fontSize: 14,
             ),

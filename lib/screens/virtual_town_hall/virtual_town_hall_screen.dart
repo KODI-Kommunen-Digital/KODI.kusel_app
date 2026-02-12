@@ -137,6 +137,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
             ),
           if (state.eventList != null && state.eventList!.isNotEmpty)
             EventsListSectionWidget(
+              boxFit: BoxFit.fill,
               context: context,
               eventsList: state.eventList ?? [],
               heading: AppLocalizations.of(context).event_text,
@@ -414,7 +415,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
                       imageUrl:
                           municipality.mapImage ?? "https://picsum.photos/200",
                       heading: municipality.name ?? "",
-                      description: "Geneide",
+                      description: AppLocalizations.of(context).municipality,
                       errorImagePath: imagePath['kusel_map_image'],
                       onPress: () {
                         ref.read(navigationProvider).navigateUsingPath(

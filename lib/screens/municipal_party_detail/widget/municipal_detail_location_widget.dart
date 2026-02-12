@@ -103,7 +103,7 @@ class _CityDetailLocationWidgetState
                     ),
                     textRegularPoppins(
                       text:
-                          "${AppLocalizations.of(context).close} $formattedCalendarText ${AppLocalizations.of(context).clock}",
+                          "${AppLocalizations.of(context).closes_at} $formattedCalendarText ${AppLocalizations.of(context).clock}",
                       textAlign: TextAlign.start,
                       maxLines: 3,
                       textOverflow: TextOverflow.ellipsis,

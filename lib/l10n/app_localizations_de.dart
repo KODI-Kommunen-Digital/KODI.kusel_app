@@ -613,7 +613,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get trophies => 'Trophäen';
 
   @override
-  String get brain_teasers => 'Denksportaufga­ben';
+  String get brain_teasers => 'Denksportauf-gaben';
 
   @override
   String get points_and_trophy => 'Punkte & ­ Trophäen';
@@ -937,7 +937,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get math_hunt_game_desc => 'Bereit zum Kopfrechnen?';
 
   @override
-  String get flip_catch_desc => 'Bereit für den Flip-Catch';
+  String get flip_catch_desc => 'Bereit für den Flip Catch?';
 
   @override
   String get abort_flip_catch => 'Flip Catch abbrechen?';
@@ -1050,5 +1050,32 @@ class AppLocalizationsDe extends AppLocalizations {
   String get our_recommendations => 'Unsere Empfehlungen';
 
   @override
-  String get digifit_end => 'Beenden';
+  String get digifit_end_game => 'Spiel beenden';
+
+  @override
+  String get digifit_end_exercise => 'Übung abbrechen';
+
+  @override
+  String get digifit_continue => 'Weiterspielen';
+
+  @override
+  String get digift_continue_exercise => 'Weiter mit der Übung';
+
+  @override
+  String get confirm_selection => 'Auswahl bestätigen';
+
+  @override
+  String get selected_text => 'Ausgewählter Text:';
+
+  @override
+  String get selected_desc => 'Ist dies das Wort, das du auswählen möchtest?';
+
+  @override
+  String get yes => 'Ja';
+
+  @override
+  String get no => 'Nein';
+
+  @override
+  String get game_start_at => 'Das Spiel beginnt um:';
 }

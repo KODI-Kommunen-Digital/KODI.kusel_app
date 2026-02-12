@@ -108,8 +108,7 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
       fetchCities(),
       getInterests(),
     ]);
-    state = state.copyWith(isLoading: false);
-  }
+    state = state.copyWith(isLoading: false);}
 
   // void initializerPageController() {
   //   pageController = PageController(
