@@ -112,6 +112,8 @@ class _ExploreScreenState extends ConsumerState<SelectedEventListScreen> {
                         text: AppLocalizations.of(context).no_data),
                   )
                 : EventsListSectionWidget(
+                  categoryId: widget.eventListScreenParameter.categoryId.toString(),
+                    boxFit: BoxFit.cover,
                     eventsList:
                         ref.watch(selectedEventListScreenProvider).eventsList,
                     heading: null,

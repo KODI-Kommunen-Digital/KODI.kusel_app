@@ -380,6 +380,7 @@ class _AllEventScreenState extends ConsumerState<AllEventScreen> {
                       return Padding(
                         padding: EdgeInsets.symmetric(horizontal: 6.w),
                         child: HighlightsCard(
+                          imageFit: BoxFit.cover,
                           date: item.startDate,
                           cardWidth: 280.w,
                           sourceId: item.sourceId ?? 3,

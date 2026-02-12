@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:domain/model/response_model/listings_model/get_all_listings_response_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -324,6 +326,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               10.horizontalSpace,
               if (state.newsList != null && state.newsList!.isNotEmpty)
                 EventsListSectionWidget(
+                  categoryId: "1",
                   boxFit: BoxFit.cover,
                   context: context,
                   eventsList: state.newsList ?? [],
@@ -374,6 +377,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               if (ref.watch(homeScreenProvider).eventsList.isNotEmpty)
                 EventsListSectionWidget(
+                  categoryId: "3",
                   context: context,
                   eventsList: state.eventsList,
                   heading: AppLocalizations.of(context).home_screen_today_event,
@@ -386,11 +390,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         .read(dashboardScreenProvider.notifier)
                         .onScreenNavigation();
                     ref.read(navigationProvider).navigateUsingPath(
-                        path: allEventScreenPath,
+                        path: selectedEventListScreenPath,
                         context: context,
-                        params: AllEventScreenParam(onFavChange: () {
-                          ref.read(homeScreenProvider.notifier).getEvents();
-                        }));
+                        params: SelectedEventListScreenParameter(
+                            listHeading:
+                                AppLocalizations.of(context).event_text,
+                            categoryId: 3,
+                            onFavChange: () {
+                              ref.read(homeScreenProvider.notifier).getEvents();
+                            }));
                   },
                   onFavClickCallback: () {
                     ref.read(homeScreenProvider.notifier).getEvents();
@@ -400,11 +408,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         .read(dashboardScreenProvider.notifier)
                         .onScreenNavigation();
                     ref.read(navigationProvider).navigateUsingPath(
-                        path: allEventScreenPath,
+                        path: selectedEventListScreenPath,
                         context: context,
-                        params: AllEventScreenParam(onFavChange: () {
-                          ref.read(homeScreenProvider.notifier).getEvents();
-                        }));
+                        params: SelectedEventListScreenParameter(
+                            listHeading:
+                                AppLocalizations.of(context).event_text,
+                            categoryId: 3,
+                            onFavChange: () {
+                              ref.read(homeScreenProvider.notifier).getEvents();
+                            }));
                   },
                   onSuccess: (isFav, eventId) {
                     ref
@@ -434,6 +446,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget customPageViewer(bool isLoading) {
     HomeScreenState state = ref.watch(homeScreenProvider);
     int currentIndex = state.highlightCount;
+
+    final maxItems = min(state.highlightsList.length, 4);
+    final limitedHighlightsList = state.highlightsList.take(maxItems).toList();
+
     return Padding(
       padding: EdgeInsets.only(left: 10.w, top: 10.h, bottom: 10.h),
       child: Column(
@@ -476,7 +492,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: List.generate(
-                            state.highlightsList.length,
+                            limitedHighlightsList.length,
                             (index) => InkWell(
                               onTap: () {
                                 ref
@@ -487,7 +503,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                     path: eventDetailScreenPath,
                                     params: EventDetailScreenParams(
                                         eventId:
-                                            state.highlightsList[index].id ??
+                                            limitedHighlightsList[index].id ??
                                                 0));
                               },
                               child: Row(
@@ -501,7 +517,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                             .primaryColor
                                             .withAlpha(130),
                                   ),
-                                  if (index != state.highlightsList.length - 1)
+                                  if (index != limitedHighlightsList.length - 1)
                                     4.horizontalSpace
                                 ],
                               ),
@@ -523,14 +539,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             317.w / MediaQuery.of(context).size.width * .9),
                     scrollDirection: Axis.horizontal,
                     padEnds: false,
-                    itemCount: state.highlightsList.length,
+                    itemCount: limitedHighlightsList.length,
                     itemBuilder: (context, index) {
-                      final listing = state.highlightsList[index];
+                      final listing = limitedHighlightsList[index];
                       return Padding(
                         padding: EdgeInsets.symmetric(horizontal: 6.h.w),
                         child: HighlightsCard(
                           imageUrl: listing.logo ?? '',
-                          date: listing.createdAt ?? "",
+                          date: listing.startDate ?? "",
                           heading: listing.title ?? "",
                           description: listing.description ?? "",
                           errorImagePath: imagePath['kusel_map_image'],
@@ -543,6 +559,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   context: context,
                                   path: eventDetailScreenPath,
                                   params: EventDetailScreenParams(
+                                    categoryId: "41",
                                     eventId: listing.id ?? 0,
                                     onFavClick: () {
                                       ref

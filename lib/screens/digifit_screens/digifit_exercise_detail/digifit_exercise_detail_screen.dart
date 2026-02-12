@@ -586,7 +586,7 @@ class _DigifitExerciseDetailScreenState
             },
             isDefaultAction: true,
             child: textBoldPoppins(
-                text: AppLocalizations.of(context).digifit_end,
+                text: AppLocalizations.of(context).digifit_continue,
                 textOverflow: TextOverflow.visible,
                 fontSize: 14),
           ),
@@ -615,7 +615,7 @@ class _DigifitExerciseDetailScreenState
             },
             isDefaultAction: true,
             child: textBoldPoppins(
-                text: AppLocalizations.of(context).digifit_abort,
+                text: AppLocalizations.of(context).digifit_end_game,
                 textOverflow: TextOverflow.visible,
                 fontSize: 14),
           ),

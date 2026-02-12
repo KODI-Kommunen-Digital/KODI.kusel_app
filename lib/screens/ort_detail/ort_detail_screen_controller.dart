@@ -17,6 +17,7 @@ import 'package:kusel/locale/localization_manager.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen_state.dart';
 
 import '../../common_widgets/listing_id_enum.dart';
+import '../../common_widgets/location_const.dart';
 
 final ortDetailScreenControllerProvider = StateNotifierProvider.autoDispose<
         OrtDetailScreenController, OrtDetailScreenState>(
@@ -61,8 +62,7 @@ class OrtDetailScreenController extends StateNotifier<OrtDetailScreenState> {
       Locale currentLocale = localeManagerController.getSelectedLocale();
 
       if (response && status) {
-        RefreshTokenRequestModel requestModel =
-            RefreshTokenRequestModel();
+        RefreshTokenRequestModel requestModel = RefreshTokenRequestModel();
         RefreshTokenResponseModel responseModel = RefreshTokenResponseModel();
 
         final refreshResponse =
@@ -104,7 +104,13 @@ class OrtDetailScreenController extends StateNotifier<OrtDetailScreenState> {
       }, (r) {
         final res = r as OrtDetailResponseModel;
 
-        state = state.copyWith(ortDetailDataModel: res.data, isLoading: false);
+        state = state.copyWith(
+            ortDetailDataModel: res.data,
+            isLoading: false,
+            latitude: double.parse(
+                res.data?.latitude ?? EventLatLong.kusel.latitude.toString()),
+            longitude: double.parse(res.data?.longitude ??
+                EventLatLong.kusel.longitude.toString()));
       });
     } catch (e) {
       debugPrint("get ort detail exception = $e");
@@ -145,10 +151,11 @@ class OrtDetailScreenController extends StateNotifier<OrtDetailScreenState> {
 
       Locale currentLocale = localeManagerController.getSelectedLocale();
 
-
       GetAllListingsRequestModel getAllListingsRequestModel =
-          GetAllListingsRequestModel(categoryId: ListingCategoryId.highlights.eventId.toString(),
-              translate: "${currentLocale.languageCode}-${currentLocale.countryCode}");
+          GetAllListingsRequestModel(
+              categoryId: ListingCategoryId.highlights.eventId.toString(),
+              translate:
+                  "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
       GetAllListingsResponseModel getAllListingsResponseModel =
           GetAllListingsResponseModel();
@@ -174,13 +181,13 @@ class OrtDetailScreenController extends StateNotifier<OrtDetailScreenState> {
 
       Locale currentLocale = localeManagerController.getSelectedLocale();
 
-
       GetAllListingsRequestModel requestModel = GetAllListingsRequestModel(
           cityId: cityId,
           pageSize: 5,
           sortByStartDate: true,
           categoryId: categoryId,
-          translate: "${currentLocale.languageCode}-${currentLocale.countryCode}");
+          translate:
+              "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
 
@@ -208,7 +215,8 @@ class OrtDetailScreenController extends StateNotifier<OrtDetailScreenState> {
           GetAllListingsRequestModel(
               cityId: cityId,
               categoryId: ListingCategoryId.event.eventId.toString(),
-              translate: "${currentLocale.languageCode}-${currentLocale.countryCode}");
+              translate:
+                  "${currentLocale.languageCode}-${currentLocale.countryCode}");
 
       GetAllListingsResponseModel getAllListingsResponseModel =
           GetAllListingsResponseModel();

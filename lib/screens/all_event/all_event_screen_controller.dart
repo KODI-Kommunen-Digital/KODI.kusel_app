@@ -242,6 +242,7 @@ class AllEventScreenController extends StateNotifier<AllEventScreenState> {
 
       GetAllListingsResponseModel responseModel = GetAllListingsResponseModel();
       RecommendationsRequestModel requestModel = RecommendationsRequestModel(
+          categoryId: "3",
           translate:
               "${currentLocale.languageCode}-${currentLocale.countryCode}");
 

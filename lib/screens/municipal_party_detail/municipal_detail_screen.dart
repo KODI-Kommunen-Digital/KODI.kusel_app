@@ -298,7 +298,7 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
           left: 0.w,
           right: 0.w,
           child: Card(
-            elevation: 8,
+            elevation: 4,
             shape: CircleBorder(),
             child: Container(
               height: 110.h,
@@ -308,8 +308,8 @@ class _CityDetailScreenState extends ConsumerState<MunicipalDetailScreen> {
                   BoxDecoration(shape: BoxShape.circle, color: Colors.white),
               child: (state.municipalPartyDetailDataModel?.image != null)
                   ? ImageUtil.loadNetworkImage(
-                      memCacheWidth: 300,
-                      memCacheHeight: 300,
+                      memCacheWidth: 540,
+                      memCacheHeight: 580,
                       imageUrl: state.municipalPartyDetailDataModel!.image!,
                       sourceId: 1,
                       fit: BoxFit.contain,

@@ -148,6 +148,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
                 .eventsList
                 .isNotEmpty)
               EventsListSectionWidget(
+                boxFit: BoxFit.cover,
                 context: context,
                 eventsList: state.eventsList,
                 heading: AppLocalizations.of(context).all_events,
@@ -254,11 +255,13 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 12.w),
               child: CityDetailLocationWidget(
-                phoneNumber: '+49 6381 424-0',
+                phoneNumber: state.ortDetailDataModel?.phone ?? '-',
                 webUrl: state.ortDetailDataModel?.websiteUrl ?? "",
-                address: 'Trierer Str. 49-51, 66869 Kusel',
+                address: state.ortDetailDataModel?.address ?? "-",
                 websiteText: AppLocalizations.of(context).visit_website,
                 calendarText: state.ortDetailDataModel?.openUntil ?? "",
+                lat: state.latitude,
+                long: state.longitude,
               ),
             ),
             20.verticalSpace,
