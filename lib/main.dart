@@ -35,6 +35,9 @@ void main() async {
   Hive.registerAdapter(DigifitUpdateExerciseRequestModelAdapter());
   Hive.registerAdapter(DigifitExerciseRecordModelAdapter());
 
+  // Todo - Need to add site Id and site Url for Matomo initialization
+  // MatomoApi.initialize("site_id", 'site_url');
+
   final prefs = await SharedPreferences.getInstance();
   runApp(ProviderScope(overrides: [
     sharedPreferencesProvider.overrideWithValue(prefs),
