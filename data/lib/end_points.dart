@@ -23,6 +23,7 @@ const onboardingDetailEndPoint = "/onboardingDetail";
 const feedbackEndpoint = "/feedbacks";
 const municipalPartyDetailEndPoint = "/virtualTownhall/getMunicipalityById";
 const resetPasswordEndPoint='/users/change-password';
+const storeFirebaseUserTokenEndPoint= '/storeFirebaseUserToken';
 
 // WEATHER API
 const weatherEndPoint = "/thirdParty/weather";

@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/location_const.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/location/bottom_sheet_screens/selected_filter_screen.dart';
@@ -39,6 +40,7 @@ class _ExploreScreenState extends ConsumerState<LocationScreen> {
       controller.isUserLoggedIn();
       controller.getPoiCoordinates();
     });
+    MatomoService.trackLocationScreenViewed();
     super.initState();
   }
 

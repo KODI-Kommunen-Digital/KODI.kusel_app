@@ -5,6 +5,7 @@ import 'package:domain/model/response_model/guest_user_login/guest_user_login_re
 import 'package:domain/usecase/guest_user_login/guest_user_login_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kusel/matomo_api.dart';
 
 import 'extract_deviceId/extract_deviceId_provider.dart';
 
@@ -44,6 +45,8 @@ class GuestUserLogin {
 
           sharedPreferenceHelper.setInt(
               userIdKey, res.data?.userId ?? 0);
+          MatomoService.trackLoginSuccess(
+              userId: res.data?.userId.toString() ?? "0");
           if(onSuccess!=null)
             {
               await onSuccess();

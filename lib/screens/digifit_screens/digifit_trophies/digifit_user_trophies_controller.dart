@@ -1,3 +1,5 @@
+import 'package:core/preference_manager/preference_constant.dart';
+import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:core/token_status.dart';
 import 'package:domain/model/request_model/digifit/digifit_user_trophies_request_model.dart';
@@ -6,6 +8,7 @@ import 'package:domain/usecase/digifit/digifit_user_trophies_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/locale/localization_manager.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:kusel/screens/digifit_screens/digifit_trophies/digifit_user_trophies_state.dart';
 
 import '../../../common_widgets/get_slug.dart';
@@ -18,7 +21,9 @@ final digifitUserTrophiesControllerProvider = StateNotifierProvider.autoDispose<
       tokenStatus: ref.read(tokenStatusProvider),
       refreshTokenProvider: ref.read(refreshTokenProvider),
       localeManagerController: ref.read(localeManagerProvider.notifier),
-      signInStatusController: ref.read(signInStatusProvider.notifier)),
+      signInStatusController: ref.read(signInStatusProvider.notifier),
+    sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider)
+  ),
 );
 
 class DigifitUserTrophiesController
@@ -28,13 +33,16 @@ class DigifitUserTrophiesController
   final RefreshTokenProvider refreshTokenProvider;
   final LocaleManagerController localeManagerController;
   final SignInStatusController signInStatusController;
+  final SharedPreferenceHelper sharedPreferenceHelper;
 
   DigifitUserTrophiesController(
       {required this.digifitUserTrophiesUseCase,
       required this.tokenStatus,
       required this.refreshTokenProvider,
       required this.localeManagerController,
-      required this.signInStatusController})
+      required this.signInStatusController,
+      required this.sharedPreferenceHelper
+      })
       : super(DigifitUserTrophiesState.empty());
 
   Future<void> fetchDigifitUserTrophies() async {
@@ -89,6 +97,15 @@ class DigifitUserTrophiesController
           var response = (r as DigifitUserTrophiesResponseModel).data;
           state = state.copyWith(
               isLoading: false, digifitUserTrophyDataModel: response);
+          if(response!=null) {
+            bool trophyEarned = (response.userStats != null &&
+                response.userStats!.trophies != null &&
+                response.userStats!.trophies! > 0);
+            if(trophyEarned) {
+              MatomoService.trackTrophyEarned(
+                  userId: sharedPreferenceHelper.getInt(userIdKey).toString());
+            }
+          }
         },
       );
     } catch (error) {

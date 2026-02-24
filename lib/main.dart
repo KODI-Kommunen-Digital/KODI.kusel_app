@@ -12,6 +12,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:kusel/l10n/app_localizations.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
 import 'package:kusel/theme_manager/theme_manager_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -35,8 +36,9 @@ void main() async {
   Hive.registerAdapter(DigifitUpdateExerciseRequestModelAdapter());
   Hive.registerAdapter(DigifitExerciseRecordModelAdapter());
 
-  // Todo - Need to add site Id and site Url for Matomo initialization
-  // MatomoApi.initialize("site_id", 'site_url');
+  /// Matomo Tracking Initialization
+  MatomoService.initialize(
+      siteId: '1', url: 'https://dev.boundless-innovation.com/analytics/matomo.php');
 
   final prefs = await SharedPreferences.getInstance();
   runApp(ProviderScope(overrides: [

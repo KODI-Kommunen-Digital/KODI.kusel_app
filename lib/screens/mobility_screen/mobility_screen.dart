@@ -14,6 +14,7 @@ import '../../common_widgets/common_more_info_card.dart';
 import '../../common_widgets/downstream_wave_clipper.dart';
 import '../../common_widgets/network_image_text_service_card.dart';
 import '../../common_widgets/web_view_page.dart';
+import '../../matomo_api.dart';
 import '../../navigation/navigation.dart';
 
 class MobilityScreen extends ConsumerStatefulWidget {
@@ -29,6 +30,7 @@ class _MobilityScreenState extends ConsumerState<MobilityScreen> {
     Future.microtask(() {
       ref.read(mobilityScreenProvider.notifier).fetchMobilityDetails();
     });
+    MatomoService.trackMobilityScreenViewed();
     super.initState();
   }
 

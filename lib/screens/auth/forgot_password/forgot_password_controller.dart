@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/common_widgets/translate_message.dart';
 import 'package:kusel/screens/auth/forgot_password/forgot_password_state.dart';
 
+import '../../../matomo_api.dart';
+
 final forgotPasswordProvider = StateNotifierProvider.autoDispose<
         ForgotPasswordController, ForgotPasswordState>(
     (ref) => ForgotPasswordController(
@@ -48,6 +50,7 @@ class ForgotPasswordController extends StateNotifier<ForgotPasswordState> {
         if (response.message != null) {
           onError(response.message ?? "");
         } else {
+          MatomoService.trackForgotPassword();
           onSuccess();
         }
       });

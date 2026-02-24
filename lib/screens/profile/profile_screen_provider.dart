@@ -20,6 +20,7 @@ import 'package:data/end_points.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:kusel/screens/profile/profile_screen_state.dart';
 
 final profileScreenProvider =
@@ -217,6 +218,8 @@ class ProfileScreenController extends StateNotifier<ProfileScreenState> {
         debugPrint("Edit Api Result : $resData");
         // await getUserDetails();
         state = state.copyWith(loading: false, editingEnabled: false);
+        MatomoService.trackProfileUpdated(
+            userId: state.userData?.id.toString() ?? "0");
         onSuccess();
         debugPrint("Edit API Success");
       });

@@ -28,6 +28,7 @@ import 'package:domain/usecase/sigin/sigin_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/common_widgets/translate_message.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:kusel/providers/extract_deviceId/extract_deviceId_provider.dart';
 import 'package:kusel/screens/auth/signin/signin_state.dart';
 
@@ -122,6 +123,11 @@ class SignInController extends StateNotifier<SignInState> {
           await sharedPreferenceHelper.setBool(
               onboardingKey, isOnboardingComplete);
           await sharedPreferenceHelper.setBool(isUserSignedIn, true);
+          // Logging out guest user
+          MatomoService.clearUser();
+          MatomoService.trackLoginSuccess(
+              userId: userId.toString());
+          MatomoService.trackLogin(userId: userId.toString());
           success();
         }
       });

@@ -19,6 +19,7 @@ import '../../common_widgets/device_helper.dart';
 import '../../common_widgets/text_styles.dart';
 import '../../common_widgets/toast_message.dart';
 import '../../images_path.dart';
+import '../../matomo_api.dart';
 import '../../navigation/navigation.dart';
 import '../../theme_manager/colors.dart';
 import '../auth/validator/empty_field_validator.dart';
@@ -36,6 +37,7 @@ class _FeedbackScreenState extends ConsumerState<FeedbackScreen> {
 
   @override
   void initState() {
+    MatomoService.trackFeedbackScreenViewed();
     super.initState();
   }
 

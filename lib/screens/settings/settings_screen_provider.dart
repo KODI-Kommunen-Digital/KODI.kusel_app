@@ -15,6 +15,8 @@ import 'package:kusel/providers/refresh_token_provider.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
 import 'package:kusel/screens/settings/settings_screen_state.dart';
 
+import '../../matomo_api.dart';
+
 final settingsScreenProvider =
     StateNotifierProvider<SettingsScreenProvider, SettingsScreenState>((ref) =>
         SettingsScreenProvider(
@@ -54,6 +56,8 @@ class SettingsScreenProvider extends StateNotifier<SettingsScreenState> {
   logoutUser(Future<void> Function() callBack,
       {VoidCallback? onSuccess}) async {
     state = state.copyWith(isLoading: true);
+    MatomoService.trackLogout(
+        userId: sharedPreferenceHelper.getInt(userIdKey).toString());
     await sharedPreferenceHelper.clear();
     await callBack();
 

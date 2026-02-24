@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/new_filter_screen/new_filter_screen_params.dart';
 
@@ -35,6 +36,8 @@ class _ExploreScreenState extends ConsumerState<FavoritesListScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(favoritesListScreenProvider.notifier).getFavoritesList(1);
     });
+
+    MatomoService.trackFavouriteEventsScreenViewed();
 
     _scrollController.addListener(_onScroll);
   }

@@ -13,6 +13,7 @@ import 'package:kusel/common_widgets/location_const.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/common_widgets/weather_widget.dart';
 import 'package:kusel/l10n/app_localizations.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:kusel/providers/favorites_list_notifier.dart';
 import 'package:kusel/screens/all_event/all_event_screen_param.dart';
 import 'package:kusel/screens/dashboard/dashboard_screen_provider.dart';
@@ -54,6 +55,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       storeController: UpgraderStoreController(),
     );
     Upgrader.clearSavedSettings();
+    MatomoService.trackHomeScreenViewed();
     super.initState();
   }
 

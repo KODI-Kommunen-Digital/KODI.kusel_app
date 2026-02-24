@@ -8,6 +8,7 @@ import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/local_image_text_service_card.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/l10n/app_localizations.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen_controller.dart';
 import 'package:kusel/screens/ort_detail/ort_detail_screen_state.dart';
 
@@ -60,6 +61,7 @@ class _OrtDetailScreenState extends ConsumerState<OrtDetailScreen> {
 
       ref.read(ortDetailScreenControllerProvider.notifier).isUserLoggedIn();
     });
+    MatomoService.trackMeinOrtScreenViewed();
     super.initState();
   }
 

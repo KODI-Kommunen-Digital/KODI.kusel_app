@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/digifit/brain_teaser_game/blur_dialog_wrapper.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:kusel/screens/digifit_screens/brain_teaser_game/all_games/pictures_game/screen_component/level_2_timer_widget.dart';
 import 'package:kusel/screens/digifit_screens/brain_teaser_game/all_games/pictures_game/screen_component/level_3_dialog_widget.dart';
 

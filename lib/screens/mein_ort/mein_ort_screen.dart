@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/image_text_card_widget.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/all_municipality/all_municipality_provider.dart';
 import 'package:kusel/screens/mein_ort/mein_ort_provider.dart';
@@ -41,6 +42,7 @@ class _MeinOrtScreenState extends ConsumerState<MeinOrtScreen> {
       ref.read(meinOrtProvider.notifier).getMeinOrtDetails();
       ref.read(meinOrtProvider.notifier).isUserLoggedIn();
     });
+    MatomoService.trackMeinOrtScreenViewed();
     super.initState();
   }
 
