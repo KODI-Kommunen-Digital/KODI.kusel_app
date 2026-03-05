@@ -13,3 +13,4 @@ const userFirstNameKey = "userFirstName";
 const selectedCityIdKey = "selectedMunicipalId";
 
 const isUserSignedIn = "isUserSignedIn";
+const fcmToken = "fcmToken";

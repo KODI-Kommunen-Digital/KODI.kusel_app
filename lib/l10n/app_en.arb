@@ -342,5 +342,6 @@
   "selected_desc": "Is this the word you want to select?",
   "yes": "Yes",
   "no": "No",
-  "game_start_at": "The game starts at:"
+  "game_start_at": "The game starts at:",
+  "notification": "Notification"
 }

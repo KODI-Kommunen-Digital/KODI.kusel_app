@@ -346,5 +346,6 @@
   "selected_desc": "Ist dies das Wort, das du auswählen möchtest?",
   "yes": "Ja",
   "no": "Nein",
-  "game_start_at": "Das Spiel beginnt um:"
+  "game_start_at": "Das Spiel beginnt um:",
+  "notification": "Notification"
 }

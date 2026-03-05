@@ -28,12 +28,14 @@ import 'package:domain/usecase/sigin/sigin_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/common_widgets/translate_message.dart';
+import 'package:kusel/firebase_api.dart';
 import 'package:kusel/matomo_api.dart';
 import 'package:kusel/providers/extract_deviceId/extract_deviceId_provider.dart';
 import 'package:kusel/screens/auth/signin/signin_state.dart';
 
 final signInScreenProvider = StateNotifierProvider
     .autoDispose<SignInController, SignInState>((ref) => SignInController(
+        ref: ref,
         signInUseCase: ref.read(signInUseCaseProvider),
         sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
         tokenStatus: ref.read(tokenStatusProvider),
@@ -46,9 +48,11 @@ final signInScreenProvider = StateNotifierProvider
         onboardingCompleteUseCase: ref.read(onboardingCompleteUseCaseProvider),
         editUserDetailUseCase: ref.read(editUserDetailUseCaseProvider),
         translateErrorMessage: ref.watch(translateErrorMessageProvider),
-        extractDeviceIdProvider: ref.read(extractDeviceIdProvider)));
+        extractDeviceIdProvider: ref.read(extractDeviceIdProvider),
+        firebaseApiHelper: ref.read(firebaseApiProvider)));
 
 class SignInController extends StateNotifier<SignInState> {
+  Ref ref;
   SignInUseCase signInUseCase;
   SharedPreferenceHelper sharedPreferenceHelper;
   TokenStatus tokenStatus;
@@ -60,9 +64,11 @@ class SignInController extends StateNotifier<SignInState> {
   EditUserDetailUseCase editUserDetailUseCase;
   TranslateErrorMessage translateErrorMessage;
   ExtractDeviceIdProvider extractDeviceIdProvider;
+  FirebaseApi firebaseApiHelper;
 
   SignInController(
-      {required this.signInUseCase,
+      {required this.ref,
+        required this.signInUseCase,
       required this.sharedPreferenceHelper,
       required this.tokenStatus,
       required this.refreshTokenUseCase,
@@ -72,7 +78,9 @@ class SignInController extends StateNotifier<SignInState> {
       required this.onboardingCompleteUseCase,
       required this.editUserDetailUseCase,
       required this.translateErrorMessage,
-      required this.extractDeviceIdProvider})
+      required this.extractDeviceIdProvider,
+      required this.firebaseApiHelper
+      })
       : super(SignInState.empty());
 
   updateShowPassword(bool value) {
@@ -84,6 +92,8 @@ class SignInController extends StateNotifier<SignInState> {
       required String password,
       required void Function() success,
       required void Function(String message) error}) async {
+
+
     try {
       state = state.copyWith(showLoading: true);
 
@@ -128,6 +138,7 @@ class SignInController extends StateNotifier<SignInState> {
           MatomoService.trackLoginSuccess(
               userId: userId.toString());
           MatomoService.trackLogin(userId: userId.toString());
+          firebaseApiHelper.uploadFcmAfterLogin();
           success();
         }
       });

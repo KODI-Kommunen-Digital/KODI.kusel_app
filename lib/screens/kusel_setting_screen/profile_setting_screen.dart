@@ -9,6 +9,7 @@ import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/toast_message.dart';
 import 'package:kusel/l10n/app_localizations.dart';
+import 'package:kusel/providers/notifications_provider.dart';
 import 'package:kusel/screens/kusel_setting_screen/kusel_setting_screen_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -118,6 +119,9 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen>
           _buildUserForm(context),
           32.verticalSpace,
           _buildLocationToggle(context),
+          32.verticalSpace,
+          32.verticalSpace,
+          _buildNotificationToggle(context),
           32.verticalSpace,
           _buildArrowContainer(
               context, AppLocalizations.of(context).ort, () async {},
@@ -457,4 +461,47 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen>
           ],
         ));
   }
+
+  _buildNotificationToggle(BuildContext context) {
+    final isNotificationEnabled = ref.watch(notificationsProvider);
+    final controller = ref.read(notificationsProvider.notifier);
+    return Container(
+        margin: EdgeInsets.symmetric(horizontal: 16.w),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+        decoration: BoxDecoration(
+            color: Theme.of(context).canvasColor,
+            borderRadius: BorderRadius.circular(15.r)),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    textBoldMontserrat(
+                      text: AppLocalizations.of(context).notification,
+                        fontSize: 16,
+                        color:
+                        Theme.of(context).textTheme.displayMedium!.color),
+                  ],
+                ),
+              ),
+              Switch(
+                  value: isNotificationEnabled,
+                  activeColor: Theme.of(context).indicatorColor,
+                  onChanged: (value) async {
+                    final res = await controller
+                        .requestOrHandleNotificationPermission(value);
+                    if (!res) {
+                      Future.microtask(() {
+                        openAppSettings();
+                      });
+                    }
+                  }),
+            ])
+          ],
+        ));
+  }
+
 }
