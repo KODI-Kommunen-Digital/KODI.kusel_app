@@ -21,6 +21,7 @@ import '../../../common_widgets/digifit/digifit_status_widget.dart';
 import '../../../common_widgets/text_styles.dart';
 import '../../../common_widgets/toast_message.dart';
 import '../../../images_path.dart';
+import '../../../matomo_api.dart';
 import '../../../navigation/navigation.dart';
 
 class DigifitTrophiesScreen extends ConsumerStatefulWidget {
@@ -43,6 +44,7 @@ class _DigifitTrophiesScreenState extends ConsumerState<DigifitTrophiesScreen> {
             .fetchDigifitUserTrophies();
       }
     });
+    MatomoService.trackDigifitTrophiesViewed();
     super.initState();
   }
 

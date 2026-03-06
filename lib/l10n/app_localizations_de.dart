@@ -1078,4 +1078,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get game_start_at => 'Das Spiel beginnt um:';
+
+  @override
+  String get notification => 'Notification';
 }

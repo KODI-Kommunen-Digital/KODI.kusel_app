@@ -10,6 +10,7 @@ import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/location_const.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/event/event_detail_screen_state.dart';
 import 'package:kusel/utility/kusel_date_utils.dart';
@@ -46,6 +47,8 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
       controller.getEventDetails(widget.eventScreenParams.eventId);
       controller.getRecommendedList(widget.eventScreenParams.categoryId);
     });
+
+    MatomoService.trackEventDetailsScreenViewed();
     super.initState();
   }
 

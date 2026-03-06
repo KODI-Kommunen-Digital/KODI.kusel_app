@@ -30,6 +30,11 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   final GlobalKey<FormState> _forgotPasswordFormKey = GlobalKey();
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(

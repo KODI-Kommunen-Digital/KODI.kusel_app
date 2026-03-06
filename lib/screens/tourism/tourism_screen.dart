@@ -12,6 +12,7 @@ import 'package:kusel/common_widgets/highlights_card.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/listing_id_enum.dart';
 import 'package:kusel/common_widgets/local_image_text_service_card.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:kusel/screens/all_event/all_event_screen_param.dart';
 import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/events_listing/selected_event_list_screen_parameter.dart';
@@ -53,6 +54,7 @@ class _TourismScreenState extends ConsumerState<TourismScreen> {
 
       ref.read(tourismScreenControllerProvider.notifier).isUserLoggedIn();
     });
+    MatomoService.trackTourismScreenViewed();
     super.initState();
   }
 

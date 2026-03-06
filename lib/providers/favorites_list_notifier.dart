@@ -13,6 +13,7 @@ import 'package:domain/usecase/refresh_token/refresh_token_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/locale/localization_manager.dart';
+import 'package:kusel/matomo_api.dart';
 
 final favoritesProvider =
     StateNotifierProvider<FavoritesListNotifier, List<Listing>>(
@@ -87,6 +88,8 @@ class FavoritesListNotifier extends StateNotifier<List<Listing>> {
               debugPrint('add fav fold exception : $l');
             },
             (r) {
+              MatomoService.trackFavouriteAdded(
+                  userId: sharedPreferenceHelper.getInt(userIdKey).toString());
               success(isFavorite: true);
             },
           );
@@ -107,6 +110,8 @@ class FavoritesListNotifier extends StateNotifier<List<Listing>> {
             debugPrint('add fav fold exception : $l');
           },
           (r) {
+            MatomoService.trackFavouriteAdded(
+                userId: sharedPreferenceHelper.getInt(userIdKey).toString());
             success(isFavorite: true);
           },
         );
@@ -154,6 +159,8 @@ class FavoritesListNotifier extends StateNotifier<List<Listing>> {
               error(message: l.toString());
             },
             (r) {
+              MatomoService.trackFavouriteRemoved(
+                  userId: sharedPreferenceHelper.getInt(userIdKey).toString());
               success(isFavorite: false);
             },
           );
@@ -172,6 +179,8 @@ class FavoritesListNotifier extends StateNotifier<List<Listing>> {
             error(message: l.toString());
           },
           (r) {
+            MatomoService.trackFavouriteRemoved(
+                userId: sharedPreferenceHelper.getInt(userIdKey).toString());
             success(isFavorite: false);
           },
         );

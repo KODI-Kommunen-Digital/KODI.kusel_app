@@ -6,6 +6,7 @@ import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
 import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:kusel/screens/digifit_screens/brain_teaser_game/game_details/params/details_params.dart';
 
 import '../../../../app_router.dart';
@@ -15,7 +16,6 @@ import '../../../../common_widgets/text_styles.dart';
 import '../../../../images_path.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../navigation/navigation.dart';
-import '../../digifit_start/digifit_information_controller.dart';
 import 'list_controller.dart';
 
 class BrainTeaserGameListScreen extends ConsumerStatefulWidget {
@@ -36,6 +36,7 @@ class _BrainTeaserGameListScreenState
           .read(brainTeaserGameListControllerProvider.notifier)
           .fetchBrainTeaserGameList();
     });
+    MatomoService.trackBrainTeaserViewed();
     super.initState();
   }
 

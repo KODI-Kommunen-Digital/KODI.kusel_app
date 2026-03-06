@@ -14,6 +14,7 @@ import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/common_widgets/toast_message.dart';
 import 'package:kusel/images_path.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:kusel/screens/auth/signin/signin_controller.dart';
 
 import '../../../common_widgets/arrow_back_widget.dart';
@@ -33,6 +34,12 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   TextEditingController emailTextEditingController = TextEditingController();
   TextEditingController passwordTextEditingController = TextEditingController();
   GlobalKey<FormState> signInFormKey = GlobalKey();
+
+  @override
+  void initState() {
+    MatomoService.trackLoginViewed();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

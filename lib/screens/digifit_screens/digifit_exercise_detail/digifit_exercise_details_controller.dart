@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:core/preference_manager/preference_constant.dart';
+import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:core/sign_in_status/sign_in_status_controller.dart';
 import 'package:core/token_status.dart';
 import 'package:domain/model/request_model/digifit/digifit_exercise_details_request_model.dart';
@@ -14,6 +16,7 @@ import 'package:domain/usecase/digifit/digifit_exercise_details_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/database/digifit_cache_data/digifit_cache_data_controller.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:kusel/providers/digifit_equipment_fav_provider.dart';
 import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
 
@@ -40,6 +43,7 @@ final digifitExerciseDetailsControllerProvider = StateNotifierProvider
     networkStatusProvider: ref.read(networkStatusProvider.notifier),
     digifitCacheDataController: ref.read(digifitCacheDataProvider.notifier),
     equipmentId: equipmentId,
+    sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
   ),
 );
 
@@ -56,6 +60,7 @@ class DigifitExerciseDetailsController
   final SignInStatusController signInStatusController;
   final NetworkStatusProvider networkStatusProvider;
   final DigifitCacheDataController digifitCacheDataController;
+  final SharedPreferenceHelper sharedPreferenceHelper;
 
   DigifitExerciseDetailsController(
       {required this.digifitExerciseDetailsUseCase,
@@ -67,7 +72,9 @@ class DigifitExerciseDetailsController
       required this.signInStatusController,
       required this.networkStatusProvider,
       required this.digifitCacheDataController,
-      required this.equipmentId})
+      required this.equipmentId,
+      required this.sharedPreferenceHelper
+      })
       : super(DigifitExerciseDetailsState.empty());
 
   Future<void> fetchDigifitExerciseDetails(
@@ -331,6 +338,8 @@ class DigifitExerciseDetailsController
         updatedAt();
         isCompleted = true;
         saveExerciseCacheData(exerciseId: equipmentId.toString(), locationId: locationId);
+        MatomoService.trackDigifitExerciseCompleted(
+            userId: sharedPreferenceHelper.getInt(userIdKey).toString());
       } else if (stageConstant == ExerciseStageConstant.abort) {
         saveExerciseCacheData(
             exerciseId: equipmentId.toString(), locationId: locationId);

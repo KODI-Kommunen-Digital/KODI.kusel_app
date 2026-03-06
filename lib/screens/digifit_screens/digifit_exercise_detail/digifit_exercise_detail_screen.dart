@@ -11,6 +11,7 @@ import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/images_path.dart';
 import 'package:kusel/l10n/app_localizations.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:kusel/offline_router.dart';
 import 'package:kusel/providers/digifit_equipment_fav_provider.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/enum/digifit_exercise_timer_state.dart';
@@ -58,6 +59,7 @@ class _DigifitExerciseDetailScreenState
               widget.digifitExerciseDetailsParams.locationId,
               widget.digifitExerciseDetailsParams.slug);
     });
+    MatomoService.trackDigifitExerciseDetailViewed();
     super.initState();
   }
 

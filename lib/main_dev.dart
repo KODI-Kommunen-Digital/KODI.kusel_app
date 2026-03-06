@@ -5,25 +5,36 @@ import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:domain/model/request_model/digifit/digifit_update_exercise_request_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_cache_data_response_model.dart';
 import 'package:domain/model/response_model/digifit/digifit_information_response_model.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:kusel/firebase_api.dart';
 import 'package:kusel/l10n/app_localizations.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:kusel/screens/no_network/network_status_screen_provider.dart';
 import 'package:kusel/theme_manager/theme_manager_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app_router.dart';
+import 'firebase_option/firebase_options.dart';
 import 'locale/localization_manager.dart';
 import 'offline_router.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Hive.initFlutter();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   Hive.registerAdapter(DigifitCacheDataResponseModelAdapter());
   Hive.registerAdapter(DigifitInformationResponseModelAdapter());
@@ -34,6 +45,10 @@ void main() async {
   Hive.registerAdapter(DigifitInformationActionsModelAdapter());
   Hive.registerAdapter(DigifitUpdateExerciseRequestModelAdapter());
   Hive.registerAdapter(DigifitExerciseRecordModelAdapter());
+
+  /// Matomo Tracking Initialization
+  MatomoService.initialize(
+      siteId: '1', url: 'https://dev.boundless-innovation.com/analytics/matomo.php');
 
   final prefs = await SharedPreferences.getInstance();
   runApp(ProviderScope(overrides: [
@@ -61,7 +76,9 @@ class MyApp extends ConsumerStatefulWidget {
 
 class _MyAppState extends ConsumerState<MyApp> {
   StreamSubscription<List<ConnectivityResult>>? subscription;
-  final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  late final FirebaseApi firebaseApi; // Use late instead of initializing directly
+
 
   @override
   Widget build(BuildContext context) {
@@ -103,12 +120,15 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   @override
   void initState() {
-    Future.microtask(() {
+    Future.microtask(() async {
       {
+        final firebaseApi = ref.read(firebaseApiProvider);
+        await firebaseApi.initNotifications();
         ref.read(localeManagerProvider.notifier).initialLocaleSetUp();
         ref.read(networkStatusProvider.notifier).checkNetworkStatus();
       }
     });
+
     super.initState();
 
     final connectivity = Connectivity();

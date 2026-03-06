@@ -6,6 +6,7 @@ import 'package:domain/usecase/signup/signup_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/common_widgets/translate_message.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:kusel/screens/auth/signup/signup_state.dart';
 
 final signUpScreenProvider =
@@ -65,6 +66,7 @@ class SignUpController extends StateNotifier<SignUpState> {
           final userId = result.id ?? 0;
           sharedPreferenceHelper.setInt(userIdKey, userId);
           debugPrint('On Success');
+          MatomoService.trackSignup(userId: userId.toString());
           onSuccess();
         } else {
           debugPrint('On error');

@@ -48,7 +48,7 @@ class LocaleManagerController extends StateNotifier<LocaleManagerState> {
     return locale;
   }
 
-  void initialLocaleSetUp() {
+  Future<void> initialLocaleSetUp() async {
     final value = sharedPreferenceHelper.getString(languageKey);
     if (value != null) {
       if (value == LocaleConstant.english.languageCode) {

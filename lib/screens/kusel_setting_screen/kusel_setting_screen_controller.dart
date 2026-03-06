@@ -19,6 +19,7 @@ import 'package:domain/usecase/user_detail/user_detail_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kusel/locale/localization_manager.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:kusel/providers/guest_user_login_provider.dart';
 import 'package:kusel/providers/refresh_token_provider.dart';
 import 'package:kusel/screens/home/home_screen_provider.dart';
@@ -144,6 +145,9 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
       state = state.copyWith(isLoading: false);
     }
 
+    MatomoService.trackLogout(
+        userId: sharedPreferenceHelper.getInt(userIdKey).toString());
+
     if (onSuccess != null) {
       onSuccess();
     }
@@ -189,6 +193,8 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
     try {
       state = state.copyWith(isProfilePageLoading: true);
       final status = tokenStatus.isAccessTokenExpired();
+      MatomoService.trackDeleteAccount(
+          userId: sharedPreferenceHelper.getInt(userIdKey).toString());
 
       if (status) {
         await refreshTokenProvider.getNewToken(
@@ -366,9 +372,13 @@ class KuselSettingScreenController extends StateNotifier<KuselSettingState> {
         await refreshTokenProvider.getNewToken(
             onError: () {},
             onSuccess: () async {
+              MatomoService.trackProfileUpdated(
+                  userId: sharedPreferenceHelper.getInt(userIdKey).toString());
               await _updateUserDetails(onSuccess: onSuccess, onError: onError);
             });
       } else {
+        MatomoService.trackProfileUpdated(
+            userId: sharedPreferenceHelper.getInt(userIdKey).toString());
         await _updateUserDetails(onSuccess: onSuccess, onError: onError);
       }
     } catch (e) {

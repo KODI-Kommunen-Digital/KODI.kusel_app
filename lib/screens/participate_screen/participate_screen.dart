@@ -18,6 +18,7 @@ import '../../common_widgets/common_contact_details_card.dart';
 import '../../common_widgets/image_utility.dart';
 import '../../common_widgets/network_image_text_service_card.dart';
 import '../../common_widgets/web_view_page.dart';
+import '../../matomo_api.dart';
 import '../../navigation/navigation.dart';
 import '../../utility/url_launcher_utility.dart';
 
@@ -34,6 +35,7 @@ class _ParticipateScreenState extends ConsumerState<ParticipateScreen> {
     Future.microtask(() {
       ref.read(participateScreenProvider.notifier).fetchParticipateDetails();
     });
+    MatomoService.trackParticipateScreenViewed();
     super.initState();
   }
 

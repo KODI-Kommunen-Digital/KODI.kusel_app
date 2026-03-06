@@ -5,6 +5,7 @@ import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/l10n/app_localizations.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/images_path.dart';
+import 'package:kusel/matomo_api.dart';
 
 import '../../app_router.dart';
 import '../../common_widgets/custom_button_widget.dart';
@@ -33,6 +34,7 @@ class _OnboardingStartPageState extends ConsumerState<OnboardingStartPage> {
         notifier.getOnboardingDetails();
       }
     });
+    MatomoService.trackOnboardingScreenViewed();
     super.initState();
   }
 

@@ -5,6 +5,7 @@ import 'package:domain/model/response_model/feedback/feedback_response_model.dar
 import 'package:domain/usecase/feedback/feedback_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:kusel/screens/feedback/feedback_screen_state.dart';
 
 import '../../common_widgets/translate_message.dart';
@@ -57,6 +58,8 @@ class FeedbackScreenProvider extends StateNotifier<FeedbackScreenState> {
       }, (r) async {
         final result = r as FeedBackResponseModel;
         success();
+        MatomoService.trackFeedbackSubmitted(
+            userId: sharedPreferenceHelper.getInt(userIdKey).toString());
         state = state.copyWith(loading: false);
       });
     } catch (error) {

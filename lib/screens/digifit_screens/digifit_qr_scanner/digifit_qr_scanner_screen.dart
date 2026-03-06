@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/l10n/app_localizations.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:kusel/screens/digifit_screens/digifit_exercise_detail/digifit_exercise_details_controller.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
@@ -34,6 +35,12 @@ class _DigifitQRScannerScreenState
   }
 
   @override
+  void initState() {
+    MatomoService.trackDigifitQrViewed();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _buildScannerUi(),
@@ -41,6 +48,7 @@ class _DigifitQRScannerScreenState
   }
 
   _buildScannerUi() {
+    final stateNotifier = ref.read(digifitQrScannerControllerProvider.notifier);
     return Stack(
       children: [
         MobileScanner(
@@ -52,6 +60,7 @@ class _DigifitQRScannerScreenState
                 _isScanComplete = true;
                 final String code = barcode.rawValue ?? '---';
 
+                stateNotifier.trackCodeScanned();
                 debugPrint('link received after scan : $code');
                 ref.read(navigationProvider).removeTopPageAndReturnValue(
                     context: context, result: code);

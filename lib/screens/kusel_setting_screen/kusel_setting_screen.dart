@@ -9,16 +9,14 @@ import 'package:kusel/common_widgets/progress_indicator.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
 import 'package:kusel/common_widgets/upstream_wave_clipper.dart';
 import 'package:kusel/l10n/app_localizations.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:kusel/screens/kusel_setting_screen/kusel_setting_screen_controller.dart';
 import 'package:kusel/screens/kusel_setting_screen/legal_policy_screen.dart';
 import 'package:kusel/screens/kusel_setting_screen/poilcy_type.dart';
-import 'package:kusel/screens/settings/settings_screen_provider.dart';
 
 import '../../common_widgets/common_background_clipper_widget.dart';
 import '../../images_path.dart';
 import '../../navigation/navigation.dart';
-import '../dashboard/dashboard_screen_provider.dart';
-import '../home/home_screen_provider.dart';
 
 class KuselSettingScreen extends ConsumerStatefulWidget {
   const KuselSettingScreen({super.key});
@@ -37,6 +35,7 @@ class _KuselSettingScreenState extends ConsumerState<KuselSettingScreen> {
       controller.getUserScore();
       controller.getAppVersion();
     });
+    MatomoService.trackProfileScreenViewed();
 
     super.initState();
 

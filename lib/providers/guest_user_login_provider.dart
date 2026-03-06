@@ -5,23 +5,30 @@ import 'package:domain/model/response_model/guest_user_login/guest_user_login_re
 import 'package:domain/usecase/guest_user_login/guest_user_login_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kusel/firebase_api.dart';
+import 'package:kusel/matomo_api.dart';
 
 import 'extract_deviceId/extract_deviceId_provider.dart';
 
 final guestUserLoginProvider = Provider((ref) => GuestUserLogin(
     guestUserLoginUseCase: ref.read(guestUserLoginUseCaseProvider),
     sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
-    extractDeviceIdProvider: ref.read(extractDeviceIdProvider)));
+    extractDeviceIdProvider: ref.read(extractDeviceIdProvider),
+    firebaseApiHelper: ref.read(firebaseApiProvider)
+));
 
 class GuestUserLogin {
   GuestUserLoginUseCase guestUserLoginUseCase;
   SharedPreferenceHelper sharedPreferenceHelper;
   ExtractDeviceIdProvider extractDeviceIdProvider;
+  FirebaseApi firebaseApiHelper;
 
   GuestUserLogin(
       {required this.guestUserLoginUseCase,
       required this.sharedPreferenceHelper,
-      required this.extractDeviceIdProvider});
+      required this.extractDeviceIdProvider,
+      required this.firebaseApiHelper
+      });
 
   getGuestUserToken({Future<void> Function()? onSuccess}) async {
     try {
@@ -44,6 +51,9 @@ class GuestUserLogin {
 
           sharedPreferenceHelper.setInt(
               userIdKey, res.data?.userId ?? 0);
+          MatomoService.trackLoginSuccess(
+              userId: res.data?.userId.toString() ?? "0");
+          await firebaseApiHelper.uploadFcmAfterLogin();
           if(onSuccess!=null)
             {
               await onSuccess();

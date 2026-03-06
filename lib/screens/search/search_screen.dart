@@ -8,6 +8,7 @@ import 'package:kusel/app_router.dart';
 import 'package:kusel/common_widgets/common_background_clipper_widget.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/search_widget/search_widget.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:kusel/screens/search/search_screen_provider.dart';
 import 'package:kusel/screens/search_result/search_result_screen_parameter.dart';
 
@@ -37,6 +38,7 @@ class _ExploreScreenState extends ConsumerState<SearchScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(searchScreenProvider.notifier).loadSavedListings();
     });
+    MatomoService.trackSearchScreenViewed();
     super.initState();
   }
 

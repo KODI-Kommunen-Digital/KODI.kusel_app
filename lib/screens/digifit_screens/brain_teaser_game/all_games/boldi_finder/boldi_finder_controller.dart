@@ -1,8 +1,11 @@
+import 'package:core/preference_manager/preference_constant.dart';
+import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:core/token_status.dart';
 import 'package:domain/model/request_model/digifit/brain_teaser_game/game_details_tracker_request_model.dart';
 import 'package:domain/model/response_model/digifit/brain_teaser_game/boldi_finder_response_model.dart';
 import 'package:domain/model/response_model/digifit/brain_teaser_game/game_details_tracker_response_model.dart';
 import 'package:domain/usecase/digifit/brain_teaser_game/all_game_usecase.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:domain/usecase/digifit/brain_teaser_game/game_details_tracker_usecase.dart';
@@ -29,6 +32,7 @@ final brainTeaserGameBoldiFinderControllerProvider =
     ),
     brainTeaserGameDetailsTrackingUseCase:
         ref.read(brainTeaserGameDetailsTrackingUseCaseProvider),
+    sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
   ),
 );
 
@@ -44,6 +48,7 @@ class BrainTeaserGameBoldiFinderController
 
   bool _isSequencePaused = false;
   bool _shouldStopSequence = false;
+  final SharedPreferenceHelper sharedPreferenceHelper;
 
   BrainTeaserGameBoldiFinderController({
     required this.brainTeaserGameBoldiFinderUseCase,
@@ -52,6 +57,7 @@ class BrainTeaserGameBoldiFinderController
     required this.levelId,
     required this.localeManagerController,
     required this.brainTeaserGameDetailsTrackingUseCase,
+    required this.sharedPreferenceHelper
   }) : super(BrainTeaserGameBoldiFinderState.empty());
 
   Future<void> fetchGameData({
@@ -152,6 +158,8 @@ class BrainTeaserGameBoldiFinderController
           if (mounted) {
             _showAnswerResult(row, column, finalRow, finalCol, isCorrect);
           }
+          MatomoService.trackDigifitGamePlayed(
+              userId: sharedPreferenceHelper.getInt(userIdKey).toString());
         },
       );
     } catch (e) {
@@ -161,6 +169,8 @@ class BrainTeaserGameBoldiFinderController
           isGamePlayEnabled: true,
           errorMessage: 'Failed to submit answer. Please try again.',
         );
+        MatomoService.trackDigifitGamePlayed(
+            userId: sharedPreferenceHelper.getInt(userIdKey).toString());
       }
       _handleError('checkAnswer', e);
     }

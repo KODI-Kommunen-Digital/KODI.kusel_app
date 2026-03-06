@@ -35,6 +35,7 @@ import 'package:domain/usecase/refresh_token/refresh_token_usecase.dart';
 import 'package:domain/usecase/user_detail/user_detail_usecase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:kusel/providers/guest_user_login_provider.dart';
 import 'package:kusel/providers/refresh_token_provider.dart';
 import 'package:kusel/screens/onboarding/onboarding_screen_state.dart';
@@ -100,15 +101,33 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   GuestUserLogin guestUserLogin;
   RefreshTokenProvider refreshTokenProvider;
 
+
   Future<void> initialCall() async {
     state = state.copyWith(isLoading: true);
-    isLoggedIn();
-    await Future.wait([
-      updateCurrentCity(),
-      fetchCities(),
-      getInterests(),
-    ]);
-    state = state.copyWith(isLoading: false);}
+
+    try {
+      isLoggedIn();
+
+      await Future.wait([
+        updateCurrentCity(),
+        fetchCities(),
+        getInterests(),
+      ]).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          debugPrint('Initial calls timed out');
+          return [];
+        },
+      );
+
+    } catch (error) {
+      debugPrint('Error in initialCall: $error');
+    } finally {
+      if (mounted) {
+        state = state.copyWith(isLoading: false);
+      }
+    }
+  }
 
   // void initializerPageController() {
   //   pageController = PageController(
@@ -416,6 +435,8 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
             debugPrint('onboarding complete fold exception : $l');
           }, (r) async {
             final result = r as OnboardingCompleteResponseModel;
+            MatomoService.trackOnboardingCompletedAuth(
+                userId: sharedPreferenceHelper.getInt(userIdKey).toString());
           });
         });
       } else {
@@ -428,6 +449,8 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
           debugPrint('onboarding complete fold exception : $l');
         }, (r) async {
           final result = r as OnboardingCompleteResponseModel;
+          MatomoService.trackOnboardingCompletedAuth(
+              userId: sharedPreferenceHelper.getInt(userIdKey).toString());
         });
       }
     } catch (error) {

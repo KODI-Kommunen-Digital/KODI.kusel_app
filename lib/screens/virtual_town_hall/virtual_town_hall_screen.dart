@@ -12,6 +12,7 @@ import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/listing_id_enum.dart';
 import 'package:kusel/common_widgets/network_image_text_service_card.dart';
 import 'package:kusel/common_widgets/town_hall_map_widget.dart';
+import 'package:kusel/matomo_api.dart';
 import 'package:kusel/navigation/navigation.dart';
 import 'package:kusel/screens/municipal_party_detail/widget/municipal_detail_screen_params.dart';
 import 'package:kusel/screens/virtual_town_hall/virtual_town_hall_provider.dart';
@@ -46,6 +47,7 @@ class _VirtualTownHallScreenState extends ConsumerState<VirtualTownHallScreen> {
       ref.read(virtualTownHallProvider.notifier).getVirtualTownHallDetails();
       ref.read(virtualTownHallProvider.notifier).isUserLoggedIn();
     });
+    MatomoService.trackVirtualTownhallScreenViewed();
     super.initState();
   }
 
