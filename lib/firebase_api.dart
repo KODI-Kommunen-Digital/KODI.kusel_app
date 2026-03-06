@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:core/preference_manager/preference_constant.dart';
 import 'package:core/preference_manager/shared_pref_helper.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -36,6 +38,14 @@ class FirebaseApi {
     );
 
     debugPrint("Notification permission: ${settings.authorizationStatus}");
+
+    if(settings.authorizationStatus == AuthorizationStatus.authorized ||
+        settings.authorizationStatus == AuthorizationStatus.provisional) {
+      SharedPreferenceHelper sharedPreferenceHelper = ref.read(sharedPreferenceHelperProvider);
+      await sharedPreferenceHelper.setBool(notificationPermission,
+          sharedPreferenceHelper.getBool(notificationPermission) ?? true);
+      await uploadFcmAfterLogin();
+    }
 
     // Always try to get token
     final token = await _firebaseMessaging.getToken();
@@ -111,14 +121,18 @@ class FirebaseApi {
       final settings = await FirebaseMessaging.instance.getNotificationSettings();
 
       final isPermissionGranted =
-          settings.authorizationStatus == AuthorizationStatus.authorized ||
-              settings.authorizationStatus == AuthorizationStatus.provisional;
+          (settings.authorizationStatus == AuthorizationStatus.authorized ||
+              settings.authorizationStatus == AuthorizationStatus.provisional);
 
-      if (isPermissionGranted) {
+      SharedPreferenceHelper sharedPreferenceHelper = ref.read(sharedPreferenceHelperProvider);
+
+      final isLocalNotificationPermissionAvailable = sharedPreferenceHelper.getBool(notificationPermission) ?? false;
+
+      if (isPermissionGranted && isLocalNotificationPermissionAvailable) {
         await subscribeToTopic("warnings");
       }
 
-      await updateNotificationPreference(isPermissionGranted);
+      await updateNotificationPreference(isPermissionGranted && isLocalNotificationPermissionAvailable);
 
       debugPrint("FCM token uploaded successfully");
     } catch (e) {

@@ -11,6 +11,7 @@ import 'package:domain/usecase/refresh_token/refresh_token_usecase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:domain/usecase/notifications/notifications_usecase.dart';
+import 'package:kusel/firebase_api.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 final notificationsProvider =
@@ -20,6 +21,7 @@ StateNotifierProvider<NotificationsNotifier, bool>(
     sharedPreferenceHelper: ref.read(sharedPreferenceHelperProvider),
     tokenStatus: ref.read(tokenStatusProvider),
     refreshTokenUseCase: ref.read(refreshTokenUseCaseProvider),
+    firebaseApiProvider: ref.read(firebaseApiProvider)
   ),
 );
 
@@ -28,13 +30,21 @@ class NotificationsNotifier extends StateNotifier<bool> {
   final SharedPreferenceHelper sharedPreferenceHelper;
   final TokenStatus tokenStatus;
   final RefreshTokenUseCase refreshTokenUseCase;
+  final FirebaseApi firebaseApiProvider;
 
   NotificationsNotifier({
     required this.notificationUseCase,
     required this.sharedPreferenceHelper,
     required this.tokenStatus,
     required this.refreshTokenUseCase,
+    required this.firebaseApiProvider
   }) : super(true);
+
+
+  Future<void> initializeNotificationStatus() async {
+      final status = sharedPreferenceHelper.getBool(notificationPermission) ?? false;
+      state = status;
+  }
 
   Future<void> storeFirebaseToken({
     required String fcmToken,
@@ -93,9 +103,10 @@ class NotificationsNotifier extends StateNotifier<bool> {
           debugPrint("update preference error: $l");
           onError(l.toString());
         },
-            (r) {
+            (r) async {
           state = enabled; // update provider state
-        },
+          await sharedPreferenceHelper.setBool(notificationPermission, enabled);
+            },
       );
     } catch (e) {
       debugPrint("updateNotificationPreference exception: $e");
@@ -132,8 +143,10 @@ class NotificationsNotifier extends StateNotifier<bool> {
           enabled: false,
           onError: (message) {},
         );
+        firebaseApiProvider.unsubscribeFromTopic("warnings");
 
         state = false;
+        await sharedPreferenceHelper.setBool(notificationPermission, false);
         return true;
       }
 
@@ -151,16 +164,20 @@ class NotificationsNotifier extends StateNotifier<bool> {
           enabled: true,
           onError: (message) {},
         );
-
+        firebaseApiProvider.subscribeToTopic("warnings");
         state = true;
+        await sharedPreferenceHelper.setBool(notificationPermission, true);
         return true;
       }
 
       // Permission denied or permanently denied
+      firebaseApiProvider.unsubscribeFromTopic("warnings");
       state = false;
+      await sharedPreferenceHelper.setBool(notificationPermission, false);
       return false;
     } catch (e) {
       debugPrint("requestOrHandleNotificationPermission error: $e");
       return false;
     }
   }}
+

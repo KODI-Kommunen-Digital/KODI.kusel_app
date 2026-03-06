@@ -122,8 +122,10 @@ class _MyAppState extends ConsumerState<MyApp> {
   void initState() {
     Future.microtask(() async {
       {
-        final firebaseApi = ref.read(firebaseApiProvider);
-        await firebaseApi.initNotifications();
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          final firebaseApi = ref.read(firebaseApiProvider);
+          firebaseApi.initNotifications();
+        });
         ref.read(localeManagerProvider.notifier).initialLocaleSetUp();
         ref.read(networkStatusProvider.notifier).checkNetworkStatus();
       }

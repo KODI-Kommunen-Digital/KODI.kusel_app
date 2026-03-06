@@ -58,6 +58,7 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen>
 
       controller.getUserDetail();
       controller.getLocationPermissionStatus();
+      ref.read(notificationsProvider.notifier).initializeNotificationStatus();
     });
 
     WidgetsBinding.instance.addObserver(this);
@@ -119,7 +120,6 @@ class _ProfileSettingScreenState extends ConsumerState<ProfileSettingScreen>
           _buildUserForm(context),
           32.verticalSpace,
           _buildLocationToggle(context),
-          32.verticalSpace,
           32.verticalSpace,
           _buildNotificationToggle(context),
           32.verticalSpace,

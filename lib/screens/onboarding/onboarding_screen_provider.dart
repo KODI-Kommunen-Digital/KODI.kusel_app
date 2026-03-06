@@ -101,15 +101,33 @@ class OnboardingScreenController extends StateNotifier<OnboardingScreenState> {
   GuestUserLogin guestUserLogin;
   RefreshTokenProvider refreshTokenProvider;
 
+
   Future<void> initialCall() async {
     state = state.copyWith(isLoading: true);
-    isLoggedIn();
-    await Future.wait([
-      updateCurrentCity(),
-      fetchCities(),
-      getInterests(),
-    ]);
-    state = state.copyWith(isLoading: false);}
+
+    try {
+      isLoggedIn();
+
+      await Future.wait([
+        updateCurrentCity(),
+        fetchCities(),
+        getInterests(),
+      ]).timeout(
+        const Duration(seconds: 10),
+        onTimeout: () {
+          debugPrint('Initial calls timed out');
+          return [];
+        },
+      );
+
+    } catch (error) {
+      debugPrint('Error in initialCall: $error');
+    } finally {
+      if (mounted) {
+        state = state.copyWith(isLoading: false);
+      }
+    }
+  }
 
   // void initializerPageController() {
   //   pageController = PageController(

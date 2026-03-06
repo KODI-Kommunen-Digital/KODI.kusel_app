@@ -14,3 +14,5 @@ const selectedCityIdKey = "selectedMunicipalId";
 
 const isUserSignedIn = "isUserSignedIn";
 const fcmToken = "fcmToken";
+
+const notificationPermission = "notificationPermission";
