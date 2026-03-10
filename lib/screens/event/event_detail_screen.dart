@@ -10,6 +10,7 @@ import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/location_const.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
+import 'package:kusel/common_widgets/text_to_speech_widget.dart';
 import 'package:kusel/matomo_api.dart';
 import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/event/event_detail_screen_state.dart';
@@ -27,6 +28,8 @@ import '../../navigation/navigation.dart';
 import '../../providers/favorites_list_notifier.dart';
 import '../../utility/url_launcher_utility.dart';
 import '../home/home_screen_provider.dart';
+import 'package:html/parser.dart' as html_parser;
+
 
 class EventDetailScreen extends ConsumerStatefulWidget {
   final EventDetailScreenParams eventScreenParams;
@@ -138,6 +141,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
               ref.read(navigationProvider).navigateUsingPath(
                   path: feedbackScreenPath, context: context);
             },
+            enableTts: true,
           ),
         ],
       ),
@@ -233,10 +237,19 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          textBoldPoppins(
-              text: heading,
-              fontSize: 15,
-              color: Theme.of(context).textTheme.bodyLarge?.color),
+          Row(
+            children: [
+              textBoldPoppins(
+                  text: heading,
+                  fontSize: 15,
+                  color: Theme.of(context).textTheme.bodyLarge?.color),
+              SizedBox(width: 20,),
+              TextToSpeechButton(
+                texts: [heading, convertHtmlToPlainText(description)],
+                size: TtsButtonSize.medium,
+              )
+            ],
+          ),
           8.verticalSpace,
           // textSemiBoldPoppins(
           //     text: subHeading,
@@ -347,10 +360,17 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    textBoldPoppins(
-                        text: heading,
-                        fontSize: 13,
-                        color: Theme.of(context).textTheme.bodyLarge?.color),
+                    Row(
+                      children: [
+                        textBoldPoppins(
+                            text: heading,
+                            fontSize: 13,
+                            color: Theme.of(context).textTheme.bodyLarge?.color),
+                        SizedBox(width: 10,),
+                        TextToSpeechButton(texts: [heading,description], size: TtsButtonSize.small,)
+                      ],
+                    ),
+                    SizedBox(height: 5,),
                     textRegularPoppins(
                         textAlign: TextAlign.left,
                         text: description,
@@ -587,4 +607,13 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
       );
     });
   }
+
+
+  String convertHtmlToPlainText(String htmlText) {
+    final document = html_parser.parse(htmlText);
+    final parsedString = document.body?.text ?? "";
+    return parsedString.trim();
+  }
+
+
 }
