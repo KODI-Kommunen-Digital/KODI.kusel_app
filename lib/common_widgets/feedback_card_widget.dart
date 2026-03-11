@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:kusel/common_widgets/custom_button_widget.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
-import 'package:kusel/common_widgets/text_to_speech_widget.dart';
+import 'package:kusel/common_widgets/text_to_speech_widget/text_to_speech_controller.dart';
+import 'package:kusel/common_widgets/text_to_speech_widget/text_to_speech_widget.dart';
 import 'package:kusel/images_path.dart';
 
 import '../theme_manager/colors.dart';
 import 'package:kusel/l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class FeedbackCardWidget extends StatefulWidget {
+
+class FeedbackCardWidget extends ConsumerStatefulWidget {
   final Function() onTap;
   final double? height;
   final bool enableTts;
@@ -21,10 +24,10 @@ class FeedbackCardWidget extends StatefulWidget {
   });
 
   @override
-  State<FeedbackCardWidget> createState() => _FeedbackCardWidgetState();
+  ConsumerState<FeedbackCardWidget> createState() => _FeedbackCardWidgetState();
 }
 
-class _FeedbackCardWidgetState extends State<FeedbackCardWidget> {
+class _FeedbackCardWidgetState extends ConsumerState<FeedbackCardWidget> {
   @override
   Widget build(BuildContext context) {
     final heading = AppLocalizations.of(context).feedback_heading;
@@ -50,13 +53,32 @@ class _FeedbackCardWidgetState extends State<FeedbackCardWidget> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      textBoldPoppins(
-                        fontWeight: FontWeight.w600,
-                        text: heading,
-                        fontSize: 15,
-                        color: Colors.white,
-                        textOverflow: TextOverflow.visible,
-                        textAlign: TextAlign.start,
+                      Row(
+                        children: [
+                          Expanded(
+                            flex: 2,
+                            child: textBoldPoppins(
+                              fontWeight: FontWeight.w600,
+                              text: heading,
+                              fontSize: 15,
+                              color: Colors.white,
+                              textOverflow: TextOverflow.visible,
+                              textAlign: TextAlign.start,
+                            ),
+                          ),
+                          SizedBox(height: 8.h),
+                          if(widget.enableTts &&
+                              (!ref.watch(textToSpeechControllerProvider).isPlaying || ref.watch(textToSpeechControllerProvider).ttsWidgetId == "feedback_card"))
+                            Expanded(
+                              flex: 1,
+                              child: TextToSpeechButton(
+                                texts: [heading, description],
+                                size: TtsButtonSize.small,
+                                isDarkTheme: true,
+                                ttsWidgetId: 'feedback_card', // Optional: provide consistent ID
+                              ),
+                            )
+                        ],
                       ),
 
                       SizedBox(height: 8.h),
@@ -82,12 +104,6 @@ class _FeedbackCardWidgetState extends State<FeedbackCardWidget> {
                         ],
                       ),
                       SizedBox(height: 10,),
-                      if(widget.enableTts)
-                      TextToSpeechButton(
-                        texts: [heading, description],
-                        size: TtsButtonSize.small,
-                        isDarkTheme: true,
-                      ),
                     ],
                   ),
                 )

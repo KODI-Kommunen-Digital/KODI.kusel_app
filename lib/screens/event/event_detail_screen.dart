@@ -10,7 +10,8 @@ import 'package:kusel/common_widgets/feedback_card_widget.dart';
 import 'package:kusel/common_widgets/image_utility.dart';
 import 'package:kusel/common_widgets/location_const.dart';
 import 'package:kusel/common_widgets/text_styles.dart';
-import 'package:kusel/common_widgets/text_to_speech_widget.dart';
+import 'package:kusel/common_widgets/text_to_speech_widget/text_to_speech_controller.dart';
+import 'package:kusel/common_widgets/text_to_speech_widget/text_to_speech_widget.dart';
 import 'package:kusel/matomo_api.dart';
 import 'package:kusel/screens/event/event_detail_screen_controller.dart';
 import 'package:kusel/screens/event/event_detail_screen_state.dart';
@@ -62,58 +63,65 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
     final isLoading = ref.watch(
         eventDetailScreenProvider(widget.eventScreenParams.eventId)
             .select((state) => state.loading));
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () async {
-            final controller = ref.read(
-                eventDetailScreenProvider(widget.eventScreenParams.eventId)
-                    .notifier);
+    return WillPopScope(
+      onWillPop: () async {
+        ref.read(textToSpeechControllerProvider.notifier).stop();
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: SafeArea(
+          child: RefreshIndicator(
+            onRefresh: () async {
+              final controller = ref.read(
+                  eventDetailScreenProvider(widget.eventScreenParams.eventId)
+                      .notifier);
 
-            controller.getEventDetails(widget.eventScreenParams.eventId);
-            controller.getRecommendedList(widget.eventScreenParams.categoryId);
-          },
-          child: Stack(
-            children: [
-              _buildBody(context, state),
-              if (isLoading) CustomProgressBar(),
-              Positioned(
-                  bottom: 16.h,
-                  left: 16.w,
-                  right: 16.w,
-                  child: CommonBottomNavCard(
-                    onBackPress: () {
-                      ref
-                          .read(navigationProvider)
-                          .removeTopPage(context: context);
-                    },
-                    isFavVisible: true,
-                    isFav: state.isFavourite,
-                    onFavChange: () {
-                      ref
-                          .watch(favoritesProvider.notifier)
-                          .toggleFavorite(state.eventDetails,
-                              success: ({required bool isFavorite}) {
-                        state.eventDetails.isFavorite = isFavorite;
+              controller.getEventDetails(widget.eventScreenParams.eventId);
+              controller.getRecommendedList(widget.eventScreenParams.categoryId);
+            },
+            child: Stack(
+              children: [
+                _buildBody(context, state),
+                if (isLoading) CustomProgressBar(),
+                Positioned(
+                    bottom: 16.h,
+                    left: 16.w,
+                    right: 16.w,
+                    child: CommonBottomNavCard(
+                      onBackPress: () {
+                        ref.read(textToSpeechControllerProvider.notifier).stop();
                         ref
-                            .read(eventDetailScreenProvider(
-                                    state.eventDetails.id ?? 0)
-                                .notifier)
-                            .toggleFav();
+                            .read(navigationProvider)
+                            .removeTopPage(context: context);
+                      },
+                      isFavVisible: true,
+                      isFav: state.isFavourite,
+                      onFavChange: () {
                         ref
-                            .read(homeScreenProvider.notifier)
-                            .setIsFavoriteHighlight(
-                                isFavorite, state.eventDetails.id);
-                        if (widget.eventScreenParams.onFavClick != null) {
-                          widget.eventScreenParams.onFavClick!();
-                        }
-                      }, error: ({required String message}) {
-                        showErrorToast(message: message, context: context);
-                      });
-                    },
-                  )),
-            ],
+                            .watch(favoritesProvider.notifier)
+                            .toggleFavorite(state.eventDetails,
+                                success: ({required bool isFavorite}) {
+                          state.eventDetails.isFavorite = isFavorite;
+                          ref
+                              .read(eventDetailScreenProvider(
+                                      state.eventDetails.id ?? 0)
+                                  .notifier)
+                              .toggleFav();
+                          ref
+                              .read(homeScreenProvider.notifier)
+                              .setIsFavoriteHighlight(
+                                  isFavorite, state.eventDetails.id);
+                          if (widget.eventScreenParams.onFavClick != null) {
+                            widget.eventScreenParams.onFavClick!();
+                          }
+                        }, error: ({required String message}) {
+                          showErrorToast(message: message, context: context);
+                        });
+                      },
+                    )),
+              ],
+            ),
           ),
         ),
       ),
@@ -131,6 +139,12 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                   'https://t4.ftcdn.net/jpg/03/45/71/65/240_F_345716541_NyJiWZIDd8rLehawiKiHiGWF5UeSvu59.jpg',
               sourceId: state.eventDetails.sourceId,
               isBackArrowEnabled: true,
+              onBackPress: (){
+                ref.read(textToSpeechControllerProvider.notifier).stop();
+                ref
+                    .read(navigationProvider)
+                    .removeTopPage(context: context);
+              },
               imageFit: BoxFit.fill,
               isStaticImage: false),
           _buildEventsUi(state),
@@ -232,6 +246,7 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
       required String subHeading,
       required String description,
       required EventDetailScreenState state}) {
+    final ttsWidgetState = ref.watch(textToSpeechControllerProvider);
     return Padding(
       padding: EdgeInsets.only(left: 8.w, right: 10.w, top: 10.h, bottom: 10.h),
       child: Column(
@@ -244,9 +259,11 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                   fontSize: 15,
                   color: Theme.of(context).textTheme.bodyLarge?.color),
               SizedBox(width: 20,),
-              TextToSpeechButton(
-                texts: [heading, convertHtmlToPlainText(description)],
+              if(!ttsWidgetState.isPlaying || ttsWidgetState.ttsWidgetId == "event_description_2")
+                TextToSpeechButton(
+                texts: [heading, convertHtmlToPlainText(description), getExpandedTileSpeechText(state, context)],
                 size: TtsButtonSize.medium,
+                ttsWidgetId: "event_description_2",
               )
             ],
           ),
@@ -366,8 +383,6 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
                             text: heading,
                             fontSize: 13,
                             color: Theme.of(context).textTheme.bodyLarge?.color),
-                        SizedBox(width: 10,),
-                        TextToSpeechButton(texts: [heading,description], size: TtsButtonSize.small,)
                       ],
                     ),
                     SizedBox(height: 5,),
@@ -424,6 +439,48 @@ class _EventScreenState extends ConsumerState<EventDetailScreen> {
         )
       ],
     );
+  }
+
+  String getExpandedTileSpeechText(EventDetailScreenState state, BuildContext context) {
+    final start = DateTime.tryParse(state.eventDetails.startDate ?? "");
+    final end = DateTime.tryParse(state.eventDetails.endDate ?? "");
+
+    if (start == null || end == null) return "";
+
+    List<DateTime> allDates = [];
+    DateTime curr = start;
+
+    while (!curr.isAfter(end)) {
+      allDates.add(curr);
+      curr = curr.add(const Duration(days: 1));
+    }
+
+    DateTime now = DateTime.now();
+
+    List<DateTime> upcoming = allDates.where((d) {
+      int idx = allDates.indexOf(d);
+      if (idx == 0) return false;
+      return !d.isBefore(DateTime(now.year, now.month, now.day));
+    }).toList();
+
+    if (upcoming.isEmpty) return "";
+
+    final fromText = AppLocalizations.of(context).from;
+    final clockText = AppLocalizations.of(context).clock;
+
+    List<String> speechParts = [];
+
+    speechParts.add(AppLocalizations.of(context).next_dates);
+
+    for (var d in upcoming) {
+      final dayName = DateFormat('EEEE').format(d);
+      final dateText = DateFormat('dd.MM.yyyy').format(d);
+
+      speechParts.add(
+          "$dayName $dateText $fromText ${DateFormat('HH:mm').format(start)} - ${DateFormat('HH:mm').format(end)} $clockText");
+    }
+
+    return speechParts.join(". ");
   }
 
   Widget _buildExpandedTile(EventDetailScreenState state) {

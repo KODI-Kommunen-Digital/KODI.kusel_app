@@ -27,6 +27,7 @@ class CommonBackgroundClipperWidget extends ConsumerStatefulWidget {
   final Widget? filterWidget;
   final BoxFit? imageFit;
   final double? headingTextLeftMargin;
+  final Function()? onBackPress;
 
   const CommonBackgroundClipperWidget(
       {super.key,
@@ -44,7 +45,9 @@ class CommonBackgroundClipperWidget extends ConsumerStatefulWidget {
       this.isLoading,
       this.filterWidget,
       this.imageFit,
-      this.headingTextLeftMargin});
+      this.headingTextLeftMargin,
+      this.onBackPress
+      });
 
   @override
   ConsumerState<CommonBackgroundClipperWidget> createState() =>
@@ -125,7 +128,7 @@ class _CommonBackgroundClipperWidgetState
                           : 0,
                       child: ArrowBackWidget(
                         size: 15.h.w,
-                        onTap: () {
+                        onTap: (widget.onBackPress!=null) ? widget.onBackPress! : () {
                           ref
                               .read(navigationProvider)
                               .removeTopPage(context: context);
